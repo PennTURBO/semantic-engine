@@ -13,10 +13,10 @@ val operation: DataIntegrityCheckOperations = new DataIntegrityCheckOperations
 def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {   
         val check: String =
-        """SELECT ?dateOK ?missing ?dataset WHERE 
+        """SELECT ?dateOK ?missing ?dataset 
+          """ + graphsList + """
+            WHERE 
             {
-                Values ?g {""" + graphsList + """}
-                GRAPH ?g {
                   ?part a turbo:TURBO_0000502 .
                   OPTIONAL {
                       ?part turbo:TURBO_0000604 ?value1 .
@@ -26,20 +26,19 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
                   }
                   BIND(IF((BOUND(?value2)) && (!(BOUND(?value1))), 'false', 'true') AS ?dateOK)
                   BIND (turbo:TURBO_0000604 AS ?missing)
-                  FILTER (?dateOK = 'false')
-                }        
+                  FILTER (?dateOK = 'false')       
             }"""
-        
+        logger.info(check)
         operation.runSparqlCheck(cxn, check, ArrayBuffer("missing", "dateOK"), "pre-expansion", "missing required birth-related shortcut")
     }
     
     def checkForValidParticipantBiosexShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
-        """SELECT ?biosexOK ?missing ?dataset WHERE 
+        """SELECT ?biosexOK ?missing ?dataset 
+          """ + graphsList + """
+          WHERE 
             {
-                Values ?g {""" + graphsList + """}
-                GRAPH ?g {
                   ?part a turbo:TURBO_0000502 .
                   OPTIONAL {
                       ?part turbo:TURBO_0000606 ?value1 .
@@ -49,8 +48,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
                   }
                   BIND(IF((BOUND(?value2)) && (!(BOUND(?value1))), 'false', 'true') AS ?biosexOK)
                   BIND (turbo:TURBO_0000606 AS ?missing)
-                  FILTER (?biosexOK = 'false')
-                }        
+                  FILTER (?biosexOK = 'false')        
             }"""
         
         operation.runSparqlCheck(cxn, check, ArrayBuffer("missing", "biosexOK"), "pre-expansion", "missing required biosex-related shortcut")
@@ -100,16 +98,15 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
     def checkForValidHealthcareEncounterDateShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
-        """SELECT ?enc WHERE 
+        """SELECT ?enc 
+          """ + graphsList + """
+          WHERE 
             {
-                Values ?g {""" + graphsList + """}
-                GRAPH ?g {
-                    ?enc a obo:OGMS_0000097 .
-                    ?enc turbo:TURBO_0000645 ?value2 .
-                    Minus {
-                        ?enc turbo:TURBO_0000644 ?value1 .
-                    }
-                }        
+                ?enc a obo:OGMS_0000097 .
+                ?enc turbo:TURBO_0000645 ?value2 .
+                Minus {
+                    ?enc turbo:TURBO_0000644 ?value1 .
+                }       
             }"""
         
         operation.runSparqlCheck(cxn, check, ArrayBuffer("enc"), "pre-expansion", "missing required healthcare encounter date-related shortcut")
@@ -118,10 +115,10 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
     def checkForValidBiobankEncounterDateShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
-        """SELECT ?dateOK ?missing WHERE 
+        """SELECT ?dateOK ?missing 
+          """ + graphsList + """
+          WHERE 
             {
-                Values ?g {""" + graphsList + """}
-                GRAPH ?g {
                   ?enc a turbo:TURBO_0000527 .
                   OPTIONAL {
                       ?enc turbo:TURBO_0000624 ?value1 .
@@ -131,8 +128,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
                   }
                   BIND(IF((BOUND(?value2)) && (!(BOUND(?value1))), 'false', 'true') AS ?dateOK)
                   BIND (turbo:TURBO_0000644 AS ?missing)
-                  FILTER (?dateOK = 'false')
-                }        
+                  FILTER (?dateOK = 'false')      
             }"""
         
         operation.runSparqlCheck(cxn, check, ArrayBuffer("missing", "dateOK"), "pre-expansion", "missing required biobank encounter date-related shortcut")
@@ -181,56 +177,58 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
     def checkForRequiredParticipantShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
-            SELECT distinct ?part ?requiredShortcut WHERE 
+            SELECT distinct ?part WHERE 
             {
                 Values ?g {""" + graphsList + """}
                 GRAPH ?g {
-                    VALUES ?requiredShortcut {turbo:TURBO_0000603 turbo:TURBO_0000608 turbo:TURBO_0000610 }
                     ?part a turbo:TURBO_0000502 .
                     MINUS {
-                        ?part ?requiredShortcut ?value .
+                        ?part turbo:TURBO_0000603 ?someval1 .
+                  			?part turbo:TURBO_0000608 ?someval2 .
+                  			?part turbo:TURBO_0000610 ?someval3 .
                     }
                 }        
             }"""
-        
-        operation.runSparqlCheck(cxn, check, ArrayBuffer("part", "requiredShortcut"), "pre-expansion", "minimum for participant not found")
+        operation.runSparqlCheck(cxn, check, ArrayBuffer("part"), "pre-expansion", "minimum for participant not found")
     }
     
     def checkForRequiredHealthcareEncounterShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
-            SELECT distinct ?enc ?requiredHealthcareShortcut
+            SELECT distinct ?enc
+            """ + graphsList + """
             WHERE 
             {
-            Values ?g {""" + graphsList + """}
-            GRAPH ?g {
-                VALUES ?requiredHealthcareShortcut {turbo:TURBO_0000643 turbo:TURBO_0000648 turbo:TURBO_0000650}
-                ?enc a obo:OGMS_0000097 .
-                MINUS 
-                {
-                    ?enc ?requiredHealthcareShortcut ?value .
-                }     
+                  ?enc a obo:OGMS_0000097 .
+                  MINUS 
+                  {
+                      ?enc turbo:TURBO_0000643 ?somevalue1 .
+                      ?enc turbo:TURBO_0000648 ?somevalue2 .
+                      ?enc turbo:TURBO_0000650 ?somevalue3 .
+                  }     
             }"""
-        operation.runSparqlCheck(cxn, check, ArrayBuffer("enc", "requiredHealthcareShortcut"), "pre-expansion", "minimum for healthcare encounter not found")
+            
+        operation.runSparqlCheck(cxn, check, ArrayBuffer("enc"), "pre-expansion", "minimum for healthcare encounter not found")
     }
     
     def checkForRequiredBiobankEncounterShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
-            SELECT distinct ?enc ?requiredBiobankShortcut 
+            SELECT distinct ?enc
             WHERE 
             {
                 Values ?g {""" + graphsList + """}
                 GRAPH ?g {
-                    VALUES ?requiredBiobankShortcut {turbo:TURBO_0000623 turbo:TURBO_0000628 turbo:TURBO_0000630 }
                     ?enc a turbo:TURBO_0000527 .
                     MINUS
                     {
-                        ?enc ?requiredBiobankShortcut ?value .
+                        ?enc turbo:TURBO_0000623 ?somevalue1 .
+                        ?enc turbo:TURBO_0000628 ?somevalue2 .
+                        ?enc turbo:TURBO_0000630 ?somevalue3 .
                     }
                 }        
             }"""
-        operation.runSparqlCheck(cxn, check, ArrayBuffer("enc", "requiredBiobankShortcut"), "pre-expansion", "minimum for biobank encounter not found")
+        operation.runSparqlCheck(cxn, check, ArrayBuffer("enc"), "pre-expansion", "minimum for biobank encounter not found")
     }
     
     def checkForMultipleParticipantDependentNodes (cxn: RepositoryConnection, graphsList: String): Boolean =

@@ -897,7 +897,7 @@ class TurboMultiuseClass
         for (a <- generateShortcutNamedGraphsList(cxn))
         {
             if (!asFrom) graphsString += "<" + a + "> "
-            else graphsString += "FROM " + a + " "
+            else graphsString += "FROM <" + a + "> "
         }
         graphsString
     }
