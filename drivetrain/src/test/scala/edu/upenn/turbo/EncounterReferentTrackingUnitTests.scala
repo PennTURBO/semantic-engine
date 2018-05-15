@@ -34,7 +34,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
 
     test("sparql bb enc referent track pre process one non reftracked one reftracked same identifier and reg")

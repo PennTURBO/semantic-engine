@@ -94,7 +94,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
           }
           finally 
           {
-              connect.closeConnectionDeleteTriples(cxn, repoManager, repository, false)
+              connect.closeGraphConnection(cxn, repoManager, repository, false)
           }
       }
   }

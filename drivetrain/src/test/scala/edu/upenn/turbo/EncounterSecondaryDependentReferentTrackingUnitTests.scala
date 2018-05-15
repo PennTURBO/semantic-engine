@@ -216,7 +216,7 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
     test("hc encs secondary dependent ref tracking - two non ref tracked same dates")

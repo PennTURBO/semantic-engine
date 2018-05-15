@@ -210,7 +210,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
     test("join 2 hc encs to 1 participant")

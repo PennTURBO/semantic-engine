@@ -47,7 +47,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
 
     test("no biosex data")

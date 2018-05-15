@@ -138,7 +138,7 @@ class BMIReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfter with
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
     test("bmi ref tracking from healthcare enc - 2 bmis same date same values")

@@ -69,6 +69,23 @@ class ConnectToGraphDB extends ProjectwideGlobals
     }
     
     /**
+     * Overloaded initializeGraph method which creates a connection to a repository provided as a string instead of the properties file.
+     */
+    def initializeGraph(repositoryForConnection: String): TurboGraphConnection =
+    {
+        val graphConnect: TurboGraphConnection = new TurboGraphConnection
+        val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
+        repoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
+        repoManager.initialize()
+        val repository: Repository = repoManager.getRepository(repositoryForConnection)
+        val cxn: RepositoryConnection = repository.getConnection()
+        graphConnect.setConnection(cxn)
+        graphConnect.setRepoManager(repoManager)
+        graphConnect.setRepository(repository)
+        graphConnect
+    }
+    
+    /**
      * Handles loading data files into their respective named graphs, as declared in TURBO Properties file. Checks to make sure that 
      * data files and named graphs are declared properly, then passes information to helper method to complete the data load.
      */
@@ -153,7 +170,7 @@ class ConnectToGraphDB extends ProjectwideGlobals
      * Used to disconnect Drivetrain from Ontotext Graph DB by closing the relevant RepositoryConnection, RemoteRepositoryManager, and Repository objects.
      * Optionally delete all triples in database before connection close by specifying boolean parameter.
      */
-    def closeConnectionDeleteTriples(cxn: RepositoryConnection, repoManager: RemoteRepositoryManager, repository: Repository, deleteAllTriples: Boolean)
+    def closeGraphConnection(cxn: RepositoryConnection, repoManager: RemoteRepositoryManager, repository: Repository, deleteAllTriples: Boolean)
     {
         if (cxn == null)
         {
@@ -173,6 +190,16 @@ class ConnectToGraphDB extends ProjectwideGlobals
             repository.shutDown()
             repoManager.shutDown()
         }
+    }
+    
+    /**
+     * Overloaded closeGraphConnection method which accepts a TurboGraphConnection instead of its individual components.
+     */
+    def closeGraphConnection(graphConnect: TurboGraphConnection)
+    {
+        graphConnect.getConnection().close()
+        graphConnect.getRepository().shutDown()
+        graphConnect.getRepoManager().shutDown()
     }
     
     /**

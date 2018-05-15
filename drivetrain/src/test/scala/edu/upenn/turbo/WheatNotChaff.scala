@@ -121,7 +121,7 @@ class WheatNotChaff extends FunSuiteLike with BeforeAndAfter with Matchers with 
 
   after {
     //Setting "false" here will cause triples to stay in database after termination of the test
-    connect.closeConnectionDeleteTriples(cxn, repoManager, repository, false)
+    connect.closeGraphConnection(cxn, repoManager, repository, false)
   }
 
   test("LoadWorked old style") {

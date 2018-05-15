@@ -95,7 +95,7 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
 
     test("hc and bb meas on same date diff values")

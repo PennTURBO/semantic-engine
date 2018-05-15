@@ -55,7 +55,7 @@ class NewExceptionTests extends FunSuiteLike with BeforeAndAfter with Matchers w
 
   after {
     //Setting "false" here will cause triples to stay in database after termination of the test
-    connect.closeConnectionDeleteTriples(cxn, repoManager, repository, false)
+    connect.closeGraphConnection(cxn, repoManager, repository, false)
   }
 
   /*

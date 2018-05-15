@@ -31,7 +31,7 @@ class CorrectlyPackagedTests extends FunSuiteLike with BeforeAndAfter with Match
 
   after {
     //Setting "false" here will cause triples to stay in database after termination of the test
-    connect.closeConnectionDeleteTriples(cxn, repoManager, repository, false)
+    connect.closeGraphConnection(cxn, repoManager, repository, false)
   }
 
   // will break up

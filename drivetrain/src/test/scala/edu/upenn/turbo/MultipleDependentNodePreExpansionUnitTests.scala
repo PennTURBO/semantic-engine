@@ -26,7 +26,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
   
     test("test check for multiple participant dependent nodes - one of each")

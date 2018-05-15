@@ -91,7 +91,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         {
             writeTXT.close()
             writeCSV.close()  
-            connect.closeConnectionDeleteTriples(cxn, repoManager, repository, false) 
+            connect.closeGraphConnection(cxn, repoManager, repository, false) 
         }
     }
     

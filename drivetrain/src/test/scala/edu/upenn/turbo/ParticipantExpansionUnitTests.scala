@@ -78,7 +78,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
     test("participant with all fields")

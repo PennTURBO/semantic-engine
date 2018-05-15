@@ -60,4 +60,5 @@ trait ProjectwideGlobals
      val solrURL = helper.retrievePropertyFromFile("solrURL")
      val SVMfile = helper.retrievePropertyFromFile("SVMfile")
      val medStandardsFile = helper.retrievePropertyFromFile("medStandardsFile")
+     val dronRepo = helper.retrievePropertyFromFile("dronRepo")
 }

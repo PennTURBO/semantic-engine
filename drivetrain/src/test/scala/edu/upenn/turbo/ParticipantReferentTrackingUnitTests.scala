@@ -34,7 +34,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
 
     test("sparql participant referent track pre process one non reftracked one reftracked")

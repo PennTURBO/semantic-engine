@@ -29,7 +29,7 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
     test("tidy order name")

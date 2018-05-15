@@ -252,7 +252,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
     test("hc encounter with all fields")

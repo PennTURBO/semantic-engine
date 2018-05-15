@@ -75,7 +75,7 @@ class BirthdateConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
 
     test("no birthdate data")

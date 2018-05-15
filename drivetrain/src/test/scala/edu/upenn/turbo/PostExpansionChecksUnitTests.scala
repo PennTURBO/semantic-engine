@@ -26,7 +26,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
     test("check for invalid classes - one valid class")

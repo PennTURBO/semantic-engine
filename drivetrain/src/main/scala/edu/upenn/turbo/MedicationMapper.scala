@@ -16,6 +16,9 @@ import java.util.Arrays
 
 class MedicationMapper extends ProjectwideGlobals
 {   
+    
+    val connect: ConnectToGraphDB = new ConnectToGraphDB
+    
     def runMedicationMapping(cxn: RepositoryConnection): Boolean =
     {
         // First, check if all necessary files are in order. If not, do not run medication mapping
@@ -84,8 +87,8 @@ class MedicationMapper extends ProjectwideGlobals
               
               med_map_svm_file <- """" + SVMfile + """"
               
-              endpoint <- """" + serviceURL + """/repositories/dron_no_ndc_no_prot"
-              
+              endpoint <- """" + serviceURL + """/repositories/""" + dronRepo + """"
+                              
               # do you have solr running with the necessary collection ?!
               # url for solr
               forward.url <- """" + solrURL + """"
@@ -807,6 +810,29 @@ class MedicationMapper extends ProjectwideGlobals
         if (!(new File(medStandardsFile).exists()))
         {
             logger.info("Did not find medication Standards file")
+            boolToReturn = false
+        }
+        //check that dron repository exists
+        try
+        {
+            val graphconnect: TurboGraphConnection = connect.initializeGraph(dronRepo)  
+            connect.closeGraphConnection(graphconnect)
+        }
+        catch
+        {
+            case e: NullPointerException => 
+            logger.info("Did not find specified Dron repository")
+            boolToReturn = false
+        }
+        //check that Solr instance is running
+        try
+        {
+            scala.io.Source.fromURL(solrURL).mkString
+        }
+        catch
+        {
+            case e: Exception =>
+            logger.info("Did not find a running Solr instance at the specified address")
             boolToReturn = false
         }
         

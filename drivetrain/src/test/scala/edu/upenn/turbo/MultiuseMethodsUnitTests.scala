@@ -28,7 +28,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
     }
     after
     {
-        connect.closeConnectionDeleteTriples(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
     test("get postfix from uri")
