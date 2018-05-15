@@ -419,12 +419,12 @@ class MedicationMapper extends ProjectwideGlobals
               failures <-
                 forward.with.dist[!forward.with.dist$query %in% qs.successes , ]
               
-              write.csv(x = matches,
-                        file = "map_matches_20180503.csv",
-                        row.names = FALSE)
-              write.csv(x = failures,
-                        file = "map_failures_20180503.csv",
-                        row.names = FALSE)
+              #write.csv(x = matches,
+              #          file = "map_matches_20180503.csv",
+              #          row.names = FALSE)
+              #write.csv(x = failures,
+              #          file = "map_failures_20180503.csv",
+              #          row.names = FALSE)
               
               # could do this by pred.conf or by distsum
               # bestmatches <- aggregate(

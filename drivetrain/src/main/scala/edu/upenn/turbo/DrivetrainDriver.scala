@@ -134,7 +134,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       {
           helper.applySymmetricalProperties(cxn, "http://www.itmat.upenn.edu/biobank/biobankJoinShortcuts")
           helper.applySymmetricalProperties(cxn, "http://www.itmat.upenn.edu/biobank/healthcareJoinShortcuts")
-          expand.expandAllShortcutEntities(cxn)
+          val graphsList: String = expand.expandAllShortcutEntities(cxn)
           logger.info("Encounters and participants have been expanded.")
           helper.clearShortcutNamedGraphs(cxn)
           logger.info("Shortcut named graph cleared")

@@ -10,104 +10,99 @@ class SparqlPreExpansionChecks extends ProjectwideGlobals {
     
 val operation: DataIntegrityCheckOperations = new DataIntegrityCheckOperations
 
-def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean =
+def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {   
         val check: String =
         """SELECT ?dateOK ?missing ?dataset WHERE 
             {
-                GRAPH pmbb:participantShortcuts {
-                    ?part a turbo:TURBO_0000502 .
-                    OPTIONAL {
-                        ?part turbo:TURBO_0000604 ?value1 .
-                    }
-                    OPTIONAL {
-                        ?part turbo:TURBO_0000605 ?value2 .
-                    }
-                    BIND(IF((BOUND(?value2)) && (!(BOUND(?value1))), 'false', 'true') AS ?dateOK)
-                    BIND (turbo:TURBO_0000604 AS ?missing)
-                    FILTER (?dateOK = 'false')
+                Values ?g {""" + graphsList + """}
+                GRAPH ?g {
+                  ?part a turbo:TURBO_0000502 .
+                  OPTIONAL {
+                      ?part turbo:TURBO_0000604 ?value1 .
+                  }
+                  OPTIONAL {
+                      ?part turbo:TURBO_0000605 ?value2 .
+                  }
+                  BIND(IF((BOUND(?value2)) && (!(BOUND(?value1))), 'false', 'true') AS ?dateOK)
+                  BIND (turbo:TURBO_0000604 AS ?missing)
+                  FILTER (?dateOK = 'false')
                 }        
             }"""
         
         operation.runSparqlCheck(cxn, check, ArrayBuffer("missing", "dateOK"), "pre-expansion", "missing required birth-related shortcut")
     }
     
-    def checkForValidParticipantBiosexShortcuts (cxn: RepositoryConnection): Boolean =
+    def checkForValidParticipantBiosexShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
         """SELECT ?biosexOK ?missing ?dataset WHERE 
             {
-                GRAPH pmbb:participantShortcuts {
-                    ?part a turbo:TURBO_0000502 .
-                    OPTIONAL {
-                        ?part turbo:TURBO_0000606 ?value1 .
-                    }
-                    OPTIONAL {
-                        ?part turbo:TURBO_0000607 ?value2 .
-                    }
-                    BIND(IF((BOUND(?value2)) && (!(BOUND(?value1))), 'false', 'true') AS ?biosexOK)
-                    BIND (turbo:TURBO_0000606 AS ?missing)
-                    FILTER (?biosexOK = 'false')
+                Values ?g {""" + graphsList + """}
+                GRAPH ?g {
+                  ?part a turbo:TURBO_0000502 .
+                  OPTIONAL {
+                      ?part turbo:TURBO_0000606 ?value1 .
+                  }
+                  OPTIONAL {
+                      ?part turbo:TURBO_0000607 ?value2 .
+                  }
+                  BIND(IF((BOUND(?value2)) && (!(BOUND(?value1))), 'false', 'true') AS ?biosexOK)
+                  BIND (turbo:TURBO_0000606 AS ?missing)
+                  FILTER (?biosexOK = 'false')
                 }        
             }"""
         
         operation.runSparqlCheck(cxn, check, ArrayBuffer("missing", "biosexOK"), "pre-expansion", "missing required biosex-related shortcut")
     }
     
-    def checkBiosexURIsAreValid (cxn: RepositoryConnection): Boolean =
+    def checkBiosexURIsAreValid (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
-        """SELECT ?biosexURI WHERE 
+        """SELECT ?biosexURI ?part WHERE 
             {
-                GRAPH pmbb:participantShortcuts {
-                    ?part a turbo:TURBO_0000502 .
-                    ?part turbo:TURBO_0000607 ?biosexURI .
-                    MINUS
-        			{
-                        ?part turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000141"^^xsd:anyURI .
-        			}
-        			MINUS
-        			{
-                        ?part turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI .
-        			}
-        			MINUS
-        			{
-                        ?part turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000133"^^xsd:anyURI .
-        			}
-                }        
+                Values ?g {""" + graphsList + """}
+                GRAPH ?g {
+                  ?part a turbo:TURBO_0000502 .
+                  ?part turbo:TURBO_0000607 ?biosexURI .
+                 
+            			Filter (?biosexURI != "http://purl.obolibrary.org/obo/OMRSE_00000141"^^xsd:anyURI)
+            			Filter (?biosexURI != "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI)
+            			Filter (?biosexURI != "http://purl.obolibrary.org/obo/OMRSE_00000133"^^xsd:anyURI)
+              }        
             }"""
         
-        operation.runSparqlCheck(cxn, check, ArrayBuffer("biosexURI"), "pre-expansion", "found invalid biosex URI")
+        operation.runSparqlCheck(cxn, check, ArrayBuffer("biosexURI", "part"), "pre-expansion", "found invalid biosex URI")
     }
     
-    def checkEncounterRegistryURIsAreValid (cxn: RepositoryConnection): Boolean =
+    def checkEncounterRegistryURIsAreValid (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
         """SELECT ?regURI WHERE 
             {
-                Values ?g { """ + healthcareEncounterShortcutGraphs + """ }
+                Values ?g {""" + graphsList + """}
                 GRAPH ?g {
                     ?enc a obo:OGMS_0000097 .
                     ?enc turbo:TURBO_0000663 ?regURI .
                     MINUS
-        			{
+        			      {
                         ?enc turbo:TURBO_0000663 "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-        			}
-        			MINUS
-        			{
+              			}
+              			MINUS
+              			{
                         ?enc turbo:TURBO_0000663 "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-        			}
+        			      }
                 }        
             }"""
         operation.runSparqlCheck(cxn, check, ArrayBuffer("regURI"), "pre-expansion", "found invalid encounter registry uri")
     }
     
-    def checkForValidHealthcareEncounterDateShortcuts (cxn: RepositoryConnection): Boolean =
+    def checkForValidHealthcareEncounterDateShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
         """SELECT ?enc WHERE 
             {
-                Values ?g { """ + healthcareEncounterShortcutGraphs + """ }
+                Values ?g {""" + graphsList + """}
                 GRAPH ?g {
                     ?enc a obo:OGMS_0000097 .
                     ?enc turbo:TURBO_0000645 ?value2 .
@@ -120,34 +115,35 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         operation.runSparqlCheck(cxn, check, ArrayBuffer("enc"), "pre-expansion", "missing required healthcare encounter date-related shortcut")
     }
     
-    def checkForValidBiobankEncounterDateShortcuts (cxn: RepositoryConnection): Boolean =
+    def checkForValidBiobankEncounterDateShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
         """SELECT ?dateOK ?missing WHERE 
             {
-                GRAPH pmbb:biobankEncounterShortcuts {
-                    ?enc a turbo:TURBO_0000527 .
-                    OPTIONAL {
-                        ?enc turbo:TURBO_0000624 ?value1 .
-                    }
-                    OPTIONAL {
-                        ?enc turbo:TURBO_0000625 ?value2 .
-                    }
-                    BIND(IF((BOUND(?value2)) && (!(BOUND(?value1))), 'false', 'true') AS ?dateOK)
-                    BIND (turbo:TURBO_0000644 AS ?missing)
-                    FILTER (?dateOK = 'false')
+                Values ?g {""" + graphsList + """}
+                GRAPH ?g {
+                  ?enc a turbo:TURBO_0000527 .
+                  OPTIONAL {
+                      ?enc turbo:TURBO_0000624 ?value1 .
+                  }
+                  OPTIONAL {
+                      ?enc turbo:TURBO_0000625 ?value2 .
+                  }
+                  BIND(IF((BOUND(?value2)) && (!(BOUND(?value1))), 'false', 'true') AS ?dateOK)
+                  BIND (turbo:TURBO_0000644 AS ?missing)
+                  FILTER (?dateOK = 'false')
                 }        
             }"""
         
         operation.runSparqlCheck(cxn, check, ArrayBuffer("missing", "dateOK"), "pre-expansion", "missing required biobank encounter date-related shortcut")
     }
     
-    def checkForValidEncounterDiagnosisShortcuts (cxn: RepositoryConnection): Boolean =
+    def checkForValidEncounterDiagnosisShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
         """SELECT ?diagnosis ?g WHERE 
             {
-                Values ?g { """ + healthcareEncounterShortcutGraphs + """ } 
+                Values ?g {""" + graphsList + """}
                 GRAPH ?g {
                     ?diagnosis a obo:OGMS_0000073 .
         			      MINUS {
@@ -161,12 +157,12 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         operation.runSparqlCheck(cxn, check, ArrayBuffer("diagnosis", "g"), "pre-expansion", "missing required encounter diagnosis shortcut")
     }
     
-    def checkForValidEncounterPrescriptionShortcuts (cxn: RepositoryConnection): Boolean =
+    def checkForValidEncounterPrescriptionShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
         """SELECT ?prescription ?g WHERE 
             {
-                Values ?g { """ + healthcareEncounterShortcutGraphs + """ } 
+                Values ?g {""" + graphsList + """}
                 GRAPH ?g {
                     ?prescription a obo:PDRO_0000024 .
         			      MINUS {
@@ -182,12 +178,13 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         operation.runSparqlCheck(cxn, check, ArrayBuffer("prescription", "g"), "pre-expansion", "missing required encounter prescription shortcut")
     }
     
-    def checkForRequiredParticipantShortcuts (cxn: RepositoryConnection): Boolean =
+    def checkForRequiredParticipantShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
             SELECT distinct ?part ?requiredShortcut WHERE 
             {
-                GRAPH pmbb:participantShortcuts {
+                Values ?g {""" + graphsList + """}
+                GRAPH ?g {
                     VALUES ?requiredShortcut {turbo:TURBO_0000603 turbo:TURBO_0000608 turbo:TURBO_0000610 }
                     ?part a turbo:TURBO_0000502 .
                     MINUS {
@@ -199,13 +196,14 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         operation.runSparqlCheck(cxn, check, ArrayBuffer("part", "requiredShortcut"), "pre-expansion", "minimum for participant not found")
     }
     
-    def checkForRequiredHealthcareEncounterShortcuts (cxn: RepositoryConnection): Boolean =
+    def checkForRequiredHealthcareEncounterShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
             SELECT distinct ?enc ?requiredHealthcareShortcut
-            """+healthcareEncounterShortcutGraphsWithFROM+"""
             WHERE 
             {
+            Values ?g {""" + graphsList + """}
+            GRAPH ?g {
                 VALUES ?requiredHealthcareShortcut {turbo:TURBO_0000643 turbo:TURBO_0000648 turbo:TURBO_0000650}
                 ?enc a obo:OGMS_0000097 .
                 MINUS 
@@ -216,13 +214,14 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         operation.runSparqlCheck(cxn, check, ArrayBuffer("enc", "requiredHealthcareShortcut"), "pre-expansion", "minimum for healthcare encounter not found")
     }
     
-    def checkForRequiredBiobankEncounterShortcuts (cxn: RepositoryConnection): Boolean =
+    def checkForRequiredBiobankEncounterShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
             SELECT distinct ?enc ?requiredBiobankShortcut 
             WHERE 
             {
-                GRAPH pmbb:biobankEncounterShortcuts {
+                Values ?g {""" + graphsList + """}
+                GRAPH ?g {
                     VALUES ?requiredBiobankShortcut {turbo:TURBO_0000623 turbo:TURBO_0000628 turbo:TURBO_0000630 }
                     ?enc a turbo:TURBO_0000527 .
                     MINUS
@@ -234,7 +233,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         operation.runSparqlCheck(cxn, check, ArrayBuffer("enc", "requiredBiobankShortcut"), "pre-expansion", "minimum for biobank encounter not found")
     }
     
-    def checkForMultipleParticipantDependentNodes (cxn: RepositoryConnection): Boolean =
+    def checkForMultipleParticipantDependentNodes (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
         select ?s
@@ -247,8 +246,8 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         (count (distinct ?type) as ?typeCount) 
         (count (distinct ?TURBO_0000610) as ?registryCount)
         (count (distinct ?TURBO_0000609) as ?regDenCount)
+        """ + graphsList + """
         where {
-            graph pmbb:participantShortcuts {
             ?s a :TURBO_0000502 .
             ?s a ?type .
             optional {
@@ -275,7 +274,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
             optional {
                 ?s   :TURBO_0000609 ?TURBO_0000609 
             } .
-        }} group by ?s
+        } group by ?s
         having (
             ?PSCCount > 1 || 
             ?DataSetCount > 1  || 
@@ -292,7 +291,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         operation.runSparqlCheck(cxn, check, ArrayBuffer("s"), "pre-expansion", "multiple shortcut relationships on one participant")
     }
     
-    def checkForMultipleBiobankEncounterDependentNodes (cxn: RepositoryConnection): Boolean =
+    def checkForMultipleBiobankEncounterDependentNodes (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
         select ?s 
@@ -306,10 +305,9 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         (count (distinct ?height) as ?heightCount)
         (count (distinct ?dateText) as ?dateTextCount)
         (count (distinct ?dateXsd) as ?dateXsdCount)
+        """ + graphsList + """
         where
         {
-            graph pmbb:biobankEncounterShortcuts
-            {
                 ?s a turbo:TURBO_0000527 .
                 ?s a ?type .
                 optional {
@@ -339,7 +337,6 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
                 optional {
                     ?s turbo:TURBO_0000625 ?dateXsd 
                 } .
-            }
         }
         group by ?s
         having (
@@ -359,7 +356,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         operation.runSparqlCheck(cxn, check, ArrayBuffer("s"), "pre-expansion", "multiple shortcut relationships on one biobank encounter")
     }
     
-    def checkForMultipleHealthcareEncounterDependentNodes (cxn: RepositoryConnection): Boolean =
+    def checkForMultipleHealthcareEncounterDependentNodes (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
         select ?s 
@@ -371,7 +368,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         (count (distinct ?height) as ?heightCount)
         (count (distinct ?dateText) as ?dateTextCount)
         (count (distinct ?dateXsd) as ?dateXsdCount)
-        """+healthcareEncounterShortcutGraphsWithFROM+"""
+        """ + graphsList + """
         where
         {
             ?s a obo:OGMS_0000097 .
@@ -414,7 +411,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         operation.runSparqlCheck(cxn, check, ArrayBuffer("s"), "pre-expansion", "multiple shortcut relationships on one healthcare encounter")
     }
     
-    def checkForMultipleDiagnosisDependentNodes(cxn: RepositoryConnection): Boolean =
+    def checkForMultipleDiagnosisDependentNodes(cxn: RepositoryConnection, graphsList: String): Boolean =
     {
      val check: String ="""      
           select ?s
@@ -422,7 +419,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
           (count (distinct ?diagCodeRegTextVal) as ?diagCodeRegCount)
           (count (distinct ?diagCodeRegURIString) as ?diagCodeStringCount)
           (count (distinct ?diagCodeLV) as ?diagCodeLvCount)
-          """+healthcareEncounterShortcutGraphsWithFROM+"""
+          """ + graphsList + """
           where 
           {
                 ?s a obo:OGMS_0000073 .
@@ -449,7 +446,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
            operation.runSparqlCheck(cxn, check, ArrayBuffer("s"), "pre-expansion", "multiple shortcut relationships on one healthcare encounter diagnosis")
     }
     
-    def checkForMultiplePrescriptionDependentNodes(cxn: RepositoryConnection): Boolean =
+    def checkForMultiplePrescriptionDependentNodes(cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
             select ?s
@@ -457,7 +454,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
             (count (distinct ?medString) as ?medStringCount)
             (count (distinct ?medId) as ?medIdCount)
             (count (distinct ?drugURIString) as ?drugUriCount)
-            """+healthcareEncounterShortcutGraphsWithFROM+"""
+            """ + graphsList + """
             where 
             {
                 ?s a obo:PDRO_0000024 .
@@ -483,17 +480,13 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         operation.runSparqlCheck(cxn, check, ArrayBuffer("s"), "pre-expansion", "multiple shortcut relationships on one healthcare encounter prescription")
     }
 
-    def checkForUnexpectedClasses (cxn: RepositoryConnection): Boolean =
+    def checkForUnexpectedClasses (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
         select * where {
             select ?c (count(?c) as ?ccount) {
-                values ?g {
-                    pmbb:biobankEncounterShortcuts 
-                    pmbb:participantShortcuts
-                    """+healthcareEncounterShortcutGraphs+"""
-                    } 
-                graph ?g {
+                Values ?g {""" + graphsList + """}
+            GRAPH ?g {
                 ?s a ?c .
                 # healthcare encounter
                 filter (?c not in (obo:OGMS_0000097))
@@ -505,24 +498,30 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
                 filter (?c not in (obo:OGMS_0000073))
                 # legal hc - med shortcut instance
                 filter (?c not in (obo:PDRO_0000024))
+                # consenter crid (in join data)
+                filter (?c not in (turbo:TURBO_0000503))
+                # biobank crid (in join data)
+                filter (?c not in (turbo:TURBO_0000533))
+                # healthcare crid (in join data)
+                filter (?c not in (turbo:TURBO_0000508))
             }} group by ?c }
         """
         operation.runSparqlCheck(cxn, check, ArrayBuffer("c", "ccount"), "pre-expansion", "found extraneous class")
     }
     
     //this one is currently untested and Mark may decide to re-write it sometime
-    def checkForPropertiesOutOfRange (cxn: RepositoryConnection): Boolean =
+    def checkForPropertiesOutOfRange (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
           select distinct ?s (str(?stl) as ?stlstr) ?p (str(?pl) as ?plstr) ?o (str(?otl) as ?otlstr) (str(?rl) as ?rlstr) {
-            values ?g {pmbb:biobankEncounterShortcuts pmbb:participantShortcuts """+healthcareEncounterShortcutGraphs+""" }
-            graph ?g {
+            Values ?g {""" + graphsList + """}
+            GRAPH ?g {
                 ?s ?p ?o .
-            }
                 optional {
                     ?s rdf:type ?st .
                 } .
                 ?o rdf:type ?ot . 
+            }
             graph pmbb:ontology
             {
                 ?p a owl:ObjectProperty ;
@@ -549,12 +548,12 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
         operation.runSparqlCheck(cxn, check, ArrayBuffer("p", "s", "o"), "pre-expansion", "found property out of range")
     }
     
-    def checkForUnexpectedPredicates (cxn: RepositoryConnection): Boolean =
+    def checkForUnexpectedPredicates (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
           SELECT ?s ?p {
-              values ?g {pmbb:biobankEncounterShortcuts pmbb:participantShortcuts """+healthcareEncounterShortcutGraphs+"""}
-                  graph ?g 
+              Values ?g {""" + graphsList + """}
+            GRAPH ?g 
                   {
                       ?s ?p ?o .
                   }
@@ -567,38 +566,39 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
                   }
                   FILTER (?p != rdf:type)
                   FILTER (?p != obo:RO_0002234)
+                  FILTER (?p != turbo:TURBO_0000302)
                 }
           """
         
         operation.runSparqlCheck(cxn, check, ArrayBuffer("s", "p"), "pre-expansion", "found unexpected shortcut")
     }
     
-    def checkAllSubjectsHaveAType (cxn: RepositoryConnection): Boolean =
+    def checkAllSubjectsHaveAType (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
           SELECT * WHERE
           {
-              values ?g {pmbb:biobankEncounterShortcuts pmbb:participantShortcuts """+healthcareEncounterShortcutGraphs+"""}
-              graph ?g 
-              {
-                  ?s ?p ?o .
-                  MINUS
-                  {
-                      ?s a ?type .
-                  }
-              }
+              Values ?g {""" + graphsList + """}
+              GRAPH ?g
+                {
+                    ?s ?p ?o .
+                    MINUS
+                    {
+                        ?s a ?type .
+                    }
+                }
           }
           """
         operation.runSparqlCheck(cxn, check, ArrayBuffer("s"), "pre-expansion", "found entity without a type declaration")
     }
     
-    def checkAllObjectsAreLiterals (cxn: RepositoryConnection): Boolean =
+    def checkAllObjectsAreLiterals (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
           SELECT * WHERE
           {
-              values ?g {pmbb:biobankEncounterShortcuts pmbb:participantShortcuts """+healthcareEncounterShortcutGraphs+"""}
-              graph ?g 
+              Values ?g {""" + graphsList + """}
+            GRAPH ?g 
               {
                   ?s ?p ?o .
               }
@@ -608,7 +608,12 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection): Boolean 
               FILTER (?o != obo:OGMS_0000097)
               FILTER (?o != obo:OGMS_0000073)
               FILTER (?o != obo:PDRO_0000024)
+              FILTER (?o != turbo:TURBO_0000508)
+              FILTER (?o != turbo:TURBO_0000503)
+              FILTER (?o != turbo:TURBO_0000533)
+              
               FILTER (?p != obo:RO_0002234)
+              FILTER (?p != turbo:TURBO_0000302)
           }
           """
         operation.runSparqlCheck(cxn, check, ArrayBuffer("o"), "pre-expansion", "found URI where literal was expected")
