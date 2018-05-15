@@ -512,9 +512,7 @@ class MedicationMapper extends ProjectwideGlobals
                   match.uris <- paste0(match.uris, collapse = " ")
                   my.query <- paste0(query.prefix, match.uris, query.suffix)
                   sparql.res <- SPARQL::SPARQL(url = endpoint, query = my.query)
-                  sparql.res <- sparql.res$results
-                  
-                  my.result <- head(sparql.res)
+                  my.result <- sparql.res$results
                   my.result <- as.data.frame(my.result)
                   
                   supertab <- table(my.result$suplab)
