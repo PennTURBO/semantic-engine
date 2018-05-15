@@ -1,0 +1,15 @@
+*.properties
+*.sbt
+target/
+sbt
+*.project
+real_329/
+.cache-main
+.cache-tests
+.classpath
+.settings
+turbo_errorlog.txt
+*.rdata
+wes_pds__med_standard.csv
+prep4solr_search_train_classsvm.R
+unique4solr.csv

@@ -1,0 +1,217 @@
+package edu.upenn.turbo
+
+import org.eclipse.rdf4j.model.IRI
+import org.eclipse.rdf4j.repository.Repository
+import org.eclipse.rdf4j.repository.RepositoryConnection
+import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
+import org.eclipse.rdf4j.rio.RDFFormat
+
+object DrivetrainDriver extends ProjectwideGlobals {
+  val connect: ConnectToGraphDB = new ConnectToGraphDB
+  val sparqlChecks: DrivetrainSparqlChecks = new DrivetrainSparqlChecks
+  val expand: Expander = new Expander()
+  val reftrack: ReferentTracker = new ReferentTracker()
+  val join: EntityLinker = new EntityLinker()
+  val conclusionate: Conclusionator = new Conclusionator()
+  val diagmap: DiagnosisMapper = new DiagnosisMapper()
+  val i2i2c2c: I2I2C2C = new I2I2C2C()
+  val medmap: MedicationMapper = new MedicationMapper()
+  val benchmark: DrivetrainAutomatedBenchmarking = new DrivetrainAutomatedBenchmarking()
+  
+  //globally available Conclusionation Named Graph IRI
+  var concNamedGraph: Option[IRI] = None : Option[IRI]
+  
+  /**
+   * DrivetrainDriver (ne Presentation Driver) contains the main method for calling Drivetrain functions. Main can be called using "all .51 .51" to run full Drivetrain stack, 
+   * or run piecewise using individual commands. Full documentation can be found in the "Usage" section of the Drivetrain documentation. Also has capacity to run benchmarking
+   * script if "benchmark" is received as an argument.
+   */
+  
+  def main(args: Array[String]): Unit =
+  {
+      if (args.size == 0) logger.info("At least one command line argument required to run the drivetrain application.")
+      else if (args(0) == "benchmark") benchmark.runBenchmarking(args)
+      else
+      {
+          var cxn: RepositoryConnection = null
+          var repoManager: RemoteRepositoryManager = null
+          var repository: Repository = null
+          try
+          {
+              val graphDBMaterials: TurboGraphConnection = connect.initializeGraph(true)
+              cxn = graphDBMaterials.getConnection()
+              repoManager = graphDBMaterials.getRepoManager()
+              repository = graphDBMaterials.getRepository() 
+              if (cxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
+              else if (args(0) == "all")
+              {
+                  val thresholds: Option[Array[Double]] = checkConclusionatorArguments(args)
+                  if (thresholds != None) 
+                  {
+                      connect.loadDataFromPropertiesFile(cxn)
+                      var postexpandProceed: Boolean = true
+                      if (args.size > 3)
+                      {
+                          if (args(3) == "--skipchecks") postexpandProceed = runExpansion(cxn, false)
+                          else postexpandProceed = runExpansion(cxn)
+                      }
+                      else postexpandProceed = runExpansion(cxn)
+                      if (postexpandProceed)
+                      {
+                          runReferentTracking(cxn)
+                          val concProceed = runConclusionating(cxn, thresholds.get(0), thresholds.get(1))
+                          if (concProceed) 
+                          {
+                              runDiagnosisMapping(cxn)
+                              runMedicationMapping(cxn)
+                              changeReasoningLevel(cxn)
+                          }
+                      }
+                  }
+              }
+              else if (args(0) == "dataload") connect.loadDataFromPropertiesFile(cxn)
+              else if (args(0) == "expand")
+              {
+                  if (args.size > 1)
+                  {
+                      if (args(1) == "--skipchecks") runExpansion(cxn, false)
+                      else runExpansion(cxn)
+                  }
+                  else runExpansion(cxn)
+              }
+              else if (args(0) == "reftrack") runReferentTracking(cxn)
+              else if (args(0) == "conclusionate") 
+              {
+                  val thresholds: Option[Array[Double]] = checkConclusionatorArguments(args)
+                  if (thresholds != None) runConclusionating(cxn, thresholds.get(0), thresholds.get(1))
+              }
+              else if (args(0) == "diagmap") runDiagnosisMapping(cxn)
+              else if (args(0) == "medmap") runMedicationMapping(cxn)
+              else if (args(0) == "i2i2c2c") runI2i2c2cMapping(cxn, args)
+              else if (args(0) == "setReasoning") changeReasoningLevel(cxn)
+              else if (args(0) == "loadRepo") helper.loadDataFromFile(cxn, args(1), RDFFormat.TURTLE)
+              else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
+          }
+          finally 
+          {
+              connect.closeConnectionDeleteTriples(cxn, repoManager, repository, false)
+          }
+      }
+  }
+  
+  def checkConclusionatorArguments(args: Array[String]): Option[Array[Double]] =
+  {
+      var thresholds: Option[Array[Double]] = None : Option[Array[Double]]
+      thresholds = None
+      var biosexThreshold: Option[Double] = None : Option[Double]
+      var dobThreshold: Option[Double] = None : Option[Double]
+      if (args.size < 3) logger.info("Not enough arguments supplied. Context and biosex, dob conclusionation thresholds required.")
+      else
+      {
+          try
+          {
+              biosexThreshold = Some(args(1).toDouble)
+              dobThreshold = Some(args(2).toDouble)
+          }
+          catch
+          {
+              case e: NumberFormatException => logger.info("One or both thresholds supplied as arguments is not parseable.")
+          }
+          if (biosexThreshold != None && dobThreshold != None) thresholds = Some(Array(biosexThreshold.get, dobThreshold.get))
+      }
+      thresholds
+  }
+  
+  def runExpansion(cxn: RepositoryConnection, runChecks: Boolean = true): Boolean =
+  {
+      logger.info("running expansion")
+      var postcheckProceed: Boolean = true
+      var precheckProceed: Boolean = true
+      logger.info("Starting pre expansion checks")
+      if (runChecks) precheckProceed = sparqlChecks.preExpansionChecks(cxn)
+      logger.info("pre expansion checks passed: " + precheckProceed)
+      if (precheckProceed)
+      {
+          helper.applySymmetricalProperties(cxn, "http://www.itmat.upenn.edu/biobank/biobankJoinShortcuts")
+          helper.applySymmetricalProperties(cxn, "http://www.itmat.upenn.edu/biobank/healthcareJoinShortcuts")
+          expand.expandAllShortcutEntities(cxn)
+          logger.info("Encounters and participants have been expanded.")
+          helper.clearShortcutNamedGraphs(cxn)
+          logger.info("Shortcut named graph cleared")
+          if (runChecks) postcheckProceed = sparqlChecks.postExpansionChecks(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "post-expansion")
+          logger.info("Post expansion checks passed: " + postcheckProceed)
+          if (postcheckProceed)
+          {
+              helper.moveDataFromOneNamedGraphToAnother(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "http://www.itmat.upenn.edu/biobank/expanded")
+              logger.info("Moved triples to expanded graph")
+              helper.clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck")
+              logger.info("post expansion named graph cleared")
+              helper.applyInverses(cxn)
+              helper.addStringLabelsToOntology(cxn)
+              logger.info("applied inverses and string labels")
+              logger.info("New data is ready for Referent Tracking")
+          }
+          else logger.info("Post-expansion checks failed!!! Do not proceed with Referent Tracking")
+      }
+      else logger.info("Pre-expansion checks failed!!! Do not proceed with Referent Tracking")
+      if (postcheckProceed && precheckProceed) true
+      else false
+  }
+  
+  def runReferentTracking(cxn: RepositoryConnection)
+  {
+      logger.info("running reftracking")
+      reftrack.runAllReftrackProcesses(cxn)
+      join.joinParticipantsAndEncounters(cxn)
+  }
+  
+  def runConclusionating(cxn: RepositoryConnection, biosexThreshold: Double, dateofbirthThreshold: Double): Boolean =
+  {
+      concNamedGraph = Some(conclusionate.runConclusionationProcess(cxn, biosexThreshold, dateofbirthThreshold))
+      logger.info("Finished conclusionation process")
+      logger.info("Applying inverses and symmetrical properties")
+      helper.applyInverses(cxn)
+      logger.info("finished inverses, doing symm props")
+      helper.applySymmetricalProperties(cxn)
+      logger.info("applying labels")
+      helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/expanded")
+      helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/entityLinkData")
+      logger.info("running post-conclusionation checks")
+      val expandedGraphCheck = sparqlChecks.postExpansionChecks(cxn, "http://www.itmat.upenn.edu/biobank/expanded", "post-conclusion")
+      if (!expandedGraphCheck) logger.info("Post-conclusionation checks failed in expanded graph!")
+      val concGraphCheck = sparqlChecks.postExpansionChecks(cxn, concNamedGraph.get.toString, "post-conclusion")
+      if (!concGraphCheck) logger.info("Post-conclusionation checks failed in conclusions graph!")
+      logger.info("post-conclusionation checks finished.")
+      concGraphCheck && expandedGraphCheck
+  }
+  
+  def runDiagnosisMapping(cxn: RepositoryConnection)
+  {
+      diagmap.addDrugOntologies(cxn)
+      diagmap.performDiagnosisMapping(cxn)
+  }
+  
+  def runMedicationMapping(cxn: RepositoryConnection)
+  {
+      medmap.runMedicationMapping(cxn)
+  }
+  
+  def changeReasoningLevel(cxn: RepositoryConnection)
+  {
+      /*var reinferBool = true
+      if (reinferRepo == "false") reinferBool = false
+      helper.changeReasoningLevelAndReinferRepository(cxn, setReasoningTo, reinferBool)*/
+  }
+  
+  def runI2i2c2cMapping(cxn: RepositoryConnection, args: Array[String])
+  {
+      i2i2c2c.runAllI2I2C2CQueries(cxn)
+      if (args.size > 1)
+      {
+          if (args(1) == "export")
+          {
+              i2i2c2c.exportCSVsFromQueries(cxn)   
+          }
+      }
+  }
+}

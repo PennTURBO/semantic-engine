@@ -1,0 +1,150 @@
+<http://localhost:8080/source/hcEncounter/20> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/diagCrid/c3095adc5d3344b4ae042d016e2bc847> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-9" .
+<http://localhost:8080/source/hcEncounter/20> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/20> <http://transformunify.org/ontologies/TURBO_0000648> "20" .
+<http://localhost:8080/source/hcEncounter/20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/diagCrid/c3095adc5d3344b4ae042d016e2bc847> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/diagCrid/c3095adc5d3344b4ae042d016e2bc847> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/20> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/c3095adc5d3344b4ae042d016e2bc847> .
+<http://localhost:8080/source/diagCrid/c3095adc5d3344b4ae042d016e2bc847> <http://transformunify.org/ontologies/TURBO_0004601> "401.9" .
+
+<http://localhost:8080/source/diagCrid/ecc2a660a1894943953dfdb545027d99> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-9" .
+<http://localhost:8080/source/hcEncounter/30> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/diagCrid/ecc2a660a1894943953dfdb545027d99> <http://transformunify.org/ontologies/TURBO_0004601> "584.9" .
+<http://localhost:8080/source/diagCrid/ecc2a660a1894943953dfdb545027d99> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/hcEncounter/30> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/30> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/ecc2a660a1894943953dfdb545027d99> .
+<http://localhost:8080/source/hcEncounter/30> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/diagCrid/ecc2a660a1894943953dfdb545027d99> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/30> <http://transformunify.org/ontologies/TURBO_0000648> "30" .
+
+<http://localhost:8080/source/hcEncounter/50> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000648> "50" .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/50> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/3f72a73432ed4e0db330f64397ad0d96> .
+<http://localhost:8080/source/diagCrid/3f72a73432ed4e0db330f64397ad0d96> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/diagCrid/3f72a73432ed4e0db330f64397ad0d96> <http://transformunify.org/ontologies/TURBO_0004601> "M81.0" .
+<http://localhost:8080/source/diagCrid/3f72a73432ed4e0db330f64397ad0d96> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/diagCrid/3f72a73432ed4e0db330f64397ad0d96> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+
+<http://localhost:8080/source/diagCrid/5a251881d241432b9ddc99754d9b585c> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/diagCrid/5a251881d241432b9ddc99754d9b585c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/hcEncounter/50> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000648> "50" .
+<http://localhost:8080/source/hcEncounter/50> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/5a251881d241432b9ddc99754d9b585c> .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/diagCrid/5a251881d241432b9ddc99754d9b585c> <http://transformunify.org/ontologies/TURBO_0004601> "N39.3" .
+<http://localhost:8080/source/diagCrid/5a251881d241432b9ddc99754d9b585c> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+
+<http://localhost:8080/source/hcEncounter/50> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/50> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/59ca5d3e7266495bbb68b6163e0dd8b5> .
+<http://localhost:8080/source/diagCrid/59ca5d3e7266495bbb68b6163e0dd8b5> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000648> "50" .
+<http://localhost:8080/source/diagCrid/59ca5d3e7266495bbb68b6163e0dd8b5> <http://transformunify.org/ontologies/TURBO_0004601> "N42.9" .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/diagCrid/59ca5d3e7266495bbb68b6163e0dd8b5> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/diagCrid/59ca5d3e7266495bbb68b6163e0dd8b5> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/diagCrid/66e5dd8cfe484a219154f68d1f14ea19> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/diagCrid/66e5dd8cfe484a219154f68d1f14ea19> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/70> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/70> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/66e5dd8cfe484a219154f68d1f14ea19> .
+<http://localhost:8080/source/diagCrid/66e5dd8cfe484a219154f68d1f14ea19> <http://transformunify.org/ontologies/TURBO_0004601> "I10" .
+<http://localhost:8080/source/diagCrid/66e5dd8cfe484a219154f68d1f14ea19> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000648> "70" .
+
+<http://localhost:8080/source/hcEncounter/70> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/55b3ef906b7d490cb40719075c9f91ac> .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/diagCrid/55b3ef906b7d490cb40719075c9f91ac> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/hcEncounter/70> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/diagCrid/55b3ef906b7d490cb40719075c9f91ac> <http://transformunify.org/ontologies/TURBO_0004601> "I50.9" .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/diagCrid/55b3ef906b7d490cb40719075c9f91ac> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/diagCrid/55b3ef906b7d490cb40719075c9f91ac> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000648> "70" .
+
+<http://localhost:8080/source/diagCrid/84d19b08f2604e8395bc453bfe4b4f2f> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000648> "80" .
+<http://localhost:8080/source/hcEncounter/80> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/diagCrid/84d19b08f2604e8395bc453bfe4b4f2f> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/diagCrid/84d19b08f2604e8395bc453bfe4b4f2f> <http://transformunify.org/ontologies/TURBO_0004601> "K21.9" .
+<http://localhost:8080/source/hcEncounter/80> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/84d19b08f2604e8395bc453bfe4b4f2f> .
+<http://localhost:8080/source/diagCrid/84d19b08f2604e8395bc453bfe4b4f2f> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000648> "80" .
+<http://localhost:8080/source/hcEncounter/80> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/diagCrid/ee92ab99dace4c13a24acaed86b17b94> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/diagCrid/ee92ab99dace4c13a24acaed86b17b94> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/diagCrid/ee92ab99dace4c13a24acaed86b17b94> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/diagCrid/ee92ab99dace4c13a24acaed86b17b94> <http://transformunify.org/ontologies/TURBO_0004601> "N17.9" .
+<http://localhost:8080/source/hcEncounter/80> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/ee92ab99dace4c13a24acaed86b17b94> .
+
+<http://localhost:8080/source/hcEncounter/90> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/diagCrid/07a8e6fa59ab4d92a7b8b68a65069fe4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/diagCrid/07a8e6fa59ab4d92a7b8b68a65069fe4> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/hcEncounter/90> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/diagCrid/07a8e6fa59ab4d92a7b8b68a65069fe4> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/90> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/90> <http://transformunify.org/ontologies/TURBO_0000648> "90" .
+<http://localhost:8080/source/diagCrid/07a8e6fa59ab4d92a7b8b68a65069fe4> <http://transformunify.org/ontologies/TURBO_0004601> "E78.5" .
+<http://localhost:8080/source/hcEncounter/90> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/07a8e6fa59ab4d92a7b8b68a65069fe4> .
+
+<http://localhost:8080/source/hcEncounter/90> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/diagCrid/9cf554a0e5464961b29547a3b5e42cb8> <http://transformunify.org/ontologies/TURBO_0004601> "R03.0" .
+<http://localhost:8080/source/hcEncounter/90> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/90> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/9cf554a0e5464961b29547a3b5e42cb8> .
+<http://localhost:8080/source/hcEncounter/90> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/90> <http://transformunify.org/ontologies/TURBO_0000648> "90" .
+<http://localhost:8080/source/diagCrid/9cf554a0e5464961b29547a3b5e42cb8> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/diagCrid/9cf554a0e5464961b29547a3b5e42cb8> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/diagCrid/9cf554a0e5464961b29547a3b5e42cb8> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+
+<http://localhost:8080/source/diagCrid/9e2b7864cf304832922a8ffb060d3e61> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/hcEncounter/110> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/9e2b7864cf304832922a8ffb060d3e61> .
+<http://localhost:8080/source/hcEncounter/110> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/diagCrid/9e2b7864cf304832922a8ffb060d3e61> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/diagCrid/9e2b7864cf304832922a8ffb060d3e61> <http://transformunify.org/ontologies/TURBO_0004601> "K21.9" .
+<http://localhost:8080/source/diagCrid/9e2b7864cf304832922a8ffb060d3e61> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000648> "110" .
+
+<http://localhost:8080/source/diagCrid/b235045b3add47978ab4b3526c8fe546> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/diagCrid/b235045b3add47978ab4b3526c8fe546> <http://transformunify.org/ontologies/TURBO_0004601> "M06.9" .
+<http://localhost:8080/source/diagCrid/b235045b3add47978ab4b3526c8fe546> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/diagCrid/b235045b3add47978ab4b3526c8fe546> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/110> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/110> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/b235045b3add47978ab4b3526c8fe546> .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000648> "110" .
+
+<http://localhost:8080/source/hcEncounter/120> <http://transformunify.org/ontologies/TURBO_0000648> "120" .
+<http://localhost:8080/source/hcEncounter/120> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/diagCrid/7e57f9dd12994f9298cb845ed750d3e1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/diagCrid/7e57f9dd12994f9298cb845ed750d3e1> <http://transformunify.org/ontologies/TURBO_0004601> "E78.5" .
+<http://localhost:8080/source/hcEncounter/120> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/120> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/diagCrid/7e57f9dd12994f9298cb845ed750d3e1> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/diagCrid/7e57f9dd12994f9298cb845ed750d3e1> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/120> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/7e57f9dd12994f9298cb845ed750d3e1> .
+
+<http://localhost:8080/source/hcEncounter/130> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/130> <http://transformunify.org/ontologies/TURBO_0000648> "130" .
+<http://localhost:8080/source/diagCrid/f99f84f658f24f0886271d9af5b901f1> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-10" .
+<http://localhost:8080/source/hcEncounter/130> <http://purl.obolibrary.org/obo/RO_0002234> <http://localhost:8080/source/diagCrid/f99f84f658f24f0886271d9af5b901f1> .
+<http://localhost:8080/source/diagCrid/f99f84f658f24f0886271d9af5b901f1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+<http://localhost:8080/source/diagCrid/f99f84f658f24f0886271d9af5b901f1> <http://transformunify.org/ontologies/TURBO_0004601> "E66.9" .
+<http://localhost:8080/source/hcEncounter/130> <http://transformunify.org/ontologies/TURBO_0000643> "encounter_diagnoses_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/130> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/diagCrid/f99f84f658f24f0886271d9af5b901f1> <http://transformunify.org/ontologies/TURBO_0004603> "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+

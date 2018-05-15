@@ -1,0 +1,97 @@
+<http://localhost:8080/source/hcEncounter/20> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/20> <http://transformunify.org/ontologies/TURBO_0000645> "2016-11-11"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://localhost:8080/source/hcEncounter/20> <http://transformunify.org/ontologies/TURBO_0000646> "177.8"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/20> <http://transformunify.org/ontologies/TURBO_0000648> "20" .
+<http://localhost:8080/source/hcEncounter/20> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/20> <http://transformunify.org/ontologies/TURBO_0000647> "82.9931972789"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/20> <http://transformunify.org/ontologies/TURBO_0000644> "11-Nov-16" .
+<http://localhost:8080/source/hcEncounter/20> <http://transformunify.org/ontologies/TURBO_0000655> "26.2574965457"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/20> <http://transformunify.org/ontologies/TURBO_0000643> "encounters_only_hc_2_pk_encounter_id.csv" .
+
+<http://localhost:8080/source/hcEncounter/30> <http://transformunify.org/ontologies/TURBO_0000646> "180.34"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/30> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/30> <http://transformunify.org/ontologies/TURBO_0000655> "18.8284850727"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/30> <http://transformunify.org/ontologies/TURBO_0000644> "15-Jan-17" .
+<http://localhost:8080/source/hcEncounter/30> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/30> <http://transformunify.org/ontologies/TURBO_0000643> "encounters_only_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/30> <http://transformunify.org/ontologies/TURBO_0000645> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://localhost:8080/source/hcEncounter/30> <http://transformunify.org/ontologies/TURBO_0000647> "61.2244897959"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/30> <http://transformunify.org/ontologies/TURBO_0000648> "30" .
+
+<http://localhost:8080/source/hcEncounter/40> <http://transformunify.org/ontologies/TURBO_0000645> "2017-02-02"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://localhost:8080/source/hcEncounter/40> <http://transformunify.org/ontologies/TURBO_0000647> "67.1201814059"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/40> <http://transformunify.org/ontologies/TURBO_0000643> "encounters_only_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/40> <http://transformunify.org/ontologies/TURBO_0000644> "2-Feb-17" .
+<http://localhost:8080/source/hcEncounter/40> <http://transformunify.org/ontologies/TURBO_0000646> "190.5"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/40> <http://transformunify.org/ontologies/TURBO_0000655> "18.4985418287"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/40> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/40> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/40> <http://transformunify.org/ontologies/TURBO_0000648> "40" .
+
+<http://localhost:8080/source/hcEncounter/50> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000648> "50" .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000645> "2017-03-03"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000647> "79.3650793651"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000643> "encounters_only_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000646> "180.34"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000655> "24.4072954645"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/50> <http://transformunify.org/ontologies/TURBO_0000644> "3-Mar-17" .
+
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000655> "26.2574965457"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000647> "82.9931972789"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/70> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000645> "2016-11-11"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000643> "encounters_only_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000646> "177.8"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000644> "11-Nov-16" .
+<http://localhost:8080/source/hcEncounter/70> <http://transformunify.org/ontologies/TURBO_0000648> "70" .
+
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000655> "19.3863661118"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000648> "80" .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000646> "180.34"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000647> "63.0385487528"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/80> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000643> "encounters_only_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000645> "2017-04-05"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://localhost:8080/source/hcEncounter/80> <http://transformunify.org/ontologies/TURBO_0000644> "5-Apr-17" .
+
+<http://localhost:8080/source/hcEncounter/90> <http://transformunify.org/ontologies/TURBO_0000643> "encounters_only_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/90> <http://transformunify.org/ontologies/TURBO_0000644> "6-Jun-17" .
+<http://localhost:8080/source/hcEncounter/90> <http://transformunify.org/ontologies/TURBO_0000645> "2017-06-06"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://localhost:8080/source/hcEncounter/90> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/90> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/90> <http://transformunify.org/ontologies/TURBO_0000648> "90" .
+
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000643> "encounters_only_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000655> "19.9442186877"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000645> "2017-08-08"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://localhost:8080/source/hcEncounter/110> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000644> "8-Aug-17" .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000647> "63.0385487528"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000646> "177.8"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/110> <http://transformunify.org/ontologies/TURBO_0000648> "110" .
+
+<http://localhost:8080/source/hcEncounter/120> <http://transformunify.org/ontologies/TURBO_0000648> "120" .
+<http://localhost:8080/source/hcEncounter/120> <http://transformunify.org/ontologies/TURBO_0000644> "10-Oct-17" .
+<http://localhost:8080/source/hcEncounter/120> <http://transformunify.org/ontologies/TURBO_0000643> "encounters_only_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/120> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/120> <http://transformunify.org/ontologies/TURBO_0000645> "2017-10-10"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://localhost:8080/source/hcEncounter/120> <http://transformunify.org/ontologies/TURBO_0000655> "23.7752997945"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/120> <http://transformunify.org/ontologies/TURBO_0000647> "73.0158730159"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/120> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+<http://localhost:8080/source/hcEncounter/120> <http://transformunify.org/ontologies/TURBO_0000646> "175.26"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+<http://localhost:8080/source/hcEncounter/130> <http://transformunify.org/ontologies/TURBO_0000643> "encounters_only_hc_2_pk_encounter_id.csv" .
+<http://localhost:8080/source/hcEncounter/130> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+<http://localhost:8080/source/hcEncounter/130> <http://transformunify.org/ontologies/TURBO_0000647> "150.566893424"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/130> <http://transformunify.org/ontologies/TURBO_0000648> "130" .
+<http://localhost:8080/source/hcEncounter/130> <http://transformunify.org/ontologies/TURBO_0000646> "172.72"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/130> <http://transformunify.org/ontologies/TURBO_0000655> "50.4799092647"^^<http://www.w3.org/2001/XMLSchema#float> .
+<http://localhost:8080/source/hcEncounter/130> <http://transformunify.org/ontologies/TURBO_0000645> "2017-10-10"^^<http://www.w3.org/2001/XMLSchema#date> .
+<http://localhost:8080/source/hcEncounter/130> <http://transformunify.org/ontologies/TURBO_0000644> "10-Oct-17" .
+<http://localhost:8080/source/hcEncounter/130> <http://transformunify.org/ontologies/TURBO_0000650> "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+

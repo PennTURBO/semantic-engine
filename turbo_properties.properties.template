@@ -1,0 +1,36 @@
+serviceURL = your_GraphDB_instance
+namespace = your_repo
+username = your_username
+password = your_password
+
+inputFiles = ..//data//demo_data//enc2hc.ttl,\
+..//data//demo_data//enc2hc - diag.ttl,\
+..//data//demo_data//enc2hc - med.ttl,\
+..//data//demo_data//enc1bb.ttl,\
+..//data//demo_data//join1hc.ttl,\
+..//data//demo_data//join2bb.ttl,\
+..//data//demo_data//part1.ttl,\
+..//data//demo_data//part2.ttl
+
+inputFilesNamedGraphs = http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts,\
+http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts,\
+http://www.itmat.upenn.edu/biobank/biobankEncounterShortcuts,\
+http://www.itmat.upenn.edu/biobank/healthcareJoinShortcuts,\
+http://www.itmat.upenn.edu/biobank/biobankJoinShortcuts,\
+http://www.itmat.upenn.edu/biobank/participantShortcuts,\
+http://www.itmat.upenn.edu/biobank/participantShortcuts
+
+#Currently supported formats: TURTLE, RDFXML. Capital letters must be used.
+inputFilesFormat = TURTLE,TURTLE,TURTLE,TURTLE,TURTLE,TURTLE,TURTLE
+importOntologies = true
+ontologyURL = https://cbil-dev-web01.pmacs.upenn.edu/ontology/turbo_merged.owl
+errorLogFile = turbo_errorlog.txt
+ontologySize = 4101
+#supported reasoning levels: empty (no reasoning), owl-horst-optimized
+setReasoningTo = "empty"
+reinferRepo = false
+
+# Medication Mapping Properties
+solrURL = your_solr_address/solr/dtmeds/select
+SVMfile = your_SVM_file.rdata
+medStandardsFile = your_medStandards_file
