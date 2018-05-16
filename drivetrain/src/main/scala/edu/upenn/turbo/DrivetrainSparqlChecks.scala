@@ -29,7 +29,7 @@ class DrivetrainSparqlChecks extends ProjectwideGlobals
         if (proceed) proceed = precheck.checkAllObjectsAreLiterals(cxn, graphsString)
         //if (proceed) proceed = precheck.checkForPropertiesOutOfRange(cxn, graphsString)
         if (proceed) proceed = precheck.checkForUnexpectedPredicates(cxn, graphsString)
-        if (proceed) proceed = precheck.checkBiosexURIsAreValid(cxn, graphsString)
+        if (proceed) proceed = precheck.checkBiosexURIsAreValid(cxn, graphsStringAsFrom)
         if (proceed) proceed = precheck.checkEncounterRegistryURIsAreValid(cxn, graphsString)
         if (proceed) proceed = precheck.checkForRequiredParticipantShortcuts(cxn, graphsString)
         if (proceed) proceed = precheck.checkForRequiredHealthcareEncounterShortcuts(cxn, graphsStringAsFrom)

@@ -43,7 +43,7 @@ class Expander extends ProjectwideGlobals
         logger.info("finished bb enc expansion")
     }
     
-    /**
+    /** 
      * Submits a SPARQL expansion update to the graph server which expands biobank encounter to biobank consenter entity linking shortcuts
      * to their fully ontologied form.
      */

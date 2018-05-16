@@ -21,6 +21,15 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     var masterPlanspec: IRI = null
     var masterPlan: IRI = null
     
+    val healthcareEncounterShortcutGraphs: String = 
+    """
+        <http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts> 
+        <http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts1> 
+        <http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts2>
+        <http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts3>
+        <http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts4>
+    """
+    
     val instantiationAndDataset: String = """
       ASK { GRAPH <http://www.itmat.upenn.edu/biobank/postExpansionCheck> {
             pmbb:test_instantiation_1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000522 .
@@ -258,7 +267,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("hc encounter with all fields")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:healthcareEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           
           <http://www.itmat.upenn.edu/biobank/hcenc1>
           turbo:TURBO_0000655 "26.2577659792"^^xsd:float ;
@@ -284,7 +293,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
@@ -353,7 +362,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("bb encounter with all fields")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:biobankEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
           pmbb:bbenc1
           turbo:TURBO_0000635 "18.8252626423"^^xsd:float ;
           turbo:TURBO_0000624 "15/Jan/2017" ;
@@ -368,7 +377,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), " <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ")
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterMinimum).get should be (true)
@@ -419,7 +428,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("hc encounter with minimum required for expansion")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:healthcareEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
           a obo:OGMS_0000097 ;
@@ -428,7 +437,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
@@ -465,7 +474,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("bb encounter with minimum required for expansion")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:biobankEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
           pmbb:bbenc1
           a turbo:TURBO_0000527 ;
           turbo:TURBO_0000628 "B" ;
@@ -474,7 +483,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), " <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ")
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterMinimum).get should be (true)
@@ -509,7 +518,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("hc encounter without ID")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:healthcareEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
           a obo:OGMS_0000097 ;
@@ -517,7 +526,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
@@ -535,7 +544,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("bb encounter without registry")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:biobankEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
           pmbb:bbenc1
           turbo:TURBO_0000623 "enc_expand.csv" ;
           a turbo:TURBO_0000527 ;
@@ -543,7 +552,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterMinimum).get should be (false)
@@ -559,7 +568,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("hc encounter without registry")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:healthcareEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
           a obo:OGMS_0000097 ;
@@ -567,7 +576,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
@@ -585,7 +594,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("bb encounter without ID")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:biobankEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
           pmbb:bbenc1
           turbo:TURBO_0000623 "enc_expand.csv" ;
           a turbo:TURBO_0000527 ;
@@ -594,7 +603,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterMinimum).get should be (false)
@@ -609,7 +618,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("hc encounter without dataset")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:healthcareEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000648 "20" ;
           a obo:OGMS_0000097 ;
@@ -617,7 +626,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (false)
@@ -635,7 +644,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("bb encounter without dataset")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:biobankEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
           pmbb:bbenc1
           turbo:TURBO_0000628 "B" ;
           a turbo:TURBO_0000527 ;
@@ -644,7 +653,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterMinimum).get should be (false)
@@ -659,7 +668,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("hc encounter with text but not xsd values and only diag code without reg info")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:healthcareEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000655 "26.2577659792"^^xsd:float ;
           turbo:TURBO_0000643 "enc_expand.csv" ;
@@ -681,7 +690,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         val diagnosisNoXsd: String = """
           ASK { GRAPH <http://www.itmat.upenn.edu/biobank/postExpansionCheck> {
@@ -781,7 +790,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("bb encounter with text but not xsd values")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:biobankEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
           pmbb:bbenc1
           turbo:TURBO_0000635 "18.8252626423"^^xsd:float ;
           turbo:TURBO_0000624 "15/Jan/2017" ;
@@ -796,7 +805,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), " <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ")
         
         val dateNoXsd: String = """
           ask {
@@ -815,7 +824,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterMinimum).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankHeightWeightAndBMI).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterDate).get should be (false)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterDate).get should be (false) 
         helper.querySparqlBoolean(cxn, sparqlPrefixes + dateNoXsd).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
@@ -862,7 +871,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     test("ensure diagnosis info stays together with duplicate hc enc URI")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:healthcareEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
           turbo:TURBO_0000648 "20" ;
@@ -887,7 +896,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}"""
         
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         val checkDiag: String = """
           Ask
@@ -941,15 +950,15 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
          helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
          helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
          helper.querySparqlBoolean(cxn, sparqlPrefixes + checkDiag).get should be (true)
-         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "diagnosisCount")(0) should startWith ("2")
-         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "diagCridCount")(0) should startWith ("2")
+         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "diagnosisCount")(0) should startWith ("\"2")
+         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "diagCridCount")(0) should startWith ("\"2")
          helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
     }
     
     test("ensure medication info stays together with duplicate hc enc URI")
     {
         val insert: String = """
-          INSERT DATA { GRAPH pmbb:healthcareEncounterShortcuts {
+          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
           turbo:TURBO_0000648 "20" ;
@@ -972,7 +981,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }}"""
         
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         val checkDiag: String = """
           Ask
@@ -1020,8 +1029,8 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
          helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
          helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
          helper.querySparqlBoolean(cxn, sparqlPrefixes + checkDiag).get should be (true)
-         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "prescriptCount")(0) should startWith ("2")
-         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "medCridCount")(0) should startWith ("2")
+         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "prescriptCount")(0) should startWith ("\"2")
+         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "medCridCount")(0) should startWith ("\"2")
          helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
     }
     
@@ -1030,7 +1039,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
         val insert1: String = """
           INSERT DATA
           {
-              GRAPH pmbb:healthcareEncounterShortcuts
+              GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts
               {
                   pmbb:hcenc1 a obo:OGMS_0000097 ;
                       turbo:TURBO_0000643 'identifierAndRegistry.csv' ;
@@ -1038,7 +1047,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
                       turbo:TURBO_0000650 'http://transformunify.org/ontologies/TURBO_0000440'^^xsd:anyURI .
               }
               
-              GRAPH pmbb:healthcareEncounterShortcuts1
+              GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts1
               {
                   pmbb:hcenc1 a obo:OGMS_0000097 ;
                       turbo:TURBO_0000643 'diagnosis.csv' ;
@@ -1049,7 +1058,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
                       turbo:TURBO_0004601 '401.9' . 
               }
               
-              GRAPH pmbb:healthcareEncounterShortcuts2
+              GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts2
               {
                   pmbb:hcenc1 a obo:OGMS_0000097 ;
                       turbo:TURBO_0000643 'meds.csv' ;
@@ -1059,7 +1068,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
                       turbo:TURBO_0005601 "3" .
               }
               
-              GRAPH pmbb:healthcareEncounterShortcuts3
+              GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts3
               {
                   pmbb:hcenc1 a obo:OGMS_0000097 ;
                       turbo:TURBO_0000643 'bmiAndHeightWeight.csv' ;
@@ -1068,7 +1077,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
                       turbo:TURBO_0000655 '26.2577659792'^^xsd:float .
               }
               
-              GRAPH pmbb:healthcareEncounterShortcuts4
+              GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts4
               {
                   pmbb:hcenc1 a obo:OGMS_0000097 ;
                       turbo:TURBO_0000643 'date.csv' ;
@@ -1078,7 +1087,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert1)
-        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.expandHealthcareEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs)
         
         val datasetCheck1: String = """
           ASK

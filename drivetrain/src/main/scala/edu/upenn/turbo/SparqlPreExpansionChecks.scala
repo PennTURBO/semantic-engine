@@ -28,7 +28,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
                   BIND (turbo:TURBO_0000604 AS ?missing)
                   FILTER (?dateOK = 'false')       
             }"""
-        logger.info(check)
+          
         operation.runSparqlCheck(cxn, check, ArrayBuffer("missing", "dateOK"), "pre-expansion", "missing required birth-related shortcut")
     }
     
@@ -57,17 +57,25 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
     def checkBiosexURIsAreValid (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
-        """SELECT ?biosexURI ?part WHERE 
+        """SELECT ?biosexURI ?part 
+          """ + graphsList + """
+          WHERE 
             {
-                Values ?g {""" + graphsList + """}
-                GRAPH ?g {
                   ?part a turbo:TURBO_0000502 .
                   ?part turbo:TURBO_0000607 ?biosexURI .
                  
-            			Filter (?biosexURI != "http://purl.obolibrary.org/obo/OMRSE_00000141"^^xsd:anyURI)
-            			Filter (?biosexURI != "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI)
-            			Filter (?biosexURI != "http://purl.obolibrary.org/obo/OMRSE_00000133"^^xsd:anyURI)
-              }        
+            			Minus
+                  {
+          						?part turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000141"^^xsd:anyURI
+                  }
+              	  Minus
+                  {
+          						?part turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI
+                  }
+              		Minus
+                  {
+          						?part turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000133"^^xsd:anyURI
+                  }       
             }"""
         
         operation.runSparqlCheck(cxn, check, ArrayBuffer("biosexURI", "part"), "pre-expansion", "found invalid biosex URI")
@@ -285,7 +293,6 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
             ?regDenCount > 1
         )
         """
-        
         operation.runSparqlCheck(cxn, check, ArrayBuffer("s"), "pre-expansion", "multiple shortcut relationships on one participant")
     }
     

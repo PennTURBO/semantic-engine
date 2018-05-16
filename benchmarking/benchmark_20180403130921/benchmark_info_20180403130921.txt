@@ -1,0 +1,22 @@
+This file contains information about the Drivetrain Automated Benchmarking run at 20180403130921
+
+serviceURL: http://cbil-dev-db01.pmacs.upenn.edu:7201/
+inputFiles: real_329/wes_pds__encounter_by_pkpatid_as_join_uuid_uris_sc-data.ttl,real_329/wes_pds__encounter_by_pkpatid_enc_only_sc-data.ttl,real_329/wes_pds__patient_by_pkpatientid_sc-data.ttl,real_329/wes_pds_enc__dx_sc-data.ttl,real_329/wes_pmbb__enc_remove_reused_props_flexyeardigs_sc-data.ttl,real_329/wes_pmbb_enc_patient_lookup-data.ttl
+turboOntology: https://cbil-dev-web01.pmacs.upenn.edu/ontology/turbo_merged.owl
+repository: Hayden_drivetrain
+
+Count instances for pre-referent tracking stage 
+Counting instances of http://transformunify.org/ontologies/TURBO_0000502
+http://transformunify.org/ontologies/TURBO_0000502: 11237
+Counting instances of http://transformunify.org/ontologies/TURBO_0000527
+http://transformunify.org/ontologies/TURBO_0000527: 14450
+Counting instances of http://purl.obolibrary.org/obo/OGMS_0000097
+http://purl.obolibrary.org/obo/OGMS_0000097: 98585
+
+Count instances for post-referent tracking stage 
+Counting instances of http://transformunify.org/ontologies/TURBO_0000502
+http://transformunify.org/ontologies/TURBO_0000502: 11237
+Counting instances of http://transformunify.org/ontologies/TURBO_0000527
+http://transformunify.org/ontologies/TURBO_0000527: 14450
+Counting instances of http://purl.obolibrary.org/obo/OGMS_0000097
+http://purl.obolibrary.org/obo/OGMS_0000097: 98585
