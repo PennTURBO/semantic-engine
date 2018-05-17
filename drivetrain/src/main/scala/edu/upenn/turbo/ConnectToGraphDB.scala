@@ -138,23 +138,30 @@ class ConnectToGraphDB extends ProjectwideGlobals
         
         val ftlList: ArrayBuffer[String] = parseCSVString(filesToLoad)
         val ngList: ArrayBuffer[String] = generateShortcutNamedGraphsList(ftlList)
-        val formatList: ArrayBuffer[String] = parseCSVString(formats)
+        var formatList: ArrayBuffer[String] = parseCSVString(formats)
+        
+        // If only one format is required, we infer that this is meant to apply to all files.
+        if (formatList.size == 1 && ftlList.size > 1)
+        {
+            for (a <- 1 to ftlList.size - 1) formatList += formatList(0)
+        }
         
         if (ftlList.size != ngList.size) 
         {
-            logger.info("The files to load list and named graphs list are of different sizes.")
-            throw new RuntimeException ("Error in properties file input, check logger message for details.")
-        }
-        if (formatList.size != ngList.size)
-        {
-            logger.info("The named graphs list and input files format list are of different sizes.")
+            logger.info("Internal Drivetrain Error: The files to load list and named graphs list are of different sizes.")
             throw new RuntimeException ("Error in properties file input, check logger message for details.")
         }
         if (formatList.size != ftlList.size)
         {
-            logger.info("The input files format list and files to load list are of different sizes.")
+            logger.info("Internal Drivetrain Error: The input files format list and files to load list are of different sizes.")
             throw new RuntimeException ("Error in properties file input, check logger message for details.")
         }
+        if (formatList.size != ngList.size)
+        {
+            logger.info("Internal Drivetrain Error: The input files format list and named graphs list are of different sizes.")
+            throw new RuntimeException ("Error in properties file input, check logger message for details.")
+        }
+      
         for (a <- 0 to ftlList.size - 1)
         {
             var format: Option[RDFFormat] = None : Option[RDFFormat]
@@ -228,7 +235,7 @@ class ConnectToGraphDB extends ProjectwideGlobals
      * are present in properties file.
      */
     def checkForMissingProperties(requiredInputFileProps: Boolean): Option[String] =
-    {
+    { 
         val input: FileInputStream = new FileInputStream("..//turbo_properties.properties")
         val props: Properties = new Properties()
         props.load(input)
@@ -256,6 +263,8 @@ class ConnectToGraphDB extends ProjectwideGlobals
             }
             a = a + 1
         }
+        // check for deprecated input graphs property
+        if (props.getProperty("inputFilesNamedGraphs") != null) logger.warn("Ignoring deprecated property 'inputFilesNamedGraphs'")
         optToReturn
     }
     

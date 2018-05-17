@@ -13,7 +13,7 @@ inputFiles = ..//data//demo_data//enc2hc.ttl,\
 ..//data//demo_data//part2.ttl
 
 #Currently supported formats: TURTLE, RDFXML. Capital letters must be used.
-inputFilesFormat = TURTLE,TURTLE,TURTLE,TURTLE,TURTLE,TURTLE,TURTLE
+inputFilesFormat = TURTLE
 importOntologies = true
 ontologyURL = https://cbil-dev-web01.pmacs.upenn.edu/ontology/turbo_merged.owl
 errorLogFile = turbo_errorlog.txt
