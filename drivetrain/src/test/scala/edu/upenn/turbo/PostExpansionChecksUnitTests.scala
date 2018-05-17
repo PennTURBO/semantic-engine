@@ -29,7 +29,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
-    test("check for invalid classes - one valid class")
+    /*test("check for invalid classes - one valid class")
     {
         helper.deleteAllTriplesInDatabase(cxn)
         helper.addOntologyFromUrl(cxn, ontologyURL)
@@ -1609,5 +1609,127 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         
         helper.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBiosexAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
+    }*/
+    
+    test("hc encs with multiple dates - none present")
+    {
+        val insert: String = 
+        """
+        INSERT DATA {
+        
+          Graph pmbb:expanded {
+              
+              pmbb:hc1 a obo:OGMS_0000097 .
+              pmbb:encstart1 obo:RO_0002223 pmbb:hc1 .
+              pmbb:encstart1 a turbo:TURBO_0000511 .
+              
+              pmbb:encdate1 a turbo:TURBO_0000512 .
+              pmbb:encdate1 obo:IAO_0000136 pmbb:encstart1 .
+              
+              pmbb:hc2 a obo:OGMS_0000097 .
+              pmbb:encstart2 obo:RO_0002223 pmbb:hc2 .
+              pmbb:encstart2 a turbo:TURBO_0000511 .
+              
+              pmbb:encdate2 a turbo:TURBO_0000512 .
+              pmbb:encdate2 obo:IAO_0000136 pmbb:encstart2 .
+          }
+        }
+        """
+        
+        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        postcheck.noHealthcareEncountersWithMultipleDates(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (true)
+    }
+    
+    test("hc encs with multiple dates - one with 2 dates")
+    {
+        val insert: String = 
+        """
+        INSERT DATA {
+        
+          Graph pmbb:expanded {
+              
+              pmbb:hc1 a obo:OGMS_0000097 .
+              pmbb:encstart1 obo:RO_0002223 pmbb:hc1 .
+              pmbb:encstart1 a turbo:TURBO_0000511 .
+              
+              pmbb:encdate1 a turbo:TURBO_0000512 .
+              pmbb:encdate1 obo:IAO_0000136 pmbb:encstart1 .
+              
+              pmbb:hc2 a obo:OGMS_0000097 .
+              pmbb:encstart2 obo:RO_0002223 pmbb:hc2 .
+              pmbb:encstart2 a turbo:TURBO_0000511 .
+              
+              pmbb:encdate2 a turbo:TURBO_0000512 .
+              pmbb:encdate2 obo:IAO_0000136 pmbb:encstart2 .
+              
+              pmbb:encdate3 a turbo:TURBO_0000512 .
+              pmbb:encdate3 obo:IAO_0000136 pmbb:encstart2 .
+          }
+        }
+        """
+        
+        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        postcheck.noHealthcareEncountersWithMultipleDates(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
+    }
+    
+    test("bb encs with multiple dates - none present")
+    {
+        val insert: String = 
+        """
+        INSERT DATA {
+        
+          Graph pmbb:expanded {
+              
+              pmbb:bb1 a turbo:TURBO_0000527 .
+              pmbb:encstart1 obo:RO_0002223 pmbb:bb1 .
+              pmbb:encstart1 a turbo:TURBO_0000531 .
+              
+              pmbb:encdate1 a turbo:TURBO_0000532 .
+              pmbb:encdate1 obo:IAO_0000136 pmbb:encstart1 .
+              
+              pmbb:bb2 a turbo:TURBO_0000527 .
+              pmbb:encstart2 obo:RO_0002223 pmbb:bb2 .
+              pmbb:encstart2 a turbo:TURBO_0000531 .
+              
+              pmbb:encdate2 a turbo:TURBO_0000532 .
+              pmbb:encdate2 obo:IAO_0000136 pmbb:encstart2 .
+          }
+        }
+        """
+        
+        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        postcheck.noBiobankEncountersWithMultipleDates(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (true)
+    }
+    
+    test("bb encs with multiple dates - one with 2 dates")
+    {
+        val insert: String = 
+        """
+        INSERT DATA {
+        
+          Graph pmbb:expanded {
+              
+              pmbb:bb1 a turbo:TURBO_0000527 .
+              pmbb:encstart1 obo:RO_0002223 pmbb:bb1 .
+              pmbb:encstart1 a turbo:TURBO_0000531 .
+              
+              pmbb:encdate1 a turbo:TURBO_0000532 .
+              pmbb:encdate1 obo:IAO_0000136 pmbb:encstart1 .
+              
+              pmbb:bb2 a turbo:TURBO_0000527 .
+              pmbb:encstart2 obo:RO_0002223 pmbb:bb2 .
+              pmbb:encstart2 a turbo:TURBO_0000531 .
+              
+              pmbb:encdate2 a turbo:TURBO_0000532 .
+              pmbb:encdate2 obo:IAO_0000136 pmbb:encstart2 .
+              
+              pmbb:encdate3 a turbo:TURBO_0000532 .
+              pmbb:encdate3 obo:IAO_0000136 pmbb:encstart2 .
+          }
+        }
+        """
+        
+        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        postcheck.noBiobankEncountersWithMultipleDates(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
 }

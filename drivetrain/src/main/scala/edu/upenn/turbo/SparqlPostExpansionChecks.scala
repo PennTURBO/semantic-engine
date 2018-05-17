@@ -505,5 +505,55 @@ def checkForInvalidClasses (cxn: RepositoryConnection, namedGraph: String, stage
         
         operation.runSparqlCheck(cxn, check, ArrayBuffer("birth"), stage, "found a non-conclusionated Birth")
     }
+    
+    def noHealthcareEncountersWithMultipleDates(cxn: RepositoryConnection, namedGraph: String, stage: String): Boolean =
+    {
+        val check: String = """
+          Select ?encounter ?encounterDate ?encounterDate2 Where
+          {
+              Graph pmbb:expanded
+              {
+                  ?enc a obo:OGMS_0000097 .
+                  ?encStart a turbo:TURBO_0000511 .
+        		      ?encStart obo:RO_0002223 ?encounter .
+        		      
+        		      ?encounterDate a turbo:TURBO_0000512 .
+        		      ?encounterDate obo:IAO_0000136 ?encStart .
+        		      
+        		      ?encounterDate2 a turbo:TURBO_0000512 .
+        		      ?encounterDate2 obo:IAO_0000136 ?encStart .
+        		      
+        		      Filter (?encounterDate != ?encounterDate2)
+              }
+          }
+          """
+      
+        operation.runSparqlCheck(cxn, check, ArrayBuffer("encounter", "encounterDate", "encounterDate2"), stage, "found multiple dates on a hc encounter")
+    }
+    
+    def noBiobankEncountersWithMultipleDates(cxn: RepositoryConnection, namedGraph: String, stage: String): Boolean =
+    {
+        val check: String = """
+          Select ?encounter ?encounterDate ?encounterDate2 Where
+          {
+              Graph pmbb:expanded
+              {
+                  ?enc a turbo:TURBO_0000527 .
+                  ?encStart a turbo:TURBO_0000531 .
+              		?encStart obo:RO_0002223 ?encounter .
+      
+              		?encounterDate a turbo:TURBO_0000532 .
+              		?encounterDate obo:IAO_0000136 ?encStart .
+              		
+              		?encounterDate2 a turbo:TURBO_0000532 .
+              		?encounterDate2 obo:IAO_0000136 ?encStart .
+              		
+              		Filter (?encounterDate != ?encounterDate2)
+              }
+          }
+          """
+      
+        operation.runSparqlCheck(cxn, check, ArrayBuffer("encounter", "encounterDate", "encounterDate2"), stage, "found multiple dates on a bb encounter")
+    }
 }    
     

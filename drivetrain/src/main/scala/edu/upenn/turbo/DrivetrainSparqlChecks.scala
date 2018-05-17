@@ -111,6 +111,8 @@ class DrivetrainSparqlChecks extends ProjectwideGlobals
             if (proceed) proceed = postcheck.allBMIsAreConclusionated(cxn, namedGraph, stage)
             if (proceed) proceed = postcheck.allBiosexAreConclusionated(cxn, namedGraph, stage)
             if (proceed) proceed = postcheck.allBirthsAreConclusionated(cxn, namedGraph, stage)
+            if (proceed) proceed = postcheck.noHealthcareEncountersWithMultipleDates(cxn, namedGraph, stage)
+            if (proceed) proceed = postcheck.noBiobankEncountersWithMultipleDates(cxn, namedGraph, stage)
         }
         logger.info(stage + " checks returning " + proceed + " for " + namedGraph.toString)
         proceed
