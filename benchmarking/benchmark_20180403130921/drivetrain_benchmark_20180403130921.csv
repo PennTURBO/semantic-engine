@@ -1,0 +1,56 @@
+stage, seconds
+
+Connect to Graph DB,0.69048706
+Load Data (source files + turbo ontology),87.439762681
+Pre-Expansion Checks,329.908202039
+Apply Symmetrical Properties,1.075499552
+Total Pre-Expansion,418.423658453
+
+Expand Healthcare Encounters,212.279250801
+Expand Biobank Encounters,12.045475109
+Expand Biobank Consenters,7.283005088
+Expand Bb Enc to Bb Cons Joins,5.399070235
+Expand Hc Enc to Bb Cons Joins,34.870269988
+Total Expansion,271.87740457
+
+Clear Shortcut Named Graph,249.27265278
+Post-Expansion Checks,41.593963501
+Move Triples to Expanded Graph,68.964258942
+Clear Post-Expansion Named Graph,59.666364791
+Apply Inverses,87.565246182
+Add String Labels to Ontology,0.038611887
+Total Post-Expansion,507.101464686
+
+Reftrack Encounters (biobank and healthcare),2013.428108176
+Reftrack Primary Encounter Dependents (biobank and healthcare),291.292473117
+Reftrack Secondary Encounter Dependents (biobank and healthcare),657.347388749
+Reftrack Tertiary Encounter Dependents (biobank and healthcare),130.94477565
+Reftrack Biobank Consenters,1083.037281773
+Reftrack Biobank Consenter Dependents,142.702949486
+Total Referent Tracking,4319.050288561
+
+Link Hc Encs to Bb Cons,26.970301927
+Link Bb Encs to Bb Cons,660.468624096
+Connect BMI To Adipose,1.144789033
+Total Entity Linking,688.583973279
+
+Conclusionate Date of Birth,6.56952923
+Conclusionate Biosex,6.750246112
+Conclusionate BMI,18.663173339
+Total Conclusionating,31.984110478
+
+Apply Inverses,172.256149107
+Apply Symmetrical Properties,2.264600256
+Apply Labels,115.906126816
+Post-Conclusionation Checks,130.856368658
+Total Post-Conclusionating,421.283527691
+
+Load Drug Ontologies (mondo + ICD9 + ICD10),66.929138603
+Diagnosis Mapping,19.015983122
+Total Diagnosis Mapping,85.945216147
+
+Load Medication Ontologies (DRON),67.311868145
+Total Medication Mapping,67.31194163
+
+Total Drivetrain Time,6811.28562221
+

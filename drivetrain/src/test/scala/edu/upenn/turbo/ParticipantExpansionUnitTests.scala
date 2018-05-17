@@ -84,7 +84,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant with all fields")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
               turbo:TURBO_0000603 "part_expand" ;
               turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
@@ -97,7 +97,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>")
         
         val extraFields: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
@@ -166,7 +166,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant with minimum required for expansion")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
               turbo:TURBO_0000603 "part_expand" ;
               a turbo:TURBO_0000502 ;
@@ -174,7 +174,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>")
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (true)
@@ -212,14 +212,14 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant without psc")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
               turbo:TURBO_0000603 "part_expand" ;
               a turbo:TURBO_0000502 ;
               turbo:TURBO_0000610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>")
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -232,14 +232,14 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant without dataset")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
               a turbo:TURBO_0000502 ;
               turbo:TURBO_0000608 "4" ;
               turbo:TURBO_0000610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>")
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -252,14 +252,14 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant without registry")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
               a turbo:TURBO_0000502 ;
               turbo:TURBO_0000608 "4" ;
               turbo:TURBO_0000603 "part_expand" .
           }}"""
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>")
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -272,7 +272,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant with text but not xsd values")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
               turbo:TURBO_0000603 "part_expand" ;
               # turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
@@ -285,7 +285,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"))
+        expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>")
         
         val dateNoXsd: String = """
           ASK {GRAPH pmbb:postExpansionCheck {

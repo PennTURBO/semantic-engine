@@ -186,8 +186,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //apply symmetrical properties
         val startAppSymmProps = System.nanoTime()
-        helper.applySymmetricalProperties(cxn, "http://www.itmat.upenn.edu/biobank/biobankJoinShortcuts")
-        helper.applySymmetricalProperties(cxn, "http://www.itmat.upenn.edu/biobank/healthcareJoinShortcuts")
+        helper.applySymmetricalProperties(cxn)
         val endAppSymmProps = System.nanoTime()
         
         writeCSV.println("Apply Symmetrical Properties," + ((endAppSymmProps - startAppSymmProps)/1000000000.0).toString)
@@ -197,37 +196,44 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     {
         val instantiation: IRI = helper.genPmbbIRI(cxn)
         
+        //get list of shortcut named graphs
+        val getGraphsListStart = System.nanoTime()
+        val graphsList: String = helper.generateShortcutNamedGraphsString(cxn)
+        val getGraphsListStop = System.nanoTime()
+        
+        writeCSV.println("Get List of Shortcut Graphs," + ((getGraphsListStop - getGraphsListStart)/1000000000.0).toString)
+        
         //expand healthcare encounters
         val startExpHcEncs = System.nanoTime()
-        expand.expandHealthcareEncounterShortcuts(cxn, instantiation)
+        expand.expandHealthcareEncounterShortcuts(cxn, instantiation, graphsList)
         val stopExpHcEncs = System.nanoTime()
         
         writeCSV.println("Expand Healthcare Encounters," + ((stopExpHcEncs - startExpHcEncs)/1000000000.0).toString)
         
         //expand biobank encounters
         val startExpBbEncs = System.nanoTime()
-        expand.expandBiobankEncounterShortcuts(cxn, instantiation)
+        expand.expandBiobankEncounterShortcuts(cxn, instantiation, graphsList)
         val stopExpBbEncs = System.nanoTime()
         
         writeCSV.println("Expand Biobank Encounters," + ((stopExpBbEncs - startExpBbEncs)/1000000000.0).toString)
         
         //expand biobank consenters
         val startExpBbCons = System.nanoTime()
-        expand.participantExpansion(cxn, instantiation)
+        expand.participantExpansion(cxn, instantiation, graphsList)
         val stopExpBbCons = System.nanoTime()
         
         writeCSV.println("Expand Biobank Consenters," + ((stopExpBbCons - startExpBbCons)/1000000000.0).toString)
         
         //expand biobank encounter - biobank consenter joins
         val startExpBbConsToBbEncs = System.nanoTime()
-        expand.biobankEncounterParticipantJoinExpansion(cxn)
+        expand.biobankEncounterParticipantJoinExpansion(cxn, graphsList)
         val stopExpBbConsToBbEncs = System.nanoTime()
         
         writeCSV.println("Expand Bb Enc to Bb Cons Joins," + ((stopExpBbConsToBbEncs - startExpBbConsToBbEncs)/1000000000.0).toString)
         
         //expand healthcare encounter - biobank consenter joins
         val startExpBbConsToHcEncs = System.nanoTime()
-        expand.healthcareEncounterParticipantJoinExpansion(cxn)
+        expand.healthcareEncounterParticipantJoinExpansion(cxn, graphsList)
         val stopExpBbConsToHcEncs = System.nanoTime()
         
         writeCSV.println("Expand Hc Enc to Bb Cons Joins," + ((stopExpBbConsToHcEncs - startExpBbConsToHcEncs)/1000000000.0).toString)

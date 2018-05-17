@@ -7,24 +7,6 @@ trait ProjectwideGlobals
     val helper: TurboMultiuseClass = new TurboMultiuseClass
     val logger = LoggerFactory.getLogger(getClass)
     
-    val healthcareEncounterShortcutGraphs: String = 
-      """
-      <http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts>
-      <http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts1>
-      <http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts2>
-      <http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts3>
-      <http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts4>
-      """
-    
-    val healthcareEncounterShortcutGraphsWithFROM: String = 
-     """
-        FROM pmbb:healthcareEncounterShortcuts
-        FROM pmbb:healthcareEncounterShortcuts1
-        FROM pmbb:healthcareEncounterShortcuts2
-        FROM pmbb:healthcareEncounterShortcuts3
-        FROM pmbb:healthcareEncounterShortcuts4
-     """
-    
     //make sparqlPrefixes for use in all queries globally available
     val sparqlPrefixes = """
 			PREFIX  :     <http://transformunify.org/ontologies/>

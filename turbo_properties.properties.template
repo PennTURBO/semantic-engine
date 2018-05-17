@@ -12,14 +12,6 @@ inputFiles = ..//data//demo_data//enc2hc.ttl,\
 ..//data//demo_data//part1.ttl,\
 ..//data//demo_data//part2.ttl
 
-inputFilesNamedGraphs = http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts,\
-http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts,\
-http://www.itmat.upenn.edu/biobank/biobankEncounterShortcuts,\
-http://www.itmat.upenn.edu/biobank/healthcareJoinShortcuts,\
-http://www.itmat.upenn.edu/biobank/biobankJoinShortcuts,\
-http://www.itmat.upenn.edu/biobank/participantShortcuts,\
-http://www.itmat.upenn.edu/biobank/participantShortcuts
-
 #Currently supported formats: TURTLE, RDFXML. Capital letters must be used.
 inputFilesFormat = TURTLE,TURTLE,TURTLE,TURTLE,TURTLE,TURTLE,TURTLE
 importOntologies = true
@@ -34,3 +26,4 @@ reinferRepo = false
 solrURL = your_solr_address/solr/dtmeds/select
 SVMfile = your_SVM_file.rdata
 medStandardsFile = your_medStandards_file
+dronRepo = your_dron_repo

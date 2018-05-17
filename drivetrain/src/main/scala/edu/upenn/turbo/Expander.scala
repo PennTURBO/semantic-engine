@@ -3,6 +3,7 @@ package edu.upenn.turbo
 import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.repository.RepositoryConnection
 import java.util.UUID
+import scala.collection.mutable.ArrayBuffer
 
 /**
  * The Expander class is responsible for all Shortcut Expansion. This is the first step in the Drivetrain process to create the fully ontologized model.
@@ -14,36 +15,39 @@ class Expander extends ProjectwideGlobals
     /**
      * Calls all methods responsible for expanding all shortcut entities available in shortcut named graphs. 
      */
-    def expandAllShortcutEntities (cxn: RepositoryConnection)
+    def expandAllShortcutEntities (cxn: RepositoryConnection): String =
     {   
         val instantiation: IRI = helper.genPmbbIRI(cxn)
-        encounterExpansion(cxn, instantiation)
+        val graphsString: String = helper.generateShortcutNamedGraphsString(cxn)
+        logger.info("graphsstring: " + graphsString)
+        encounterExpansion(cxn, instantiation, graphsString)
         logger.info("finished encounter expansion")
-        participantExpansion(cxn, instantiation)
+        participantExpansion(cxn, instantiation, graphsString)
         logger.info("finished participant expansion")
-        biobankEncounterParticipantJoinExpansion(cxn)
+        biobankEncounterParticipantJoinExpansion(cxn, graphsString)
         logger.info("finished biobank join expansion, starting healthcare join expansion")
-        healthcareEncounterParticipantJoinExpansion(cxn)
+        healthcareEncounterParticipantJoinExpansion(cxn, graphsString)
         logger.info("finished join expansion")
+        graphsString
     }
     
     /**
-     * Calls all methods responsible for expanding all shortcut entities availabe in encounter shortcut named graphs.
+     * Calls all methods responsible for expanding all shortcut entities available in encounter shortcut named graphs.
      */
-    def encounterExpansion (cxn: RepositoryConnection, instantiation: IRI)
+    def encounterExpansion (cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
     {     
         logger.info("starting hc enc expansion")
-        expandHealthcareEncounterShortcuts(cxn, instantiation)
+        expandHealthcareEncounterShortcuts(cxn, instantiation, graphsString)
         logger.info("finished hc enc expansion, starting bb enc expansion")
-        expandBiobankEncounterShortcuts(cxn, instantiation)
+        expandBiobankEncounterShortcuts(cxn, instantiation, graphsString)
         logger.info("finished bb enc expansion")
     }
     
-    /**
+    /** 
      * Submits a SPARQL expansion update to the graph server which expands biobank encounter to biobank consenter entity linking shortcuts
      * to their fully ontologied form.
      */
-    def biobankEncounterParticipantJoinExpansion(cxn: RepositoryConnection)
+    def biobankEncounterParticipantJoinExpansion(cxn: RepositoryConnection, graphsString: String)
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         val expand: String = """
@@ -87,7 +91,8 @@ class Expander extends ProjectwideGlobals
           }
           Where
           {
-              Graph pmbb:biobankJoinShortcuts
+              Values ?g { """ + graphsString + """ }
+              Graph ?g
               {
                   ?bbEncCridSC a turbo:TURBO_0000533 .
                   ?bbEncCridSC turbo:TURBO_0001608 ?bbEncSymbLit .
@@ -127,7 +132,7 @@ class Expander extends ProjectwideGlobals
      * Submits a SPARQL expansion update to the graph server which expands healthcare encounter to biobank consenter entity linking shortcuts
      * to their fully ontologied form.
      */
-    def healthcareEncounterParticipantJoinExpansion(cxn: RepositoryConnection)
+    def healthcareEncounterParticipantJoinExpansion(cxn: RepositoryConnection, graphsString: String)
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         val expand: String = """
@@ -171,7 +176,8 @@ class Expander extends ProjectwideGlobals
           }
           Where
           {
-              Graph pmbb:healthcareJoinShortcuts
+              Values ?g { """ + graphsString + """ }
+              Graph ?g
               {
                   ?hcEncCridSC a turbo:TURBO_0000508 .
                   ?hcEncCridSC turbo:TURBO_0002608 ?hcEncSymbLit .
@@ -209,7 +215,7 @@ class Expander extends ProjectwideGlobals
     /**
      * Submits a SPARQL expansion update to the graph server which expands biobank consenter shortcuts to their fully ontologied form.
      */
-    def participantExpansion (cxn: RepositoryConnection, instantiation: IRI)
+    def participantExpansion (cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         logger.info("running part expansion")
@@ -283,7 +289,8 @@ class Expander extends ProjectwideGlobals
         	}
         }
         WHERE {
-        	GRAPH pmbb:participantShortcuts
+        	Values ?g { """ + graphsString + """ }
+          Graph ?g
         	# bind each one of these literal values to an individual above
         	{
         		?shortcutPart  rdf:type     :TURBO_0000502 ;
@@ -348,7 +355,7 @@ class Expander extends ProjectwideGlobals
     /**
      * Submits a SPARQL expansion update to the graph server which expands biobank encounter shortcuts to their fully ontologied form.
      */
-    def expandBiobankEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI)
+    def expandBiobankEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         val biobankEncounterExpansion = """
@@ -433,7 +440,8 @@ class Expander extends ProjectwideGlobals
         }
             WHERE
             {
-            	GRAPH pmbb:biobankEncounterShortcuts
+            	Values ?g { """ + graphsString + """ }
+              Graph ?g
             	{
             		?encFromKarma
             			a                     turbo:TURBO_0000527 ;
@@ -486,7 +494,7 @@ class Expander extends ProjectwideGlobals
     /**
      * Submits a SPARQL expansion update to the graph server which expands healthcare consenter shortcuts to their fully ontologized form.
      */
-    def expandHealthcareEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI)
+    def expandHealthcareEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         logger.info("running enc expansion")
@@ -619,8 +627,8 @@ class Expander extends ProjectwideGlobals
         }
             WHERE
             {
-              VALUES ?g { """ + healthcareEncounterShortcutGraphs + """ }
-            	GRAPH ?g
+              Values ?g { """ + graphsString + """ }
+              Graph ?g
             	{
             		?encFromKarma
             			a                     obo:OGMS_0000097 ;

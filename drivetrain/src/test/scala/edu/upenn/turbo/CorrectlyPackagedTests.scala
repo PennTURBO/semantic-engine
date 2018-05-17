@@ -55,13 +55,13 @@ class CorrectlyPackagedTests extends FunSuiteLike with BeforeAndAfter with Match
     // TODO: ADD TEST?: were the expected shortcut triples inserted
 
     //HAYDEN 10/10 3:34 PM I am adding the argument for the instantiation process which now must be supplied
-    expand.encounterExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"))
+    expand.encounterExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here")
 
     // TODO: ask test... participant expansion is select... make them both selects?
     val EncExpSuccess = SparqlHelper.CheckExpandedEncScTrips(cxn)
     assert(EncExpSuccess, "...Encounters were not expanded as expected")
 
-    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"))
+    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here")
 
     // TODO: select test... encounter expansion is an ask... make them both selects?
     val PartExpRes = SparqlHelper.CheckExpandedPartScTripsClarifiedGID(cxn)

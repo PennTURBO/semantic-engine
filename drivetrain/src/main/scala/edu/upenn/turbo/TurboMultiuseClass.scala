@@ -628,15 +628,8 @@ class TurboMultiuseClass
      */
     def clearShortcutNamedGraphs (cxn: RepositoryConnection)
     {
-        clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/participantShortcuts")
-        clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts")
-        clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts1")
-        clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts2")
-        clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts3")
-        clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/healthcareEncounterShortcuts4")
-        clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/biobankEncounterShortcuts")
-        clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/healthcareJoinShortcuts")
-        clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/biobankJoinShortcuts")
+        val graphs: ArrayBuffer[String] = generateShortcutNamedGraphsList(cxn)
+        for (graph <- graphs) clearNamedGraph(cxn, graph)
     }
     
     /**
@@ -891,6 +884,42 @@ class TurboMultiuseClass
           """
         
         updateSparql(cxn, sparqlPrefixes + update)
+    }
+    
+    /**
+     * Generates string of all Shortcut named graphs by issuing retrieving a list of shortcut graphs and transforming it to a string
+     * 
+     * @return a string representation of all shortcut named graphs for expansion
+     */
+    def generateShortcutNamedGraphsString(cxn: RepositoryConnection, asFrom: Boolean = false): String =
+    {
+        var graphsString = ""
+        for (a <- generateShortcutNamedGraphsList(cxn))
+        {
+            if (!asFrom) graphsString += "<" + a + "> "
+            else graphsString += "FROM <" + a + "> "
+        }
+        graphsString
+    }
+    
+    /**
+     * Generates list of all Shortcut named graphs by issuing a Sparql command to retrieve all named graphs which start with "Shortcuts"
+     * 
+     * @return a list representation of all shortcut named graphs for expansion
+     */
+    def generateShortcutNamedGraphsList(cxn: RepositoryConnection): ArrayBuffer[String] =
+    {
+        val getGraphs: String = """
+        select distinct ?g where 
+        {
+            graph ?g
+            {
+                ?s ?p ?o .
+            }
+            filter (strStarts(str(?g), "http://www.itmat.upenn.edu/biobank/Shortcuts"))
+        }"""
+        
+        querySparqlAndUnpackTuple(cxn, getGraphs, "g")
     }
     
     /**

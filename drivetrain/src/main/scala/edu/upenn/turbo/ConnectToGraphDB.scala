@@ -137,7 +137,7 @@ class ConnectToGraphDB extends ProjectwideGlobals
         val formats: String = inputFilesFormat
         
         val ftlList: ArrayBuffer[String] = parseCSVString(filesToLoad)
-        val ngList: ArrayBuffer[String] = parseCSVString(namedGraphs)
+        val ngList: ArrayBuffer[String] = generateShortcutNamedGraphsList(ftlList)
         val formatList: ArrayBuffer[String] = parseCSVString(formats)
         
         if (ftlList.size != ngList.size) 
@@ -239,7 +239,6 @@ class ConnectToGraphDB extends ProjectwideGlobals
         if (requiredInputFileProps) 
         {
             requiredProperties += "inputFiles"
-            requiredProperties += "inputFilesNamedGraphs"
             requiredProperties += "inputFilesFormat"
         }
         var a = 0
@@ -258,5 +257,23 @@ class ConnectToGraphDB extends ProjectwideGlobals
             a = a + 1
         }
         optToReturn
+    }
+    
+    /**
+     * Receives a list of all files being loaded into the graph. Generates the name of a named graph for each of the files to be loaded into based on
+     * the name of the file.
+     * 
+     * @return a list of strings representing the named graph which each file will be loaded into at that specific index in the input list
+     */
+    def generateShortcutNamedGraphsList(newFiles: ArrayBuffer[String]): ArrayBuffer[String] =
+    {
+        var listToReturn: ArrayBuffer[String] = new ArrayBuffer[String]
+        for (file <- newFiles)
+        {
+            val namedGraph: String = "http://www.itmat.upenn.edu/biobank/Shortcuts_" + 
+                java.util.UUID.randomUUID().toString.replaceAll("-","") + "_" + helper.getPostfixfromURI(file).replaceAll(" ", "")
+            listToReturn += namedGraph
+        }
+        listToReturn
     }
 }

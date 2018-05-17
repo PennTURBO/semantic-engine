@@ -132,9 +132,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
       logger.info("pre expansion checks passed: " + precheckProceed)
       if (precheckProceed)
       {
-          helper.applySymmetricalProperties(cxn, "http://www.itmat.upenn.edu/biobank/biobankJoinShortcuts")
-          helper.applySymmetricalProperties(cxn, "http://www.itmat.upenn.edu/biobank/healthcareJoinShortcuts")
-          expand.expandAllShortcutEntities(cxn)
+          helper.applySymmetricalProperties(cxn)
+          val graphsList: String = expand.expandAllShortcutEntities(cxn)
           logger.info("Encounters and participants have been expanded.")
           helper.clearShortcutNamedGraphs(cxn)
           logger.info("Shortcut named graph cleared")
