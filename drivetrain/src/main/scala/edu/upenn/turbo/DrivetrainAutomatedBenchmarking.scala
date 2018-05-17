@@ -186,8 +186,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //apply symmetrical properties
         val startAppSymmProps = System.nanoTime()
-        helper.applySymmetricalProperties(cxn, "http://www.itmat.upenn.edu/biobank/biobankJoinShortcuts")
-        helper.applySymmetricalProperties(cxn, "http://www.itmat.upenn.edu/biobank/healthcareJoinShortcuts")
+        helper.applySymmetricalProperties(cxn)
         val endAppSymmProps = System.nanoTime()
         
         writeCSV.println("Apply Symmetrical Properties," + ((endAppSymmProps - startAppSymmProps)/1000000000.0).toString)
