@@ -15,7 +15,7 @@ inputFiles = ..//data//demo_data//enc2hc.ttl,\
 #Currently supported formats: TURTLE, RDFXML. Capital letters must be used.
 inputFilesFormat = TURTLE
 importOntologies = true
-ontologyURL = https://cbil-dev-web01.pmacs.upenn.edu/ontology/turbo_merged.owl
+ontologyURL = https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl
 errorLogFile = turbo_errorlog.txt
 ontologySize = 4101
 #supported reasoning levels: empty (no reasoning), owl-horst-optimized
@@ -23,7 +23,7 @@ setReasoningTo = "empty"
 reinferRepo = false
 
 # Medication Mapping Properties
-solrURL = your_solr_address/solr/dtmeds/select
+solrURL = http://your_solr_address:8983/solr/collection_name/select
 SVMfile = your_SVM_file.rdata
 medStandardsFile = your_medStandards_file
 dronRepo = your_dron_repo
