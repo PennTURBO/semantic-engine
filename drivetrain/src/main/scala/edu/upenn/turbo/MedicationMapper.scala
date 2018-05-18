@@ -770,6 +770,7 @@ class MedicationMapper extends ProjectwideGlobals
                 println()
             }
             logger.info("found " + result.size + " matches.")
+            // remove brackets from ontology class results list, if applicable
             //add matches to cache
             true
         }
@@ -801,7 +802,7 @@ class MedicationMapper extends ProjectwideGlobals
         //check for existence of SVM .rdata file
         if (!(new File(SVMfile).exists())) 
         {
-            logger.info("Did not find SVM")
+            logger.info("Did not find serialized SVM model")
             boolToReturn = false
         }
         //check for existence of med standards file
@@ -815,6 +816,23 @@ class MedicationMapper extends ProjectwideGlobals
         {
             val graphconnect: TurboGraphConnection = connect.initializeGraph(dronRepo)  
             connect.closeGraphConnection(graphconnect)
+            //can we check to make sure that certain classes are there? all these classes should be there:
+            /*
+             * "http://purl.obolibrary.org/obo/CHEBI_23367",
+              "http://purl.obolibrary.org/obo/CHEBI_60004",
+              "http://purl.obolibrary.org/obo/DRON_00000005",
+              "http://purl.obolibrary.org/obo/DRON_00000015",
+              "http://purl.obolibrary.org/obo/DRON_00000016",
+              "http://purl.obolibrary.org/obo/DRON_00000017",
+              "http://purl.obolibrary.org/obo/DRON_00000018",
+              "http://purl.obolibrary.org/obo/DRON_00000019",
+              "http://purl.obolibrary.org/obo/DRON_00000020",
+              "http://purl.obolibrary.org/obo/DRON_00000021",
+              "http://purl.obolibrary.org/obo/DRON_00000022",
+              "http://purl.obolibrary.org/obo/DRON_00000024",
+              "http://purl.obolibrary.org/obo/DRON_00000026",
+              "http://purl.obolibrary.org/obo/OBI_0000047"
+             */
         }
         catch
         {
