@@ -1,11 +1,11 @@
-serviceURL = your_GraphDB_instance
+serviceURL = http://your_GraphDB_instance:7200
 namespace = your_repo
 username = your_username
 password = your_password
 
 inputFiles = ..//data//demo_data//enc2hc.ttl,\
-..//data//demo_data//enc2hc - diag.ttl,\
-..//data//demo_data//enc2hc - med.ttl,\
+..//data//demo_data//enc2hc_diag.ttl,\
+..//data//demo_data//enc2hc_med.ttl,\
 ..//data//demo_data//enc1bb.ttl,\
 ..//data//demo_data//join1hc.ttl,\
 ..//data//demo_data//join2bb.ttl,\
