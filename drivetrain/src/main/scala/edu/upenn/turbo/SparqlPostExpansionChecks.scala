@@ -19,7 +19,8 @@ def checkForInvalidClasses (cxn: RepositoryConnection, namedGraph: String, stage
                 }
                 filter not exists {
                     graph pmbb:ontology {
-                        ?c a owl:Class
+                        ?c a owl:Class .
+                        ?c rdfs:label ?label .
                     }
                 }
                 FILTER (?c != rdf:Statement)
