@@ -377,6 +377,19 @@ class TurboMultiuseClass
         result
     }
     
+    def removeAngleBracketsFromString(input: String): String =
+    {
+        var result: String = input
+        if (result.length > 0)
+        {
+            if (result.charAt(0) == '<' && result.charAt(result.length-1) == '>')
+            {
+                result = result.substring(1, result.length-1)
+            }
+        }
+        result
+    }
+    
     /**
      * Moves all RDF data in a specified Graph DB repository to another specified Graph DB repository.  This method is somewhat inefficient.
      */
@@ -491,7 +504,7 @@ class TurboMultiuseClass
    * Adds an RDF.XML formatted set of triples (usually an ontology) received from a given URL to the specified named graph.
    */
   def addOntologyFromUrl(cxn: RepositoryConnection, 
-      ontology: String = "https://turbo-prd-app01.pmacs.upenn.edu/ontology/turbo_merged.owl", 
+      ontology: String = "https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl", 
       namedGraph: String = "http://www.itmat.upenn.edu/biobank/ontology") 
   {
       try
@@ -1021,5 +1034,17 @@ class TurboMultiuseClass
                 for (a <- index1 to arr1.size - 1) nonMatchesArr1 += arr1(a)
             }
         }
+    }
+    
+    def convertSparqlResultToStringArray(sparqlResult: ArrayBuffer[ArrayBuffer[Value]]): ArrayBuffer[ArrayBuffer[String]] =
+    {
+        var arrToReturn: ArrayBuffer[ArrayBuffer[String]] = new ArrayBuffer[ArrayBuffer[String]]
+        for (a <- sparqlResult)
+        {
+            var singleLine: ArrayBuffer[String] = new ArrayBuffer[String]
+            for (b <- a) singleLine += b.toString
+            arrToReturn += singleLine
+        }
+        arrToReturn
     }
 }
