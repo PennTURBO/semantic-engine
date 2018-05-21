@@ -46,6 +46,14 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
         helper.removeQuotesFromString("hello\"") should be ("hello\"")
     }
     
+    test("remove angle brackets from string")
+    {
+        helper.removeAngleBracketsFromString("<hello>") should be ("hello")
+        helper.removeAngleBracketsFromString("hello") should be ("hello")
+        helper.removeAngleBracketsFromString("<hello") should be ("<hello")
+        helper.removeAngleBracketsFromString("hello>") should be ("hello>")
+    }
+    
     test("move data from one named graph to another")
     {
         val insert: String = """
