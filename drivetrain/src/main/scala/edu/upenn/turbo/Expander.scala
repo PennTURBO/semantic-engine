@@ -28,6 +28,8 @@ class Expander extends ProjectwideGlobals
         logger.info("finished biobank join expansion, starting healthcare join expansion")
         healthcareEncounterParticipantJoinExpansion(cxn, graphsString)
         logger.info("finished join expansion")
+        expandLossOfFunctionShortcuts(cxn, graphsString)
+        logger.info("expanded loss of function shortcuts")
         graphsString
     }
     
@@ -739,5 +741,58 @@ class Expander extends ProjectwideGlobals
             }"""
                 
           helper.updateSparql(cxn, sparqlPrefixes + healthcareEncounterExpansion) 
+    }
+    
+    def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, graphsString: String)
+    {
+        val expandLOF: String = """
+          Insert
+          {
+              # inserting into pmbb:expanded for now, at some point may want to use pmbb:postExpansionCheck if checks are necessary on this expanded data
+              Graph pmbb:expanded
+              {
+                  ?allele a obo:OBI_0001352 .
+                  ?allele obo:OBI_0001938 ?zygVal .
+                  ?allele obo:BFO_0000050 ?dataset .
+                  ?allele obo:IAO_0000136 ?dna .
+                  
+                  ?DNAextract a obo:OBI_0001051 .
+                  
+                  ?formProcess a obo:OBI_0200000 .
+                  
+                  ?genomeIdCridSymb turbo:TURBO_0006510 ?genomeIdCridSymbLit .
+                  ?genomeIdCridSymb obo:BFO_0000050 ?dataset .
+                  
+              }
+          }
+          Where
+          {
+              Values ?g { """ + graphsString + """ }
+              Graph ?g
+            	{
+            	    ?alleleSC a obo:OBI_0001352 ;
+            	            turbo:TURBO_0007607 ?zygosityValURI ;
+            	            turbo:TURBO_0007601 ?bbEncSymb ;
+            	            turbo:TURBO_0007606 ?zygosityValText ;
+            	            turbo:TURBO_0007602 ?genomeIdCridSymbLit ;
+            	            turbo:TURBO_0007603 ?genomeIdReg ;
+            	            turbo:TURBO_0007505 ?geneText ;
+            	            turbo:TURBO_0007608 ?dataset .
+            	    Optional
+            	    {
+            	        ?allele turbo:TURBO_0007604 ?protein .
+            	    }
+            	    
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?allele)
+            	Bind (uri(?zygosityValURI) AS ?zygVal)      
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextract)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?formProcess)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeIdCridSymb)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?dna)
+            	}
+          }
+          """
+        
+        helper.updateSparql(cxn, sparqlPrefixes + expandLOF)
     }
 }

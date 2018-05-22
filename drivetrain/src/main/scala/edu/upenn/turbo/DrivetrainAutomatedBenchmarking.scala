@@ -237,6 +237,13 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         val stopExpBbConsToHcEncs = System.nanoTime()
         
         writeCSV.println("Expand Hc Enc to Bb Cons Joins," + ((stopExpBbConsToHcEncs - startExpBbConsToHcEncs)/1000000000.0).toString)
+        
+        //expand loss of function
+        val startLOFexpand = System.nanoTime()
+        expand.expandLossOfFunctionShortcuts(cxn, graphsList)
+        val stopLOFexpand = System.nanoTime()
+        
+        writeCSV.println("Expand Loss of Function Data," + ((stopLOFexpand - startLOFexpand)/1000000000.0).toString)
     }
     
     def benchmarkPostExpansion(cxn: RepositoryConnection, writeCSV: PrintWriter, writeTXT: PrintWriter)
