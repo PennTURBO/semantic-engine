@@ -749,7 +749,7 @@ class Expander extends ProjectwideGlobals
           Insert
           {
               # inserting into pmbb:expanded for now, at some point may want to use pmbb:postExpansionCheck if checks are necessary on this expanded data
-              Graph pmbb:expanded
+              Graph pmbb:postExpansionCheck
               {
                   ?allele a obo:OBI_0001352 .
                   ?allele obo:OBI_0001938 ?zygVal .
