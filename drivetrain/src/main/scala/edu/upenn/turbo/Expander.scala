@@ -24,11 +24,11 @@ class Expander extends ProjectwideGlobals
         logger.info("finished encounter expansion")
         participantExpansion(cxn, instantiation, graphsString)
         logger.info("finished participant expansion")
-        biobankEncounterParticipantJoinExpansion(cxn, graphsString)
+        biobankEncounterParticipantJoinExpansion(cxn, instantiation, graphsString)
         logger.info("finished biobank join expansion, starting healthcare join expansion")
-        healthcareEncounterParticipantJoinExpansion(cxn, graphsString)
+        healthcareEncounterParticipantJoinExpansion(cxn, instantiation, graphsString)
         logger.info("finished join expansion")
-        expandLossOfFunctionShortcuts(cxn, graphsString)
+        expandLossOfFunctionShortcuts(cxn, instantiation, graphsString)
         logger.info("expanded loss of function shortcuts")
         graphsString
     }
@@ -49,7 +49,7 @@ class Expander extends ProjectwideGlobals
      * Submits a SPARQL expansion update to the graph server which expands biobank encounter to biobank consenter entity linking shortcuts
      * to their fully ontologied form.
      */
-    def biobankEncounterParticipantJoinExpansion(cxn: RepositoryConnection, graphsString: String)
+    def biobankEncounterParticipantJoinExpansion(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         val expand: String = """
@@ -57,6 +57,9 @@ class Expander extends ProjectwideGlobals
           {
               Graph pmbb:entityLinkData
               {
+                  ?instantiation a turbo:TURBO_0000522 .
+        		      ?instantiation obo:OBI_0000293 ?dataset .
+        		      
                   ?bbEncCrid a turbo:TURBO_0000533 .
                   ?bbEncCrid obo:BFO_0000051 ?bbEncSymb .
                   ?bbEncCrid obo:BFO_0000051 ?bbEncRegDen .
@@ -124,6 +127,7 @@ class Expander extends ProjectwideGlobals
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?bbEncRegDen)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?partSymb)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?partRegDen)
+              BIND(uri("""" + instantiation + """") AS ?instantiation)
           }
           """    
         
@@ -134,7 +138,7 @@ class Expander extends ProjectwideGlobals
      * Submits a SPARQL expansion update to the graph server which expands healthcare encounter to biobank consenter entity linking shortcuts
      * to their fully ontologied form.
      */
-    def healthcareEncounterParticipantJoinExpansion(cxn: RepositoryConnection, graphsString: String)
+    def healthcareEncounterParticipantJoinExpansion(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         val expand: String = """
@@ -142,6 +146,9 @@ class Expander extends ProjectwideGlobals
           {
               Graph pmbb:entityLinkData
               {
+                  ?instantiation a turbo:TURBO_0000522 .
+        		      ?instantiation obo:OBI_0000293 ?dataset .
+        		      
                   ?hcEncCrid a turbo:TURBO_0000508 .
                   ?hcEncCrid obo:BFO_0000051 ?hcEncSymb .
                   ?hcEncCrid obo:BFO_0000051 ?hcEncRegDen .
@@ -208,6 +215,7 @@ class Expander extends ProjectwideGlobals
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?hcEncRegDen)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?partSymb)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?partRegDen)
+              BIND(uri("""" + instantiation + """") AS ?instantiation)
           }
           """    
         
@@ -743,7 +751,7 @@ class Expander extends ProjectwideGlobals
           helper.updateSparql(cxn, sparqlPrefixes + healthcareEncounterExpansion) 
     }
     
-    def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, graphsString: String)
+    def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
     {
         val expandLOF: String = """
           Insert
@@ -751,18 +759,60 @@ class Expander extends ProjectwideGlobals
               # inserting into pmbb:expanded for now, at some point may want to use pmbb:postExpansionCheck if checks are necessary on this expanded data
               Graph pmbb:postExpansionCheck
               {
+                  ?instantiation a turbo:TURBO_0000522 .
+        		      ?instantiation obo:OBI_0000293 ?dataset .
+        		      
+                  ?dataset dc:title ?datasetTitle .
+                  ?dataset a obo:IAO_0000100 .
+                  
                   ?allele a obo:OBI_0001352 .
                   ?allele obo:OBI_0001938 ?zygVal .
                   ?allele obo:BFO_0000050 ?dataset .
-                  ?allele obo:IAO_0000136 ?dna .
+                  ?allele obo:IAO_0000136 ?DNA .
+                  ?allele obo:IAO_0000142 ?proteinURI .
+                  ?allele turbo:TURBO_0006512 ?geneText .
                   
                   ?DNAextract a obo:OBI_0001051 .
                   
                   ?formProcess a obo:OBI_0200000 .
+                  ?formProcess obo:OBI_0000299 ?allele .
+                  ?formProcess obo:OBI_0000293 ?sequenceData .
                   
-                  ?genomeIdCridSymb turbo:TURBO_0006510 ?genomeIdCridSymbLit .
-                  ?genomeIdCridSymb obo:BFO_0000050 ?dataset .
+                  ?genomeCridSymb turbo:TURBO_0006510 ?genomeCridSymbLit .
+                  ?genomeCridSymb obo:BFO_0000050 ?dataset .
+                  ?genomeCridSymb a turbo:TURBO_0000568 .
+                  ?genomeCridSymb obo:BFO_0000050 ?genomeCrid .
                   
+                  ?genomeRegDen obo:BFO_0000050 ?genomeCrid .
+                  ?genomeRegDen a turbo:TURBO_0000567 .
+                  ?genomeRegDen obo:IAO_0000219 turbo:TURBO_0000451 .
+                  
+                  ?genomeCrid a turbo:TURBO_0000566 .
+                  ?genomeCrid obo:IAO_0000219 ?specimen .
+                  
+                  ?DNAextractionProcess a obo:OBI_0000257 .
+                  ?DNAextractionProcess obo:OBI_0000299 ?DNAextract .
+                  ?DNAextractionProcess obo:OBI_0000293 ?specimen .
+                  
+                  ?zigVal turbo:TURBO_0006512 ?zygosityValText .
+                  ?zigVal obo:BFO_0000050 ?dataset .
+                  ?zigVal a turbo:TURBO_0000571 .
+                  
+                  ?specimen a obo:OBI_0001479 .
+                  
+                  ?DNA a obo:CHEBI_16991 .
+                  
+                  ?collectionProcess a obo:OBI_0600005 .
+                  ?collectionProcess obo:OBI_0000299 ?specimen .
+                  
+                  ?exomeSequenceProcess a obo:OBI_0002118 .
+                  ?exomeSequenceProcess obo:OBI_0000293 ?DNAextract .
+                  ?exomeSequenceProcess obo:OBI_0000299 ?sequenceData .
+                  
+                  ?sequenceData a obo:OBI_0001573 .
+                  
+                  # leaving this shortcut in for entity linking later on
+                  ?allele turbo:TURBO_0007601 .
               }
           }
           Where
@@ -774,21 +824,32 @@ class Expander extends ProjectwideGlobals
             	            turbo:TURBO_0007607 ?zygosityValURI ;
             	            turbo:TURBO_0007601 ?bbEncSymb ;
             	            turbo:TURBO_0007606 ?zygosityValText ;
-            	            turbo:TURBO_0007602 ?genomeIdCridSymbLit ;
-            	            turbo:TURBO_0007603 ?genomeIdReg ;
+            	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
+            	            turbo:TURBO_0007603 ?genomeReg ;
             	            turbo:TURBO_0007505 ?geneText ;
-            	            turbo:TURBO_0007608 ?dataset .
+            	            turbo:TURBO_0007608 ?datasetTitle .
             	    Optional
             	    {
             	        ?allele turbo:TURBO_0007604 ?protein .
             	    }
             	    
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?dataset)    
             	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?allele)
-            	Bind (uri(?zygosityValURI) AS ?zygVal)      
+            	Bind (uri(?zygosityValURI) AS ?zygVal) 
+            	Bind (uri(?genomeReg) AS ?genomeRegURI)  
+            	Bind (uri(?protein) AS ?proteinURI)      
             	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextract)
             	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?formProcess)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeIdCridSymb)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?dna)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCridSymb)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNA)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextractionProcess)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeRegDen)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCrid)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?specimen)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?collectionProcess)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?sequenceData)
+            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?exomeSequenceProcess)
+            	Bind (uri("""" + instantiation + """") AS ?instantiation)
             	}
           }
           """
