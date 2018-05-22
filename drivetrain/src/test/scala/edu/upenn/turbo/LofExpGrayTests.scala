@@ -9,7 +9,7 @@ import org.scalatest._
 class LofExpGrayTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals {
   val lofExp = new LofExpander
 
-  test("no biosex data") {
+  test("placeholder / stub test") {
     val toyInput = 2
 
     val toyOutput = lofExp.addOne(toyInput)
