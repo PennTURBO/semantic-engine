@@ -11,7 +11,7 @@ import org.eclipse.rdf4j.rio.RDFFormat
 import org.eclipse.rdf4j.rio.Rio
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
-import com.example.incubator.karmaClientHelper
+//import com.example.incubator.karmaClientHelper
 
 // write more tests checking for processes, inputs and outputs
 
@@ -2724,33 +2724,33 @@ graph <http://www.itmat.upenn.edu/biobank/inverses> {
     // leave UUID out and trust turbo cleanup methods to load these shortcut triples into a named graph and 
     // expand and uniquify them before relateasgin into teh default named graph?
 
-    System.out.println(MyCSVContent)
-
-    val RDFService = new karmaClientHelper
-
-    var EncountersTurtleString = RDFService.CSV2TTL(MyRdfServiceURL, MyModelLocURL, MyCSVContent)
-
-    System.out.println("encounters triples from karma")
-
-    System.out.println(EncountersTurtleString)
-
-    // but best practice is to use static, handcrafted triples that aren't' dependent on any  (or minimal) external services
-
-    //    // the triplestore defined by cxn should now contain all of the shortcut triples about encounters 
-    //    //    in graph <http://transformunify.org/participants_from_karma>, and nothing else
-    //    //    this may not be useful if we want to test the expansion of single shortcuts individually
-
-    //    // instances of encounters are created even in the shortcut Karma model
-    //    // (you can't have RDF triples without at least one entity)
-    //    // (also the shortcut encounter triples don't instantiate any other individuals)
-    //    // the expansion method must ensure that the URI for any one helathcare encounter in reality is universally unique 
-    //    //    how to test that?!
-    //    // it doesn't necessarily have to be the same URI as provided by Karma,
-    //    // although the previous textual value should be captured
-    //
-    //    // PS output from Karma is in N-triples, not Turtle, so it won't be prefixed.  Sticking with that pattern for the hadncrafties
-
-    var InsertSuccess = InsertFromString(cxn, EncountersTurtleString, "http://transformunify.org/ontologies/participants_from_karma")
+//    System.out.println(MyCSVContent)
+//
+//    val RDFService = new karmaClientHelper
+//
+//    var EncountersTurtleString = RDFService.CSV2TTL(MyRdfServiceURL, MyModelLocURL, MyCSVContent)
+//
+//    System.out.println("encounters triples from karma")
+//
+//    System.out.println(EncountersTurtleString)
+//
+//    // but best practice is to use static, handcrafted triples that aren't' dependent on any  (or minimal) external services
+//
+//    //    // the triplestore defined by cxn should now contain all of the shortcut triples about encounters 
+//    //    //    in graph <http://transformunify.org/participants_from_karma>, and nothing else
+//    //    //    this may not be useful if we want to test the expansion of single shortcuts individually
+//
+//    //    // instances of encounters are created even in the shortcut Karma model
+//    //    // (you can't have RDF triples without at least one entity)
+//    //    // (also the shortcut encounter triples don't instantiate any other individuals)
+//    //    // the expansion method must ensure that the URI for any one helathcare encounter in reality is universally unique 
+//    //    //    how to test that?!
+//    //    // it doesn't necessarily have to be the same URI as provided by Karma,
+//    //    // although the previous textual value should be captured
+//    //
+//    //    // PS output from Karma is in N-triples, not Turtle, so it won't be prefixed.  Sticking with that pattern for the hadncrafties
+//
+//    var InsertSuccess = InsertFromString(cxn, EncountersTurtleString, "http://transformunify.org/ontologies/participants_from_karma")
 
   }
 
