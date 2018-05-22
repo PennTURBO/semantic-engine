@@ -239,6 +239,30 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
         operation.runSparqlCheck(cxn, check, ArrayBuffer("enc"), "pre-expansion", "minimum for biobank encounter not found")
     }
     
+    def checkForRequiredLossOfFunctionShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
+    {
+        val check: String = """
+            SELECT distinct ?enc
+            WHERE 
+            {
+                Values ?g {""" + graphsList + """}
+                GRAPH ?g {
+                    ?allele a obo:OBI_0001352 .
+                    MINUS
+                    {
+                        ?allele turbo:TURBO_0007607 ?zygosityValURI ;
+          	            turbo:TURBO_0007601 ?bbEncSymb ;
+          	            turbo:TURBO_0007606 ?zygosityValText ;
+          	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
+          	            turbo:TURBO_0007603 ?genomeReg ;
+          	            turbo:TURBO_0007505 ?geneText ;
+          	            turbo:TURBO_0007608 ?datasetTitle .
+                    }
+                }        
+            }"""
+        operation.runSparqlCheck(cxn, check, ArrayBuffer("enc"), "pre-expansion", "minimum for loss of function allele not found")
+    }
+    
     def checkForMultipleParticipantDependentNodes (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String = """
@@ -484,6 +508,60 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
             
         operation.runSparqlCheck(cxn, check, ArrayBuffer("s"), "pre-expansion", "multiple shortcut relationships on one healthcare encounter prescription")
     }
+    
+    def checkForMultipleLossOfFunctionShortcutNodes(cxn: RepositoryConnection, graphsList: String): Boolean =
+    {
+        val check: String = """
+            select ?s
+            (count (distinct ?alleletype) as ?alleleTypeCount)
+            (count (distinct ?zygosityValue) as ?zygValCount)
+            (count (distinct ?bbEncSymb) as ?bbEncSymbCount)
+            (count (distinct ?zygValText) as ?zygValTextCount)
+            (count (distinct ?genomeCridSymbLit) as ?genomeCridSymbLitCount)
+            (count (distinct ?genomeReg) as ?genomeRegCount)
+            (count (distinct ?geneText) as ?geneTextCount)
+            (count (distinct ?dataset) as ?datasetCount)
+            """ + graphsList + """
+            where 
+            {
+                ?allele a obo:OBI_0001352 .
+                ?allele a ?alleletype .
+                optional {
+                    ?allele turbo:TURBO_0007607 ?zygosityValue .
+                } .
+                optional {
+                    ?allele turbo:TURBO_0007601 ?bbEncSymb .
+                } .
+                optional {
+                    ?allele turbo:TURBO_0007606 ?zygValText .
+                } .
+                optional {
+                    ?allele turbo:TURBO_0007602 ?genomeCridSymbLit .
+                } .
+                optional {
+                    ?allele turbo:TURBO_0007603 ?genomeReg .
+                } .
+                optional {
+                    ?allele turbo:TURBO_0007605 ?geneText .
+                } .
+                optional {
+                    ?allele turbo:TURBO_0007608 ?dataset .
+                } .
+            }
+            group by ?s
+            having (
+            ?alleleTypeCount > 1 ||
+            ?zygValCount > 1 ||
+            ?bbEncSymbCount > 1 ||
+            ?genomeCridSymbLitCount > 1 ||
+            ?genomeRegCount > 1 ||
+            ?geneTextCount > 1 ||
+            ?datasetCount > 1 ||
+            ?zygValTextCount > 1
+            )"""
+            
+        operation.runSparqlCheck(cxn, check, ArrayBuffer("s"), "pre-expansion", "multiple shortcut relationships on one healthcare encounter prescription")
+    }
 
     def checkForUnexpectedClasses (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
@@ -509,6 +587,8 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
                 filter (?c not in (turbo:TURBO_0000533))
                 # healthcare crid (in join data)
                 filter (?c not in (turbo:TURBO_0000508))
+                # allele info (loss of function)
+                filter (?c not in (obo:OBI_0001352))
             }} group by ?c }
         """
         operation.runSparqlCheck(cxn, check, ArrayBuffer("c", "ccount"), "pre-expansion", "found extraneous class")
@@ -616,6 +696,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
               FILTER (?o != turbo:TURBO_0000508)
               FILTER (?o != turbo:TURBO_0000503)
               FILTER (?o != turbo:TURBO_0000533)
+              FILTER (?o != obo:OBI_0001352)
               
               FILTER (?p != obo:RO_0002234)
               FILTER (?p != turbo:TURBO_0000302)

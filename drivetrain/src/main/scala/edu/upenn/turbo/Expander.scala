@@ -756,18 +756,24 @@ class Expander extends ProjectwideGlobals
         val expandLOF: String = """
           Insert
           {
-              # inserting into pmbb:expanded for now, at some point may want to use pmbb:postExpansionCheck if checks are necessary on this expanded data
               Graph pmbb:postExpansionCheck
               {
                   ?instantiation a turbo:TURBO_0000522 .
         		      ?instantiation obo:OBI_0000293 ?dataset .
         		      
-                  ?dataset dc:title ?datasetTitle .
+                  ?dataset dc11:title ?datasetTitle .
                   ?dataset a obo:IAO_0000100 .
+                  
+                  # connections to dataset
+                  ?allele obo:BFO_0000050 ?dataset .
+                  ?dataset obo:BFO_0000051 ?allele .
+                  ?genomeCridSymb obo:BFO_0000050 ?dataset .
+                  ?dataset obo:BFO_0000051 ?genomeCridSymb .
+                  ?zigVal obo:BFO_0000050 ?dataset .
+                  ?dataset obo:BFO_0000051 ?zipVal .
                   
                   ?allele a obo:OBI_0001352 .
                   ?allele obo:OBI_0001938 ?zygVal .
-                  ?allele obo:BFO_0000050 ?dataset .
                   ?allele obo:IAO_0000136 ?DNA .
                   ?allele obo:IAO_0000142 ?proteinURI .
                   ?allele turbo:TURBO_0006512 ?geneText .
@@ -779,13 +785,14 @@ class Expander extends ProjectwideGlobals
                   ?formProcess obo:OBI_0000293 ?sequenceData .
                   
                   ?genomeCridSymb turbo:TURBO_0006510 ?genomeCridSymbLit .
-                  ?genomeCridSymb obo:BFO_0000050 ?dataset .
                   ?genomeCridSymb a turbo:TURBO_0000568 .
                   ?genomeCridSymb obo:BFO_0000050 ?genomeCrid .
+                  ?genomeCrid obo:BFO_0000051 ?genomeCridSymb .
                   
                   ?genomeRegDen obo:BFO_0000050 ?genomeCrid .
+                  ?genomeCrid obo:BFO_0000051 ?genomeRegDen .
                   ?genomeRegDen a turbo:TURBO_0000567 .
-                  ?genomeRegDen obo:IAO_0000219 turbo:TURBO_0000451 .
+                  ?genomeRegDen obo:IAO_0000219 ?genomeRegURI .
                   
                   ?genomeCrid a turbo:TURBO_0000566 .
                   ?genomeCrid obo:IAO_0000219 ?specimen .
@@ -795,7 +802,6 @@ class Expander extends ProjectwideGlobals
                   ?DNAextractionProcess obo:OBI_0000293 ?specimen .
                   
                   ?zigVal turbo:TURBO_0006512 ?zygosityValText .
-                  ?zigVal obo:BFO_0000050 ?dataset .
                   ?zigVal a turbo:TURBO_0000571 .
                   
                   ?specimen a obo:OBI_0001479 .
@@ -811,8 +817,9 @@ class Expander extends ProjectwideGlobals
                   
                   ?sequenceData a obo:OBI_0001573 .
                   
-                  # leaving this shortcut in for entity linking later on
-                  ?allele turbo:TURBO_0007601 .
+                  # leaving these shortcuts in for entity linking later on
+                  ?allele turbo:TURBO_0007601 ?bbEncSymb .
+                  ?allele graphBuilder:ScToCollProc ?collectionProcess .
               }
           }
           Where
@@ -826,11 +833,11 @@ class Expander extends ProjectwideGlobals
             	            turbo:TURBO_0007606 ?zygosityValText ;
             	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
             	            turbo:TURBO_0007603 ?genomeReg ;
-            	            turbo:TURBO_0007505 ?geneText ;
+            	            turbo:TURBO_0007605 ?geneText ;
             	            turbo:TURBO_0007608 ?datasetTitle .
             	    Optional
             	    {
-            	        ?allele turbo:TURBO_0007604 ?protein .
+            	        ?alleleSC turbo:TURBO_0007604 ?protein .
             	    }
             	    
             	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?dataset)    

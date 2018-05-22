@@ -325,6 +325,10 @@ def checkForInvalidClasses (cxn: RepositoryConnection, namedGraph: String, stage
         operation.runSparqlCheck(cxn, checkBBEnc, ArrayBuffer("encounter"), stage, "biobank encounter has missing dependents")
     }
     
+    def checkAllelesHaveRequiredDependents(cxn: RepositoryConnection) {}
+    def checkDiagnosesHaveRequiredDependents(cxn: RepositoryConnection) {}
+    def checkPrescriptionsHaveRequiredDependents(cxn: RepositoryConnection) {}
+    
     //eventually make dynamic using now function again 
     def checkAllDatesAreReasonable(cxn: RepositoryConnection, namedGraph: String, stage: String): Boolean =
     {
@@ -361,6 +365,8 @@ def checkForInvalidClasses (cxn: RepositoryConnection, namedGraph: String, stage
                   {
                       ?p rdfs:subPropertyOf ?shortcutCategory .
                   }
+                  # Allowed shortcuts
+                  Filter (?p != turbo:TURBO_0007601)
               }
               """
             

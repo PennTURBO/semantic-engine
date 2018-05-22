@@ -14,6 +14,12 @@ class EntityLinker extends ProjectwideGlobals
 {   
     val twoFieldMatch: MatchOnTwoFields = new MatchOnTwoFields
     
+    def runAllEntityLinking(cxn: RepositoryConnection)
+    {
+        joinParticipantsAndEncounters(cxn)
+        connectLossOfFunctionToBiobankEncounters(cxn)
+    }
+    
     /**
      * This is the driver method to complete the original "EntityLinking" to connect Healthcare and Biobank encounters to Biobank consenters.
      */
@@ -27,6 +33,11 @@ class EntityLinker extends ProjectwideGlobals
         logger.info("connect bmi to adipose")
         connectBMIToAdipose(cxn)
         logger.info("Participants and Encounters have been linked using join data")
+    }
+    
+    def connectLossOfFunctionToBiobankEncounters(cxn: RepositoryConnection)
+    {
+        
     }
     
     /**

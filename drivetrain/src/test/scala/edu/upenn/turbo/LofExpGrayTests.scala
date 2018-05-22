@@ -12,9 +12,9 @@ class LofExpGrayTests extends FunSuiteLike with BeforeAndAfter with Matchers wit
   test("placeholder / stub test") {
     val toyInput = 2
     //expander.expandLossOfFunctionShortcuts(cxn, graphslist)
-    val toyOutput = lofExp.addOne(toyInput)
+    //val toyOutput = lofExp.addOne(toyInput)
 
-    assert(toyOutput == 3)
+    //assert(toyOutput == 3)
   }
 
 }

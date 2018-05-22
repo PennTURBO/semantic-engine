@@ -226,21 +226,21 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //expand biobank encounter - biobank consenter joins
         val startExpBbConsToBbEncs = System.nanoTime()
-        expand.biobankEncounterParticipantJoinExpansion(cxn, graphsList)
+        expand.biobankEncounterParticipantJoinExpansion(cxn, instantiation, graphsList)
         val stopExpBbConsToBbEncs = System.nanoTime()
         
         writeCSV.println("Expand Bb Enc to Bb Cons Joins," + ((stopExpBbConsToBbEncs - startExpBbConsToBbEncs)/1000000000.0).toString)
         
         //expand healthcare encounter - biobank consenter joins
         val startExpBbConsToHcEncs = System.nanoTime()
-        expand.healthcareEncounterParticipantJoinExpansion(cxn, graphsList)
+        expand.healthcareEncounterParticipantJoinExpansion(cxn, instantiation, graphsList)
         val stopExpBbConsToHcEncs = System.nanoTime()
         
         writeCSV.println("Expand Hc Enc to Bb Cons Joins," + ((stopExpBbConsToHcEncs - startExpBbConsToHcEncs)/1000000000.0).toString)
         
         //expand loss of function
         val startLOFexpand = System.nanoTime()
-        expand.expandLossOfFunctionShortcuts(cxn, graphsList)
+        expand.expandLossOfFunctionShortcuts(cxn, instantiation, graphsList)
         val stopLOFexpand = System.nanoTime()
         
         writeCSV.println("Expand Loss of Function Data," + ((stopLOFexpand - startLOFexpand)/1000000000.0).toString)
@@ -372,6 +372,13 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         val stopConnectBmiToAdi = System.nanoTime()
         
         writeCSV.println("Connect BMI To Adipose," + ((stopConnectBmiToAdi - startConnectBmiToAdi)/1000000000.0).toString)
+        
+        //connect LOF to BB Encs
+        val startConnectLOF = System.nanoTime()
+        join.connectLossOfFunctionToBiobankEncounters(cxn)
+        val stopConnectLOF = System.nanoTime()
+        
+        writeCSV.println("Connect LOF to BB Encs," + ((stopConnectLOF - startConnectLOF)/1000000000.0).toString)
     }
     
     def benchmarkConclusionating(cxn: RepositoryConnection, writeCSV: PrintWriter, writeTXT: PrintWriter)

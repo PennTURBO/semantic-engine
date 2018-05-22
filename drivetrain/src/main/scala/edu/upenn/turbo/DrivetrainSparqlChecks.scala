@@ -34,6 +34,7 @@ class DrivetrainSparqlChecks extends ProjectwideGlobals
         if (proceed) proceed = precheck.checkForRequiredParticipantShortcuts(cxn, graphsString)
         if (proceed) proceed = precheck.checkForRequiredHealthcareEncounterShortcuts(cxn, graphsStringAsFrom)
         if (proceed) proceed = precheck.checkForRequiredBiobankEncounterShortcuts(cxn, graphsString)
+        if (proceed) proceed = precheck.checkForRequiredLossOfFunctionShortcuts(cxn, graphsString)
         if (proceed) proceed = precheck.checkForValidParticipantBirthShortcuts(cxn, graphsStringAsFrom)
         if (proceed) proceed = precheck.checkForValidParticipantBiosexShortcuts(cxn, graphsStringAsFrom)
         if (proceed) proceed = precheck.checkForValidHealthcareEncounterDateShortcuts(cxn, graphsStringAsFrom)
@@ -45,6 +46,7 @@ class DrivetrainSparqlChecks extends ProjectwideGlobals
         if (proceed) proceed = precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, graphsStringAsFrom)
         if (proceed) proceed = precheck.checkForMultiplePrescriptionDependentNodes(cxn, graphsStringAsFrom)
         if (proceed) proceed = precheck.checkForMultipleDiagnosisDependentNodes(cxn, graphsStringAsFrom)
+        if (proceed) proceed = precheck.checkForMultipleLossOfFunctionShortcutNodes(cxn, graphsStringAsFrom)
         logger.info("pre-expansion checks returning " + proceed)
         proceed
     }

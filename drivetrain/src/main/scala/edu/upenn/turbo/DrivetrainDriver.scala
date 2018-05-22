@@ -161,7 +161,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   {
       logger.info("running reftracking")
       reftrack.runAllReftrackProcesses(cxn)
-      join.joinParticipantsAndEncounters(cxn)
+      join.runAllEntityLinking(cxn)
   }
   
   def runConclusionating(cxn: RepositoryConnection, biosexThreshold: Double, dateofbirthThreshold: Double): Boolean =
