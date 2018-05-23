@@ -361,7 +361,8 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //link biobank encounters to biobank consenters
         val startJoinBbEncsToBbCons = System.nanoTime()
-        join.joinParticipantsAndBiobankEncounters(cxn, consResult)
+        val bbEncResult = join.getBiobankEncounterInfo(cxn)
+        join.joinParticipantsAndBiobankEncounters(cxn, consResult, bbEncResult)
         val stopJoinBbEncsToBbCons = System.nanoTime()
         
         writeCSV.println("Link Bb Encs to Bb Cons," + ((stopJoinBbEncsToBbCons - startJoinBbEncsToBbCons)/1000000000.0).toString)
@@ -375,7 +376,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //connect LOF to BB Encs
         val startConnectLOF = System.nanoTime()
-        join.connectLossOfFunctionToBiobankEncounters(cxn)
+        join.connectLossOfFunctionToBiobankEncounters(cxn, bbEncResult)
         val stopConnectLOF = System.nanoTime()
         
         writeCSV.println("Connect LOF to BB Encs," + ((stopConnectLOF - startConnectLOF)/1000000000.0).toString)

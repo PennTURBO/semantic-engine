@@ -115,7 +115,7 @@ class CorrectlyPackagedTests extends FunSuiteLike with BeforeAndAfter with Match
 
     reftrackInst.reftrackEncountersAndDependents(cxn)
 
-    joiner.joinParticipantsAndEncounters(cxn)
+    joiner.joinParticipantsAndEncounters(cxn, joiner.getBiobankEncounterInfo(cxn))
 
     //HAYDEN 10/12 10:13 Changing double values to conform to what is expected by tests 
     //This value must be greater than .5 and less than or equal to 1. If it is not, the program will default to using a value of 1.

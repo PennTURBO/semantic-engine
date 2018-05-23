@@ -393,7 +393,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
         
-        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
+        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn), entLink.getBiobankEncounterInfo(cxn))
         
         val ask1: String = """
           ASK {GRAPH pmbb:expanded
@@ -891,7 +891,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }"""
         
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
+        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn), entLink.getBiobankEncounterInfo(cxn))
         
         val ask1: String = """
           ASK {GRAPH pmbb:expanded
@@ -1026,7 +1026,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }"""
         
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
+        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn), entLink.getBiobankEncounterInfo(cxn))
         
         val ask1: String = """
           ASK {GRAPH pmbb:expanded

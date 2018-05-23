@@ -16,28 +16,30 @@ class EntityLinker extends ProjectwideGlobals
     
     def runAllEntityLinking(cxn: RepositoryConnection)
     {
-        joinParticipantsAndEncounters(cxn)
-        connectLossOfFunctionToBiobankEncounters(cxn)
+        val bbEncResult: ArrayBuffer[ArrayBuffer[Value]] = getBiobankEncounterInfo(cxn)
+        joinParticipantsAndEncounters(cxn, bbEncResult)
+        connectLossOfFunctionToBiobankEncounters(cxn, bbEncResult)
     }
     
     /**
      * This is the driver method to complete the original "EntityLinking" to connect Healthcare and Biobank encounters to Biobank consenters.
      */
-    def joinParticipantsAndEncounters (cxn: RepositoryConnection)
+    def joinParticipantsAndEncounters (cxn: RepositoryConnection, bbEncResult: ArrayBuffer[ArrayBuffer[Value]])
     {
         val consResult: ArrayBuffer[ArrayBuffer[Value]] = getConsenterInfo(cxn)
         logger.info("starting hc join")
         joinParticipantsAndHealthcareEncounters(cxn, consResult)
         logger.info("starting biobank join")
-        joinParticipantsAndBiobankEncounters(cxn, consResult)
+        joinParticipantsAndBiobankEncounters(cxn, consResult, bbEncResult)
         logger.info("connect bmi to adipose")
         connectBMIToAdipose(cxn)
         logger.info("Participants and Encounters have been linked using join data")
     }
     
-    def connectLossOfFunctionToBiobankEncounters(cxn: RepositoryConnection)
+    def connectLossOfFunctionToBiobankEncounters(cxn: RepositoryConnection, bbEncResult: ArrayBuffer[ArrayBuffer[Value]])
     {
-        
+        val lossOfFunctionJoinData: ArrayBuffer[ArrayBuffer[Value]] = getLossOfFunctionJoinData(cxn)
+        twoFieldMatch.executeMatchWithTwoTables(cxn, bbEncResult, lossOfFunctionJoinData)
     }
     
     /**
@@ -78,7 +80,7 @@ class EntityLinker extends ProjectwideGlobals
       val encResult: ArrayBuffer[ArrayBuffer[Value]] = getHealthcareEncounterInfo(cxn)
       logger.info("got encounter results")
       
-      twoFieldMatch.executeMatch(cxn, joinResult, encResult, consResult)
+      twoFieldMatch.executeMatchWithThreeTables(cxn, joinResult, encResult, consResult)
       logger.info("completed match preprocess")
       val completeHealthcareEncounterJoin: String = 
       """
@@ -142,14 +144,13 @@ class EntityLinker extends ProjectwideGlobals
     /**
      * Executes biobank encounter to biobank consenter joins.
      */
-    def joinParticipantsAndBiobankEncounters(cxn: RepositoryConnection, consResult: ArrayBuffer[ArrayBuffer[Value]])
+    def joinParticipantsAndBiobankEncounters(
+        cxn: RepositoryConnection, consResult: ArrayBuffer[ArrayBuffer[Value]], encResult: ArrayBuffer[ArrayBuffer[Value]])
     {
       val joinResult: ArrayBuffer[ArrayBuffer[Value]] = getBiobankToConsenterJoinInfo(cxn)
       logger.info("got join results")
-      val encResult: ArrayBuffer[ArrayBuffer[Value]] = getBiobankEncounterInfo(cxn)
-      logger.info("got encounter results")
       
-      twoFieldMatch.executeMatch(cxn, joinResult, encResult, consResult)
+      twoFieldMatch.executeMatchWithThreeTables(cxn, joinResult, encResult, consResult)
       logger.info("completed match preprocess")
       val completeBiobankEncounterJoin: String = 
       """
@@ -321,7 +322,6 @@ class EntityLinker extends ProjectwideGlobals
             Graph pmbb:expanded
             {
               ?bbSymb turbo:TURBO_0006510 ?eilv ;
-          		               turbo:TURBO_0006500 'true'^^xsd:boolean ;
           		               a turbo:TURBO_0000534 .
           		?bbEncCrid a turbo:TURBO_0000533 ;
           		           obo:BFO_0000051 ?bbSymb ;
@@ -373,5 +373,22 @@ class EntityLinker extends ProjectwideGlobals
         }"""
          
        helper.updateSparql(cxn, sparqlPrefixes + attachBMIToAdipose)
+    }
+    
+    def getLossOfFunctionJoinData(cxn: RepositoryConnection): ArrayBuffer[ArrayBuffer[Value]] =
+    {
+        val query: String = 
+        """
+            select ?allele ?encLit ?encReg where
+            {
+                graph pmbb:expanded
+                {
+                    ?allele a obo:OBI_0001352 .
+                    ?allele turbo:TURBO_0007601 ?encLit .
+                    ?allele turbo:TURBO_0007609 ?encReg .
+                }
+            }  
+        """
+        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, ArrayBuffer("allele", "encLit", "encReg"))
     }
 }
