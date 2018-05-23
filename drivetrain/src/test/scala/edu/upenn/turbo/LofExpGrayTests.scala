@@ -59,17 +59,18 @@ class LofExpGrayTests extends FunSuiteLike with BeforeAndAfter with Matchers wit
       prefix turbo: <http://transformunify.org/ontologies/>
       prefix xsd: <http://www.w3.org/2001/XMLSchema#>
       insert data {
+      graph <http://http://www.itmat.upenn.edu/biobank/oneLofScBlock> {
 alleleInfo:b78d_10bf rdf:type obo:OBI_0001352 .
-alleleInfo:b78d_10bf turbo:TURBO_0007601 "66EE7A08-E660-4D7E-B24D-C62AC448E311" .
+alleleInfo:b78d_10bf turbo:TURBO_0007601 "annono-enc" .
 alleleInfo:b78d_10bf turbo:TURBO_0007609 "http://transformunify.org/ontologies/TURBO_0000422"^^xsd:anyURI .
 alleleInfo:b78d_10bf turbo:TURBO_0007604 "http://purl.obolibrary.org/obo/PR_O43657"^^xsd:anyURI .
 alleleInfo:b78d_10bf turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
 alleleInfo:b78d_10bf turbo:TURBO_0007605 "TSPAN6(ENSG00000000003)" .
-alleleInfo:b78d_10bf turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
+alleleInfo:b78d_10bf turbo:TURBO_0007602 "annono-geno_id" .
 alleleInfo:b78d_10bf turbo:TURBO_0007606 "1" .
 alleleInfo:b78d_10bf turbo:TURBO_0007607 "http://transformunify.org/ontologies/TURBO_0000591"^^xsd:anyURI .
 alleleInfo:b78d_10bf turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0000451"^^xsd:anyURI .
-      }
+      }}
       """
 
     cxn.prepareUpdate(QueryLanguage.SPARQL, UpdateStatement).execute()
