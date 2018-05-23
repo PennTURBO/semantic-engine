@@ -203,6 +203,8 @@ def checkForInvalidClasses (cxn: RepositoryConnection, namedGraph: String, stage
                   ?p a owl:DatatypeProperty .
               }
               FILTER (isUri(?o))
+              # exceptions list
+              Filter (?p != turbo:TURBO_0007609)
           }
           """
         operation.runSparqlCheck(cxn, check, ArrayBuffer("o", "p"), stage, "URI found where Literal expected")
