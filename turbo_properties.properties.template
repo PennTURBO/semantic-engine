@@ -10,7 +10,8 @@ inputFiles = ..//data//demo_data//enc2hc.ttl,\
 ..//data//demo_data//join1hc.ttl,\
 ..//data//demo_data//join2bb.ttl,\
 ..//data//demo_data//part1.ttl,\
-..//data//demo_data//part2.ttl
+..//data//demo_data//part2.ttl,\
+..//data//demo_data//lof.ttl
 
 #Currently supported formats: TURTLE, RDFXML. Capital letters must be used.
 inputFilesFormat = TURTLE
