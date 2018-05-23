@@ -39,13 +39,6 @@ class LofExpGrayTests extends FunSuiteLike with BeforeAndAfter with Matchers wit
   }
 
   test("placeholder / stub test") {
-<<<<<<< HEAD
-    val toyInput = 2
-    //expander.expandLossOfFunctionShortcuts(cxn, graphslist)
-    //val toyOutput = lofExp.addOne(toyInput)
-
-    //assert(toyOutput == 3)
-=======
 
     // the last karma instantiation didn't include the anyURi tag on the TURBO_0007609 object
     val oneLofScBlock = """
@@ -87,7 +80,7 @@ alleleInfo:b78d_10bf turbo:TURBO_0007603 "http://transformunify.org/ontologies/T
 
     // are there more triples in the database after the insert?
     assert(subsequentStmtCt > initialStmtCt, "doesn't look like any triples were added")
->>>>>>> Mark
+
   }
 
 }
