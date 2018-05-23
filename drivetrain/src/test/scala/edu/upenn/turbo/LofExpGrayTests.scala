@@ -14,6 +14,15 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 
 class LofExpGrayTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals {
+  
+  
+/*1. I would not hardcode "false" as a parameter into the delete triples method, because this won't work when run in conjunction with other tests. 
+  I get this might be useful for developing/debugging at this point however, but once the test is complete I would change it. 
+2. I would put the line of code that clears all triples in the database in your "before" method. 
+3. instead of including the prefixes on every sparql insert statement, you can just say "sparqlPrefixes + query" in your call to the update method, this is a global variable. 
+  You can even go into projectwide globals and add prefixes to the list if you want. 
+*/
+
 
   val expand: Expander = new Expander()
   val connect: ConnectToGraphDB = new ConnectToGraphDB()
