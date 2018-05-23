@@ -787,15 +787,15 @@ class Expander extends ProjectwideGlobals
                   ?genomeCridSymb turbo:TURBO_0006510 ?genomeCridSymbLit .
                   ?genomeCridSymb a turbo:TURBO_0000568 .
                   ?genomeCridSymb obo:BFO_0000050 ?genomeCrid .
-                  ?genomeCrid obo:BFO_0000051 ?genomeCridSymb .
                   
                   ?genomeRegDen obo:BFO_0000050 ?genomeCrid .
-                  ?genomeCrid obo:BFO_0000051 ?genomeRegDen .
                   ?genomeRegDen a turbo:TURBO_0000567 .
                   ?genomeRegDen obo:IAO_0000219 ?genomeRegURI .
                   
                   ?genomeCrid a turbo:TURBO_0000566 .
                   ?genomeCrid obo:IAO_0000219 ?specimen .
+                  ?genomeCrid obo:BFO_0000051 ?genomeRegDen .
+                  ?genomeCrid obo:BFO_0000051 ?genomeCridSymb .
                   
                   ?DNAextractionProcess a obo:OBI_0000257 .
                   ?DNAextractionProcess obo:OBI_0000299 ?DNAextract .
@@ -805,8 +805,10 @@ class Expander extends ProjectwideGlobals
                   ?zigVal a turbo:TURBO_0000571 .
                   
                   ?specimen a obo:OBI_0001479 .
+                  ?specimen obo:BFO_0000051 ?DNA .
                   
                   ?DNA a obo:CHEBI_16991 .
+                  ?DNA obo:BFO_0000050 ?specimen .
                   
                   ?collectionProcess a obo:OBI_0600005 .
                   ?collectionProcess obo:OBI_0000299 ?specimen .
@@ -819,7 +821,8 @@ class Expander extends ProjectwideGlobals
                   
                   # leaving these shortcuts in for entity linking later on
                   ?allele turbo:TURBO_0007601 ?bbEncSymb .
-                  ?allele graphBuilder:ScToCollProc ?collectionProcess .
+                  ?allele turbo:TURBO_0007609 ?bbEncRegURI .
+                  
               }
           }
           Where
@@ -834,7 +837,8 @@ class Expander extends ProjectwideGlobals
             	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
             	            turbo:TURBO_0007603 ?genomeReg ;
             	            turbo:TURBO_0007605 ?geneText ;
-            	            turbo:TURBO_0007608 ?datasetTitle .
+            	            turbo:TURBO_0007608 ?datasetTitle ;
+            	            turbo:TURBO_0007609 ?bbEncReg .
             	    Optional
             	    {
             	        ?alleleSC turbo:TURBO_0007604 ?protein .
@@ -845,6 +849,7 @@ class Expander extends ProjectwideGlobals
             	Bind (uri(?zygosityValURI) AS ?zygVal) 
             	Bind (uri(?genomeReg) AS ?genomeRegURI)  
             	Bind (uri(?protein) AS ?proteinURI)      
+            	Bind (uri(?bbEncReg) AS ?bbEncRegURI)
             	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextract)
             	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?formProcess)
             	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCridSymb)

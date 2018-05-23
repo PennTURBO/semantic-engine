@@ -367,6 +367,7 @@ def checkForInvalidClasses (cxn: RepositoryConnection, namedGraph: String, stage
                   }
                   # Allowed shortcuts
                   Filter (?p != turbo:TURBO_0007601)
+                  Filter (?p != turbo:TURBO_0007609)
               }
               """
             
