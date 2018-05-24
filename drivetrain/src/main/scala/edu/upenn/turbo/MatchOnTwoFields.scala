@@ -32,6 +32,7 @@ class MatchOnTwoFields extends ProjectwideGlobals
                 val encToLink: IRI = f.createIRI(table1map(encStringToHash)(0).toString)
                 val consToLink: IRI = f.createIRI(table2map(consStringToHash)(0).toString)
                 model.add(consToLink, f.createIRI("http://purl.obolibrary.org/obo/RO_0000056"), encToLink)
+                //model.add(a(4).asInstanceOf[IRI], f.createIRI("http://graphBuilder.org/deleteWith"), a(5).asInstanceOf[IRI])
             }
         }
         logger.info("joins processed")

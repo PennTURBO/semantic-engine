@@ -69,6 +69,26 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
               }
           }
           """
+        
+        val shortcutRelation1: String = """
+          ASK
+          {
+              Graph pmbb:expanded
+              {
+                  pmbb:allele1 turbo:TURBO_0007601 ?someVar .
+              }
+          }
+          """
+        
+        val shortcutRelation2: String = """
+          ASK
+          {
+              Graph pmbb:expanded
+              {
+                  pmbb:allele1 turbo:TURBO_0007609 ?someVar .
+              }
+          }
+          """
     
     before
     {
@@ -99,6 +119,10 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
                   pmbb:consenterRegDen1 rdf:type turbo:TURBO_0000505 .
                   pmbb:consenterRegDen1 obo:IAO_0000219 pmbb:registry1 .
                   pmbb:registry1 rdf:type turbo:TURBO_0000506 .
+                  pmbb:consenter1 obo:RO_0000086 pmbb:height1 .
+          		    pmbb:consenter1 obo:RO_0000086 pmbb:weight1 .
+          		    pmbb:height1 rdf:type obo:PATO_0000119 .
+          		    pmbb:weight1 rdf:type obo:PATO_0000128 .
                   
                   # bb enc with lit value '2' and reg value 'registry2' 
                   
@@ -128,7 +152,7 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
               		pmbb:DNA1 a obo:CHEBI_16991 .
               		pmbb:DNA1 obo:BFO_0000050 pmbb:specimen1 .
               		pmbb:specimen1 a obo:OBI_0001479 .
-              		pmbb:specimen1 obo:OBI_0000312 pmbb:collectionProcess1 .
+              		pmbb:collectionProcess1 obo:OBI_0000299 pmbb:specimen1 .
               		pmbb:collectionProcess1 a obo:OBI_0600005 .
               }
           }
@@ -154,13 +178,15 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
           }
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.connectLossOfFunctionToBiobankEncounters(cxn, entLink.getBiobankEncounterInfo(cxn))
+        entLink.connectLossOfFunctionToBiobankEncounters(cxn)
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + dnaToConsenter).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + collToConsenter).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + bbSymbToLofDataset).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + bbEncToColl).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + graphBuilder).get should be (false)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + shortcutRelation1).get should be (false)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + shortcutRelation2).get should be (false)
     }
     
     test("encounter requested is not present")
@@ -176,13 +202,15 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
           }
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.connectLossOfFunctionToBiobankEncounters(cxn, entLink.getBiobankEncounterInfo(cxn))
+        entLink.connectLossOfFunctionToBiobankEncounters(cxn)
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + dnaToConsenter).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + collToConsenter).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + bbSymbToLofDataset).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + bbEncToColl).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + graphBuilder).get should be (false)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + shortcutRelation1).get should be (true)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + shortcutRelation2).get should be (true)
     }
     
     test("encounter is present but not attached to a consenter")
@@ -198,12 +226,62 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
           }
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.connectLossOfFunctionToBiobankEncounters(cxn, entLink.getBiobankEncounterInfo(cxn))
+        entLink.connectLossOfFunctionToBiobankEncounters(cxn)
         
         helper.querySparqlBoolean(cxn, sparqlPrefixes + dnaToConsenter).get should be (false)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + collToConsenter).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + bbSymbToLofDataset).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + bbEncToColl).get should be (false)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + bbSymbToLofDataset).get should be (true)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + bbEncToColl).get should be (true)
         helper.querySparqlBoolean(cxn, sparqlPrefixes + graphBuilder).get should be (false)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + shortcutRelation1).get should be (false)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + shortcutRelation2).get should be (false)
+    }
+    
+    test("consenter added later")
+    {
+        val insLink: String = """
+          INSERT DATA
+          {
+              Graph pmbb:expanded
+              {
+                  pmbb:bbSymb1 obo:BFO_0000050 pmbb:dataset1 .
+                  pmbb:dataset1 obo:BFO_0000051 pmbb:bbSymb1 .
+                  pmbb:collectionProcess1 obo:BFO_0000050 pmbb:bbenc1 .
+                  pmbb:bbenc1 obo:BFO_0000051 pmbb:collectionProcess1 .
+              }
+              Graph pmbb:entityLinkData
+              {
+                  pmbb:entLinkBbCrid a turbo:TURBO_0000533 .
+                  pmbb:entLinkBbCrid obo:BFO_0000051 pmbb:entLinkBbSymb .
+                  pmbb:entLinkBbCrid obo:BFO_0000051 pmbb:entLinkBbRegDen .
+                  pmbb:entLinkBbSymb turbo:TURBO_0006510 '2' .
+                  pmbb:entLinkBbSymb a turbo:TURBO_0000534 .
+                  pmbb:entLinkBbRegDen a turbo:TURBO_0000535 .
+                  pmbb:entLinkBbRegDen obo:IAO_0000219 pmbb:registry2 .
+                  pmbb:registry2 a turbo:TURBO_0000543 .
+                  
+                  pmbb:entLinkPartCrid turbo:TURBO_0000302 pmbb:entLinkBbCrid .
+                  
+                  pmbb:entLinkPartCrid a turbo:TURBO_0000503 .
+                  pmbb:entLinkPartCrid obo:BFO_0000051 pmbb:entLinkPartSymb .
+                  pmbb:entLinkPartSymb a turbo:TURBO_0000504 .
+                  pmbb:entLinkPartSymb turbo:TURBO_0006510 '1' .
+                  pmbb:entLinkPartCrid obo:BFO_0000051 pmbb:entLinkPartRegDen .
+                  pmbb:entLinkPartRegDen a turbo:TURBO_0000505 .
+                  pmbb:entLinkPartRegDen obo:IAO_0000219 pmbb:registry1 .
+                  pmbb:registry1 a turbo:TURBO_0000506 .
+              }
+          }
+          """
+        helper.updateSparql(cxn, sparqlPrefixes + insLink)
+        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
+        
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + dnaToConsenter).get should be (true)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + collToConsenter).get should be (true)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + bbSymbToLofDataset).get should be (true)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + bbEncToColl).get should be (true)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + graphBuilder).get should be (false)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + shortcutRelation1).get should be (false)
+        helper.querySparqlBoolean(cxn, sparqlPrefixes + shortcutRelation2).get should be (false)
     }
 }

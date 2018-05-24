@@ -16,30 +16,93 @@ class EntityLinker extends ProjectwideGlobals
     
     def runAllEntityLinking(cxn: RepositoryConnection)
     {
-        val bbEncResult: ArrayBuffer[ArrayBuffer[Value]] = getBiobankEncounterInfo(cxn)
-        joinParticipantsAndEncounters(cxn, bbEncResult)
-        connectLossOfFunctionToBiobankEncounters(cxn, bbEncResult)
+        joinParticipantsAndEncounters(cxn)
+        connectLossOfFunctionToBiobankEncounters(cxn)
+        cleanupJoinData(cxn)
     }
     
     /**
      * This is the driver method to complete the original "EntityLinking" to connect Healthcare and Biobank encounters to Biobank consenters.
      */
-    def joinParticipantsAndEncounters (cxn: RepositoryConnection, bbEncResult: ArrayBuffer[ArrayBuffer[Value]])
+    def joinParticipantsAndEncounters (cxn: RepositoryConnection)
     {
         val consResult: ArrayBuffer[ArrayBuffer[Value]] = getConsenterInfo(cxn)
         logger.info("starting hc join")
         joinParticipantsAndHealthcareEncounters(cxn, consResult)
         logger.info("starting biobank join")
-        joinParticipantsAndBiobankEncounters(cxn, consResult, bbEncResult)
+        joinParticipantsAndBiobankEncounters(cxn, consResult)
         logger.info("connect bmi to adipose")
         connectBMIToAdipose(cxn)
         logger.info("Participants and Encounters have been linked using join data")
     }
     
-    def connectLossOfFunctionToBiobankEncounters(cxn: RepositoryConnection, bbEncResult: ArrayBuffer[ArrayBuffer[Value]])
+    def connectLossOfFunctionToBiobankEncounters(cxn: RepositoryConnection)
     {
+        val bbEncResult: ArrayBuffer[ArrayBuffer[Value]] = getBiobankEncounterInfo(cxn, false)
         val lossOfFunctionJoinData: ArrayBuffer[ArrayBuffer[Value]] = getLossOfFunctionJoinData(cxn)
         twoFieldMatch.executeMatchWithTwoTables(cxn, bbEncResult, lossOfFunctionJoinData)
+        
+        val insertSupplTrips: String = 
+        """
+            Delete
+            {
+                Graph pmbb:expanded
+                {
+                    ?allele graphBuilder:willBeLinkedWith ?bbEnc .
+                    ?allele turbo:TURBO_0007601 ?encSymbLit .
+                    ?allele turbo:TURBO_0007609 ?bbReg .
+                }
+            }
+            Insert
+            {
+                Graph pmbb:expanded
+                {
+                    ?DNA obo:BFO_0000050 ?consenter .
+                    ?consenter obo:BFO_0000051 ?DNA .
+                    ?collProc obo:OBI_0000293 ?consenter .
+                    ?consenter obo:OBI_0000299 ?collProc .
+                    ?bbSymb obo:BFO_0000050 ?dataset .
+                    ?dataset obo:BFO_0000051 ?bbSymb .
+                    ?collProc obo:BFO_0000050 ?bbEnc .
+                    ?bbEnc obo:BFO_0000051 ?collProc .
+                }
+            }
+            Where
+            {
+                Graph pmbb:expanded
+                {
+                    ?allele a obo:OBI_0001352 .
+                    ?allele obo:BFO_0000050 ?dataset .
+                		?dataset a obo:IAO_0000100 .
+                		?allele obo:IAO_0000136 ?DNA .
+                		?DNA a obo:CHEBI_16991 .
+                		?DNA obo:BFO_0000050 ?specimen .
+                		?specimen a obo:OBI_0001479 .
+                		?collProc obo:OBI_0000299 ?specimen .
+                		?collProc a obo:OBI_0600005 .
+                		
+                    ?allele graphBuilder:willBeLinkedWith ?bbEnc .
+                    
+                    ?bbEnc a turbo:TURBO_0000527 .
+                    ?bbEncCrid obo:IAO_0000219 ?bbEnc .
+                    ?bbEncCrid a turbo:TURBO_0000533 .
+                		?bbEncCrid obo:BFO_0000051 ?bbSymb .
+                		?bbEncCrid obo:BFO_0000051 ?bbRegDen .
+                	  ?bbSymb a turbo:TURBO_0000534 .
+                	  ?bbSymb turbo:TURBO_0006510 ?encSymbLit .
+                	  ?bbRegDen a turbo:TURBO_0000535 .
+                	  ?bbRegDen obo:IAO_0000219 ?bbReg .
+                	  ?bbReg a turbo:TURBO_0000543 .
+
+                		Optional
+                		{
+                		    ?consenter obo:RO_0000056 ?bbEnc .
+            		        ?consenter a turbo:TURBO_0000502 .
+                		}
+                }
+            }
+        """
+        helper.updateSparql(cxn, sparqlPrefixes + insertSupplTrips)
     }
     
     /**
@@ -55,7 +118,6 @@ class EntityLinker extends ProjectwideGlobals
             Graph pmbb:expanded
             {
               ?bbConsSymb turbo:TURBO_0006510 ?pilv ;
-  		               turbo:TURBO_0006500 'true'^^xsd:boolean ;
   		               a turbo:TURBO_0000504 .
       		    ?partCrid a turbo:TURBO_0000503 ;
       		              obo:BFO_0000051 ?bbConsSymb ;
@@ -65,7 +127,7 @@ class EntityLinker extends ProjectwideGlobals
       		                obo:IAO_0000219 ?bbConsRegId .
       		    ?bbConsRegId a turbo:TURBO_0000506 .
           		?part  a  turbo:TURBO_0000502 ;
-          		       turbo:TURBO_0006500 'true'^^xsd:boolean ;
+          		       turbo:TURBO_0006500 'true'^^xsd:boolean .
             }}
         """
         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbConsInfo, ArrayBuffer("part", "pilv", "bbConsRegId"))
@@ -145,8 +207,9 @@ class EntityLinker extends ProjectwideGlobals
      * Executes biobank encounter to biobank consenter joins.
      */
     def joinParticipantsAndBiobankEncounters(
-        cxn: RepositoryConnection, consResult: ArrayBuffer[ArrayBuffer[Value]], encResult: ArrayBuffer[ArrayBuffer[Value]])
+        cxn: RepositoryConnection, consResult: ArrayBuffer[ArrayBuffer[Value]])
     {
+      val encResult: ArrayBuffer[ArrayBuffer[Value]] = getBiobankEncounterInfo(cxn)
       val joinResult: ArrayBuffer[ArrayBuffer[Value]] = getBiobankToConsenterJoinInfo(cxn)
       logger.info("got join results")
       
@@ -168,6 +231,11 @@ class EntityLinker extends ProjectwideGlobals
           		?heightDatum obo:IAO_0000221 ?height .
           		?massMeas obo:OBI_0000293 ?part .
           		?heightMeas obo:OBI_0000293 ?part .
+          		#
+          		?DNA obo:BFO_0000050 ?part .
+              ?part obo:BFO_0000051 ?DNA .
+              ?collProc obo:OBI_0000293 ?part .
+              ?part obo:OBI_0000299 ?collProc .
           	}
         	}
         	Where
@@ -203,8 +271,18 @@ class EntityLinker extends ProjectwideGlobals
         		          obo:OBI_0000299 ?heightDatum .
               		?heightDatum a obo:IAO_0000408 .
               	}
+              	OPTIONAL
+              	{
+              	    # Is there LOF Data attached to this biobank encounter?
+              	    ?enc obo:BFO_0000051 ?collProc .
+              	    ?collProc a obo:OBI_0600005 .
+              	    ?DNA a obo:CHEBI_16991 .
+                		?DNA obo:BFO_0000050 ?specimen .
+                		?specimen a obo:OBI_0001479 .
+                		?collProc obo:OBI_0000299 ?specimen .
+              	}
               }
-            	BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("new hc puirole", str(?enc))))) AS ?puirole)
+            	BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("new bb puirole", str(?enc))))) AS ?puirole)
         	}
       """
       helper.updateSparql(cxn, sparqlPrefixes + completeBiobankEncounterJoin)
@@ -219,7 +297,7 @@ class EntityLinker extends ProjectwideGlobals
     {
         val getJoinInfo: String = 
         """
-            Select ?eilv ?hcEncRegId ?pilv ?BbConsRegId
+            Select ?eilv ?hcEncRegId ?pilv ?BbConsRegId ?entLinkPartCrid ?entLinkHcCrid
             Where {
             Graph pmbb:entityLinkData
             {
@@ -244,7 +322,7 @@ class EntityLinker extends ProjectwideGlobals
                 ?BbConsRegId a turbo:TURBO_0000506 .
             }}
         """
-      helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getJoinInfo, ArrayBuffer("eilv", "hcEncRegId", "pilv", "BbConsRegId"))
+      helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getJoinInfo, ArrayBuffer("eilv", "hcEncRegId", "pilv", "BbConsRegId", "entLinkPartCrid", "entLinkHcCrid"))
     }
     
     /**
@@ -270,6 +348,11 @@ class EntityLinker extends ProjectwideGlobals
           		?hcEncRegId a turbo:TURBO_0000513 .
           		?enc  a  obo:OGMS_0000097 ;
           		       turbo:TURBO_0006500 'true'^^xsd:boolean .
+          		Minus
+          		{
+          		    ?consenter obo:RO_0000056 ?enc .
+          		    ?consenter a turbo:TURBO_0000502 .
+          		}
             }}
         """
         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getHcEncInfo, ArrayBuffer("enc", "eilv", "hcEncRegId"))
@@ -282,7 +365,7 @@ class EntityLinker extends ProjectwideGlobals
     {
         val getJoinInfo: String = 
         """
-            Select ?eilv ?bbEncRegId ?pilv ?bbConsRegId
+            Select ?eilv ?bbEncRegId ?pilv ?bbConsRegId ?entLinkPartCrid ?entLinkBbCrid
             Where {
             Graph pmbb:entityLinkData
             {
@@ -307,15 +390,15 @@ class EntityLinker extends ProjectwideGlobals
                 ?bbConsRegId a turbo:TURBO_0000506 .
             }}
         """
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getJoinInfo, ArrayBuffer("eilv", "bbEncRegId", "pilv", "bbConsRegId"))
+        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getJoinInfo, ArrayBuffer("eilv", "bbEncRegId", "pilv", "bbConsRegId", "entLinkPartCrid", "entLinkBbCrid"))
     }
     
     /**
      * Pulls relevant biobank encounter data from the graph: biobank encounter URI, identifier, and registry.
      */
-    def getBiobankEncounterInfo(cxn: RepositoryConnection): ArrayBuffer[ArrayBuffer[Value]] =
+    def getBiobankEncounterInfo(cxn: RepositoryConnection, withoutConsenter: Boolean = true): ArrayBuffer[ArrayBuffer[Value]] =
     {
-        val getBbEncInfo: String = 
+        var getBbEncInfo: String = 
         """
             Select ?enc ?eilv ?bbEncRegId
             Where {
@@ -332,8 +415,15 @@ class EntityLinker extends ProjectwideGlobals
           		?bbEncRegId a turbo:TURBO_0000543 .
           		?enc  a  turbo:TURBO_0000527 ;
           		       turbo:TURBO_0006500 'true'^^xsd:boolean .
-            }}
-        """
+          		""" 
+          		if (withoutConsenter) getBbEncInfo += """
+          		Minus
+          		{
+          		    ?consenter obo:RO_0000056 ?enc .
+          		    ?consenter a turbo:TURBO_0000502 .
+          		}"""
+            getBbEncInfo += "}}"
+      
         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbEncInfo, ArrayBuffer("enc", "eilv", "bbEncRegId"))
     }
     
@@ -390,5 +480,21 @@ class EntityLinker extends ProjectwideGlobals
             }  
         """
         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, ArrayBuffer("allele", "encLit", "encReg"))
+    }
+    
+    def cleanupJoinData(cxn: RepositoryConnection)
+    {
+        cleanupBiobankJoinData(cxn)
+        cleanupHealthcareJoinData(cxn)
+    }
+    
+    def cleanupBiobankJoinData(cxn: RepositoryConnection)
+    {
+      
+    }
+    
+    def cleanupHealthcareJoinData(cxn: RepositoryConnection)
+    {
+        
     }
 }

@@ -32,6 +32,9 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
         
         val insert: String = """
             INSERT DATA {GRAPH pmbb:expanded {
+            
+            #consenter with ID 1 and registry turbo:reg1
+            
             turbo:part1 a turbo:TURBO_0000502 .
             turbo:part1 turbo:TURBO_0006500 'true'^^xsd:boolean .
             turbo:partCrid obo:IAO_0000219 turbo:part1 .
@@ -53,7 +56,6 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
         		turbo:height1 a obo:PATO_0000119 .
         		turbo:part1 obo:RO_0000086 turbo:weight1 .
         		turbo:weight1 a obo:PATO_0000128 .
-    		
         		turbo:part1 turbo:TURBO_0006500 'true'^^xsd:boolean .
         		turbo:biosex1 turbo:TURBO_0006500 'true'^^xsd:boolean .
         		turbo:birth1 turbo:TURBO_0006500 'true'^^xsd:boolean .
@@ -63,6 +65,8 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
         		turbo:partRegDen turbo:TURBO_0006500 'true'^^xsd:boolean .
         		turbo:height1 turbo:TURBO_0006500 'true'^^xsd:boolean .
         		turbo:weight1 turbo:TURBO_0006500 'true'^^xsd:boolean .
+        		
+        		# hc encounter with id '1' and registry turbo:hcreg1
         		
         		turbo:hcenc1 a obo:OGMS_0000097 .
             turbo:hcCrid1 obo:IAO_0000219 turbo:hcenc1 .
@@ -94,6 +98,8 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
             turbo:hcenc1 obo:OBI_0000299 turbo:BMI1 .
             turbo:BMI1 a <http://www.ebi.ac.uk/efo/EFO_0004340> .
     		
+    		    # hc encounter with id 2 and registry turbo:hcreg1
+    		    
     		    turbo:hcenc2 a obo:OGMS_0000097 .
             turbo:hcCrid2 obo:IAO_0000219 turbo:hcenc2 .
             turbo:hcCrid2 a turbo:TURBO_0000508 .
@@ -124,6 +130,8 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
             turbo:hcenc2 obo:OBI_0000299 turbo:BMI2 .
             turbo:BMI2 a <http://www.ebi.ac.uk/efo/EFO_0004340> .
     		
+    		    # biobank encounter with id '3' and registry turbo:bbreg1
+    		    
     		    turbo:bbenc3 a turbo:TURBO_0000527 .
             turbo:bbCrid1 obo:IAO_0000219 turbo:bbenc3 .
             turbo:bbCrid1 a turbo:TURBO_0000533 .
@@ -154,6 +162,8 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
             turbo:bbenc3 obo:OBI_0000299 turbo:BMI3 .
             turbo:BMI3 a <http://www.ebi.ac.uk/efo/EFO_0004340> .
     		
+    		    # biobank encounter with id 4 and registry turbo:bbreg2 
+    		     
     		    turbo:bbenc4 a turbo:TURBO_0000527 .
             turbo:bbCrid2 obo:IAO_0000219 turbo:bbenc4 .
             turbo:bbCrid2 a turbo:TURBO_0000533 .
@@ -393,7 +403,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
         
-        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn), entLink.getBiobankEncounterInfo(cxn))
+        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
         
         val ask1: String = """
           ASK {GRAPH pmbb:expanded
@@ -891,7 +901,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }"""
         
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn), entLink.getBiobankEncounterInfo(cxn))
+        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
         
         val ask1: String = """
           ASK {GRAPH pmbb:expanded
@@ -1026,7 +1036,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }"""
         
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn), entLink.getBiobankEncounterInfo(cxn))
+        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
         
         val ask1: String = """
           ASK {GRAPH pmbb:expanded
