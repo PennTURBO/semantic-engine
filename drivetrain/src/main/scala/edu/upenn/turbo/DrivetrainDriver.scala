@@ -167,16 +167,16 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runConclusionating(cxn: RepositoryConnection, biosexThreshold: Double, dateofbirthThreshold: Double): Boolean =
   {
-      //concNamedGraph = Some(conclusionate.runConclusionationProcess(cxn, biosexThreshold, dateofbirthThreshold))
+      concNamedGraph = Some(conclusionate.runConclusionationProcess(cxn, biosexThreshold, dateofbirthThreshold))
       logger.info("Finished conclusionation process")
       logger.info("Applying inverses and symmetrical properties")
-      helper.applyInverses(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/Conclusionations20180525113743"))
+      //helper.applyInverses(cxn, concNamedGraph.get)
       logger.info("finished inverses, doing symm props")
       helper.applySymmetricalProperties(cxn)
       logger.info("applying labels")
-      // Why are we not adding labels to the conclusionated named graph???
       helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/expanded")
       helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/entityLinkData")
+      helper.addLabelsToEverything(cxn, concNamedGraph.get.toString)
       logger.info("running post-conclusionation checks")
       val expandedGraphCheck = sparqlChecks.postExpansionChecks(cxn, "http://www.itmat.upenn.edu/biobank/expanded", "post-conclusion")
       if (!expandedGraphCheck) logger.info("Post-conclusionation checks failed in expanded graph!")
