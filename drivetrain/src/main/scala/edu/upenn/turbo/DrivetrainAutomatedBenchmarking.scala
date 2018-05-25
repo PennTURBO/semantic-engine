@@ -276,13 +276,6 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         writeCSV.println("Clear Post-Expansion Named Graph," + ((stopClrPostExpNg - startClrPostExpNg)/1000000000.0).toString)
         
-        //apply inverses
-        val startApplyInverses = System.nanoTime()
-        helper.applyInverses(cxn)
-        val stopApplyInverses = System.nanoTime()
-        
-        writeCSV.println("Apply Inverses," + ((stopApplyInverses - startApplyInverses)/1000000000.0).toString)
-        
         //add string labels to ontology
         val startAddStrLbls = System.nanoTime()
         helper.addStringLabelsToOntology(cxn)
@@ -417,7 +410,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     {
         //apply inverses
         val startAppInverses = System.nanoTime()
-        helper.applyInverses(cxn)
+        helper.applyInverses(cxn, conclusionationNamedGraph)
         val stopAppInverses = System.nanoTime()
         
         writeCSV.println("Apply Inverses," + ((stopAppInverses - startAppInverses)/1000000000.0).toString)

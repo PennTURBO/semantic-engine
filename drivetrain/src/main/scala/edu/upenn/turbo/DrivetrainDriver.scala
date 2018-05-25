@@ -145,7 +145,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
               logger.info("post expansion named graph cleared")
               helper.clearShortcutNamedGraphs(cxn)
               logger.info("Shortcut named graph cleared")
-              helper.applyInverses(cxn)
+              //Is it really necessary to apply inverses here? Maybe just at the end?
+              //helper.applyInverses(cxn)
               helper.addStringLabelsToOntology(cxn)
               logger.info("applied inverses and string labels")
               logger.info("New data is ready for Referent Tracking")
@@ -166,13 +167,14 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runConclusionating(cxn: RepositoryConnection, biosexThreshold: Double, dateofbirthThreshold: Double): Boolean =
   {
-      concNamedGraph = Some(conclusionate.runConclusionationProcess(cxn, biosexThreshold, dateofbirthThreshold))
+      //concNamedGraph = Some(conclusionate.runConclusionationProcess(cxn, biosexThreshold, dateofbirthThreshold))
       logger.info("Finished conclusionation process")
       logger.info("Applying inverses and symmetrical properties")
-      helper.applyInverses(cxn)
+      helper.applyInverses(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/Conclusionations20180525113743"))
       logger.info("finished inverses, doing symm props")
       helper.applySymmetricalProperties(cxn)
       logger.info("applying labels")
+      // Why are we not adding labels to the conclusionated named graph???
       helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/expanded")
       helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/entityLinkData")
       logger.info("running post-conclusionation checks")

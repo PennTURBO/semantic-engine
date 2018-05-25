@@ -15,7 +15,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
     var cxn: RepositoryConnection = null
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
-    val clearDatabaseAfterRun: Boolean = true
+    val clearDatabaseAfterRun: Boolean = false
     
     before
     {
@@ -186,12 +186,12 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
         val insert: String = """
           INSERT DATA {
           
-            GRAPH pmbb:testgraph1 {
+            GRAPH pmbb:expanded {
             pmbb:entity1 a pmbb:type1 .
             pmbb:entity2 a pmbb:type2 .
             pmbb:entity1 obo:BFO_0000050 pmbb:entity2 .}
             
-            GRAPH pmbb:testgraph2 {
+            GRAPH <http://www.itmat.upenn.edu/biobank/someGraph> {
             pmbb:entity3 a pmbb:type1 .
             pmbb:entity4 a pmbb:type2 .
             pmbb:entity4 obo:BFO_0000054 pmbb:entity3 .}
@@ -210,7 +210,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
         
-        helper.applyInverses(cxn)
+        helper.applyInverses(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/someGraph"))
         
         val ask1: String = """
           ASK {GRAPH pmbb:inverses {

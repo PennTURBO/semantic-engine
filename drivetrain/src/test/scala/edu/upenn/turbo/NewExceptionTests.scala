@@ -155,7 +155,7 @@ class NewExceptionTests extends FunSuiteLike with BeforeAndAfter with Matchers w
     //HAYDEN 10/13 2:05 PM: Adding transfer of enc and part data into expanded named graph from staging area
     helper.moveDataFromOneNamedGraphToAnother(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "http://www.itmat.upenn.edu/biobank/expanded")
     
-    helper.applyInverses(cxn)
+    //helper.applyInverses(cxn)
 
     graphList = SparqlHelper.ListNamedGraphs(cxn)
     expectedGraphs = Set[String](
