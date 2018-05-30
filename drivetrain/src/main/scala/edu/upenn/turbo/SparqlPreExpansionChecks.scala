@@ -256,7 +256,8 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
           	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
           	            turbo:TURBO_0007603 ?genomeReg ;
           	            turbo:TURBO_0007505 ?geneText ;
-          	            turbo:TURBO_0007608 ?datasetTitle .
+          	            turbo:TURBO_0007608 ?datasetTitle ;
+          	            turbo:TURBO_0007609 ?bbEncReg .
                     }
                 }        
             }"""
@@ -521,6 +522,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
             (count (distinct ?genomeReg) as ?genomeRegCount)
             (count (distinct ?geneText) as ?geneTextCount)
             (count (distinct ?dataset) as ?datasetCount)
+            (count (distinct ?bbEncReg) as ?encRegCount)
             """ + graphsList + """
             where 
             {
@@ -547,6 +549,9 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
                 optional {
                     ?allele turbo:TURBO_0007608 ?dataset .
                 } .
+                optional {
+                    ?allele turbo:TURBO_0007609 ?bbEncReg .
+                } .
             }
             group by ?s
             having (
@@ -557,7 +562,8 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
             ?genomeRegCount > 1 ||
             ?geneTextCount > 1 ||
             ?datasetCount > 1 ||
-            ?zygValTextCount > 1
+            ?zygValTextCount > 1 ||
+            ?encRegCount > 1
             )"""
             
         operation.runSparqlCheck(cxn, check, ArrayBuffer("s"), "pre-expansion", "multiple shortcut relationships on one healthcare encounter prescription")

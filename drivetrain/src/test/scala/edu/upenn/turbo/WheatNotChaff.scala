@@ -252,7 +252,7 @@ INSERT DATA {
     cxn.prepareUpdate(QueryLanguage.SPARQL, "clear graph <http://transformunify.org/ontologies/healthcareEncounterShortcuts>").execute()
 
     //HAYDEN 10/16 4:22 pm changing to call method in application
-    helper.applyInverses(cxn)
+    //helper.applyInverses(cxn)
 
     DumpRepoToFile(cxn, "MAM_dumps/expanded_encs.ttl")
 
@@ -1548,7 +1548,7 @@ INSERT DATA {
     helper.addOntologyFromUrl(cxn)
     
     //HAYDEN 10/16 4:22 pm changing to call method in application
-    helper.applyInverses(cxn)
+    //helper.applyInverses(cxn)
 
     DumpRepoToFile(cxn, "MAM_dumps/expanded_parts.ttl")
 
