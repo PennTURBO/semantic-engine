@@ -31,6 +31,8 @@ class LofExpGrayTests extends FunSuiteLike with BeforeAndAfter with Matchers wit
   var cxn: RepositoryConnection = null
   var repoManager: RemoteRepositoryManager = null
   var repository: Repository = null
+  
+//  var 
 
   //  //this is the flag of whether to keep or delete triples after the run
   //  val deleteTriplesOrDatabaseFileAfterRun: Boolean = false
