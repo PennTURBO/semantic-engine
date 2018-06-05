@@ -229,11 +229,12 @@ ask {
 // underspecified test to see if the numerical zygosity value specification has been bound anywhere
     askStr = """
 ask {
-?s <http://transformunify.org/ontologies/TURBO_0006512>|<http://transformunify.org/ontologies/TURBO_0006510> "1"
+?s a obo:OBI_0001352 ;
+   <http://transformunify.org/ontologies/TURBO_0006512>|<http://transformunify.org/ontologies/TURBO_0006510> "1"
 }
 """
 
-    testRes = tinySparqlTest(askStr, "the numerical zygosity value specification has noy been bound anywhere", true)
+    testRes = tinySparqlTest(askStr, "the numerical zygosity value specification has not been bound anywhere", true)
 
   }
 
