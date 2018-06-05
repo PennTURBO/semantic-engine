@@ -226,7 +226,7 @@ ask {
 
 */
     
-// underspecified test to see if the numerical zygosity value specification has been bound anywhere
+//  test to see if the numerical zygosity value has been bound to the allele information instance
     askStr = """
 ask {
 ?s a obo:OBI_0001352 ;
@@ -234,7 +234,19 @@ ask {
 }
 """
 
-    testRes = tinySparqlTest(askStr, "the numerical zygosity value specification has not been bound anywhere", true)
+    testRes = tinySparqlTest(askStr, "the numerical zygosity value has not been bound to an allele information", true)
+
+    
+//  zygosity value specifications are singletons and shouldn't be parts of datasets
+    askStr = """
+ask {
+?zvs a obo:OBI_0001352 ;
+   obo:BFO_0000050 ?ds .
+?ds a obo:IAO_0000100 .
+}
+"""
+
+    testRes = tinySparqlTest(askStr, "zygosity value specification shouldn't be part of a dataset", false)
 
   }
 
