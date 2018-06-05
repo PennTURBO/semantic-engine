@@ -179,9 +179,10 @@ pmbb:8d5b5560-d488-42c4-9dbd-82a9d8b05a11 rdf:type obo:IAO_0000100 .
 
     var testRes = tinySparqlTest(askStr, "lof expansion failed", true)
     
-    // not sure what's require here regarding teh abckgorund data
+    // not sure what's require here regarding the background data
     // wrong named graph?
-    // need to inverse some of teh props?
+    // need to inverse some of the props?
+    // needs to be pre-referent tracked?
 
     askStr = """
    ask {
