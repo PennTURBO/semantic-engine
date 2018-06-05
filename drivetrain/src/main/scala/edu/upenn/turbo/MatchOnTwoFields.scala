@@ -55,6 +55,7 @@ class MatchOnTwoFields extends ProjectwideGlobals
             if (table1map.contains(checkString)) 
             {
                 model.add(a(0).asInstanceOf[IRI], pred, table1map(checkString)(0))
+                logger.info("found match: " + a(0) + " " + table1map(checkString)(0))
             }
         }
         logger.info("joins processed")
