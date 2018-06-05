@@ -99,23 +99,33 @@ pmbb:b78d_10bf turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0
     cxn.prepareUpdate(QueryLanguage.SPARQL, UpdateStatement).execute()
 
     // background statements about encounter and consenter, for testing post-expansion liking
+    /*
+     * Hayden 6/5: fixing these problems
+     * 
+     *  1. bb enc is not ref tracked
+        2. used BFO_0000050 instead of BFO_0000051 
+        3. there is no registry identifier, only a registry denoter
+        4. using human-readable URIs, not UUIDs
+     */
     UpdateStatement = sparqlPrefixes + """
       insert data {
       graph <http://www.itmat.upenn.edu/biobank/expanded> {
-pmbb:8002b326-1d4e-42a7-93ec-b6f9a1aaa9a3 rdf:type turbo:TURBO_0000527 .
-pmbb:9d908250-29a4-4583-8d8b-65fabc910eee obo:IAO_0000219 pmbb:8002b326-1d4e-42a7-93ec-b6f9a1aaa9a3 .
-pmbb:9d908250-29a4-4583-8d8b-65fabc910eee rdf:type turbo:TURBO_0000533 .
-pmbb:b4f5872d-1576-468f-97d9-ecf1519d8ff7 obo:BFO_0000050 pmbb:9d908250-29a4-4583-8d8b-65fabc910eee .
-pmbb:b4f5872d-1576-468f-97d9-ecf1519d8ff7 turbo:TURBO_0006510 "annono-enc" .
-pmbb:b4f5872d-1576-468f-97d9-ecf1519d8ff7 rdf:type turbo:TURBO_0000534 .
-pmbb:c08e6d55-4f94-4590-96e4-185ec8a81ddd obo:RO_0000056 pmbb:8002b326-1d4e-42a7-93ec-b6f9a1aaa9a3 .
-pmbb:c08e6d55-4f94-4590-96e4-185ec8a81ddd rdf:type turbo:TURBO_0000502 .
-pmbb:c509cf26-afed-461c-89e0-deed241bd519 obo:BFO_0000050 pmbb:9d908250-29a4-4583-8d8b-65fabc910eee .
-# pmbb:c509cf26-afed-461c-89e0-deed241bd519 obo:IAO_0000219 turbo:TURBO_0000422 .
-pmbb:c509cf26-afed-461c-89e0-deed241bd519 rdf:type turbo:TURBO_0000535 .
-pmbb:b4f5872d-1576-468f-97d9-ecf1519d8ff7 obo:BFO_0000050 pmbb:8d5b5560-d488-42c4-9dbd-82a9d8b05a11 .
-pmbb:8d5b5560-d488-42c4-9dbd-82a9d8b05a11 <http://purl.org/dc/elements/1.1/title> "non-lof data" .
-pmbb:8d5b5560-d488-42c4-9dbd-82a9d8b05a11 rdf:type obo:IAO_0000100 .
+pmbb:bbenc1 rdf:type turbo:TURBO_0000527 .
+pmbb:bbenc1 turbo:TURBO_0006500 'true'^^xsd:boolean .
+pmbb:bbenccrid1 obo:IAO_0000219 pmbb:bbenc1 .
+pmbb:bbenccrid1 rdf:type turbo:TURBO_0000533 .
+pmbb:bbenccrid1 obo:BFO_0000051 pmbb:bbencsymb1 .
+pmbb:bbencsymb1 turbo:TURBO_0006510 "annono-enc" .
+pmbb:bbencsymb1 rdf:type turbo:TURBO_0000534 .
+pmbb:consenter1 obo:RO_0000056 pmbb:bbenc1 .
+pmbb:consenter1 rdf:type turbo:TURBO_0000502 .
+pmbb:bbenccrid1 obo:BFO_0000051 pmbb:bbencregden1 .
+pmbb:bbencregden1 obo:IAO_0000219 turbo:TURBO_0000422 .
+turbo:TURBO_0000422 a turbo:TURBO_0000543 .
+pmbb:bbencregden1 rdf:type turbo:TURBO_0000535 .
+pmbb:bbencsymb1 obo:BFO_0000050 pmbb:dataset1 .
+pmbb:dataset1 <http://purl.org/dc/elements/1.1/title> "non-lof data" .
+pmbb:dataset1 rdf:type obo:IAO_0000100 .
       }}
       """
 
@@ -134,6 +144,10 @@ pmbb:8d5b5560-d488-42c4-9dbd-82a9d8b05a11 rdf:type obo:IAO_0000100 .
     val instantiation: IRI = helper.genPmbbIRI(cxn)
 
     expInst.expandLossOfFunctionShortcuts(cxn, instantiation, "<" + graphString + ">")
+    
+    //Hayden 6/5: moving triples from pmbb:postExpansionCheck to pmbb:expanded
+    helper.moveDataFromOneNamedGraphToAnother(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "http://www.itmat.upenn.edu/biobank/expanded")
+    helper.clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck")
 
     entLinker.connectLossOfFunctionToBiobankEncounters(cxn)
 
