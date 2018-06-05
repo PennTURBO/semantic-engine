@@ -769,7 +769,7 @@ class Expander extends ProjectwideGlobals
                   ?dataset obo:BFO_0000051 ?allele .
                   ?genomeCridSymb obo:BFO_0000050 ?dataset .
                   ?dataset obo:BFO_0000051 ?genomeCridSymb .
-                  ?zigVal obo:BFO_0000050 ?dataset .
+                  ?zygVal obo:BFO_0000050 ?dataset .
                   ?dataset obo:BFO_0000051 ?zipVal .
                   
                   ?allele a obo:OBI_0001352 .
@@ -801,8 +801,8 @@ class Expander extends ProjectwideGlobals
                   ?DNAextractionProcess obo:OBI_0000299 ?DNAextract .
                   ?DNAextractionProcess obo:OBI_0000293 ?specimen .
                   
-                  ?zigVal turbo:TURBO_0006512 ?zygosityValText .
-                  ?zigVal a turbo:TURBO_0000571 .
+                  ?zygVal turbo:TURBO_0006512 ?zygosityValText .
+                  ?zygVal a turbo:TURBO_0000571 .
                   
                   ?specimen a obo:OBI_0001479 .
                   ?specimen obo:BFO_0000051 ?DNA .
