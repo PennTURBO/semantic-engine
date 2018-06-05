@@ -769,14 +769,13 @@ class Expander extends ProjectwideGlobals
                   ?dataset obo:BFO_0000051 ?allele .
                   ?genomeCridSymb obo:BFO_0000050 ?dataset .
                   ?dataset obo:BFO_0000051 ?genomeCridSymb .
-                  ?zygVal obo:BFO_0000050 ?dataset .
-                  ?dataset obo:BFO_0000051 ?zipVal .
                   
                   ?allele a obo:OBI_0001352 .
                   ?allele obo:OBI_0001938 ?zygVal .
                   ?allele obo:IAO_0000136 ?DNA .
                   ?allele obo:IAO_0000142 ?proteinURI .
                   ?allele turbo:TURBO_0006512 ?geneText .
+                  ?allele turbo:TURBO_0006512 ?zygosityValText .
                   
                   ?DNAextract a obo:OBI_0001051 .
                   
@@ -801,7 +800,6 @@ class Expander extends ProjectwideGlobals
                   ?DNAextractionProcess obo:OBI_0000299 ?DNAextract .
                   ?DNAextractionProcess obo:OBI_0000293 ?specimen .
                   
-                  ?zygVal turbo:TURBO_0006512 ?zygosityValText .
                   ?zygVal a turbo:TURBO_0000571 .
                   
                   ?specimen a obo:OBI_0001479 .
@@ -862,6 +860,9 @@ class Expander extends ProjectwideGlobals
             	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?sequenceData)
             	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?exomeSequenceProcess)
             	Bind (uri("""" + instantiation + """") AS ?instantiation)
+            	# It's important that these variables are different datatypes because they will both be textual values of the allele, so the datatypes are the differentiator
+            	Filter (datatype(?geneText) = xsd:string)
+            	Filter (datatype(?zygosityValText) = xsd:integer)
             	}
           }
           """
