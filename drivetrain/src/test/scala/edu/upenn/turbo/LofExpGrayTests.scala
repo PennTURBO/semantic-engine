@@ -230,7 +230,7 @@ ask {
     askStr = """
 ask {
 ?s a obo:OBI_0001352 ;
-   <http://transformunify.org/ontologies/TURBO_0006512>|<http://transformunify.org/ontologies/TURBO_0006510> "1"
+   <http://transformunify.org/ontologies/TURBO_0006512> "1"
 }
 """
 
