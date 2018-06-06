@@ -88,9 +88,9 @@ pmbb:b78d_10bf turbo:TURBO_0007601 "annono-enc" .
 pmbb:b78d_10bf turbo:TURBO_0007609 "http://transformunify.org/ontologies/TURBO_0000422"^^xsd:anyURI .
 pmbb:b78d_10bf turbo:TURBO_0007604 "http://purl.obolibrary.org/obo/PR_O43657"^^xsd:anyURI .
 pmbb:b78d_10bf turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
-pmbb:b78d_10bf turbo:TURBO_0007605 "TSPAN6(ENSG00000000003)" .
+pmbb:b78d_10bf turbo:TURBO_0007605 "TSPAN6(ENSG00000000003)"^^xsd:string .
 pmbb:b78d_10bf turbo:TURBO_0007602 "annono-geno_id" .
-pmbb:b78d_10bf turbo:TURBO_0007606 "1" .
+pmbb:b78d_10bf turbo:TURBO_0007606 "1"^^xsd:integer .
 pmbb:b78d_10bf turbo:TURBO_0007607 "http://transformunify.org/ontologies/TURBO_0000591"^^xsd:anyURI .
 pmbb:b78d_10bf turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0000451"^^xsd:anyURI .
       }}
@@ -230,7 +230,7 @@ ask {
     askStr = """
 ask {
 ?s a obo:OBI_0001352 ;
-   <http://transformunify.org/ontologies/TURBO_0006512> "1"
+   <http://transformunify.org/ontologies/TURBO_0006512> "1"^^xsd:integer .
 }
 """
 
