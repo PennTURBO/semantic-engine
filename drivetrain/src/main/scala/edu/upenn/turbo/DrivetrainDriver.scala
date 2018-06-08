@@ -173,10 +173,13 @@ object DrivetrainDriver extends ProjectwideGlobals {
       //helper.applyInverses(cxn, concNamedGraph.get)
       logger.info("finished inverses, doing symm props")
       helper.applySymmetricalProperties(cxn)
-      logger.info("applying labels")
-      helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/expanded")
-      helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/entityLinkData")
-      helper.addLabelsToEverything(cxn, concNamedGraph.get.toString)
+      if (applyLabels == "true")
+      {
+          logger.info("applying labels")
+          helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/expanded")
+          helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/entityLinkData")
+          helper.addLabelsToEverything(cxn, concNamedGraph.get.toString)
+      }
       logger.info("running post-conclusionation checks")
       val expandedGraphCheck = sparqlChecks.postExpansionChecks(cxn, "http://www.itmat.upenn.edu/biobank/expanded", "post-conclusion")
       if (!expandedGraphCheck) logger.info("Post-conclusionation checks failed in expanded graph!")
@@ -188,12 +191,13 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runDiagnosisMapping(cxn: RepositoryConnection)
   {
-      diagmap.addDrugOntologies(cxn)
+      diagmap.addDiseaseOntologies(cxn)
       diagmap.performDiagnosisMapping(cxn)
   }
   
   def runMedicationMapping(cxn: RepositoryConnection)
   {
+      medmap.addDrugOntologies(cxn)
       medmap.runMedicationMapping(cxn)
   }
   

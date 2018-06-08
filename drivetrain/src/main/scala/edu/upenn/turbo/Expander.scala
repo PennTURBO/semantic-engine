@@ -4,6 +4,7 @@ import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.repository.RepositoryConnection
 import java.util.UUID
 import scala.collection.mutable.ArrayBuffer
+import org.eclipse.rdf4j.model.Value
 
 /**
  * The Expander class is responsible for all Shortcut Expansion. This is the first step in the Drivetrain process to create the fully ontologized model.
@@ -753,120 +754,123 @@ class Expander extends ProjectwideGlobals
     
     def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
     {
-        val expandLOF: String = """
-          Insert
-          {
-              Graph pmbb:postExpansionCheck
+        val graphsList: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn)
+        for (graph <- graphsList)
+        {
+            val expandLOF: String = """
+              Insert
               {
-                  ?instantiation a turbo:TURBO_0000522 .
-        		      ?instantiation obo:OBI_0000293 ?dataset .
-        		      
-                  ?dataset dc11:title ?datasetTitle .
-                  ?dataset a obo:IAO_0000100 .
-                  
-                  # connections to dataset
-                  ?allele obo:BFO_0000050 ?dataset .
-                  ?dataset obo:BFO_0000051 ?allele .
-                  ?genomeCridSymb obo:BFO_0000050 ?dataset .
-                  ?dataset obo:BFO_0000051 ?genomeCridSymb .
-                  
-                  ?allele a obo:OBI_0001352 .
-                  ?allele obo:OBI_0001938 ?zygVal .
-                  ?allele obo:IAO_0000136 ?DNA .
-                  ?allele obo:IAO_0000142 ?proteinURI .
-                  ?allele turbo:TURBO_0006512 ?geneText .
-                  ?allele turbo:TURBO_0006512 ?zygosityValText .
-                  
-                  ?DNAextract a obo:OBI_0001051 .
-                  
-                  ?formProcess a obo:OBI_0200000 .
-                  ?formProcess obo:OBI_0000299 ?allele .
-                  ?formProcess obo:OBI_0000293 ?sequenceData .
-                  
-                  ?genomeCridSymb turbo:TURBO_0006510 ?genomeCridSymbLit .
-                  ?genomeCridSymb a turbo:TURBO_0000568 .
-                  ?genomeCridSymb obo:BFO_0000050 ?genomeCrid .
-                  
-                  ?genomeRegDen obo:BFO_0000050 ?genomeCrid .
-                  ?genomeRegDen a turbo:TURBO_0000567 .
-                  ?genomeRegDen obo:IAO_0000219 ?genomeRegURI .
-                  
-                  ?genomeCrid a turbo:TURBO_0000566 .
-                  ?genomeCrid obo:IAO_0000219 ?specimen .
-                  ?genomeCrid obo:BFO_0000051 ?genomeRegDen .
-                  ?genomeCrid obo:BFO_0000051 ?genomeCridSymb .
-                  
-                  ?DNAextractionProcess a obo:OBI_0000257 .
-                  ?DNAextractionProcess obo:OBI_0000299 ?DNAextract .
-                  ?DNAextractionProcess obo:OBI_0000293 ?specimen .
-                  
-                  ?zygVal a turbo:TURBO_0000571 .
-                  
-                  ?specimen a obo:OBI_0001479 .
-                  ?specimen obo:BFO_0000051 ?DNA .
-                  
-                  ?DNA a obo:CHEBI_16991 .
-                  ?DNA obo:BFO_0000050 ?specimen .
-                  
-                  ?collectionProcess a obo:OBI_0600005 .
-                  ?collectionProcess obo:OBI_0000299 ?specimen .
-                  
-                  ?exomeSequenceProcess a obo:OBI_0002118 .
-                  ?exomeSequenceProcess obo:OBI_0000293 ?DNAextract .
-                  ?exomeSequenceProcess obo:OBI_0000299 ?sequenceData .
-                  
-                  ?sequenceData a obo:OBI_0001573 .
-                  
-                  # leaving these shortcuts in for entity linking later on
-                  ?allele turbo:TURBO_0007601 ?bbEncSymb .
-                  ?allele turbo:TURBO_0007609 ?bbEncRegURI .
-                  
+                  Graph pmbb:postExpansionCheck
+                  {
+                      ?instantiation a turbo:TURBO_0000522 .
+            		      ?instantiation obo:OBI_0000293 ?dataset .
+            		      
+                      ?dataset dc11:title ?datasetTitle .
+                      ?dataset a obo:IAO_0000100 .
+                      
+                      # connections to dataset
+                      ?allele obo:BFO_0000050 ?dataset .
+                      ?dataset obo:BFO_0000051 ?allele .
+                      ?genomeCridSymb obo:BFO_0000050 ?dataset .
+                      ?dataset obo:BFO_0000051 ?genomeCridSymb .
+                      
+                      ?allele a obo:OBI_0001352 .
+                      ?allele obo:OBI_0001938 ?zygVal .
+                      ?allele obo:IAO_0000136 ?DNA .
+                      ?allele obo:IAO_0000142 ?proteinURI .
+                      ?allele turbo:TURBO_0006512 ?geneText .
+                      ?allele turbo:TURBO_0006512 ?zygosityValText .
+                      
+                      ?DNAextract a obo:OBI_0001051 .
+                      
+                      ?formProcess a obo:OBI_0200000 .
+                      ?formProcess obo:OBI_0000299 ?allele .
+                      ?formProcess obo:OBI_0000293 ?sequenceData .
+                      
+                      ?genomeCridSymb turbo:TURBO_0006510 ?genomeCridSymbLit .
+                      ?genomeCridSymb a turbo:TURBO_0000568 .
+                      ?genomeCridSymb obo:BFO_0000050 ?genomeCrid .
+                      
+                      ?genomeRegDen obo:BFO_0000050 ?genomeCrid .
+                      ?genomeRegDen a turbo:TURBO_0000567 .
+                      ?genomeRegDen obo:IAO_0000219 ?genomeRegURI .
+                      
+                      ?genomeCrid a turbo:TURBO_0000566 .
+                      ?genomeCrid obo:IAO_0000219 ?specimen .
+                      ?genomeCrid obo:BFO_0000051 ?genomeRegDen .
+                      ?genomeCrid obo:BFO_0000051 ?genomeCridSymb .
+                      
+                      ?DNAextractionProcess a obo:OBI_0000257 .
+                      ?DNAextractionProcess obo:OBI_0000299 ?DNAextract .
+                      ?DNAextractionProcess obo:OBI_0000293 ?specimen .
+                      
+                      ?zygVal a turbo:TURBO_0000571 .
+                      
+                      ?specimen a obo:OBI_0001479 .
+                      ?specimen obo:BFO_0000051 ?DNA .
+                      
+                      ?DNA a obo:CHEBI_16991 .
+                      ?DNA obo:BFO_0000050 ?specimen .
+                      
+                      ?collectionProcess a obo:OBI_0600005 .
+                      ?collectionProcess obo:OBI_0000299 ?specimen .
+                      
+                      ?exomeSequenceProcess a obo:OBI_0002118 .
+                      ?exomeSequenceProcess obo:OBI_0000293 ?DNAextract .
+                      ?exomeSequenceProcess obo:OBI_0000299 ?sequenceData .
+                      
+                      ?sequenceData a obo:OBI_0001573 .
+                      
+                      # leaving these shortcuts in for entity linking later on
+                      ?allele turbo:TURBO_0007601 ?bbEncSymb .
+                      ?allele turbo:TURBO_0007609 ?bbEncRegURI .
+                      
+                  }
               }
-          }
-          Where
-          {
-              Values ?g { """ + graphsString + """ }
-              Graph ?g
-            	{
-            	    ?alleleSC a obo:OBI_0001352 ;
-            	            turbo:TURBO_0007607 ?zygosityValURI ;
-            	            turbo:TURBO_0007601 ?bbEncSymb ;
-            	            turbo:TURBO_0007606 ?zygosityValText ;
-            	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
-            	            turbo:TURBO_0007603 ?genomeReg ;
-            	            turbo:TURBO_0007605 ?geneText ;
-            	            turbo:TURBO_0007608 ?datasetTitle ;
-            	            turbo:TURBO_0007609 ?bbEncReg .
-            	    Optional
-            	    {
-            	        ?alleleSC turbo:TURBO_0007604 ?protein .
-            	    }
-            	    
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?dataset)    
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?allele)
-            	Bind (uri(?zygosityValURI) AS ?zygVal) 
-            	Bind (uri(?genomeReg) AS ?genomeRegURI)  
-            	Bind (uri(?protein) AS ?proteinURI)      
-            	Bind (uri(?bbEncReg) AS ?bbEncRegURI)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextract)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?formProcess)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCridSymb)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNA)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextractionProcess)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeRegDen)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCrid)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?specimen)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?collectionProcess)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?sequenceData)
-            	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?exomeSequenceProcess)
-            	Bind (uri("""" + instantiation + """") AS ?instantiation)
-            	# It's important that these variables are different datatypes because they will both be textual values of the allele, so the datatypes are the differentiator
-            	Filter (datatype(?geneText) = xsd:string)
-            	Filter (datatype(?zygosityValText) = xsd:integer)
-            	}
-          }
-          """
-        
-        helper.updateSparql(cxn, sparqlPrefixes + expandLOF)
+              Where
+              {
+                  Graph <""" + graph + """>
+                	{
+                	    ?alleleSC a obo:OBI_0001352 ;
+                	            turbo:TURBO_0007607 ?zygosityValURI ;
+                	            turbo:TURBO_0007601 ?bbEncSymb ;
+                	            turbo:TURBO_0007606 ?zygosityValText ;
+                	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
+                	            turbo:TURBO_0007603 ?genomeReg ;
+                	            turbo:TURBO_0007605 ?geneText ;
+                	            turbo:TURBO_0007608 ?datasetTitle ;
+                	            turbo:TURBO_0007609 ?bbEncReg .
+                	    Optional
+                	    {
+                	        ?alleleSC turbo:TURBO_0007604 ?protein .
+                	    }
+                	    
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?dataset)    
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?allele)
+                	Bind (uri(?zygosityValURI) AS ?zygVal) 
+                	Bind (uri(?genomeReg) AS ?genomeRegURI)  
+                	Bind (uri(?protein) AS ?proteinURI)      
+                	Bind (uri(?bbEncReg) AS ?bbEncRegURI)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextract)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?formProcess)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCridSymb)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNA)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextractionProcess)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeRegDen)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCrid)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?specimen)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?collectionProcess)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?sequenceData)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?exomeSequenceProcess)
+                	Bind (uri("""" + instantiation + """") AS ?instantiation)
+                	# It's important that these variables are different datatypes because they will both be textual values of the allele, so the datatypes are the differentiator
+                	Filter (datatype(?geneText) = xsd:string)
+                	Filter (datatype(?zygosityValText) = xsd:integer)
+                	}
+              }
+              """
+            
+            helper.updateSparql(cxn, sparqlPrefixes + expandLOF)
+        }
     }
 }

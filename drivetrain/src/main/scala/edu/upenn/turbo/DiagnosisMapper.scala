@@ -14,7 +14,7 @@ class DiagnosisMapper extends ProjectwideGlobals
     /**
      * Adds relevant ontologies to Graph database.
      */
-    def addDrugOntologies(cxn: RepositoryConnection)
+    def addDiseaseOntologies(cxn: RepositoryConnection)
     {
         logger.info("adding mondo ontology")
         helper.addOntologyFromUrl(cxn, "https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl", 
