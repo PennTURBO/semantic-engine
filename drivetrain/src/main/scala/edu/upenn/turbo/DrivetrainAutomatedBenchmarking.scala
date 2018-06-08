@@ -423,13 +423,17 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         writeCSV.println("Apply Symmetrical Properties," + ((stopAppSymmProps - startAppSymmProps)/1000000000.0).toString)
         
         //apply labels
-        val startApplyLabels = System.nanoTime()
-        helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/expanded")
-        helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/entityLinkData")
-        val stopApplyLabels = System.nanoTime()
-        
-        writeCSV.println("Apply Labels," + ((stopApplyLabels - startApplyLabels)/1000000000.0).toString)
-        
+        if (applyLabels == "true")
+        {
+            val startApplyLabels = System.nanoTime()
+            helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/expanded")
+            helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/entityLinkData")
+            val stopApplyLabels = System.nanoTime()
+            
+            writeCSV.println("Apply Labels," + ((stopApplyLabels - startApplyLabels)/1000000000.0).toString)
+        }
+        else writeCSV.println("Apply Labels,SKIPPED")
+          
         //post-conclusionation checks
         val startPostConcChecks = System.nanoTime()
         sparqlChecks.postExpansionChecks(cxn, "http://www.itmat.upenn.edu/biobank/expanded", "post-conclusion")
@@ -443,10 +447,10 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     {
         //load drug ontologies - mondo, ICD9, ICD10
         val startLoadDrugOntologies =  System.nanoTime()
-        diagmap.addDrugOntologies(cxn)
+        diagmap.addDiseaseOntologies(cxn)
         val stopLoadDrugOntologies =  System.nanoTime()
         
-        writeCSV.println("Load Drug Ontologies (mondo + ICD9 + ICD10)," + ((stopLoadDrugOntologies - startLoadDrugOntologies)/1000000000.0).toString)
+        writeCSV.println("Load Disease Ontologies (mondo + ICD9 + ICD10)," + ((stopLoadDrugOntologies - startLoadDrugOntologies)/1000000000.0).toString)
         
         //diagnosis mapping
         val startDiagMap = System.nanoTime()
@@ -459,10 +463,16 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     def benchmarkMedicationMapping(cxn: RepositoryConnection, writeCSV: PrintWriter, writeTXT: PrintWriter)
     {
         val startLoadMedOntologies = System.nanoTime()
-        val success: Boolean = medmap.runMedicationMapping(cxn)
+        medmap.addDrugOntologies(cxn)
         val stopLoadMedOntologies = System.nanoTime()
         
-        if (success) writeCSV.println("Medication Mapping," + ((stopLoadMedOntologies - startLoadMedOntologies)/1000000000.0).toString)
+        writeCSV.println("Load Drug Ontologies," + ((stopLoadMedOntologies - startLoadMedOntologies)/1000000000.0).toString)
+        
+        val startRunMedMap = System.nanoTime()
+        val success: Boolean = medmap.runMedicationMapping(cxn)
+        val stopRunMedMap = System.nanoTime()
+        
+        if (success) writeCSV.println("Medication Mapping," + ((stopRunMedMap - startRunMedMap)/1000000000.0).toString)
         else writeCSV.println("Medication Mapping, SKIPPED")
     }
     
