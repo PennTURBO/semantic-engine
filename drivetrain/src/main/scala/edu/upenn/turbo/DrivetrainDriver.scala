@@ -20,6 +20,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   //globally available Conclusionation Named Graph IRI
   var concNamedGraph: Option[IRI] = None : Option[IRI]
+  var instantiation: Option[IRI] = None : Option[IRI]
   
   /**
    * DrivetrainDriver (ne Presentation Driver) contains the main method for calling Drivetrain functions. Main can be called using "all .51 .51" to run full Drivetrain stack, 
@@ -133,7 +134,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       if (precheckProceed)
       {
           helper.applySymmetricalProperties(cxn)
-          val graphsList: String = expand.expandAllShortcutEntities(cxn)
+          instantiation = Some(expand.expandAllShortcutEntities(cxn))
           logger.info("Encounters and participants have been expanded.")
           if (runChecks) postcheckProceed = sparqlChecks.postExpansionChecks(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "post-expansion")
           logger.info("Post expansion checks passed: " + postcheckProceed)
@@ -162,7 +163,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
   {
       logger.info("running reftracking")
       reftrack.runAllReftrackProcesses(cxn)
-      join.runAllEntityLinking(cxn)
+      join.joinParticipantsAndEncounters(cxn)
+      //load LOF data
+      connect.loadDataFromPropertiesFile(cxn, inputLOFFiles, "LOFShortcuts", true)
+      join.connectLossOfFunctionToBiobankEncounters(cxn)
+      expand.expandLossOfFunctionShortcuts(cxn, instantiation.get)
   }
   
   def runConclusionating(cxn: RepositoryConnection, biosexThreshold: Double, dateofbirthThreshold: Double): Boolean =

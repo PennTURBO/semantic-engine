@@ -18,7 +18,6 @@ class EntityLinker extends ProjectwideGlobals
     {
         joinParticipantsAndEncounters(cxn)
         connectLossOfFunctionToBiobankEncounters(cxn)
-        cleanupJoinData(cxn)
     }
     
     /**
@@ -38,7 +37,7 @@ class EntityLinker extends ProjectwideGlobals
     
     def connectLossOfFunctionToBiobankEncounters(cxn: RepositoryConnection)
     {
-        val bbEncResult: ArrayBuffer[ArrayBuffer[Value]] = getBiobankEncounterInfo(cxn, false)
+        val bbEncResult: ArrayBuffer[ArrayBuffer[Value]] = getBiobankEncounterWithConsenterInfo(cxn)
         val lossOfFunctionJoinData: ArrayBuffer[ArrayBuffer[Value]] = getLossOfFunctionJoinData(cxn)
         twoFieldMatch.executeMatchWithTwoTables(cxn, bbEncResult, lossOfFunctionJoinData)
         
@@ -57,7 +56,31 @@ class EntityLinker extends ProjectwideGlobals
             {
                 Graph pmbb:expanded
                 {
+                    ?DNA a obo:CHEBI_16991 .
+                    ?DNA obo:BFO_0000050 ?specimen .
                     ?DNA obo:BFO_0000050 ?consenter .
+                    ?specimen a obo:OBI_0001479 .
+                    ?specimen obo:BFO_0000051 ?DNA .
+                    ?collectionProcess a obo:OBI_0600005 .
+                    ?collectionProcess obo:OBI_0000299 ?specimen .
+                    ?allele obo:IAO_0000136 ?DNA .
+                    
+                    ?genomeCridSymb turbo:TURBO_0006510 ?genomeCridSymbLit .
+                    ?genomeCridSymb a turbo:TURBO_0000568 .
+                    ?genomeCridSymb obo:BFO_0000050 ?genomeCrid .
+                    
+                    ?genomeRegDen obo:BFO_0000050 ?genomeCrid .
+                    ?genomeRegDen a turbo:TURBO_0000567 .
+                    ?genomeRegDen obo:IAO_0000219 ?genomeRegURI .
+                    
+                    ?genomeCrid a turbo:TURBO_0000566 .
+                    ?genomeCrid obo:IAO_0000219 ?specimen .
+                    ?genomeCrid obo:BFO_0000051 ?genomeRegDen .
+                    ?genomeCrid obo:BFO_0000051 ?genomeCridSymb .
+                    
+                    ?genomeCridSymb obo:BFO_0000050 ?dataset .
+                    ?dataset obo:BFO_0000051 ?genomeCridSymb .
+                    
                     ?consenter obo:BFO_0000051 ?DNA .
                     ?collProc obo:OBI_0000293 ?consenter .
                     ?consenter obo:OBI_0000299 ?collProc .
@@ -74,12 +97,8 @@ class EntityLinker extends ProjectwideGlobals
                     ?allele a obo:OBI_0001352 .
                     ?allele obo:BFO_0000050 ?dataset .
                 		?dataset a obo:IAO_0000100 .
-                		?allele obo:IAO_0000136 ?DNA .
-                		?DNA a obo:CHEBI_16991 .
-                		?DNA obo:BFO_0000050 ?specimen .
-                		?specimen a obo:OBI_0001479 .
-                		?collProc obo:OBI_0000299 ?specimen .
-                		?collProc a obo:OBI_0600005 .
+                		?allele turbo:TURBO_0007602 ?genomeCridSymbLit .
+                		?allele turbo:TURBO_0007603 ?genomeRegURI .
                 		
                     ?allele graphBuilder:willBeLinkedWith ?bbEnc .
                     
@@ -94,11 +113,15 @@ class EntityLinker extends ProjectwideGlobals
                 	  ?bbRegDen obo:IAO_0000219 ?bbReg .
                 	  ?bbReg a turbo:TURBO_0000543 .
 
-                		Optional
-                		{
-                		    ?consenter obo:RO_0000056 ?bbEnc .
-            		        ?consenter a turbo:TURBO_0000502 .
-                		}
+            		    ?consenter obo:RO_0000056 ?bbEnc .
+        		        ?consenter a turbo:TURBO_0000502 .
+        		        
+        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("DNA", str(?consenter))))) AS ?DNA)
+        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("collProc", str(?consenter))))) AS ?collProc)
+        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("specimen", str(?consenter))))) AS ?specimen)
+        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("genomeCrid", str(?consenter))))) AS ?genomeCrid)
+        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("genomeCridSymb", str(?consenter))))) AS ?genoneCridSymb)
+        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("genomeCridRegDen", str(?consenter))))) AS ?genomeCridRegDen)
                 }
             }
         """
@@ -231,11 +254,6 @@ class EntityLinker extends ProjectwideGlobals
           		?heightDatum obo:IAO_0000221 ?height .
           		?massMeas obo:OBI_0000293 ?part .
           		?heightMeas obo:OBI_0000293 ?part .
-          		#
-          		?DNA obo:BFO_0000050 ?part .
-              ?part obo:BFO_0000051 ?DNA .
-              ?collProc obo:OBI_0000293 ?part .
-              ?part obo:OBI_0000299 ?collProc .
           	}
         	}
         	Where
@@ -270,16 +288,6 @@ class EntityLinker extends ProjectwideGlobals
         		          rdf:type turbo:TURBO_0001511 ;
         		          obo:OBI_0000299 ?heightDatum .
               		?heightDatum a obo:IAO_0000408 .
-              	}
-              	OPTIONAL
-              	{
-              	    # Is there LOF Data attached to this biobank encounter?
-              	    ?enc obo:BFO_0000051 ?collProc .
-              	    ?collProc a obo:OBI_0600005 .
-              	    ?DNA a obo:CHEBI_16991 .
-                		?DNA obo:BFO_0000050 ?specimen .
-                		?specimen a obo:OBI_0001479 .
-                		?collProc obo:OBI_0000299 ?specimen .
               	}
               }
             	BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("new bb puirole", str(?enc))))) AS ?puirole)
@@ -427,6 +435,32 @@ class EntityLinker extends ProjectwideGlobals
         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbEncInfo, ArrayBuffer("enc", "eilv", "bbEncRegId"))
     }
     
+    def getBiobankEncounterWithConsenterInfo(cxn: RepositoryConnection): ArrayBuffer[ArrayBuffer[Value]] =
+    {
+        var getBbEncInfo: String = 
+        """
+            Select ?enc ?eilv ?bbEncRegId
+            Where {
+            Graph pmbb:expanded
+            {
+              ?bbSymb turbo:TURBO_0006510 ?eilv ;
+          		               a turbo:TURBO_0000534 .
+          		?bbEncCrid a turbo:TURBO_0000533 ;
+          		           obo:BFO_0000051 ?bbSymb ;
+          		           obo:IAO_0000219 ?enc ;
+          		           obo:BFO_0000051 ?bbEncRegDen .
+          		?bbEncRegDen a turbo:TURBO_0000535 ;
+          		             obo:IAO_0000219 ?bbEncRegId .
+          		?bbEncRegId a turbo:TURBO_0000543 .
+          		?enc  a  turbo:TURBO_0000527 ;
+          		       turbo:TURBO_0006500 'true'^^xsd:boolean .
+      		    ?consenter obo:RO_0000056 ?enc .
+      		    ?consenter a turbo:TURBO_0000502 .
+            }}"""
+      
+        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbEncInfo, ArrayBuffer("enc", "eilv", "bbEncRegId"))
+    }
+    
     /**
      * After healthcare and biobank encounters have been joined with biobank consenters, this SPARQL-based method
      * finds instances of BMI data attached to linked encounters and connects the BMI with the relevant consenter's
@@ -480,21 +514,5 @@ class EntityLinker extends ProjectwideGlobals
             }  
         """
         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, ArrayBuffer("allele", "encLit", "encReg"))
-    }
-    
-    def cleanupJoinData(cxn: RepositoryConnection)
-    {
-        cleanupBiobankJoinData(cxn)
-        cleanupHealthcareJoinData(cxn)
-    }
-    
-    def cleanupBiobankJoinData(cxn: RepositoryConnection)
-    {
-      
-    }
-    
-    def cleanupHealthcareJoinData(cxn: RepositoryConnection)
-    {
-        
     }
 }

@@ -89,9 +89,9 @@ class ConnectToGraphDB extends ProjectwideGlobals
      * Handles loading data files into their respective named graphs, as declared in TURBO Properties file. Checks to make sure that 
      * data files and named graphs are declared properly, then passes information to helper method to complete the data load.
      */
-    def loadDataFromPropertiesFile(cxn: RepositoryConnection)
+    def loadDataFromPropertiesFile(cxn: RepositoryConnection, inputProp: String = inputFiles, ngPrefix: String = "Shortcuts", allInOneGraph: Boolean = false)
     {
-        val filesToLoadList: HashMap[String, HashMap[String, RDFFormat]] = generateLoadList()
+        val filesToLoadList: HashMap[String, HashMap[String, RDFFormat]] = generateLoadList(inputProp, ngPrefix, allInOneGraph)
         for ((k,v) <- filesToLoadList)
         {
             var namedgraph: String = ""
@@ -128,16 +128,16 @@ class ConnectToGraphDB extends ProjectwideGlobals
      * Reads the files-to-load list and their respective named graphs from the TURBO properties file and checks to make sure that these lists are valid.
      * If they are, returns a mapping of file names to named graphs/RDF format of the files. 
      */
-    def generateLoadList(): HashMap[String, HashMap[String, RDFFormat]] =
+    def generateLoadList(inputProp: String, ngPrefix: String, allInOneGraph: Boolean): HashMap[String, HashMap[String, RDFFormat]] =
     {
         val mapToReturn: HashMap[String, HashMap[String, RDFFormat]] = new HashMap[String, HashMap[String, RDFFormat]]
         
-        val filesToLoad: String = inputFiles
+        val filesToLoad: String = inputProp
         val namedGraphs: String = inputFilesNamedGraphs
         val formats: String = inputFilesFormat
         
         val ftlList: ArrayBuffer[String] = parseCSVString(filesToLoad)
-        val ngList: ArrayBuffer[String] = generateShortcutNamedGraphsList(ftlList)
+        val ngList: ArrayBuffer[String] = generateShortcutNamedGraphsList(ftlList, ngPrefix, allInOneGraph)
         var formatList: ArrayBuffer[String] = parseCSVString(formats)
         
         // If only one format is required, we infer that this is meant to apply to all files.
@@ -274,12 +274,13 @@ class ConnectToGraphDB extends ProjectwideGlobals
      * 
      * @return a list of strings representing the named graph which each file will be loaded into at that specific index in the input list
      */
-    def generateShortcutNamedGraphsList(newFiles: ArrayBuffer[String]): ArrayBuffer[String] =
+    def generateShortcutNamedGraphsList(newFiles: ArrayBuffer[String], ngPrefix: String, allInOneGraph: Boolean): ArrayBuffer[String] =
     {
         var listToReturn: ArrayBuffer[String] = new ArrayBuffer[String]
         for (file <- newFiles)
         {
-            val namedGraph: String = "http://www.itmat.upenn.edu/biobank/Shortcuts_" + 
+            var namedGraph: String = "http://www.itmat.upenn.edu/biobank/" + ngPrefix 
+            if (!allInOneGraph) namedGraph += "_" +
                 java.util.UUID.randomUUID().toString.replaceAll("-","") + "_" + helper.getPostfixfromURI(file).replaceAll(" ", "")
             listToReturn += namedGraph
         }

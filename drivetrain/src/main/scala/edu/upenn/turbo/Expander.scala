@@ -16,7 +16,7 @@ class Expander extends ProjectwideGlobals
     /**
      * Calls all methods responsible for expanding all shortcut entities available in shortcut named graphs. 
      */
-    def expandAllShortcutEntities (cxn: RepositoryConnection): String =
+    def expandAllShortcutEntities (cxn: RepositoryConnection): IRI =
     {   
         val instantiation: IRI = helper.genPmbbIRI(cxn)
         val graphsString: String = helper.generateShortcutNamedGraphsString(cxn)
@@ -29,9 +29,9 @@ class Expander extends ProjectwideGlobals
         logger.info("finished biobank join expansion, starting healthcare join expansion")
         healthcareEncounterParticipantJoinExpansion(cxn, instantiation, graphsString)
         logger.info("finished join expansion")
-        expandLossOfFunctionShortcuts(cxn, instantiation, graphsString)
-        logger.info("expanded loss of function shortcuts")
-        graphsString
+        //expandLossOfFunctionShortcuts(cxn, instantiation, graphsString)
+        //logger.info("expanded loss of function shortcuts")
+        instantiation
     }
     
     /**
@@ -752,11 +752,9 @@ class Expander extends ProjectwideGlobals
           helper.updateSparql(cxn, sparqlPrefixes + healthcareEncounterExpansion) 
     }
     
-    def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
+    def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: IRI)
     {
         val graphsList: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn)
-        for (graph <- graphsList)
-        {
             val expandLOF: String = """
               Insert
               {
@@ -824,12 +822,13 @@ class Expander extends ProjectwideGlobals
                       # leaving these shortcuts in for entity linking later on
                       ?allele turbo:TURBO_0007601 ?bbEncSymb .
                       ?allele turbo:TURBO_0007609 ?bbEncRegURI .
-                      
+                      ?allele turbo:TURBO_0007602 ?genomeCridSymbLit .
+                      ?allele turbo:TURBO_0007603 ?genomeRegURI .
                   }
               }
               Where
               {
-                  Graph <""" + graph + """>
+                  Graph pmbb:LOFShortcuts
                 	{
                 	    ?alleleSC a obo:OBI_0001352 ;
                 	            turbo:TURBO_0007607 ?zygosityValURI ;
@@ -853,13 +852,13 @@ class Expander extends ProjectwideGlobals
                 	Bind (uri(?bbEncReg) AS ?bbEncRegURI)
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextract)
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?formProcess)
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCridSymb)
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNA)
+                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCridSymb)
+                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNA)
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextractionProcess)
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeRegDen)
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCrid)
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?specimen)
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?collectionProcess)
+                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeRegDen)
+                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCrid)
+                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?specimen)
+                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?collectionProcess)
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?sequenceData)
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?exomeSequenceProcess)
                 	Bind (uri("""" + instantiation + """") AS ?instantiation)
@@ -871,6 +870,5 @@ class Expander extends ProjectwideGlobals
               """
             
             helper.updateSparql(cxn, sparqlPrefixes + expandLOF)
-        }
     }
 }
