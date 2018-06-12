@@ -37,95 +37,10 @@ class EntityLinker extends ProjectwideGlobals
     
     def connectLossOfFunctionToBiobankEncounters(cxn: RepositoryConnection)
     {
+        convertLOFRegStringToRegURI(cxn)
         val bbEncResult: ArrayBuffer[ArrayBuffer[Value]] = getBiobankEncounterWithConsenterInfo(cxn)
         val lossOfFunctionJoinData: ArrayBuffer[ArrayBuffer[Value]] = getLossOfFunctionJoinData(cxn)
         twoFieldMatch.executeMatchWithTwoTables(cxn, bbEncResult, lossOfFunctionJoinData)
-        
-        val insertSupplTrips: String = 
-        """
-            Delete
-            {
-                Graph pmbb:expanded
-                {
-                    ?allele graphBuilder:willBeLinkedWith ?bbEnc .
-                    ?allele turbo:TURBO_0007601 ?encSymbLit .
-                    ?allele turbo:TURBO_0007609 ?bbReg .
-                }
-            }
-            Insert
-            {
-                Graph pmbb:expanded
-                {
-                    ?DNA a obo:CHEBI_16991 .
-                    ?DNA obo:BFO_0000050 ?specimen .
-                    ?DNA obo:BFO_0000050 ?consenter .
-                    ?specimen a obo:OBI_0001479 .
-                    ?specimen obo:BFO_0000051 ?DNA .
-                    ?collectionProcess a obo:OBI_0600005 .
-                    ?collectionProcess obo:OBI_0000299 ?specimen .
-                    ?allele obo:IAO_0000136 ?DNA .
-                    
-                    ?genomeCridSymb turbo:TURBO_0006510 ?genomeCridSymbLit .
-                    ?genomeCridSymb a turbo:TURBO_0000568 .
-                    ?genomeCridSymb obo:BFO_0000050 ?genomeCrid .
-                    
-                    ?genomeRegDen obo:BFO_0000050 ?genomeCrid .
-                    ?genomeRegDen a turbo:TURBO_0000567 .
-                    ?genomeRegDen obo:IAO_0000219 ?genomeRegURI .
-                    
-                    ?genomeCrid a turbo:TURBO_0000566 .
-                    ?genomeCrid obo:IAO_0000219 ?specimen .
-                    ?genomeCrid obo:BFO_0000051 ?genomeRegDen .
-                    ?genomeCrid obo:BFO_0000051 ?genomeCridSymb .
-                    
-                    ?genomeCridSymb obo:BFO_0000050 ?dataset .
-                    ?dataset obo:BFO_0000051 ?genomeCridSymb .
-                    
-                    ?consenter obo:BFO_0000051 ?DNA .
-                    ?collProc obo:OBI_0000293 ?consenter .
-                    ?consenter obo:OBI_0000299 ?collProc .
-                    ?bbSymb obo:BFO_0000050 ?dataset .
-                    ?dataset obo:BFO_0000051 ?bbSymb .
-                    ?collProc obo:BFO_0000050 ?bbEnc .
-                    ?bbEnc obo:BFO_0000051 ?collProc .
-                }
-            }
-            Where
-            {
-                Graph pmbb:expanded
-                {
-                    ?allele a obo:OBI_0001352 .
-                    ?allele obo:BFO_0000050 ?dataset .
-                		?dataset a obo:IAO_0000100 .
-                		?allele turbo:TURBO_0007602 ?genomeCridSymbLit .
-                		?allele turbo:TURBO_0007603 ?genomeRegURI .
-                		
-                    ?allele graphBuilder:willBeLinkedWith ?bbEnc .
-                    
-                    ?bbEnc a turbo:TURBO_0000527 .
-                    ?bbEncCrid obo:IAO_0000219 ?bbEnc .
-                    ?bbEncCrid a turbo:TURBO_0000533 .
-                		?bbEncCrid obo:BFO_0000051 ?bbSymb .
-                		?bbEncCrid obo:BFO_0000051 ?bbRegDen .
-                	  ?bbSymb a turbo:TURBO_0000534 .
-                	  ?bbSymb turbo:TURBO_0006510 ?encSymbLit .
-                	  ?bbRegDen a turbo:TURBO_0000535 .
-                	  ?bbRegDen obo:IAO_0000219 ?bbReg .
-                	  ?bbReg a turbo:TURBO_0000543 .
-
-            		    ?consenter obo:RO_0000056 ?bbEnc .
-        		        ?consenter a turbo:TURBO_0000502 .
-        		        
-        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("DNA", str(?consenter))))) AS ?DNA)
-        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("collProc", str(?consenter))))) AS ?collProc)
-        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("specimen", str(?consenter))))) AS ?specimen)
-        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("genomeCrid", str(?consenter))))) AS ?genomeCrid)
-        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("genomeCridSymb", str(?consenter))))) AS ?genoneCridSymb)
-        		        Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("genomeCridRegDen", str(?consenter))))) AS ?genomeCridRegDen)
-                }
-            }
-        """
-        helper.updateSparql(cxn, sparqlPrefixes + insertSupplTrips)
     }
     
     /**
@@ -456,6 +371,7 @@ class EntityLinker extends ProjectwideGlobals
           		       turbo:TURBO_0006500 'true'^^xsd:boolean .
       		    ?consenter obo:RO_0000056 ?enc .
       		    ?consenter a turbo:TURBO_0000502 .
+      		    ?consenter turbo:TURBO_0006500 'true'^^xsd:boolean .
             }}"""
       
         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbEncInfo, ArrayBuffer("enc", "eilv", "bbEncRegId"))
@@ -505,14 +421,49 @@ class EntityLinker extends ProjectwideGlobals
         """
             select ?allele ?encLit ?encReg where
             {
-                graph pmbb:expanded
+                graph pmbb:LOFShortcuts
                 {
-                    ?allele a obo:OBI_0001352 .
-                    ?allele turbo:TURBO_0007601 ?encLit .
-                    ?allele turbo:TURBO_0007609 ?encReg .
+                    ?allele a obo:OBI_0001352 ;
+          	            turbo:TURBO_0007607 ?zygosityValURI ;
+          	            turbo:TURBO_0007601 ?encLit ;
+          	            turbo:TURBO_0007606 ?zygosityValText ;
+          	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
+          	            turbo:TURBO_0007603 ?genomeReg ;
+          	            turbo:TURBO_0007605 ?geneText ;
+          	            turbo:TURBO_0007608 ?datasetTitle ;
+          	            turbo:TURBO_0007609 ?encReg .
                 }
             }  
         """
         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, ArrayBuffer("allele", "encLit", "encReg"))
+    }
+    
+    def convertLOFRegStringToRegURI(cxn: RepositoryConnection)
+    {
+        val makeURIs: String = """
+          Delete 
+          {
+              Graph pmbb:LOFShortcuts
+              {
+                  ?allele turbo:TURBO_0007609 ?bbRegString .
+              }
+          }
+          Insert
+          {
+              Graph pmbb:LOFShortcuts
+              {
+                  ?allele turbo:TURBO_0007609 ?bbRegURI .
+              }
+          }
+          Where
+          {
+              Graph pmbb:LOFShortcuts
+              {
+                  ?allele turbo:TURBO_0007609 ?bbRegString .
+              }
+              Bind (uri(?bbRegString) AS ?bbRegURI)  
+          }  
+          """
+        helper.updateSparql(cxn, sparqlPrefixes + makeURIs)
     }
 }

@@ -60,7 +60,7 @@ class MatchOnTwoFields extends ProjectwideGlobals
         }
         logger.info("joins processed")
         cxn.begin()
-        cxn.add(model, f.createIRI("http://www.itmat.upenn.edu/biobank/expanded"))
+        cxn.add(model, f.createIRI("http://www.itmat.upenn.edu/biobank/LOFShortcuts"))
         cxn.commit()
         logger.info("changes committed")
     }

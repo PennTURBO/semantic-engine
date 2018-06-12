@@ -143,7 +143,8 @@ pmbb:dataset1 rdf:type obo:IAO_0000100 .
     val entLinker = new EntityLinker
     val instantiation: IRI = helper.genPmbbIRI(cxn)
 
-    expInst.expandLossOfFunctionShortcuts(cxn, instantiation, "<" + graphString + ">")
+    // Hayden 6/12: Graph String variable no longer required.
+    expInst.expandLossOfFunctionShortcuts(cxn, instantiation)
     
     //Hayden 6/5: moving triples from pmbb:postExpansionCheck to pmbb:expanded
     helper.moveDataFromOneNamedGraphToAnother(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "http://www.itmat.upenn.edu/biobank/expanded")

@@ -754,11 +754,34 @@ class Expander extends ProjectwideGlobals
     
     def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: IRI)
     {
+        val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         val graphsList: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn)
             val expandLOF: String = """
+              Delete
+              {
+                  Graph pmbb:LOFShortcuts
+                  {
+                      ?alleleSC a obo:OBI_0001352 ;
+                	            turbo:TURBO_0007607 ?zygosityValURI ;
+                	            turbo:TURBO_0007601 ?bbEncSymb ;
+                	            turbo:TURBO_0007606 ?zygosityValText ;
+                	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
+                	            turbo:TURBO_0007603 ?genomeReg ;
+                	            turbo:TURBO_0007605 ?geneText ;
+                	            turbo:TURBO_0007608 ?datasetTitle ;
+                	            turbo:TURBO_0007609 ?bbEncReg .
+                	            
+                	    ?alleleSC graphBuilder:willBeLinkedWith ?bbEnc .
+                	    ?bbEnc a turbo:TURBO_0000527 .
+                	    ?consenter obo:RO_0000056 ?bbEnc .
+                	    ?consenter a turbo:TURBO_0000502 .
+                	    
+                	    ?alleleSC turbo:TURBO_0007604 ?protein .
+                  }
+              }
               Insert
               {
-                  Graph pmbb:postExpansionCheck
+                  Graph pmbb:expanded
                   {
                       ?instantiation a turbo:TURBO_0000522 .
             		      ?instantiation obo:OBI_0000293 ?dataset .
@@ -807,8 +830,9 @@ class Expander extends ProjectwideGlobals
                       ?specimen a obo:OBI_0001479 .
                       ?specimen obo:BFO_0000051 ?DNA .
                       
-                      ?DNA a obo:CHEBI_16991 .
+                      ?DNA a obo:OBI_0001868 .
                       ?DNA obo:BFO_0000050 ?specimen .
+                      ?DNA obo:OBI_0000643 ?DNAextract .
                       
                       ?collectionProcess a obo:OBI_0600005 .
                       ?collectionProcess obo:OBI_0000299 ?specimen .
@@ -819,11 +843,14 @@ class Expander extends ProjectwideGlobals
                       
                       ?sequenceData a obo:OBI_0001573 .
                       
-                      # leaving these shortcuts in for entity linking later on
-                      ?allele turbo:TURBO_0007601 ?bbEncSymb .
-                      ?allele turbo:TURBO_0007609 ?bbEncRegURI .
-                      ?allele turbo:TURBO_0007602 ?genomeCridSymbLit .
-                      ?allele turbo:TURBO_0007603 ?genomeRegURI .
+                      # connections to bb encounter and consenter
+                      ?DNA obo:OGG_0000000014 ?consenter .
+                      ?collectionProcess obo:OBI_0000293 ?consenter .
+                      ?consenter obo:OBI_0000299 ?collectionProcess .
+                      ?bbSymb obo:BFO_0000050 ?dataset .
+                      ?dataset obo:BFO_0000051 ?bbSymb .
+                      ?collectionProcess obo:BFO_0000050 ?bbEnc .
+                      ?bbEnc obo:BFO_0000051 ?collectionProcess .
                   }
               }
               Where
@@ -843,29 +870,36 @@ class Expander extends ProjectwideGlobals
                 	    {
                 	        ?alleleSC turbo:TURBO_0007604 ?protein .
                 	    }
+                	            
+                	    ?alleleSC graphBuilder:willBeLinkedWith ?bbEnc .
+                	}
+                	Graph pmbb:expanded 
+                	{
+                	    ?bbEnc a turbo:TURBO_0000527 .
+                	    ?consenter obo:RO_0000056 ?bbEnc .
+                	    ?consenter a turbo:TURBO_0000502 .
+                	}    
                 	    
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?dataset)    
+                	BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + randomUUID + """", str(?datasetTitle))))) AS ?dataset)
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?allele)
                 	Bind (uri(?zygosityValURI) AS ?zygVal) 
                 	Bind (uri(?genomeReg) AS ?genomeRegURI)  
                 	Bind (uri(?protein) AS ?proteinURI)      
-                	Bind (uri(?bbEncReg) AS ?bbEncRegURI)
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextract)
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?formProcess)
-                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCridSymb)
-                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNA)
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?DNAextractionProcess)
-                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeRegDen)
-                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genomeCrid)
-                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?specimen)
-                	# Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?collectionProcess)
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?sequenceData)
-                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?exomeSequenceProcess)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("DNAextract", str(?consenter), str(?genomeCridSymbLit))))) AS ?DNAextract)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("formprocess", str(?consenter), str(?genomeCridSymbLit))))) AS ?formProcess)
+                	Bind (uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("genomeCridSymb", str(?consenter), str(?genomeCridSymbLit))))) AS ?genomeCridSymb)
+                	Bind (uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("DNA", str(?consenter))))) AS ?DNA)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("DNAextractionprocess", str(?consenter), str(?genomeCridSymbLit))))) AS ?DNAextractionProcess)
+                	Bind (uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("genomeRegDen", str(?consenter), str(?genomeCridSymbLit))))) AS ?genomeRegDen)
+                	Bind (uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("genomeCrid", str(?consenter), str(?genomeCridSymbLit))))) AS ?genomeCrid)
+                	Bind (uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("specimen", str(?consenter), str(?genomeCridSymbLit))))) AS ?specimen)
+                	Bind (uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("collProc", str(?consenter), str(?genomeCridSymbLit))))) AS ?collectionProcess)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("sequencedata", str(?consenter), str(?genomeCridSymbLit))))) AS ?sequenceData)
+                	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("exomesequence", str(?consenter), str(?genomeCridSymbLit))))) AS ?exomeSequenceProcess)
                 	Bind (uri("""" + instantiation + """") AS ?instantiation)
                 	# It's important that these variables are different datatypes because they will both be textual values of the allele, so the datatypes are the differentiator
                 	Filter (datatype(?geneText) = xsd:string)
                 	Filter (datatype(?zygosityValText) = xsd:integer)
-                	}
               }
               """
             

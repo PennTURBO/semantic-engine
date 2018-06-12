@@ -91,6 +91,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "i2i2c2c") runI2i2c2cMapping(cxn, args)
               else if (args(0) == "setReasoning") changeReasoningLevel(cxn)
               else if (args(0) == "loadRepo") helper.loadDataFromFile(cxn, args(1), RDFFormat.TURTLE)
+              else if (args(0) == "loadTurboOntology") helper.addOntologyFromUrl(cxn)
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
@@ -167,7 +168,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       //load LOF data
       connect.loadDataFromPropertiesFile(cxn, inputLOFFiles, "LOFShortcuts", true)
       join.connectLossOfFunctionToBiobankEncounters(cxn)
-      expand.expandLossOfFunctionShortcuts(cxn, instantiation.get)
+      expand.expandLossOfFunctionShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/instantiation1"))/*instantiation.get)*/
   }
   
   def runConclusionating(cxn: RepositoryConnection, biosexThreshold: Double, dateofbirthThreshold: Double): Boolean =

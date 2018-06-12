@@ -240,7 +240,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //expand loss of function
         val startLOFexpand = System.nanoTime()
-        expand.expandLossOfFunctionShortcuts(cxn, instantiation, graphsList)
+        expand.expandLossOfFunctionShortcuts(cxn, instantiation)
         val stopLOFexpand = System.nanoTime()
         
         writeCSV.println("Expand Loss of Function Data," + ((stopLOFexpand - startLOFexpand)/1000000000.0).toString)
