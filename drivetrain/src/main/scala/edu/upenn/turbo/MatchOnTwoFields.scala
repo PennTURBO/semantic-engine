@@ -42,25 +42,24 @@ class MatchOnTwoFields extends ProjectwideGlobals
         logger.info("changes committed")
     }
     
-    def executeMatchWithTwoTables(cxn: RepositoryConnection, table1: ArrayBuffer[ArrayBuffer[Value]], table2: ArrayBuffer[ArrayBuffer[Value]])
+    def executeMatchWithTwoTables(cxn: RepositoryConnection, table1: HashMap[String, ArrayBuffer[Value]], table2: ArrayBuffer[ArrayBuffer[Value]], context: String)
     {
         var model: Model = new LinkedHashModel()
         val f: ValueFactory = cxn.getValueFactory
         val pred: IRI = f.createIRI("http://graphBuilder.org/willBeLinkedWith")
         logger.info("Searching for matches")
-        val table1map: HashMap[String, ArrayBuffer[Value]] = createHashMapFromTable(table1)
         for (a <- table2)
         {
             val checkString: String = a(1).toString + a(2).toString
-            if (table1map.contains(checkString)) 
+            if (table1.contains(checkString)) 
             {
-                model.add(a(0).asInstanceOf[IRI], pred, table1map(checkString)(0))
+                model.add(a(0).asInstanceOf[IRI], pred, table1(checkString)(0))
                 //logger.info("found match: " + a(0) + " " + table1map(checkString)(0))
             }
         }
         logger.info("joins processed")
         cxn.begin()
-        cxn.add(model, f.createIRI("http://www.itmat.upenn.edu/biobank/LOFShortcuts"))
+        cxn.add(model, f.createIRI(context))
         cxn.commit()
         logger.info("changes committed")
     }

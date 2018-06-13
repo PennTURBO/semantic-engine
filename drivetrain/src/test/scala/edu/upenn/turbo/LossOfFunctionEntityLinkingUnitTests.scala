@@ -95,7 +95,7 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
           }
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.connectLossOfFunctionToBiobankEncounters(cxn)
+        entLink.connectLossOfFunctionToBiobankEncounters(cxn, ArrayBuffer("http://www.itmat.upenn.edu/biobank/LOFShortcuts"))
         
         val ask: String = """
           ASK
@@ -129,7 +129,7 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
           }
           """
         helper.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.connectLossOfFunctionToBiobankEncounters(cxn)
+        entLink.connectLossOfFunctionToBiobankEncounters(cxn, ArrayBuffer("http://www.itmat.upenn.edu/biobank/LOFShortcuts"))
         
         val ask1: String = """
           ASK

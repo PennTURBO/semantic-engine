@@ -5,6 +5,7 @@ import org.eclipse.rdf4j.repository.Repository
 import org.eclipse.rdf4j.repository.RepositoryConnection
 import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
 import org.eclipse.rdf4j.rio.RDFFormat
+import scala.collection.mutable.ArrayBuffer
 
 object DrivetrainDriver extends ProjectwideGlobals {
   val connect: ConnectToGraphDB = new ConnectToGraphDB
@@ -60,12 +61,12 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       if (postexpandProceed)
                       {
                           runReferentTracking(cxn)
+                          runEntityLinking(cxn)
                           val concProceed = runConclusionating(cxn, thresholds.get(0), thresholds.get(1))
                           if (concProceed) 
                           {
                               runDiagnosisMapping(cxn)
                               runMedicationMapping(cxn)
-                              changeReasoningLevel(cxn)
                           }
                       }
                   }
@@ -81,6 +82,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   else runExpansion(cxn)
               }
               else if (args(0) == "reftrack") runReferentTracking(cxn)
+              else if (args(0) == "entlink") runEntityLinking(cxn)
               else if (args(0) == "conclusionate") 
               {
                   val thresholds: Option[Array[Double]] = checkConclusionatorArguments(args)
@@ -164,11 +166,22 @@ object DrivetrainDriver extends ProjectwideGlobals {
   {
       logger.info("running reftracking")
       reftrack.runAllReftrackProcesses(cxn)
-      join.joinParticipantsAndEncounters(cxn)
-      //load LOF data
-      connect.loadDataFromPropertiesFile(cxn, inputLOFFiles, "LOFShortcuts", true)
-      join.connectLossOfFunctionToBiobankEncounters(cxn)
-      expand.expandLossOfFunctionShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/instantiation1"))/*instantiation.get)*/
+      logger.info("All referent tracking complete")
+  }
+  
+  def runEntityLinking(cxn: RepositoryConnection)
+  {
+      logger.info("starting entity linking")
+      //join.joinParticipantsAndEncounters(cxn)
+      logger.info("loading LOF data")
+      connect.loadDataFromPropertiesFile(cxn, inputLOFFiles, "LOFShortcuts", false)
+      /*val lofGraphs: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
+      logger.info("connecting biobank encounters to LOF data")
+      join.connectLossOfFunctionToBiobankEncounters(cxn, lofGraphs)
+      logger.info("expanding LOF data")
+      if (instantiation == None) expand.expandLossOfFunctionShortcuts(cxn, helper.genTurboIRI(cxn), lofGraphs)
+      else expand.expandLossOfFunctionShortcuts(cxn, instantiation.get, lofGraphs)
+      logger.info("All entity linking complete")*/
   }
   
   def runConclusionating(cxn: RepositoryConnection, biosexThreshold: Double, dateofbirthThreshold: Double): Boolean =

@@ -14,12 +14,6 @@ class EntityLinker extends ProjectwideGlobals
 {   
     val twoFieldMatch: MatchOnTwoFields = new MatchOnTwoFields
     
-    def runAllEntityLinking(cxn: RepositoryConnection)
-    {
-        joinParticipantsAndEncounters(cxn)
-        connectLossOfFunctionToBiobankEncounters(cxn)
-    }
-    
     /**
      * This is the driver method to complete the original "EntityLinking" to connect Healthcare and Biobank encounters to Biobank consenters.
      */
@@ -35,12 +29,15 @@ class EntityLinker extends ProjectwideGlobals
         logger.info("Participants and Encounters have been linked using join data")
     }
     
-    def connectLossOfFunctionToBiobankEncounters(cxn: RepositoryConnection)
+    def connectLossOfFunctionToBiobankEncounters(cxn: RepositoryConnection, lofGraphs: ArrayBuffer[String])
     {
-        convertLOFRegStringToRegURI(cxn)
-        val bbEncResult: ArrayBuffer[ArrayBuffer[Value]] = getBiobankEncounterWithConsenterInfo(cxn)
-        val lossOfFunctionJoinData: ArrayBuffer[ArrayBuffer[Value]] = getLossOfFunctionJoinData(cxn)
-        twoFieldMatch.executeMatchWithTwoTables(cxn, bbEncResult, lossOfFunctionJoinData)
+        convertLOFRegStringToRegURI(cxn, lofGraphs)
+        val bbEncResult: HashMap[String, ArrayBuffer[Value]] = twoFieldMatch.createHashMapFromTable(getBiobankEncounterWithConsenterInfo(cxn))
+        for (graph <- lofGraphs)
+        {
+            val lossOfFunctionJoinData: ArrayBuffer[ArrayBuffer[Value]] = getLossOfFunctionJoinData(cxn, graph)
+            twoFieldMatch.executeMatchWithTwoTables(cxn, bbEncResult, lossOfFunctionJoinData, graph)
+        }
     }
     
     /**
@@ -415,13 +412,13 @@ class EntityLinker extends ProjectwideGlobals
        helper.updateSparql(cxn, sparqlPrefixes + attachBMIToAdipose)
     }
     
-    def getLossOfFunctionJoinData(cxn: RepositoryConnection): ArrayBuffer[ArrayBuffer[Value]] =
+    def getLossOfFunctionJoinData(cxn: RepositoryConnection, lofGraph: String): ArrayBuffer[ArrayBuffer[Value]] =
     {
         val query: String = 
         """
             select ?allele ?encLit ?encReg where
             {
-                graph pmbb:LOFShortcuts
+                graph <""" + lofGraph + """>
                 {
                     ?allele a obo:OBI_0001352 ;
           	            turbo:TURBO_0007607 ?zygosityValURI ;
@@ -438,32 +435,35 @@ class EntityLinker extends ProjectwideGlobals
         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, ArrayBuffer("allele", "encLit", "encReg"))
     }
     
-    def convertLOFRegStringToRegURI(cxn: RepositoryConnection)
+    def convertLOFRegStringToRegURI(cxn: RepositoryConnection, lofGraphs: ArrayBuffer[String])
     {
-        val makeURIs: String = """
-          Delete 
-          {
-              Graph pmbb:LOFShortcuts
-              {
-                  ?allele turbo:TURBO_0007609 ?bbRegString .
-              }
-          }
-          Insert
-          {
-              Graph pmbb:LOFShortcuts
-              {
-                  ?allele turbo:TURBO_0007609 ?bbRegURI .
-              }
-          }
-          Where
-          {
-              Graph pmbb:LOFShortcuts
-              {
-                  ?allele turbo:TURBO_0007609 ?bbRegString .
-              }
-              Bind (uri(?bbRegString) AS ?bbRegURI)  
-          }  
-          """
-        helper.updateSparql(cxn, sparqlPrefixes + makeURIs)
+        for (graph <- lofGraphs)
+        {
+            val makeURIs: String = """
+                Delete 
+                {
+                    Graph <""" + graph + """>
+                    {
+                        ?allele turbo:TURBO_0007609 ?bbRegString .
+                    }
+                }
+                Insert
+                {
+                    Graph <""" + graph + """>
+                    {
+                        ?allele turbo:TURBO_0007609 ?bbRegURI .
+                    }
+                }
+                Where
+                {
+                    Graph <""" + graph + """>
+                    {
+                        ?allele turbo:TURBO_0007609 ?bbRegString .
+                    }
+                    Bind (uri(?bbRegString) AS ?bbRegURI)  
+                }  
+                """
+            helper.updateSparql(cxn, sparqlPrefixes + makeURIs)
+        }
     }
 }

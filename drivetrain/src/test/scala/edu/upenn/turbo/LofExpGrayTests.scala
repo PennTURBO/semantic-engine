@@ -12,6 +12,7 @@ import org.eclipse.rdf4j.rio.RDFFormat
 import org.eclipse.rdf4j.rio.Rio
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
+import scala.collection.mutable.ArrayBuffer
 
 class LofExpGrayTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals {
 
@@ -143,14 +144,13 @@ pmbb:dataset1 rdf:type obo:IAO_0000100 .
     val entLinker = new EntityLinker
     val instantiation: IRI = helper.genPmbbIRI(cxn)
 
-    // Hayden 6/12: Graph String variable no longer required.
-    expInst.expandLossOfFunctionShortcuts(cxn, instantiation)
+    expInst.expandLossOfFunctionShortcuts(cxn, instantiation, ArrayBuffer(graphString))
     
     //Hayden 6/5: moving triples from pmbb:postExpansionCheck to pmbb:expanded
     helper.moveDataFromOneNamedGraphToAnother(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "http://www.itmat.upenn.edu/biobank/expanded")
     helper.clearNamedGraph(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck")
 
-    entLinker.connectLossOfFunctionToBiobankEncounters(cxn)
+    entLinker.connectLossOfFunctionToBiobankEncounters(cxn, ArrayBuffer(graphString))
 
     var askStr = """
    ask {

@@ -752,14 +752,15 @@ class Expander extends ProjectwideGlobals
           helper.updateSparql(cxn, sparqlPrefixes + healthcareEncounterExpansion) 
     }
     
-    def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: IRI)
+    def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: IRI, lofGraphs: ArrayBuffer[String])
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
-        val graphsList: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn)
+        for (graph <- lofGraphs)
+        {
             val expandLOF: String = """
               Delete
               {
-                  Graph pmbb:LOFShortcuts
+                  Graph <"""+graph+""">
                   {
                       ?alleleSC a obo:OBI_0001352 ;
                 	            turbo:TURBO_0007607 ?zygosityValURI ;
@@ -772,9 +773,6 @@ class Expander extends ProjectwideGlobals
                 	            turbo:TURBO_0007609 ?bbEncReg .
                 	            
                 	    ?alleleSC graphBuilder:willBeLinkedWith ?bbEnc .
-                	    ?bbEnc a turbo:TURBO_0000527 .
-                	    ?consenter obo:RO_0000056 ?bbEnc .
-                	    ?consenter a turbo:TURBO_0000502 .
                 	    
                 	    ?alleleSC turbo:TURBO_0007604 ?protein .
                   }
@@ -855,7 +853,7 @@ class Expander extends ProjectwideGlobals
               }
               Where
               {
-                  Graph pmbb:LOFShortcuts
+                  Graph <"""+graph+""">
                 	{
                 	    ?alleleSC a obo:OBI_0001352 ;
                 	            turbo:TURBO_0007607 ?zygosityValURI ;
@@ -903,6 +901,7 @@ class Expander extends ProjectwideGlobals
               }
               """
             
-            helper.updateSparql(cxn, sparqlPrefixes + expandLOF)
+            helper.updateSparql(cxn, sparqlPrefixes + expandLOF)  
+        }
     }
 }

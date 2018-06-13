@@ -993,7 +993,7 @@ class TurboMultiuseClass
      * 
      * @return a list representation of all shortcut named graphs for expansion
      */
-    def generateShortcutNamedGraphsList(cxn: RepositoryConnection): ArrayBuffer[String] =
+    def generateShortcutNamedGraphsList(cxn: RepositoryConnection, graphsPrefix: String = "http://www.itmat.upenn.edu/biobank/Shortcuts"): ArrayBuffer[String] =
     {
         val getGraphs: String = """
         select distinct ?g where 
@@ -1002,7 +1002,7 @@ class TurboMultiuseClass
             {
                 ?s ?p ?o .
             }
-            filter (strStarts(str(?g), "http://www.itmat.upenn.edu/biobank/Shortcuts"))
+            filter (strStarts(str(?g), """"+graphsPrefix+""""))
         }"""
         
         querySparqlAndUnpackTuple(cxn, getGraphs, "g")
