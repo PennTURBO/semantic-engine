@@ -1,0 +1,52 @@
+This file contains information about the Drivetrain Automated Benchmarking run at 20180615101949
+
+serviceURL: http://turbo-prd-db01.pmacs.upenn.edu:7200/
+inputFiles: ../data/real_329/wes_pds__encounter_by_pkpatid_as_join_uuid_uris_sc-data.ttl,../data/real_329/wes_pds__encounter_by_pkpatid_enc_only_sc-data.ttl,../data/real_329/wes_pds__patient_by_pkpatientid_sc-data.ttl,../data/real_329/wes_pds_enc__dx_sc-data.ttl,../data/real_329/wes_pmbb__enc_remove_reused_props_flexyeardigs_sc-data.ttl,../data/real_329/wes_pmbb_enc_patient_lookup-data.ttl,../data/real_329/wes_classification_med_map_for_karma_20180503-data.ttl
+turboOntology: https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl
+repository: turbo_6millLOF_20180614
+
+Count instances for pre-referent tracking stage 
+Counting instances of http://transformunify.org/ontologies/TURBO_0000502
+biobank consenter: 11237
+Counting instances of http://transformunify.org/ontologies/TURBO_0000527
+biobank encounter: 14450
+Counting instances of http://purl.obolibrary.org/obo/OGMS_0000097
+healthcare encounter: 98585
+Counting instances of http://purl.obolibrary.org/obo/PDRO_0000024
+drug prescription: 136280
+Counting instances of http://purl.obolibrary.org/obo/OGMS_0000073
+diagnosis: 181420
+
+Count instances for post-referent tracking stage 
+Counting instances of http://transformunify.org/ontologies/TURBO_0000502
+biobank consenter: 11237
+Counting instances of http://transformunify.org/ontologies/TURBO_0000527
+biobank encounter: 14450
+Counting instances of http://purl.obolibrary.org/obo/OGMS_0000097
+healthcare encounter: 98585
+Counting instances of http://purl.obolibrary.org/obo/PDRO_0000024
+drug prescription: 136280
+Counting instances of http://purl.obolibrary.org/obo/OGMS_0000073
+diagnosis: 181420
+
+Total rows of LOF data loaded: 5774222
+Total rows of LOF data expanded: 3524397
+Total rows of LOF data unexpanded: 2249825
+
+Distinct Diagnosis Codes: 8007
+ICD9 Codes: 76531
+ICD10 Codes: 104889
+Distinct Medication Codes: 2438
+
+TripleCount at each stage
+TriplesCount Startup: 0
+TriplesCount Pre-Expansion: 3592996
+TriplesCount Expansion: 15128607
+TriplesCount Post-expansion: 11546089
+TriplesCount Referent Tracking: 16522039
+TriplesCount Entity Linking: 71633238
+TriplesCount Conclusionating: 72332810
+TriplesCount Post-Conclusionating: 72558784
+TriplesCount Diagnosis Mapping: 75231066
+TriplesCount Medication Mapping: 75231066
+

@@ -826,10 +826,8 @@ class Expander extends ProjectwideGlobals
                       ?zygVal a turbo:TURBO_0000571 .
                       
                       ?specimen a obo:OBI_0001479 .
-                      ?specimen obo:BFO_0000051 ?DNA .
                       
                       ?DNA a obo:OBI_0001868 .
-                      ?DNA obo:BFO_0000050 ?specimen .
                       ?DNA obo:OBI_0000643 ?DNAextract .
                       
                       ?collectionProcess a obo:OBI_0600005 .
@@ -844,7 +842,6 @@ class Expander extends ProjectwideGlobals
                       # connections to bb encounter and consenter
                       ?DNA obo:OGG_0000000014 ?consenter .
                       ?collectionProcess obo:OBI_0000293 ?consenter .
-                      ?consenter obo:OBI_0000299 ?collectionProcess .
                       ?bbSymb obo:BFO_0000050 ?dataset .
                       ?dataset obo:BFO_0000051 ?bbSymb .
                       ?collectionProcess obo:BFO_0000050 ?bbEnc .

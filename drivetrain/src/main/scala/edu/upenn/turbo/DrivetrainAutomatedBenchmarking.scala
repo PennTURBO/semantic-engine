@@ -40,6 +40,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     
     var conclusionationNamedGraph: IRI = null
     var tripCountInfo: String = ""
+    var instantiation: IRI = null
     
     /**T
      * his holds the running time of any operations external to the full stack such as sparql queries to determine the number of nodes at a given stage.
@@ -136,6 +137,8 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         countTriplesInDatabase(cxn, "Entity Linking")
         
+        getLOFInfo(cxn, writeTXT)
+        
         //conclusionating
         runBenchmarkingStage(cxn, writeCSV, writeTXT, "Total Conclusionating", benchmarkConclusionating)
         
@@ -194,7 +197,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     
     def benchmarkExpansion(cxn: RepositoryConnection, writeCSV: PrintWriter, writeTXT: PrintWriter)
     {
-        val instantiation: IRI = helper.genPmbbIRI(cxn)
+        instantiation = helper.genPmbbIRI(cxn)
         
         //get list of shortcut named graphs
         val getGraphsListStart = System.nanoTime()
@@ -359,17 +362,30 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         writeCSV.println("Connect BMI To Adipose," + ((stopConnectBmiToAdi - startConnectBmiToAdi)/1000000000.0).toString)
         
+        //load LOF data
+        val loadLOFstart = System.nanoTime()
+        connect.loadDataFromPropertiesFile(cxn, inputLOFFiles, "LOFShortcuts", false)
+        val loadLOFstop = System.nanoTime()
+        
+        writeCSV.println("Load LOF files," + ((loadLOFstop - loadLOFstart)/1000000000.0).toString)
+        
+        //get list of LOF graphs
+        val getGraphListStart = System.nanoTime()
+        val lofGraphs: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
+        val getGraphListStop = System.nanoTime()
+        
+        writeCSV.println("Get list of LOF shortcut graphs," + ((getGraphListStop - getGraphListStart)/1000000000.0).toString)
+        
         //connect LOF to BB Encs
         val startConnectLOF = System.nanoTime()
-        val LOFgraphs = helper.generateShortcutNamedGraphsList(cxn, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
-        join.connectLossOfFunctionToBiobankEncounters(cxn, LOFgraphs)
+        join.connectLossOfFunctionToBiobankEncounters(cxn, lofGraphs)
         val stopConnectLOF = System.nanoTime()
         
         writeCSV.println("Connect LOF to BB Encs," + ((stopConnectLOF - startConnectLOF)/1000000000.0).toString)
         
         //expand loss of function
         val startLOFexpand = System.nanoTime()
-        expand.expandLossOfFunctionShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/instantiation1"), LOFgraphs)
+        expand.expandLossOfFunctionShortcuts(cxn, instantiation, lofGraphs)
         val stopLOFexpand = System.nanoTime()
         
         writeCSV.println("Expand Loss of Function Data," + ((stopLOFexpand - startLOFexpand)/1000000000.0).toString)
@@ -411,10 +427,11 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     {
         //apply inverses
         val startAppInverses = System.nanoTime()
-        helper.applyInverses(cxn, conclusionationNamedGraph)
+        //helper.applyInverses(cxn, conclusionationNamedGraph)
         val stopAppInverses = System.nanoTime()
         
-        writeCSV.println("Apply Inverses," + ((stopAppInverses - startAppInverses)/1000000000.0).toString)
+        //writeCSV.println("Apply Inverses," + ((stopAppInverses - startAppInverses)/1000000000.0).toString)
+        writeCSV.println("Apply Inverses,SKIPPED")
         
         //apply symmetrical properties
         val startAppSymmProps = System.nanoTime()
@@ -446,12 +463,16 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     
     def benchmarkDiagnosisMapping(cxn: RepositoryConnection, writeCSV: PrintWriter, writeTXT: PrintWriter)
     {
-        //load drug ontologies - mondo, ICD9, ICD10
-        val startLoadDrugOntologies =  System.nanoTime()
-        diagmap.addDiseaseOntologies(cxn)
-        val stopLoadDrugOntologies =  System.nanoTime()
-        
-        writeCSV.println("Load Disease Ontologies (mondo + ICD9 + ICD10)," + ((stopLoadDrugOntologies - startLoadDrugOntologies)/1000000000.0).toString)
+        //load disease ontologies - mondo, ICD9, ICD10
+        if (loadDiseaseOntologies == "true")
+        {
+            val startLoadDiseaseOntologies =  System.nanoTime()
+            diagmap.addDiseaseOntologies(cxn)
+            val stopLoadDiseaseOntologies =  System.nanoTime()
+            
+            writeCSV.println("Load Disease Ontologies (mondo + ICD9 + ICD10)," + ((stopLoadDiseaseOntologies - startLoadDiseaseOntologies)/1000000000.0).toString)
+        }
+        else writeCSV.println("Load Disease Ontologies,SKIPPED")
         
         //diagnosis mapping
         val startDiagMap = System.nanoTime()
@@ -463,11 +484,15 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     
     def benchmarkMedicationMapping(cxn: RepositoryConnection, writeCSV: PrintWriter, writeTXT: PrintWriter)
     {
-        val startLoadMedOntologies = System.nanoTime()
-        medmap.addDrugOntologies(cxn)
-        val stopLoadMedOntologies = System.nanoTime()
-        
-        writeCSV.println("Load Drug Ontologies," + ((stopLoadMedOntologies - startLoadMedOntologies)/1000000000.0).toString)
+        if (loadDrugOntologies == "true")
+        {
+            val startLoadMedOntologies = System.nanoTime()
+            medmap.addDrugOntologies(cxn)
+            val stopLoadMedOntologies = System.nanoTime()
+            
+            writeCSV.println("Load Drug Ontologies," + ((stopLoadMedOntologies - startLoadMedOntologies)/1000000000.0).toString)
+        }
+        else writeCSV.println("Load Drug Ontologies,SKIPPED")
         
         val startRunMedMap = System.nanoTime()
         val success: Boolean = medmap.runMedicationMapping(cxn)
@@ -575,6 +600,45 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         writeTXT.println("Distinct Medication Codes: " + helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getDistinctMedCount, "medCount")(0).split("\"")(1).toInt)
         
         val stop = System.nanoTime()
+        subtractFromTotal += (stop - start)/1000000000.0
+        logger.info("SUBTRACT FROM TOTAL VALUE: " + subtractFromTotal)
+    }
+    
+    def getLOFInfo(cxn: RepositoryConnection, writeTXT: PrintWriter)
+    {
+        val start = System.nanoTime()
+        
+        val getExpandedLOFInfo: String = """
+          SELECT (count (distinct ?allele) as ?alleleCount) WHERE
+          {
+              graph pmbb:expanded
+              {
+              	?allele a obo:OBI_0001352 .
+              }
+          }
+          """
+        
+        val getUnexpandedLOFInfo: String = """
+          SELECT (count (distinct ?allele) as ?alleleCount) WHERE
+          {
+              graph ?g 
+              {
+              	?allele a obo:OBI_0001352 .
+              }
+              Filter (?g != pmbb:expanded)
+          }
+          """
+        
+        val expandedCount: Int = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getExpandedLOFInfo, "alleleCount")(0).split("\"")(1).toInt
+        val unexpandedCount: Int = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getUnexpandedLOFInfo, "alleleCount")(0).split("\"")(1).toInt
+        
+        writeTXT.println()
+        writeTXT.println("Total rows of LOF data loaded: " + (expandedCount + unexpandedCount))
+        writeTXT.println("Total rows of LOF data expanded: " + expandedCount)
+        writeTXT.println("Total rows of LOF data unexpanded: " + unexpandedCount)
+        
+        val stop = System.nanoTime()
+        
         subtractFromTotal += (stop - start)/1000000000.0
         logger.info("SUBTRACT FROM TOTAL VALUE: " + subtractFromTotal)
     }

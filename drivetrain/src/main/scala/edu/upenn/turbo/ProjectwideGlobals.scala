@@ -45,4 +45,6 @@ trait ProjectwideGlobals
      val dronRepo = helper.retrievePropertyFromFile("dronRepo")
      val applyLabels = helper.retrievePropertyFromFile("applyLabels")
      val inputLOFFiles = helper.retrievePropertyFromFile("inputLOFFiles")
+     val loadDiseaseOntologies = helper.retrievePropertyFromFile("loadDiseaseOntologies")
+     val loadDrugOntologies = helper.retrievePropertyFromFile("loadDrugOntologies")
 }

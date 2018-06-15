@@ -172,16 +172,16 @@ object DrivetrainDriver extends ProjectwideGlobals {
   def runEntityLinking(cxn: RepositoryConnection)
   {
       logger.info("starting entity linking")
-      //join.joinParticipantsAndEncounters(cxn)
+      join.joinParticipantsAndEncounters(cxn)
       logger.info("loading LOF data")
       connect.loadDataFromPropertiesFile(cxn, inputLOFFiles, "LOFShortcuts", false)
-      /*val lofGraphs: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
+      val lofGraphs: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
       logger.info("connecting biobank encounters to LOF data")
       join.connectLossOfFunctionToBiobankEncounters(cxn, lofGraphs)
       logger.info("expanding LOF data")
       if (instantiation == None) expand.expandLossOfFunctionShortcuts(cxn, helper.genTurboIRI(cxn), lofGraphs)
       else expand.expandLossOfFunctionShortcuts(cxn, instantiation.get, lofGraphs)
-      logger.info("All entity linking complete")*/
+      logger.info("All entity linking complete")
   }
   
   def runConclusionating(cxn: RepositoryConnection, biosexThreshold: Double, dateofbirthThreshold: Double): Boolean =
@@ -210,13 +210,13 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runDiagnosisMapping(cxn: RepositoryConnection)
   {
-      diagmap.addDiseaseOntologies(cxn)
+      if (loadDiseaseOntologies == "true") diagmap.addDiseaseOntologies(cxn)
       diagmap.performDiagnosisMapping(cxn)
   }
   
   def runMedicationMapping(cxn: RepositoryConnection)
   {
-      medmap.addDrugOntologies(cxn)
+      if (loadDrugOntologies == "true") medmap.addDrugOntologies(cxn)
       medmap.runMedicationMapping(cxn)
   }
   

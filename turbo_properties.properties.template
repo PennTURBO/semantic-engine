@@ -10,8 +10,9 @@ inputFiles = ..//data//demo_data//enc2hc.ttl,\
 ..//data//demo_data//join1hc.ttl,\
 ..//data//demo_data//join2bb.ttl,\
 ..//data//demo_data//part1.ttl,\
-..//data//demo_data//part2.ttl,\
-..//data//demo_data//lof.ttl
+..//data//demo_data//part2.ttl
+
+inputLOFFiles = ..//data//demo_data//lof.ttl
 
 #Currently supported formats: TURTLE, RDFXML. Capital letters must be used.
 inputFilesFormat = TURTLE
@@ -30,3 +31,5 @@ solrURL = http://your_solr_address:8983/solr/collection_name/select
 SVMfile = your_SVM_file.rdata
 medStandardsFile = your_medStandards_file
 dronRepo = your_dron_repo
+loadDiseaseOntologies = true
+loadDrugOntologies = true
