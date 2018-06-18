@@ -777,6 +777,7 @@ class Expander extends ProjectwideGlobals
                 	    ?alleleSC turbo:TURBO_0007604 ?protein .
                   }
               }
+              # Working on Graph """ + graph + """
               Insert
               {
                   Graph pmbb:expanded
