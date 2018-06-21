@@ -181,6 +181,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       logger.info("expanding LOF data")
       if (instantiation == None) expand.expandLossOfFunctionShortcuts(cxn, helper.genTurboIRI(cxn), lofGraphs)
       else expand.expandLossOfFunctionShortcuts(cxn, instantiation.get, lofGraphs)
+      expand.createErrorTriplesForUnexpandedAlleles(cxn, lofGraphs)
       logger.info("All entity linking complete")
   }
   

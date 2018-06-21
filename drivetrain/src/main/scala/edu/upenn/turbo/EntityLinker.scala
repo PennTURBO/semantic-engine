@@ -32,11 +32,11 @@ class EntityLinker extends ProjectwideGlobals
     def connectLossOfFunctionToBiobankEncounters(cxn: RepositoryConnection, lofGraphs: ArrayBuffer[String])
     {
         convertLOFRegStringToRegURI(cxn, lofGraphs)
-        val bbEncResult: HashMap[String, ArrayBuffer[Value]] = twoFieldMatch.createHashMapFromTable(getBiobankEncounterWithConsenterInfo(cxn))
+        val bbEncResult: HashMap[String, ArrayBuffer[Value]] = twoFieldMatch.createHashMapFromTable(getBiobankEncounterWithConsenterInfo(cxn), true)
         for (graph <- lofGraphs)
         {
             val lossOfFunctionJoinData: ArrayBuffer[ArrayBuffer[Value]] = getLossOfFunctionJoinData(cxn, graph)
-            twoFieldMatch.executeMatchWithTwoTables(cxn, bbEncResult, lossOfFunctionJoinData, graph)
+            twoFieldMatch.executeMatchWithTwoTables(cxn, bbEncResult, lossOfFunctionJoinData, graph, true)
         }
     }
     
@@ -423,7 +423,6 @@ class EntityLinker extends ProjectwideGlobals
                     ?allele a obo:OBI_0001352 ;
           	            turbo:TURBO_0007607 ?zygosityValURI ;
           	            turbo:TURBO_0007601 ?encLit ;
-          	            turbo:TURBO_0007606 ?zygosityValText ;
           	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
           	            turbo:TURBO_0007603 ?genomeReg ;
           	            turbo:TURBO_0007605 ?geneText ;

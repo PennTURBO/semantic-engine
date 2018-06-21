@@ -776,6 +776,10 @@ class Expander extends ProjectwideGlobals
                 	    
                 	    ?alleleSC turbo:TURBO_0007604 ?protein .
                   }
+                  Graph pmbb:errorLogging
+                  {
+                      ?alleleSC graphBuilder:reasonNotExpanded graphBuilder:noMatchFound .
+                  }
               }
               # Working on Graph """ + graph + """
               Insert
@@ -856,7 +860,6 @@ class Expander extends ProjectwideGlobals
                 	    ?alleleSC a obo:OBI_0001352 ;
                 	            turbo:TURBO_0007607 ?zygosityValURI ;
                 	            turbo:TURBO_0007601 ?bbEncSymb ;
-                	            turbo:TURBO_0007606 ?zygosityValText ;
                 	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
                 	            turbo:TURBO_0007603 ?genomeReg ;
                 	            turbo:TURBO_0007605 ?geneText ;
@@ -893,13 +896,42 @@ class Expander extends ProjectwideGlobals
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("sequencedata", str(?consenter), str(?genomeCridSymbLit))))) AS ?sequenceData)
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("exomesequence", str(?consenter), str(?genomeCridSymbLit))))) AS ?exomeSequenceProcess)
                 	Bind (uri("""" + instantiation + """") AS ?instantiation)
-                	# It's important that these variables are different datatypes because they will both be textual values of the allele, so the datatypes are the differentiator
-                	Filter (datatype(?geneText) = xsd:string)
-                	Filter (datatype(?zygosityValText) = xsd:integer)
               }
               """
             
             helper.updateSparql(cxn, sparqlPrefixes + expandLOF)  
+        }
+    }
+    
+    def createErrorTriplesForUnexpandedAlleles(cxn: RepositoryConnection, lofGraphs: ArrayBuffer[String])
+    {
+        for (graph <- lofGraphs)
+        {
+            val logError: String = """
+              Insert
+              {
+                  Graph pmbb:errorLogging
+                  {
+                      ?allele graphBuilder:reasonNotExpanded graphBuilder:dataFormatError .
+                  }
+              }
+              Where
+              {
+                  Graph <"""+graph+""">
+                  {
+                      ?allele ?p ?o .
+                  }
+                  Minus
+                  {
+                      Graph pmbb:errorLogging
+                      {
+                          ?allele graphBuilder:reasonNotExpanded ?reason .
+                      }
+                  }
+              }
+              """
+            
+            helper.updateSparql(cxn, sparqlPrefixes + logError)    
         }
     }
 }

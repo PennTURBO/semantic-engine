@@ -389,6 +389,13 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         val stopLOFexpand = System.nanoTime()
         
         writeCSV.println("Expand Loss of Function Data," + ((stopLOFexpand - startLOFexpand)/1000000000.0).toString)
+        
+        //add error logging for unexpanded alleles
+        val startErrLog = System.nanoTime()
+        expand.createErrorTriplesForUnexpandedAlleles(cxn, lofGraphs)
+        val stopErrLog = System.nanoTime()
+        
+        writeCSV.println("Write Error Log for Unexpanded Alleles," + ((stopErrLog - startErrLog)/1000000000.0).toString)
     }
     
     def benchmarkConclusionating(cxn: RepositoryConnection, writeCSV: PrintWriter, writeTXT: PrintWriter)

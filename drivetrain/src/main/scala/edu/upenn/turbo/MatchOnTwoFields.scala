@@ -42,34 +42,46 @@ class MatchOnTwoFields extends ProjectwideGlobals
         logger.info("changes committed")
     }
     
-    def executeMatchWithTwoTables(cxn: RepositoryConnection, table1: HashMap[String, ArrayBuffer[Value]], table2: ArrayBuffer[ArrayBuffer[Value]], context: String)
+    def executeMatchWithTwoTables(cxn: RepositoryConnection, table1: HashMap[String, ArrayBuffer[Value]], table2: ArrayBuffer[ArrayBuffer[Value]], context: String, toLowerCase: Boolean = false)
     {
         var model: Model = new LinkedHashModel()
+        var errorModel: Model = new LinkedHashModel()
         val f: ValueFactory = cxn.getValueFactory
         val pred: IRI = f.createIRI("http://graphBuilder.org/willBeLinkedWith")
+        val errorPred: IRI = f.createIRI("http://graphBuilder.org/reasonNotExpanded")
+        val errorObj: IRI = f.createIRI("http://graphBuilder.org/noMatchFound")
         logger.info("Searching for matches")
         for (a <- table2)
         {
-            val checkString: String = a(1).toString + a(2).toString
+            var identifier: String = a(1).toString
+            if (toLowerCase) identifier = identifier.toLowerCase()
+            val checkString: String = identifier + a(2).toString
             if (table1.contains(checkString)) 
             {
                 model.add(a(0).asInstanceOf[IRI], pred, table1(checkString)(0))
                 //logger.info("found match: " + a(0) + " " + table1map(checkString)(0))
             }
+            else
+            {
+                errorModel.add(a(0).asInstanceOf[IRI], errorPred, errorObj)
+            }
         }
         logger.info("joins processed")
         cxn.begin()
         cxn.add(model, f.createIRI(context))
+        cxn.add(errorModel, f.createIRI("http://www.itmat.upenn.edu/biobank/errorLogging"))
         cxn.commit()
         logger.info("changes committed")
     }
     
-    def createHashMapFromTable(table: ArrayBuffer[ArrayBuffer[Value]]): HashMap[String, ArrayBuffer[Value]] =
+    def createHashMapFromTable(table: ArrayBuffer[ArrayBuffer[Value]], toLowerCase: Boolean = false): HashMap[String, ArrayBuffer[Value]] =
     {
         var resultMap: HashMap[String, ArrayBuffer[Value]] = new HashMap[String, ArrayBuffer[Value]]
         for (a <- table)
         {
-            val stringToHash: String = a(1).toString + a(2).toString
+            var identifier: String = a(1).toString
+            if (toLowerCase) identifier = identifier.toLowerCase()
+            val stringToHash: String = identifier + a(2).toString
             if (resultMap.contains(stringToHash))
             {
                 logger.info("This URI has the same symbol/reg combo as a newly submitted entry: " + resultMap(stringToHash))
