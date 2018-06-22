@@ -171,10 +171,10 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runEntityLinking(cxn: RepositoryConnection)
   {
-      logger.info("starting entity linking")
+      /*logger.info("starting entity linking")
       join.joinParticipantsAndEncounters(cxn)
       logger.info("loading LOF data")
-      connect.loadDataFromPropertiesFile(cxn, inputLOFFiles, "LOFShortcuts", false)
+      connect.loadDataFromPropertiesFile(cxn, inputLOFFiles, "LOFShortcuts", false)*/
       val lofGraphs: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
       logger.info("connecting biobank encounters to LOF data")
       join.connectLossOfFunctionToBiobankEncounters(cxn, lofGraphs)

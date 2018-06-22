@@ -765,7 +765,6 @@ class Expander extends ProjectwideGlobals
                       ?alleleSC a obo:OBI_0001352 ;
                 	            turbo:TURBO_0007607 ?zygosityValURI ;
                 	            turbo:TURBO_0007601 ?bbEncSymb ;
-                	            turbo:TURBO_0007606 ?zygosityValText ;
                 	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
                 	            turbo:TURBO_0007603 ?genomeReg ;
                 	            turbo:TURBO_0007605 ?geneText ;
@@ -803,7 +802,6 @@ class Expander extends ProjectwideGlobals
                       ?allele obo:IAO_0000136 ?DNA .
                       ?allele obo:IAO_0000142 ?proteinURI .
                       ?allele turbo:TURBO_0006512 ?geneText .
-                      ?allele turbo:TURBO_0006512 ?zygosityValText .
                       
                       ?DNAextract a obo:OBI_0001051 .
                       
@@ -875,6 +873,10 @@ class Expander extends ProjectwideGlobals
                 	Graph pmbb:expanded 
                 	{
                 	    ?bbEnc a turbo:TURBO_0000527 .
+                	    ?bbEncCrid a turbo:TURBO_0000533 .
+                	    ?bbEncCrid obo:IAO_0000219 ?bbEnc .
+                	    ?bbEncCrid obo:BFO_0000051 ?bbSymb .
+                	    ?bbSymb a turbo:TURBO_0000534 .
                 	    ?consenter obo:RO_0000056 ?bbEnc .
                 	    ?consenter a turbo:TURBO_0000502 .
                 	}    
