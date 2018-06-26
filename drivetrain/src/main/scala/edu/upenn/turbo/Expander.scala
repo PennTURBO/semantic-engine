@@ -29,8 +29,6 @@ class Expander extends ProjectwideGlobals
         logger.info("finished biobank join expansion, starting healthcare join expansion")
         healthcareEncounterParticipantJoinExpansion(cxn, instantiation, graphsString)
         logger.info("finished join expansion")
-        //expandLossOfFunctionShortcuts(cxn, instantiation, graphsString)
-        //logger.info("expanded loss of function shortcuts")
         instantiation
     }
     

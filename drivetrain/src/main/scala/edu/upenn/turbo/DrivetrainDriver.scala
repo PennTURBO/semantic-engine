@@ -61,7 +61,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       if (postexpandProceed)
                       {
                           runReferentTracking(cxn)
-                          runEntityLinking(cxn)
+                          runEntityLinking(cxn, true)
                           val concProceed = runConclusionating(cxn, thresholds.get(0), thresholds.get(1))
                           if (concProceed) 
                           {
@@ -82,7 +82,12 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   else runExpansion(cxn)
               }
               else if (args(0) == "reftrack") runReferentTracking(cxn)
-              else if (args(0) == "entlink") runEntityLinking(cxn)
+              else if (args(0) == "entlink" && args.size > 1) 
+              {
+                  if (args(1) == "true") runEntityLinking(cxn, true)
+                  else if (args(1) == "false") runEntityLinking(cxn, false)
+                  else logger.info("Second argument for entity linking should be boolean - true to load LOF data, false to not load LOF data")
+              }
               else if (args(0) == "conclusionate") 
               {
                   val thresholds: Option[Array[Double]] = checkConclusionatorArguments(args)
@@ -169,12 +174,12 @@ object DrivetrainDriver extends ProjectwideGlobals {
       logger.info("All referent tracking complete")
   }
   
-  def runEntityLinking(cxn: RepositoryConnection)
+  def runEntityLinking(cxn: RepositoryConnection, loadLOFData: Boolean)
   {
-      /*logger.info("starting entity linking")
+      logger.info("starting entity linking")
       join.joinParticipantsAndEncounters(cxn)
       logger.info("loading LOF data")
-      connect.loadDataFromPropertiesFile(cxn, inputLOFFiles, "LOFShortcuts", false)*/
+      if (loadLOFData) connect.loadDataFromPropertiesFile(cxn, inputLOFFiles, "LOFShortcuts", false)
       val lofGraphs: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
       logger.info("connecting biobank encounters to LOF data")
       join.connectLossOfFunctionToBiobankEncounters(cxn, lofGraphs)
