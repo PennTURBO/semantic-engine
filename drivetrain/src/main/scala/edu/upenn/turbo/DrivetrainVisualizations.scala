@@ -29,6 +29,8 @@ class DrivetrainVisualizations extends ProjectwideGlobals
         createReferentTrackingInfoTable(cxn, timestamp)
         createDiagnosisInfoTable(cxn, timestamp)
         createConclusionationInfoTable(cxn, timestamp)
+        //create info text file to be included in directory
+        writeTextFileWithMetaInfo(timestamp: String)
     }
     
     def createConclusionationInfoTable(cxn: RepositoryConnection, timestamp: String)
@@ -309,5 +311,15 @@ class DrivetrainVisualizations extends ProjectwideGlobals
             tabtoprint = tableHTML(df)
             write_tableHTML(tabtoprint, file = "..//HTMLtables//"""+filename+"""")
         """)
+    }
+    
+    def writeTextFileWithMetaInfo(timestamp: String)
+    {
+        val pw: PrintWriter = new PrintWriter (new File ("..//HTMLTables//" + timestamp + "//HTMLTables_info"))
+        pw.println("This file contians information about the repository used to generate the tables in this directory.")
+        pw.println("Graph DB instance: " + serviceURL)
+        pw.println("Repository: " + namespace)
+        pw.println("Timestamp: " + timestamp)
+        pw.close()
     }
 }
