@@ -977,10 +977,10 @@ class TurboMultiuseClass
      * 
      * @return a string representation of all shortcut named graphs for expansion
      */
-    def generateShortcutNamedGraphsString(cxn: RepositoryConnection, asFrom: Boolean = false): String =
+    def generateShortcutNamedGraphsString(cxn: RepositoryConnection, asFrom: Boolean = false, prefix: String = "http://www.itmat.upenn.edu/biobank/Shortcuts"): String =
     {
         var graphsString = ""
-        for (a <- generateShortcutNamedGraphsList(cxn))
+        for (a <- generateShortcutNamedGraphsList(cxn, prefix))
         {
             if (!asFrom) graphsString += "<" + a + "> "
             else graphsString += "FROM <" + a + "> "

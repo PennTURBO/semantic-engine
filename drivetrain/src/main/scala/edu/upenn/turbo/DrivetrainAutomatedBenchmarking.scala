@@ -42,8 +42,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     var tripCountInfo: String = ""
     var instantiation: IRI = null
     
-    /**T
-     * his holds the running time of any operations external to the full stack such as sparql queries to determine the number of nodes at a given stage.
+    /**This holds the running time of any operations external to the full stack such as sparql queries to determine the number of nodes at a given stage.
      * It is subtracted from the total time at the end
      */
     var subtractFromTotal: Double = 0

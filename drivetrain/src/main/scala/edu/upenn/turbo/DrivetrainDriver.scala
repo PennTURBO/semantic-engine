@@ -18,6 +18,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   val i2i2c2c: I2I2C2C = new I2I2C2C()
   val medmap: MedicationMapper = new MedicationMapper()
   val benchmark: DrivetrainAutomatedBenchmarking = new DrivetrainAutomatedBenchmarking()
+  val visualize: DrivetrainVisualizations = new DrivetrainVisualizations()
   
   //globally available Conclusionation Named Graph IRI
   var concNamedGraph: Option[IRI] = None : Option[IRI]
@@ -99,6 +100,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "setReasoning") changeReasoningLevel(cxn)
               else if (args(0) == "loadRepo") helper.loadDataFromFile(cxn, args(1), RDFFormat.TURTLE)
               else if (args(0) == "loadTurboOntology") helper.addOntologyFromUrl(cxn)
+              else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
