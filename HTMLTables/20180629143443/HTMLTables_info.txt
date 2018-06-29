@@ -1,0 +1,4 @@
+This file contians information about the repository used to generate the tables in this directory.
+Graph DB instance: http://turbo-prd-db01.pmacs.upenn.edu:7200/
+Repository: turbo_6MillLOF_20180622
+Timestamp: 20180629143443

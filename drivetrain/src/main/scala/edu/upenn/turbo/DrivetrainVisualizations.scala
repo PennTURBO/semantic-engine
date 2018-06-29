@@ -315,7 +315,7 @@ class DrivetrainVisualizations extends ProjectwideGlobals
     
     def writeTextFileWithMetaInfo(timestamp: String)
     {
-        val pw: PrintWriter = new PrintWriter (new File ("..//HTMLTables//" + timestamp + "//HTMLTables_info"))
+        val pw: PrintWriter = new PrintWriter (new File ("..//HTMLTables//" + timestamp + "//HTMLTables_info.txt"))
         pw.println("This file contians information about the repository used to generate the tables in this directory.")
         pw.println("Graph DB instance: " + serviceURL)
         pw.println("Repository: " + namespace)
