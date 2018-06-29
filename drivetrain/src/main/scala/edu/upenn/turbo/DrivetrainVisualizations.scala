@@ -24,7 +24,7 @@ class DrivetrainVisualizations extends ProjectwideGlobals
     def createDrivetrainVisualizations(cxn: RepositoryConnection)
     {
         val timestamp: String = helper.getCurrentTimestamp()
-        new File("HTMLTables//" + timestamp).mkdirs()
+        new File("..//HTMLTables//" + timestamp).mkdirs()
         createLofExpansionInfoTable(cxn, timestamp)
         createReferentTrackingInfoTable(cxn, timestamp)
         createDiagnosisInfoTable(cxn, timestamp)
@@ -284,7 +284,7 @@ class DrivetrainVisualizations extends ProjectwideGlobals
              c("""+columnNames+""")
             
             tabtoprint = tableHTML(matr, rownames = FALSE)
-            write_tableHTML(tabtoprint, file = "HTMLtables//"""+filename+"""")
+            write_tableHTML(tabtoprint, file = "..//HTMLtables//"""+filename+"""")
         """)
     }
     
@@ -307,7 +307,7 @@ class DrivetrainVisualizations extends ProjectwideGlobals
              rownames(df) <- c("""+ rowNames +""")
             
             tabtoprint = tableHTML(df)
-            write_tableHTML(tabtoprint, file = "HTMLtables//"""+filename+"""")
+            write_tableHTML(tabtoprint, file = "..//HTMLtables//"""+filename+"""")
         """)
     }
 }
