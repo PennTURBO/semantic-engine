@@ -37,6 +37,7 @@ class DrivetrainSparqlChecks extends ProjectwideGlobals
         if (proceed) proceed = precheck.checkForRequiredLossOfFunctionShortcuts(cxn, graphsString)
         if (proceed) proceed = precheck.checkForValidParticipantBirthShortcuts(cxn, graphsStringAsFrom)
         if (proceed) proceed = precheck.checkForValidParticipantBiosexShortcuts(cxn, graphsStringAsFrom)
+        if (proceed) proceed = precheck.checkForValidParticipantRaceShortcuts(cxn, graphsStringAsFrom)
         if (proceed) proceed = precheck.checkForValidHealthcareEncounterDateShortcuts(cxn, graphsStringAsFrom)
         if (proceed) proceed = precheck.checkForValidBiobankEncounterDateShortcuts(cxn, graphsStringAsFrom)
         if (proceed) proceed = precheck.checkForValidEncounterDiagnosisShortcuts(cxn, graphsString)

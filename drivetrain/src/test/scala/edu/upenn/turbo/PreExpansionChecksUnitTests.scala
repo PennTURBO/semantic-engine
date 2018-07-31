@@ -112,6 +112,40 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
         precheck.checkForValidParticipantBiosexShortcuts(cxn, participantAsFrom) should be (false)
     }
     
+    test("test check for valid race shortcuts - all required info")
+    {
+        val insert: String = """
+          INSERT DATA {graph pmbb:Shortcuts_participantShortcuts {
+          turbo:part1 a turbo:TURBO_0000502 .
+          turbo:part1 turbo:TURBO_0000614 turbo:someRaceURI .
+          turbo:part1 turbo:TURBO_0000615 'white' . }}
+          """
+        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        precheck.checkForValidParticipantRaceShortcuts(cxn, participantAsFrom) should be (true)
+    }
+    
+    test("test check for valid race shortcuts - just text")
+    {
+        val insert: String = """
+          INSERT DATA {graph pmbb:Shortcuts_participantShortcuts {
+          turbo:part1 a turbo:TURBO_0000502 .
+          turbo:part1 turbo:TURBO_0000615 'black' . }}
+          """
+        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        precheck.checkForValidParticipantRaceShortcuts(cxn, participantAsFrom) should be (false)
+    }
+    
+    test("test check for valid race shortcuts - just xsd")
+    {
+        val insert: String = """
+          INSERT DATA {graph pmbb:Shortcuts_participantShortcuts {
+          turbo:part1 a turbo:TURBO_0000502 .
+          turbo:part1 turbo:TURBO_0000614 'asian' . }}
+          """
+        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        precheck.checkForValidParticipantRaceShortcuts(cxn, participantAsFrom) should be (false)
+    }
+    
     test("test check biosex uris are valid - three valid")
     {
         val insert: String = """

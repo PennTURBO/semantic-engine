@@ -247,6 +247,8 @@ class Expander extends ProjectwideGlobals
             ?dataset obo:BFO_0000051 ?consenterRegistryDenoter .
             ?consenterSymbol obo:BFO_0000050 ?dataset .
             ?dataset obo:BFO_0000051 ?consenterSymbol .
+            ?raceIdentityDatum obo:BFO_0000050 ?raceDataset .
+            ?raceDataset obo:BFO_0000051 ?raceIdentityDatum .
             
             # properties of consenter
             ?consenter obo:RO_0000086 ?biosex .
@@ -289,6 +291,11 @@ class Expander extends ProjectwideGlobals
             ?dateOfBirth turbo:TURBO_0006511 ?dateOfBirthDateValue .
             ?dateOfBirth obo:IAO_0000136 ?birth .
             
+            # properties of Race Identity Datum
+            ?raceIdentityDatum a ?ridType .
+            ?raceIdentityDatum obo:IAO_0000136 ?consenter .
+            ?raceIdentityDatum turbo:TURBO_0006512 ?ridString .
+            
             # type declarations for Consenter properties
             ?biosex rdf:type obo:PATO_0000047 .
             ?birth rdf:type obo:UBERON_0035946 .
@@ -327,6 +334,16 @@ class Expander extends ProjectwideGlobals
         		OPTIONAL
         		{
         			?shortcutPart :TURBO_0000607   ?gidString .
+
+        		}
+        		OPTIONAL
+        		{
+        		  ?shortcutPart turbo:TURBO_0000614 ?ridTypeString .
+        		  BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?raceIdentityDatum)
+        		}
+        		OPTIONAL
+        		{
+        		  ?shortcutPart turbo:TURBO_0000615 ?ridString .
         		}
         		# what IRIs should be held constant for all of this expansion process, across all of the  shortcut patterns?
         		# dataset "iao_0000100", instantiation process "r2rinstantiation", instantiation output container "container"
@@ -340,6 +357,7 @@ class Expander extends ProjectwideGlobals
         		#
         		BIND(uri(?consenterRegistryString) AS ?consenterRegistry)
         		BIND(uri(?gidString) AS ?gidType_1)
+        		BIND(uri(?ridTypeString) AS ?ridType)
         		BIND (IF (BOUND(?gidType_1), ?gidType_1, obo:OMRSE_00000133) AS ?genderIdentityDatumType)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenter)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterCrid)
@@ -354,6 +372,7 @@ class Expander extends ProjectwideGlobals
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?height)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?weight)
         		BIND(IF (BOUND(?dateOfBirthStringValue), ?dataset, ?unbound) AS ?dateDataset)
+        		BIND(IF (BOUND(?ridTypeString), ?dataset, ?unbound) AS ?raceDataset)
         	}
         }          
         """

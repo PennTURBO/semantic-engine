@@ -59,7 +59,7 @@ class ConnectToGraphDB extends ProjectwideGlobals
             val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
             repoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
             repoManager.initialize()
-            val repository: Repository = repoManager.getRepository(namespace)
+            val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile("namespace"))
             val cxn: RepositoryConnection = repository.getConnection()
             graphConnect.setConnection(cxn)
             graphConnect.setRepoManager(repoManager)

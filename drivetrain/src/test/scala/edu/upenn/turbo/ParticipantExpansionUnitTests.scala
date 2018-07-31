@@ -94,7 +94,11 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000604 "04/May/1969" ;
               turbo:TURBO_0000606 "F" ;
               turbo:TURBO_0000609 'inpatient' ;
-              turbo:TURBO_0000610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
+              turbo:TURBO_0000610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI ;
+              
+              # adding race data 7/31/18
+              turbo:TURBO_0000614 'http://purl.obolibrary.org/obo/OMRSE_00000181'^^xsd:anyURI ;
+              turbo:TURBO_0000615 'asian' .
           }}"""
         helper.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>")
@@ -123,6 +127,10 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientCrid obo:BFO_0000051 ?patientRegDen .
         		?patientRegDen a turbo:TURBO_0000505 .
         		?patientRegDen turbo:TURBO_0006510 'inpatient' .
+        		
+        		?rid obo:IAO_0000136 ?part .
+        		?rid turbo:TURBO_0006512 "asian"^^xsd:string .
+        		?rid a obo:OMRSE_00000181 .
           }}
           """
         helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
@@ -155,12 +163,15 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006511"
+            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006511",
+            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0006512",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051", 
+            "http://purl.obolibrary.org/obo/BFO_0000050"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray) should be (true)
         
-        result.size should be (44)
+        result.size should be (49)
     }
     
     test("participant with minimum required for expansion")

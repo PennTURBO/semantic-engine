@@ -19,6 +19,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   val medmap: MedicationMapper = new MedicationMapper()
   val benchmark: DrivetrainAutomatedBenchmarking = new DrivetrainAutomatedBenchmarking()
   val visualize: DrivetrainVisualizations = new DrivetrainVisualizations()
+  val future: Futures = new Futures()
   
   //globally available Conclusionation Named Graph IRI
   var concNamedGraph: Option[IRI] = None : Option[IRI]
@@ -97,7 +98,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "diagmap") runDiagnosisMapping(cxn)
               else if (args(0) == "medmap") runMedicationMapping(cxn)
               else if (args(0) == "i2i2c2c") runI2i2c2cMapping(cxn, args)
-              else if (args(0) == "setReasoning") changeReasoningLevel(cxn)
+              else if (args(0) == "moveToReasoningRepo") moveDataToReasoningRepo(cxn)
               else if (args(0) == "loadRepo") helper.loadDataFromFile(cxn, args(1), RDFFormat.TURTLE)
               else if (args(0) == "loadTurboOntology") helper.addOntologyFromUrl(cxn)
               else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
@@ -228,11 +229,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
       medmap.runMedicationMapping(cxn)
   }
   
-  def changeReasoningLevel(cxn: RepositoryConnection)
+  def moveDataToReasoningRepo(cxn: RepositoryConnection)
   {
-      /*var reinferBool = true
-      if (reinferRepo == "false") reinferBool = false
-      helper.changeReasoningLevelAndReinferRepository(cxn, setReasoningTo, reinferBool)*/
+      //future.testFutures(cxn)
   }
   
   def runI2i2c2cMapping(cxn: RepositoryConnection, args: Array[String])

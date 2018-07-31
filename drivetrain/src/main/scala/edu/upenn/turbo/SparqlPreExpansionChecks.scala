@@ -54,6 +54,28 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
         operation.runSparqlCheck(cxn, check, ArrayBuffer("missing", "biosexOK"), "pre-expansion", "missing required biosex-related shortcut")
     }
     
+    def checkForValidParticipantRaceShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
+    {
+        val check: String =
+        """SELECT ?raceOK ?missing ?dataset 
+          """ + graphsList + """
+          WHERE 
+            {
+                  ?part a turbo:TURBO_0000502 .
+                  OPTIONAL {
+                      ?part turbo:TURBO_0000614 ?value1 .
+                  }
+                  OPTIONAL {
+                      ?part turbo:TURBO_0000615 ?value2 .
+                  }
+                  BIND(IF((BOUND(?value2)) && !(BOUND(?value1)) || (Bound(?value1) && !Bound(?value2)), 'false', 'true') AS ?raceOK)
+                  BIND (turbo:TURBO_0000614 AS ?missing)
+                  FILTER (?raceOK = 'false')        
+            }"""
+        
+        operation.runSparqlCheck(cxn, check, ArrayBuffer("missing", "raceOK"), "pre-expansion", "missing required race-related shortcut")
+    }
+    
     def checkBiosexURIsAreValid (cxn: RepositoryConnection, graphsList: String): Boolean =
     {
         val check: String =
