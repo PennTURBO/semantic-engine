@@ -128,6 +128,8 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientRegDen a turbo:TURBO_0000505 .
         		?patientRegDen turbo:TURBO_0006510 'inpatient' .
         		
+        		?rip a obo:OMRSE_00000099 .
+        		?rip obo:OBI_0000299 ?rid .
         		?rid obo:IAO_0000136 ?part .
         		?rid turbo:TURBO_0006512 "asian"^^xsd:string .
         		?rid a obo:OMRSE_00000181 .
@@ -166,12 +168,13 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006511",
             "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0006512",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051", 
-            "http://purl.obolibrary.org/obo/BFO_0000050"
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/OBI_0000299"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray) should be (true)
         
-        result.size should be (49)
+        result.size should be (51)
     }
     
     test("participant with minimum required for expansion")

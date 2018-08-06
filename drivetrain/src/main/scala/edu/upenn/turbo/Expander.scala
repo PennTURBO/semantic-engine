@@ -292,6 +292,8 @@ class Expander extends ProjectwideGlobals
             ?dateOfBirth obo:IAO_0000136 ?birth .
             
             # properties of Race Identity Datum
+            ?raceIdentityProcess a obo:OMRSE_00000099 .
+            ?raceIdentityProcess obo:OBI_0000299 ?raceIdentityDatum .
             ?raceIdentityDatum a ?ridType .
             ?raceIdentityDatum obo:IAO_0000136 ?consenter .
             ?raceIdentityDatum turbo:TURBO_0006512 ?ridString .
@@ -340,6 +342,7 @@ class Expander extends ProjectwideGlobals
         		{
         		  ?shortcutPart turbo:TURBO_0000614 ?ridTypeString .
         		  BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?raceIdentityDatum)
+        		  BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?raceIdentityProcess)
         		}
         		OPTIONAL
         		{
