@@ -190,7 +190,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
             {
                 Values ?g {""" + graphsList + """}
                 GRAPH ?g {
-                    ?prescription a obo:PDRO_0000024 .
+                    ?prescription a obo:PDRO_0000001 .
         			      MINUS {
         			          ?enc a obo:OGMS_0000097 .
                         ?enc obo:RO_0002234 ?prescription .
@@ -509,7 +509,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
             """ + graphsList + """
             where 
             {
-                ?s a obo:PDRO_0000024 .
+                ?s a obo:PDRO_0000001 .
                 ?s a ?prescriptType .
                 optional {
                     ?s turbo:TURBO_0005611 ?medString .
@@ -608,7 +608,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
                 # legal hc - diag shortcut instance
                 filter (?c not in (obo:OGMS_0000073))
                 # legal hc - med shortcut instance
-                filter (?c not in (obo:PDRO_0000024))
+                filter (?c not in (obo:PDRO_0000001))
                 # consenter crid (in join data)
                 filter (?c not in (turbo:TURBO_0000503))
                 # biobank crid (in join data)
@@ -720,7 +720,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
               FILTER (?o != turbo:TURBO_0000527)
               FILTER (?o != obo:OGMS_0000097)
               FILTER (?o != obo:OGMS_0000073)
-              FILTER (?o != obo:PDRO_0000024)
+              FILTER (?o != obo:PDRO_0000001)
               FILTER (?o != turbo:TURBO_0000508)
               FILTER (?o != turbo:TURBO_0000503)
               FILTER (?o != turbo:TURBO_0000533)

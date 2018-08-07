@@ -669,7 +669,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
                   turbo:encDate1 a turbo:TURBO_0000512 .
                   
                   turbo:hcenc1 obo:RO_0002234 turbo:prescription1 .
-                  turbo:prescription1 a obo:PDRO_0000024 .
+                  turbo:prescription1 a obo:PDRO_0000001 .
                   turbo:prescription1 obo:BFO_0000050 turbo:dataset .
                   turbo:dataset obo:BFO_0000051 turbo:prescription1 .
                   turbo:prescription1 turbo:TURBO_0006512 "some drug" .
@@ -709,7 +709,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
                   turbo:encDate1 a turbo:TURBO_0000512 .
                   
                   turbo:hcenc1 obo:RO_0002234 turbo:prescription1 .
-                  turbo:prescription1 a obo:PDRO_0000024 .
+                  turbo:prescription1 a obo:PDRO_0000001 .
                   turbo:prescription1 obo:BFO_0000050 turbo:dataset .
                   turbo:dataset obo:BFO_0000051 turbo:prescription1 .
                   turbo:prescription1 turbo:TURBO_0006512 "some drug" .
@@ -761,7 +761,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
                   turbo:diagCodeSymbol1 a turbo:TURBO_0000554 .
                   
                   turbo:hcenc1 obo:RO_0002234 turbo:prescription1 .
-                  turbo:prescription1 a obo:PDRO_0000024 .
+                  turbo:prescription1 a obo:PDRO_0000001 .
                   turbo:prescription1 obo:BFO_0000050 turbo:dataset .
                   turbo:dataset obo:BFO_0000051 turbo:prescription1 .
                   turbo:prescription1 turbo:TURBO_0006512 "some drug" .

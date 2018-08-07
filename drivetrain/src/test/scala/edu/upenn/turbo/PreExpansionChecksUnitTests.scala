@@ -331,7 +331,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           INSERT DATA {graph pmbb:Shortcuts_healthcareEncounterShortcuts {
           turbo:enc1 a obo:OGMS_0000097 .
           turbo:enc1 obo:RO_0002234 turbo:prescription1 .
-          turbo:prescription1 a obo:PDRO_0000024 .
+          turbo:prescription1 a obo:PDRO_0000001 .
   		    turbo:prescription1 turbo:TURBO_0005611 'dried semen of the Western Lowland gorilla' .
   		    turbo:prescription1 turbo:TURBO_0005601  '999' . 
   		    }}
@@ -347,7 +347,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           INSERT DATA {graph pmbb:Shortcuts_healthcareEncounterShortcuts {
           turbo:enc1 a obo:OGMS_0000097 .
           turbo:enc1 obo:RO_0002234 turbo:prescription1 .
-          turbo:prescription1 a obo:PDRO_0000024 .
+          turbo:prescription1 a obo:PDRO_0000001 .
   		    # turbo:prescription1 turbo:TURBO_0005611 'dried semen of the Western Lowland gorilla' .
   		    turbo:prescription1 turbo:TURBO_0005601  '999' . 
   		    }}
@@ -362,7 +362,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           INSERT DATA {graph pmbb:Shortcuts_healthcareEncounterShortcuts {
           turbo:enc1 a obo:OGMS_0000097 .
           turbo:enc1 obo:RO_0002234 turbo:prescription1 .
-          turbo:prescription1 a obo:PDRO_0000024 .
+          turbo:prescription1 a obo:PDRO_0000001 .
   		    turbo:prescription1 turbo:TURBO_0005611 'dried semen of the Western Lowland gorilla' .
   		    # turbo:prescription1 turbo:TURBO_0005601  '999' . 
   		    }}
@@ -375,7 +375,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
     {
         val insert: String = """
           INSERT DATA {graph pmbb:Shortcuts_healthcareEncounterShortcuts {
-          turbo:prescription1 a obo:PDRO_0000024 .
+          turbo:prescription1 a obo:PDRO_0000001 .
   		    turbo:prescription1 turbo:TURBO_0005611 'dried semen of the Western Lowland gorilla' .
   		    turbo:prescription1 turbo:TURBO_0005601  '999' . 
   		    }}
@@ -574,7 +574,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
               turbo:hcenc1 obo:RO_0002234 turbo:diagnosis1 .
               turbo:diagnosis1 a obo:OGMS_0000073 .
               turbo:hcenc1 obo:RO_0002234 turbo:prescription1 .
-              turbo:prescription1 a obo:PDRO_0000024 .
+              turbo:prescription1 a obo:PDRO_0000001 .
           }
           # this check should only check shortcut graphs, so the data below should not cause a failure
           graph pmbb:postExpansionCheck {

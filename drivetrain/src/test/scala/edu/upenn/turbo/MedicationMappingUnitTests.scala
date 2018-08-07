@@ -48,10 +48,10 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
           {
               Graph pmbb:expanded
               {
-                  pmbb:prescript1 a obo:PDRO_0000024 .
-                  pmbb:prescript2 a obo:PDRO_0000024 .
-                  pmbb:prescript3 a obo:PDRO_0000024 .
-                  pmbb:prescript4 a obo:PDRO_0000024 .
+                  pmbb:prescript1 a obo:PDRO_0000001 .
+                  pmbb:prescript2 a obo:PDRO_0000001 .
+                  pmbb:prescript3 a obo:PDRO_0000001 .
+                  pmbb:prescript4 a obo:PDRO_0000001 .
                   
                   pmbb:prescript1 turbo:TURBO_0006512 "RYTHMOL 150 MG OR TABS" .
                   pmbb:prescript2 turbo:TURBO_0006512 "ATENOLOL 25 MG OR TABS" .
@@ -77,10 +77,10 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
           {
               Graph pmbb:expanded
               {
-                  pmbb:prescript1 a obo:PDRO_0000024 .
-                  pmbb:prescript2 a obo:PDRO_0000024 .
-                  pmbb:prescript3 a obo:PDRO_0000024 .
-                  pmbb:prescript4 a obo:PDRO_0000024 .
+                  pmbb:prescript1 a obo:PDRO_0000001 .
+                  pmbb:prescript2 a obo:PDRO_0000001 .
+                  pmbb:prescript3 a obo:PDRO_0000001 .
+                  pmbb:prescript4 a obo:PDRO_0000001 .
                   
                   pmbb:prescript1 turbo:TURBO_0006512 "RYTHMOL 150 MG OR TABS" .
                   pmbb:prescript2 turbo:TURBO_0006512 "ATENOLOL 25 MG OR TABS" .
@@ -131,9 +131,9 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
           {
               Graph pmbb:expanded
               {
-                  pmbb:prescript1 a obo:PDRO_0000024 .
-                  pmbb:prescript2 a obo:PDRO_0000024 .
-                  pmbb:prescript3 a obo:PDRO_0000024 .
+                  pmbb:prescript1 a obo:PDRO_0000001 .
+                  pmbb:prescript2 a obo:PDRO_0000001 .
+                  pmbb:prescript3 a obo:PDRO_0000001 .
                   
                   pmbb:prescript1 turbo:TURBO_0006512 "RYTHMOL 150 MG OR TABS" .
                   pmbb:prescript2 turbo:TURBO_0006512 "ATENOLOL 25 MG OR TABS" .
@@ -176,9 +176,9 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
           {
               Graph pmbb:expanded
               {
-                  pmbb:prescript1 a obo:PDRO_0000024 .
-                  pmbb:prescript2 a obo:PDRO_0000024 .
-                  pmbb:prescript3 a obo:PDRO_0000024 .
+                  pmbb:prescript1 a obo:PDRO_0000001 .
+                  pmbb:prescript2 a obo:PDRO_0000001 .
+                  pmbb:prescript3 a obo:PDRO_0000001 .
                   
                   pmbb:prescript1 turbo:TURBO_0006512 "RYTHMOL 150 MG OR TABS" .
                   pmbb:prescript2 turbo:TURBO_0006512 "ATENOLOL 25 MG OR TABS" .

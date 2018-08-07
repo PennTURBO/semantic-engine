@@ -207,7 +207,7 @@ class I2I2C2C extends ProjectwideGlobals {
           insert data {
           graph <http://www.itmat.upenn.edu/biobank/i2i2c2c> 
           {
-              <http://purl.obolibrary.org/obo/PDRO_0000024> <http://purl.obolibrary.org/obo/IAO_0000142> obo:DRON_00000005 .
+              <http://purl.obolibrary.org/obo/PDRO_0000001> <http://purl.obolibrary.org/obo/IAO_0000142> obo:DRON_00000005 .
               obo:OGMS_0000073 obo:IAO_0000142 <http://purl.obolibrary.org/obo/DOID_4> .
               <http://purl.obolibrary.org/obo/DOID_4> rdfs:label "disease" .
           }

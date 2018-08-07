@@ -116,7 +116,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //get info on number of pre-referent-tracking encounter/consenter nodes, print to writeTXT
         countDistinctOfType(cxn, writeTXT, Array("http://transformunify.org/ontologies/TURBO_0000502", 
-            "http://transformunify.org/ontologies/TURBO_0000527", "http://purl.obolibrary.org/obo/OGMS_0000097", "http://purl.obolibrary.org/obo/PDRO_0000024",
+            "http://transformunify.org/ontologies/TURBO_0000527", "http://purl.obolibrary.org/obo/OGMS_0000097", "http://purl.obolibrary.org/obo/PDRO_0000001",
             "http://purl.obolibrary.org/obo/OGMS_0000073"), Array("biobank consenter", "biobank encounter", "healthcare encounter", "drug prescription", 
             "diagnosis"), "pre-referent tracking")
         
@@ -127,7 +127,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //get info on number of post-referent-tracking encounter/consenter nodes, print to writeTXT
         countDistinctOfType(cxn, writeTXT, Array("http://transformunify.org/ontologies/TURBO_0000502", 
-            "http://transformunify.org/ontologies/TURBO_0000527", "http://purl.obolibrary.org/obo/OGMS_0000097", "http://purl.obolibrary.org/obo/PDRO_0000024",
+            "http://transformunify.org/ontologies/TURBO_0000527", "http://purl.obolibrary.org/obo/OGMS_0000097", "http://purl.obolibrary.org/obo/PDRO_0000001",
             "http://purl.obolibrary.org/obo/OGMS_0000073"), Array("biobank consenter", "biobank encounter", "healthcare encounter", "drug prescription", 
             "diagnosis"), "post-referent tracking")
         
@@ -593,7 +593,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         val getDistinctMedCount: String = """
           SELECT (count (distinct ?drugURI) as ?medCount) WHERE
           {
-              ?drugPrescript a obo:PDRO_0000024 .
+              ?drugPrescript a obo:PDRO_0000001 .
         	    ?drugPrescript obo:IAO_0000142 ?drugURI .
           }
           """

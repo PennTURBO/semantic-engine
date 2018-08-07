@@ -451,7 +451,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -488,7 +488,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -524,7 +524,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -563,7 +563,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -600,7 +600,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -637,7 +637,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -674,7 +674,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -711,7 +711,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -748,7 +748,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -785,7 +785,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -821,13 +821,13 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
             
             turbo:enc1 obo:RO_0002234 turbo:prescript2 .
-            turbo:prescript2 a obo:PDRO_0000024 .
+            turbo:prescript2 a obo:PDRO_0000001 .
           }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts2 {
             turbo:enc1 obo:RO_0002234 turbo:diagnosis1 .
@@ -860,7 +860,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 a turbo:notAType .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
@@ -897,7 +897,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005611 'something else' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
@@ -934,7 +934,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 'something else' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
@@ -971,7 +971,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005612 'something else' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
@@ -1008,7 +1008,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -1047,7 +1047,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -1084,7 +1084,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -1121,7 +1121,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .
@@ -1158,7 +1158,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
            }
           graph pmbb:Shortcuts_healthcareEncounterShortcuts1 {
             turbo:enc1 obo:RO_0002234 turbo:prescript1 .
-            turbo:prescript1 a obo:PDRO_0000024 .
+            turbo:prescript1 a obo:PDRO_0000001 .
             turbo:prescript1 turbo:TURBO_0005611 'blood of a firstborn caterpillar' .
             turbo:prescript1 turbo:TURBO_0005601 '333.3' .
             turbo:prescript1 turbo:TURBO_0005612 'ICD-10' .

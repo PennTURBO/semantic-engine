@@ -802,7 +802,7 @@ class MedicationMapper extends ProjectwideGlobals
          """
              Select ?prescript ?ordername Where
              {
-                 ?prescript a obo:PDRO_0000024 .
+                 ?prescript a obo:PDRO_0000001 .
                  ?prescript turbo:TURBO_0006512 ?ordername .
              }         
          """

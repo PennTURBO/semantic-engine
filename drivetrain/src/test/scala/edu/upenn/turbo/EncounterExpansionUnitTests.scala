@@ -170,7 +170,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           ?dataset a obo:IAO_0000100 .
           ?encounter a obo:OGMS_0000097 .
           ?encounter obo:RO_0002234 ?drugPrescript .
-      		?drugPrescript a obo:PDRO_0000024 .
+      		?drugPrescript a obo:PDRO_0000001 .
       		?drugPrescript turbo:TURBO_0006512 "holistic soil from the ganges" .
       		?medCrid obo:IAO_0000219 ?drugPrescript .
       		?medCrid a turbo:TURBO_0000561 .
@@ -287,7 +287,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:TURBO_0004601 "401.9" .
           
           pmbb:hcenc1 obo:RO_0002234 turbo:prescription1 .
-          turbo:prescription1 a obo:PDRO_0000024 ;
+          turbo:prescription1 a obo:PDRO_0000001 ;
           turbo:TURBO_0005601 "3" ;
           turbo:TURBO_0005611 "holistic soil from the ganges" .
           }}
@@ -683,7 +683,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
               turbo:TURBO_0004602 "ICD-9" .
               
           pmbb:hcenc1 obo:RO_0002234 turbo:prescription1 .
-          turbo:prescription1 a obo:PDRO_0000024 ;
+          turbo:prescription1 a obo:PDRO_0000001 ;
           turbo:TURBO_0005601 "3" ;
           turbo:TURBO_0005611 "holistic soil from the ganges" .
           
@@ -965,7 +965,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           a obo:OGMS_0000097 ;
           turbo:TURBO_0000650 "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
           obo:RO_0002234 turbo:prescription1 .
-          turbo:prescription1 a obo:PDRO_0000024 ;
+          turbo:prescription1 a obo:PDRO_0000001 ;
           turbo:TURBO_0005601 "3" ;
           turbo:TURBO_0005611 "holistic soil from the ganges" .
           
@@ -975,7 +975,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           a obo:OGMS_0000097 ;
           turbo:TURBO_0000650 "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
           obo:RO_0002234 turbo:prescription2 .
-          turbo:prescription2 a obo:PDRO_0000024 ;
+          turbo:prescription2 a obo:PDRO_0000001 ;
           turbo:TURBO_0005601 "4" ;
           turbo:TURBO_0005611 "medicinal purple kush" . 
           }}"""
@@ -990,12 +990,12 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
               {
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:RO_0002234 ?prescription1 .
-                  ?prescription1 a obo:PDRO_0000024 .
+                  ?prescription1 a obo:PDRO_0000001 .
                   ?prescription1 turbo:TURBO_0006512 "holistic soil from the ganges" .
                   ?medCrid1 obo:IAO_0000219 ?prescription1 .
                   ?medCrid1 a turbo:TURBO_0000561 .
                   ?enc obo:RO_0002234 ?prescription2 .
-                  ?prescription2 a obo:PDRO_0000024 .
+                  ?prescription2 a obo:PDRO_0000001 .
                   ?prescription2 turbo:TURBO_0006512 "medicinal purple kush" .
                   ?medCrid2 obo:IAO_0000219 ?prescription2 .
                   ?medCrid2 a turbo:TURBO_0000561 .
@@ -1021,7 +1021,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
               {
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:RO_0002234 ?prescription .
-                  ?prescription a obo:PDRO_0000024 .
+                  ?prescription a obo:PDRO_0000001 .
                   ?medCrid obo:IAO_0000219 ?prescription .
               }
           }
@@ -1063,7 +1063,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   pmbb:hcenc1 a obo:OGMS_0000097 ;
                       turbo:TURBO_0000643 'meds.csv' ;
                       obo:RO_0002234 pmbb:prescription .
-                      pmbb:prescription a obo:PDRO_0000024 ;
+                      pmbb:prescription a obo:PDRO_0000001 ;
                       turbo:TURBO_0005611 "holistic soil from the ganges" ;
                       turbo:TURBO_0005601 "3" .
               }
@@ -1153,7 +1153,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   
                   ?encounter a obo:OGMS_0000097 .
               		?encounter obo:RO_0002234 ?drugPrescript .
-              		?drugPrescript a obo:PDRO_0000024 .
+              		?drugPrescript a obo:PDRO_0000001 .
               		?medCrid obo:IAO_0000219 ?drugPrescript .
               		?medCrid a turbo:TURBO_0000561 .
               		?medCrid obo:BFO_0000051 ?medCridSymbol .

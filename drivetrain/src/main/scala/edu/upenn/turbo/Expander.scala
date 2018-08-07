@@ -639,7 +639,7 @@ class Expander extends ProjectwideGlobals
       	                   obo:IAO_0000039 obo:UO_0000009 ;
       	                   obo:OBI_0002135 ?weightKG .
         	    
-      	    ?drugPrescript a obo:PDRO_0000024 .
+      	    ?drugPrescript a obo:PDRO_0000001 .
       	    # medString is the ORDER_NAME
       	    ?drugPrescript turbo:TURBO_0006512 ?medString .
       	    
@@ -695,7 +695,7 @@ class Expander extends ProjectwideGlobals
             		optional 
             		{
             		    ?encFromKarma obo:RO_0002234 ?prescription .
-            		    ?prescription a obo:PDRO_0000024 .
+            		    ?prescription a obo:PDRO_0000001 .
             		    ?prescription turbo:TURBO_0005601  ?medId .
             		    
             		    # making the medString optional occurred due to discussions with Mark on 5/4. In Karma, a blank order name is not instantiated as "", meaning that
