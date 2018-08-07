@@ -23,13 +23,19 @@ class Expander extends ProjectwideGlobals
         logger.info("graphsstring: " + graphsString)
         encounterExpansion(cxn, instantiation, graphsString)
         logger.info("finished encounter expansion")
-        participantExpansion(cxn, instantiation, graphsString)
+        expandAllParticipants(cxn, instantiation, graphsString)
         logger.info("finished participant expansion")
         biobankEncounterParticipantJoinExpansion(cxn, instantiation, graphsString)
         logger.info("finished biobank join expansion, starting healthcare join expansion")
         healthcareEncounterParticipantJoinExpansion(cxn, instantiation, graphsString)
         logger.info("finished join expansion")
         instantiation
+    }
+    
+    def expandAllParticipants(cxn: RepositoryConnection, instantiation: IRI, graphString: String)
+    {
+        participantExpansion(cxn, instantiation, graphString)
+        expandParticipantsMultipleIdentifiers(cxn, instantiation, graphString)
     }
     
     /**
@@ -222,7 +228,8 @@ class Expander extends ProjectwideGlobals
     }
     
     /**
-     * Submits a SPARQL expansion update to the graph server which expands biobank consenter shortcuts to their fully ontologied form.
+     * Submits a SPARQL expansion update to the graph server which expands biobank consenter shortcuts to their fully ontologied form. This method is used for deprecated
+     * shortcut triples which we still are supporting. This shortcut model does not include a CRID and therefore supports only one identifier per consenter.
      */
     def participantExpansion (cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
     {
@@ -239,8 +246,8 @@ class Expander extends ProjectwideGlobals
             # connect data to dataset
             ?dataset rdf:type obo:IAO_0000100 .
             ?dataset dc11:title ?datasetTitle .
-            ?genderIdentityDatum obo:BFO_0000050 ?dataset .
-            ?dataset obo:BFO_0000051 ?genderIdentityDatum .
+            ?genderIdentityDatum obo:BFO_0000050 ?genderDataset .
+            ?genderDataset obo:BFO_0000051 ?genderIdentityDatum .
             ?dateOfBirth obo:BFO_0000050 ?dateDataset .
             ?dateDataset obo:BFO_0000051 ?dateOfBirth .
             ?consenterRegistryDenoter obo:BFO_0000050 ?dataset .
@@ -376,10 +383,164 @@ class Expander extends ProjectwideGlobals
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?weight)
         		BIND(IF (BOUND(?dateOfBirthStringValue), ?dataset, ?unbound) AS ?dateDataset)
         		BIND(IF (BOUND(?ridTypeString), ?dataset, ?unbound) AS ?raceDataset)
+        		BIND(IF (BOUND(?genderIdentityDatumValue), ?dataset, ?unbound) AS ?genderDataset)
         	}
         }          
         """
                 
+        helper.updateSparql(cxn, sparqlPrefixes + participantExpansion)
+    }
+    
+    /**
+     * Submits a SPARQL expansion update to the graph server which expands biobank consenter shortcuts to their fully ontologied form. This method uses the latest
+     * consenter shortcut properties including potentially multiple CRIDs, which allows for multiple identifiers per consenter.
+     */
+    def expandParticipantsMultipleIdentifiers(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
+    {
+        val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
+        val participantExpansion = """
+        INSERT {
+        	GRAPH pmbb:postExpansionCheck {
+        	
+        		# create data instantiation process
+            ?instantiation obo:OBI_0000293 ?dataset .
+            ?instantiation a turbo:TURBO_0000522 .
+            
+            # connect data to dataset
+            ?dataset a obo:IAO_0000100 .
+            ?dataset dc11:title ?datasetTitle .
+            ?genderIdentityDatum obo:BFO_0000050 ?genderDataset .
+            ?genderDataset obo:BFO_0000051 ?genderIdentityDatum .
+            ?dateOfBirth obo:BFO_0000050 ?dateDataset .
+            ?dateDataset obo:BFO_0000051 ?dateOfBirth .
+            ?consenterRegistryDenoter obo:BFO_0000050 ?dataset .
+            ?dataset obo:BFO_0000051 ?consenterRegistryDenoter .
+            ?consenterSymbol obo:BFO_0000050 ?dataset .
+            ?dataset obo:BFO_0000051 ?consenterSymbol .
+            ?raceIdentityDatum obo:BFO_0000050 ?raceDataset .
+            ?raceDataset obo:BFO_0000051 ?raceIdentityDatum .
+            
+            # properties of consenter
+            ?consenter obo:RO_0000086 ?biosex .
+            ?consenter turbo:TURBO_0000303 ?birth .
+            ?consenter obo:BFO_0000051 ?adipose ;
+                         obo:RO_0000086 ?height ;
+                         obo:RO_0000086 ?weight .
+            ?consenter a turbo:TURBO_0000502 .
+            ?adipose obo:BFO_0000050 ?consenter .
+            
+            # stores the previous URI value of the consenter
+            ?consenter turbo:TURBO_0006601 ?previousUriText .
+                         
+            # properties of consenter CRID
+            ?consenterCrid obo:IAO_0000219 ?consenter .
+            ?consenterCrid a turbo:TURBO_0000503 .
+            ?consenterCrid obo:BFO_0000051 ?consenterRegistryDenoter .
+            ?consenterCrid obo:BFO_0000051 ?consenterSymbol .
+            
+            # properties of consenter Symbol
+            ?consenterSymbol obo:BFO_0000050 ?consenterCrid .
+            ?consenterSymbol turbo:TURBO_0006510 ?consenterSymbolValue .
+            ?consenterSymbol a turbo:TURBO_0000504 .
+            
+            # properties of consenter Registry Denoter
+            ?consenterRegistryDenoter obo:BFO_0000050 ?consenterCrid .
+            ?consenterRegistryDenoter turbo:TURBO_0006510 ?registryDenoterString .
+            ?consenterRegistryDenoter a turbo:TURBO_0000505 .
+            ?consenterRegistryDenoter obo:IAO_0000219 ?consenterRegistry .
+            ?consenterRegistry a turbo:TURBO_0000506 .
+            
+            # properties of Gender Identity Datum
+            ?genderIdentityDatum turbo:TURBO_0006510 ?genderIdentityDatumValue .
+            ?genderIdentityDatum a ?genderIdentityDatumType .
+            ?genderIdentityDatum obo:IAO_0000136 ?consenter .
+            
+            # properties of Date of Birth
+            ?dateOfBirth a efo:EFO_0004950 .
+            ?dateOfBirth turbo:TURBO_0006510 ?dateOfBirthStringValue .
+            ?dateOfBirth turbo:TURBO_0006511 ?dateOfBirthDateValue .
+            ?dateOfBirth obo:IAO_0000136 ?birth .
+            
+            # properties of Race Identity Datum
+            ?raceIdentityProcess a obo:OMRSE_00000099 .
+            ?raceIdentityProcess obo:OBI_0000299 ?raceIdentityDatum .
+            ?raceIdentityDatum a ?ridType .
+            ?raceIdentityDatum obo:IAO_0000136 ?consenter .
+            ?raceIdentityDatum turbo:TURBO_0006512 ?ridString .
+            
+            # type declarations for Consenter properties
+            ?biosex a obo:PATO_0000047 .
+            ?birth a obo:UBERON_0035946 .
+            ?adipose a obo:UBERON_0001013 .
+            ?height a obo:PATO_0000119 .
+            ?weight a obo:PATO_0000128 .
+        	}
+        }
+        WHERE {
+        	Values ?g { """ + graphsString + """ }
+          Graph ?g
+        	# bind each one of these literal values to an individual above
+        	{
+        		?shortcutPart a turbo:TURBO_0000502 .
+        	  ?shortcutCrid a turbo:TURBO_0000503 .
+        	  ?shortcutCrid obo:IAO_0000219 ?shortcutPart .
+        	  ?shortcutCrid turbo:TURBO_0003603 ?datasetTitle .
+        	  ?shortcutCrid turbo:TURBO_0003610 ?consenterRegistryString .
+        	  ?shortcutCrid turbo:TURBO_0003608 ?consenterSymbolValue .
+        	  
+        		BIND(str(?shortcutPart) AS ?previousUriText)
+        		OPTIONAL
+        		{
+        			?shortcutPart  :TURBO_0000604  ?dateOfBirthStringValue .
+        		}
+        		OPTIONAL
+        		{
+        		    ?shortcutPart :TURBO_0000605   ?dateOfBirthDateValue
+        		}
+        		OPTIONAL
+        		{
+        			?shortcutPart  :TURBO_0000606  ?genderIdentityDatumValue .
+        			BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("gid", """" + randomUUID + """", str(?shortcutPart))))) AS ?genderIdentityDatum)
+        		}
+        		OPTIONAL
+        		{
+        			?shortcutPart :TURBO_0000607   ?gidString .
+        		}
+        		OPTIONAL
+        		{
+        		  ?shortcutPart turbo:TURBO_0000614 ?ridTypeString .
+        		  BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("rid", """" + randomUUID + """", str(?shortcutPart))))) AS ?raceIdentityDatum)
+        		  BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("rip", """" + randomUUID + """", str(?shortcutPart))))) AS ?raceIdentityProcess)
+        		}
+        		OPTIONAL
+        		{
+        		  ?shortcutPart turbo:TURBO_0000615 ?ridString .
+        		}
+        		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + randomUUID + """", str(?datasetTitle))))) AS ?dataset)
+        		BIND(uri("""" + instantiation + """") AS ?instantiation)
+        		#
+        		BIND(uri(?consenterRegistryString) AS ?consenterRegistry)
+        		BIND(uri(?gidString) AS ?gidType_1)
+        		BIND(uri(?ridTypeString) AS ?ridType)
+        		BIND (IF (BOUND(?gidType_1), ?gidType_1, obo:OMRSE_00000133) AS ?genderIdentityDatumType)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + randomUUID + """", str(?shortcutPart))))) AS ?consenter)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterCrid)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterRegistryDenoter)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterSymbol)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("biosex", """" + randomUUID + """", str(?shortcutPart))))) AS ?biosex)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("birth", """" + randomUUID + """", str(?shortcutPart))))) AS ?birth)
+        		# We are currently creating dob datum even if no dob data exists...is this a good idea? So we can make statements about it in conclusionation
+        		# BIND(IF(bound(?dobTextVal), uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))), ?unbound) AS ?dateOfBirth)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dob", """" + randomUUID + """", str(?shortcutPart))))) AS ?dateOfBirth)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("adipose", """" + randomUUID + """", str(?shortcutPart))))) AS ?adipose)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("height", """" + randomUUID + """", str(?shortcutPart))))) AS ?height)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("weight", """" + randomUUID + """", str(?shortcutPart))))) AS ?weight)
+        		BIND(IF (BOUND(?dateOfBirthStringValue), ?dataset, ?unbound) AS ?dateDataset)
+        		BIND(IF (BOUND(?ridTypeString), ?dataset, ?unbound) AS ?raceDataset)
+        		BIND(IF (BOUND(?genderIdentityDatumValue), ?dataset, ?unbound) AS ?genderDataset)
+        	}
+        }          
+        """
         helper.updateSparql(cxn, sparqlPrefixes + participantExpansion)
     }
     

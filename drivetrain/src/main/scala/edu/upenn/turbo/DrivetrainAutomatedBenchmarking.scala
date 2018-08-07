@@ -222,6 +222,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         //expand biobank consenters
         val startExpBbCons = System.nanoTime()
         expand.participantExpansion(cxn, instantiation, graphsList)
+        expand.expandParticipantsMultipleIdentifiers(cxn, instantiation, graphsList)
         val stopExpBbCons = System.nanoTime()
         
         writeCSV.println("Expand Biobank Consenters," + ((stopExpBbCons - startExpBbCons)/1000000000.0).toString)
