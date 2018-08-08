@@ -1536,7 +1536,7 @@ INSERT DATA {
 
     //HAYDEN 10/13 3:53 pm adding IRI to method call
     val f: ValueFactory = cxn.getValueFactory()
-    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/R2RInst2"), "shortcut graphs here")
+    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/R2RInst2"), "shortcut graphs here", "random UUID here")
 
     helper.moveDataFromOneNamedGraphToAnother(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "http://www.itmat.upenn.edu/biobank/expanded")
 

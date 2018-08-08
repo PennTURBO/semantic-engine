@@ -34,8 +34,9 @@ class Expander extends ProjectwideGlobals
     
     def expandAllParticipants(cxn: RepositoryConnection, instantiation: IRI, graphString: String)
     {
-        participantExpansion(cxn, instantiation, graphString)
-        expandParticipantsMultipleIdentifiers(cxn, instantiation, graphString)
+        val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
+        participantExpansion(cxn, instantiation, graphString, randomUUID)
+        expandParticipantsMultipleIdentifiers(cxn, instantiation, graphString, randomUUID)
     }
     
     /**
@@ -231,9 +232,8 @@ class Expander extends ProjectwideGlobals
      * Submits a SPARQL expansion update to the graph server which expands biobank consenter shortcuts to their fully ontologied form. This method is used for deprecated
      * shortcut triples which we still are supporting. This shortcut model does not include a CRID and therefore supports only one identifier per consenter.
      */
-    def participantExpansion (cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
+    def participantExpansion (cxn: RepositoryConnection, instantiation: IRI, graphsString: String, randomUUID: String)
     {
-        val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         logger.info("running part expansion")
         val participantExpansion = """
         INSERT {
@@ -338,7 +338,7 @@ class Expander extends ProjectwideGlobals
         		OPTIONAL
         		{
         			?shortcutPart  :TURBO_0000606  ?genderIdentityDatumValue .
-        			BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?genderIdentityDatum)
+        			BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("gid", """" + randomUUID + """", str(?shortcutPart))))) AS ?genderIdentityDatum)
         		}
         		OPTIONAL
         		{
@@ -348,8 +348,8 @@ class Expander extends ProjectwideGlobals
         		OPTIONAL
         		{
         		  ?shortcutPart turbo:TURBO_0000614 ?ridTypeString .
-        		  BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?raceIdentityDatum)
-        		  BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?raceIdentityProcess)
+        		  BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("rid", """" + randomUUID + """", str(?shortcutPart))))) AS ?raceIdentityDatum)
+        		  BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("rip", """" + randomUUID + """", str(?shortcutPart))))) AS ?raceIdentityProcess)
         		}
         		OPTIONAL
         		{
@@ -369,18 +369,18 @@ class Expander extends ProjectwideGlobals
         		BIND(uri(?gidString) AS ?gidType_1)
         		BIND(uri(?ridTypeString) AS ?ridType)
         		BIND (IF (BOUND(?gidType_1), ?gidType_1, obo:OMRSE_00000133) AS ?genderIdentityDatumType)
-        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenter)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + randomUUID + """", str(?shortcutPart))))) AS ?consenter)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterCrid)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterRegistryDenoter)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterSymbol)
-        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?biosex)
-        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?birth)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("biosex", """" + randomUUID + """", str(?shortcutPart))))) AS ?biosex)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("birth", """" + randomUUID + """", str(?shortcutPart))))) AS ?birth)
         		# We are currently creating dob datum even if no dob data exists...is this a good idea? So we can make statements about it in conclusionation
         		# BIND(IF(bound(?dobTextVal), uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))), ?unbound) AS ?dateOfBirth)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?dateOfBirth)
-        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?adipose)
-        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?height)
-        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?weight)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("adipose", """" + randomUUID + """", str(?shortcutPart))))) AS ?adipose)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("height", """" + randomUUID + """", str(?shortcutPart))))) AS ?height)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("weight", """" + randomUUID + """", str(?shortcutPart))))) AS ?weight)
         		BIND(IF (BOUND(?dateOfBirthStringValue), ?dataset, ?unbound) AS ?dateDataset)
         		BIND(IF (BOUND(?ridTypeString), ?dataset, ?unbound) AS ?raceDataset)
         		BIND(IF (BOUND(?genderIdentityDatumValue), ?dataset, ?unbound) AS ?genderDataset)
@@ -395,9 +395,8 @@ class Expander extends ProjectwideGlobals
      * Submits a SPARQL expansion update to the graph server which expands biobank consenter shortcuts to their fully ontologied form. This method uses the latest
      * consenter shortcut properties including potentially multiple CRIDs, which allows for multiple identifiers per consenter.
      */
-    def expandParticipantsMultipleIdentifiers(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
+    def expandParticipantsMultipleIdentifiers(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, randomUUID: String)
     {
-        val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
         val participantExpansion = """
         INSERT {
         	GRAPH pmbb:postExpansionCheck {

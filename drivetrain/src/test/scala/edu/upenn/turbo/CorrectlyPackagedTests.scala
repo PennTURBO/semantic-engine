@@ -61,7 +61,7 @@ class CorrectlyPackagedTests extends FunSuiteLike with BeforeAndAfter with Match
     val EncExpSuccess = SparqlHelper.CheckExpandedEncScTrips(cxn)
     assert(EncExpSuccess, "...Encounters were not expanded as expected")
 
-    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here")
+    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here", "random UUID here")
 
     // TODO: select test... encounter expansion is an ask... make them both selects?
     val PartExpRes = SparqlHelper.CheckExpandedPartScTripsClarifiedGID(cxn)

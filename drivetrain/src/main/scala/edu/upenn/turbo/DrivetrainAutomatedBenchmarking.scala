@@ -17,6 +17,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection
 import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
 import org.eclipse.rdf4j.model.ValueFactory
 import org.eclipse.rdf4j.model.Value
+import java.util.UUID
 
 /**
  * This class contains the Benchmarking script, which runs the Drivetrain full stack and records the time each segment takes to complete, as well as graph-based
@@ -221,8 +222,9 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //expand biobank consenters
         val startExpBbCons = System.nanoTime()
-        expand.participantExpansion(cxn, instantiation, graphsList)
-        expand.expandParticipantsMultipleIdentifiers(cxn, instantiation, graphsList)
+        val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
+        expand.participantExpansion(cxn, instantiation, graphsList, randomUUID)
+        expand.expandParticipantsMultipleIdentifiers(cxn, instantiation, graphsList, randomUUID)
         val stopExpBbCons = System.nanoTime()
         
         writeCSV.println("Expand Biobank Consenters," + ((stopExpBbCons - startExpBbCons)/1000000000.0).toString)

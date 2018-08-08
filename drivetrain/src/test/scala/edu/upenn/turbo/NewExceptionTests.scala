@@ -131,7 +131,7 @@ class NewExceptionTests extends FunSuiteLike with BeforeAndAfter with Matchers w
     val preOK = sparqlCheckInst.preExpansionChecks(cxn)
     assert(preOK, "The pre-expansion checkers rejected the comlete/aceptible input participant triples")
 
-    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here")
+    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here", "random UUID here")
 
     graphList = SparqlHelper.ListNamedGraphs(cxn)
     expectedGraphs = Set[String](
@@ -793,7 +793,7 @@ turbo:r2rinst1
 
     SparqlHelper.InsertFromString(cxn, TriplesString, DestinationGraph)
 
-    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here")
+    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here", "random UUID here")
 
     // this should be true after com.example.app.FullStackPostReorgSparql.ExpandPartScTrips
     // OR com.example.app.FullStackAllSparql.participantExpansion
