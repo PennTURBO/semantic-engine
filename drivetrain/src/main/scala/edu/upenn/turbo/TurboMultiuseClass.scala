@@ -1015,7 +1015,7 @@ class TurboMultiuseClass
      */
     def changeReasoningLevelAndReinferRepository(cxn: RepositoryConnection, newLevel: String, reinfer: Boolean)
     {
-        if (newLevel != "empty" && newLevel != "owl-horst-optimized") logger.info("Reasoning level " + newLevel + " is not supported.")
+        if (newLevel != "empty" && newLevel != "rdfsplus-optimized" && newLevel != "owl-horst-optimized") logger.info("Reasoning level " + newLevel + " is not supported.")
         else 
         {
             logger.info("Attempting to change reasoning level to " + newLevel)
@@ -1119,5 +1119,21 @@ class TurboMultiuseClass
             arrToReturn += singleLine
         }
         arrToReturn
+    }
+    
+    def removeInferredStatements(cxn: RepositoryConnection)
+    {
+        var model: Model = new LinkedHashModel()
+        val f: ValueFactory = cxn.getValueFactory()
+        val select: String =
+          """
+            Select * FROM <http://www.ontotext.com/implicit> Where {?s ?p ?o .}
+          """
+        val result: ArrayBuffer[ArrayBuffer[Value]] = querySparqlAndUnpackTuple(cxn, select, Array("s", "p", "o"))
+        for (row <- result)
+        {
+            model.add(row(0).asInstanceOf[IRI], row(1).asInstanceOf[IRI], row(2).asInstanceOf[IRI])
+        }
+        cxn.remove(model, f.createIRI("http://www.ontotext.com/implicit"))
     }
 }

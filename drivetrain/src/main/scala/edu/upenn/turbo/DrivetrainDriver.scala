@@ -98,10 +98,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "diagmap") runDiagnosisMapping(cxn)
               else if (args(0) == "medmap") runMedicationMapping(cxn)
               else if (args(0) == "i2i2c2c") runI2i2c2cMapping(cxn, args)
-              else if (args(0) == "moveToReasoningRepo") moveDataToReasoningRepo(cxn)
+              else if (args(0) == "changeReasoningLevel" && args.size > 2) setReasoningLevel(cxn, args(1), args(2))
               else if (args(0) == "loadRepo") helper.loadDataFromFile(cxn, args(1), RDFFormat.TURTLE)
               else if (args(0) == "loadTurboOntology") helper.addOntologyFromUrl(cxn)
               else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
+              else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
@@ -229,9 +230,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
       medmap.runMedicationMapping(cxn)
   }
   
-  def moveDataToReasoningRepo(cxn: RepositoryConnection)
+  def setReasoningLevel(cxn: RepositoryConnection, level: String, reinfer: String)
   {
-      //future.testFutures(cxn)
+      var reinferBool = true
+      if (reinferRepo == "false") reinferBool = false
+      helper.changeReasoningLevelAndReinferRepository(cxn, level, reinferBool)
   }
   
   def runI2i2c2cMapping(cxn: RepositoryConnection, args: Array[String])

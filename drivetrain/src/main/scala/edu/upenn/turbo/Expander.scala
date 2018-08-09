@@ -377,7 +377,7 @@ class Expander extends ProjectwideGlobals
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("birth", """" + randomUUID + """", str(?shortcutPart))))) AS ?birth)
         		# We are currently creating dob datum even if no dob data exists...is this a good idea? So we can make statements about it in conclusionation
         		# BIND(IF(bound(?dobTextVal), uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))), ?unbound) AS ?dateOfBirth)
-        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?dateOfBirth)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dob", """" + randomUUID + """", str(?shortcutPart))))) AS ?dateOfBirth)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("adipose", """" + randomUUID + """", str(?shortcutPart))))) AS ?adipose)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("height", """" + randomUUID + """", str(?shortcutPart))))) AS ?height)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("weight", """" + randomUUID + """", str(?shortcutPart))))) AS ?weight)

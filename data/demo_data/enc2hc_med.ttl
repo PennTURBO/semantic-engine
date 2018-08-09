@@ -5,18 +5,18 @@
 <http://localhost:8080/source/hcEncounter/20> obo:RO_0002234 pmbb:prescript1 ;
 	a obo:OGMS_0000097 ;
 	turbo:TURBO_0000643 'enc2hc - med.ttl' .
-pmbb:prescript1 a obo:PDRO_0000024 ;
+pmbb:prescript1 a obo:PDRO_0000001 ;
     turbo:TURBO_0005611 "sodium chloride" ;
     turbo:TURBO_0005601 "3" .
 <http://localhost:8080/source/hcEncounter/30> obo:RO_0002234 pmbb:prescript2 ;
     a obo:OGMS_0000097 ;
     turbo:TURBO_0000643 'enc2hc - med.ttl' .
-pmbb:prescript2 a obo:PDRO_0000024 ;
+pmbb:prescript2 a obo:PDRO_0000001 ;
     turbo:TURBO_0005611 "insulin" ;
     turbo:TURBO_0005601 "4" .
 <http://localhost:8080/source/hcEncounter/50> obo:RO_0002234 pmbb:prescript3 ;
     a obo:OGMS_0000097 ;
     turbo:TURBO_0000643 'enc2hc - med.ttl' .
-pmbb:prescript3 a obo:PDRO_0000024 ;
+pmbb:prescript3 a obo:PDRO_0000001 ;
     turbo:TURBO_0005611 "vitamin c" ;
     turbo:TURBO_0005601 "5" .
