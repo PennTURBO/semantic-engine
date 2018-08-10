@@ -1028,7 +1028,7 @@ class TurboMultiuseClass
             if (reinfer)
             {
                 logger.info("Reinferring...")
-                updateSparql(cxn, sparqlPrefixes + addRuleset) 
+                updateSparql(cxn, sparqlPrefixes + reinferRepo) 
             }
             logger.info("Done.")
         }
