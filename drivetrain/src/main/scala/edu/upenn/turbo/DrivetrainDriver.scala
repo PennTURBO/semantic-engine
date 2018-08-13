@@ -19,7 +19,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   val medmap: MedicationMapper = new MedicationMapper()
   val benchmark: DrivetrainAutomatedBenchmarking = new DrivetrainAutomatedBenchmarking()
   val visualize: DrivetrainVisualizations = new DrivetrainVisualizations()
-  val future: Futures = new Futures()
+  //val future: Futures = new Futures()
   
   //globally available Conclusionation Named Graph IRI
   var concNamedGraph: Option[IRI] = None : Option[IRI]
