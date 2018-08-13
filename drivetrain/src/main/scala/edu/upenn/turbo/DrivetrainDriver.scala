@@ -98,7 +98,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "diagmap") runDiagnosisMapping(cxn)
               else if (args(0) == "medmap") runMedicationMapping(cxn)
               else if (args(0) == "i2i2c2c") runI2i2c2cMapping(cxn, args)
-              else if (args(0) == "changeReasoningLevel" && args.size > 2) setReasoningLevel(cxn, args(1), args(2))
+              else if (args(0) == "changeReasoningLevel" && args.size > 1) setReasoningLevel(cxn, args(1))
               else if (args(0) == "loadRepo") helper.loadDataFromFile(cxn, args(1), RDFFormat.TURTLE)
               else if (args(0) == "loadTurboOntology") helper.addOntologyFromUrl(cxn)
               else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
@@ -230,11 +230,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
       medmap.runMedicationMapping(cxn)
   }
   
-  def setReasoningLevel(cxn: RepositoryConnection, level: String, reinfer: String)
+  def setReasoningLevel(cxn: RepositoryConnection, level: String)
   {
-      var reinferBool = true
-      if (reinferRepo == "false") reinferBool = false
-      helper.changeReasoningLevelAndReinferRepository(cxn, level, reinferBool)
+      helper.changeReasoningLevelAndReinferRepository(cxn, level)
   }
   
   def runI2i2c2cMapping(cxn: RepositoryConnection, args: Array[String])

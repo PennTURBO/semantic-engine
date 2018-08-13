@@ -1018,6 +1018,7 @@ class TurboMultiuseClass
         if (newLevel != "empty" && newLevel != "rdfsplus-optimized" && newLevel != "owl-horst-optimized") logger.info("Reasoning level " + newLevel + " is not supported.")
         else 
         {
+            logger.info("If you see this, you are running the latest code.")
             logger.info("Attempting to change reasoning level to " + newLevel)
             val addRuleset: String = """ INSERT DATA {_:b sys:addRuleset """"+newLevel+"""" } """
             val setDefaultRuleset: String = """ INSERT DATA {_:b sys:defaultRuleset """"+newLevel+"""" } """    
