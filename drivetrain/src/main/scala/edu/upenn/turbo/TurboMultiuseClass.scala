@@ -1013,7 +1013,7 @@ class TurboMultiuseClass
      * to reinfer the repository. This functionality is not fully supported by Ontotext Graph DB and this method should be used
      * with care.
      */
-    def changeReasoningLevelAndReinferRepository(cxn: RepositoryConnection, newLevel: String, reinfer: Boolean)
+    def changeReasoningLevelAndReinferRepository(cxn: RepositoryConnection, newLevel: String, reinfer: Boolean = true)
     {
         if (newLevel != "empty" && newLevel != "rdfsplus-optimized" && newLevel != "owl-horst-optimized") logger.info("Reasoning level " + newLevel + " is not supported.")
         else 
