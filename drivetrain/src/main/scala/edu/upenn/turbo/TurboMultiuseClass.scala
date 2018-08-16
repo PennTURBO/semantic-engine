@@ -714,7 +714,7 @@ class TurboMultiuseClass
      */
     def clearShortcutNamedGraphs (cxn: RepositoryConnection)
     {
-        val graphs: ArrayBuffer[String] = generateShortcutNamedGraphsList(cxn)
+        val graphs: ArrayBuffer[String] = generateNamedGraphsListFromPrefix(cxn, "http://www.itmat.upenn.edu/biobank/Shortcuts")
         for (graph <- graphs) clearNamedGraph(cxn, graph)
     }
     
@@ -980,7 +980,7 @@ class TurboMultiuseClass
     def generateShortcutNamedGraphsString(cxn: RepositoryConnection, asFrom: Boolean = false, prefix: String = "http://www.itmat.upenn.edu/biobank/Shortcuts"): String =
     {
         var graphsString = ""
-        for (a <- generateShortcutNamedGraphsList(cxn, prefix))
+        for (a <- generateNamedGraphsListFromPrefix(cxn, prefix))
         {
             if (!asFrom) graphsString += "<" + a + "> "
             else graphsString += "FROM <" + a + "> "
@@ -993,7 +993,7 @@ class TurboMultiuseClass
      * 
      * @return a list representation of all shortcut named graphs for expansion
      */
-    def generateShortcutNamedGraphsList(cxn: RepositoryConnection, graphsPrefix: String = "http://www.itmat.upenn.edu/biobank/Shortcuts"): ArrayBuffer[String] =
+    def generateNamedGraphsListFromPrefix(cxn: RepositoryConnection, graphsPrefix: String = "http://www.itmat.upenn.edu/biobank/Shortcuts"): ArrayBuffer[String] =
     {
         val getGraphs: String = """
         select distinct ?g where 
@@ -1018,7 +1018,6 @@ class TurboMultiuseClass
         if (newLevel != "empty" && newLevel != "rdfsplus-optimized" && newLevel != "owl-horst-optimized") logger.info("Reasoning level " + newLevel + " is not supported.")
         else 
         {
-            logger.info("If you see this, you are running the latest code.")
             logger.info("Attempting to change reasoning level to " + newLevel)
             val addRuleset: String = """ INSERT DATA {_:b sys:addRuleset """"+newLevel+"""" } """
             val setDefaultRuleset: String = """ INSERT DATA {_:b sys:defaultRuleset """"+newLevel+"""" } """    

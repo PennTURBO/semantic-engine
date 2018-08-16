@@ -29,7 +29,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
-    /*test("check for invalid classes - one valid class")
+    test("check for invalid classes - one valid class")
     {
         helper.deleteAllTriplesInDatabase(cxn)
         helper.addOntologyFromUrl(cxn, ontologyURL)
@@ -1609,7 +1609,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         
         helper.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBiosexAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
-    }*/
+    }
     
     test("hc encs with multiple dates - none present")
     {

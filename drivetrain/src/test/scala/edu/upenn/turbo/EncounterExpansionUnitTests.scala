@@ -13,7 +13,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
     var cxn: RepositoryConnection = null
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
-    val clearDatabaseAfterRun: Boolean = false
+    val clearDatabaseAfterRun: Boolean = true
     val expand = new Expander
     
     var conclusionationNamedGraph: IRI = null
@@ -145,23 +145,14 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           ASK { GRAPH <http://www.itmat.upenn.edu/biobank/postExpansionCheck> {
           
                 ?dataset a obo:IAO_0000100 .
-                
                 ?encounter a obo:OGMS_0000097 .
             		?encounter obo:RO_0002234 ?diagnosis .
             		?diagnosis a obo:OGMS_0000073 .
-            		?diagCrid obo:IAO_0000219 ?diagnosis .
-            		?dataset obo:BFO_0000051 ?diagCodeRegId .
-            		?dataset obo:BFO_0000051 ?diagCodeSymbol .
-            		?diagCodeSymbol obo:BFO_0000050 ?dataset .
-            		?diagCodeRegId obo:BFO_0000050 ?dataset .
-            		?diagCrid <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000553 .
-            		?diagCrid obo:BFO_0000051 ?diagCodeRegId .
-            		?diagCrid obo:BFO_0000051 ?diagCodeSymbol .
-            		?diagCodeSymbol <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000554 .
-            		?diagCodeSymbol turbo:TURBO_0006510 "401.9" .
-            		?diagCodeRegId <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000555 .
-            		?diagCodeRegId obo:IAO_0000219 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
-            		?diagCodeRegId turbo:TURBO_0006512 "ICD-9" .
+            		?diagnosis turbo:TURBO_0006512 "401.9" .
+            		?diagnosis obo:IAO_0000142 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
+            		?diagnosis ns1:hasOBONamespace "ICD-9" .
+            		?diagnosis obo:BFO_0000050 ?dataset .
+            		?dataset obo:BFO_0000051 ?diagnosis .
         	}}
           """
     
@@ -698,17 +689,9 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
                 ?dataset a obo:IAO_0000100 .
         		?encounter obo:RO_0002234 ?diagnosis.
         		?diagnosis a obo:OGMS_0000073 .
-        		?diagCrid obo:IAO_0000219 ?diagnosis .
-        		?dataset obo:BFO_0000051 ?diagCodeRegId .
-        		# ?dataset obo:BFO_0000051 ?diagCodeSymbol .
-        		?diagCrid <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000553 .
-        		?diagCrid obo:BFO_0000051 ?diagCodeRegId .
-        		# ?diagCrid obo:BFO_0000051 ?diagCodeSymbol .
-        		# ?diagCodeSymbol a turbo:TURBO_0000554 .
-        		# ?diagCodeSymbol turbo:TURBO_0006510 "401.9" .
-        		?diagCodeRegId a turbo:TURBO_0000555 .
-        		# ?diagCodeRegId obo:IAO_0000219 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
-        		?diagCodeRegId turbo:TURBO_0006512 "ICD-9" .
+        		?diagnosis ns1:hasOBONamespace "ICD-9" .
+        		?diagnosis obo:BFO_0000050 ?dataset .
+        		?dataset obo:BFO_0000051 ?diagnosis .
         	}}
           """
         
@@ -906,44 +889,29 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:RO_0002234 ?diagnosis1 .
                   ?diagnosis1 a obo:OGMS_0000073 .
-                  ?diagCrid1 obo:IAO_0000219 ?diagnosis1 .
-                  ?diagCrid1 a turbo:TURBO_0000553 .
-                  ?enc obo:RO_0002234 ?diagnosis2 .
                   ?diagnosis2 a obo:OGMS_0000073 .
-                  ?diagCrid2 obo:IAO_0000219 ?diagnosis2 .
-                  ?diagCrid2 a turbo:TURBO_0000553 .
                   
-                  ?diagCrid1 obo:BFO_0000051 ?diagCridRegDen1 .
-                  ?diagCrid1 obo:BFO_0000051 ?diagCridSymbol1 .
-                  ?diagCridRegDen1 a turbo:TURBO_0000555 .
-                  ?diagCridSymbol1 a turbo:TURBO_0000554 .
-                  ?diagCridRegDen1 turbo:TURBO_0006512 "ICD-9" .
-                  ?diagCridRegDen1 obo:IAO_0000219 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
-                  ?diagCridSymbol1 turbo:TURBO_0006510 "401.9" .
+                  ?diagnosis ns1:hasOBONamespace "ICD-9" .
+                  ?diagnosis obo:IAO_0000142 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
+                  ?diagnosis1 turbo:TURBO_0006512 "401.9" .
                   
-                  ?diagCrid2 obo:BFO_0000051 ?diagCridRegDen2 .
-                  ?diagCrid2 obo:BFO_0000051 ?diagCridSymbol2 .
-                  ?diagCridRegDen2 a turbo:TURBO_0000555 .
-                  ?diagCridSymbol2 a turbo:TURBO_0000554 .
-                  ?diagCridRegDen2 turbo:TURBO_0006512 "ICD-10" .
-                  ?diagCridRegDen2 obo:IAO_0000219 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#someOtherRegistry> .
-                  ?diagCridSymbol2 turbo:TURBO_0006510 "177.8" .
+                  ?diagnosis2 ns1:hasOBONamespace "ICD-10" .
+                  ?diagnosis2 obo:IAO_0000142 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#someOtherRegistry> .
+                  ?diagnosis2 turbo:TURBO_0006512 "177.8" .
                   
-                  Filter (?diagCrid1 != ?diagCrid2) 
                   Filter (?diagnosis1 != ?diagnosis2) 
               }
           }
           """
         
         val countDiag: String = """
-          Select (count (distinct ?diagnosis) as ?diagnosisCount) (count (distinct ?diagCrid) as ?diagCridCount)
+          Select (count (distinct ?diagnosis) as ?diagnosisCount)
           {
               Graph pmbb:postExpansionCheck
               {
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:RO_0002234 ?diagnosis .
                   ?diagnosis a obo:OGMS_0000073 .
-                  ?diagCrid obo:IAO_0000219 ?diagnosis .
               }
           }
           """
@@ -951,7 +919,6 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
          helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
          helper.querySparqlBoolean(cxn, sparqlPrefixes + checkDiag).get should be (true)
          helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "diagnosisCount")(0) should startWith ("\"2")
-         helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "diagCridCount")(0) should startWith ("\"2")
          helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
     }
     
@@ -1127,17 +1094,12 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   ?encounter a obo:OGMS_0000097 .
               		?encounter obo:RO_0002234 ?diagnosis .
               		?diagnosis a obo:OGMS_0000073 .
-              		?diagCrid obo:IAO_0000219 ?diagnosis .
-              		?diagCrid <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000553 .
-              		?diagCrid obo:BFO_0000051 ?diagCodeRegId .
-              		?diagCrid obo:BFO_0000051 ?diagCodeSymbol .
-              		?diagCodeSymbol <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000554 .
-              		?diagCodeRegId <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000555 .
+              		?diagnosis turbo:TURBO_0006512 "401.9" .
+            		  ?diagnosis obo:IAO_0000142 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
+            		  ?diagnosis ns1:hasOBONamespace "ICD-9" .
               		
-              		?dataset obo:BFO_0000051 ?diagCodeRegId .
-              		?dataset obo:BFO_0000051 ?diagCodeSymbol .
-              		?diagCodeSymbol obo:BFO_0000050 ?dataset .
-              		?diagCodeRegId obo:BFO_0000050 ?dataset .	
+              		?dataset obo:BFO_0000051 ?diagnosis .
+              		?diagnosis obo:BFO_0000050 ?dataset .
               }
           }
           """

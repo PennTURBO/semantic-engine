@@ -103,6 +103,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "loadTurboOntology") helper.addOntologyFromUrl(cxn)
               else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)
+              else if (args(0) == "validateRepository") validateDataInRepository(cxn)
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
@@ -184,7 +185,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       join.joinParticipantsAndEncounters(cxn)
       logger.info("loading LOF data")
       if (loadLOFData) connect.loadDataFromPropertiesFile(cxn, inputLOFFiles, "LOFShortcuts", false)
-      val lofGraphs: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
+      val lofGraphs: ArrayBuffer[String] = helper.generateNamedGraphsListFromPrefix(cxn, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
       logger.info("connecting biobank encounters to LOF data")
       join.connectLossOfFunctionToBiobankEncounters(cxn, lofGraphs)
       logger.info("expanding LOF data")
@@ -210,12 +211,26 @@ object DrivetrainDriver extends ProjectwideGlobals {
           helper.addLabelsToEverything(cxn, concNamedGraph.get.toString)
       }
       logger.info("running post-conclusionation checks")
+      validateDataInRepository(cxn)
+  }
+  
+  def validateDataInRepository(cxn: RepositoryConnection): Boolean =
+  {
+      var concCheck: Boolean = true
       val expandedGraphCheck = sparqlChecks.postExpansionChecks(cxn, "http://www.itmat.upenn.edu/biobank/expanded", "post-conclusion")
-      if (!expandedGraphCheck) logger.info("Post-conclusionation checks failed in expanded graph!")
-      val concGraphCheck = sparqlChecks.postExpansionChecks(cxn, concNamedGraph.get.toString, "post-conclusion")
-      if (!concGraphCheck) logger.info("Post-conclusionation checks failed in conclusions graph!")
-      logger.info("post-conclusionation checks finished.")
-      concGraphCheck && expandedGraphCheck
+      if (!expandedGraphCheck) logger.info("Checks failed in expanded graph!")
+      else
+      {
+          val concNamedGraphs: ArrayBuffer[String] = helper.generateNamedGraphsListFromPrefix(cxn, "http://www.itmat.upenn.edu/biobank/Conclusionations")
+          var a: Int = 0
+          while (concCheck && a < concNamedGraphs.size)
+          {
+              if (sparqlChecks.postExpansionChecks(cxn, concNamedGraphs(a), "post-conclusion") == false) concCheck = false
+          }
+          if (!concCheck) logger.info("Checks failed in a conclusions graph!")
+      }
+      if (expandedGraphCheck && concCheck) true
+      else false
   }
   
   def runDiagnosisMapping(cxn: RepositoryConnection)

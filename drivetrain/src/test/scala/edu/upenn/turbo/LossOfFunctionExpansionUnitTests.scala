@@ -34,7 +34,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele1 a obo:OBI_0001352 .
                   pmbb:allele1 turbo:TURBO_0007601 "B" .
                   pmbb:allele1 turbo:TURBO_0007609 "http://transformunify.org/ontologies/TURBO_0000420"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                  pmbb:allele1 turbo:TURBO_0007604 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele1 turbo:TURBO_0007610 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele1 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                   pmbb:allele1 turbo:TURBO_0007605 "gene:TSPAN6(ENSG00000000003);zygosity:1" .
                   pmbb:allele1 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
@@ -47,7 +47,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele4 a obo:OBI_0001352 .
                   pmbb:allele4 turbo:TURBO_0007607 "http://transformunify.org/ontologies/TURBO_0000591"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele4 turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                  pmbb:allele4 turbo:TURBO_0007604 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele4 turbo:TURBO_0007610 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele4 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                   pmbb:allele4 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
                   
@@ -57,7 +57,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele5 a obo:OBI_0001352 .
                   pmbb:allele5 turbo:TURBO_0007607 "http://transformunify.org/ontologies/TURBO_0000591"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele5 turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                  pmbb:allele5 turbo:TURBO_0007604 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele5 turbo:TURBO_0007610 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele5 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                   pmbb:allele5 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
                   
@@ -67,7 +67,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele6 a obo:OBI_0001352 .
                   pmbb:allele6 turbo:TURBO_0007607 "http://transformunify.org/ontologies/TURBO_0000591"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele6 turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                  pmbb:allele6 turbo:TURBO_0007604 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele6 turbo:TURBO_0007610 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele6 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                   pmbb:allele6 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
                   
@@ -77,7 +77,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   # pmbb:allele7 a obo:OBI_0001352 .
                   pmbb:allele7 turbo:TURBO_0007607 "http://transformunify.org/ontologies/TURBO_0000591"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele7 turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                  pmbb:allele7 turbo:TURBO_0007604 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele7 turbo:TURBO_0007610 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele7 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                   pmbb:allele7 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
                   
@@ -87,7 +87,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele8 a obo:OBI_0001352 .
                   # pmbb:allele8 turbo:TURBO_0007607 "http://transformunify.org/ontologies/TURBO_0000591"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele8 turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                  pmbb:allele8 turbo:TURBO_0007604 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele8 turbo:TURBO_0007610 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele8 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                   pmbb:allele8 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
                   
@@ -97,7 +97,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele9 a obo:OBI_0001352 .
                   pmbb:allele9 turbo:TURBO_0007607 "http://transformunify.org/ontologies/TURBO_0000591"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   # pmbb:allele9 turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                  pmbb:allele9 turbo:TURBO_0007604 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele9 turbo:TURBO_0007610 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele9 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                   pmbb:allele9 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
                   
@@ -107,7 +107,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele10 a obo:OBI_0001352 .
                   pmbb:allele10 turbo:TURBO_0007607 "http://transformunify.org/ontologies/TURBO_0000591"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele10 turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                  pmbb:allele10 turbo:TURBO_0007604 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele10 turbo:TURBO_0007610 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   # pmbb:allele10 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                   pmbb:allele10 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
                   
@@ -117,7 +117,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele11 a obo:OBI_0001352 .
                   pmbb:allele11 turbo:TURBO_0007607 "http://transformunify.org/ontologies/TURBO_0000591"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele11 turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                  pmbb:allele11 turbo:TURBO_0007604 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele11 turbo:TURBO_0007610 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                   pmbb:allele11 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                   # pmbb:allele11 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
                   

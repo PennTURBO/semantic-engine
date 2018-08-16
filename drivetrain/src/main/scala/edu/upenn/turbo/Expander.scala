@@ -718,10 +718,8 @@ class Expander extends ProjectwideGlobals
         		?BMI obo:BFO_0000050 ?dataset .
         		?regDenDataset obo:BFO_0000051 ?hcEncRegDen .
         		?hcEncRegDen obo:BFO_0000050 ?regDenDataset .
-        		?dataset obo:BFO_0000051 ?diagCodeSymbol .
-        		?diagCodeSymbol obo:BFO_0000050 ?dataset .
-        		?dataset obo:BFO_0000051 ?diagCodeRegID .
-        		?diagCodeRegID obo:BFO_0000050 ?dataset .
+        		?dataset obo:BFO_0000051 ?diagnosis .
+        		?diagnosis obo:BFO_0000050 ?dataset .
         		?dateDataset obo:BFO_0000051 ?encounterDate .
         		?encounterDate obo:BFO_0000050 ?dateDataset .
         		?dataset obo:BFO_0000051 ?medSymb .
@@ -754,24 +752,9 @@ class Expander extends ProjectwideGlobals
         		?encounterDate obo:IAO_0000136 ?encStart .
         		
         		?diagnosis a obo:OGMS_0000073 .
-        		?diagCrid obo:IAO_0000219 ?diagnosis .
-        		?diagCrid a turbo:TURBO_0000553 .
-        		?diagCrid obo:BFO_0000051 ?diagCodeRegID .
-        		?diagCrid obo:BFO_0000051 ?diagCodeSymbol .
-        		
-        		?diagCodeSymbol a turbo:TURBO_0000554 .
-        		# ?diagCodeLV is the diagnosis code (like "Z86.73")
-        		?diagCodeSymbol turbo:TURBO_0006510 ?diagCodeLV .
-        		?diagCodeSymbol obo:BFO_0000050 ?diagCrid .
-        		
-        		?diagCodeRegID a turbo:TURBO_0000555 .
-        		?diagCodeRegID obo:IAO_0000219 ?diagCodeRegURI .
-        		# diagCodeRegTextVal is the string representation of the registry - like "ICD-10" 
-        		?diagCodeRegID turbo:TURBO_0006512 ?diagCodeRegTextVal .
-        		?diagCodeRegID obo:BFO_0000050 ?diagCrid .
-        		
-        		# this is the URI of the registry like <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892> (for ICD-10)
-        		?diagCodeRegURI a turbo:TURBO_0000556 .
+        		?diagnosis obo:IAO_0000142 ?diagCodeRegURI .
+        		?diagnosis ns1:hasOBONamespace ?diagCodeRegTextVal .
+        		?diagnosis turbo:TURBO_0006512 ?diagCodeLV .
 
         		?BMI a efo:EFO_0004340 .
         		?BMI obo:OBI_0001938 ?BMIvalspec .
@@ -904,11 +887,8 @@ class Expander extends ProjectwideGlobals
             		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc encounter", """" + randomUUID + """", str(?encFromKarma))))) AS ?encounter)
             		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc enc ID", """" + randomUUID + """", str(?encFromKarma))))) AS ?encounterCrid)
             		BIND(IF (BOUND(?diagSC), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("diagnosis ", """" + randomUUID + """", str(?encFromKarma), str(?diagSC))))), ?unbound) AS ?diagnosis)
-            		BIND(IF (BOUND(?diagSC), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("diag crid", """" + randomUUID + """", str(?encFromKarma), str(?diagSC))))), ?unbound) AS ?diagCrid)
             		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("enc date", """" + randomUUID + """", str(?encFromKarma))))) AS ?encounterDate)
           	    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("enc start", """" + randomUUID + """", str(?encFromKarma))))) AS ?encStart)
-          	    BIND(IF (BOUND(?diagCodeRegTextVal), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("diag code reg text val", """" + randomUUID + """", str(?encFromKarma), str(?diagSC))))), ?unbound) AS ?diagCodeRegID)
-          	    BIND(IF (BOUND(?diagCodeLV), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("diag code symbol", """" + randomUUID + """", str(?encFromKarma), str(?diagSC))))), ?unbound) AS ?diagCodeSymbol)
           	    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc enc reg den", """" + randomUUID + """", str(?encFromKarma))))) AS ?hcEncRegDen)
           	    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc enc symb", """" + randomUUID + """", str(?encFromKarma))))) AS ?hcEncSymb)
           	    BIND(IF (BOUND(?heightCM), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc height val spec", """" + randomUUID + """", str(?encFromKarma), str(?heightCM))))), ?unbound) AS ?heightValSpec)
@@ -949,11 +929,11 @@ class Expander extends ProjectwideGlobals
                 	            turbo:TURBO_0007603 ?genomeReg ;
                 	            turbo:TURBO_0007605 ?geneText ;
                 	            turbo:TURBO_0007608 ?datasetTitle ;
-                	            turbo:TURBO_0007609 ?bbEncReg .
+                	            turbo:TURBO_0007609 ?bbEncReg ;
+                	            turbo:TURBO_0007610 ?geneTerm .
                 	            
                 	    ?alleleSC graphBuilder:willBeLinkedWith ?bbEnc .
-                	    
-                	    ?alleleSC turbo:TURBO_0007604 ?protein .
+                	   
                   }
                   Graph pmbb:errorLogging
                   {
@@ -980,8 +960,8 @@ class Expander extends ProjectwideGlobals
                       ?allele a obo:OBI_0001352 .
                       ?allele obo:OBI_0001938 ?zygVal .
                       ?allele obo:IAO_0000136 ?DNA .
-                      ?allele obo:IAO_0000142 ?proteinURI .
                       ?allele turbo:TURBO_0006512 ?geneText .
+                      ?allele obo:IAO_0000142 ?geneTermURI .
                       
                       ?DNAextract a obo:OBI_0001051 .
                       
@@ -1042,11 +1022,8 @@ class Expander extends ProjectwideGlobals
                 	            turbo:TURBO_0007603 ?genomeReg ;
                 	            turbo:TURBO_0007605 ?geneText ;
                 	            turbo:TURBO_0007608 ?datasetTitle ;
-                	            turbo:TURBO_0007609 ?bbEncReg .
-                	    Optional
-                	    {
-                	        ?alleleSC turbo:TURBO_0007604 ?protein .
-                	    }
+                	            turbo:TURBO_0007609 ?bbEncReg ;
+                	            turbo:TURBO_0007610 ?geneTerm .
                 	            
                 	    ?alleleSC graphBuilder:willBeLinkedWith ?bbEnc .
                 	}
@@ -1065,7 +1042,8 @@ class Expander extends ProjectwideGlobals
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?allele)
                 	Bind (uri(?zygosityValURI) AS ?zygVal) 
                 	Bind (uri(?genomeReg) AS ?genomeRegURI)  
-                	Bind (uri(?protein) AS ?proteinURI)      
+                	Bind (uri(?protein) AS ?proteinURI)     
+                	Bind (uri(?geneTerm) AS ?geneTermURI) 
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("DNAextract", str(?consenter), str(?genomeCridSymbLit))))) AS ?DNAextract)
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("formprocess", str(?consenter), str(?genomeCridSymbLit))))) AS ?formProcess)
                 	Bind (uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("genomeCridSymb", str(?consenter), str(?genomeCridSymbLit))))) AS ?genomeCridSymb)

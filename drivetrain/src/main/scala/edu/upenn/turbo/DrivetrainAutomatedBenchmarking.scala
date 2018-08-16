@@ -373,7 +373,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //get list of LOF graphs
         val getGraphListStart = System.nanoTime()
-        val lofGraphs: ArrayBuffer[String] = helper.generateShortcutNamedGraphsList(cxn, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
+        val lofGraphs: ArrayBuffer[String] = helper.generateNamedGraphsListFromPrefix(cxn, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
         val getGraphListStop = System.nanoTime()
         
         writeCSV.println("Get list of LOF shortcut graphs," + ((getGraphListStop - getGraphListStart)/1000000000.0).toString)

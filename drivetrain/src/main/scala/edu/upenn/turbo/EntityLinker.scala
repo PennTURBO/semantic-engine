@@ -427,7 +427,8 @@ class EntityLinker extends ProjectwideGlobals
           	            turbo:TURBO_0007603 ?genomeReg ;
           	            turbo:TURBO_0007605 ?geneText ;
           	            turbo:TURBO_0007608 ?datasetTitle ;
-          	            turbo:TURBO_0007609 ?encReg .
+          	            turbo:TURBO_0007609 ?encReg ;
+          	            turbo:TURBO_0007610 ?geneTerm .
                 }
             }  
         """
