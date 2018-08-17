@@ -236,7 +236,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
   def runDiagnosisMapping(cxn: RepositoryConnection)
   {
       if (loadDiseaseOntologies == "true") diagmap.addDiseaseOntologies(cxn)
-      diagmap.performDiagnosisMapping(cxn)
+      logger.info("diagnosis mapping currently deprecated")
+      //diagmap.performDiagnosisMapping(cxn)
   }
   
   def runMedicationMapping(cxn: RepositoryConnection)

@@ -752,8 +752,9 @@ class Expander extends ProjectwideGlobals
         		?encounterDate obo:IAO_0000136 ?encStart .
         		
         		?diagnosis a obo:OGMS_0000073 .
-        		?diagnosis obo:IAO_0000142 ?diagCodeRegURI .
-        		?diagnosis ns1:hasOBONamespace ?diagCodeRegTextVal .
+        		?diagnosis turbo:TURBO_0000306 ?concatIcdTerm .
+        		?diagnosis turbo:TURBO_0000703 ?diagCodeRegURI .
+        		?diagnosis turbo:TURBO_0006515 ?diagCodeRegTextVal .
         		?diagnosis turbo:TURBO_0006512 ?diagCodeLV .
 
         		?BMI a efo:EFO_0004340 .
@@ -787,7 +788,7 @@ class Expander extends ProjectwideGlobals
       	    ?drugPrescript turbo:TURBO_0006512 ?medString .
       	    
       	    #temporary workaround triple
-      	    ?drugPrescript obo:IAO_0000142 ?drugURI .
+      	    ?drugPrescript turbo:TURBO_0000307 ?drugURI .
       	    
       	    ?medCrid obo:IAO_0000219 ?drugPrescript .
       	    ?medCrid a turbo:TURBO_0000561 .
@@ -906,6 +907,10 @@ class Expander extends ProjectwideGlobals
           	    BIND(IF (BOUND(?encDateTextVal), ?dataset, ?unbound) AS ?dateDataset)
           	    BIND(IF (BOUND(?EncID_LV), ?dataset, ?unbound) AS ?cridSymbDataset)
           	    BIND(IF (BOUND(?hcRegIdURIString), ?dataset, ?unbound) AS ?regDenDataset)
+          	    BIND(IF (?diagCodeRegURI = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat("http://purl.bioontology.org/ontology/ICD9CM/", ?diagCodeLV)), ?unbound) AS ?icd9term)
+                BIND(IF (?diagCodeRegURI = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat("http://purl.bioontology.org/ontology/ICD10CM/", ?diagCodeLV)), ?unbound) AS ?icd10term)
+                BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?concatIcdTerm)
+                BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?concatIcdTerm) as ?concatIcdTerm)
           	  }
             }"""
                 
@@ -961,7 +966,7 @@ class Expander extends ProjectwideGlobals
                       ?allele obo:OBI_0001938 ?zygVal .
                       ?allele obo:IAO_0000136 ?DNA .
                       ?allele turbo:TURBO_0006512 ?geneText .
-                      ?allele obo:IAO_0000142 ?geneTermURI .
+                      ?allele turbo:TURBO_0000305 ?geneTermURI .
                       
                       ?DNAextract a obo:OBI_0001051 .
                       

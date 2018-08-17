@@ -485,7 +485,8 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //diagnosis mapping
         val startDiagMap = System.nanoTime()
-        diagmap.performDiagnosisMapping(cxn)
+        logger.info("diagnosis mapping currently deprecated")
+        //diagmap.performDiagnosisMapping(cxn)
         val stopDiagMap = System.nanoTime()
         
         writeCSV.println("Diagnosis Mapping," + ((stopDiagMap - startDiagMap)/1000000000.0).toString)

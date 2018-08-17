@@ -7,6 +7,8 @@ import scala.collection.mutable.ArrayBuffer
 /**
  * Contains methods related to mapping diagnosis codes to ontology classes.
  */
+
+// we are not currently using this class as of 8-17-2018
 class DiagnosisMapper extends ProjectwideGlobals
 {
     val connection: ConnectToGraphDB = new ConnectToGraphDB()
