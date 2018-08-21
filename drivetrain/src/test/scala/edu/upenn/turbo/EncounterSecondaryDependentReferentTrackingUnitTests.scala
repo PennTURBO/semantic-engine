@@ -212,7 +212,7 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertBiobankAndHealthcareData)
+        update.updateSparql(cxn, sparqlPrefixes + insertBiobankAndHealthcareData)
     }
     after
     {
@@ -229,13 +229,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryHealthcareEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
     }
     
     test("bb encs secondary dependent ref tracking - two non reftracked same dates")
@@ -248,13 +248,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryBiobankEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
     }
     
     test("hc encs secondary dependent ref tracking - two non reftracked diff dates")
@@ -267,13 +267,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
               }
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryHealthcareEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
     }
     
     test("bb encs secondary dependent ref tracking - two non reftracked diff dates")
@@ -286,33 +286,33 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryBiobankEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
     }
     
     test("hc encs secondary dependent ref tracking - two non reftracked no dates")
     {
         encreftrack.reftrackSecondaryHealthcareEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
     }
     
     test("bb encs secondary dependent ref tracking - two non reftracked no dates")
     {
         encreftrack.reftrackSecondaryBiobankEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
     }
     
     //I may be ok with these tests failing for now
@@ -325,13 +325,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryHealthcareEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
     }
     
     test("bb encs secondary dependent ref tracking - two non reftracked one date present one missing")
@@ -343,13 +343,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryBiobankEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
     }
     
     test("hc encs secondary dependent ref tracking - one ref tracked one non reftracked same dates")
@@ -367,13 +367,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryHealthcareEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
     }
     
     test("bb encs secondary dependent ref tracking - one ref tracked one non reftracked same dates")
@@ -390,13 +390,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryBiobankEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
     }
     
     test("hc encs secondary dependent ref tracking - one ref tracked one non reftracked diff dates")
@@ -414,13 +414,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryHealthcareEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (true)
     }
     
     test("bb encs secondary dependent ref tracking - one ref tracked one non reftracked diff dates")
@@ -437,13 +437,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryBiobankEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
     }
     
     //I may be ok with these tests failing for now
@@ -461,13 +461,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryHealthcareEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
     }
     
     test("hc encs secondary dependent ref tracking - one ref tracked one non reftracked only non reftracked date present")
@@ -484,13 +484,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryHealthcareEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
     }
     
     test("bb encs secondary dependent ref tracking - one ref tracked one non reftracked only ref tracked date present")
@@ -506,13 +506,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryBiobankEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
     }
     
     test("bb encs secondary dependent ref tracking - one ref tracked one non reftracked only non ref tracked date present")
@@ -528,13 +528,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryBiobankEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
     }
     
     test("hc encs secondary dependent ref tracking - one ref tracked one non reftracked no dates")
@@ -548,13 +548,13 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryHealthcareEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackCombineDateToPre).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSecondaryReftrackNoCombineDateToPre).get should be (false)
     }
     
     test("bb encs secondary dependent ref tracking - one ref tracked one non reftracked no dates")
@@ -568,12 +568,12 @@ class EncounterSecondaryDependentReferentTrackingUnitTests extends FunSuiteLike 
           	}
          }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackSecondaryBiobankEncounterDependents(cxn)
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDateToPre).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDateToPre).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackCombineDate).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + biobankSecondaryReftrackNoCombineDate).get should be (false)
     }
 }

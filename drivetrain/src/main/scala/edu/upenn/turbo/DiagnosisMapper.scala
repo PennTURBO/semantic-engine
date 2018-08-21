@@ -12,15 +12,13 @@ import scala.collection.mutable.ArrayBuffer
 class DiagnosisMapper extends ProjectwideGlobals
 {
     val connection: ConnectToGraphDB = new ConnectToGraphDB()
+    val ontLoad: OntologyLoader = new OntologyLoader
     
     /**
      * Adds relevant ontologies to Graph database.
      */
     def addDiseaseOntologies(cxn: RepositoryConnection)
     {
-        logger.info("adding mondo ontology")
-        helper.addOntologyFromUrl(cxn, "https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl", 
-                "http://www.itmat.upenn.edu/biobank/mondoOntology")
         logger.info("adding ICD9 ontology")
         helper.loadDataFromFile(cxn, "../ontologies/ICD9CM.ttl", RDFFormat.TURTLE, "http://www.itmat.upenn.edu/biobank/ICD9Ontology")
         logger.info("adding ICD10 ontology")
@@ -76,7 +74,7 @@ class DiagnosisMapper extends ProjectwideGlobals
              filter(?crid_rewrite = ?xref)
         }"""
     
-        helper.updateSparql(cxn, sparqlPrefixes + insert1)
+        update.updateSparql(cxn, sparqlPrefixes + insert1)
     }
     
     /**
@@ -108,7 +106,7 @@ class DiagnosisMapper extends ProjectwideGlobals
             }}
           """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertICD9matches)
+        update.updateSparql(cxn, sparqlPrefixes + insertICD9matches)
     }
     
     /**
@@ -140,6 +138,6 @@ class DiagnosisMapper extends ProjectwideGlobals
             }}
           """
         
-         helper.updateSparql(cxn, sparqlPrefixes + insertICD10matches)
+         update.updateSparql(cxn, sparqlPrefixes + insertICD10matches)
     }
 }

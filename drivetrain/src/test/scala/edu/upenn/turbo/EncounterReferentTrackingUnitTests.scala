@@ -82,7 +82,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackBiobankEncounters(cxn)
         
         val check1: String = """ 
@@ -98,9 +98,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (1)
     }
     
@@ -149,7 +149,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackHealthcareEncounters(cxn)
         
         val check1: String = """
@@ -165,9 +165,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (1)
     }
     
@@ -213,7 +213,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackBiobankEncounters(cxn)
         
         val check1: String = """
@@ -231,9 +231,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (2)
     }
     
@@ -280,7 +280,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackHealthcareEncounters(cxn)
         
         val check1: String = """
@@ -298,9 +298,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (2)
     }
     
@@ -346,7 +346,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackBiobankEncounters(cxn)
         
         val check1: String = """
@@ -367,9 +367,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (2)
     }
     
@@ -415,7 +415,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackHealthcareEncounters(cxn)
         
         val check1: String = """
@@ -436,9 +436,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (2)
     }
     
@@ -484,7 +484,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackBiobankEncounters(cxn)
         
         val check1: String = """
@@ -505,9 +505,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (2)
     }
     
@@ -553,7 +553,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackHealthcareEncounters(cxn)
         
         val check1: String = """
@@ -574,9 +574,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (2)
     }
     
@@ -628,7 +628,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackBiobankEncounters(cxn)
         
         val check1: String = """
@@ -645,9 +645,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (1)
     }
     
@@ -696,7 +696,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackHealthcareEncounters(cxn)
         
         val check1: String = """
@@ -713,9 +713,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (1)
     }
     
@@ -764,7 +764,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackBiobankEncounters(cxn)
         
         val check1: String = """
@@ -781,9 +781,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (1)
     }
     
@@ -832,7 +832,7 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
             	}
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         encreftrack.reftrackHealthcareEncounters(cxn)
         
         val check1: String = """
@@ -849,9 +849,9 @@ class EncounterReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfte
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (1)
     }
 }

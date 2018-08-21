@@ -101,7 +101,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000614 'http://purl.obolibrary.org/obo/OMRSE_00000181'^^xsd:anyURI ;
               turbo:TURBO_0000615 'asian' .
           }}"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
             UUID.randomUUID().toString.replaceAll("-", ""))
@@ -138,13 +138,13 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?rid a obo:OMRSE_00000181 .
           }}
           """
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + extraFields).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + extraFields).get should be (true)
         
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
-        val result = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
         
         val expectedPredicates = Array (
             "http://purl.obolibrary.org/obo/OBI_0000293", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -190,16 +190,16 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000608 "4" ;
               turbo:TURBO_0000610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
             UUID.randomUUID().toString.replaceAll("-", ""))
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
-        val result = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")        
+        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")        
         
         //compare expected predicates to received predicates
         //only checking predicates because many of the subjects/objects in expanded triples are unique UUIDs
@@ -237,16 +237,16 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               a turbo:TURBO_0000502 ;
               turbo:TURBO_0000610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
             UUID.randomUUID().toString.replaceAll("-", ""))
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
-        val result = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "s")
         result.size should be (0)
     }
     
@@ -259,16 +259,16 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000608 "4" ;
               turbo:TURBO_0000610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
             UUID.randomUUID().toString.replaceAll("-", ""))
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
-        val result = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "s")
         result.size should be (0)
     }
     
@@ -281,16 +281,16 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000608 "4" ;
               turbo:TURBO_0000603 "part_expand" .
           }}"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
             UUID.randomUUID().toString.replaceAll("-", ""))
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
-        val result = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "s")
         result.size should be (0)
     }
     
@@ -309,7 +309,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000609 "inpatient" ;
               turbo:TURBO_0000610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
             UUID.randomUUID().toString.replaceAll("-", ""))
@@ -336,13 +336,13 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?dataset a obo:IAO_0000100 .
           }}"""
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + dateNoXsd).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + gidNoXsd).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + dateNoXsd).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + gidNoXsd).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
-        val result = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
         
         val expectedPredicates = Array (
             "http://purl.obolibrary.org/obo/OBI_0000293", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -407,7 +407,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             pmbb:shortcutCrid3 turbo:TURBO_0003610 "http://transformunify.org/ontologies/TURBO_0000410"^^xsd:anyURI .
 
           }}"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.expandParticipantsMultipleIdentifiers(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
             UUID.randomUUID().toString.replaceAll("-", ""))
@@ -506,9 +506,9 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           }}
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
-        val result = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
         result.size should be (80)
     }
     
@@ -551,7 +551,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           }
           
           }"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.expandParticipantsMultipleIdentifiers(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
             "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts1><http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts2><http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts3>",
@@ -657,9 +657,9 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           }}
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
-        val result = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
         result.size should be (86)
     }
     
@@ -698,7 +698,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               pmbb:shortcutCrid3 turbo:TURBO_0003610 "http://transformunify.org/ontologies/TURBO_0000410"^^xsd:anyURI .
           }
           }"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.expandAllParticipants(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
             "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>")
@@ -797,9 +797,9 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           }}
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
-        val result = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
         result.size should be (80)
     }
     
@@ -842,7 +842,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               pmbb:shortcutCrid3 turbo:TURBO_0003610 "http://transformunify.org/ontologies/TURBO_0000410"^^xsd:anyURI .
           }
           }"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.expandAllParticipants(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
             "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts1><http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts2>")
@@ -943,9 +943,9 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		
           }}
           """
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
-        val result = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
         result.size should be (83)
     }
 }

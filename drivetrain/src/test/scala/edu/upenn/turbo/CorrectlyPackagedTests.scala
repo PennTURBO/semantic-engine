@@ -97,7 +97,7 @@ class CorrectlyPackagedTests extends FunSuiteLike with BeforeAndAfter with Match
           ?s <http://purl.obolibrary.org/obo/BFO_0000050> ?o .
       }
       """
-    helper.updateSparql(cxn, addInverse)
+    update.updateSparql(cxn, addInverse)
     reftrackInst.reftrackParticipantsAndDependents(cxn)
 
     val PartRtRes = SparqlHelper.MinimalPartRefTrackTest(cxn)

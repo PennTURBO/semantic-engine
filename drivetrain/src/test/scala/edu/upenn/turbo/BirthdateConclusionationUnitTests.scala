@@ -46,7 +46,7 @@ class BirthdateConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter
                   turbo:TURBO_0006500 'true'^^xsd:boolean .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         askForMK = """
           ASK 
@@ -82,9 +82,9 @@ class BirthdateConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter
     {
         birthdateconc.conclusionateBirthdate(cxn, conclusionationNamedGraph, .51, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + askForMK).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + askForMK).get)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + askForAnyDate).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + askForAnyDate).get)
     }
     
     test("multiple dob not conflicting")
@@ -99,7 +99,7 @@ class BirthdateConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter
                   obo:IAO_0000136 turbo:birth1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         birthdateconc.conclusionateBirthdate(cxn, conclusionationNamedGraph, .51, masterConclusionation, masterPlanspec, masterPlan)
         
@@ -114,9 +114,9 @@ class BirthdateConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter
             }
           }
           """
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + askForMK).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + askForMK).get)
     }
     
     test("conflicting dob does not meet threshold")
@@ -131,13 +131,13 @@ class BirthdateConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter
                   obo:IAO_0000136 turbo:birth1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         birthdateconc.conclusionateBirthdate(cxn, conclusionationNamedGraph, .99, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + askForMK).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + askForMK).get)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + askForAnyDate).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + askForAnyDate).get)
     }
     
     test("conflicting dob does meet threshold")
@@ -155,7 +155,7 @@ class BirthdateConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter
                   obo:IAO_0000136 turbo:birth1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         birthdateconc.conclusionateBirthdate(cxn, conclusionationNamedGraph, .51, masterConclusionation, masterPlanspec, masterPlan)
         
@@ -170,9 +170,9 @@ class BirthdateConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter
             }
           }
           """
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + askForMK).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + askForMK).get)
     }
     
     test("invalid threshold causes exception")
@@ -187,7 +187,7 @@ class BirthdateConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter
                       obo:IAO_0000136 turbo:birth1 .
               }}
               """
-            helper.updateSparql(cxn, sparqlPrefixes + insert)
+            update.updateSparql(cxn, sparqlPrefixes + insert)
             birthdateconc.conclusionateBirthdate(cxn, conclusionationNamedGraph, .01, masterConclusionation, masterPlanspec, masterPlan)
             assert(false)
         }

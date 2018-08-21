@@ -93,12 +93,12 @@ class DrivetrainVisualizations extends ProjectwideGlobals
         }  
         """
         
-        val concBiosexCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getConclusionatedBiosex, "biosexConcCount")(0).toString.split("\"")(1)
-        val mkBiosexCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getMissingKnowledgeBiosex, "mkCount")(0).toString.split("\"")(1)
-        val concBirthCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getConclusionatedBirths, "birthConcCount")(0).toString.split("\"")(1)
-        val mkBirthCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getMissingKnowledgeBirths, "mkCount")(0).toString.split("\"")(1)
-        val concBmiCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getConclusionatedBMI, "BmiConcCount")(0).toString.split("\"")(1)
-        val mkBmiCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getMissingKnowledgeBMI, "mkCount")(0).toString.split("\"")(1)
+        val concBiosexCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getConclusionatedBiosex, "biosexConcCount")(0).toString.split("\"")(1)
+        val mkBiosexCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getMissingKnowledgeBiosex, "mkCount")(0).toString.split("\"")(1)
+        val concBirthCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getConclusionatedBirths, "birthConcCount")(0).toString.split("\"")(1)
+        val mkBirthCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getMissingKnowledgeBirths, "mkCount")(0).toString.split("\"")(1)
+        val concBmiCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getConclusionatedBMI, "BmiConcCount")(0).toString.split("\"")(1)
+        val mkBmiCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getMissingKnowledgeBMI, "mkCount")(0).toString.split("\"")(1)
         
         val dataString: String = "\""+concBiosexCount+"\",\""+mkBiosexCount+"\",\""+concBirthCount+"\",\""+mkBirthCount+"\",\""+concBmiCount+"\",\""+mkBmiCount+"\""
         val colHeaders: String = "\"Biological Sex\",\"Date Of Birth\",\"BMI\""
@@ -130,8 +130,8 @@ class DrivetrainVisualizations extends ProjectwideGlobals
             }
         }  
         """
-        val diagnosisCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiagnoses, "diagCount")(0).toString.split("\"")(1)
-        val diagRegCountResult: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getDiagRegistryCount, Array("ICD9Count", "ICD10Count"))
+        val diagnosisCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiagnoses, "diagCount")(0).toString.split("\"")(1)
+        val diagRegCountResult: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getDiagRegistryCount, Array("ICD9Count", "ICD10Count"))
 
         val ICD9Count: String = diagRegCountResult(0)(0).toString.split("\"")(1)
         val ICD10Count: String = diagRegCountResult(0)(1).toString.split("\"")(1)
@@ -195,12 +195,12 @@ class DrivetrainVisualizations extends ProjectwideGlobals
         }}
         """
         
-        val reftrackedBbEncs: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countReftrackedBbEncs, "encCount")(0).toString.split("\"")(1)
-        val preReftrackedBbEncs: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countPreReftrackedBbEncs, "retiredEncCount")(0).toString.split("\"")(1)
-        val reftrackedHcEncs: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countReftrackedHcEncs, "encCount")(0).toString.split("\"")(1)
-        val preReftrackedHcEncs: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countPreReftrackedHcEncs, "retiredEncCount")(0).toString.split("\"")(1)
-        val reftrackedConsenterCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countReftrackedConsenters, "consenterCount")(0).toString.split("\"")(1)
-        val preReftrackedConsterCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countPreReftrackedConsenters, "retiredConsenterCount")(0).toString.split("\"")(1)
+        val reftrackedBbEncs: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countReftrackedBbEncs, "encCount")(0).toString.split("\"")(1)
+        val preReftrackedBbEncs: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countPreReftrackedBbEncs, "retiredEncCount")(0).toString.split("\"")(1)
+        val reftrackedHcEncs: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countReftrackedHcEncs, "encCount")(0).toString.split("\"")(1)
+        val preReftrackedHcEncs: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countPreReftrackedHcEncs, "retiredEncCount")(0).toString.split("\"")(1)
+        val reftrackedConsenterCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countReftrackedConsenters, "consenterCount")(0).toString.split("\"")(1)
+        val preReftrackedConsterCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countPreReftrackedConsenters, "retiredConsenterCount")(0).toString.split("\"")(1)
     
         val dataString: String = "\""+reftrackedBbEncs+"\",\""+preReftrackedBbEncs+"\",\""+reftrackedHcEncs+"\",\""+preReftrackedHcEncs+"\",\""+reftrackedConsenterCount+"\",\""+preReftrackedConsterCount+"\""
         val colHeaders: String = "\"Biobank Encounters\",\"Healthcare Encounters\",\"Biobank Consenters\""
@@ -261,11 +261,11 @@ class DrivetrainVisualizations extends ProjectwideGlobals
             }
         }
         """
-        val totalCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getTotalLof, "alleleCount")(0).toString.split("\"")(1)
-        val expandedCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getExpandedLof, "alleleCount")(0).toString.split("\"")(1)
-        val unexpandedCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getUnexpandedLof, "alleleCount")(0).toString.split("\"")(1)
-        val noMatchFoundCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getUnexpandedDueToNoMatch, "alleleCount")(0).toString.split("\"")(1)
-        val dataFormatCount: String = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getUnexpandedDueToDataFormat, "alleleCount")(0).toString.split("\"")(1)
+        val totalCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getTotalLof, "alleleCount")(0).toString.split("\"")(1)
+        val expandedCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getExpandedLof, "alleleCount")(0).toString.split("\"")(1)
+        val unexpandedCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getUnexpandedLof, "alleleCount")(0).toString.split("\"")(1)
+        val noMatchFoundCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getUnexpandedDueToNoMatch, "alleleCount")(0).toString.split("\"")(1)
+        val dataFormatCount: String = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getUnexpandedDueToDataFormat, "alleleCount")(0).toString.split("\"")(1)
         
         val dataString: String = "\""+totalCount+"\",\""+expandedCount+"\",\""+unexpandedCount+"\",\""+noMatchFoundCount+"\",\""+dataFormatCount+"\""
         val headers: String = "\"Total LOF rows received\",\"Total expanded\",\"Total unexpanded\",\"Unexpanded due to No Match\",\"Unexpanded due to Data Format Error\""

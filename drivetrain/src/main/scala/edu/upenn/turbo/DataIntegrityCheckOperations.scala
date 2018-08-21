@@ -18,7 +18,7 @@ class DataIntegrityCheckOperations extends ProjectwideGlobals
     def runSparqlCheck (cxn: RepositoryConnection, check: String, variables: ArrayBuffer[String], stage: String, explanation: String, ruleNumber: Int = 1): Boolean =
     {
         //logger.info("checking for result")
-        val result: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check, variables)
+        val result: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check, variables)
         //logger.info("obtained result from check query")
         if (checkResultForError(result, ruleNumber)) 
         {

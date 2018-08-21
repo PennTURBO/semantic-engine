@@ -19,6 +19,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
   val medmap: MedicationMapper = new MedicationMapper()
   val benchmark: DrivetrainAutomatedBenchmarking = new DrivetrainAutomatedBenchmarking()
   val visualize: DrivetrainVisualizations = new DrivetrainVisualizations()
+  val ontLoad: OntologyLoader = new OntologyLoader
+  val reasoner: ReasoningManager = new ReasoningManager
   //val future: Futures = new Futures()
   
   //globally available Conclusionation Named Graph IRI
@@ -69,6 +71,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                           {
                               runDiagnosisMapping(cxn)
                               runMedicationMapping(cxn)
+                              runInferenceWithAddedOntologies(cxn)
                           }
                       }
                   }
@@ -98,9 +101,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "diagmap") runDiagnosisMapping(cxn)
               else if (args(0) == "medmap") runMedicationMapping(cxn)
               else if (args(0) == "i2i2c2c") runI2i2c2cMapping(cxn, args)
-              else if (args(0) == "changeReasoningLevel" && args.size > 1) setReasoningLevel(cxn, args(1))
+              else if (args(0) == "reasoner") runInferenceWithAddedOntologies(cxn)
               else if (args(0) == "loadRepo") helper.loadDataFromFile(cxn, args(1), RDFFormat.TURTLE)
-              else if (args(0) == "loadTurboOntology") helper.addOntologyFromUrl(cxn)
+              else if (args(0) == "loadTurboOntology") ontLoad.addOntologyFromUrl(cxn)
               else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
@@ -235,20 +238,29 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runDiagnosisMapping(cxn: RepositoryConnection)
   {
-      if (loadDiseaseOntologies == "true") diagmap.addDiseaseOntologies(cxn)
+      if (loadDiseaseOntologies == "true")
+      {
+          ontLoad.addDiseaseOntologies(cxn)
+          diagmap.addDiseaseOntologies(cxn)
+      }
       logger.info("diagnosis mapping currently deprecated")
       //diagmap.performDiagnosisMapping(cxn)
   }
   
   def runMedicationMapping(cxn: RepositoryConnection)
   {
-      if (loadDrugOntologies == "true") medmap.addDrugOntologies(cxn)
+      if (loadDrugOntologies == "true") ontLoad.addDrugOntologies(cxn)
       medmap.runMedicationMapping(cxn)
   }
   
-  def setReasoningLevel(cxn: RepositoryConnection, level: String)
+  def runInferenceWithAddedOntologies(cxn: RepositoryConnection)
   {
-      helper.changeReasoningLevelAndReinferRepository(cxn, level)
+      reasoner.changeReasoningLevel(cxn, "rdfsplus-optimized")
+      reasoner.reinferRepository(cxn)
+      reasoner.changeReasoningLevel(cxn, "empty")
+      reasoner.reinferRepository(cxn)
+      
+      ontLoad.addMiscOntologies(cxn)
   }
   
   def runI2i2c2cMapping(cxn: RepositoryConnection, args: Array[String])

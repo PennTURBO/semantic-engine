@@ -185,7 +185,7 @@ class BirthdateConclusionator extends ProjectwideGlobals
           }
         """
        //println(insert1)    
-       helper.updateSparql(cxn, sparqlPrefixes + insert1)
+       update.updateSparql(cxn, sparqlPrefixes + insert1)
        
        val addDatumsAsEvidence: String = """
            INSERT 
@@ -230,7 +230,7 @@ class BirthdateConclusionator extends ProjectwideGlobals
            }  
        """
        //println(addDatumsAsEvidence)
-       helper.updateSparql(cxn, sparqlPrefixes + addDatumsAsEvidence)
+       update.updateSparql(cxn, sparqlPrefixes + addDatumsAsEvidence)
     }
     
     /**
@@ -253,6 +253,6 @@ class BirthdateConclusionator extends ProjectwideGlobals
           }}
           ORDER BY ?birth
           """   
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + dataRetrieve, ArrayBuffer("birth", "dateLit"))
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + dataRetrieve, ArrayBuffer("birth", "dateLit"))
     }
 }

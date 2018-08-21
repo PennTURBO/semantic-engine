@@ -198,7 +198,7 @@ class BiosexConclusionator extends ProjectwideGlobals
           }
         """
        //println(insert1)
-       helper.updateSparql(cxn, sparqlPrefixes + insert1)
+       update.updateSparql(cxn, sparqlPrefixes + insert1)
        
        val addDatumsAsEvidence: String = """
            INSERT 
@@ -238,7 +238,7 @@ class BiosexConclusionator extends ProjectwideGlobals
            }  
        """
        //println(addDatumsAsEvidence)
-       helper.updateSparql(cxn, sparqlPrefixes + addDatumsAsEvidence)
+       update.updateSparql(cxn, sparqlPrefixes + addDatumsAsEvidence)
     }
     
     /**
@@ -264,6 +264,6 @@ class BiosexConclusionator extends ProjectwideGlobals
           }}
           ORDER BY ?biosex
           """   
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + dataRetrieve, ArrayBuffer("biosex", "gidType"))
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + dataRetrieve, ArrayBuffer("biosex", "gidType"))
     }
 }

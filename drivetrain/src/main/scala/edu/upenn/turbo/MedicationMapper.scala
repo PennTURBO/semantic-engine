@@ -22,6 +22,7 @@ import org.eclipse.rdf4j.model.ValueFactory
 class MedicationMapper extends ProjectwideGlobals
 {   
     val connect: ConnectToGraphDB = new ConnectToGraphDB
+    val ontLoad: OntologyLoader = new OntologyLoader
     
     def runMedicationMapping(cxn: RepositoryConnection): Boolean =
     {
@@ -806,40 +807,6 @@ class MedicationMapper extends ProjectwideGlobals
                  ?prescript turbo:TURBO_0006512 ?ordername .
              }         
          """
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getInfo, ArrayBuffer("prescript", "ordername"))
-    }
-    
-    def addDrugOntologies(cxn: RepositoryConnection)
-    {
-        //load chebi lite
-        logger.info("loading chebi-lite...")
-        helper.addOntologyFromUrl(cxn, "ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi_lite.owl", 
-                "http://www.itmat.upenn.edu/biobank/drugOntologies")
-        logger.info("chebi-lite loaded.")
-        //load dron rxnorm
-        logger.info("loading dron-rxnorm...")
-        helper.addOntologyFromUrl(cxn, "https://bitbucket.org/uamsdbmi/dron/raw/6bcc56a003c6c4db6ffbcbca04e10d2712fadfd8/dron-rxnorm.owl", 
-                "http://www.itmat.upenn.edu/biobank/drugOntologies")
-        logger.info("dron-rxnorm loaded.")
-        //load dron-chebi
-        logger.info("loading dron-chebi...")
-        helper.addOntologyFromUrl(cxn, "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-chebi.owl", 
-                "http://www.itmat.upenn.edu/biobank/drugOntologies")
-        logger.info("dron-chebi loaded.")
-        //load dron-hand
-        logger.info("loading dron-hand...")
-        helper.addOntologyFromUrl(cxn, "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-hand.owl", 
-                "http://www.itmat.upenn.edu/biobank/drugOntologies")
-        logger.info("dron-hand loaded.")
-        //load dron-upper
-        logger.info("loading dron-upper...")
-        helper.addOntologyFromUrl(cxn, "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl", 
-                "http://www.itmat.upenn.edu/biobank/drugOntologies")
-        logger.info("dron-upper loaded.")
-        //load dron-ingredient
-        logger.info("loading dron-ingredient...")
-        helper.addOntologyFromUrl(cxn, "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ingredient.owl", 
-                "http://www.itmat.upenn.edu/biobank/drugOntologies")
-        logger.info("dron-ingredient loaded.")
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getInfo, ArrayBuffer("prescript", "ordername"))
     }
 }

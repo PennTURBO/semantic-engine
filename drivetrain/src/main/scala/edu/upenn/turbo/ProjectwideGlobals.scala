@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory
 trait ProjectwideGlobals 
 {
     val helper: TurboMultiuseClass = new TurboMultiuseClass
+    val update: SparqlUpdater = new SparqlUpdater
     val logger = LoggerFactory.getLogger(getClass)
     
     //make sparqlPrefixes for use in all queries globally available

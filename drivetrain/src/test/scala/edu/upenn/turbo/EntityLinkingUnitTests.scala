@@ -216,7 +216,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
         		turbo:encdate4 turbo:TURBO_0006500 'true'^^xsd:boolean .
     		}}"""
         
-            helper.updateSparql(cxn, sparqlPrefixes + insert)
+            update.updateSparql(cxn, sparqlPrefixes + insert)
     }
     after
     {
@@ -267,7 +267,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
             turbo:joinPartCrid2 turbo:TURBO_0000302 turbo:joinHcEncCrid2 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         entLink.joinParticipantsAndHealthcareEncounters(cxn, entLink.getConsenterInfo(cxn))
         
@@ -338,21 +338,21 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
                 turbo:newEncID2 ?p ?o .
           }}
           """
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
         bool1 should be (true)
-        val bool2: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
+        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
         bool2 should be (true)
-        val bool3: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
+        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
         bool3 should be (true)
-        val bool4: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get
+        val bool4: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get
         bool4 should be (true)
-        val bool5: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask5).get
+        val bool5: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask5).get
         bool5 should be (false)
-        val bool6: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask6).get
+        val bool6: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask6).get
         bool6 should be (false)
-        val bool7: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask7).get
+        val bool7: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask7).get
         bool7 should be (false)
-        val bool8: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask8).get
+        val bool8: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask8).get
         bool8 should be (false)
     }
     
@@ -401,7 +401,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           turbo:joinPartCrid2 turbo:TURBO_0000302 turbo:joinBbCrid2 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
         
@@ -472,21 +472,21 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
                 turbo:newEncID2 ?p ?o .
           }}
           """
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
         bool1 should be (true)
-        val bool2: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
+        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
         bool2 should be (true)
-        val bool3: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
+        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
         bool3 should be (true)
-        val bool4: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get
+        val bool4: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get
         bool4 should be (true)
-        val bool5: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask5).get
+        val bool5: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask5).get
         bool5 should be (false)
-        val bool6: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask6).get
+        val bool6: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask6).get
         bool6 should be (false)
-        val bool7: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask7).get
+        val bool7: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask7).get
         bool7 should be (false)
-        val bool8: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask8).get
+        val bool8: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask8).get
         bool8 should be (false)
     }
     
@@ -514,7 +514,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }}
           """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         entLink.connectBMIToAdipose(cxn)
         
@@ -541,13 +541,13 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
               turbo:BMI4 obo:IAO_0000136 turbo:adipose1 .
           }}
           """
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
         bool1 should be (true)
-        val bool2: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
+        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
         bool2 should be (true)
-        val bool3: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
+        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
         bool3 should be (true)
-        val bool4: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get
+        val bool4: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get
         bool4 should be (true)  
     }
     
@@ -631,7 +631,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }
           }"""
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         entLink.joinParticipantsAndHealthcareEncounters(cxn, entLink.getConsenterInfo(cxn))
         
         val ask1: String = """
@@ -676,13 +676,13 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }
           """
         
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
         bool1 should be (true)
-        val bool2: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
+        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
         bool2 should be (true)
-        val bool3: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
+        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
         bool3 should be (false)
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
     }
     
     test("an additional hc enc with same reg diff symbol value")
@@ -765,7 +765,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }
           }"""
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         entLink.joinParticipantsAndHealthcareEncounters(cxn, entLink.getConsenterInfo(cxn))
         
         val ask1: String = """
@@ -810,13 +810,13 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }
           """
         
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
         bool1 should be (true)
-        val bool2: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
+        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
         bool2 should be (true)
-        val bool3: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
+        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
         bool3 should be (false)
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
     }
     
     test("an additional bb enc with different registry")
@@ -900,7 +900,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }
           }"""
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
         
         val ask1: String = """
@@ -945,13 +945,13 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }
           """
         
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
         bool1 should be (true)
-        val bool2: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
+        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
         bool2 should be (true)
-        val bool3: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
+        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
         bool3 should be (false)
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
     }
     
     test("an additional bb enc with sam reg diff symbol value")
@@ -1035,7 +1035,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }
           }"""
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
         
         val ask1: String = """
@@ -1080,12 +1080,12 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }
           """
         
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
         bool1 should be (true)
-        val bool2: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
+        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
         bool2 should be (true)
-        val bool3: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
+        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
         bool3 should be (false)
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
     }
 }

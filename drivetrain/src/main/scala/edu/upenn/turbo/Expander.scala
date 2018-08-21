@@ -137,7 +137,7 @@ class Expander extends ProjectwideGlobals
           }
           """    
         
-        helper.updateSparql(cxn, sparqlPrefixes + expand)
+        update.updateSparql(cxn, sparqlPrefixes + expand)
     }
     
     /**
@@ -225,7 +225,7 @@ class Expander extends ProjectwideGlobals
           }
           """    
         
-        helper.updateSparql(cxn, sparqlPrefixes + expand)
+        update.updateSparql(cxn, sparqlPrefixes + expand)
     }
     
     /**
@@ -388,7 +388,7 @@ class Expander extends ProjectwideGlobals
         }          
         """
                 
-        helper.updateSparql(cxn, sparqlPrefixes + participantExpansion)
+        update.updateSparql(cxn, sparqlPrefixes + participantExpansion)
     }
     
     /**
@@ -540,7 +540,7 @@ class Expander extends ProjectwideGlobals
         	}
         }          
         """
-        helper.updateSparql(cxn, sparqlPrefixes + participantExpansion)
+        update.updateSparql(cxn, sparqlPrefixes + participantExpansion)
     }
     
     /**
@@ -679,7 +679,7 @@ class Expander extends ProjectwideGlobals
             	}
             }"""
                 
-          helper.updateSparql(cxn, sparqlPrefixes + biobankEncounterExpansion)   
+          update.updateSparql(cxn, sparqlPrefixes + biobankEncounterExpansion)   
     }
     
     /**
@@ -914,7 +914,7 @@ class Expander extends ProjectwideGlobals
           	  }
             }"""
                 
-          helper.updateSparql(cxn, sparqlPrefixes + healthcareEncounterExpansion) 
+          update.updateSparql(cxn, sparqlPrefixes + healthcareEncounterExpansion) 
     }
     
     def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: IRI, lofGraphs: ArrayBuffer[String])
@@ -1064,7 +1064,7 @@ class Expander extends ProjectwideGlobals
               }
               """
             
-            helper.updateSparql(cxn, sparqlPrefixes + expandLOF)  
+            update.updateSparql(cxn, sparqlPrefixes + expandLOF)  
         }
     }
     
@@ -1096,7 +1096,7 @@ class Expander extends ProjectwideGlobals
               }
               """
             
-            helper.updateSparql(cxn, sparqlPrefixes + logError)    
+            update.updateSparql(cxn, sparqlPrefixes + logError)    
         }
     }
 }

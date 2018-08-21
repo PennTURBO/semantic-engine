@@ -320,8 +320,8 @@ class BMIConclusionator extends ProjectwideGlobals
          }
          """
        //println(insert1)
-       helper.updateSparql(cxn, sparqlPrefixes + insert1)
-       helper.updateSparql(cxn, sparqlPrefixes + insert2)
+       update.updateSparql(cxn, sparqlPrefixes + insert1)
+       update.updateSparql(cxn, sparqlPrefixes + insert2)
     }
     
     /**
@@ -404,7 +404,7 @@ class BMIConclusionator extends ProjectwideGlobals
               }
           }}
           """   
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + dataRetrieve, 
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + dataRetrieve, 
         ArrayBuffer("none", "BMILit1", "BMILit2", "dateVal", "bbBMI", "hcBMI", "dateVal", "bbEnc", "hcEnc", "adipose", "bbEncDate", "hcEncDate"))
     }
 }

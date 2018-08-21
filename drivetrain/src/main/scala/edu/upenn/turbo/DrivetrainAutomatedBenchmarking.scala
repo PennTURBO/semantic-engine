@@ -38,6 +38,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     val medmap: MedicationMapper = new MedicationMapper()
     val encReftrack: EncounterReferentTracker = new EncounterReferentTracker()
     val partReftrack: ParticipantReferentTracker = new ParticipantReferentTracker()
+    val ontload: OntologyLoader = new OntologyLoader()
     
     var conclusionationNamedGraph: IRI = null
     var tripCountInfo: String = ""
@@ -476,6 +477,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         if (loadDiseaseOntologies == "true")
         {
             val startLoadDiseaseOntologies =  System.nanoTime()
+            ontload.addDiseaseOntologies(cxn)
             diagmap.addDiseaseOntologies(cxn)
             val stopLoadDiseaseOntologies =  System.nanoTime()
             
@@ -497,7 +499,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         if (loadDrugOntologies == "true")
         {
             val startLoadMedOntologies = System.nanoTime()
-            medmap.addDrugOntologies(cxn)
+            ontload.addDrugOntologies(cxn)
             val stopLoadMedOntologies = System.nanoTime()
             
             writeCSV.println("Load Drug Ontologies," + ((stopLoadMedOntologies - startLoadMedOntologies)/1000000000.0).toString)
@@ -543,8 +545,8 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
                       filter (?g != pmbb:ontology)
                   }
                   """
-                 //logger.info("parsing number: " + helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "typecount")(0))
-                 writeTXT.println(labelList(index) + ": " + helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "typecount")(0).toString.split("\"")(1).toInt)
+                 //logger.info("parsing number: " + update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "typecount")(0))
+                 writeTXT.println(labelList(index) + ": " + update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "typecount")(0).toString.split("\"")(1).toInt)
             }
         }
         val stop = System.nanoTime()
@@ -562,8 +564,8 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
               ?s ?p ?o .
           }
           """
-         //logger.info("parsing number: " + helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "tripcount")(0))
-         tripCountInfo += "TriplesCount " + stage + ": " + helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, 
+         //logger.info("parsing number: " + update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "tripcount")(0))
+         tripCountInfo += "TriplesCount " + stage + ": " + update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, 
                  "tripcount")(0).split("\"")(1).toInt + System.lineSeparator()
         
         val stop = System.nanoTime()
@@ -603,11 +605,11 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
           """
         
         writeTXT.println()
-        writeTXT.println("Distinct Diagnosis Codes: " + helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getDistinctDiagCodes, "diagCodeCount")(0).split("\"")(1).toInt)
-        val diagRegResults: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getDiagRegistryCount, Array("ICD9Count", "ICD10Count"))
+        writeTXT.println("Distinct Diagnosis Codes: " + update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getDistinctDiagCodes, "diagCodeCount")(0).split("\"")(1).toInt)
+        val diagRegResults: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getDiagRegistryCount, Array("ICD9Count", "ICD10Count"))
         writeTXT.println("ICD9 Codes: " + diagRegResults(0)(0).toString.split("\"")(1).toInt)
         writeTXT.println("ICD10 Codes: " + diagRegResults(0)(1).toString.split("\"")(1).toInt)
-        writeTXT.println("Distinct Medication Codes: " + helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getDistinctMedCount, "medCount")(0).split("\"")(1).toInt)
+        writeTXT.println("Distinct Medication Codes: " + update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getDistinctMedCount, "medCount")(0).split("\"")(1).toInt)
         
         val stop = System.nanoTime()
         subtractFromTotal += (stop - start)/1000000000.0
@@ -639,8 +641,8 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
           }
           """
         
-        val expandedCount: Int = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getExpandedLOFInfo, "alleleCount")(0).split("\"")(1).toInt
-        val unexpandedCount: Int = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getUnexpandedLOFInfo, "alleleCount")(0).split("\"")(1).toInt
+        val expandedCount: Int = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getExpandedLOFInfo, "alleleCount")(0).split("\"")(1).toInt
+        val unexpandedCount: Int = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getUnexpandedLOFInfo, "alleleCount")(0).split("\"")(1).toInt
         
         writeTXT.println()
         writeTXT.println("Total rows of LOF data loaded: " + (expandedCount + unexpandedCount))

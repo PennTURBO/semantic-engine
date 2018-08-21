@@ -52,7 +52,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 turbo:TURBO_0000604 '1/15/1994' .
           turbo:part1 turbo:TURBO_0000605 '01-15-1994'^^xsd:date . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidParticipantBirthShortcuts(cxn, participantAsFrom) should be (true)
     }
     
@@ -63,7 +63,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 a turbo:TURBO_0000502 .
           turbo:part1 turbo:TURBO_0000604 '1/15/1994' . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidParticipantBirthShortcuts(cxn, participantAsFrom) should be (true)
     }
     
@@ -74,7 +74,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 a turbo:TURBO_0000502 .
           turbo:part1 turbo:TURBO_0000605 '01-15-1994'^^xsd:date . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidParticipantBirthShortcuts(cxn, participantAsFrom) should be (false)
     }
     
@@ -86,7 +86,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 turbo:TURBO_0000606 'F' .
           turbo:part1 turbo:TURBO_0000607 turbo:female . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidParticipantBiosexShortcuts(cxn, participantAsFrom) should be (true)
     }
     
@@ -97,7 +97,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 a turbo:TURBO_0000502 .
           turbo:part1 turbo:TURBO_0000606 'F' . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidParticipantBiosexShortcuts(cxn, participantAsFrom) should be (true)
     }
     
@@ -108,7 +108,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 a turbo:TURBO_0000502 .
           turbo:part1 turbo:TURBO_0000607 turbo:female . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidParticipantBiosexShortcuts(cxn, participantAsFrom) should be (false)
     }
     
@@ -120,7 +120,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 turbo:TURBO_0000614 turbo:someRaceURI .
           turbo:part1 turbo:TURBO_0000615 'white' . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidParticipantRaceShortcuts(cxn, participantAsFrom) should be (true)
     }
     
@@ -131,7 +131,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 a turbo:TURBO_0000502 .
           turbo:part1 turbo:TURBO_0000615 'black' . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidParticipantRaceShortcuts(cxn, participantAsFrom) should be (false)
     }
     
@@ -142,7 +142,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 a turbo:TURBO_0000502 .
           turbo:part1 turbo:TURBO_0000614 'asian' . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidParticipantRaceShortcuts(cxn, participantAsFrom) should be (false)
     }
     
@@ -157,7 +157,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part3 a turbo:TURBO_0000502 .
           turbo:part3 turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000133"^^xsd:anyURI . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkBiosexURIsAreValid(cxn, participantAsFrom) should be (true)
     }
     
@@ -170,7 +170,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part2 a turbo:TURBO_0000502 .
           turbo:part2 turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/not_a_gid"^^xsd:anyURI . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkBiosexURIsAreValid(cxn, participantAsFrom) should be (false)
     }
     
@@ -183,7 +183,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part2 a turbo:TURBO_0000502 .
           turbo:part2 turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000141"^^xsd:anyURI . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkBiosexURIsAreValid(cxn, participantAsFrom) should be (false)
     }
     
@@ -195,7 +195,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 turbo:TURBO_0000644 '1/15/1994' .
           turbo:enc1 turbo:TURBO_0000645 '01-15-1994'^^xsd:date . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidHealthcareEncounterDateShortcuts(cxn, healthcareAsFrom) should be (true)
     }
     
@@ -206,7 +206,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 a obo:OGMS_0000097 .
           turbo:enc1 turbo:TURBO_0000644 '1/15/1994' . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidHealthcareEncounterDateShortcuts(cxn, healthcareAsFrom) should be (true)
     }
     
@@ -217,7 +217,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 a obo:OGMS_0000097 .
           turbo:enc1 turbo:TURBO_0000645 '01-15-1994'^^xsd:date . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidHealthcareEncounterDateShortcuts(cxn, healthcareAsFrom) should be (false)
     }
     
@@ -229,7 +229,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 turbo:TURBO_0000624 '1/15/1994' .
           turbo:enc1 turbo:TURBO_0000625 '01-15-1994'^^xsd:date . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidBiobankEncounterDateShortcuts(cxn, biobankAsFrom) should be (true)
     }
     
@@ -240,7 +240,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 a turbo:TURBO_0000527 .
           turbo:enc1 turbo:TURBO_0000624 '1/15/1994' . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidBiobankEncounterDateShortcuts(cxn, biobankAsFrom) should be (true)
     }
     
@@ -251,7 +251,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 a turbo:TURBO_0000527 .
           turbo:enc1 turbo:TURBO_0000625 '01-15-1994'^^xsd:date . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidBiobankEncounterDateShortcuts(cxn, biobankAsFrom) should be (false)
     }
     
@@ -266,7 +266,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:diagnosis1 turbo:TURBO_0004602 "ICD9" .
           turbo:diagnosis1 turbo:TURBO_0004603 "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890" }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidEncounterDiagnosisShortcuts(cxn, healthcareGraph) should be (true)
     }
     
@@ -280,7 +280,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:diagnosis1 turbo:TURBO_0004601 "401.9" .
           turbo:diagnosis1 turbo:TURBO_0004603 "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890" }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidEncounterDiagnosisShortcuts(cxn, healthcareGraph) should be (false)
     }
     
@@ -294,7 +294,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:diagnosis1 turbo:TURBO_0004601 "401.9" .
           turbo:diagnosis1 turbo:TURBO_0004602 "ICD9" . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidEncounterDiagnosisShortcuts(cxn, healthcareGraph) should be (true)
     }
     
@@ -308,7 +308,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:diagnosis1 turbo:TURBO_0004603 "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890" .
           turbo:diagnosis1 turbo:TURBO_0004602 "ICD9" . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidEncounterDiagnosisShortcuts(cxn, healthcareGraph) should be (true)
     }
     
@@ -321,7 +321,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:diagnosis1 turbo:TURBO_0004602 "ICD9" .
           turbo:diagnosis1 turbo:TURBO_0004601 "401.9" . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidEncounterDiagnosisShortcuts(cxn, healthcareGraph) should be (false)
     }
     
@@ -336,7 +336,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
   		    turbo:prescription1 turbo:TURBO_0005601  '999' . 
   		    }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidEncounterPrescriptionShortcuts(cxn, healthcareGraph) should be (true)
     }
     
@@ -352,7 +352,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
   		    turbo:prescription1 turbo:TURBO_0005601  '999' . 
   		    }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidEncounterPrescriptionShortcuts(cxn, healthcareGraph) should be (true)
     }
     
@@ -367,7 +367,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
   		    # turbo:prescription1 turbo:TURBO_0005601  '999' . 
   		    }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidEncounterPrescriptionShortcuts(cxn, healthcareGraph) should be (false)
     }
     
@@ -380,7 +380,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
   		    turbo:prescription1 turbo:TURBO_0005601  '999' . 
   		    }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForValidEncounterPrescriptionShortcuts(cxn, healthcareGraph) should be (false)
     }
     
@@ -394,7 +394,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 turbo:TURBO_0000610 turbo:registry1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredParticipantShortcuts(cxn, participantGraph) should be (true)
     }
     
@@ -407,7 +407,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 turbo:TURBO_0000608 '1' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredParticipantShortcuts(cxn, participantGraph) should be (false)
     }
     
@@ -420,7 +420,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 turbo:TURBO_0000610 turbo:registry1 .
          }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredParticipantShortcuts(cxn, participantGraph) should be (false)
     }
     
@@ -433,7 +433,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:part1 turbo:TURBO_0000610 turbo:registry1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredParticipantShortcuts(cxn, participantGraph) should be (false)
     }
     
@@ -446,7 +446,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 turbo:TURBO_0000648 '1' .
           turbo:enc1 turbo:TURBO_0000650 'http://transformunify.org/ontologies/TURBO_0000440'^^xsd:anyURI .}}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredHealthcareEncounterShortcuts(cxn, healthcareAsFrom) should be (true)
     }
     
@@ -458,7 +458,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 turbo:TURBO_0000648 '1' .
           turbo:enc1 turbo:TURBO_0000650 'http://transformunify.org/ontologies/TURBO_0000440'^^xsd:anyURI .}}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredHealthcareEncounterShortcuts(cxn, healthcareAsFrom) should be (false)
     }
     
@@ -471,7 +471,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 turbo:TURBO_0000650 'http://transformunify.org/ontologies/TURBO_0000440'^^xsd:anyURI .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredHealthcareEncounterShortcuts(cxn, healthcareAsFrom) should be (false)
     }
      
@@ -483,7 +483,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 turbo:TURBO_0000643 'dataset1' .
           turbo:enc1 turbo:TURBO_0000648 '1' .}}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredHealthcareEncounterShortcuts(cxn, healthcareAsFrom) should be (false)
     }
     
@@ -505,7 +505,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredHealthcareEncounterShortcuts(cxn, healthcareAsFrom) should be (true)
     }
      
@@ -518,7 +518,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 turbo:TURBO_0000628 '1' .
           turbo:enc1 turbo:TURBO_0000630 "http://transformunify.org/ontologies/biobankRegistry"^^xsd:anyURI .}}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredBiobankEncounterShortcuts(cxn, biobankGraph) should be (true)
     }
     
@@ -530,7 +530,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 turbo:TURBO_0000623 'dataset1' .
           turbo:enc1 turbo:TURBO_0000628 '1' .}}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredBiobankEncounterShortcuts(cxn, biobankGraph) should be (false)
     }
     
@@ -542,7 +542,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 turbo:TURBO_0000628 '1' .
           turbo:enc1 turbo:TURBO_0000630 "http://transformunify.org/ontologies/biobankRegistry"^^xsd:anyURI .}}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredBiobankEncounterShortcuts(cxn, biobankGraph) should be (false)
     }
     
@@ -554,7 +554,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:enc1 turbo:TURBO_0000623 'dataset1' .
           turbo:enc1 turbo:TURBO_0000630 "http://transformunify.org/ontologies/biobankRegistry"^^xsd:anyURI . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForRequiredBiobankEncounterShortcuts(cxn, biobankGraph) should be (false)
     }
     
@@ -585,7 +585,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForUnexpectedClasses(cxn, healthcareGraph + biobankGraph + participantGraph) should be (true)
     }
     
@@ -599,7 +599,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForUnexpectedClasses(cxn, participantGraph) should be (false)
     }
     
@@ -616,7 +616,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForUnexpectedClasses(cxn, participantGraph + biobankGraph) should be (false)
     }
     
@@ -633,7 +633,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForUnexpectedClasses(cxn, participantGraph + healthcareGraph) should be (false)
     }
     
@@ -658,7 +658,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForUnexpectedPredicates(cxn, participantGraph + biobankGraph + healthcareGraph) should be (true)
     }
     
@@ -685,7 +685,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForUnexpectedPredicates(cxn, participantGraph + biobankGraph + healthcareGraph) should be (false)
     }
     
@@ -706,7 +706,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForUnexpectedPredicates(cxn,  participantGraph + biobankGraph) should be (false)
     }
     
@@ -727,7 +727,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForUnexpectedPredicates(cxn, participantGraph + healthcareGraph) should be (false)
     }
     
@@ -753,7 +753,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkAllSubjectsHaveAType(cxn, participantGraph + biobankGraph + healthcareGraph) should be (true)
     }
     
@@ -778,7 +778,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkAllSubjectsHaveAType(cxn, participantGraph + biobankGraph + healthcareGraph) should be (false)
     }
     
@@ -797,7 +797,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkAllSubjectsHaveAType(cxn, participantGraph + biobankGraph) should be (false)
     }
     
@@ -816,7 +816,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkAllSubjectsHaveAType(cxn, participantGraph + healthcareGraph) should be (false)
     }
     
@@ -841,7 +841,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkAllObjectsAreLiterals(cxn, participantGraph + biobankGraph + healthcareGraph) should be (true)
     }
     
@@ -856,7 +856,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkAllObjectsAreLiterals(cxn, participantGraph) should be (false)
     }
     
@@ -876,7 +876,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkAllObjectsAreLiterals(cxn, participantGraph + healthcareGraph) should be (false)
     }
     
@@ -896,7 +896,7 @@ class PreExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with 
           }
                }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkAllObjectsAreLiterals(cxn, participantGraph + biobankGraph) should be (false)
     }
 }

@@ -76,7 +76,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                 turbo:part2 turbo:TURBO_0006500 'true'^^xsd:boolean .
              }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         partreftrack.reftrackParticipants(cxn)
         
         val check1: String = """
@@ -92,9 +92,9 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         check2results.size should be (1)
     }
     
@@ -149,7 +149,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                 turbo:part2 turbo:TURBO_0006500 'true'^^xsd:boolean .
              }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         partreftrack.reftrackParticipants(cxn)
         
         val check1: String = """
@@ -171,11 +171,11 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                  ?s graphBuilder:willBeCombinedWith ?o .
                  }
           """
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
-        val bool2: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check2).get
+        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check2).get
         bool2 should be (true)
-        val check3results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check3, Array("s", "o"))
+        val check3results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check3, Array("s", "o"))
         check3results.size should be (2)
     }
     
@@ -212,7 +212,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                 turbo:patientRegID2 a turbo:TURBO_0000506 .
              }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         partreftrack.reftrackParticipants(cxn)
         
         val check1: String = """
@@ -231,8 +231,8 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                  ?s graphBuilder:willBeCombinedWith ?o .
                  }
           """
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
-        val check2results: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val check2results: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check2, Array("s", "o"))
         bool1 should be (true)
         check2results.size should be (2)
     }
@@ -285,7 +285,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                     turbo:part2 graphBuilder:placeholderDemotionType turbo:TURBO_0000902 .
              }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         helper.completeReftrackProcess(cxn)
         
         val check1: String = """
@@ -341,28 +341,28 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
         """
         
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
         
-        val bool5: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check2).get
+        val bool5: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check2).get
         bool5 should be (true)
         
-        val bool6: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check3).get
+        val bool6: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check3).get
         bool6 should be (true)
         
-        val bool7: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + datasetStuff).get
+        val bool7: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + datasetStuff).get
         bool7 should be (true)
         
         val noMoreGraphBuilder1: String = """
           ASK { ?subject graphBuilder:willBeCombinedWith ?object . }
           """
-        val bool2: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + noMoreGraphBuilder1).get
+        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + noMoreGraphBuilder1).get
         bool2 should be (false)
         
         val noMoreGraphBuilder2: String = """
           ASK { ?subject graphBuilder:placeholderDemotionType ?object . }
           """
-        val bool3: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + noMoreGraphBuilder2).get
+        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + noMoreGraphBuilder2).get
         bool3 should be (false)
     }
     
@@ -423,7 +423,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                 }
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         partreftrack.reftrackParticipantDependents(cxn)
         
         val check1: String = """
@@ -447,7 +447,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
     }
     
@@ -477,7 +477,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                 }
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         partreftrack.reftrackSecondaryParticipantDependents(cxn)
         
         val check1: String = """
@@ -499,7 +499,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
     }
     
@@ -531,7 +531,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                 }
              }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         partreftrack.reftrackSecondaryParticipantDependents(cxn)
         
         val check1: String = """
@@ -544,7 +544,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
     }
   
@@ -606,7 +606,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                 turbo:instantiation a turbo:TURBO_0000522 .        
              }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insertString)
+        update.updateSparql(cxn, sparqlPrefixes + insertString)
         partreftrack.reftrackParticipants(cxn)
         
         val check1: String = """
@@ -623,7 +623,7 @@ class ParticipantReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAf
                  }
           """
         //helper.printAllInDatabase(cxn)
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
     }
 }

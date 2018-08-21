@@ -161,7 +161,7 @@ class ParticipantReferentTracker extends ProjectwideGlobals
             }}  
         """
                 
-        helper.updateSparql(cxn, sparqlPrefixes + reftrackDependents)    
+        update.updateSparql(cxn, sparqlPrefixes + reftrackDependents)    
     }
     
     /**
@@ -219,7 +219,7 @@ class ParticipantReferentTracker extends ProjectwideGlobals
               BIND (IF (bound(?consenterRegDen2), ?consenterRegDen2, uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("reftracked consenter reg den", str(?consenterCrid)))))) AS ?consenterRegDenDestination)
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + update1)
+        update.updateSparql(cxn, sparqlPrefixes + update1)
     }
     
     /**
@@ -252,7 +252,7 @@ class ParticipantReferentTracker extends ProjectwideGlobals
           ORDER BY ?pscLit ?patientRegId
           """
         
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + nonReftrackedConsenters, ArrayBuffer("participant", "pscLit", "patientRegId"))
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + nonReftrackedConsenters, ArrayBuffer("participant", "pscLit", "patientRegId"))
     }
     
     /**
@@ -280,6 +280,6 @@ class ParticipantReferentTracker extends ProjectwideGlobals
           }
           """
         
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + reftrackedConsenters, ArrayBuffer("participant", "pscLit", "patientRegId"))
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + reftrackedConsenters, ArrayBuffer("participant", "pscLit", "patientRegId"))
     }
 }

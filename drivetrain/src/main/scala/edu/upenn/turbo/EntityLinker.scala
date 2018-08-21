@@ -65,7 +65,7 @@ class EntityLinker extends ProjectwideGlobals
           		       turbo:TURBO_0006500 'true'^^xsd:boolean .
             }}
         """
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbConsInfo, ArrayBuffer("part", "pilv", "bbConsRegId"))
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbConsInfo, ArrayBuffer("part", "pilv", "bbConsRegId"))
     }
     
     /**
@@ -134,7 +134,7 @@ class EntityLinker extends ProjectwideGlobals
             	BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("new hc puirole", str(?enc))))) AS ?puirole)
         	}
       """
-      helper.updateSparql(cxn, sparqlPrefixes + completeHealthcareEncounterJoin)
+      update.updateSparql(cxn, sparqlPrefixes + completeHealthcareEncounterJoin)
       logger.info("join complete")
     }
     
@@ -205,7 +205,7 @@ class EntityLinker extends ProjectwideGlobals
             	BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("new bb puirole", str(?enc))))) AS ?puirole)
         	}
       """
-      helper.updateSparql(cxn, sparqlPrefixes + completeBiobankEncounterJoin)
+      update.updateSparql(cxn, sparqlPrefixes + completeBiobankEncounterJoin)
       logger.info("join complete")
       
     }
@@ -242,7 +242,7 @@ class EntityLinker extends ProjectwideGlobals
                 ?BbConsRegId a turbo:TURBO_0000506 .
             }}
         """
-      helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getJoinInfo, ArrayBuffer("eilv", "hcEncRegId", "pilv", "BbConsRegId", "entLinkPartCrid", "entLinkHcCrid"))
+      update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getJoinInfo, ArrayBuffer("eilv", "hcEncRegId", "pilv", "BbConsRegId", "entLinkPartCrid", "entLinkHcCrid"))
     }
     
     /**
@@ -275,7 +275,7 @@ class EntityLinker extends ProjectwideGlobals
           		}
             }}
         """
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getHcEncInfo, ArrayBuffer("enc", "eilv", "hcEncRegId"))
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getHcEncInfo, ArrayBuffer("enc", "eilv", "hcEncRegId"))
     }
     
     /**
@@ -310,7 +310,7 @@ class EntityLinker extends ProjectwideGlobals
                 ?bbConsRegId a turbo:TURBO_0000506 .
             }}
         """
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getJoinInfo, ArrayBuffer("eilv", "bbEncRegId", "pilv", "bbConsRegId", "entLinkPartCrid", "entLinkBbCrid"))
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getJoinInfo, ArrayBuffer("eilv", "bbEncRegId", "pilv", "bbConsRegId", "entLinkPartCrid", "entLinkBbCrid"))
     }
     
     /**
@@ -344,7 +344,7 @@ class EntityLinker extends ProjectwideGlobals
           		}"""
             getBbEncInfo += "}}"
       
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbEncInfo, ArrayBuffer("enc", "eilv", "bbEncRegId"))
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbEncInfo, ArrayBuffer("enc", "eilv", "bbEncRegId"))
     }
     
     def getBiobankEncounterWithConsenterInfo(cxn: RepositoryConnection): ArrayBuffer[ArrayBuffer[Value]] =
@@ -371,7 +371,7 @@ class EntityLinker extends ProjectwideGlobals
       		    ?consenter turbo:TURBO_0006500 'true'^^xsd:boolean .
             }}"""
       
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbEncInfo, ArrayBuffer("enc", "eilv", "bbEncRegId"))
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbEncInfo, ArrayBuffer("enc", "eilv", "bbEncRegId"))
     }
     
     /**
@@ -409,7 +409,7 @@ class EntityLinker extends ProjectwideGlobals
             }
         }"""
          
-       helper.updateSparql(cxn, sparqlPrefixes + attachBMIToAdipose)
+       update.updateSparql(cxn, sparqlPrefixes + attachBMIToAdipose)
     }
     
     def getLossOfFunctionJoinData(cxn: RepositoryConnection, lofGraph: String): ArrayBuffer[ArrayBuffer[Value]] =
@@ -432,7 +432,7 @@ class EntityLinker extends ProjectwideGlobals
                 }
             }  
         """
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, ArrayBuffer("allele", "encLit", "encReg"))
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, ArrayBuffer("allele", "encLit", "encReg"))
     }
     
     def convertLOFRegStringToRegURI(cxn: RepositoryConnection, lofGraphs: ArrayBuffer[String])
@@ -463,7 +463,7 @@ class EntityLinker extends ProjectwideGlobals
                     Bind (uri(?bbRegString) AS ?bbRegURI)  
                 }  
                 """
-            helper.updateSparql(cxn, sparqlPrefixes + makeURIs)
+            update.updateSparql(cxn, sparqlPrefixes + makeURIs)
         }
     }
 }

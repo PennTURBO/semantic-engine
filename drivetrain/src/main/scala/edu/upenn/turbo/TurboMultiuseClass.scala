@@ -53,163 +53,7 @@ class TurboMultiuseClass
 			PREFIX sys: <http://www.ontotext.com/owlim/system#>
 			"""
     val logger = LoggerFactory.getLogger(getClass)
-    
-    /**
-     * Overloaded method which is Drivetrain's main point of access to Graph DB for SPARQL queries. Used for when only one variable is requested
-     * to be returned in the result set.
-     * 
-     * @return ArrayBuffer[String] representing the results of the query
-     */
-      def querySparqlAndUnpackTuple(cxn: RepositoryConnection, query: String, variable: String): ArrayBuffer[String] =
-      {
-          val result: Option[TupleQueryResult] = querySparql(cxn, query)
-          val unpackedResult: ArrayBuffer[String] = unpackTuple(result.get, variable)
-          //close tupleQueryResult to free resources
-          result.get.close()
-          unpackedResult
-      }
-      
-    /**
-     * Overloaded method which is Drivetrain's main point of access to Graph DB for SPARQL queries. Used for when multiple variables are requested
-     * to be returned in the result set. Overloaded to accept Array[String] as list of variables.
-     * 
-     * @return ArrayBuffer[ArrayBuffer[Value]] representing the results of the query 
-     */
-      def querySparqlAndUnpackTuple(cxn: RepositoryConnection, query: String, variable: Array[String]): ArrayBuffer[ArrayBuffer[Value]] =
-      {
-          val result: Option[TupleQueryResult] = querySparql(cxn, query)
-          val unpackedResult: ArrayBuffer[ArrayBuffer[Value]] = unpackTuple(result.get, variable)
-          //close tupleQueryResult to free resources
-          result.get.close()
-          unpackedResult
-      }
-      
-      /**
-     * Overloaded method which is Drivetrain's main point of access to Graph DB for SPARQL queries. Used for when multiple variables are requested
-     * to be returned in the result set. Overloaded to accept ArrayBuffer[String] as list of variables.
-     * 
-     * @return ArrayBuffer[ArrayBuffer[Value]] representing the results of the query 
-     */
-      def querySparqlAndUnpackTuple(cxn: RepositoryConnection, query: String, variable: ArrayBuffer[String]): ArrayBuffer[ArrayBuffer[Value]] =
-      {
-          val result: Option[TupleQueryResult] = querySparql(cxn, query)
-          val unpackedResult: ArrayBuffer[ArrayBuffer[Value]] = unpackTuple(result.get, variable)
-          //close tupleQueryResult to free resources
-          result.get.close()
-          unpackedResult
-      }
-      
-      /**
-       * QuerySparql() is a generic SPARQL query method which uses the RepositoryConnection object
-       * to connect with a Graph database. It can accept any String that uses proper SPARQL syntax.
-       * 
-       * @return a TupleQueryResult object with the results of the SPARQL query.
-       */
-      def querySparql(cxn: RepositoryConnection, query: String): Option[TupleQueryResult] =
-      {
-          var result: Option[TupleQueryResult] = None : Option[TupleQueryResult]
-          try 
-          {
-              //send input String to Blazegraph SPARQL engine via the RepositoryConnection object
-              val tupleQuery: TupleQuery = cxn.prepareTupleQuery(QueryLanguage.SPARQL, query)
-              //convert tupleQuery into TupleQueryResult using built-in evaluate() function
-              result = Some(tupleQuery.evaluate())
-              result
-          }
-          catch
-          {
-              case e: OpenRDFException => logger.warn(e.toString)
-              None
-          }
-      }
-      /**
-       * QuerySparqlBoolean() method to handle ASK queries which should return a Boolean rather than a resultset.
-       * 
-       * @return a Option[Boolean] object with the results of the SPARQL query. If query is invalid, None is returned.
-       */
-      def querySparqlBoolean(cxn: RepositoryConnection, query: String): Option[Boolean] =
-      {  
-          try
-          {
-              val boolQueryResult: BooleanQuery = cxn.prepareBooleanQuery(QueryLanguage.SPARQL, query)
-              Some(boolQueryResult.evaluate())
-          }
-          catch
-          {
-              case e: OpenRDFException => logger.warn(e.toString)
-              None
-          }
-      }
-      
-      /**
-     * This method accepts a TupleQueryResult and converts it into a list. Each element in the list represents
-     * a value of the SPARQL variable for one of the results. 
-     * 
-     * @return A list of strings which represent the value of the given variable for one of the results
-     */
-    def unpackTuple(resultTuple: TupleQueryResult, variableToUnpack: String): ArrayBuffer[String] =
-    {
-        //Create empty list to be populated and returned
-        val resultList: ArrayBuffer[String] = new ArrayBuffer[String]
-        //For each result, convert it to a String and add it to the list
-        while (resultTuple.hasNext())
-        {
-            val bindingset: BindingSet = resultTuple.next()
-            var result: String = removeQuotesFromString(bindingset.getValue(variableToUnpack).toString)
-            resultList += result
-        }
-        //Return list of results as Strings
-        resultList
-    }
-    /**
-     * Overloaded UnpackTuple method to accept multiple variables. Variable input given as Array[String]
-     * 
-     * @return a list of lists of strings which represent the values of the given variable for one of the results
-     */
-    def unpackTuple(resultTuple: TupleQueryResult, variables: Array[String]): ArrayBuffer[ArrayBuffer[Value]] =
-    {
-        //Create empty list of lists to be populated and returned
-        val resultList: ArrayBuffer[ArrayBuffer[Value]] = new ArrayBuffer[ArrayBuffer[Value]]
-        //For each result, add it to the list. Note that this method does not convert to Strings but leaves results as Values
-        while (resultTuple.hasNext())
-        {
-            val oneResult: ArrayBuffer[Value] = new ArrayBuffer[Value]
-            val bindingset: BindingSet = resultTuple.next()
-            for (a <- 0 to variables.size - 1)
-            {
-                val result: Value = bindingset.getValue(variables(a))
-                oneResult += result
-            }
-            resultList += oneResult
-        }
-        //Return list of lists of Value objects
-        resultList
-    }
-    
-    /**
-     * Overloaded UnpackTuple method to accept multiple variables. Variable input given as ArrayBuffer[String]
-     * 
-     * @return a list of lists of strings which represent the values of the given variable for one of the results
-     */
-    def unpackTuple(resultTuple: TupleQueryResult, variables: ArrayBuffer[String]): ArrayBuffer[ArrayBuffer[Value]] =
-    {
-        //Create empty list of lists to be populated and returned
-        val resultList: ArrayBuffer[ArrayBuffer[Value]] = new ArrayBuffer[ArrayBuffer[Value]]
-        //For each result, add it to the list. Note that this method does not convert to Strings but leaves results as Values
-        while (resultTuple.hasNext())
-        {
-            val oneResult: ArrayBuffer[Value] = new ArrayBuffer[Value]
-            val bindingset: BindingSet = resultTuple.next()
-            for (a <- 0 to variables.size - 1)
-            {
-                val result: Value = bindingset.getValue(variables(a))
-                oneResult += result
-            }
-            resultList += oneResult
-        }
-        //Return list of lists of Value objects
-        resultList
-    }
+    val updater: SparqlUpdater = new SparqlUpdater
     
     /**
      * Deletes all triples in the entire database, including all named graphs.
@@ -230,24 +74,7 @@ class TurboMultiuseClass
       
          //Clear Graph seems to give better performance than deleting a triple pattern
          val deleteAll: String = "CLEAR GRAPH <" + namedGraph + ">"
-         updateSparql(cxn, deleteAll)
-     }
-    
-    /**
-     * The main point of access for Drivetrain's SPARQL-based updates. Updates are submitted to the method as a SPARQL String.
-     * Invalid SPARQL inputs will spawn an exception thrown by an RDF4J method.
-     */
-    def updateSparql(cxn: RepositoryConnection, update: String)
-     {
-         //logger.info("inside update sparql")
-         cxn.begin()
-         //logger.info("finished cxn begin")
-         val tupleUpdate = cxn.prepareUpdate(QueryLanguage.SPARQL, update)
-         //logger.info("finished prepare update")
-         tupleUpdate.execute()
-         //logger.info("finished execute")
-         cxn.commit()
-         //logger.info("changes committed")
+         updater.updateSparql(cxn, deleteAll)
      }
     
     /**
@@ -358,27 +185,6 @@ class TurboMultiuseClass
         datetimeStamp
     }
     
-    /**
-     * Returns input string if no quotes, otherwise removes quotes and returns input string without quotes. Only leading and trailing quotes
-     * are removed. Non-leading or trailing quotes in string will not be affected. Both leading and trailing quotation marks must be present
-     * on the string in order to trigger removal; just one or the other present will lead to the method returning the original input string with
-     * all original quotation marks.
-     * 
-     * @return a String containing the input string, minus leading and trailing quotation marks if they existed.
-     */
-    def removeQuotesFromString(input: String): String =
-    {
-        var result: String = input
-        if (result.length > 0)
-        {
-            if (result.charAt(0) == '"' && result.charAt(result.length-1) == '"')
-            {
-                result = result.substring(1, result.length-1)
-            }
-        }
-        result
-    }
-    
     def removeAngleBracketsFromString(input: String): String =
     {
         var result: String = input
@@ -410,7 +216,7 @@ class TurboMultiuseClass
             """
                ADD <"""+fromGraph+"""> TO <"""+toGraph+""">
             """
-        updateSparql(cxn, sparqlPrefixes + moveTriples)
+        updater.updateSparql(cxn, sparqlPrefixes + moveTriples)
     }
     
     /**
@@ -419,7 +225,7 @@ class TurboMultiuseClass
     def printAllInDatabase(cxn: RepositoryConnection)
     {
         val queryAll: String = "SELECT ?s ?p ?o WHERE {?s ?p ?o .}"
-        val results = querySparqlAndUnpackTuple(cxn, queryAll, Array("s","p","o"))
+        val results = updater.querySparqlAndUnpackTuple(cxn, queryAll, Array("s","p","o"))
         logger.info("Number of statements: " + results.size.toString)
         for (result <- results)
         {
@@ -437,7 +243,7 @@ class TurboMultiuseClass
     def printAllInNamedGraph(cxn: RepositoryConnection, namedGraph: String)
     {
         val queryAll: String = "SELECT ?s ?p ?o WHERE { GRAPH <" + namedGraph + "> {?s ?p ?o .}}"
-        val results = querySparqlAndUnpackTuple(cxn, queryAll, Array("s","p","o"))
+        val results = updater.querySparqlAndUnpackTuple(cxn, queryAll, Array("s","p","o"))
         logger.info("Number of statements: " + results.size.toString)
         for (result <- results)
         {
@@ -499,36 +305,8 @@ class TurboMultiuseClass
     def isThereDataInNamedGraph(cxn: RepositoryConnection, namedGraph: IRI): Boolean =
     {
         val sparql: String = "ASK {GRAPH <" + namedGraph + "> {?s ?p ?o .}}"
-        querySparqlBoolean(cxn, sparql).get
+        updater.querySparqlBoolean(cxn, sparql).get
     }
-
-  /**
-   * Adds an RDF.XML formatted set of triples (usually an ontology) received from a given URL to the specified named graph.
-   */
-  def addOntologyFromUrl(cxn: RepositoryConnection, 
-      ontology: String = "https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl", 
-      namedGraph: String = "http://www.itmat.upenn.edu/biobank/ontology") 
-  {
-      try
-      {
-          val f = cxn.getValueFactory
-          val OntoUrl = new URL(ontology)
-          val OntoGraphName = f.createIRI(namedGraph);
-      
-          val OntoBase = "http://transformunify.org/ontologies/"
-       
-          cxn.begin()
-          cxn.add(OntoUrl, OntoBase, RDFFormat.RDFXML, OntoGraphName)
-          cxn.commit()
-      }
-      catch
-      {
-          case f: ConnectException => logger.info("The ontology was not loaded. Please ensure that your URL in the properties file is correct and that the server is online.")
-          throw new RuntimeException ("A connection to the ontology could not be established.")
-          case e: RuntimeException => logger.info("The ontology was not loaded. Please ensure that your URL in the properties file is correct and that the server is online.")
-          throw new RuntimeException ("The ontology could not be accessed at the specified URL.")
-      }
-  }
   
   /**
    * Overloaded method to load triples from a file into the triplestore. Triples are loaded into default named graph.
@@ -597,7 +375,7 @@ class TurboMultiuseClass
         }
         """
             
-      updateSparql(cxn, sparqlPrefixes + insert)
+      updater.updateSparql(cxn, sparqlPrefixes + insert)
   }
   
   /**
@@ -622,7 +400,7 @@ class TurboMultiuseClass
           }
           """
         
-        val inverseList: ArrayBuffer[ArrayBuffer[Value]] = querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getInversePreds, ArrayBuffer("p", "inverse"))
+        val inverseList: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getInversePreds, ArrayBuffer("p", "inverse"))
         
         var inverseMap: HashMap[Value, Value] = new HashMap[Value, Value]
         var inversePredString: String = ""
@@ -649,7 +427,7 @@ class TurboMultiuseClass
           }
           """
               
-        val triplesList: ArrayBuffer[ArrayBuffer[Value]] = querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getAllTriples, ArrayBuffer("s", "p", "o"))
+        val triplesList: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getAllTriples, ArrayBuffer("s", "p", "o"))
         
         logger.info("Applying inverses to " + triplesList.size + " triples...")
         
@@ -676,36 +454,6 @@ class TurboMultiuseClass
         cxn.commit()
         
         logger.info("Finished applying inverses")
-        
-        /*val check1: String = """
-        insert 
-        {
-       	    graph <http://www.itmat.upenn.edu/biobank/inverses> {
-       	    ?o ?inverse ?s .
-       	 }
-        }
-        where {
-            graph ?g {
-                ?s ?p ?o .
-        	}
-        	# this minus is to make sure that we do not re-add an inverse that already exists in a named graph other than pmbb:inverses
-        	minus
-        	{
-        	    ?o ?inverse ?s .
-        	}
-    		graph pmbb:ontology
-    		{
-                ?p owl:inverseOf ?inverse .
-    		}
-        	FILTER (?g != pmbb:inverses)
-        	FILTER (?g != pmbb:ontology)
-    		  FILTER (?p != obo:IAO_0000136)
-    		  FILTER (?g != pmbb:ICD9Ontology)
-          FILTER (?g != pmbb:ICD10Ontology)
-          FILTER (?g != pmbb:mondoOntology)
-        }
-        """
-        updateSparql(cxn, sparqlPrefixes + check1)*/
     }
   
     /**
@@ -742,7 +490,7 @@ class TurboMultiuseClass
                }
            }
            """       
-          val result: ArrayBuffer[String] = querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getNodesToBeReftracked, "node")
+          val result: ArrayBuffer[String] = updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getNodesToBeReftracked, "node")
           var values: String = ""
           val resultSize = result.size
           val threshold: Integer = 1000
@@ -798,8 +546,8 @@ class TurboMultiuseClass
               BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/",md5(CONCAT("retired node", str(?originalNode),""""+randomUUID+"""")))) AS ?newRetiredNode)
             }
           """
-        updateSparql(cxn, sparqlPrefixes + completeReftrackProcess)
-        //querySparqlAndUnpackTuple(cxn, sparqlPrefixes + completeReftrackProcess, ArrayBuffer("originalNode", "reftrackedNode", "demotionType", "predicateForDelete1", 
+        updater.updateSparql(cxn, sparqlPrefixes + completeReftrackProcess)
+        //updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + completeReftrackProcess, ArrayBuffer("originalNode", "reftrackedNode", "demotionType", "predicateForDelete1", 
             //"objectForDelete", "predicateForCopy1", "objectForCopy", "subjectForCopy", "predicateForCopy2", "originalNodeString", "newRetiredNode"))
         //logger.info("received result")
     }
@@ -829,7 +577,7 @@ class TurboMultiuseClass
                }
            }
            """
-         updateSparql(cxn, sparqlPrefixes + fixNodesThatAreNotObjects)
+         updater.updateSparql(cxn, sparqlPrefixes + fixNodesThatAreNotObjects)
     }
     
     /**
@@ -849,7 +597,7 @@ class TurboMultiuseClass
                graphBuilder:tempSubj graphBuilder:tempPred ?node .
            }
            """
-         updateSparql(cxn, sparqlPrefixes + removeTemporaryPredicates)
+         updater.updateSparql(cxn, sparqlPrefixes + removeTemporaryPredicates)
          
          val removeGraphBuilder: String = """
            delete 
@@ -863,7 +611,7 @@ class TurboMultiuseClass
                ?s graphBuilder:placeholderDemotionType ?type .
            }
            """
-         updateSparql(cxn, sparqlPrefixes + removeGraphBuilder)
+         updater.updateSparql(cxn, sparqlPrefixes + removeGraphBuilder)
     }
     
     /**
@@ -914,7 +662,7 @@ class TurboMultiuseClass
           }
           """
         
-        updateSparql(cxn, sparqlPrefixes + addLabelsToEverything)
+        updater.updateSparql(cxn, sparqlPrefixes + addLabelsToEverything)
     }
     
     /**
@@ -969,7 +717,7 @@ class TurboMultiuseClass
           }
           """
         
-        updateSparql(cxn, sparqlPrefixes + update)
+        updater.updateSparql(cxn, sparqlPrefixes + update)
     }
     
     /**
@@ -1005,33 +753,7 @@ class TurboMultiuseClass
             filter (strStarts(str(?g), """"+graphsPrefix+""""))
         }"""
         
-        querySparqlAndUnpackTuple(cxn, getGraphs, "g")
-    }
-    
-    /**
-     * This is an attempt to programatically change the reasoning level of a repository. It has an optional boolean parameter
-     * to reinfer the repository. This functionality is not fully supported by Ontotext Graph DB and this method should be used
-     * with care.
-     */
-    def changeReasoningLevelAndReinferRepository(cxn: RepositoryConnection, newLevel: String, reinfer: Boolean = true)
-    {
-        if (newLevel != "empty" && newLevel != "rdfsplus-optimized" && newLevel != "owl-horst-optimized") logger.info("Reasoning level " + newLevel + " is not supported.")
-        else 
-        {
-            logger.info("Attempting to change reasoning level to " + newLevel)
-            val addRuleset: String = """ INSERT DATA {_:b sys:addRuleset """"+newLevel+"""" } """
-            val setDefaultRuleset: String = """ INSERT DATA {_:b sys:defaultRuleset """"+newLevel+"""" } """    
-            val reinferRepo: String = """ INSERT DATA {[] <http://www.ontotext.com/owlim/system#reinfer> []} """
-            updateSparql(cxn, sparqlPrefixes + addRuleset)
-            updateSparql(cxn, sparqlPrefixes + setDefaultRuleset)
-            
-            if (reinfer)
-            {
-                logger.info("Reinferring...")
-                updateSparql(cxn, sparqlPrefixes + reinferRepo) 
-            }
-            logger.info("Done.")
-        }
+        updater.querySparqlAndUnpackTuple(cxn, getGraphs, "g")
     }
     
     //These 2 globals are associated with the two methods below
@@ -1129,7 +851,7 @@ class TurboMultiuseClass
           """
             Select * FROM <http://www.ontotext.com/implicit> Where {?s ?p ?o .}
           """
-        val result: ArrayBuffer[ArrayBuffer[Value]] = querySparqlAndUnpackTuple(cxn, select, Array("s", "p", "o"))
+        val result: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, select, Array("s", "p", "o"))
         for (row <- result)
         {
             model.add(row(0).asInstanceOf[IRI], row(1).asInstanceOf[IRI], row(2).asInstanceOf[IRI])

@@ -15,6 +15,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
     var repository: Repository = null
     val clearDatabaseAfterRun: Boolean = true
     val postcheck = new SparqlPostExpansionChecks
+    val ontLoad: OntologyLoader = new OntologyLoader
     
     before
     {
@@ -32,7 +33,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
     test("check for invalid classes - one valid class")
     {
         helper.deleteAllTriplesInDatabase(cxn)
-        helper.addOntologyFromUrl(cxn, ontologyURL)
+        ontLoad.addOntologyFromUrl(cxn, ontologyURL)
         
         val insert: String = """
           INSERT DATA 
@@ -43,14 +44,14 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForInvalidClasses(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
     test("check for invalid classes - one invalid class")
     {
         helper.deleteAllTriplesInDatabase(cxn)
-        helper.addOntologyFromUrl(cxn, ontologyURL)
+        ontLoad.addOntologyFromUrl(cxn, ontologyURL)
         
         val insert: String = """
           INSERT DATA 
@@ -61,7 +62,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForInvalidClasses(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -84,7 +85,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForUnidentifiedRegistryIDs(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -103,7 +104,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForUnidentifiedRegistryIDs(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -118,7 +119,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForUnparseableOrUntaggedDates(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -133,7 +134,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForUnparseableOrUntaggedDates(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -148,7 +149,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForUnparseableOrUntaggedDates(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -163,7 +164,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkThatDateLiteralsHaveValidDatePredicates(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -178,7 +179,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkThatDateLiteralsHaveValidDatePredicates(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -194,7 +195,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForInvalidPredicates(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -209,7 +210,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForInvalidPredicates(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -224,7 +225,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForSingleInstantiationProcess(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "testing") should be (true)
     }
     
@@ -240,7 +241,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForSingleInstantiationProcess(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "testing") should be (false)
     }
     
@@ -257,7 +258,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkAllInstantiationProcessesAreAttachedToDatasets(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -274,7 +275,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkAllInstantiationProcessesAreAttachedToDatasets(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -290,7 +291,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForSubclassRelationships(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -306,7 +307,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkForSubclassRelationships(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -321,7 +322,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkObjectPropertiesDoNotHaveLiteralObjects(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -336,7 +337,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkObjectPropertiesDoNotHaveLiteralObjects(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -351,7 +352,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkDatatypePropertiesDoNotHaveUriObjects(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
 
@@ -366,7 +367,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkDatatypePropertiesDoNotHaveUriObjects(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -407,7 +408,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkParticipantsForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -434,7 +435,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkParticipantsForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -473,7 +474,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkParticipantsForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -510,7 +511,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkParticipantsForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
         
@@ -549,7 +550,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkParticipantsForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }    
     
@@ -588,7 +589,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkParticipantsForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -627,7 +628,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkParticipantsForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -683,7 +684,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkHealthcareEncountersForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -723,7 +724,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkHealthcareEncountersForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -775,7 +776,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkHealthcareEncountersForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -811,7 +812,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkBiobankEncountersForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -830,7 +831,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkBiobankEncountersForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -862,7 +863,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkBiobankEncountersForRequiredDependents(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -877,7 +878,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkAllDatesAreReasonable(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -892,7 +893,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkAllDatesAreReasonable(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -907,7 +908,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.checkAllDatesAreReasonable(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -922,7 +923,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.noShortcutRelationsInGraph(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (true)
     }
     
@@ -937,7 +938,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.noShortcutRelationsInGraph(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -952,7 +953,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.noShortcutRelationsInGraph(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -967,7 +968,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.noShortcutRelationsInGraph(cxn, "http://transformunify.org/ontologies/testingGraph", "testing") should be (false)
     }
     
@@ -1024,7 +1025,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         pmbb:bmivalspec turbo:TURBO_0006500 'true'^^xsd:boolean . 
         }}"""
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allEntitiesAreReftracked(cxn, "http://www.itmat.upenn.edu/biobank/testingGraph", "testing") should be (true)
     }
     
@@ -1058,7 +1059,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         pmbb:bmivalspec a obo:OBI_0001933 .
         }}"""
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allEntitiesAreReftracked(cxn, "http://www.itmat.upenn.edu/biobank/testingGraph", "testing") should be (false)
     }
     
@@ -1112,7 +1113,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
           }
           """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBMIsAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (true)
     }
     
@@ -1163,7 +1164,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
           }
           """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBMIsAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1210,7 +1211,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
           }
           """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBMIsAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1264,7 +1265,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
           }
           """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBMIsAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1318,7 +1319,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
           }
           """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBMIsAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1350,7 +1351,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBirthsAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (true)
     }
     
@@ -1379,7 +1380,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBirthsAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1408,7 +1409,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBirthsAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1440,7 +1441,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBirthsAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1472,7 +1473,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBirthsAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1507,7 +1508,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBiosexAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (true)
     }
     
@@ -1539,7 +1540,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBiosexAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1572,7 +1573,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBiosexAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1607,7 +1608,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.allBiosexAreConclusionated(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1636,7 +1637,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.noHealthcareEncountersWithMultipleDates(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (true)
     }
     
@@ -1668,7 +1669,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.noHealthcareEncountersWithMultipleDates(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
     
@@ -1697,7 +1698,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.noBiobankEncountersWithMultipleDates(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (true)
     }
     
@@ -1729,7 +1730,7 @@ class PostExpansionChecksUnitTests extends FunSuiteLike with BeforeAndAfter with
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         postcheck.noBiobankEncountersWithMultipleDates(cxn, "http://www.itmat.upenn.edu/biobank/conclusions", "testing") should be (false)
     }
 }

@@ -134,7 +134,7 @@ class BMIReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfter with
           }
           """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
     }
     after
     {
@@ -155,10 +155,10 @@ class BMIReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfter with
               pmbb:hcBMI2 obo:IAO_0000581 pmbb:hcDate1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackHealthcareBMI(cxn)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMICombinedToOne).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMINotCombined).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMICombinedToOne).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMINotCombined).get should be (false)
     }
     
     test("bmi ref tracking from biobank enc - 2 bmis same date same values")
@@ -175,10 +175,10 @@ class BMIReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfter with
               pmbb:bbBMI2 obo:IAO_0000581 pmbb:bbDate1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackBiobankBMI(cxn)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMICombinedToOne).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMINotCombined).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMICombinedToOne).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMINotCombined).get should be (false)
     }
     
     test("bmi ref tracking from healthcare enc - 2 bmis same values diff date")
@@ -205,10 +205,10 @@ class BMIReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfter with
               pmbb:hcBMI2 obo:IAO_0000581 pmbb:hcDate1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackHealthcareBMI(cxn)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMICombinedToOne).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMINotCombined).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMICombinedToOne).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMINotCombined).get should be (true)
     }
     
     test("bmi ref tracking from biobank enc - 2 bmis same date diff values")
@@ -225,10 +225,10 @@ class BMIReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfter with
               pmbb:bbBMI2 obo:IAO_0000581 pmbb:bbDate1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackBiobankBMI(cxn)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMICombinedToOne).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMINotCombined).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMICombinedToOne).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMINotCombined).get should be (true)
     }
     
     test("bmi ref tracking from healthcare enc - 2 bmis same value missing date")
@@ -286,10 +286,10 @@ class BMIReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfter with
                   pmbb:hcDate1 turbo:TURBO_0006511 '03/09/10'^^xsd:boolean .
                   pmbb:hcDate2 turbo:TURBO_0006511 '03/09/10'^^xsd:boolean .
                   }}"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackHealthcareBMI(cxn)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMICombinedToOne).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMINotCombined).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMICombinedToOne).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoHcBMINotCombined).get should be (true)
     }
     
     test("bmi ref tracking from biobank enc - 2 bmis same value same date diff encounters")
@@ -336,10 +336,10 @@ class BMIReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfter with
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackBiobankBMI(cxn)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMICombinedToOne).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMINotCombined).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMICombinedToOne).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + twoBbBMINotCombined).get should be (true)
     }
     
     test("bmi val spec ref tracking - 2 val specs combined to 1")
@@ -356,7 +356,7 @@ class BMIReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfter with
               pmbb:valspec2 a obo:OBI_0001933 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         encreftrack.reftrackBMIValSpecs(cxn)
         
         val ask: String = """
@@ -369,7 +369,7 @@ class BMIReferentTrackingUnitTests extends FunSuiteLike with BeforeAndAfter with
                 pmbb:valspec2 graphBuilder:placeholderDemotionType turbo:TURBO_0001904 .
           }}
           """
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
     }
     
     test("handle 2 bmis from one hc encounter tied to multiple dates")

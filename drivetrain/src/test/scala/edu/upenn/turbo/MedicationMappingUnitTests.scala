@@ -60,7 +60,7 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         val result: ArrayBuffer[ArrayBuffer[Value]] = medmap.getAllUnmappedMedsInfo(cxn)
         val convertedResult: ArrayBuffer[ArrayBuffer[String]] = helper.convertSparqlResultToStringArray(result)
@@ -89,7 +89,7 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         medmap.runMedicationMapping(cxn)
         
@@ -118,10 +118,10 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
           }
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get should be (true)
     }
     
     test("two valid input one non med input")
@@ -141,7 +141,7 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         medmap.runMedicationMapping(cxn)
         
@@ -164,9 +164,9 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
           }
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get should be (false)
     }
     
     test("two valid input one malformed input")
@@ -186,7 +186,7 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         medmap.runMedicationMapping(cxn)
         
@@ -209,9 +209,9 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
           }
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get should be (false)
     }
     
     test("no input to med mapper")
@@ -219,6 +219,6 @@ class MedicationMappingUnitTests extends FunSuiteLike with BeforeAndAfter with M
          medmap.runMedicationMapping(cxn)
          
          val ask: String = "ask {?s ?p ?o .}"
-         helper.querySparqlBoolean(cxn, ask).get should be (false)
+         update.querySparqlBoolean(cxn, ask).get should be (false)
     }
 }

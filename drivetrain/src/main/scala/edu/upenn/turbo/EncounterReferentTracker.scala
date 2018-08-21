@@ -78,7 +78,7 @@ class EncounterReferentTracker extends ProjectwideGlobals
             }}  
         """
                 
-        helper.updateSparql(cxn, sparqlPrefixes + reftrackBBEncs)  
+        update.updateSparql(cxn, sparqlPrefixes + reftrackBBEncs)  
     }
     
     /**
@@ -139,7 +139,7 @@ class EncounterReferentTracker extends ProjectwideGlobals
             }}  
         """
                 
-        helper.updateSparql(cxn, sparqlPrefixes + reftrackHCEncs)  
+        update.updateSparql(cxn, sparqlPrefixes + reftrackHCEncs)  
     }
     
     /**
@@ -211,7 +211,7 @@ class EncounterReferentTracker extends ProjectwideGlobals
             }}  
         """
                 
-        helper.updateSparql(cxn, sparqlPrefixes + reftrackBBDependents)  
+        update.updateSparql(cxn, sparqlPrefixes + reftrackBBDependents)  
     }
     
     /**
@@ -259,7 +259,7 @@ class EncounterReferentTracker extends ProjectwideGlobals
             }}  
         """
                 
-        helper.updateSparql(cxn, sparqlPrefixes + reftrackHCDependents)    
+        update.updateSparql(cxn, sparqlPrefixes + reftrackHCDependents)    
     }
     
     /**
@@ -340,7 +340,7 @@ class EncounterReferentTracker extends ProjectwideGlobals
           """
       
         logger.info("sending sparql string to server")
-        helper.updateSparql(cxn, sparqlPrefixes + reftrackBiobankEncDates) 
+        update.updateSparql(cxn, sparqlPrefixes + reftrackBiobankEncDates) 
         logger.info("submitted secondary ref track statement to server")
     }
     
@@ -422,7 +422,7 @@ class EncounterReferentTracker extends ProjectwideGlobals
           """
       
         logger.info("sending sparql string to server")
-        helper.updateSparql(cxn, sparqlPrefixes + reftrackHealthcareEncDates) 
+        update.updateSparql(cxn, sparqlPrefixes + reftrackHealthcareEncDates) 
         logger.info("submitted secondary ref track statement to server")
     }
     
@@ -472,7 +472,7 @@ class EncounterReferentTracker extends ProjectwideGlobals
             }}
           """
         
-        helper.updateSparql(cxn, sparqlPrefixes + reftrackBiobankBMIs) 
+        update.updateSparql(cxn, sparqlPrefixes + reftrackBiobankBMIs) 
     }
     
     /**
@@ -520,7 +520,7 @@ class EncounterReferentTracker extends ProjectwideGlobals
             }}
           """
         
-        helper.updateSparql(cxn, sparqlPrefixes + reftrackHealthcareBMIs)  
+        update.updateSparql(cxn, sparqlPrefixes + reftrackHealthcareBMIs)  
     }
     
     /**
@@ -555,6 +555,6 @@ class EncounterReferentTracker extends ProjectwideGlobals
             }}
           """
         
-        helper.updateSparql(cxn, sparqlPrefixes + reftrackBMIValSpecs)
+        update.updateSparql(cxn, sparqlPrefixes + reftrackBMIValSpecs)
     }
 }

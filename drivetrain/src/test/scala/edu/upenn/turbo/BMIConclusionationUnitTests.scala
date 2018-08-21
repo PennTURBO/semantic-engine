@@ -91,7 +91,7 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
               
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
     }
     after
     {
@@ -115,12 +115,12 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '42' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("no hc bb meas")
@@ -134,21 +134,21 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '42' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)       
+        update.updateSparql(cxn, sparqlPrefixes + insert)       
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get)  
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get)  
     }
     
     test("no hc no bb")
     {
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("hc and bb meas on same date hc out of range")
@@ -168,12 +168,12 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '42'^^xsd:float .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("hc and bb meas on same date bb out of range")
@@ -193,12 +193,12 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '.2' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("one hc with two bmis one bb diff values all same date")
@@ -224,12 +224,12 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '42' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("one bb with two bmis one hc diff values all same date")
@@ -255,12 +255,12 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '42' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("two hc encs one bb enc diff values all same date")
@@ -295,12 +295,12 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '42' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("two bb encs one hc enc diff values all same date")
@@ -335,12 +335,12 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '42' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("two bb encs one hc enc bb values out of range all same date")
@@ -375,12 +375,12 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '.2' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("two hc encs one bb enc hc values out of range all same date")
@@ -415,12 +415,12 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '42' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("bb BMI out of range - only BMI")
@@ -434,12 +434,12 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '500.6' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("hc BMI out of range - only BMI")
@@ -453,12 +453,12 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '.003' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
     
     test("hc BMI in range - only BMI")
@@ -472,11 +472,11 @@ class BMIConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   obo:OBI_0002135 '21.0' .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         bmiconc.conclusionateBMI(cxn, conclusionationNamedGraph, masterConclusionation, masterPlanspec, masterPlan)
         
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + usedHealthcareBMI).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + usedBiobankBMI).get) 
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + missingKnowledge).get) 
     }
 }

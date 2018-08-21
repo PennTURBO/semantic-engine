@@ -98,6 +98,7 @@ class WheatNotChaff extends FunSuiteLike with BeforeAndAfter with Matchers with 
   val biosexConclusionateInst: BiosexConclusionator = new BiosexConclusionator()
   val birthdateConclusionateInst: BirthdateConclusionator = new BirthdateConclusionator()
   val expand: Expander = new Expander()
+  val ontLoad: OntologyLoader = new OntologyLoader
 
   val connect: ConnectToGraphDB = new ConnectToGraphDB()
   val sparqlChecks = new DrivetrainSparqlChecks()
@@ -1545,7 +1546,7 @@ INSERT DATA {
 
     //HAYDEN 11/7 11:35 am This test is failing because the ontology is not imported. The newest version of the applyInverses method requires that the ontology be imported to work.
     
-    helper.addOntologyFromUrl(cxn)
+    ontLoad.addOntologyFromUrl(cxn)
     
     //HAYDEN 10/16 4:22 pm changing to call method in application
     //helper.applyInverses(cxn)

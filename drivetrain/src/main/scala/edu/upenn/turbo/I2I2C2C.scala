@@ -363,7 +363,7 @@ class I2I2C2C extends ProjectwideGlobals {
     for (query <- queriesList)
     {
         count = count + 1
-        helper.updateSparql(cxn, sparqlPrefixes + query)
+        update.updateSparql(cxn, sparqlPrefixes + query)
         logger.info("Ran query " + count + " starting with " + query.replaceAll(" ", "").substring(0, 8))
     }
     logger.info("Ran " + count + " i2i2c2c queries")
@@ -398,7 +398,7 @@ class I2I2C2C extends ProjectwideGlobals {
             }
             group by ?sc
           """
-        val instanceTypeAssertionCountsResults: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, 
+        val instanceTypeAssertionCountsResults: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, 
             sparqlPrefixes + instanceTypeAssertionCounts, Array("sc", "somecount", "classorlit"))
         for (result <- instanceTypeAssertionCountsResults) threeClmnSht.println(result(0) + "," + result(1).toString.split("\\^")(0) + "," + result(2).toString.split("\\^")(0))
         
@@ -423,7 +423,7 @@ class I2I2C2C extends ProjectwideGlobals {
           } 
           group by ?ot
           """
-          val literalTypeInstanceCountsResults: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, 
+          val literalTypeInstanceCountsResults: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, 
               sparqlPrefixes + literalTypeInstanceCounts, Array("ot", "somecount", "classorlit"))
           for (result <- literalTypeInstanceCountsResults) threeClmnSht.println(result(0) + "," + result(1).toString.split("\\^")(0) + "," + result(2).toString.split("\\^")(0))
           
@@ -458,7 +458,7 @@ class I2I2C2C extends ProjectwideGlobals {
           #limit 100
           group by ?sc ?p ?oc"""
         
-          val datatypePatternsResults: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, 
+          val datatypePatternsResults: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, 
               sparqlPrefixes + datatypePatterns, Array("sc", "p", "oc", "somecount"))
           for (result <- datatypePatternsResults) fourClmnSht.println(result(0) + "," + result(1) + "," + result(2) + "," + result(3).toString.split("\\^")(0))
         
@@ -482,7 +482,7 @@ class I2I2C2C extends ProjectwideGlobals {
           #limit 100
           group by ?sc ?p ?oc"""
         
-          val objRelCntsResults: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, 
+          val objRelCntsResults: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, 
               sparqlPrefixes + objRelCnts, Array("sc", "p", "oc", "somecount"))
           for (result <- objRelCntsResults) fourClmnSht.println(result(0) + "," + result(1) + "," + result(2) + "," + result(3).toString.split("\\^")(0))
           
@@ -500,7 +500,7 @@ class I2I2C2C extends ProjectwideGlobals {
           } 
           group by ?sc ?p ?oc"""
         
-          val predUsgeNonOwlResults: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, 
+          val predUsgeNonOwlResults: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, 
               sparqlPrefixes + predUsgeNonOwl, Array("sc", "p", "oc", "somecount"))
           for (result <- predUsgeNonOwlResults) fourClmnSht.println(result(0) + "," + result(1) + "," + result(2) + "," + result(3).toString.split("\\^")(0))
           
@@ -541,7 +541,7 @@ class I2I2C2C extends ProjectwideGlobals {
           #pmbb:i2i2c2c
           order by asc(?oc )"""
         
-          val stmtClsObjResults: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, 
+          val stmtClsObjResults: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, 
               sparqlPrefixes + stmtClsObj, Array("sc", "p", "oc", "somecount"))
           for (result <- stmtClsObjResults) fourClmnSht.println(result(0) + "," + result(1) + "," + result(2) + "," + result(3).toString.split("\\^")(0))
           
@@ -570,7 +570,7 @@ class I2I2C2C extends ProjectwideGlobals {
           #limit 100
           group by ?sc ?p ?oc"""
         
-          val stmtPredCntResults: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, 
+          val stmtPredCntResults: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, 
               sparqlPrefixes + stmtPredCnts, Array("sc", "p", "oc", "somecount"))
           for (result <- stmtPredCntResults) fourClmnSht.println(result(0) + "," + result(1) + "," + result(2) + "," + result(3).toString.split("\\^")(0))
           
@@ -603,7 +603,7 @@ class I2I2C2C extends ProjectwideGlobals {
           
           order by asc(?oc )"""
         
-          val stmtSubjCntResults: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, 
+          val stmtSubjCntResults: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, 
               sparqlPrefixes + stmtSubjCnts, Array("sc", "p", "oc", "somecount"))
           for (result <- stmtSubjCntResults) fourClmnSht.println(result(0) + "," + result(1) + "," + result(2) + "," + result(3).toString.split("\\^")(0))
           

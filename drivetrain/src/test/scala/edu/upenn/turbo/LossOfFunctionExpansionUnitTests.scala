@@ -150,7 +150,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
               }    
           }"""
         
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
     }
     
     after
@@ -180,7 +180,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
         }
         """
         
-        val tripsResult: ArrayBuffer[String] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countTrips, "p")
+        val tripsResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countTrips, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -188,7 +188,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0001938",
-            "http://purl.obolibrary.org/obo/IAO_0000136", "http://purl.obolibrary.org/obo/IAO_0000142",
+            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0000305",
             "http://transformunify.org/ontologies/TURBO_0006512", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
             "http://purl.obolibrary.org/obo/OBI_0000293", "http://transformunify.org/ontologies/TURBO_0006510",
@@ -229,7 +229,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
         }
         """
         
-        helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + restNotExpanded, "expandedCount")(0) should be ("\"1\"^^<http://www.w3.org/2001/XMLSchema#integer>")
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + restNotExpanded, "expandedCount")(0) should be ("\"1\"^^<http://www.w3.org/2001/XMLSchema#integer>")
         
         val checkDelete: String = 
         """
@@ -239,7 +239,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
         }
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + checkDelete).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + checkDelete).get should be (false)
     }
     
     test("test data format error logging")
@@ -267,6 +267,6 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
             }
         }  
         """
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
     }
 }

@@ -51,7 +51,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:TURBO_0000609 'registry1' ;
           turbo:TURBO_0000610 turbo:reg1 . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleParticipantDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts> ") should be (true)
     }
     
@@ -64,7 +64,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:part1 turbo:TURBO_0000608 '1' .
           turbo:part1 turbo:TURBO_0000608 '2' . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleParticipantDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts> ") should be (false)
     }
     
@@ -77,7 +77,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:part1 turbo:TURBO_0000603 'dataset1' .
           turbo:part1 turbo:TURBO_0000608 '1' . }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleParticipantDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts> ") should be (false)
     }
     
@@ -91,7 +91,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:part1 turbo:TURBO_0000608 '1' .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleParticipantDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts> ") should be (false)
     }
     
@@ -106,7 +106,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:part1 turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000141"^^xsd:anyURI .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleParticipantDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts> ") should be (false)
     }
     
@@ -121,7 +121,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:part1 turbo:TURBO_0000604 "04/May/1970" .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleParticipantDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts> ") should be (false)
     }
     
@@ -136,7 +136,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:part1 turbo:TURBO_0000605 "1970-05-04"^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleParticipantDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts> ") should be (false)
     }
     
@@ -151,7 +151,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:part1 turbo:TURBO_0000606 "M" .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleParticipantDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts> ") should be (false)
     }
     
@@ -167,7 +167,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:part1 turbo:TURBO_0000610 turbo:reg2 .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleParticipantDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts> ") should be (false)
     }
     
@@ -184,7 +184,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:part1 turbo:TURBO_0000609 'registry2' .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleParticipantDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts> ") should be (false)
     }
     
@@ -199,7 +199,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:part1 turbo:TURBO_0000606 "M" .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleParticipantDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts> ") should be (false)
     }
     
@@ -219,7 +219,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:enc1 turbo:TURBO_0000625 '12/31/1968'^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleBiobankEncounterDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ") should be (true)
     }
     
@@ -240,7 +240,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:enc1 turbo:TURBO_0000625 '12/31/1968'^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleBiobankEncounterDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ") should be (false)
     }
     
@@ -261,7 +261,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:enc1 turbo:TURBO_0000625 '12/31/1968'^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleBiobankEncounterDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ") should be (false)
     }
     
@@ -282,7 +282,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:enc1 turbo:TURBO_0000625 '12/31/1968'^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleBiobankEncounterDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ") should be (false)
     }
     
@@ -303,7 +303,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:enc1 turbo:TURBO_0000625 '12/31/1968'^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleBiobankEncounterDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ") should be (false)
     }
     
@@ -324,7 +324,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:enc1 turbo:TURBO_0000625 '12/31/1968'^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleBiobankEncounterDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ") should be (false)
     }
     
@@ -345,7 +345,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:enc1 turbo:TURBO_0000625 '12/31/1968'^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleBiobankEncounterDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ") should be (false)
     }
     
@@ -366,7 +366,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:enc1 turbo:TURBO_0000625 '12/31/1968'^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleBiobankEncounterDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ") should be (false)
     }
     
@@ -387,7 +387,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:enc1 turbo:TURBO_0000625 '12/31/1968'^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleBiobankEncounterDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ") should be (false)
     }
     
@@ -408,7 +408,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:enc1 turbo:TURBO_0000625 '12/31/1968'^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleBiobankEncounterDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ") should be (false)
     }
     
@@ -429,7 +429,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           turbo:enc1 turbo:TURBO_0000625 '12/1/1968'^^xsd:date .
            }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleBiobankEncounterDependentNodes(cxn, " FROM <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ") should be (false)
     }
     
@@ -465,7 +465,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (true)
     }
     
@@ -502,7 +502,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -540,7 +540,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (true)
     }
     
@@ -577,7 +577,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -614,7 +614,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -651,7 +651,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -688,7 +688,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -725,7 +725,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -762,7 +762,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -799,7 +799,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -838,7 +838,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (true)
     }
     
@@ -875,7 +875,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultiplePrescriptionDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -912,7 +912,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultiplePrescriptionDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -949,7 +949,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultiplePrescriptionDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -986,7 +986,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultiplePrescriptionDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -1025,7 +1025,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleHealthcareEncounterDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (true)
     }
     
@@ -1062,7 +1062,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleDiagnosisDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -1099,7 +1099,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleDiagnosisDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -1136,7 +1136,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleDiagnosisDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
     
@@ -1173,7 +1173,7 @@ class MultipleDependentNodePreExpansionUnitTests extends FunSuiteLike with Befor
           }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         precheck.checkForMultipleDiagnosisDependentNodes(cxn, healthcareEncounterShortcutGraphs) should be (false)
     }
 }

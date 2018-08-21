@@ -161,7 +161,7 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
                   pmbb:allele12 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                   pmbb:allele12 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
               }}"""
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
     }
     after
     {
@@ -191,7 +191,7 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         entLink.connectLossOfFunctionToBiobankEncounters(cxn, ArrayBuffer("http://www.itmat.upenn.edu/biobank/LOFShortcuts"))
         
         val ask: String = """
@@ -202,7 +202,7 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
               pmbb:allele3 graphBuilder:willBeLinkedWith pmbb:bbEnc1 .
           }
           """
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
         
         val ask2: String = """
           ASK
@@ -213,8 +213,8 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
               Filter (?allele != pmbb:allele3)
           }
           """
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + noMatchFoundCheck).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + noMatchFoundCheck).get should be (true)
     }
     
     test("3 LOF alleles connect to a bb enc without consenter")
@@ -237,7 +237,7 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         entLink.connectLossOfFunctionToBiobankEncounters(cxn, ArrayBuffer("http://www.itmat.upenn.edu/biobank/LOFShortcuts"))
         
         val ask1: String = """
@@ -255,9 +255,9 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
               pmbb:allele3 graphBuilder:reasonNotExpanded graphBuilder:noMatchFound .
           }
           """
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)      
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + noMatchFoundCheck).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)      
+        update.querySparqlBoolean(cxn, sparqlPrefixes + noMatchFoundCheck).get should be (true)
     }
     
     test("three LOF alleles connect to a bb enc with consenter - different case identifiers")
@@ -283,7 +283,7 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         entLink.connectLossOfFunctionToBiobankEncounters(cxn, ArrayBuffer("http://www.itmat.upenn.edu/biobank/LOFShortcuts"))
         
         val ask: String = """
@@ -294,7 +294,7 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
               pmbb:allele3 graphBuilder:willBeLinkedWith pmbb:bbEnc1 .
           }
           """
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
         
         val ask2: String = """
           ASK
@@ -305,7 +305,7 @@ class LossOfFunctionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAf
               Filter (?allele != pmbb:allele3)
           }
           """
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + noMatchFoundCheck).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + noMatchFoundCheck).get should be (true)
     }
 }

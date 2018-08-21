@@ -11,6 +11,7 @@ import scala.collection.mutable.ArrayBuffer
 class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
     val connect: ConnectToGraphDB = new ConnectToGraphDB()
+    val ontLoad: OntologyLoader = new OntologyLoader
     var cxn: RepositoryConnection = null
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
@@ -25,7 +26,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         helper.deleteAllTriplesInDatabase(cxn)
         
         //load TURBO ontology manually
-        helper.addOntologyFromUrl(cxn)
+        ontLoad.addOntologyFromUrl(cxn)
     }
     after
     {
@@ -53,7 +54,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
             }
         }
         """
-        helper.updateSparql(cxn, sparqlPrefixes + insertEncounter)
+        update.updateSparql(cxn, sparqlPrefixes + insertEncounter)
 
         runDrivetrainTestStack()
         
@@ -77,7 +78,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
+        update.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
         
         runDrivetrainTestStack()
         
@@ -100,7 +101,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertConsenter)
+        update.updateSparql(cxn, sparqlPrefixes + insertConsenter)
         
         runDrivetrainTestStack()
         
@@ -117,7 +118,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
     }
     
     test("3 drivetrain runs - consenter, biobank encounter, ent link data")
@@ -141,7 +142,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertConsenter)
+        update.updateSparql(cxn, sparqlPrefixes + insertConsenter)
         
         runDrivetrainTestStack()
         
@@ -164,7 +165,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
             }
         }
         """
-        helper.updateSparql(cxn, sparqlPrefixes + insertEncounter)
+        update.updateSparql(cxn, sparqlPrefixes + insertEncounter)
 
         runDrivetrainTestStack()
         
@@ -188,7 +189,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
+        update.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
         
         runDrivetrainTestStack()
         
@@ -205,7 +206,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true) 
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true) 
     }
     
     test("3 drivetrain runs - ent link data, consenter, biobank encounter")
@@ -230,7 +231,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
+        update.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
         
         runDrivetrainTestStack()
         
@@ -253,7 +254,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertConsenter)
+        update.updateSparql(cxn, sparqlPrefixes + insertConsenter)
         
         runDrivetrainTestStack()
         
@@ -276,7 +277,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
             }
         }
         """
-        helper.updateSparql(cxn, sparqlPrefixes + insertEncounter)
+        update.updateSparql(cxn, sparqlPrefixes + insertEncounter)
 
         runDrivetrainTestStack()
         
@@ -293,7 +294,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
     }
     
     test("3 drivetrain runs - healthcare encounter, ent link data, consenter")
@@ -316,7 +317,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
             }
         }
         """
-        helper.updateSparql(cxn, sparqlPrefixes + insertEncounter)
+        update.updateSparql(cxn, sparqlPrefixes + insertEncounter)
 
         runDrivetrainTestStack()
         
@@ -339,7 +340,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
+        update.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
         
         runDrivetrainTestStack()
         
@@ -362,7 +363,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertConsenter)
+        update.updateSparql(cxn, sparqlPrefixes + insertConsenter)
         
         runDrivetrainTestStack()
         
@@ -379,7 +380,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
     }
     
     test("3 drivetrain runs - consenter, healthcare encounter, ent link data")
@@ -403,7 +404,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertConsenter)
+        update.updateSparql(cxn, sparqlPrefixes + insertConsenter)
         
         runDrivetrainTestStack()
         
@@ -425,7 +426,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
             }
         }
         """
-        helper.updateSparql(cxn, sparqlPrefixes + insertEncounter)
+        update.updateSparql(cxn, sparqlPrefixes + insertEncounter)
 
         runDrivetrainTestStack()
         
@@ -448,7 +449,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
+        update.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
         
         runDrivetrainTestStack()
         
@@ -465,7 +466,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)       
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)       
     }
     
     test("3 drivetrain runs - ent link data, consenter, healthcare encounter")
@@ -489,7 +490,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
+        update.updateSparql(cxn, sparqlPrefixes + insertEntLinkData)
         
         runDrivetrainTestStack()
         
@@ -512,7 +513,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertConsenter)
+        update.updateSparql(cxn, sparqlPrefixes + insertConsenter)
         
         runDrivetrainTestStack()
         
@@ -534,7 +535,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
             }
         }
         """
-        helper.updateSparql(cxn, sparqlPrefixes + insertEncounter)
+        update.updateSparql(cxn, sparqlPrefixes + insertEncounter)
 
         runDrivetrainTestStack()
         
@@ -551,7 +552,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)   
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)   
     }
     
     test("4 drivetrain runs - LOF, biobank encounter, entlink, consenter")
@@ -576,7 +577,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertLOF)
+        update.updateSparql(cxn, sparqlPrefixes + insertLOF)
         
         runDrivetrainTestStack()
         
@@ -601,7 +602,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEncounter)
+        update.updateSparql(cxn, sparqlPrefixes + insertEncounter)
         
         runDrivetrainTestStack()
         
@@ -625,7 +626,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEntLink)
+        update.updateSparql(cxn, sparqlPrefixes + insertEntLink)
         
         runDrivetrainTestStack()
         
@@ -648,7 +649,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertConsenter)
+        update.updateSparql(cxn, sparqlPrefixes + insertConsenter)
         
         runDrivetrainTestStack()
         
@@ -663,7 +664,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
         
         val ask2: String =
         """
@@ -676,7 +677,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
     }
     
     test("4 drivetrain runs - LOF, biobank consenter, entlink, encounter")
@@ -701,7 +702,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertLOF)
+        update.updateSparql(cxn, sparqlPrefixes + insertLOF)
         
         runDrivetrainTestStack()
         
@@ -724,7 +725,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertConsenter)
+        update.updateSparql(cxn, sparqlPrefixes + insertConsenter)
         
         runDrivetrainTestStack()
         
@@ -748,7 +749,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEntLink)
+        update.updateSparql(cxn, sparqlPrefixes + insertEntLink)
         
         runDrivetrainTestStack()
         
@@ -773,7 +774,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEncounter)
+        update.updateSparql(cxn, sparqlPrefixes + insertEncounter)
         
         runDrivetrainTestStack()
         
@@ -788,7 +789,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
         
         val ask2: String =
         """
@@ -801,7 +802,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
     }
     
     test("4 drivetrain runs - biobank consenter, entlink, LOF, encounter")
@@ -825,7 +826,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertConsenter)
+        update.updateSparql(cxn, sparqlPrefixes + insertConsenter)
         
         runDrivetrainTestStack()
         
@@ -849,7 +850,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEntLink)
+        update.updateSparql(cxn, sparqlPrefixes + insertEntLink)
         
         runDrivetrainTestStack()
         
@@ -873,7 +874,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertLOF)
+        update.updateSparql(cxn, sparqlPrefixes + insertLOF)
         
         runDrivetrainTestStack()
         
@@ -898,7 +899,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEncounter)
+        update.updateSparql(cxn, sparqlPrefixes + insertEncounter)
         
         runDrivetrainTestStack()
         
@@ -913,7 +914,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
         
         val ask2: String =
         """
@@ -926,7 +927,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
     }
     
     test("3 drivetrain runs - LOF with consenter, biobank encounter, entlink")
@@ -951,7 +952,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertLOF)
+        update.updateSparql(cxn, sparqlPrefixes + insertLOF)
         
         val insertConsenter: String =
         """
@@ -972,7 +973,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertConsenter)
+        update.updateSparql(cxn, sparqlPrefixes + insertConsenter)
         
         runDrivetrainTestStack()
         
@@ -997,7 +998,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEncounter)
+        update.updateSparql(cxn, sparqlPrefixes + insertEncounter)
         
         val insertEntLink: String = 
         """
@@ -1019,7 +1020,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.updateSparql(cxn, sparqlPrefixes + insertEntLink)
+        update.updateSparql(cxn, sparqlPrefixes + insertEntLink)
         
         runDrivetrainTestStack()
         
@@ -1034,7 +1035,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
         
         val ask2: String =
         """
@@ -1047,7 +1048,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
         }  
         """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
     }
     
     def runDrivetrainTestStack()

@@ -12,6 +12,7 @@ import scala.collection.mutable.ArrayBuffer
 class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
     val connect: ConnectToGraphDB = new ConnectToGraphDB()
+    val ontLoad: OntologyLoader = new OntologyLoader
     var cxn: RepositoryConnection = null
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
@@ -40,10 +41,10 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
     
     test("remove quotes from string")
     {
-        helper.removeQuotesFromString("\"hello\"") should be ("hello")
-        helper.removeQuotesFromString("hello") should be ("hello")
-        helper.removeQuotesFromString("\"hello") should be ("\"hello")
-        helper.removeQuotesFromString("hello\"") should be ("hello\"")
+        update.removeQuotesFromString("\"hello\"") should be ("hello")
+        update.removeQuotesFromString("hello") should be ("hello")
+        update.removeQuotesFromString("\"hello") should be ("\"hello")
+        update.removeQuotesFromString("hello\"") should be ("hello\"")
     }
     
     test("remove angle brackets from string")
@@ -61,7 +62,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           pmbb:entity1 a pmbb:type1 .
           pmbb:entity2 a pmbb:type2 .}}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         helper.moveDataFromOneNamedGraphToAnother(cxn,
             "http://www.itmat.upenn.edu/biobank/testgraph1", 
@@ -73,7 +74,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           pmbb:entity2 a pmbb:type2 .}}
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get should be (true)
     }
     
     test("is there data in named graph")
@@ -83,7 +84,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           pmbb:entity1 a pmbb:type1 .
           pmbb:entity2 a pmbb:type2 .}}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         helper.isThereDataInNamedGraph(cxn, cxn.getValueFactory.createIRI(
             "http://www.itmat.upenn.edu/biobank/testgraph1")) should be (true) 
@@ -95,7 +96,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
     test("apply symmetrical properties - specified named graphs in input to method")
     {
         //this defaults to adding the TURBO ontology into the pmbb:ontology named graph if no arguments are given
-        helper.addOntologyFromUrl(cxn)
+        ontLoad.addOntologyFromUrl(cxn)
         
         //as of 5/4/2018, there is only one symmetric property in the TURBO ontology: TURBO_0000302 (shares row with)
         val insert: String = """
@@ -112,7 +113,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
             pmbb:entity4 turbo:TURBO_0000302 pmbb:entity3 .}
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         helper.applySymmetricalProperties(cxn, "http://www.itmat.upenn.edu/biobank/testgraph1")
         
@@ -125,14 +126,14 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           pmbb:entity3 turbo:TURBO_0000302 pmbb:entity4 .}}
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
     }
     
     test("apply symmetrical properties - operate over all named graphs")
     {
         //this defaults to adding the TURBO ontology into the pmbb:ontology named graph if no arguments are given
-        helper.addOntologyFromUrl(cxn)
+        ontLoad.addOntologyFromUrl(cxn)
         
         //as of 5/4/2018, there is only one symmetric property in the TURBO ontology: TURBO_0000302 (shares row with)
         val insert: String = """
@@ -154,7 +155,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
             pmbb:entity5 turbo:TURBO_0000302 pmbb:entity6 .}
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         //operate over all named graphs by default
         helper.applySymmetricalProperties(cxn)
@@ -172,15 +173,15 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           pmbb:entity6 turbo:TURBO_0000302 pmbb:entity5 .}}
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get should be (false)
     }
     
     test("apply inverses")
     {
         //this defaults to adding the TURBO ontology into the pmbb:ontology named graph if no arguments are given
-        helper.addOntologyFromUrl(cxn)
+        ontLoad.addOntologyFromUrl(cxn)
         
         //as of 5/4/2018, there is only one symmetric property in the TURBO ontology: TURBO_0000302 (shares row with)
         val insert: String = """
@@ -208,7 +209,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         
         helper.applyInverses(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/someGraph"))
         
@@ -229,10 +230,10 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           pmbb:entity8 obo:BFO_0000054 pmbb:entity7 .}}
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get should be (false)
     }
     
     test("add temp subject to all nodes to be reftracked")
@@ -250,7 +251,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
             }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         helper.addTempSubjectToAllNodesToBeReftracked(cxn)
         
         val ask1: String = """
@@ -262,8 +263,8 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           graphBuilder:tempSubj graphBuilder:tempPred pmbb:node2 .}
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
     }
     
     test("remove temporary predicates")
@@ -280,7 +281,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
             }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         helper.cleanupAfterCompletingReftrackProcess(cxn)
         
         val ask1: String = """
@@ -292,8 +293,8 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           graphBuilder:tempSubj graphBuilder:tempPred pmbb:node2 .}
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
     }
     
     test("remove reftrack pointers")
@@ -309,7 +310,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
               }
           }
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         helper.cleanupAfterCompletingReftrackProcess(cxn)
         
         val ask1: String = """
@@ -323,8 +324,8 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           pmbb:node2 graphBuilder:placeholderDemotionType pmbb:retiredtype .}
           """
         
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (false)
-        helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (false)
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (false)
     }
     
     test("finalize process test")
@@ -350,7 +351,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
           }}
           """
         //logger.info("starting complete reftrack process")
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         helper.completeReftrackProcess(cxn)
         
         val check1: String = """
@@ -365,7 +366,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                    ?thing2 turbo:TURBO_0006602 'http://transformunify.org/ontologies/thing2' .
                  }
           """
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
         
         val check2: String = """
@@ -380,7 +381,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                    turbo:subject4 turbo:someProperty2 turbo:reftrackedthing .
                  }
           """
-        val bool2: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check2).get
+        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check2).get
         bool2 should be (true)
         
         val check3: String = """
@@ -388,7 +389,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                      ?s graphBuilder:willBeCombinedWith ?o .
                  }
           """
-        val bool3: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check3).get
+        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check3).get
         bool3 should be (false)
         
         val check4: String = """
@@ -396,7 +397,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                      ?s graphBuilder:placeholderDemotionType ?o .
                  }
           """
-        val bool4: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check4).get
+        val bool4: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check4).get
         bool4 should be (false)
         
          val check5: String = """
@@ -404,7 +405,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                          turbo:thing1 a turbo:retiredtype .
                  }
           """
-        val bool5: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check5).get
+        val bool5: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check5).get
         bool5 should be (false)
         
         val check6: String = """
@@ -412,7 +413,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                      turbo:thing2 a turbo:retiredtype .
                  }
           """
-        val bool6: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check6).get
+        val bool6: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check6).get
         bool6 should be (false)
         
         val check7: String = """
@@ -420,7 +421,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                      turbo:thing1 turbo:someProperty turbo:object1 .
                  }
           """
-        val bool7: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check7).get
+        val bool7: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check7).get
         bool7 should be (false)
         
         val check8: String = """
@@ -428,7 +429,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                      turbo:thing1 turbo:someProperty turbo:object2 .
                  }
           """
-        val bool8: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check8).get
+        val bool8: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check8).get
         bool8 should be (false)
         
         val check9: String = """
@@ -436,7 +437,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                      turbo:subject1 turbo:someProperty2 turbo:thing1 .
                  }
           """
-        val bool9: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check9).get
+        val bool9: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check9).get
         bool9 should be (false)
         
         val check10: String = """
@@ -444,7 +445,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                      turbo:subject2 turbo:someProperty2 turbo:thing1 .
                  }
           """
-        val bool10: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check10).get
+        val bool10: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check10).get
         bool10 should be (false)
         
         val check11: String = """
@@ -452,7 +453,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                      turbo:subject3 turbo:someProperty2 turbo:thing2 .
                  }
           """
-        val bool11: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check11).get
+        val bool11: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check11).get
         bool11 should be (false)
         
         val check12: String = """
@@ -460,7 +461,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                      turbo:subject4 turbo:someProperty2 turbo:thing2 .
                  }
           """
-        val bool12: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check12).get
+        val bool12: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check12).get
         bool12 should be (false)  
      
     val check13: String = """
@@ -469,7 +470,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
               ?thing a turbo:retiredtype .
           }
       """
-    val result: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check13, Array("thing"))
+    val result: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check13, Array("thing"))
     for (a <- result)
     {
       logger.info("found a result")
@@ -486,7 +487,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
               <"""+node1+"""> ?p ?o .
           }
       """
-    val result2: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check14, Array("o"))
+    val result2: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check14, Array("o"))
     result2.size should be (4)
     
     val check15: String = """
@@ -495,7 +496,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
               <"""+node2+"""> ?p ?o .
           }
       """
-    val result3: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check15, Array("o"))
+    val result3: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check15, Array("o"))
     result3.size should be (4)
     
     val check16: String = """
@@ -504,7 +505,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
               ?s ?p <"""+node2+"""> .
           }
       """
-    val result4: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check16, Array("s"))
+    val result4: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check16, Array("s"))
     result4.size should be (0)
     
     val check17: String = """
@@ -513,7 +514,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
               ?s ?p <"""+node1+"""> .
           }
       """
-    val result5: ArrayBuffer[ArrayBuffer[Value]] = helper.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check17, Array("s"))
+    val result5: ArrayBuffer[ArrayBuffer[Value]] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + check17, Array("s"))
     result5.size should be (0)
     }
     
@@ -539,7 +540,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
               
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         helper.completeReftrackProcess(cxn)
         
         val check1: String = """
@@ -554,7 +555,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                    ?thing2 turbo:TURBO_0006602 'http://transformunify.org/ontologies/thing2' .
                  }
           """
-        val bool1: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
+        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check1).get
         bool1 should be (true)
         
         val check2: String = """
@@ -568,7 +569,7 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
                    turbo:subject4 turbo:someProperty2 turbo:reftrackedthing .
                  }
           """
-        val bool2: Boolean = helper.querySparqlBoolean(cxn, sparqlPrefixes + check2).get
+        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check2).get
         bool2 should be (true)
     }
 }

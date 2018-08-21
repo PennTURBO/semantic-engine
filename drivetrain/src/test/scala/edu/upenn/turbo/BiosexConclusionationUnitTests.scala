@@ -43,7 +43,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
                   turbo:TURBO_0006500 'true'^^xsd:boolean .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
     }
     after
     {
@@ -64,7 +64,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
             }
           }
           """
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
     }
     
     test("multiple gids not conflicting")
@@ -78,7 +78,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
                 obo:IAO_0000136 turbo:part1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         biosexconc.conclusionateBiosex(cxn, conclusionationNamedGraph, .51, masterConclusionation, masterPlanspec, masterPlan)
         
         val ask = """
@@ -90,7 +90,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
             }
           }
           """
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
         
         val ask2 = """
           ASK 
@@ -102,7 +102,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
             }
           }
           """
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get)
     }
     
     test("conflicting gids does not meet threshold")
@@ -116,7 +116,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
                 obo:IAO_0000136 turbo:part1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         biosexconc.conclusionateBiosex(cxn, conclusionationNamedGraph, .99, masterConclusionation, masterPlanspec, masterPlan)
         
         val ask = """
@@ -129,7 +129,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
             }
           }
           """
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
         
         val ask2 = """
           ASK 
@@ -140,7 +140,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
             }
           }
           """
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get)
         
         val ask3 = """
           ASK 
@@ -151,7 +151,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
             }
           }
           """
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get)
     }
     
     test("conflicting gids does meet threshold")
@@ -167,7 +167,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
                 obo:IAO_0000136 turbo:part1 .
           }}
           """
-        helper.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(cxn, sparqlPrefixes + insert)
         biosexconc.conclusionateBiosex(cxn, conclusionationNamedGraph, .51, masterConclusionation, masterPlanspec, masterPlan)
         
         val ask = """
@@ -179,7 +179,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
             }
           }
           """
-        assert(helper.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
+        assert(update.querySparqlBoolean(cxn, sparqlPrefixes + ask).get)
         
         val ask2 = """
           ASK 
@@ -191,7 +191,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
             }
           }
           """
-        assert(!helper.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get)
+        assert(!update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get)
     }
     
     test("invalid threshold causes exception")
@@ -205,7 +205,7 @@ class BiosexConclusionationUnitTests extends FunSuiteLike with BeforeAndAfter wi
                     obo:IAO_0000136 turbo:part1 .
               }}
               """
-            helper.updateSparql(cxn, sparqlPrefixes + insert)
+            update.updateSparql(cxn, sparqlPrefixes + insert)
             biosexconc.conclusionateBiosex(cxn, conclusionationNamedGraph, .01, masterConclusionation, masterPlanspec, masterPlan)
             assert(false)
         }
