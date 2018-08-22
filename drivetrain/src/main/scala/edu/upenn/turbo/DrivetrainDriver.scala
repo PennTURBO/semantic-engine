@@ -69,9 +69,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
                           val concProceed = runConclusionating(cxn, thresholds.get(0), thresholds.get(1))
                           if (concProceed) 
                           {
+                              runInferenceWithAddedOntologies(cxn)
                               runDiagnosisMapping(cxn)
                               runMedicationMapping(cxn)
-                              runInferenceWithAddedOntologies(cxn)
                           }
                       }
                   }
@@ -241,7 +241,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
       if (loadDiseaseOntologies == "true")
       {
           ontLoad.addDiseaseOntologies(cxn)
-          diagmap.addDiseaseOntologies(cxn)
       }
       logger.info("diagnosis mapping currently deprecated")
       //diagmap.performDiagnosisMapping(cxn)

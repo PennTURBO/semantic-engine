@@ -478,7 +478,6 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         {
             val startLoadDiseaseOntologies =  System.nanoTime()
             ontload.addDiseaseOntologies(cxn)
-            diagmap.addDiseaseOntologies(cxn)
             val stopLoadDiseaseOntologies =  System.nanoTime()
             
             writeCSV.println("Load Disease Ontologies (mondo + ICD9 + ICD10)," + ((stopLoadDiseaseOntologies - startLoadDiseaseOntologies)/1000000000.0).toString)

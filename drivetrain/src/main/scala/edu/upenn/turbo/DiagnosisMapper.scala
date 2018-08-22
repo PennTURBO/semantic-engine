@@ -12,19 +12,6 @@ import scala.collection.mutable.ArrayBuffer
 class DiagnosisMapper extends ProjectwideGlobals
 {
     val connection: ConnectToGraphDB = new ConnectToGraphDB()
-    val ontLoad: OntologyLoader = new OntologyLoader
-    
-    /**
-     * Adds relevant ontologies to Graph database.
-     */
-    def addDiseaseOntologies(cxn: RepositoryConnection)
-    {
-        logger.info("adding ICD9 ontology")
-        helper.loadDataFromFile(cxn, "../ontologies/ICD9CM.ttl", RDFFormat.TURTLE, "http://www.itmat.upenn.edu/biobank/ICD9Ontology")
-        logger.info("adding ICD10 ontology")
-        helper.loadDataFromFile(cxn, "../ontologies/ICD10CM.ttl", RDFFormat.TURTLE, "http://www.itmat.upenn.edu/biobank/ICD10Ontology")
-        logger.info("Successfully loaded ontologies")
-    }
     
     /**
      * Calls relevant diagnosis mapping methods.
