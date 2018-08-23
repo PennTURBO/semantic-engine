@@ -41,7 +41,7 @@ class NewExceptionTests extends FunSuiteLike with BeforeAndAfter with Matchers w
 
   val sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
 
-  val expectedOntologyTriples = ontologySize.toInt
+  //val expectedOntologyTriples = ontologySize.toInt
 
   val ErrorLogFile = new File(errorLogFile)
 
@@ -93,7 +93,7 @@ class NewExceptionTests extends FunSuiteLike with BeforeAndAfter with Matchers w
 
     // confirm ontology loaded?  how?  number of triples?
     val statementCount = SparqlHelper.CountAcrossTriplestore(cxn)
-    assert(statementCount >= expectedOntologyTriples, "after ontology loading, the number of triples\n is less than the expected number for the properties file")
+    //assert(statementCount >= expectedOntologyTriples, "after ontology loading, the number of triples\n is less than the expected number for the properties file")
 
     graphList = SparqlHelper.ListNamedGraphs(cxn)
     //    println(graphList)

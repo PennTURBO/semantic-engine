@@ -238,17 +238,12 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runDiagnosisMapping(cxn: RepositoryConnection)
   {
-      if (loadDiseaseOntologies == "true")
-      {
-          ontLoad.addDiseaseOntologies(cxn)
-      }
       logger.info("diagnosis mapping currently deprecated")
       //diagmap.performDiagnosisMapping(cxn)
   }
   
   def runMedicationMapping(cxn: RepositoryConnection)
   {
-      if (loadDrugOntologies == "true") ontLoad.addDrugOntologies(cxn)
       medmap.runMedicationMapping(cxn)
   }
   
@@ -259,6 +254,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
       reasoner.changeReasoningLevel(cxn, "empty")
       reasoner.reinferRepository(cxn)
       
+      ontLoad.addDrugOntologies(cxn)
+      ontLoad.addDiseaseOntologies(cxn)
+      ontLoad.addGeneOntologies(cxn)
       ontLoad.addMiscOntologies(cxn)
   }
   

@@ -506,11 +506,10 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         else writeCSV.println("Load Drug Ontologies,SKIPPED")
         
         val startRunMedMap = System.nanoTime()
-        val success: Boolean = medmap.runMedicationMapping(cxn)
+        medmap.runMedicationMapping(cxn)
         val stopRunMedMap = System.nanoTime()
         
-        if (success) writeCSV.println("Medication Mapping," + ((stopRunMedMap - startRunMedMap)/1000000000.0).toString)
-        else writeCSV.println("Medication Mapping, SKIPPED")
+        writeCSV.println("Medication Mapping," + ((stopRunMedMap - startRunMedMap)/1000000000.0).toString)
     }
     
     def addBenchmarkInfoToTextFile(writeTXT: PrintWriter, currTime: String)

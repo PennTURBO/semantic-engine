@@ -566,7 +566,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007601> "B" .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000420"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007610> "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007605> "TSPAN6(ENSG00000000003)"^^<http://www.w3.org/2001/XMLSchema#string> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
@@ -691,7 +691,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007601> "B" .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000420"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007610> "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007605> "TSPAN6(ENSG00000000003)"^^<http://www.w3.org/2001/XMLSchema#string> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
@@ -863,7 +863,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007601> "B" .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000420"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007610> "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007605> "TSPAN6(ENSG00000000003)"^^<http://www.w3.org/2001/XMLSchema#string> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
@@ -941,7 +941,7 @@ class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter wit
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007601> "B" .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000420"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
-                <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007610> "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007605> "TSPAN6(ENSG00000000003)"^^<http://www.w3.org/2001/XMLSchema#string> .
                 <http://localhost:8080/source/alleleInfo/b78dc9117b0f4654a380cf20b08010bf> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .

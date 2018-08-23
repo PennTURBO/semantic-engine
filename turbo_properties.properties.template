@@ -19,17 +19,12 @@ inputFilesFormat = TURTLE
 importOntologies = true
 ontologyURL = https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl
 errorLogFile = turbo_errorlog.txt
-ontologySize = 4101
-#supported reasoning levels: empty (no reasoning), owl-horst-optimized
-setReasoningTo = "empty"
-reinferRepo = false
+
 # choose whether all entities should have rdfs:label
 applyLabels = true
 
-# Medication Mapping Properties
-solrURL = http://your_solr_address:8983/solr/collection_name/select
-SVMfile = your_SVM_file.rdata
-medStandardsFile = your_medStandards_file
-dronRepo = your_dron_repo
-loadDiseaseOntologies = true
-loadDrugOntologies = true
+# the api key from bioportal to load icd9/icd10 ontologies
+bioportalAPIKey = your_key_here
+
+# the repository holding the med mapping info
+medMappingRepo = your_medmap_repo

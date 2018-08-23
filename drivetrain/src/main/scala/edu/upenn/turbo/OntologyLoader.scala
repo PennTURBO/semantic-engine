@@ -46,23 +46,51 @@ class OntologyLoader extends ProjectwideGlobals
         
     private val diseaseOntologies: Map[String, Map[String, RDFFormat]] = Map(
         "https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl" -> Map("https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl" -> RDFFormat.RDFXML),
-        "http://data.bioontology.org/ontologies/ICD10CM/submissions/14/download?apikey=5095cf97-751f-46c6-81fe-428b8d124480" -> Map("http://data.bioontology.org/ontologies/ICD10CM/submissions/14/" -> RDFFormat.TURTLE),
-        "http://data.bioontology.org/ontologies/ICD9CM/submissions/14/download?apikey=5095cf97-751f-46c6-81fe-428b8d124480" -> Map("http://data.bioontology.org/ontologies/ICD9CM/submissions/14/" -> RDFFormat.TURTLE)
+        "http://data.bioontology.org/ontologies/ICD10CM/submissions/"+getBioportalSubmissionInfo("ICD10CM")+"/download?apikey="+bioportalAPIkey -> 
+                Map("http://data.bioontology.org/ontologies/ICD10CM/" -> RDFFormat.TURTLE),
+        "http://data.bioontology.org/ontologies/ICD9CM/submissions/"+getBioportalSubmissionInfo("ICD9CM")+"/download?apikey="+bioportalAPIkey -> 
+                Map("http://data.bioontology.org/ontologies/ICD9CM/" -> RDFFormat.TURTLE)
+    )
+    
+    private val geneOntologies: Map[String, Map[String, RDFFormat]] = Map(
+        "http://purl.obolibrary.org/obo/go.owl" -> Map("http://purl.obolibrary.org/obo/go.owl" -> RDFFormat.RDFXML),
+        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl_variation_ontology.owl" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl_variation_ontology.owl" -> RDFFormat.RDFXML),
+        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-mapping.owl" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-mapping.owl" -> RDFFormat.RDFXML),
+        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-terms.rdf" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-terms.rdf" -> RDFFormat.RDFXML),
+        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-void.ttl" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-void.ttl" -> RDFFormat.TURTLE)
     )
     
     private val miscOntologies: Map[String, Map[String, RDFFormat]] = Map(
-        "ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> Map("ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> RDFFormat.RDFXML),  
-        "http://purl.obolibrary.org/obo/go.owl" -> Map("http://purl.obolibrary.org/obo/go.owl" -> RDFFormat.RDFXML)
+        "ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> Map("ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> RDFFormat.RDFXML),
+        "http://data.bioontology.org/ontologies/RXNORM/submissions/"+getBioportalSubmissionInfo("RXNORM")+"/download?apikey="+bioportalAPIkey -> 
+                Map("http://data.bioontology.org/ontologies/RXNORM/submissions/15/download?apikey=5095cf97-751f-46c6-81fe-428b8d124480" -> RDFFormat.RDFXML)
     )
+    
+    def addGeneOntologies(cxn: RepositoryConnection)
+    {
+        for((ontology, formatting) <- geneOntologies) 
+        {
+            logger.info("adding ontology: " + ontology)
+            addOntologyFromUrl(cxn, ontology, formatting)
+        }
+    }
     
     def addDrugOntologies(cxn: RepositoryConnection)
     {
-        for((ontology, formatting) <- drugOntologies) addOntologyFromUrl(cxn, ontology, formatting)
+        for((ontology, formatting) <- drugOntologies) 
+        {
+            logger.info("adding ontology: " + ontology)
+            addOntologyFromUrl(cxn, ontology, formatting)
+        }
     }
     
     def addDiseaseOntologies(cxn: RepositoryConnection)
     {
-        for((ontology, formatting) <- diseaseOntologies) addOntologyFromUrl(cxn, ontology, formatting)
+        for((ontology, formatting) <- diseaseOntologies)
+        {
+            logger.info("adding ontology: " + ontology)
+            addOntologyFromUrl(cxn, ontology, formatting)
+        }
     }
     
     def addMiscOntologies(cxn: RepositoryConnection)
@@ -100,5 +128,12 @@ class OntologyLoader extends ProjectwideGlobals
             case e: RuntimeException => logger.info("The ontology was not loaded. Please ensure that your URL in the properties file is correct and that the server is online.")
             throw new RuntimeException ("The ontology could not be accessed at the specified URL.")
         }
+    }
+    
+    def getBioportalSubmissionInfo(ontology: String): String =
+    {
+        val url = "https://data.bioontology.org/ontologies/"+ontology+"/latest_submission?apikey=5095cf97-751f-46c6-81fe-428b8d124480"
+        val res = scala.io.Source.fromURL(url)
+        res.mkString
     }
 }
