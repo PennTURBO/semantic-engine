@@ -34,7 +34,13 @@ class OntologyLoaderUnitTests extends FunSuiteLike with BeforeAndAfter with Matc
     
     test("get bioportal submission version")
     {
-        val result: String = ontLoad.getBioportalSubmissionInfo("ICD10CM")
-        logger.info(result)
+        val result: Option[Int] = ontLoad.getBioportalSubmissionInfo("ICD10CM")
+        result.get should be (14)
+        val result2: Option[Int] = ontLoad.getBioportalSubmissionInfo("ICD9CM")
+        result2.get should be (14)
+        val result3: Option[Int] = ontLoad.getBioportalSubmissionInfo("RXNORM")
+        result3.get should be (15)
+        val result4: Option[Int] = ontLoad.getBioportalSubmissionInfo("this_isnt_an_ontology")
+        result4 should be (None)
     }
 }

@@ -179,7 +179,7 @@ class ConnectToGraphDB extends ProjectwideGlobals
      * Used to disconnect Drivetrain from Ontotext Graph DB by closing the relevant RepositoryConnection, RemoteRepositoryManager, and Repository objects.
      * Optionally delete all triples in database before connection close by specifying boolean parameter.
      */
-    def closeGraphConnection(cxn: RepositoryConnection, repoManager: RemoteRepositoryManager, repository: Repository, deleteAllTriples: Boolean)
+    def closeGraphConnection(cxn: RepositoryConnection, repoManager: RemoteRepositoryManager, repository: Repository, deleteAllTriples: Boolean = false)
     {
         if (cxn == null)
         {

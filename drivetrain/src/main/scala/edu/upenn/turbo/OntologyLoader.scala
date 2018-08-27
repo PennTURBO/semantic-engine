@@ -30,6 +30,9 @@ import java.io.BufferedInputStream
 import java.io.InputStream
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
 import org.eclipse.rdf4j.model.Model
+import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.http.client.methods.HttpGet
+import java.net.SocketException
 
 class OntologyLoader extends ProjectwideGlobals
 {   
@@ -46,9 +49,9 @@ class OntologyLoader extends ProjectwideGlobals
         
     private val diseaseOntologies: Map[String, Map[String, RDFFormat]] = Map(
         "https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl" -> Map("https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl" -> RDFFormat.RDFXML),
-        "http://data.bioontology.org/ontologies/ICD10CM/submissions/"+getBioportalSubmissionInfo("ICD10CM")+"/download?apikey="+bioportalAPIkey -> 
+        "http://data.bioontology.org/ontologies/ICD10CM/submissions/"+getBioportalSubmissionInfo("ICD10CM").get+"/download?apikey="+bioportalAPIkey -> 
                 Map("http://data.bioontology.org/ontologies/ICD10CM/" -> RDFFormat.TURTLE),
-        "http://data.bioontology.org/ontologies/ICD9CM/submissions/"+getBioportalSubmissionInfo("ICD9CM")+"/download?apikey="+bioportalAPIkey -> 
+        "http://data.bioontology.org/ontologies/ICD9CM/submissions/"+getBioportalSubmissionInfo("ICD9CM").get+"/download?apikey="+bioportalAPIkey -> 
                 Map("http://data.bioontology.org/ontologies/ICD9CM/" -> RDFFormat.TURTLE)
     )
     
@@ -62,44 +65,33 @@ class OntologyLoader extends ProjectwideGlobals
     
     private val miscOntologies: Map[String, Map[String, RDFFormat]] = Map(
         "ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> Map("ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> RDFFormat.RDFXML),
-        "http://data.bioontology.org/ontologies/RXNORM/submissions/"+getBioportalSubmissionInfo("RXNORM")+"/download?apikey="+bioportalAPIkey -> 
-                Map("http://data.bioontology.org/ontologies/RXNORM/submissions/15/download?apikey=5095cf97-751f-46c6-81fe-428b8d124480" -> RDFFormat.RDFXML)
+        "http://data.bioontology.org/ontologies/RXNORM/submissions/"+getBioportalSubmissionInfo("RXNORM").get+"/download?apikey="+bioportalAPIkey -> 
+          Map("http://data.bioontology.org/ontologies/RXNORM/" -> RDFFormat.RDFXML)
     )
     
     def addGeneOntologies(cxn: RepositoryConnection)
     {
-        for((ontology, formatting) <- geneOntologies) 
-        {
-            logger.info("adding ontology: " + ontology)
-            addOntologyFromUrl(cxn, ontology, formatting)
-        }
+        addOntologiesFromMap(cxn, geneOntologies)
     }
     
     def addDrugOntologies(cxn: RepositoryConnection)
     {
-        for((ontology, formatting) <- drugOntologies) 
-        {
-            logger.info("adding ontology: " + ontology)
-            addOntologyFromUrl(cxn, ontology, formatting)
-        }
+        addOntologiesFromMap(cxn, drugOntologies)
     }
     
     def addDiseaseOntologies(cxn: RepositoryConnection)
     {
-        for((ontology, formatting) <- diseaseOntologies)
-        {
-            logger.info("adding ontology: " + ontology)
-            addOntologyFromUrl(cxn, ontology, formatting)
-        }
+        addOntologiesFromMap(cxn, diseaseOntologies)
     }
     
     def addMiscOntologies(cxn: RepositoryConnection)
     {
-        for((ontology, formatting) <- miscOntologies) 
-        {
-            logger.info("adding ontology: " + ontology)
-            addOntologyFromUrl(cxn, ontology, formatting)
-        }
+        addOntologiesFromMap(cxn, miscOntologies)
+    }
+    
+    def addOntologiesFromMap(cxn: RepositoryConnection, ontMap: Map[String, Map[String, RDFFormat]])
+    {
+        for((ontology, formatting) <- ontMap) addOntologyFromUrl(cxn, ontology, formatting) 
     }
     
      /**
@@ -109,6 +101,7 @@ class OntologyLoader extends ProjectwideGlobals
         formatting: Map[String, RDFFormat] = Map("http://www.itmat.upenn.edu/biobank/ontology" -> RDFFormat.RDFXML)) 
     {
         if (formatting.size > 1) throw new RuntimeException ("Formatting map size > 1, internal error occurred.")
+        logger.info("Adding ontology " + ontology)
         try
         {
             val f = cxn.getValueFactory
@@ -118,22 +111,63 @@ class OntologyLoader extends ProjectwideGlobals
             val OntoBase = "http://transformunify.org/ontologies/"
          
             cxn.begin()
+            logger.info("At add step...")
             cxn.add(OntoUrl, OntoBase, formatting.head._2, OntoGraphName)
-            cxn.commit()
+            logger.info("Finished try block.")
         }
         catch
         {
-            case f: ConnectException => logger.info("The ontology was not loaded. Please ensure that your URL in the properties file is correct and that the server is online.")
-            throw new RuntimeException ("A connection to the ontology could not be established.")
-            case e: RuntimeException => logger.info("The ontology was not loaded. Please ensure that your URL in the properties file is correct and that the server is online.")
-            throw new RuntimeException ("The ontology could not be accessed at the specified URL.")
+            case g: SocketException => 
+            {
+                logger.info("The ontology " + ontology + " was not loaded - socket exception thrown")
+                helper.writeErrorLog("Ontology loading", "Failed to load ontology " + ontology)
+            }
+            case e: RuntimeException => 
+            {
+                logger.info("The ontology " + ontology + " was not loaded - generic runtime exception.")
+                helper.writeErrorLog("Ontology loading", "Failed to load ontology " + ontology)
+            }
         }
+        logger.info("Committing transaction...")
+        cxn.commit()
+        logger.info("Committing complete.")
     }
     
-    def getBioportalSubmissionInfo(ontology: String): String =
+    def getBioportalSubmissionInfo(ontology: String): Option[Int] =
     {
-        val url = "https://data.bioontology.org/ontologies/"+ontology+"/latest_submission?apikey=5095cf97-751f-46c6-81fe-428b8d124480"
-        val res = scala.io.Source.fromURL(url)
-        res.mkString
+        val url = "http://data.bioontology.org/ontologies/"+ontology+"/latest_submission?apikey="+bioportalAPIkey
+        try
+        {
+            var optReturn: Option[Int] = None:Option[Int]
+    
+            val httpClient = new DefaultHttpClient()
+            val httpResponse = httpClient.execute(new HttpGet(url))
+            val entity = httpResponse.getEntity()
+            var content = ""
+            if (entity != null) 
+            {
+                val inputStream = entity.getContent()
+                content = io.Source.fromInputStream(inputStream).getLines.mkString
+                inputStream.close
+            }
+            httpClient.getConnectionManager().shutdown()
+            val list = content.substring(1, content.length - 1).split(",").map(_.split(":"))
+            var map: HashMap[String, String] = new HashMap[String, String]
+            for (row <- list) if (row.size > 1) map += row(0).substring(1,row(0).length-1) -> row(1)
+            try
+            {
+                Some(map("submissionId").toInt)
+            }
+            catch 
+            {
+                case e: NumberFormatException => logger.info("Whoops! It looks like we received non-numeric version info from " + url)
+                None
+            }
+        }
+        catch
+        {
+            case e: RuntimeException => logger.info("Something went wrong when looking up bioportal submission info from " + url)
+            None
+        }
     }
 }

@@ -260,7 +260,7 @@ class TurboMultiuseClass
      * the logErrorMessage method.  This method was specifically designed to work with the DrivetrainSparqlChecks 
      * class to perform data validation on the contents of the triplestore.
      */
-    def writeErrorLog (process: String, error: String, variables: String)
+    def writeErrorLog (process: String, error: String, variables: String = "")
     {
         val map: HashMap[String, String] = new HashMap[String, String]
         map += "process" -> process
