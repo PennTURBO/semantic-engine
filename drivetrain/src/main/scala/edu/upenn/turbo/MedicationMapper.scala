@@ -20,33 +20,50 @@ import org.eclipse.rdf4j.model.Model
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
 import org.eclipse.rdf4j.model.IRI
 import org.eclipse.rdf4j.model.ValueFactory
+import org.json4s._
+import org.json4s.jackson.Serialization
+import org.json4s.jackson.Serialization.write
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.entity.StringEntity
+import org.apache.http.util.EntityUtils
+import org.json4s.jackson.JsonMethods._
+import org.eclipse.rdf4j.query.TupleQueryResult
+
+case class MedFullName(fullName: List[String])
+case class MedLookupResult(medFullName: String, mappedTerm: String)
 
 class MedicationMapper extends ProjectwideGlobals
 {   
+    implicit val formats = DefaultFormats
     val connect: ConnectToGraphDB = new ConnectToGraphDB
     
     def runMedicationMapping(cxn: RepositoryConnection)
     {
-        // make connection to med mapping repo
-        var medConnection: RepositoryConnection = null
-        var medRepository: Repository = null
-        var medRepoManager: RemoteRepositoryManager = null
-        try
-        {
-            val medGraphConnect: TurboGraphConnection = connect.initializeGraph(medMappingRepo)
-            medConnection = medGraphConnect.getConnection()
-            medRepoManager = medGraphConnect.getRepoManager()
-            medRepository = medGraphConnect.getRepository() 
-            
-            
-        }
-        finally 
-        {
-            connect.closeGraphConnection(medConnection, medRepoManager, medRepository, false)
-        }
+        //val medsToMap: ArrayBuffer[ArrayBuffer[Value]] = getAllUnmappedMedsInfo(cxn)
+        val mappingResult: List[MedLookupResult] = getMappingsFromService(
+            MedFullName(fullName = List("INSULIN ASPART 100 UNIT/ML SC SOLN", "ONDANSETRON HCL 4 MG/2ML INJECTION SOLN", "sodium chloride 0.9% -")))
+        logger.info("mapping1: " + mappingResult(2).mappedTerm + " " + mappingResult(2).medFullName)
     }
     
-    def getAllUnmappedMedsInfo(cxn: RepositoryConnection): ArrayBuffer[ArrayBuffer[Value]] =
+    def getMappingsFromService(mappedStrings: MedFullName): List[MedLookupResult] =
+    {
+        val post = new HttpPost("http://localhost:8080/medications")
+        val stringToPost: String = write(mappedStrings)
+        post.setEntity(new StringEntity(stringToPost))
+        val client = HttpClientBuilder.create().build()
+        val response = client.execute(post)
+        val responseData = response.getEntity
+        val responseString: String = EntityUtils.toString(responseData)
+        logger.info(responseString)
+        response.close()
+        client.close()
+        
+        // convert JSON to MedLookupResult using json4s methods
+        parse(responseString).extract[List[MedLookupResult]]
+    }
+    
+    def getAllUnmappedMedsInfo(cxn: RepositoryConnection): Option[TupleQueryResult] =
     {
         val getInfo: String = 
          """
@@ -56,6 +73,6 @@ class MedicationMapper extends ProjectwideGlobals
                  ?prescript turbo:TURBO_0006512 ?ordername .
              }         
          """
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getInfo, ArrayBuffer("prescript", "ordername"))
+        update.querySparql(cxn, sparqlPrefixes + getInfo)
     }
 }

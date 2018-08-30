@@ -30,7 +30,7 @@ import java.io.BufferedInputStream
 import java.io.InputStream
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
 import org.eclipse.rdf4j.model.Model
-import org.apache.http.impl.client.DefaultHttpClient
+import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.client.methods.HttpGet
 import java.net.SocketException
 
@@ -140,7 +140,7 @@ class OntologyLoader extends ProjectwideGlobals
         {
             var optReturn: Option[Int] = None:Option[Int]
     
-            val httpClient = new DefaultHttpClient()
+            val httpClient = HttpClientBuilder.create().build()
             val httpResponse = httpClient.execute(new HttpGet(url))
             val entity = httpResponse.getEntity()
             var content = ""
@@ -150,7 +150,8 @@ class OntologyLoader extends ProjectwideGlobals
                 content = io.Source.fromInputStream(inputStream).getLines.mkString
                 inputStream.close
             }
-            httpClient.getConnectionManager().shutdown()
+            httpClient.close()
+            httpResponse.close()
             val list = content.substring(1, content.length - 1).split(",").map(_.split(":"))
             var map: HashMap[String, String] = new HashMap[String, String]
             for (row <- list) if (row.size > 1) map += row(0).substring(1,row(0).length-1) -> row(1)
