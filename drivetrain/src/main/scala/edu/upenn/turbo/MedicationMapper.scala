@@ -29,6 +29,7 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.util.EntityUtils
 import org.json4s.jackson.JsonMethods._
 import org.eclipse.rdf4j.query.TupleQueryResult
+import org.eclipse.rdf4j.query.BindingSet
 
 case class MedFullName(fullName: List[String])
 case class MedLookupResult(medFullName: String, mappedTerm: String)
@@ -40,10 +41,43 @@ class MedicationMapper extends ProjectwideGlobals
     
     def runMedicationMapping(cxn: RepositoryConnection)
     {
-        //val medsToMap: ArrayBuffer[ArrayBuffer[Value]] = getAllUnmappedMedsInfo(cxn)
-        val mappingResult: List[MedLookupResult] = getMappingsFromService(
-            MedFullName(fullName = List("INSULIN ASPART 100 UNIT/ML SC SOLN", "ONDANSETRON HCL 4 MG/2ML INJECTION SOLN", "sodium chloride 0.9% -")))
-        logger.info("mapping1: " + mappingResult(2).mappedTerm + " " + mappingResult(2).medFullName)
+        // retrieve all instances of prescription with an order name
+        val medsIterator: TupleQueryResult = getAllUnmappedMedsInfo(cxn).get
+        // iterate through result, creating mapping of prescriptions -> orderNames, and single list of orderNames for mapping service
+        var prescriptionToOrderNameMap: HashMap[String, ArrayBuffer[String]] = new HashMap[String, ArrayBuffer[String]]
+        var medsStringBuffer: ArrayBuffer[String] = new ArrayBuffer[String]
+        while(medsIterator.hasNext())
+        {
+            val bSet: BindingSet = medsIterator.next
+            val orderName: String = bSet.getBinding("ordername").toString.split("\\^")(0).split("\\=")(1).replaceAll("\"","")
+            if (prescriptionToOrderNameMap contains orderName) prescriptionToOrderNameMap(orderName) += bSet.getBinding("prescription").toString
+            else prescriptionToOrderNameMap += orderName -> ArrayBuffer(bSet.getBinding("prescription").toString)
+            medsStringBuffer += orderName
+            //logger.info("order name: " + orderName + " prescription: " + bSet.getBinding("prescription").toString)
+        }
+        
+        // convert to set for removing duplicates, then to list
+        val medsStringList: List[String] = medsStringBuffer.toSet.toList
+        
+        for (name <- medsStringList) println(name)
+        // send list of order names to service for mapping
+        val mappingResult: List[MedLookupResult] = getMappingsFromService(MedFullName(fullName = medsStringList))
+        
+        // match up mapped meds with results from hashmap matching on order name, store results in model
+        var model: Model = new LinkedHashModel()
+        val f: ValueFactory = cxn.getValueFactory()
+        for (lookupResult <- mappingResult)
+        {
+            val mappedOrderName: String = lookupResult.medFullName
+            val mappedMedication: String = lookupResult.mappedTerm
+            
+            for (prescription <- prescriptionToOrderNameMap(mappedOrderName))
+            {
+                model.add(f.createIRI(prescription), f.createIRI("http://transformunify.org/ontologies/relevant_pred"), f.createIRI(mappedMedication))
+                logger.info("adding triple: " + prescription + " predicate " + mappedMedication)
+            }
+        }
+        //cxn.add(model)
     }
     
     def getMappingsFromService(mappedStrings: MedFullName): List[MedLookupResult] =
@@ -67,11 +101,12 @@ class MedicationMapper extends ProjectwideGlobals
     {
         val getInfo: String = 
          """
-             Select ?prescript ?ordername Where
+             Select ?prescription ?ordername Where
              {
-                 ?prescript a obo:PDRO_0000001 .
-                 ?prescript turbo:TURBO_0006512 ?ordername .
+                 ?prescription a obo:PDRO_0000001 .
+                 ?prescription turbo:TURBO_0006512 ?ordername .
              }         
+             #LIMIT 20
          """
         update.querySparql(cxn, sparqlPrefixes + getInfo)
     }
