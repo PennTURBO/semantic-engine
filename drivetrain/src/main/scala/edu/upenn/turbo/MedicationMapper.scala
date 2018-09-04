@@ -82,7 +82,7 @@ class MedicationMapper extends ProjectwideGlobals
     
     def getMappingsFromService(mappedStrings: MedFullName): List[MedLookupResult] =
     {
-        val post = new HttpPost("http://localhost:8080/medications")
+        val post = new HttpPost("http://localhost:8080/medications/orderNameLookup")
         val stringToPost: String = write(mappedStrings)
         post.setEntity(new StringEntity(stringToPost))
         val client = HttpClientBuilder.create().build()
