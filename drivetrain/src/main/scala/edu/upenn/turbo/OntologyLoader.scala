@@ -36,7 +36,21 @@ import java.net.SocketException
 
 class OntologyLoader extends ProjectwideGlobals
 {   
-    private val drugOntologies: Map[String, Map[String, RDFFormat]] = Map(
+    def addGeneOntologies(cxn: RepositoryConnection)
+    {
+        val geneOntologies: Map[String, Map[String, RDFFormat]] = Map(
+        "http://purl.obolibrary.org/obo/go.owl" -> Map("http://purl.obolibrary.org/obo/go.owl" -> RDFFormat.RDFXML),
+        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl_variation_ontology.owl" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl_variation_ontology.owl" -> RDFFormat.RDFXML),
+        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-mapping.owl" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-mapping.owl" -> RDFFormat.RDFXML),
+        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-terms.rdf" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-terms.rdf" -> RDFFormat.RDFXML),
+        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-void.ttl" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-void.ttl" -> RDFFormat.TURTLE)
+        )
+        addOntologiesFromMap(cxn, geneOntologies)
+    }
+    
+    def addDrugOntologies(cxn: RepositoryConnection)
+    {
+        val drugOntologies: Map[String, Map[String, RDFFormat]] = Map(
         "ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi_lite.owl" -> Map("ftp://ftp.ebi.ac.uk/pub/databases/chebi/ontology/chebi_lite.owl" -> RDFFormat.RDFXML),
         "https://bitbucket.org/uamsdbmi/dron/raw/6bcc56a003c6c4db6ffbcbca04e10d2712fadfd8/dron-rxnorm.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/6bcc56a003c6c4db6ffbcbca04e10d2712fadfd8/dron-rxnorm.owl" -> RDFFormat.RDFXML),
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-chebi.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-chebi.owl" -> RDFFormat.RDFXML),
@@ -45,47 +59,32 @@ class OntologyLoader extends ProjectwideGlobals
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ingredient.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ingredient.owl" -> RDFFormat.RDFXML),
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-pro.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-pro.owl" -> RDFFormat.RDFXML),
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ndc.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ndc.owl" -> RDFFormat.RDFXML)
-    )
+        )
         
-    private val diseaseOntologies: Map[String, Map[String, RDFFormat]] = Map(
-        "https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl" -> Map("https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl" -> RDFFormat.RDFXML),
-        "http://data.bioontology.org/ontologies/ICD10CM/submissions/"+getBioportalSubmissionInfo("ICD10CM").get+"/download?apikey="+bioportalAPIkey -> 
-                Map("http://data.bioontology.org/ontologies/ICD10CM/" -> RDFFormat.TURTLE),
-        "http://data.bioontology.org/ontologies/ICD9CM/submissions/"+getBioportalSubmissionInfo("ICD9CM").get+"/download?apikey="+bioportalAPIkey -> 
-                Map("http://data.bioontology.org/ontologies/ICD9CM/" -> RDFFormat.TURTLE)
-    )
-    
-    private val geneOntologies: Map[String, Map[String, RDFFormat]] = Map(
-        "http://purl.obolibrary.org/obo/go.owl" -> Map("http://purl.obolibrary.org/obo/go.owl" -> RDFFormat.RDFXML),
-        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl_variation_ontology.owl" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl_variation_ontology.owl" -> RDFFormat.RDFXML),
-        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-mapping.owl" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-mapping.owl" -> RDFFormat.RDFXML),
-        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-terms.rdf" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-terms.rdf" -> RDFFormat.RDFXML),
-        "https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-void.ttl" -> Map("https://raw.githubusercontent.com/Ensembl/VersioningService/master/rdf-support-files/ensembl-void.ttl" -> RDFFormat.TURTLE)
-    )
-    
-    private val miscOntologies: Map[String, Map[String, RDFFormat]] = Map(
-        "ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> Map("ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> RDFFormat.RDFXML),
-        "http://data.bioontology.org/ontologies/RXNORM/submissions/"+getBioportalSubmissionInfo("RXNORM").get+"/download?apikey="+bioportalAPIkey -> 
-          Map("http://data.bioontology.org/ontologies/RXNORM/" -> RDFFormat.RDFXML)
-    )
-    
-    def addGeneOntologies(cxn: RepositoryConnection)
-    {
-        addOntologiesFromMap(cxn, geneOntologies)
-    }
-    
-    def addDrugOntologies(cxn: RepositoryConnection)
-    {
         addOntologiesFromMap(cxn, drugOntologies)
     }
     
     def addDiseaseOntologies(cxn: RepositoryConnection)
     {
+        val diseaseOntologies: Map[String, Map[String, RDFFormat]] = Map(
+        "https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl" -> Map("https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl" -> RDFFormat.RDFXML),
+        "http://data.bioontology.org/ontologies/ICD10CM/submissions/"+getBioportalSubmissionInfo("ICD10CM").get+"/download?apikey="+bioportalAPIkey -> 
+                Map("http://data.bioontology.org/ontologies/ICD10CM/" -> RDFFormat.TURTLE),
+        "http://data.bioontology.org/ontologies/ICD9CM/submissions/"+getBioportalSubmissionInfo("ICD9CM").get+"/download?apikey="+bioportalAPIkey -> 
+                Map("http://data.bioontology.org/ontologies/ICD9CM/" -> RDFFormat.TURTLE)
+        )
+        
         addOntologiesFromMap(cxn, diseaseOntologies)
     }
     
     def addMiscOntologies(cxn: RepositoryConnection)
     {
+        val miscOntologies: Map[String, Map[String, RDFFormat]] = Map(
+        "ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> Map("ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> RDFFormat.RDFXML),
+        "http://data.bioontology.org/ontologies/RXNORM/submissions/"+getBioportalSubmissionInfo("RXNORM").get+"/download?apikey="+bioportalAPIkey -> 
+          Map("http://data.bioontology.org/ontologies/RXNORM/" -> RDFFormat.RDFXML)
+        )
+        
         addOntologiesFromMap(cxn, miscOntologies)
     }
     

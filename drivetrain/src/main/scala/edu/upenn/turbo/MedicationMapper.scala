@@ -110,4 +110,17 @@ class MedicationMapper extends ProjectwideGlobals
          """
         update.querySparql(cxn, sparqlPrefixes + getInfo)
     }
+    
+  def queryBioportal(searchTerm: String, apiKey: String)
+  {
+      val post = new HttpPost("http://data.bioontology.org/search?q="+searchTerm)
+      post.setHeader("Authorization", "api-key token="+apiKey)
+      val client = HttpClientBuilder.create().build()
+      val response = client.execute(post)
+      val responseData = response.getEntity
+      val responseString: String = EntityUtils.toString(responseData)
+      logger.info(responseString)
+      response.close()
+      client.close()
+  }
 }

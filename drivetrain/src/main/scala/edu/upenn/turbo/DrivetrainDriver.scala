@@ -107,6 +107,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
+              else if (args(0) == "queryBioportal") medmap.queryBioportal("melanoma", "5095cf97-751f-46c6-81fe-428b8d124480")
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
