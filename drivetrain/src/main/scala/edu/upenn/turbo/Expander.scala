@@ -16,38 +16,38 @@ class Expander extends ProjectwideGlobals
     /**
      * Calls all methods responsible for expanding all shortcut entities available in shortcut named graphs. 
      */
-    def expandAllShortcutEntities (cxn: RepositoryConnection): IRI =
+    def expandAllShortcutEntities (cxn: RepositoryConnection, globalUUID: String): IRI =
     {   
         val instantiation: IRI = helper.genPmbbIRI(cxn)
         val graphsString: String = helper.generateShortcutNamedGraphsString(cxn)
         logger.info("graphsstring: " + graphsString)
-        encounterExpansion(cxn, instantiation, graphsString)
+        encounterExpansion(cxn, instantiation, graphsString, globalUUID)
         logger.info("finished encounter expansion")
-        expandAllParticipants(cxn, instantiation, graphsString)
+        expandAllParticipants(cxn, instantiation, graphsString, globalUUID)
         logger.info("finished participant expansion")
-        biobankEncounterParticipantJoinExpansion(cxn, instantiation, graphsString)
+        biobankEncounterParticipantJoinExpansion(cxn, instantiation, graphsString, globalUUID)
         logger.info("finished biobank join expansion, starting healthcare join expansion")
-        healthcareEncounterParticipantJoinExpansion(cxn, instantiation, graphsString)
+        healthcareEncounterParticipantJoinExpansion(cxn, instantiation, graphsString, globalUUID)
         logger.info("finished join expansion")
         instantiation
     }
     
-    def expandAllParticipants(cxn: RepositoryConnection, instantiation: IRI, graphString: String)
+    def expandAllParticipants(cxn: RepositoryConnection, instantiation: IRI, graphString: String, globalUUID: String)
     {
         val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
-        participantExpansion(cxn, instantiation, graphString, randomUUID)
-        expandParticipantsMultipleIdentifiers(cxn, instantiation, graphString, randomUUID)
+        participantExpansion(cxn, instantiation, graphString, randomUUID, globalUUID)
+        expandParticipantsMultipleIdentifiers(cxn, instantiation, graphString, randomUUID, globalUUID)
     }
     
     /**
      * Calls all methods responsible for expanding all shortcut entities available in encounter shortcut named graphs.
      */
-    def encounterExpansion (cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
+    def encounterExpansion (cxn: RepositoryConnection, instantiation: IRI, graphsString: String, globalUUID: String)
     {     
         logger.info("starting hc enc expansion")
-        expandHealthcareEncounterShortcuts(cxn, instantiation, graphsString)
+        expandHealthcareEncounterShortcuts(cxn, instantiation, graphsString, globalUUID)
         logger.info("finished hc enc expansion, starting bb enc expansion")
-        expandBiobankEncounterShortcuts(cxn, instantiation, graphsString)
+        expandBiobankEncounterShortcuts(cxn, instantiation, graphsString, globalUUID)
         logger.info("finished bb enc expansion")
     }
     
@@ -55,9 +55,9 @@ class Expander extends ProjectwideGlobals
      * Submits a SPARQL expansion update to the graph server which expands biobank encounter to biobank consenter entity linking shortcuts
      * to their fully ontologied form.
      */
-    def biobankEncounterParticipantJoinExpansion(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
+    def biobankEncounterParticipantJoinExpansion(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, globalUUID: String)
     {
-        val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
+        //val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         val expand: String = """
           Insert
           {
@@ -128,7 +128,7 @@ class Expander extends ProjectwideGlobals
               Bind(Uri(?partRegUriLit) As ?partRegURI)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?bbEncCrid)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?partCrid)
-              BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + randomUUID + """", str(?datasetTitle))))) AS ?dataset)
+              BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + globalUUID + """", str(?datasetTitle))))) AS ?dataset)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?bbEncSymb)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?bbEncRegDen)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?partSymb)
@@ -144,9 +144,9 @@ class Expander extends ProjectwideGlobals
      * Submits a SPARQL expansion update to the graph server which expands healthcare encounter to biobank consenter entity linking shortcuts
      * to their fully ontologied form.
      */
-    def healthcareEncounterParticipantJoinExpansion(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
+    def healthcareEncounterParticipantJoinExpansion(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, globalUUID: String)
     {
-        val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
+        //val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         val expand: String = """
           Insert
           {
@@ -216,7 +216,7 @@ class Expander extends ProjectwideGlobals
               Bind(Uri(?partRegUriLit) As ?partRegURI)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?hcEncCrid)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?partCrid)
-              BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + randomUUID + """", str(?datasetTitle))))) AS ?dataset)
+              BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + globalUUID + """", str(?datasetTitle))))) AS ?dataset)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?hcEncSymb)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?hcEncRegDen)
               Bind(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?partSymb)
@@ -232,7 +232,7 @@ class Expander extends ProjectwideGlobals
      * Submits a SPARQL expansion update to the graph server which expands biobank consenter shortcuts to their fully ontologied form. This method is used for deprecated
      * shortcut triples which we still are supporting. This shortcut model does not include a CRID and therefore supports only one identifier per consenter.
      */
-    def participantExpansion (cxn: RepositoryConnection, instantiation: IRI, graphsString: String, randomUUID: String)
+    def participantExpansion (cxn: RepositoryConnection, instantiation: IRI, graphsString: String, randomUUID: String, globalUUID: String)
     {
         logger.info("running part expansion")
         val participantExpansion = """
@@ -362,7 +362,7 @@ class Expander extends ProjectwideGlobals
         		# probably won't work with more complex ref-tracking/conclusionating algorithms
         		#
         		# for each of these bindings, create a type assertion in the construct/insert block
-        		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + randomUUID + """", str(?datasetTitle))))) AS ?dataset)
+        		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + globalUUID + """", str(?datasetTitle))))) AS ?dataset)
         		BIND(uri("""" + instantiation + """") AS ?instantiation)
         		#
         		BIND(uri(?consenterRegistryString) AS ?consenterRegistry)
@@ -395,7 +395,7 @@ class Expander extends ProjectwideGlobals
      * Submits a SPARQL expansion update to the graph server which expands biobank consenter shortcuts to their fully ontologied form. This method uses the latest
      * consenter shortcut properties including potentially multiple CRIDs, which allows for multiple identifiers per consenter.
      */
-    def expandParticipantsMultipleIdentifiers(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, randomUUID: String)
+    def expandParticipantsMultipleIdentifiers(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, randomUUID: String, globalUUID: String)
     {
         val participantExpansion = """
         INSERT {
@@ -515,7 +515,7 @@ class Expander extends ProjectwideGlobals
         		{
         		  ?shortcutPart turbo:TURBO_0000615 ?ridString .
         		}
-        		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + randomUUID + """", str(?datasetTitle))))) AS ?dataset)
+        		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + globalUUID + """", str(?datasetTitle))))) AS ?dataset)
         		BIND(uri("""" + instantiation + """") AS ?instantiation)
         		#
         		BIND(uri(?consenterRegistryString) AS ?consenterRegistry)
@@ -546,7 +546,7 @@ class Expander extends ProjectwideGlobals
     /**
      * Submits a SPARQL expansion update to the graph server which expands biobank encounter shortcuts to their fully ontologied form.
      */
-    def expandBiobankEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
+    def expandBiobankEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, globalUUID: String)
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         val biobankEncounterExpansion = """
@@ -659,7 +659,7 @@ class Expander extends ProjectwideGlobals
             			?encFromKarma         turbo:TURBO_0000625  ?encDateMeasVal .
             		}
             		BIND(uri(?bbEncRegIdString) AS ?bbEncRegId)
-            		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + randomUUID + """", str(?dsTitle))))) AS ?dataset)
+            		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + globalUUID + """", str(?dsTitle))))) AS ?dataset)
             		BIND(uri("""" + instantiation + """") AS ?instantiation)
             		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?encounter)
             		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?encounterCrid)
@@ -685,7 +685,7 @@ class Expander extends ProjectwideGlobals
     /**
      * Submits a SPARQL expansion update to the graph server which expands healthcare consenter shortcuts to their fully ontologized form.
      */
-    def expandHealthcareEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String)
+    def expandHealthcareEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, globalUUID: String)
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         logger.info("running enc expansion")
@@ -880,7 +880,7 @@ class Expander extends ProjectwideGlobals
             		#
             		# for each of these bindings, create a type assertion in the construct/insert block
             		# FILTER (?dsTitle1 != ?dsTitle2)
-            		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + randomUUID + """", str(?dsTitle1))))) AS ?dataset)
+            		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + globalUUID + """", str(?dsTitle1))))) AS ?dataset)
             		BIND(uri("""" + instantiation + """") AS ?instantiation)
             		#
             		BIND(uri(?hcRegIdURIString) AS ?hcEncRegId)
@@ -917,7 +917,7 @@ class Expander extends ProjectwideGlobals
           update.updateSparql(cxn, sparqlPrefixes + healthcareEncounterExpansion) 
     }
     
-    def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: IRI, lofGraphs: ArrayBuffer[String])
+    def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: IRI, lofGraphs: ArrayBuffer[String], globalUUID: String)
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         for (graph <- lofGraphs)
@@ -1043,7 +1043,7 @@ class Expander extends ProjectwideGlobals
                 	    ?consenter a turbo:TURBO_0000502 .
                 	}    
                 	    
-                	BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + randomUUID + """", str(?datasetTitle))))) AS ?dataset)
+                	BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + globalUUID + """", str(?datasetTitle))))) AS ?dataset)
                 	Bind (uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?allele)
                 	Bind (uri(?zygosityValURI) AS ?zygVal) 
                 	Bind (uri(?genomeReg) AS ?genomeRegURI)  

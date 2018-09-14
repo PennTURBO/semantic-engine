@@ -24,7 +24,8 @@ class DrivetrainSparqlChecks extends ProjectwideGlobals
         logger.info("graph string with from: " + graphsStringAsFrom)
         
         logger.info("starting pre-expansion checks")
-        var proceed: Boolean = precheck.checkAllSubjectsHaveAType(cxn, graphsString)
+        var proceed: Boolean = precheck.checkForTurboOntology(cxn)
+        if (proceed) proceed = precheck.checkAllSubjectsHaveAType(cxn, graphsString)
         if (proceed) proceed = precheck.checkForUnexpectedClasses(cxn, graphsString)
         if (proceed) proceed = precheck.checkAllObjectsAreLiterals(cxn, graphsString)
         //if (proceed) proceed = precheck.checkForPropertiesOutOfRange(cxn, graphsString)

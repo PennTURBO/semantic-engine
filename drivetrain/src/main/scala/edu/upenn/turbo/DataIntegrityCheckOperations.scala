@@ -46,18 +46,25 @@ class DataIntegrityCheckOperations extends ProjectwideGlobals
      */
     def checkResultForError(result: ArrayBuffer[ArrayBuffer[Value]], ruleNumber: Int): Boolean =
     {
+         //this rule enforces that no results are present - this is the default rule used if none provided
          if (ruleNumber == 1)
          {
-             //this rule enforces that no results are present - this is the default rule used if none provided
              if (result.size > 0 && result(0)(0) != null) true
              else false
          }
+         //this rule enforces that there is exactly one result
          else if (ruleNumber == 2)
          {
-             //this rule enforces that there is exactly one result
              if (result.size == 1) false
              else true
          }
-         else false
+         //this rule enforces that there is at least one result
+         else if (ruleNumber == 3)
+         {
+             if (result.size > 0) false
+             else true
+         }
+           
+         else throw new RuntimeException("Whoops! Did not receive a rule declaration.")
     }
 }

@@ -10,6 +10,17 @@ class SparqlPreExpansionChecks extends ProjectwideGlobals {
     
 val operation: DataIntegrityCheckOperations = new DataIntegrityCheckOperations
 
+def checkForTurboOntology (cxn: RepositoryConnection): Boolean =
+{
+    val check: String = "select * where {graph pmbb:ontology {?s ?p ?o .}}"
+    val explanation: String = 
+    """
+    Did not find the TURBO ontology, which is required to run expansion. 
+    Load the ontology by using command 'loadTurboOntology'.
+    """
+    operation.runSparqlCheck(cxn, check, ArrayBuffer(), "pre-expansion", explanation, 3)
+}
+
 def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
     {   
         val check: String =

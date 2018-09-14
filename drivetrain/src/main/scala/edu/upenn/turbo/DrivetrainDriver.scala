@@ -6,6 +6,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection
 import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
 import org.eclipse.rdf4j.rio.RDFFormat
 import scala.collection.mutable.ArrayBuffer
+import java.util.UUID
 
 object DrivetrainDriver extends ProjectwideGlobals {
   val connect: ConnectToGraphDB = new ConnectToGraphDB
@@ -35,10 +36,12 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def main(args: Array[String]): Unit =
   {
+      val globalUUID = UUID.randomUUID().toString().replaceAll("-", "")
       if (args.size == 0) logger.info("At least one command line argument required to run the drivetrain application.")
-      else if (args(0) == "benchmark") benchmark.runBenchmarking(args)
+      else if (args(0) == "benchmark") benchmark.runBenchmarking(args, globalUUID)
       else
       {
+          logger.info("Note that running Drivetrain with any command other than 'all' is supported for testing but should not be executed in production.")
           var cxn: RepositoryConnection = null
           var repoManager: RemoteRepositoryManager = null
           var repository: Repository = null
@@ -58,14 +61,14 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       var postexpandProceed: Boolean = true
                       if (args.size > 3)
                       {
-                          if (args(3) == "--skipchecks") postexpandProceed = runExpansion(cxn, false)
-                          else postexpandProceed = runExpansion(cxn)
+                          if (args(3) == "--skipchecks") postexpandProceed = runExpansion(cxn, globalUUID, false)
+                          else postexpandProceed = runExpansion(cxn, globalUUID)
                       }
-                      else postexpandProceed = runExpansion(cxn)
+                      else postexpandProceed = runExpansion(cxn, globalUUID)
                       if (postexpandProceed)
                       {
                           runReferentTracking(cxn)
-                          runEntityLinking(cxn, true)
+                          runEntityLinking(cxn, globalUUID, true)
                           val concProceed = runConclusionating(cxn, thresholds.get(0), thresholds.get(1))
                           if (concProceed) 
                           {
@@ -81,16 +84,16 @@ object DrivetrainDriver extends ProjectwideGlobals {
               {
                   if (args.size > 1)
                   {
-                      if (args(1) == "--skipchecks") runExpansion(cxn, false)
-                      else runExpansion(cxn)
+                      if (args(1) == "--skipchecks") runExpansion(cxn, globalUUID, false)
+                      else runExpansion(cxn, globalUUID)
                   }
-                  else runExpansion(cxn)
+                  else runExpansion(cxn, globalUUID)
               }
               else if (args(0) == "reftrack") runReferentTracking(cxn)
               else if (args(0) == "entlink" && args.size > 1) 
               {
-                  if (args(1) == "true") runEntityLinking(cxn, true)
-                  else if (args(1) == "false") runEntityLinking(cxn, false)
+                  if (args(1) == "true") runEntityLinking(cxn, globalUUID, true)
+                  else if (args(1) == "false") runEntityLinking(cxn, globalUUID, false)
                   else logger.info("Second argument for entity linking should be boolean - true to load LOF data, false to not load LOF data")
               }
               else if (args(0) == "conclusionate") 
@@ -102,12 +105,12 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "medmap") runMedicationMapping(cxn)
               else if (args(0) == "i2i2c2c") runI2i2c2cMapping(cxn, args)
               else if (args(0) == "reasoner") runInferenceWithAddedOntologies(cxn)
-              else if (args(0) == "loadRepo") helper.loadDataFromFile(cxn, args(1), RDFFormat.TURTLE)
+              else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.TURTLE)
+              else if (args(0) == "loadRepoFromUrl") ontLoad.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
               else if (args(0) == "loadTurboOntology") ontLoad.addOntologyFromUrl(cxn)
               else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
-              else if (args(0) == "queryBioportal") medmap.queryBioportal("melanoma", "5095cf97-751f-46c6-81fe-428b8d124480")
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
@@ -140,7 +143,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       thresholds
   }
   
-  def runExpansion(cxn: RepositoryConnection, runChecks: Boolean = true): Boolean =
+  def runExpansion(cxn: RepositoryConnection, globalUUID: String, runChecks: Boolean = true): Boolean =
   {
       logger.info("running expansion")
       var postcheckProceed: Boolean = true
@@ -151,7 +154,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       if (precheckProceed)
       {
           helper.applySymmetricalProperties(cxn)
-          instantiation = Some(expand.expandAllShortcutEntities(cxn))
+          instantiation = Some(expand.expandAllShortcutEntities(cxn, globalUUID))
           logger.info("Encounters and participants have been expanded.")
           if (runChecks) postcheckProceed = sparqlChecks.postExpansionChecks(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "post-expansion")
           logger.info("Post expansion checks passed: " + postcheckProceed)
@@ -183,7 +186,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       logger.info("All referent tracking complete")
   }
   
-  def runEntityLinking(cxn: RepositoryConnection, loadLOFData: Boolean)
+  def runEntityLinking(cxn: RepositoryConnection, globalUUID: String, loadLOFData: Boolean)
   {
       logger.info("starting entity linking")
       join.joinParticipantsAndEncounters(cxn)
@@ -193,8 +196,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
       logger.info("connecting biobank encounters to LOF data")
       join.connectLossOfFunctionToBiobankEncounters(cxn, lofGraphs)
       logger.info("expanding LOF data")
-      if (instantiation == None) expand.expandLossOfFunctionShortcuts(cxn, helper.genTurboIRI(cxn), lofGraphs)
-      else expand.expandLossOfFunctionShortcuts(cxn, instantiation.get, lofGraphs)
+      if (instantiation == None) expand.expandLossOfFunctionShortcuts(cxn, helper.genTurboIRI(cxn), lofGraphs, globalUUID)
+      else expand.expandLossOfFunctionShortcuts(cxn, instantiation.get, lofGraphs, globalUUID)
       expand.createErrorTriplesForUnexpandedAlleles(cxn, lofGraphs)
       logger.info("All entity linking complete")
   }

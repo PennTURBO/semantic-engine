@@ -110,9 +110,9 @@ class OntologyLoader extends ProjectwideGlobals
             val OntoBase = "http://transformunify.org/ontologies/"
          
             cxn.begin()
-            logger.info("At add step...")
+            //logger.info("At add step...")
             cxn.add(OntoUrl, OntoBase, formatting.head._2, OntoGraphName)
-            logger.info("Finished try block.")
+            //logger.info("Finished try block.")
         }
         catch
         {
@@ -127,9 +127,9 @@ class OntologyLoader extends ProjectwideGlobals
                 helper.writeErrorLog("Ontology loading", "Failed to load ontology " + ontology)
             }
         }
-        logger.info("Committing transaction...")
+        //logger.info("Committing transaction...")
         cxn.commit()
-        logger.info("Committing complete.")
+        //logger.info("Committing complete.")
     }
     
     def getBioportalSubmissionInfo(ontology: String): Option[Int] =

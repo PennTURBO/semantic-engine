@@ -48,9 +48,11 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
      * It is subtracted from the total time at the end
      */
     var subtractFromTotal: Double = 0
+    var globalUUID = ""
   
-    def runBenchmarking(args: Array[String]): Unit =
+    def runBenchmarking(args: Array[String], incomingUUID: String): Unit =
     {
+        globalUUID = incomingUUID
         logger.info("Beginning benchmarking sequence")
         logger.info("Output available in turbo/benchmarking")
         val currTime: String = helper.getCurrentTimestamp()
@@ -209,14 +211,14 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //expand healthcare encounters
         val startExpHcEncs = System.nanoTime()
-        expand.expandHealthcareEncounterShortcuts(cxn, instantiation, graphsList)
+        expand.expandHealthcareEncounterShortcuts(cxn, instantiation, graphsList, globalUUID)
         val stopExpHcEncs = System.nanoTime()
         
         writeCSV.println("Expand Healthcare Encounters," + ((stopExpHcEncs - startExpHcEncs)/1000000000.0).toString)
         
         //expand biobank encounters
         val startExpBbEncs = System.nanoTime()
-        expand.expandBiobankEncounterShortcuts(cxn, instantiation, graphsList)
+        expand.expandBiobankEncounterShortcuts(cxn, instantiation, graphsList, globalUUID)
         val stopExpBbEncs = System.nanoTime()
         
         writeCSV.println("Expand Biobank Encounters," + ((stopExpBbEncs - startExpBbEncs)/1000000000.0).toString)
@@ -224,22 +226,22 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         //expand biobank consenters
         val startExpBbCons = System.nanoTime()
         val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
-        expand.participantExpansion(cxn, instantiation, graphsList, randomUUID)
-        expand.expandParticipantsMultipleIdentifiers(cxn, instantiation, graphsList, randomUUID)
+        expand.participantExpansion(cxn, instantiation, graphsList, randomUUID, globalUUID)
+        expand.expandParticipantsMultipleIdentifiers(cxn, instantiation, graphsList, randomUUID, globalUUID)
         val stopExpBbCons = System.nanoTime()
         
         writeCSV.println("Expand Biobank Consenters," + ((stopExpBbCons - startExpBbCons)/1000000000.0).toString)
         
         //expand biobank encounter - biobank consenter joins
         val startExpBbConsToBbEncs = System.nanoTime()
-        expand.biobankEncounterParticipantJoinExpansion(cxn, instantiation, graphsList)
+        expand.biobankEncounterParticipantJoinExpansion(cxn, instantiation, graphsList, globalUUID)
         val stopExpBbConsToBbEncs = System.nanoTime()
         
         writeCSV.println("Expand Bb Enc to Bb Cons Joins," + ((stopExpBbConsToBbEncs - startExpBbConsToBbEncs)/1000000000.0).toString)
         
         //expand healthcare encounter - biobank consenter joins
         val startExpBbConsToHcEncs = System.nanoTime()
-        expand.healthcareEncounterParticipantJoinExpansion(cxn, instantiation, graphsList)
+        expand.healthcareEncounterParticipantJoinExpansion(cxn, instantiation, graphsList, globalUUID)
         val stopExpBbConsToHcEncs = System.nanoTime()
         
         writeCSV.println("Expand Hc Enc to Bb Cons Joins," + ((stopExpBbConsToHcEncs - startExpBbConsToHcEncs)/1000000000.0).toString)
@@ -388,7 +390,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //expand loss of function
         val startLOFexpand = System.nanoTime()
-        expand.expandLossOfFunctionShortcuts(cxn, instantiation, lofGraphs)
+        expand.expandLossOfFunctionShortcuts(cxn, instantiation, lofGraphs, globalUUID)
         val stopLOFexpand = System.nanoTime()
         
         writeCSV.println("Expand Loss of Function Data," + ((stopLOFexpand - startLOFexpand)/1000000000.0).toString)
