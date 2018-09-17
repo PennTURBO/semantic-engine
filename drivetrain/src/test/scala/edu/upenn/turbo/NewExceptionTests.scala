@@ -15,6 +15,7 @@ import org.eclipse.rdf4j.rio.RDFFormat
 import org.eclipse.rdf4j.query.QueryLanguage
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
+import java.util.UUID
 
 class NewExceptionTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals {
 
@@ -32,6 +33,8 @@ class NewExceptionTests extends FunSuiteLike with BeforeAndAfter with Matchers w
   var cxn: RepositoryConnection = null
   var repoManager: RemoteRepositoryManager = null
   var repository: Repository = null
+  
+  val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
 
   //this is the flag of whether to keep or delete triples after the run
   val deleteTriplesOrDatabaseFileAfterRun: Boolean = false
@@ -131,7 +134,7 @@ class NewExceptionTests extends FunSuiteLike with BeforeAndAfter with Matchers w
     val preOK = sparqlCheckInst.preExpansionChecks(cxn)
     assert(preOK, "The pre-expansion checkers rejected the comlete/aceptible input participant triples")
 
-    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here", "random UUID here")
+    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here", "random UUID here", randomUUID)
 
     graphList = SparqlHelper.ListNamedGraphs(cxn)
     expectedGraphs = Set[String](
@@ -793,7 +796,7 @@ turbo:r2rinst1
 
     SparqlHelper.InsertFromString(cxn, TriplesString, DestinationGraph)
 
-    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here", "random UUID here")
+    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here", "random UUID here", randomUUID)
 
     // this should be true after com.example.app.FullStackPostReorgSparql.ExpandPartScTrips
     // OR com.example.app.FullStackAllSparql.participantExpansion

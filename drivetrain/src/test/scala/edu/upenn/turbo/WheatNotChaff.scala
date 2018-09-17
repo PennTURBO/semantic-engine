@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.rio.RDFFormat
 import org.eclipse.rdf4j.rio.Rio
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
+import java.util.UUID
 //import com.example.incubator.karmaClientHelper
 
 // write more tests checking for processes, inputs and outputs
@@ -107,6 +108,8 @@ class WheatNotChaff extends FunSuiteLike with BeforeAndAfter with Matchers with 
   var repoManager: RemoteRepositoryManager = null
   var repository: Repository = null
 
+  val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
+  
   //  //this is the flag of whether to keep or delete triples after the run
   //  val deleteTriplesOrDatabaseFileAfterRun: Boolean = false
 
@@ -245,7 +248,7 @@ INSERT DATA {
 
     //HAYDEN 10/13 supplying IRI
     val f: ValueFactory = cxn.getValueFactory()
-    expand.encounterExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/R2Rinst1"), "shortcut graphs here")
+    expand.encounterExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/R2Rinst1"), "shortcut graphs here", randomUUID)
 
     helper.moveDataFromOneNamedGraphToAnother(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "http://www.itmat.upenn.edu/biobank/expanded")
     
@@ -1537,7 +1540,7 @@ INSERT DATA {
 
     //HAYDEN 10/13 3:53 pm adding IRI to method call
     val f: ValueFactory = cxn.getValueFactory()
-    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/R2RInst2"), "shortcut graphs here", "random UUID here")
+    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/R2RInst2"), "shortcut graphs here", "random UUID here", randomUUID)
 
     helper.moveDataFromOneNamedGraphToAnother(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "http://www.itmat.upenn.edu/biobank/expanded")
 

@@ -23,6 +23,8 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     var masterPlanspec: IRI = null
     var masterPlan: IRI = null
     
+    val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
+    
     val instantiationAndDataset: String = """
       ASK { GRAPH <http://www.itmat.upenn.edu/biobank/postExpansionCheck> {
           
@@ -104,7 +106,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""))
+            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
         
         val extraFields: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
@@ -193,7 +195,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""))
+            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (true)
@@ -240,7 +242,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""))
+            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -262,7 +264,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""))
+            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -284,7 +286,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""))
+            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -312,7 +314,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.participantExpansion(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""))
+            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
         
         val dateNoXsd: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
@@ -410,7 +412,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.expandParticipantsMultipleIdentifiers(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""))
+            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
     
         val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
@@ -555,7 +557,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         expand.expandParticipantsMultipleIdentifiers(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
             "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts1><http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts2><http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts3>",
-            UUID.randomUUID().toString.replaceAll("-", ""))
+            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
     
           val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
@@ -701,7 +703,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.expandAllParticipants(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
-            "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>")
+            "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>", randomUUID)
             
         val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
@@ -845,7 +847,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.updateSparql(cxn, sparqlPrefixes + insert)
         expand.expandAllParticipants(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
-            "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts1><http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts2>")
+            "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts1><http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts2>", randomUUID)
     
         val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {

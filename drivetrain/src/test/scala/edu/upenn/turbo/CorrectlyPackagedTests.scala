@@ -7,6 +7,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection
 import org.eclipse.rdf4j.rio.RDFFormat
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
+import java.util.UUID
 
 class CorrectlyPackagedTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals {
 
@@ -53,15 +54,16 @@ class CorrectlyPackagedTests extends FunSuiteLike with BeforeAndAfter with Match
 
     SparqlHelper.InsertPartScTripsGidClarified(cxn)
     // TODO: ADD TEST?: were the expected shortcut triples inserted
+    val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
 
     //HAYDEN 10/10 3:34 PM I am adding the argument for the instantiation process which now must be supplied
-    expand.encounterExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here")
+    expand.encounterExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here", randomUUID)
 
     // TODO: ask test... participant expansion is select... make them both selects?
     val EncExpSuccess = SparqlHelper.CheckExpandedEncScTrips(cxn)
     assert(EncExpSuccess, "...Encounters were not expanded as expected")
 
-    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here", "random UUID here")
+    expand.participantExpansion(cxn, f.createIRI("http://transformunify.org/ontologies/r2rinst1"), "shortcut graphs here", "random UUID here", randomUUID)
 
     // TODO: select test... encounter expansion is an ask... make them both selects?
     val PartExpRes = SparqlHelper.CheckExpandedPartScTripsClarifiedGID(cxn)

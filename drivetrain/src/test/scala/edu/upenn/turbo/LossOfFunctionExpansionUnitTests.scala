@@ -8,6 +8,7 @@ import org.eclipse.rdf4j.model.IRI
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
+import java.util.UUID
 
 class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
@@ -17,6 +18,8 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
     var repository: Repository = null
     val clearDatabaseAfterRun: Boolean = true
     val expand: Expander = new Expander
+    
+    val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
     
     before
     {
@@ -167,7 +170,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
     {
         expand.expandLossOfFunctionShortcuts(cxn, 
             cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
-            ArrayBuffer("http://www.itmat.upenn.edu/biobank/LOFShortcuts"))  
+            ArrayBuffer("http://www.itmat.upenn.edu/biobank/LOFShortcuts"), randomUUID)  
         
         val countTrips: String = 
         """
