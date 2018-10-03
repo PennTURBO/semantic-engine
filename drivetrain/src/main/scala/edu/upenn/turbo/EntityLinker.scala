@@ -238,8 +238,8 @@ class EntityLinker extends ProjectwideGlobals
                 ?entLinkPartSymb turbo:TURBO_0006510 ?pilv .
                 ?entLinkPartCrid obo:BFO_0000051 ?entLinkPartRegDen .
                 ?entLinkPartRegDen a turbo:TURBO_0000505 .
-                ?entLinkPartRegDen obo:IAO_0000219 ?BbConsRegId .
-                ?BbConsRegId a turbo:TURBO_0000506 .
+                ?entLinkPartRegDen obo:IAO_0000219 ?bbConsRegId .
+                ?bbConsRegId a turbo:TURBO_0000506 .
             }}
         """
       update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getJoinInfo, ArrayBuffer("eilv", "hcEncRegId", "pilv", "BbConsRegId", "entLinkPartCrid", "entLinkHcCrid"))
@@ -465,5 +465,193 @@ class EntityLinker extends ProjectwideGlobals
                 """
             update.updateSparql(cxn, sparqlPrefixes + makeURIs)
         }
+    }
+    
+    def runPreExpansionLinking(cxn: RepositoryConnection, globalUUID: String)
+    {
+        linkUnexpandedHcEncountersToUnexpandedConsenters(cxn, globalUUID)
+        linkUnexpandedBbEncountersToUnexpandedConsenters(cxn, globalUUID)
+        createJoinDataFromUnlinkedHcEncounters(cxn)
+        createJoinDataFromUnlinkedBbEncounters(cxn)
+    }
+    
+    def linkUnexpandedHcEncountersToUnexpandedConsenters(cxn: RepositoryConnection, globalUUID: String)
+    {
+        val createLinks: String = """
+          Insert
+          {
+              Graph pmbb:expanded
+              {
+                  ?expandedConsenter obo:RO_0000056 ?expandedEncounter .
+              }
+          }
+          Where
+          {
+              Values ?regValues {turbo:TURBO_0000610 turbo:TURBO_0003610}
+              Graph ?g1
+              {
+                  ?hcEnc a obo:OGMS_0000097 .
+                  ?hcEnc turbo:ScHcEnc2UnexpandedConsenter ?consenterUriString .
+                  ?hcEnc turbo:ScHcEnc2ConsenterReg ?consenterRegistryUriString .
+                  Bind(uri(?consenterUriString) as ?consenter)
+              }
+              Graph ?g2
+              {
+                  ?consenter a turbo:TURBO_0000502 .
+                  ?consenter ?regValues ?consenterRegistryUriString .
+              }
+              BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + globalUUID + """", str(?consenter))))) AS ?expandedConsenter)
+              BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc encounter", """" + globalUUID + """", str(?hcEnc))))) AS ?expandedEncounter)
+          }
+          """
+          update.updateSparql(cxn, sparqlPrefixes + createLinks)
+    }
+    
+    def linkUnexpandedBbEncountersToUnexpandedConsenters(cxn: RepositoryConnection, globalUUID: String)
+    {
+        val createLinks: String = """
+          Insert
+          {
+              Graph pmbb:expanded
+              {
+                  ?expandedConsenter obo:RO_0000056 ?expandedEncounter .
+              }
+          }
+          Where
+          {
+              Values ?regValues {turbo:TURBO_0000610 turbo:TURBO_0003610}
+              Graph ?g1
+              {
+                  ?bbEnc a turbo:TURBO_0000527 .
+                  ?bbEnc turbo:ScBbEnc2UnexpandedConsenter ?consenterUriString .
+                  ?bbEnc turbo:ScBbEnc2ConsenterReg ?consenterRegistryUriString .
+                  Bind(uri(?consenterUriString) as ?consenter)
+              }
+              Graph ?g2
+              {
+                  ?consenter a turbo:TURBO_0000502 .
+                  ?consenter ?regValues ?consenterRegistryUriString .
+              }
+              BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + globalUUID + """", str(?consenter))))) AS ?expandedConsenter)
+              BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("bb encounter", """" + globalUUID + """", str(?bbEnc))))) AS ?expandedEncounter)
+          }
+          """
+          update.updateSparql(cxn, sparqlPrefixes + createLinks)
+    }
+    
+    def createJoinDataFromUnlinkedHcEncounters(cxn: RepositoryConnection)
+    {
+        val createJoinData: String = """
+            Insert
+            {
+                Graph pmbb:entityLinkData
+                {
+                    ?entLinkHcCrid a turbo:TURBO_0000508 .
+                    ?entLinkHcCrid obo:BFO_0000051 ?entLinkHcSymb .
+                    ?entLinkHcSymb turbo:TURBO_0006510 ?encId .
+                    ?entLinkHcSymb a turbo:TURBO_0000509 .
+                    ?entLinkHcCrid obo:BFO_0000051 ?entLinkHcRegDen .
+                    ?entLinkHcRegDen a turbo:TURBO_0000510 .
+                    ?entLinkHcRegDen obo:IAO_0000219 ?hcEncRegId .
+                    ?hcEncRegId a turbo:TURBO_0000513 .
+                    
+                    ?entLinkPartCrid turbo:TURBO_0000302 ?entLinkHcCrid .
+                    
+                    ?entLinkPartCrid a turbo:TURBO_0000503 .
+                    ?entLinkPartCrid obo:BFO_0000051 ?entLinkPartSymb .
+                    ?entLinkPartSymb a turbo:TURBO_0000504 .
+                    ?entLinkPartSymb turbo:TURBO_0006510 ?consId .
+                    ?entLinkPartCrid obo:BFO_0000051 ?entLinkPartRegDen .
+                    ?entLinkPartRegDen a turbo:TURBO_0000505 .
+                    ?entLinkPartRegDen obo:IAO_0000219 ?bbConsRegId .
+                    ?bbConsRegId a turbo:TURBO_0000506 .
+                }
+            }
+            Where
+            {
+                Graph ?g 
+                {
+                    ?hcEnc a obo:OGMS_0000097 .
+                    ?hcEnc turbo:ScHcEnc2ConsId ?consId . 
+                    ?hcEnc turbo:TURBO_0000648 ?encId .
+                    ?hcEnc turbo:TURBO_0000650 ?hcRegistryUriString .
+                    ?hcEnc turbo:ScHcEnc2ConsenterReg ?consRegistryUriString .
+                }
+                Minus
+                {
+                    Graph pmbb:expanded
+                    {
+                        ?consenter obo:RO_0000056 ?hcEnc .
+                    }
+                }
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkHcCrid)
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkHcSymb)
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkHcRegDen)
+                BIND(uri(?hcRegistryUriString) AS ?hcEncRegId)
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkPartCrid)
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkPartSymb)
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkPartRegDen)
+                BIND(uri(?consRegistryUriString) AS ?bbConsRegId)
+            }
+        """
+        update.updateSparql(cxn, sparqlPrefixes + createJoinData)
+    }
+    
+    def createJoinDataFromUnlinkedBbEncounters(cxn: RepositoryConnection)
+    {
+        val createJoinData: String = """
+            Insert
+            {
+                Graph pmbb:entityLinkData
+                {
+                    ?entLinkBbCrid a turbo:TURBO_0000533 .
+                    ?entLinkBbCrid obo:BFO_0000051 ?entLinkBbSymb .
+                    ?entLinkBbCrid obo:BFO_0000051 ?entLinkBbRegDen .
+                    ?entLinkBbSymb turbo:TURBO_0006510 ?encId .
+                    ?entLinkBbSymb a turbo:TURBO_0000534 .
+                    ?entLinkBbRegDen a turbo:TURBO_0000535 .
+                    ?entLinkBbRegDen obo:IAO_0000219 ?bbEncRegId .
+                    ?bbEncRegId a turbo:TURBO_0000543 .
+                    
+                    ?entLinkPartCrid turbo:TURBO_0000302 ?entLinkBbCrid .
+                    
+                    ?entLinkPartCrid a turbo:TURBO_0000503 .
+                    ?entLinkPartCrid obo:BFO_0000051 ?entLinkPartSymb .
+                    ?entLinkPartSymb a turbo:TURBO_0000504 .
+                    ?entLinkPartSymb turbo:TURBO_0006510 ?consId .
+                    ?entLinkPartCrid obo:BFO_0000051 ?entLinkPartRegDen .
+                    ?entLinkPartRegDen a turbo:TURBO_0000505 .
+                    ?entLinkPartRegDen obo:IAO_0000219 ?bbConsRegId .
+                    ?bbConsRegId a turbo:TURBO_0000506 .
+                }
+            }
+            Where
+            {
+                Graph ?g
+                {
+                    ?bbEnc a turbo:TURBO_0000527 .
+                    ?bbEnc turbo:ScBbEnc2ConsId ?consId .
+                    ?bbEnc turbo:TURBO_0000628 ?encId .
+                    ?bbEnc turbo:TURBO_0000630 ?bbRegistryUriString .
+                    ?hcEnc turbo:ScBbEnc2ConsenterReg ?consRegistryUriString .
+                }
+                Minus
+                {
+                    Graph pmbb:expanded
+                    {
+                        ?consenter obo:RO_0000056 ?bbEnc .
+                    }
+                }
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkBbCrid)
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkBbSymb)
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkBbRegDen)
+                BIND(uri(?bbRegistryUriString) AS ?bbEncRegId)
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkPartCrid)
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkPartSymb)
+                BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkPartRegDen)
+                BIND(uri(?consRegistryUriString) AS ?bbConsRegId)
+            }
+        """
+        update.updateSparql(cxn, sparqlPrefixes + createJoinData)
     }
 }

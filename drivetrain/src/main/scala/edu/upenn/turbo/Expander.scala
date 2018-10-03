@@ -369,7 +369,7 @@ class Expander extends ProjectwideGlobals
         		BIND(uri(?gidString) AS ?gidType_1)
         		BIND(uri(?ridTypeString) AS ?ridType)
         		BIND (IF (BOUND(?gidType_1), ?gidType_1, obo:OMRSE_00000133) AS ?genderIdentityDatumType)
-        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + randomUUID + """", str(?shortcutPart))))) AS ?consenter)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + globalUUID + """", str(?shortcutPart))))) AS ?consenter)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterCrid)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterRegistryDenoter)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterSymbol)
@@ -522,7 +522,7 @@ class Expander extends ProjectwideGlobals
         		BIND(uri(?gidString) AS ?gidType_1)
         		BIND(uri(?ridTypeString) AS ?ridType)
         		BIND (IF (BOUND(?gidType_1), ?gidType_1, obo:OMRSE_00000133) AS ?genderIdentityDatumType)
-        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + randomUUID + """", str(?shortcutPart))))) AS ?consenter)
+        		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + globalUUID + """", str(?shortcutPart))))) AS ?consenter)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterCrid)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterRegistryDenoter)
         		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?consenterSymbol)
@@ -661,7 +661,7 @@ class Expander extends ProjectwideGlobals
             		BIND(uri(?bbEncRegIdString) AS ?bbEncRegId)
             		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + globalUUID + """", str(?dsTitle))))) AS ?dataset)
             		BIND(uri("""" + instantiation + """") AS ?instantiation)
-            		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?encounter)
+            		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("bb encounter", """" + globalUUID + """", str(?encFromKarma))))) AS ?encounter)
             		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?encounterCrid)
             		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?encounterDate)
           	    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?encStart)
@@ -851,7 +851,7 @@ class Expander extends ProjectwideGlobals
             		    # Note that the TURBO_0005612 relationship below is a temporary work-around, until we have med mapping implemented in the MedicationMapper class
             		    optional
             		    {
-            		        ?prescription turbo:TURBO_0005612 ?drugURIString .
+            		        ?prescription turbo:TURBO_0005612 ?drugURIString 
             		    }
             		}
             		
@@ -885,7 +885,7 @@ class Expander extends ProjectwideGlobals
             		#
             		BIND(uri(?hcRegIdURIString) AS ?hcEncRegId)
             		BIND(uri(?drugURIString) AS ?drugURI)
-            		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc encounter", """" + randomUUID + """", str(?encFromKarma))))) AS ?encounter)
+            		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc encounter", """" + globalUUID + """", str(?encFromKarma))))) AS ?encounter)
             		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc enc ID", """" + randomUUID + """", str(?encFromKarma))))) AS ?encounterCrid)
             		BIND(IF (BOUND(?diagSC), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("diagnosis ", """" + randomUUID + """", str(?encFromKarma), str(?diagSC))))), ?unbound) AS ?diagnosis)
             		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("enc date", """" + randomUUID + """", str(?encFromKarma))))) AS ?encounterDate)

@@ -154,6 +154,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       if (precheckProceed)
       {
           helper.applySymmetricalProperties(cxn)
+          join.runPreExpansionLinking(cxn, globalUUID)
           instantiation = Some(expand.expandAllShortcutEntities(cxn, globalUUID))
           logger.info("Encounters and participants have been expanded.")
           if (runChecks) postcheckProceed = sparqlChecks.postExpansionChecks(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "post-expansion")
