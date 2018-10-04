@@ -71,11 +71,11 @@ class PreExpansionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfte
               {
                   pmbb:hc1 a obo:OGMS_0000097 .
                   pmbb:hc1 turbo:ScHcEnc2UnexpandedConsenter "http://carnival/consenter/1"^^xsd:anyURI .
-                  pmbb:hc1 turbo:ScHcEnc2ConsenterReg "http://carnival/reg1"^^xsd:anyURI .
+                  pmbb:hc1 turbo:TURBO_0010002 "http://carnival/reg1"^^xsd:anyURI .
                   
                   pmbb:hc2 a obo:OGMS_0000097 .
                   pmbb:hc2 turbo:ScHcEnc2UnexpandedConsenter "http://carnival/consenter/2"^^xsd:anyURI .
-                  pmbb:hc2 turbo:ScHcEnc2ConsenterReg "http://carnival/reg1"^^xsd:anyURI .
+                  pmbb:hc2 turbo:TURBO_0010002 "http://carnival/reg1"^^xsd:anyURI .
               }
               Graph pmbb:shortcuts2
               {
@@ -103,11 +103,11 @@ class PreExpansionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfte
               {
                   pmbb:bb1 a turbo:TURBO_0000527 .
                   pmbb:bb1 turbo:ScBbEnc2UnexpandedConsenter "http://carnival/consenter/1"^^xsd:anyURI .
-                  pmbb:bb1 turbo:ScBbEnc2ConsenterReg "http://carnival/reg1"^^xsd:anyURI .
+                  pmbb:bb1 turbo:TURBO_0010012 "http://carnival/reg1"^^xsd:anyURI .
                   
                   pmbb:bb2 a turbo:TURBO_0000527 .
                   pmbb:bb2 turbo:ScBbEnc2UnexpandedConsenter "http://carnival/consenter/2"^^xsd:anyURI .
-                  pmbb:bb2 turbo:ScBbEnc2ConsenterReg "http://carnival/reg1"^^xsd:anyURI .
+                  pmbb:bb2 turbo:TURBO_0010012 "http://carnival/reg1"^^xsd:anyURI .
               }
               Graph pmbb:shortcuts2
               {
@@ -135,7 +135,7 @@ class PreExpansionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfte
               {
                   pmbb:hc1 a obo:OGMS_0000097 .
                   pmbb:hc1 turbo:ScHcEnc2UnexpandedConsenter "http://carnival/consenter/1"^^xsd:anyURI .
-                  pmbb:hc1 turbo:ScHcEnc2ConsenterReg "http://carnival/reg1"^^xsd:anyURI .
+                  pmbb:hc1 turbo:TURBO_0010002 "http://carnival/reg1"^^xsd:anyURI .
               }
           }
           """
@@ -155,7 +155,7 @@ class PreExpansionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfte
               {
                   pmbb:bb1 a turbo:TURBO_0000527 .
                   pmbb:bb1 turbo:ScBbEnc2UnexpandedConsenter "http://carnival/consenter/1"^^xsd:anyURI .
-                  pmbb:bb1 turbo:ScBbEnc2ConsenterReg "http://carnival/reg1"^^xsd:anyURI .
+                  pmbb:bb1 turbo:TURBO_0010012 "http://carnival/reg1"^^xsd:anyURI .
               }
           }
           """
@@ -175,7 +175,7 @@ class PreExpansionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfte
               {
                   pmbb:hc1 a obo:OGMS_0000097 .
                   pmbb:hc1 turbo:ScHcEnc2UnexpandedConsenter "http://carnival/consenter/1"^^xsd:anyURI .
-                  pmbb:hc1 turbo:ScHcEnc2ConsenterReg "http://carnival/reg1"^^xsd:anyURI .
+                  pmbb:hc1 turbo:TURBO_0010002 "http://carnival/reg1"^^xsd:anyURI .
               }
               Graph pmbb:shortcuts2
               {
@@ -200,7 +200,7 @@ class PreExpansionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfte
               {
                   pmbb:bb1 a turbo:TURBO_0000527 .
                   pmbb:bb1 turbo:ScBbEnc2UnexpandedConsenter "http://carnival/consenter/1"^^xsd:anyURI .
-                  pmbb:bb1 turbo:ScBbEnc2ConsenterReg "http://carnival/reg1"^^xsd:anyURI .
+                  pmbb:bb1 turbo:TURBO_0010012 "http://carnival/reg1"^^xsd:anyURI .
               }
               Graph pmbb:shortcuts2
               {
@@ -224,15 +224,15 @@ class PreExpansionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfte
               Graph pmbb:shortcuts1
               {
                   pmbb:hcEnc1 a obo:OGMS_0000097 .
-                  pmbb:hcEnc1 turbo:ScHcEnc2ConsId '123' .
+                  pmbb:hcEnc1 turbo:TURBO_0010000 '123' .
                   pmbb:hcEnc1 turbo:TURBO_0000648 '456' .
                   pmbb:hcEnc1 turbo:TURBO_0000650 "http://carnival/hcReg1"^^xsd:anyURI .
-                  pmbb:hcEnc1 turbo:ScHcEnc2ConsenterReg "http://carnival/consReg1"^^xsd:anyURI .
+                  pmbb:hcEnc1 turbo:TURBO_0010002 "http://carnival/consReg1"^^xsd:anyURI .
               }
           }
           """
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        entlink.createJoinDataFromUnlinkedHcEncounters(cxn)
+        entlink.createJoinDataFromUnlinkedHcEncounters(cxn, "globalUUID")
         val ask = """
           Ask
           {
@@ -271,15 +271,15 @@ class PreExpansionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfte
               Graph pmbb:shortcuts1
               {
                   pmbb:bbEnc1 a turbo:TURBO_0000527 .
-                  pmbb:bbEnc1 turbo:ScBbEnc2ConsId '123' .
+                  pmbb:bbEnc1 turbo:TURBO_0010010 '123' .
                   pmbb:bbEnc1 turbo:TURBO_0000628 '456' .
                   pmbb:bbEnc1 turbo:TURBO_0000630 "http://carnival/bbReg1"^^xsd:anyURI .
-                  pmbb:bbEnc1 turbo:ScBbEnc2ConsenterReg "http://carnival/consReg1"^^xsd:anyURI .
+                  pmbb:bbEnc1 turbo:TURBO_0010012 "http://carnival/consReg1"^^xsd:anyURI .
               }
           }
           """
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        entlink.createJoinDataFromUnlinkedBbEncounters(cxn)
+        entlink.createJoinDataFromUnlinkedBbEncounters(cxn, "globlUUID")
         val ask = """
           Ask
           {
@@ -318,19 +318,19 @@ class PreExpansionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfte
               Graph pmbb:shortcuts1
               {
                   pmbb:hcEnc1 a obo:OGMS_0000097 .
-                  pmbb:hcEnc1 turbo:ScHcEnc2ConsId '123' .
+                  pmbb:hcEnc1 turbo:TURBO_0010000 '123' .
                   pmbb:hcEnc1 turbo:TURBO_0000648 '456' .
                   pmbb:hcEnc1 turbo:TURBO_0000650 "http://carnival/hcReg1"^^xsd:anyURI .
-                  pmbb:hcEnc1 turbo:ScHcEnc2ConsenterReg "http://carnival/consReg1"^^xsd:anyURI .
+                  pmbb:hcEnc1 turbo:TURBO_0010002 "http://carnival/consReg1"^^xsd:anyURI .
               }
               Graph pmbb:expanded
               {
-                  pmbb:consenter1 obo:RO_0000056 pmbb:hcEnc1 .
+                  pmbb:consenter1 obo:RO_0000056 pmbb:f0fc4ee4fd16fc81547e3303a336922e .
               }
           }
           """
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        entlink.createJoinDataFromUnlinkedHcEncounters(cxn)
+        entlink.createJoinDataFromUnlinkedHcEncounters(cxn, "globalUUID")
         val ask = """
           Ask
           {
@@ -370,19 +370,19 @@ class PreExpansionEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfte
               Graph pmbb:shortcuts1
               {
                   pmbb:bbEnc1 a turbo:TURBO_0000527 .
-                  pmbb:bbEnc1 turbo:ScBbEnc2ConsId '123' .
+                  pmbb:bbEnc1 turbo:TURBO_0010010 '123' .
                   pmbb:bbEnc1 turbo:TURBO_0000628 '456' .
                   pmbb:bbEnc1 turbo:TURBO_0000630 "http://carnival/bbReg1"^^xsd:anyURI .
-                  pmbb:bbEnc1 turbo:ScBbEnc2ConsenterReg "http://carnival/consReg1"^^xsd:anyURI .
+                  pmbb:bbEnc1 turbo:TURBO_0010012 "http://carnival/consReg1"^^xsd:anyURI .
               }
               Graph pmbb:expanded
               {
-                  pmbb:consenter1 obo:RO_0000056 pmbb:bbEnc1 .
+                  pmbb:consenter1 obo:RO_0000056 pmbb:6212cd5ecd0668f0c5e5dd95c234a149 .
               }
           }
           """
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        entlink.createJoinDataFromUnlinkedBbEncounters(cxn)
+        entlink.createJoinDataFromUnlinkedBbEncounters(cxn, "globalUUID")
         val ask = """
           Ask
           {

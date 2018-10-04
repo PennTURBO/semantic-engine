@@ -23,12 +23,13 @@ class MatchOnTwoFields extends ProjectwideGlobals
         logger.info("searching for joins")
         for (a <- joinResults)
         {
+            ("searching over: " + a(0) + " " + a(1) + " " + a(2) + " " + a(3))
             val encStringToHash: String = a(0).toString + a(1).toString
             val consStringToHash: String = a(2).toString + a(3).toString
             //logger.info("searching for join on " + a(0).toString + " and " + a(2).toString)
             if (table1map.contains(encStringToHash) && table2map.contains(consStringToHash))
             {
-                //logger.info("found a match: " + a(0) + " to " + a(2))
+                logger.info("found a match: " + a(0) + " to " + a(2))
                 val encToLink: IRI = f.createIRI(table1map(encStringToHash)(0).toString)
                 val consToLink: IRI = f.createIRI(table2map(consStringToHash)(0).toString)
                 model.add(consToLink, f.createIRI("http://purl.obolibrary.org/obo/RO_0000056"), encToLink)

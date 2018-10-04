@@ -217,7 +217,7 @@ class EntityLinker extends ProjectwideGlobals
     {
         val getJoinInfo: String = 
         """
-            Select ?eilv ?hcEncRegId ?pilv ?BbConsRegId ?entLinkPartCrid ?entLinkHcCrid
+            Select ?eilv ?hcEncRegId ?pilv ?bbConsRegId ?entLinkPartCrid ?entLinkHcCrid
             Where {
             Graph pmbb:entityLinkData
             {
@@ -242,7 +242,7 @@ class EntityLinker extends ProjectwideGlobals
                 ?bbConsRegId a turbo:TURBO_0000506 .
             }}
         """
-      update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getJoinInfo, ArrayBuffer("eilv", "hcEncRegId", "pilv", "BbConsRegId", "entLinkPartCrid", "entLinkHcCrid"))
+      update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getJoinInfo, ArrayBuffer("eilv", "hcEncRegId", "pilv", "bbConsRegId", "entLinkPartCrid", "entLinkHcCrid"))
     }
     
     /**
@@ -471,8 +471,8 @@ class EntityLinker extends ProjectwideGlobals
     {
         linkUnexpandedHcEncountersToUnexpandedConsenters(cxn, globalUUID)
         linkUnexpandedBbEncountersToUnexpandedConsenters(cxn, globalUUID)
-        createJoinDataFromUnlinkedHcEncounters(cxn)
-        createJoinDataFromUnlinkedBbEncounters(cxn)
+        createJoinDataFromUnlinkedHcEncounters(cxn, globalUUID)
+        createJoinDataFromUnlinkedBbEncounters(cxn, globalUUID)
     }
     
     def linkUnexpandedHcEncountersToUnexpandedConsenters(cxn: RepositoryConnection, globalUUID: String)
@@ -492,7 +492,7 @@ class EntityLinker extends ProjectwideGlobals
               {
                   ?hcEnc a obo:OGMS_0000097 .
                   ?hcEnc turbo:ScHcEnc2UnexpandedConsenter ?consenterUriString .
-                  ?hcEnc turbo:ScHcEnc2ConsenterReg ?consenterRegistryUriString .
+                  ?hcEnc turbo:TURBO_0010002 ?consenterRegistryUriString .
                   Bind(uri(?consenterUriString) as ?consenter)
               }
               Graph ?g2
@@ -524,7 +524,7 @@ class EntityLinker extends ProjectwideGlobals
               {
                   ?bbEnc a turbo:TURBO_0000527 .
                   ?bbEnc turbo:ScBbEnc2UnexpandedConsenter ?consenterUriString .
-                  ?bbEnc turbo:ScBbEnc2ConsenterReg ?consenterRegistryUriString .
+                  ?bbEnc turbo:TURBO_0010012 ?consenterRegistryUriString .
                   Bind(uri(?consenterUriString) as ?consenter)
               }
               Graph ?g2
@@ -539,7 +539,7 @@ class EntityLinker extends ProjectwideGlobals
           update.updateSparql(cxn, sparqlPrefixes + createLinks)
     }
     
-    def createJoinDataFromUnlinkedHcEncounters(cxn: RepositoryConnection)
+    def createJoinDataFromUnlinkedHcEncounters(cxn: RepositoryConnection, globalUUID: String)
     {
         val createJoinData: String = """
             Insert
@@ -572,16 +572,17 @@ class EntityLinker extends ProjectwideGlobals
                 Graph ?g 
                 {
                     ?hcEnc a obo:OGMS_0000097 .
-                    ?hcEnc turbo:ScHcEnc2ConsId ?consId . 
+                    ?hcEnc turbo:TURBO_0010000 ?consId . 
                     ?hcEnc turbo:TURBO_0000648 ?encId .
                     ?hcEnc turbo:TURBO_0000650 ?hcRegistryUriString .
-                    ?hcEnc turbo:ScHcEnc2ConsenterReg ?consRegistryUriString .
+                    ?hcEnc turbo:TURBO_0010002 ?consRegistryUriString .
+                    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc encounter", """" + globalUUID + """", str(?hcEnc))))) AS ?expandedEncounter)
                 }
                 Minus
                 {
                     Graph pmbb:expanded
                     {
-                        ?consenter obo:RO_0000056 ?hcEnc .
+                        ?consenter obo:RO_0000056 ?expandedEncounter .
                     }
                 }
                 BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkHcCrid)
@@ -597,7 +598,7 @@ class EntityLinker extends ProjectwideGlobals
         update.updateSparql(cxn, sparqlPrefixes + createJoinData)
     }
     
-    def createJoinDataFromUnlinkedBbEncounters(cxn: RepositoryConnection)
+    def createJoinDataFromUnlinkedBbEncounters(cxn: RepositoryConnection, globalUUID: String)
     {
         val createJoinData: String = """
             Insert
@@ -630,16 +631,17 @@ class EntityLinker extends ProjectwideGlobals
                 Graph ?g
                 {
                     ?bbEnc a turbo:TURBO_0000527 .
-                    ?bbEnc turbo:ScBbEnc2ConsId ?consId .
+                    ?bbEnc turbo:TURBO_0010010 ?consId .
                     ?bbEnc turbo:TURBO_0000628 ?encId .
                     ?bbEnc turbo:TURBO_0000630 ?bbRegistryUriString .
-                    ?hcEnc turbo:ScBbEnc2ConsenterReg ?consRegistryUriString .
+                    ?bbEnc turbo:TURBO_0010012 ?consRegistryUriString .
+                    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("bb encounter", """" + globalUUID + """", str(?bbEnc))))) AS ?expandedEncounter)
                 }
                 Minus
                 {
                     Graph pmbb:expanded
                     {
-                        ?consenter obo:RO_0000056 ?bbEnc .
+                        ?consenter obo:RO_0000056 ?expandedEncounter .
                     }
                 }
                 BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", REPLACE(struuid(), "-", ""))) AS ?entLinkBbCrid)

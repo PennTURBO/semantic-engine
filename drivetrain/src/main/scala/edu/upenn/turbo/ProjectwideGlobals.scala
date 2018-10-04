@@ -22,8 +22,6 @@ trait ProjectwideGlobals
 			PREFIX graphBuilder: <http://graphBuilder.org/>
 			PREFIX pmbb: <http://www.itmat.upenn.edu/biobank/>
 			PREFIX sys: <http://www.ontotext.com/owlim/system#>
-			PREFIX luceneInst: <http://www.ontotext.com/connectors/lucene/instance#>
-			PREFIX lucene: <http://www.ontotext.com/connectors/lucene#>
 			PREFIX efo: <http://www.ebi.ac.uk/efo/>
 			PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 			PREFIX ns1: <http://www.geneontology.org/formats/oboInOwl#>
