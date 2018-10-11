@@ -196,6 +196,13 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         val endAppSymmProps = System.nanoTime()
         
         writeCSV.println("Apply Symmetrical Properties," + ((endAppSymmProps - startAppSymmProps)/1000000000.0).toString)
+    
+        //pre expansion entity linking
+        val startPreExpandEntLink = System.nanoTime()
+        join.runPreExpansionLinking(cxn, globalUUID)
+        val endPreExpandEntLink = System.nanoTime()
+        
+        writeCSV.println("Pre-expansion entity linking," + ((endPreExpandEntLink - startPreExpandEntLink)/1000000000.0).toString)
     }
     
     def benchmarkExpansion(cxn: RepositoryConnection, writeCSV: PrintWriter, writeTXT: PrintWriter)
@@ -390,7 +397,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
         
         //expand loss of function
         val startLOFexpand = System.nanoTime()
-        expand.expandLossOfFunctionShortcuts(cxn, instantiation, lofGraphs, globalUUID)
+        expand.expandLossOfFunctionShortcuts(cxn, instantiation.toString, lofGraphs, globalUUID)
         val stopLOFexpand = System.nanoTime()
         
         writeCSV.println("Expand Loss of Function Data," + ((stopLOFexpand - startLOFexpand)/1000000000.0).toString)
@@ -558,15 +565,7 @@ class DrivetrainAutomatedBenchmarking extends ProjectwideGlobals
     {
         val start = System.nanoTime()
         
-        val query: String = """
-          select (count (?s) as ?tripcount) where
-          {
-              ?s ?p ?o .
-          }
-          """
-         //logger.info("parsing number: " + update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "tripcount")(0))
-         tripCountInfo += "TriplesCount " + stage + ": " + update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, 
-                 "tripcount")(0).split("\"")(1).toInt + System.lineSeparator()
+         tripCountInfo += "TriplesCount " + stage + ": " + helper.countTriplesInDatabase(cxn) + System.lineSeparator()
         
         val stop = System.nanoTime()
         subtractFromTotal += (stop - start)/1000000000.0

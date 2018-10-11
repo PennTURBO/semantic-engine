@@ -20,13 +20,14 @@ object DrivetrainDriver extends ProjectwideGlobals {
   val medmap: MedicationMapper = new MedicationMapper()
   val benchmark: DrivetrainAutomatedBenchmarking = new DrivetrainAutomatedBenchmarking()
   val visualize: DrivetrainVisualizations = new DrivetrainVisualizations()
-  val ontLoad: OntologyLoader = new OntologyLoader
-  val reasoner: ReasoningManager = new ReasoningManager
+  val ontLoad: OntologyLoader = new OntologyLoader()
+  val reasoner: ReasoningManager = new ReasoningManager()
+  val simpleBenchmark: SimpleBenchmark = new SimpleBenchmark()
   //val future: Futures = new Futures()
   
   //globally available Conclusionation Named Graph IRI
   var concNamedGraph: Option[IRI] = None : Option[IRI]
-  var instantiation: Option[IRI] = None : Option[IRI]
+  var instantiation: Option[String] = None : Option[String]
   
   /**
    * DrivetrainDriver (ne Presentation Driver) contains the main method for calling Drivetrain functions. Main can be called using "all .51 .51" to run full Drivetrain stack, 
@@ -82,12 +83,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "dataload") connect.loadDataFromPropertiesFile(cxn)
               else if (args(0) == "expand")
               {
-                  if (args.size > 1)
-                  {
-                      if (args(1) == "--skipchecks") runExpansion(cxn, globalUUID, false)
-                      else runExpansion(cxn, globalUUID)
-                  }
-                  else runExpansion(cxn, globalUUID)
+                  var runChecks: Boolean = true
+                  var instantiation: String = ""
+                  if (args.contains("--skipchecks")) runChecks = false
+                  if (args.contains("--instantiation")) instantiation = args(args.indexOf("--instantiation")+1)
+                  runExpansion(cxn, globalUUID, runChecks, instantiation)
               }
               else if (args(0) == "reftrack") runReferentTracking(cxn)
               else if (args(0) == "entlink" && args.size > 1) 
@@ -111,6 +111,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
+              else if (args(0) == "simpleBenchmark") simpleBenchmark.runSimpleBenchmark(cxn)
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
@@ -143,7 +144,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       thresholds
   }
   
-  def runExpansion(cxn: RepositoryConnection, globalUUID: String, runChecks: Boolean = true): Boolean =
+  def runExpansion(cxn: RepositoryConnection, globalUUID: String, runChecks: Boolean = true, instantiationInput: String = ""): Boolean =
   {
       logger.info("running expansion")
       var postcheckProceed: Boolean = true
@@ -155,7 +156,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
       {
           helper.applySymmetricalProperties(cxn)
           join.runPreExpansionLinking(cxn, globalUUID)
-          instantiation = Some(expand.expandAllShortcutEntities(cxn, globalUUID))
+          if (instantiationInput == "") instantiation = Some(expand.expandAllShortcutEntities(cxn, globalUUID))
+          else instantiation = Some(expand.expandAllShortcutEntities(cxn, globalUUID, instantiationInput))
           logger.info("Encounters and participants have been expanded.")
           if (runChecks) postcheckProceed = sparqlChecks.postExpansionChecks(cxn, "http://www.itmat.upenn.edu/biobank/postExpansionCheck", "post-expansion")
           logger.info("Post expansion checks passed: " + postcheckProceed)
@@ -197,7 +199,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       logger.info("connecting biobank encounters to LOF data")
       join.connectLossOfFunctionToBiobankEncounters(cxn, lofGraphs)
       logger.info("expanding LOF data")
-      if (instantiation == None) expand.expandLossOfFunctionShortcuts(cxn, helper.genTurboIRI(cxn), lofGraphs, globalUUID)
+      if (instantiation == None) expand.expandLossOfFunctionShortcuts(cxn, helper.genPmbbIRI(), lofGraphs, globalUUID)
       else expand.expandLossOfFunctionShortcuts(cxn, instantiation.get, lofGraphs, globalUUID)
       expand.createErrorTriplesForUnexpandedAlleles(cxn, lofGraphs)
       logger.info("All entity linking complete")

@@ -169,7 +169,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
     test("expand 1 row LOF properly formatted, disregard 8 rows improperly formatted")
     {
         expand.expandLossOfFunctionShortcuts(cxn, 
-            cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
+            "http://www.itmat.upenn.edu/biobank/test_instantiation_1", 
             ArrayBuffer("http://www.itmat.upenn.edu/biobank/LOFShortcuts"), randomUUID)  
         
         val countTrips: String = 

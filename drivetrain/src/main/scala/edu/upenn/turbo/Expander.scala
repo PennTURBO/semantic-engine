@@ -16,18 +16,18 @@ class Expander extends ProjectwideGlobals
     /**
      * Calls all methods responsible for expanding all shortcut entities available in shortcut named graphs. 
      */
-    def expandAllShortcutEntities (cxn: RepositoryConnection, globalUUID: String): IRI =
+    def expandAllShortcutEntities (cxn: RepositoryConnection, globalUUID: String, instantiation: String = helper.genPmbbIRI()): String =
     {   
-        val instantiation: IRI = helper.genPmbbIRI(cxn)
+        val instantiationIRI: IRI = cxn.getValueFactory.createIRI(instantiation)
         val graphsString: String = helper.generateShortcutNamedGraphsString(cxn)
         logger.info("graphsstring: " + graphsString)
-        encounterExpansion(cxn, instantiation, graphsString, globalUUID)
+        encounterExpansion(cxn, instantiationIRI, graphsString, globalUUID)
         logger.info("finished encounter expansion")
-        expandAllParticipants(cxn, instantiation, graphsString, globalUUID)
+        expandAllParticipants(cxn, instantiationIRI, graphsString, globalUUID)
         logger.info("finished participant expansion")
-        biobankEncounterParticipantJoinExpansion(cxn, instantiation, graphsString, globalUUID)
+        biobankEncounterParticipantJoinExpansion(cxn, instantiationIRI, graphsString, globalUUID)
         logger.info("finished biobank join expansion, starting healthcare join expansion")
-        healthcareEncounterParticipantJoinExpansion(cxn, instantiation, graphsString, globalUUID)
+        healthcareEncounterParticipantJoinExpansion(cxn, instantiationIRI, graphsString, globalUUID)
         logger.info("finished join expansion")
         instantiation
     }
@@ -917,7 +917,7 @@ class Expander extends ProjectwideGlobals
           update.updateSparql(cxn, sparqlPrefixes + healthcareEncounterExpansion) 
     }
     
-    def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: IRI, lofGraphs: ArrayBuffer[String], globalUUID: String)
+    def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: String, lofGraphs: ArrayBuffer[String], globalUUID: String)
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         for (graph <- lofGraphs)

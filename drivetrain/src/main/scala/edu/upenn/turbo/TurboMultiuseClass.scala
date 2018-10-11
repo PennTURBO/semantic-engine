@@ -118,6 +118,16 @@ class TurboMultiuseClass
     }
     
     /**
+     * Overloaded method to generate a random UUID with the PMBB prefix. No database connection necessary because no conversion to IRI is executed.
+     * 
+     * @return a String with a new and unique PMBB URI
+     */
+    def genPmbbIRI(): String =
+    {
+        "http://transformunify.org/ontologies/" + UUID.randomUUID().toString().replaceAll("-", "")
+    }
+    
+    /**
      * Overloaded method to generate a random UUID with the PMBB prefix. Overload accepts RepositoryConnection object as input.
      * 
      * @return an IRI with a new and unique PMBB URI
@@ -857,5 +867,28 @@ class TurboMultiuseClass
             model.add(row(0).asInstanceOf[IRI], row(1).asInstanceOf[IRI], row(2).asInstanceOf[IRI])
         }
         cxn.remove(model, f.createIRI("http://www.ontotext.com/implicit"))
+    }
+    
+    def countTriplesInDatabase(cxn: RepositoryConnection): Int =
+    {        
+        val query: String = """
+          select (count (?s) as ?tripcount) where
+          {
+              ?s ?p ?o .
+          }
+          """
+         updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "tripcount")(0).split("\"")(1).toInt
+    }
+    
+    def getDatasetNames(cxn: RepositoryConnection): ArrayBuffer[String] = 
+    {
+        val query: String = """
+          select ?dsTitle where
+          {
+              ?ds a obo:IAO_0000100 .
+              ?ds dc11:title ?dsTitle .
+          }
+          """
+        updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "dsTitle")
     }
 }
