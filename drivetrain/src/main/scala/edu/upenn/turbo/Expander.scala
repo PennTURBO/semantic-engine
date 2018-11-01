@@ -20,7 +20,7 @@ class Expander extends ProjectwideGlobals
     {   
         val instantiationIRI: IRI = cxn.getValueFactory.createIRI(instantiation)
         val graphsString: String = helper.generateShortcutNamedGraphsString(cxn)
-        logger.info("graphsstring: " + graphsString)
+        logger.info("Expanding from these named graphs: " + graphsString)
         encounterExpansion(cxn, instantiationIRI, graphsString, globalUUID)
         logger.info("finished encounter expansion")
         expandAllParticipants(cxn, instantiationIRI, graphsString, globalUUID)
@@ -687,234 +687,37 @@ class Expander extends ProjectwideGlobals
      */
     def expandHealthcareEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, globalUUID: String)
     {
-        val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
-        logger.info("running enc expansion")
-        val healthcareEncounterExpansion = """
-          insert {
-        	GRAPH <http://www.itmat.upenn.edu/biobank/postExpansionCheck> {
-        	
-        	  ?instantiation a turbo:TURBO_0000522 .
-        		?instantiation obo:OBI_0000293 ?dataset .
-        	
-        		?encounter a obo:OGMS_0000097 .
-        		?encounter turbo:TURBO_0006601 ?previousUriText .
-        		?encounter obo:RO_0002234 ?diagnosis .
-        		?encounter obo:RO_0002234 ?BMI .
-        		?encounter obo:RO_0002234 ?drugPrescript .
-        		?encounter obo:BFO_0000051 ?weightAssay .
-        		?weightAssay obo:BFO_0000050 ?encounter .
-        		?encounter obo:BFO_0000051 ?heightAssay .
-        		?heightAssay obo:BFO_0000050 ?encounter .
-        		
-        		?dataset a obo:IAO_0000100 .
-        		?dataset dc11:title ?dsTitle1 .
-        		?cridSymbDataset obo:BFO_0000051 ?hcEncSymb .
-        		?hcEncSymb obo:BFO_0000050 ?cridSymbDataset .
-        		?dataset obo:BFO_0000051 ?weightDatum .
-        		?weightDatum obo:BFO_0000050 ?dataset .
-        		?dataset obo:BFO_0000051 ?heightDatum .
-        		?heightDatum obo:BFO_0000050 ?dataset .
-        		?dataset obo:BFO_0000051 ?BMI .
-        		?BMI obo:BFO_0000050 ?dataset .
-        		?regDenDataset obo:BFO_0000051 ?hcEncRegDen .
-        		?hcEncRegDen obo:BFO_0000050 ?regDenDataset .
-        		?dataset obo:BFO_0000051 ?diagnosis .
-        		?diagnosis obo:BFO_0000050 ?dataset .
-        		?dateDataset obo:BFO_0000051 ?encounterDate .
-        		?encounterDate obo:BFO_0000050 ?dateDataset .
-        		?dataset obo:BFO_0000051 ?medSymb .
-        		?medSymb obo:BFO_0000050 ?dataset .
-        		?dataset obo:BFO_0000051 ?drugPrescript .
-        		?drugPrescript obo:BFO_0000050 ?dataset .
-        		
-        		?encounterCrid a turbo:TURBO_0000508 .
-        		?encounterCrid obo:IAO_0000219 ?encounter .
-        		?encounterCrid obo:BFO_0000051 ?hcEncSymb .
-        		?encounterCrid obo:BFO_0000051 ?hcEncRegDen .
-        		
-        		?hcEncSymb obo:BFO_0000050 ?encounterCrid .
-        		?hcEncSymb a turbo:TURBO_0000509 .
-        		?hcEncSymb turbo:TURBO_0006510 ?EncID_LV .
-        		
-        		?hcEncRegDen obo:BFO_0000050 ?encounterCrid .
-        		?hcEncRegDen a turbo:TURBO_0000510 .
-        		# the below triple is not created, as we do not expect string representation of the hc enc registry
-        		# ?hcEncRegDen turbo:TURBO_0006510 ?hcRegIdStringVal .
-        		?hcEncRegDen obo:IAO_0000219 ?hcEncRegId .
-        		?hcEncRegId a turbo:TURBO_0000513  .
-        		            
-        		?encStart a turbo:TURBO_0000511 .
-        		?encStart obo:RO_0002223 ?encounter .
-        		            
-        		?encounterDate a turbo:TURBO_0000512 .
-        		?encounterDate turbo:TURBO_0006512 ?encDateTextVal .
-        		?encounterDate turbo:TURBO_0006511 ?encDateMeasVal .
-        		?encounterDate obo:IAO_0000136 ?encStart .
-        		
-        		?diagnosis a obo:OGMS_0000073 .
-        		?diagnosis turbo:TURBO_0000306 ?concatIcdTerm .
-        		?diagnosis turbo:TURBO_0000703 ?diagCodeRegURI .
-        		?diagnosis turbo:TURBO_0006515 ?diagCodeRegTextVal .
-        		?diagnosis turbo:TURBO_0006512 ?diagCodeLV .
-
-        		?BMI a efo:EFO_0004340 .
-        		?BMI obo:OBI_0001938 ?BMIvalspec .
-        		?BMIvalspec a obo:OBI_0001933 .
-        		?BMIvalspec obo:OBI_0002135 ?BMILit .
-        		?BMI obo:IAO_0000581 ?encounterDate .
-        		
-        		?heightValSpec rdf:type obo:OBI_0001931 ;
-        		               obo:IAO_0000039 obo:UO_0000015 ;
-        		               obo:OBI_0002135 ?heightCM .
-        	    
-      	    ?heightAssay rdf:type turbo:TURBO_0001511 ;
-      	                 obo:OBI_0000299 ?heightDatum .   
-      	    
-      	    ?heightDatum rdf:type obo:IAO_0000408 ;
-      	                 obo:OBI_0001938 ?heightValSpec .
-      	    
-      	    ?weightAssay rdf:type obo:OBI_0000445 ;
-      	                 obo:OBI_0000299 ?weightDatum .
-      	    
-      	    ?weightDatum rdf:type obo:IAO_0000414 ;
-      	                 obo:OBI_0001938 ?weightValSpec .
-      	    
-      	    ?weightValSpec rdf:type obo:OBI_0001931 ;
-      	                   obo:IAO_0000039 obo:UO_0000009 ;
-      	                   obo:OBI_0002135 ?weightKG .
-        	    
-      	    ?drugPrescript a obo:PDRO_0000001 .
-      	    # medString is the ORDER_NAME
-      	    ?drugPrescript turbo:TURBO_0006512 ?medString .
-      	    
-      	    #temporary workaround triple
-      	    ?drugPrescript turbo:TURBO_0000307 ?drugURI .
-      	    
-      	    ?medCrid obo:IAO_0000219 ?drugPrescript .
-      	    ?medCrid a turbo:TURBO_0000561 .
-      	    ?medCrid obo:BFO_0000051 ?medSymb .
-      	    
-      	    ?medSymb obo:BFO_0000050 ?medCrid .
-      	    ?medSymb a turbo:TURBO_0000562 .
-      	    # medId is a string of letters and/or numbers representing a medication
-      	    ?medSymb turbo:TURBO_0006510 ?medId .
-        	}
-        }
-            WHERE
-            {
+        //collect list of all healthcare encounters
+        logger.info("running hc enc expansion")
+        val getShortcutHcEncs: String = """
+          select * where
+          {
               Values ?g { """ + graphsString + """ }
               Graph ?g
             	{
-            		?encFromKarma
-            			a                     obo:OGMS_0000097 ;
-            		turbo:TURBO_0000643   ?dsTitle1 .
-            	  BIND(str(?encFromKarma) AS ?previousUriText)
-            			
-            		Optional {
-          			?encFromKarma turbo:TURBO_0000648     ?EncID_LV .
-            		}
-            		Optional
-            		{
-            		    ?encFromKarma turbo:TURBO_0000650 ?hcRegIdURIString .
-            		}
-            		
-            		optional 
-            		{
-            		
-            		    ?encFromKarma obo:RO_0002234 ?diagSC .
-            		    ?diagSC a obo:OGMS_0000073 .
-            		    ?diagSC turbo:TURBO_0004602  ?diagCodeRegTextVal .
-            		    
-            		    optional 
-            		    {
-            			    ?diagSC turbo:TURBO_0004603  ?diagCodeRegURIString .
-                	    }
-                		optional 
-                		{
-                		    ?diagSC turbo:TURBO_0004601  ?diagCodeLV .
-                		}
-                		
-            		}
-            		
-            		optional 
-            		{
-            		    ?encFromKarma obo:RO_0002234 ?prescription .
-            		    ?prescription a obo:PDRO_0000001 .
-            		    ?prescription turbo:TURBO_0005601  ?medId .
-            		    
-            		    # making the medString optional occurred due to discussions with Mark on 5/4. In Karma, a blank order name is not instantiated as "", meaning that
-            		    # this property will be missing on valid prescriptions with blank order names. See Issue #211.
-            		    optional
-            		    {
-            		        ?prescription turbo:TURBO_0005611  ?medString .
-            		    }
-            		    # Note that the TURBO_0005612 relationship below is a temporary work-around, until we have med mapping implemented in the MedicationMapper class
-            		    optional
-            		    {
-            		        ?prescription turbo:TURBO_0005612 ?drugURIString 
-            		    }
-            		}
-            		
-            		optional {
-            			?encFromKarma         turbo:TURBO_0000644  ?encDateTextVal .
-            	    }
-            		optional {
-            			?encFromKarma         turbo:TURBO_0000645  ?encDateMeasVal .
-            		}
-            		optional {
-            		    ?encFromKarma         turbo:TURBO_0000646         ?heightCM .
-            		}
-            		optional {
-            		    ?encFromKarma         turbo:TURBO_0000647         ?weightKG .
-            		}
-            		optional
-            		{
-            		    ?encFromKarma         turbo:TURBO_0000655 ?BMILit .
-            		}
-            		#
-            		# what IRIs should be held constant for all of this expansion process, across all of the  shortcut patterns?
-            		# dataset "Dataset1", instantiation process "Instantiation1", instantiation output container "OutpContainer"
-            		# can be created as UUIDs outside of sparql
-            		# for referent tracking and conclusionating, create URIs based on MD5s of the input variables
-            		# probably won't work with more complex ref-tracking/conclusionating algorithms
-            		#
-            		# for each of these bindings, create a type assertion in the construct/insert block
-            		# FILTER (?dsTitle1 != ?dsTitle2)
-            		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + globalUUID + """", str(?dsTitle1))))) AS ?dataset)
-            		BIND(uri("""" + instantiation + """") AS ?instantiation)
-            		#
-            		BIND(uri(?hcRegIdURIString) AS ?hcEncRegId)
-            		BIND(uri(?drugURIString) AS ?drugURI)
-            		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc encounter", """" + globalUUID + """", str(?encFromKarma))))) AS ?encounter)
-            		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc enc ID", """" + randomUUID + """", str(?encFromKarma))))) AS ?encounterCrid)
-            		BIND(IF (BOUND(?diagSC), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("diagnosis ", """" + randomUUID + """", str(?encFromKarma), str(?diagSC))))), ?unbound) AS ?diagnosis)
-            		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("enc date", """" + randomUUID + """", str(?encFromKarma))))) AS ?encounterDate)
-          	    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("enc start", """" + randomUUID + """", str(?encFromKarma))))) AS ?encStart)
-          	    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc enc reg den", """" + randomUUID + """", str(?encFromKarma))))) AS ?hcEncRegDen)
-          	    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc enc symb", """" + randomUUID + """", str(?encFromKarma))))) AS ?hcEncSymb)
-          	    BIND(IF (BOUND(?heightCM), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc height val spec", """" + randomUUID + """", str(?encFromKarma), str(?heightCM))))), ?unbound) AS ?heightValSpec)
-          	    BIND(IF (BOUND(?heightCM), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc height assay", """" + randomUUID + """", str(?encFromKarma), str(?heightCM))))), ?unbound) AS ?heightAssay)
-          	    BIND(IF (BOUND(?heightCM), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc height datum", """" + randomUUID + """", str(?encFromKarma), str(?heightCM))))), ?unbound) AS ?heightDatum)
-          	    BIND(IF (BOUND(?weightKG), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc weight val spec", """" + randomUUID + """", str(?encFromKarma), str(?weightKG))))), ?unbound) AS ?weightValSpec)
-          	    BIND(IF (BOUND(?weightKG), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc weight assay", """" + randomUUID + """", str(?encFromKarma), str(?weightKG))))), ?unbound) AS ?weightAssay)
-          	    BIND(IF (BOUND(?weightKG), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc weight datum", """" + randomUUID + """", str(?encFromKarma), str(?weightKG))))), ?unbound) AS ?weightDatum)
-          	    BIND(uri(?diagCodeRegURIString) AS ?diagCodeRegURI)
-          	    BIND(IF (BOUND(?BMILit), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc bmi", """" + randomUUID + """", str(?encFromKarma), str(?BMILit))))), ?unbound) AS ?BMI)
-          	    BIND(IF (BOUND(?BMI), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc bmi val spec", """" + randomUUID + """", str(?encFromKarma), str(?BMILit))))), ?unbound) AS ?BMIvalspec)
-          	    BIND(IF (BOUND(?prescription), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("drug prescription", """" + randomUUID + """", str(?encFromKarma), str(?prescription))))), ?unbound) AS ?drugPrescript)
-          	    BIND(IF (BOUND(?prescription), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("med crid", """" + randomUUID + """", str(?encFromKarma), str(?prescription))))), ?unbound) AS ?medCrid)
-          	    BIND(IF (BOUND(?prescription), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("med symb", """" + randomUUID + """", str(?encFromKarma), str(?prescription))))), ?unbound) AS ?medSymb)
-          	    BIND(IF (BOUND(?encDateTextVal), ?dataset, ?unbound) AS ?dateDataset)
-          	    BIND(IF (BOUND(?EncID_LV), ?dataset, ?unbound) AS ?cridSymbDataset)
-          	    BIND(IF (BOUND(?hcRegIdURIString), ?dataset, ?unbound) AS ?regDenDataset)
-          	    BIND(IF (?diagCodeRegURI = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat("http://purl.bioontology.org/ontology/ICD9CM/", ?diagCodeLV)), ?unbound) AS ?icd9term)
-                BIND(IF (?diagCodeRegURI = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat("http://purl.bioontology.org/ontology/ICD10CM/", ?diagCodeLV)), ?unbound) AS ?icd10term)
-                BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?concatIcdTerm)
-                BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?concatIcdTerm) as ?concatIcdTerm)
-          	  }
-            }"""
-                
-          update.updateSparql(cxn, sparqlPrefixes + healthcareEncounterExpansion) 
+            	    ?enc a obo:OGMS_0000097 .
+            	}
+          }
+          """
+        val allScHcEncs: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getShortcutHcEncs, "enc")
+        val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
+        
+        //batch healthcare encounter expansion
+        var encounterList: String = ""
+        var count = 1
+        val hcEncSize = allScHcEncs.size
+        for (encounter <- allScHcEncs)
+        {
+            encounterList += "<" + encounter + ">"
+            count = count + 1
+            if (count % 1000 == 0)
+            {
+                logger.info("expanded " + count + " out of " + hcEncSize + " healthcare encounters")
+                runBatchedHealthcareEncounterExpansion(cxn, randomUUID, globalUUID, graphsString, encounterList, instantiation)
+                encounterList = ""
+            }
+        }
+        runBatchedHealthcareEncounterExpansion(cxn, randomUUID, globalUUID, graphsString, encounterList, instantiation)
     }
     
     def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: String, lofGraphs: ArrayBuffer[String], globalUUID: String)
@@ -1066,6 +869,237 @@ class Expander extends ProjectwideGlobals
             
             update.updateSparql(cxn, sparqlPrefixes + expandLOF)  
         }
+    }
+    
+    def runBatchedHealthcareEncounterExpansion(cxn: RepositoryConnection, randomUUID: String, globalUUID: String, graphsString: String, encounterList: String, instantiation: IRI)
+    {
+        val healthcareEncounterExpansion = """
+          insert {
+        	GRAPH <http://www.itmat.upenn.edu/biobank/postExpansionCheck> {
+        	
+        	  ?instantiation a turbo:TURBO_0000522 .
+        		?instantiation obo:OBI_0000293 ?dataset .
+        	
+        		?encounter a obo:OGMS_0000097 .
+        		?encounter turbo:TURBO_0006601 ?previousUriText .
+        		?encounter obo:RO_0002234 ?diagnosis .
+        		?encounter obo:RO_0002234 ?BMI .
+        		?encounter obo:RO_0002234 ?drugPrescript .
+        		?encounter obo:BFO_0000051 ?weightAssay .
+        		?weightAssay obo:BFO_0000050 ?encounter .
+        		?encounter obo:BFO_0000051 ?heightAssay .
+        		?heightAssay obo:BFO_0000050 ?encounter .
+        		
+        		?dataset a obo:IAO_0000100 .
+        		?dataset dc11:title ?dsTitle1 .
+        		?cridSymbDataset obo:BFO_0000051 ?hcEncSymb .
+        		?hcEncSymb obo:BFO_0000050 ?cridSymbDataset .
+        		?dataset obo:BFO_0000051 ?weightDatum .
+        		?weightDatum obo:BFO_0000050 ?dataset .
+        		?dataset obo:BFO_0000051 ?heightDatum .
+        		?heightDatum obo:BFO_0000050 ?dataset .
+        		?dataset obo:BFO_0000051 ?BMI .
+        		?BMI obo:BFO_0000050 ?dataset .
+        		?regDenDataset obo:BFO_0000051 ?hcEncRegDen .
+        		?hcEncRegDen obo:BFO_0000050 ?regDenDataset .
+        		?dataset obo:BFO_0000051 ?diagnosis .
+        		?diagnosis obo:BFO_0000050 ?dataset .
+        		?dateDataset obo:BFO_0000051 ?encounterDate .
+        		?encounterDate obo:BFO_0000050 ?dateDataset .
+        		?dataset obo:BFO_0000051 ?medSymb .
+        		?medSymb obo:BFO_0000050 ?dataset .
+        		?dataset obo:BFO_0000051 ?drugPrescript .
+        		?drugPrescript obo:BFO_0000050 ?dataset .
+        		
+        		?encounterCrid a turbo:TURBO_0000508 .
+        		?encounterCrid obo:IAO_0000219 ?encounter .
+        		?encounterCrid obo:BFO_0000051 ?hcEncSymb .
+        		?encounterCrid obo:BFO_0000051 ?hcEncRegDen .
+        		
+        		?hcEncSymb obo:BFO_0000050 ?encounterCrid .
+        		?hcEncSymb a turbo:TURBO_0000509 .
+        		?hcEncSymb turbo:TURBO_0006510 ?EncID_LV .
+        		
+        		?hcEncRegDen obo:BFO_0000050 ?encounterCrid .
+        		?hcEncRegDen a turbo:TURBO_0000510 .
+        		# the below triple is not created, as we do not expect string representation of the hc enc registry
+        		# ?hcEncRegDen turbo:TURBO_0006510 ?hcRegIdStringVal .
+        		?hcEncRegDen obo:IAO_0000219 ?hcEncRegId .
+        		?hcEncRegId a turbo:TURBO_0000513  .
+        		            
+        		?encStart a turbo:TURBO_0000511 .
+        		?encStart obo:RO_0002223 ?encounter .
+        		            
+        		?encounterDate a turbo:TURBO_0000512 .
+        		?encounterDate turbo:TURBO_0006512 ?encDateTextVal .
+        		?encounterDate turbo:TURBO_0006511 ?encDateMeasVal .
+        		?encounterDate obo:IAO_0000136 ?encStart .
+        		
+        		?diagnosis a obo:OGMS_0000073 .
+        		?diagnosis turbo:TURBO_0000306 ?concatIcdTerm .
+        		?diagnosis turbo:TURBO_0000703 ?diagCodeRegURI .
+        		?diagnosis turbo:TURBO_0006515 ?diagCodeRegTextVal .
+        		?diagnosis turbo:TURBO_0006512 ?diagCodeLV .
+
+        		?BMI a efo:EFO_0004340 .
+        		?BMI obo:OBI_0001938 ?BMIvalspec .
+        		?BMIvalspec a obo:OBI_0001933 .
+        		?BMIvalspec obo:OBI_0002135 ?BMILit .
+        		?BMI obo:IAO_0000581 ?encounterDate .
+        		
+        		?heightValSpec rdf:type obo:OBI_0001931 ;
+        		               obo:IAO_0000039 obo:UO_0000015 ;
+        		               obo:OBI_0002135 ?heightCM .
+        	    
+      	    ?heightAssay rdf:type turbo:TURBO_0001511 ;
+      	                 obo:OBI_0000299 ?heightDatum .   
+      	    
+      	    ?heightDatum rdf:type obo:IAO_0000408 ;
+      	                 obo:OBI_0001938 ?heightValSpec .
+      	    
+      	    ?weightAssay rdf:type obo:OBI_0000445 ;
+      	                 obo:OBI_0000299 ?weightDatum .
+      	    
+      	    ?weightDatum rdf:type obo:IAO_0000414 ;
+      	                 obo:OBI_0001938 ?weightValSpec .
+      	    
+      	    ?weightValSpec rdf:type obo:OBI_0001931 ;
+      	                   obo:IAO_0000039 obo:UO_0000009 ;
+      	                   obo:OBI_0002135 ?weightKG .
+        	    
+      	    ?drugPrescript a obo:PDRO_0000001 .
+      	    # medString is the ORDER_NAME
+      	    ?drugPrescript turbo:TURBO_0006512 ?medString .
+      	    
+      	    #temporary workaround triple
+      	    ?drugPrescript turbo:TURBO_0000307 ?drugURI .
+      	    
+      	    ?medCrid obo:IAO_0000219 ?drugPrescript .
+      	    ?medCrid a turbo:TURBO_0000561 .
+      	    ?medCrid obo:BFO_0000051 ?medSymb .
+      	    
+      	    ?medSymb obo:BFO_0000050 ?medCrid .
+      	    ?medSymb a turbo:TURBO_0000562 .
+      	    # medId is a string of letters and/or numbers representing a medication
+      	    ?medSymb turbo:TURBO_0006510 ?medId .
+        	}
+        }
+            WHERE
+            {
+              Values ?g { """ + graphsString + """ }
+              Values ?encFromKarma { """ + encounterList + """ } 
+              Graph ?g
+            	{
+            		?encFromKarma
+            			a                     obo:OGMS_0000097 ;
+            		turbo:TURBO_0000643   ?dsTitle1 .
+            	  BIND(str(?encFromKarma) AS ?previousUriText)
+            			
+            		Optional {
+          			?encFromKarma turbo:TURBO_0000648     ?EncID_LV .
+            		}
+            		Optional
+            		{
+            		    ?encFromKarma turbo:TURBO_0000650 ?hcRegIdURIString .
+            		}
+            		
+            		optional 
+            		{
+            		
+            		    ?encFromKarma obo:RO_0002234 ?diagSC .
+            		    ?diagSC a obo:OGMS_0000073 .
+            		    ?diagSC turbo:TURBO_0004602  ?diagCodeRegTextVal .
+            		    
+            		    optional 
+            		    {
+            			    ?diagSC turbo:TURBO_0004603  ?diagCodeRegURIString .
+                	    }
+                		optional 
+                		{
+                		    ?diagSC turbo:TURBO_0004601  ?diagCodeLV .
+                		}
+                		
+            		}
+            		
+            		optional 
+            		{
+            		    ?encFromKarma obo:RO_0002234 ?prescription .
+            		    ?prescription a obo:PDRO_0000001 .
+            		    ?prescription turbo:TURBO_0005601  ?medId .
+            		    
+            		    # making the medString optional occurred due to discussions with Mark on 5/4/18. In Karma, a blank order name is not instantiated as "", meaning that
+            		    # this property will be missing on valid prescriptions with blank order names. See Issue #211.
+            		    optional
+            		    {
+            		        ?prescription turbo:TURBO_0005611  ?medString .
+            		    }
+            		    # Note that the TURBO_0005612 relationship below is a temporary work-around, until we have med mapping implemented in the MedicationMapper class
+            		    optional
+            		    {
+            		        ?prescription turbo:TURBO_0005612 ?drugURIString 
+            		    }
+            		}
+            		
+            		optional {
+            			?encFromKarma         turbo:TURBO_0000644  ?encDateTextVal .
+            	    }
+            		optional {
+            			?encFromKarma         turbo:TURBO_0000645  ?encDateMeasVal .
+            		}
+            		optional {
+            		    ?encFromKarma         turbo:TURBO_0000646         ?heightCM .
+            		}
+            		optional {
+            		    ?encFromKarma         turbo:TURBO_0000647         ?weightKG .
+            		}
+            		optional
+            		{
+            		    ?encFromKarma         turbo:TURBO_0000655 ?BMILit .
+            		}
+            		#
+            		# what IRIs should be held constant for all of this expansion process, across all of the  shortcut patterns?
+            		# dataset "Dataset1", instantiation process "Instantiation1", instantiation output container "OutpContainer"
+            		# can be created as UUIDs outside of sparql
+            		# for referent tracking and conclusionating, create URIs based on MD5s of the input variables
+            		# probably won't work with more complex ref-tracking/conclusionating algorithms
+            		#
+            		# for each of these bindings, create a type assertion in the construct/insert block
+            		# FILTER (?dsTitle1 != ?dsTitle2)
+            		BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("dataset", """" + globalUUID + """", str(?dsTitle1))))) AS ?dataset)
+            		BIND(uri("""" + instantiation + """") AS ?instantiation)
+            		#
+            		BIND(uri(?hcRegIdURIString) AS ?hcEncRegId)
+            		BIND(uri(?drugURIString) AS ?drugURI)
+            		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc encounter", """" + globalUUID + """", str(?encFromKarma))))) AS ?encounter)
+            		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc enc ID", """" + randomUUID + """", str(?encFromKarma))))) AS ?encounterCrid)
+            		BIND(IF (BOUND(?diagSC), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("diagnosis ", """" + randomUUID + """", str(?encFromKarma), str(?diagSC))))), ?unbound) AS ?diagnosis)
+            		BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("enc date", """" + randomUUID + """", str(?encFromKarma))))) AS ?encounterDate)
+          	    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("enc start", """" + randomUUID + """", str(?encFromKarma))))) AS ?encStart)
+          	    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc enc reg den", """" + randomUUID + """", str(?encFromKarma))))) AS ?hcEncRegDen)
+          	    BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc enc symb", """" + randomUUID + """", str(?encFromKarma))))) AS ?hcEncSymb)
+          	    BIND(IF (BOUND(?heightCM), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc height val spec", """" + randomUUID + """", str(?encFromKarma), str(?heightCM))))), ?unbound) AS ?heightValSpec)
+          	    BIND(IF (BOUND(?heightCM), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc height assay", """" + randomUUID + """", str(?encFromKarma), str(?heightCM))))), ?unbound) AS ?heightAssay)
+          	    BIND(IF (BOUND(?heightCM), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc height datum", """" + randomUUID + """", str(?encFromKarma), str(?heightCM))))), ?unbound) AS ?heightDatum)
+          	    BIND(IF (BOUND(?weightKG), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc weight val spec", """" + randomUUID + """", str(?encFromKarma), str(?weightKG))))), ?unbound) AS ?weightValSpec)
+          	    BIND(IF (BOUND(?weightKG), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc weight assay", """" + randomUUID + """", str(?encFromKarma), str(?weightKG))))), ?unbound) AS ?weightAssay)
+          	    BIND(IF (BOUND(?weightKG), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc weight datum", """" + randomUUID + """", str(?encFromKarma), str(?weightKG))))), ?unbound) AS ?weightDatum)
+          	    BIND(uri(?diagCodeRegURIString) AS ?diagCodeRegURI)
+          	    BIND(IF (BOUND(?BMILit), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc bmi", """" + randomUUID + """", str(?encFromKarma), str(?BMILit))))), ?unbound) AS ?BMI)
+          	    BIND(IF (BOUND(?BMI), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc bmi val spec", """" + randomUUID + """", str(?encFromKarma), str(?BMILit))))), ?unbound) AS ?BMIvalspec)
+          	    BIND(IF (BOUND(?prescription), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("drug prescription", """" + randomUUID + """", str(?encFromKarma), str(?prescription))))), ?unbound) AS ?drugPrescript)
+          	    BIND(IF (BOUND(?prescription), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("med crid", """" + randomUUID + """", str(?encFromKarma), str(?prescription))))), ?unbound) AS ?medCrid)
+          	    BIND(IF (BOUND(?prescription), uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("med symb", """" + randomUUID + """", str(?encFromKarma), str(?prescription))))), ?unbound) AS ?medSymb)
+          	    BIND(IF (BOUND(?encDateTextVal), ?dataset, ?unbound) AS ?dateDataset)
+          	    BIND(IF (BOUND(?EncID_LV), ?dataset, ?unbound) AS ?cridSymbDataset)
+          	    BIND(IF (BOUND(?hcRegIdURIString), ?dataset, ?unbound) AS ?regDenDataset)
+          	    BIND(IF (?diagCodeRegURI = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat("http://purl.bioontology.org/ontology/ICD9CM/", ?diagCodeLV)), ?unbound) AS ?icd9term)
+                BIND(IF (?diagCodeRegURI = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat("http://purl.bioontology.org/ontology/ICD10CM/", ?diagCodeLV)), ?unbound) AS ?icd10term)
+                BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?concatIcdTerm)
+                BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?concatIcdTerm) as ?concatIcdTerm)
+          	  }
+            }"""
+                
+          update.updateSparql(cxn, sparqlPrefixes + healthcareEncounterExpansion) 
     }
     
     def createErrorTriplesForUnexpandedAlleles(cxn: RepositoryConnection, lofGraphs: ArrayBuffer[String])

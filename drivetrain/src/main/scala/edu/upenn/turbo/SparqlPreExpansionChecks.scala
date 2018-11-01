@@ -743,6 +743,8 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
                   FILTER (?p != rdf:type)
                   FILTER (?p != obo:RO_0002234)
                   FILTER (?p != turbo:TURBO_0000302)
+                  FILTER (?p != turbo:ScBbEnc2UnexpandedConsenter)
+                  FILTER (?p != turbo:ScHcEnc2UnexpandedConsenter)
                 }
           """
         

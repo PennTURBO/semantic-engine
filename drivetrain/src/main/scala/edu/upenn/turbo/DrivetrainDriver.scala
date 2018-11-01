@@ -69,7 +69,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       if (postexpandProceed)
                       {
                           runReferentTracking(cxn)
-                          runEntityLinking(cxn, globalUUID, true)
+                          runEntityLinking(cxn, globalUUID, true, instantiation.get)
                           val concProceed = runConclusionating(cxn, thresholds.get(0), thresholds.get(1))
                           if (concProceed) 
                           {
@@ -92,9 +92,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "reftrack") runReferentTracking(cxn)
               else if (args(0) == "entlink" && args.size > 1) 
               {
-                  if (args(1) == "true") runEntityLinking(cxn, globalUUID, true)
-                  else if (args(1) == "false") runEntityLinking(cxn, globalUUID, false)
-                  else logger.info("Second argument for entity linking should be boolean - true to load LOF data, false to not load LOF data")
+                  var loadLOF = false
+                  if (args(1) == "true") loadLOF = true
+                  var instantiation: String = ""
+                  if (args.contains("--instantiation")) instantiation = args(args.indexOf("--instantiation")+1)
+                  runEntityLinking(cxn, globalUUID, loadLOF, instantiation)
               }
               else if (args(0) == "conclusionate") 
               {
@@ -105,13 +107,14 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "medmap") runMedicationMapping(cxn)
               else if (args(0) == "i2i2c2c") runI2i2c2cMapping(cxn, args)
               else if (args(0) == "reasoner") runInferenceWithAddedOntologies(cxn)
-              else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.TURTLE)
+              else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.NQUADS)
               else if (args(0) == "loadRepoFromUrl") ontLoad.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
               else if (args(0) == "loadTurboOntology") ontLoad.addOntologyFromUrl(cxn)
               else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
               else if (args(0) == "simpleBenchmark") simpleBenchmark.runSimpleBenchmark(cxn)
+              else if (args(0) == "validateShortcuts") logger.info("shortcuts valid: " + sparqlChecks.preExpansionChecks(cxn))
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
@@ -189,7 +192,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       logger.info("All referent tracking complete")
   }
   
-  def runEntityLinking(cxn: RepositoryConnection, globalUUID: String, loadLOFData: Boolean)
+  def runEntityLinking(cxn: RepositoryConnection, globalUUID: String, loadLOFData: Boolean, instantiation: String)
   {
       logger.info("starting entity linking")
       join.joinParticipantsAndEncounters(cxn)
@@ -199,8 +202,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
       logger.info("connecting biobank encounters to LOF data")
       join.connectLossOfFunctionToBiobankEncounters(cxn, lofGraphs)
       logger.info("expanding LOF data")
-      if (instantiation == None) expand.expandLossOfFunctionShortcuts(cxn, helper.genPmbbIRI(), lofGraphs, globalUUID)
-      else expand.expandLossOfFunctionShortcuts(cxn, instantiation.get, lofGraphs, globalUUID)
+      if (instantiation == "") expand.expandLossOfFunctionShortcuts(cxn, helper.genPmbbIRI(), lofGraphs, globalUUID)
+      else expand.expandLossOfFunctionShortcuts(cxn, instantiation, lofGraphs, globalUUID)
       expand.createErrorTriplesForUnexpandedAlleles(cxn, lofGraphs)
       logger.info("All entity linking complete")
   }
@@ -235,7 +238,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
           var a: Int = 0
           while (concCheck && a < concNamedGraphs.size)
           {
-              if (sparqlChecks.postExpansionChecks(cxn, concNamedGraphs(a), "post-conclusion") == false) concCheck = false
+              if (!sparqlChecks.postExpansionChecks(cxn, concNamedGraphs(a), "post-conclusion")) concCheck = false
+              a = a + 1
           }
           if (!concCheck) logger.info("Checks failed in a conclusions graph!")
       }

@@ -421,11 +421,11 @@ class EntityLinker extends ProjectwideGlobals
                 graph <""" + lofGraph + """>
                 {
                     ?allele a obo:OBI_0001352 ;
-          	            turbo:TURBO_0007607 ?zygosityValURI ;
           	            turbo:TURBO_0007601 ?encLit ;
           	            turbo:TURBO_0007602 ?genomeCridSymbLit ;
           	            turbo:TURBO_0007603 ?genomeReg ;
           	            turbo:TURBO_0007605 ?geneText ;
+          	            turbo:TURBO_0007607 ?zygosityValURI ;
           	            turbo:TURBO_0007608 ?datasetTitle ;
           	            turbo:TURBO_0007609 ?encReg ;
           	            turbo:TURBO_0007610 ?geneTerm .

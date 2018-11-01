@@ -210,10 +210,45 @@ def checkForInvalidClasses (cxn: RepositoryConnection, namedGraph: String, stage
     
     def checkParticipantsForRequiredDependents (cxn: RepositoryConnection, namedGraph: String, stage: String): Boolean =
     {
+        //collect list of all healthcare encounters
+        val getConsenters: String = """
+          select * where
+          {
+              Graph <"""+namedGraph+""">
+            	{
+            	    ?cons a turbo:TURBO_0000502 .
+            	}
+          }
+          """
+        val allCons: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getConsenters, "cons")
+        logger.info("validating consenters")
+        //batch consenter validation
+        var consList: String = ""
+        var count = 0
+        val consListSize = allCons.size
+        var bool = true
+        while (count < consListSize && bool)
+        {
+            consList += "<" + allCons(count) + ">"
+            count = count + 1
+            if (count % 500 == 0)
+            {
+                logger.info("checked " + count + " out of " + consListSize + " consenters")
+                bool = runBatchedConsenterDependentsCheck(cxn, namedGraph, consList, stage)
+                consList = ""
+            }
+        }
+        bool = runBatchedConsenterDependentsCheck(cxn, namedGraph, consList, stage)
+        bool
+    }
+    
+    def runBatchedConsenterDependentsCheck(cxn: RepositoryConnection, namedGraph: String, consList: String, stage: String): Boolean =
+    {
         val check: String = """
           SELECT ?participant WHERE {
               GRAPH  <"""+namedGraph+"""> 
               {
+                  Values ?participant {""" + consList + """}
                   ?participant a turbo:TURBO_0000502 .
                   MINUS
                   {
@@ -252,10 +287,45 @@ def checkForInvalidClasses (cxn: RepositoryConnection, namedGraph: String, stage
     
     def checkHealthcareEncountersForRequiredDependents (cxn: RepositoryConnection, namedGraph: String, stage: String): Boolean =
     {
+        //collect list of all healthcare encounters
+        val getHcEncs: String = """
+          select * where
+          {
+              Graph <"""+namedGraph+""">
+            	{
+            	    ?enc a obo:OGMS_0000097 .
+            	}
+          }
+          """
+        val allHcEncs: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getHcEncs, "enc")
+        logger.info("validating healthcare encounters")
+        //batch healthcare encounter expansion
+        var encounterList: String = ""
+        var count = 0
+        val hcEncSize = allHcEncs.size
+        var bool = true
+        while (count < hcEncSize && bool)
+        {
+            encounterList += "<" + allHcEncs(count) + ">"
+            count = count + 1
+            if (count % 2 == 0)
+            {
+                logger.info("checked " + count + " out of " + hcEncSize + " healthcare encounters")
+                bool = runBatchedHealthcareEncounterDependentsCheck(cxn, namedGraph, encounterList, stage)
+                encounterList = ""
+            }
+        }
+        bool = runBatchedHealthcareEncounterDependentsCheck(cxn, namedGraph, encounterList, stage)
+        bool
+    }
+    
+    def runBatchedHealthcareEncounterDependentsCheck(cxn: RepositoryConnection, namedGraph: String, encounterList: String, stage: String): Boolean =
+    {
         val checkHCEnc: String = """
           SELECT ?encounter WHERE {
               GRAPH  <"""+namedGraph+"""> 
               {
+                  Values ?encounter {""" + encounterList + """}
                   ?encounter a obo:OGMS_0000097 .
                   MINUS
                   {
@@ -287,15 +357,51 @@ def checkForInvalidClasses (cxn: RepositoryConnection, namedGraph: String, stage
               }
           }
           """
+          logger.info("sending query: " + checkHCEnc)
          operation.runSparqlCheck(cxn, checkHCEnc, ArrayBuffer("encounter"), stage, "healthcare encounter has missing dependents")
     }
     
     def checkBiobankEncountersForRequiredDependents (cxn: RepositoryConnection, namedGraph: String, stage: String): Boolean =
     {
+        //collect list of all biobank encounters
+        val getBbEncs: String = """
+          select * where
+          {
+              Graph <"""+namedGraph+""">
+            	{
+            	    ?enc a turbo:TURBO_0000527 .
+            	}
+          }
+          """
+        val allBbEncs: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getBbEncs, "enc")
+        logger.info("validating biobank encounters")
+        //batch biobank encounter expansion
+        var encounterList: String = ""
+        var count = 0
+        val bbEncSize = allBbEncs.size
+        var bool = true
+        while (count < bbEncSize && bool)
+        {
+            encounterList += "<" + allBbEncs(count) + ">"
+            count = count + 1
+            if (count % 500 == 0)
+            {
+                logger.info("checked " + count + " out of " + bbEncSize + " biobank encounters")
+                bool = runBatchedBiobankEncounterDependentsCheck(cxn, namedGraph, encounterList, stage)
+                encounterList = ""
+            }
+        }
+        bool = runBatchedBiobankEncounterDependentsCheck(cxn, namedGraph, encounterList, stage)
+        bool
+    }
+    
+    def runBatchedBiobankEncounterDependentsCheck (cxn: RepositoryConnection, namedGraph: String, encounterList: String, stage: String): Boolean =
+    {
         val checkBBEnc: String = """
           SELECT ?encounter WHERE {
               GRAPH  <"""+namedGraph+"""> 
               {
+                  Values ?encounter {""" + encounterList + """}
                   ?encounter a turbo:TURBO_0000527 .
                   MINUS
                   {
