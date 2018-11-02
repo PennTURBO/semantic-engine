@@ -152,7 +152,7 @@ class EncounterReferentTracker extends ProjectwideGlobals
         logger.info("finished bb enc primary dependents rt'ing, starting hc enc dependents rt'ing")
         reftrackPrimaryHealthcareEncounterDependents(cxn)
         logger.info("finished hc enc primary dependents rt'ing")
-        helper.completeReftrackProcess(cxn)
+        helper.completeReftrackProcess(cxn, 5000)
         logger.info("starting encounter secondary dependent ref tracking")
         reftrackSecondaryBiobankEncounterDependents(cxn)
         reftrackSecondaryHealthcareEncounterDependents(cxn)

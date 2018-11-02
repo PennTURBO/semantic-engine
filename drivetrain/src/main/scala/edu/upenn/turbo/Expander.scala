@@ -830,8 +830,12 @@ class Expander extends ProjectwideGlobals
                 	            turbo:TURBO_0007603 ?genomeReg ;
                 	            turbo:TURBO_0007605 ?geneText ;
                 	            turbo:TURBO_0007608 ?datasetTitle ;
-                	            turbo:TURBO_0007609 ?bbEncReg ;
-                	            turbo:TURBO_0007610 ?geneTerm .
+                	            turbo:TURBO_0007609 ?bbEncReg .
+                	            # this shortcut becoming optional on 11/2/18 because our files don't contain this shortcut
+                	            optional
+                	            {
+                	                ?alleleSC turbo:TURBO_0007610 ?geneTerm .
+                	            }
                 	            
                 	    ?alleleSC graphBuilder:willBeLinkedWith ?bbEnc .
                 	}

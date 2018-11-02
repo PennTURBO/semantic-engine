@@ -427,8 +427,9 @@ class EntityLinker extends ProjectwideGlobals
           	            turbo:TURBO_0007605 ?geneText ;
           	            turbo:TURBO_0007607 ?zygosityValURI ;
           	            turbo:TURBO_0007608 ?datasetTitle ;
-          	            turbo:TURBO_0007609 ?encReg ;
-          	            turbo:TURBO_0007610 ?geneTerm .
+          	            turbo:TURBO_0007609 ?encReg .
+          	            # this shortcut becoming optional on 11/2/18 because our files don't contain this shortcut
+          	            # turbo:TURBO_0007610 ?geneTerm .
                 }
             }  
         """

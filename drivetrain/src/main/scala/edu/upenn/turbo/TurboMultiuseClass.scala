@@ -481,7 +481,7 @@ class TurboMultiuseClass
      * node to a reftracked node. The referent tracker class is responsible for creating pointers from non-reftracked nodes to reftracked nodes but not
      * for migrating the properties or retiring the non-reftracked node. 
      */
-    def completeReftrackProcess (cxn: RepositoryConnection)
+    def completeReftrackProcess (cxn: RepositoryConnection, threshold: Integer = 1000)
     {
          logger.info("starting complete reftrack process")
          /**
@@ -503,7 +503,6 @@ class TurboMultiuseClass
           val result: ArrayBuffer[String] = updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getNodesToBeReftracked, "node")
           var values: String = ""
           val resultSize = result.size
-          val threshold: Integer = 1000
           logger.info("number of nodes to retire: " + resultSize)
           for (a <- 0 to resultSize - 1)
           {

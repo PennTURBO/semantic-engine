@@ -124,6 +124,16 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele11 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
                   # pmbb:allele11 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
                   
+                  pmbb:allele12 turbo:TURBO_0007605 "gene:TSPAN6(ENSG00000000003);zygosity:1" .
+                  pmbb:allele12 turbo:TURBO_0007601 "B" .
+                  pmbb:allele12 turbo:TURBO_0007609 "http://transformunify.org/ontologies/TURBO_0000420"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele12 a obo:OBI_0001352 .
+                  pmbb:allele12 turbo:TURBO_0007607 "http://transformunify.org/ontologies/TURBO_0000591"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele12 turbo:TURBO_0007603 "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  # pmbb:allele12 turbo:TURBO_0007610 "http://purl.obolibrary.org/obo/PR_O43657"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  pmbb:allele12 turbo:TURBO_0007608 "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
+                  pmbb:allele12 turbo:TURBO_0007602 "UPENN_UPENN2358_96b80197-66d2-4d59-97f5-632bd13b95e5" .
+                  
                   pmbb:allele1 graphBuilder:willBeLinkedWith pmbb:bbEnc1 .
                   pmbb:allele4 graphBuilder:willBeLinkedWith pmbb:bbEnc1 .
                   pmbb:allele5 graphBuilder:willBeLinkedWith pmbb:bbEnc1 .
@@ -133,6 +143,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele9 graphBuilder:willBeLinkedWith pmbb:bbEnc1 .
                   pmbb:allele10 graphBuilder:willBeLinkedWith pmbb:bbEnc1 .
                   pmbb:allele11 graphBuilder:willBeLinkedWith pmbb:bbEnc1 .
+                  pmbb:allele12 graphBuilder:willBeLinkedWith pmbb:bbEnc1 .
               }
               Graph pmbb:expanded
               {
@@ -166,7 +177,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
    * 1. allele expansion method
    * 2. unexpanded allele error logging method
    */
-    test("expand 1 row LOF properly formatted, disregard 8 rows improperly formatted")
+    test("expand 1 row LOF properly formatted, disregard 9 rows improperly formatted")
     {
         expand.expandLossOfFunctionShortcuts(cxn, 
             "http://www.itmat.upenn.edu/biobank/test_instantiation_1", 
@@ -267,6 +278,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                 pmbb:allele9 graphBuilder:reasonNotExpanded graphBuilder:dataFormatError .
                 pmbb:allele10 graphBuilder:reasonNotExpanded graphBuilder:dataFormatError .
                 pmbb:allele11 graphBuilder:reasonNotExpanded graphBuilder:dataFormatError .
+                pmbb:allele12 graphBuilder:reasonNotExpanded graphBuilder:dataFormatError .
             }
         }  
         """
