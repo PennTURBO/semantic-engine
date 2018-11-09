@@ -42,7 +42,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       else if (args(0) == "benchmark") benchmark.runBenchmarking(args, globalUUID)
       else
       {
-          logger.info("Note that running Drivetrain with any command other than 'all' is supported for testing but should not be executed in production.")
+          if (args(0) != "all") logger.info("Note that running Drivetrain with any command other than 'all' is supported for testing but should not be executed in production.")
           var cxn: RepositoryConnection = null
           var repoManager: RemoteRepositoryManager = null
           var repository: Repository = null
@@ -58,7 +58,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   val thresholds: Option[Array[Double]] = checkConclusionatorArguments(args)
                   if (thresholds != None) 
                   {
-                      connect.loadDataFromPropertiesFile(cxn)
+                      //connect.loadDataFromPropertiesFile(cxn)
                       var postexpandProceed: Boolean = true
                       if (args.size > 3)
                       {
@@ -73,9 +73,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
                           val concProceed = runConclusionating(cxn, thresholds.get(0), thresholds.get(1))
                           if (concProceed) 
                           {
-                              runInferenceWithAddedOntologies(cxn)
-                              runDiagnosisMapping(cxn)
-                              runMedicationMapping(cxn)
+                              //runInferenceWithAddedOntologies(cxn)
+                              //runDiagnosisMapping(cxn)
+                              //runMedicationMapping(cxn)
                           }
                       }
                   }

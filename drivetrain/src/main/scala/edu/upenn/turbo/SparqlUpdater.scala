@@ -30,6 +30,10 @@ import java.io.BufferedInputStream
 import java.io.InputStream
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
 import org.eclipse.rdf4j.model.Model
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.entity.StringEntity
+import org.apache.http.util.EntityUtils
 
 class SparqlUpdater
 {
@@ -229,4 +233,17 @@ class SparqlUpdater
         }
         result
     }
+    
+    /*def querySparqlWithHTTP(searchTerm: String)
+    {
+        val post = new HttpPost("http://data.bioontology.org/search?q="+searchTerm)
+        post.setHeader("Authorization", "api-key token="+apiKey)
+        val client = HttpClientBuilder.create().build()
+        val response = client.execute(post)
+        val responseData = response.getEntity
+        val responseString: String = EntityUtils.toString(responseData)
+        logger.info(responseString)
+        response.close()
+        client.close()
+    }*/
 }

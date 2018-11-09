@@ -177,7 +177,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/OBI_0000299"
         )
         
-        helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray) should be (true)
+        helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (51)
     }
@@ -225,7 +225,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
-        helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray) should be (true)   
+        helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (34) 
     }
@@ -371,7 +371,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://transformunify.org/ontologies/TURBO_0006510"
         )
         
-        helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray) should be (true)
+        helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (43)
     }

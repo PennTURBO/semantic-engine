@@ -229,7 +229,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006500"
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, tripsResult.toArray) should be (true)
+        helper.checkStringArraysForEquivalency(checkPredicates, tripsResult.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         tripsResult.size should be (60)
         

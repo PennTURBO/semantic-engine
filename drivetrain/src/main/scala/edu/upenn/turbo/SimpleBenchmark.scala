@@ -96,6 +96,7 @@ class SimpleBenchmark extends ProjectwideGlobals
         {
             writeTXT.println(count)
         }
+        writeTXT.println()
         for (count <- postreftrackCounts)
         {
             writeTXT.println(count)

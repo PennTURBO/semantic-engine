@@ -776,7 +776,7 @@ class TurboMultiuseClass
      * 
      * @return a Boolean true if sorted arrays are equivalent, false otherwise
      */
-    def checkStringArraysForEquivalency(arr1: Array[String], arr2: Array[String]): Boolean =
+    def checkStringArraysForEquivalency(arr1: Array[String], arr2: Array[String]): HashMap[String, Object] =
     {
         logger.info("about to check string arrays for equivalency")
         
@@ -786,22 +786,25 @@ class TurboMultiuseClass
         //first, sort each array in alphabetical order
         scala.util.Sorting.quickSort(arr1)
         scala.util.Sorting.quickSort(arr2)
-        
+        logger.info("finished sorting arrays")
         //search line by line for differences in array
         findSortedArrayDifferences(arr1, 0, arr2, 0)
         
-        logger.info("nonMatchesArr1") 
+        logger.info("nonMatchesArr1: " + nonMatchesArr1.size)
         for (a <- nonMatchesArr1) logger.info(a)
-        logger.info("nonMatchesArr2")
+        logger.info("nonMatchesArr2: " + nonMatchesArr2.size)
         for (a <- nonMatchesArr2) logger.info(a)
         
         var boolToReturn: Boolean = false
         if (nonMatchesArr1.size == 0 && nonMatchesArr2.size == 0) boolToReturn = true
+        
+        var res1return = nonMatchesArr1
+        var res2return = nonMatchesArr2
 
         nonMatchesArr1 = new ArrayBuffer[String]
         nonMatchesArr2 = new ArrayBuffer[String]
         
-        boolToReturn
+        HashMap("results" -> Array(res1return, res2return), "equivalent" -> boolToReturn.toString)
     }
     
     /**
@@ -810,7 +813,7 @@ class TurboMultiuseClass
      * 
      * Do you even recurse bro? (I hope you do it better than me)
      */
-    def findSortedArrayDifferences(arr1: Array[String], index1: Int, arr2: Array[String], index2: Int)
+    private def findSortedArrayDifferences(arr1: Array[String], index1: Int, arr2: Array[String], index2: Int)
     {
         if (arr1.size - 1 >= index1 && arr2.size - 1 >= index2)
         {

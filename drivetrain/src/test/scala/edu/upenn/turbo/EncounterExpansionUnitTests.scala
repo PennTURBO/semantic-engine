@@ -345,7 +345,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050"
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray) should be (true)
+        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (80)
     }
@@ -412,7 +412,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             "http://purl.obolibrary.org/obo/IAO_0000039", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" 
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray) should be (true)
+        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (60)
     }
@@ -459,7 +459,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray) should be (true)
+        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (25)
     }
@@ -503,7 +503,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             "http://purl.obolibrary.org/obo/BFO_0000050"
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray) should be (true)
+        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (25)
     }
@@ -773,7 +773,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray) should be (true)
+        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (76)
     }
@@ -855,7 +855,7 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             "http://purl.obolibrary.org/obo/IAO_0000039"
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray) should be (true)
+        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (59)
     }
