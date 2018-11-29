@@ -73,7 +73,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                           val concProceed = runConclusionating(cxn, thresholds.get(0), thresholds.get(1))
                           if (concProceed) 
                           {
-                              //runInferenceWithAddedOntologies(cxn)
+                              runInferenceWithAddedOntologies(cxn)
                               //runDiagnosisMapping(cxn)
                               //runMedicationMapping(cxn)
                           }
@@ -224,6 +224,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
           helper.addLabelsToEverything(cxn, concNamedGraph.get.toString)
       }
       logger.info("running post-conclusionation checks")
+      helper.consolidateLOFShortcutGraphs(cxn)
       validateDataInRepository(cxn)
   }
   

@@ -738,7 +738,8 @@ class Expander extends ProjectwideGlobals
                 	            turbo:TURBO_0007605 ?geneText ;
                 	            turbo:TURBO_0007608 ?datasetTitle ;
                 	            turbo:TURBO_0007609 ?bbEncReg ;
-                	            turbo:TURBO_0007610 ?geneTerm .
+                	            turbo:TURBO_0007610 ?geneTerm ;
+                	            turbo:TURBO_0007604 ?unnecessary ;
                 	            
                 	    ?alleleSC graphBuilder:willBeLinkedWith ?bbEnc .
                 	   
@@ -835,6 +836,11 @@ class Expander extends ProjectwideGlobals
                 	            optional
                 	            {
                 	                ?alleleSC turbo:TURBO_0007610 ?geneTerm .
+                	            }
+                	            # this shortcut is deprecated but may still appear and should be deleted
+                	            optional
+                	            {
+                	                ?alleleSC turbo:TURBO_0007604 ?unnecessary .
                 	            }
                 	            
                 	    ?alleleSC graphBuilder:willBeLinkedWith ?bbEnc .
@@ -944,6 +950,8 @@ class Expander extends ProjectwideGlobals
         		?diagnosis turbo:TURBO_0000703 ?diagCodeRegURI .
         		?diagnosis turbo:TURBO_0006515 ?diagCodeRegTextVal .
         		?diagnosis turbo:TURBO_0006512 ?diagCodeLV .
+        		?diagnosis turbo:TURBO_0010013 ?primaryDiag .
+        		?diagnosis turbo:TURBO_0010014 ?diagSequence .
 
         		?BMI a efo:EFO_0004340 .
         		?BMI obo:OBI_0001938 ?BMIvalspec .
@@ -1022,7 +1030,14 @@ class Expander extends ProjectwideGlobals
                 		{
                 		    ?diagSC turbo:TURBO_0004601  ?diagCodeLV .
                 		}
-                		
+                		optional
+                		{
+                		    ?diagSC turbo:TURBO_0010013 ?primaryDiag .
+                		}
+                		optional
+                		{
+                		    ?diagSC turbo:TURBO_0010014 ?diagSequence .
+                		}
             		}
             		
             		optional 

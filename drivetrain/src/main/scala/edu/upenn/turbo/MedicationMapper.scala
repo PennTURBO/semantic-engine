@@ -84,6 +84,7 @@ class MedicationMapper extends ProjectwideGlobals
     {
         val post = new HttpPost("http://localhost:8080/medications/orderNameLookup")
         val stringToPost: String = write(mappedStrings)
+        logger.info("sending: " + stringToPost)
         post.setEntity(new StringEntity(stringToPost))
         val client = HttpClientBuilder.create().build()
         val response = client.execute(post)

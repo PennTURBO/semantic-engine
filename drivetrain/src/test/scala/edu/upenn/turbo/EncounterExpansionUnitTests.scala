@@ -157,6 +157,9 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             		?diagnosis turbo:TURBO_0000306 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
             		?diagnosis obo:BFO_0000050 ?dataset .
             		?dataset obo:BFO_0000051 ?diagnosis .
+            		
+            		?diagnosis turbo:TURBO_0010013 "true"^^xsd:Boolean .
+            		?diagnosis turbo:TURBO_0010014 "1"^^xsd:Integer .
         	}}
           """
     
@@ -279,7 +282,9 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
           turbo:diagnosis1 a obo:OGMS_0000073 ;
           turbo:TURBO_0004603 "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
           turbo:TURBO_0004602 "ICD-9" ;
-          turbo:TURBO_0004601 "401.9" .
+          turbo:TURBO_0004601 "401.9" ;
+          turbo:TURBO_0010013 "true"^^xsd:Boolean ;
+          turbo:TURBO_0010014 "1"^^xsd:Integer .
           
           pmbb:hcenc1 obo:RO_0002234 turbo:prescription1 .
           turbo:prescription1 a obo:PDRO_0000001 ;
@@ -342,12 +347,13 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             "http://purl.obolibrary.org/obo/IAO_0000039", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006512",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050"
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://transformunify.org/ontologies/TURBO_0010013", "http://transformunify.org/ontologies/TURBO_0010014"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (80)
+        result.size should be (82)
     }
     
     test("bb encounter with all fields")
@@ -1035,7 +1041,9 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
                   pmbb:diagCridSC a obo:OGMS_0000073 ;
                       turbo:TURBO_0004602 'ICD-9' ;
                       turbo:TURBO_0004603 'http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890'^^xsd:anyURI ;
-                      turbo:TURBO_0004601 '401.9' . 
+                      turbo:TURBO_0004601 '401.9' ;
+                      turbo:TURBO_0010013 "true"^^xsd:Boolean ;
+                      turbo:TURBO_0010014 "1"^^xsd:Integer .
               }
               
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts2

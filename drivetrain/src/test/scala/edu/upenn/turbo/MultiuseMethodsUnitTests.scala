@@ -572,4 +572,142 @@ class MultiuseMethodsUnitTests extends FunSuiteLike with BeforeAndAfter with Mat
         val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + check2).get
         bool2 should be (true)
     }
+    
+    test("consolidate Lof Shortcut Graphs")
+    {
+        val insert = """
+          Insert Data
+          {
+              Graph pmbb:LOFShortcuts_1
+              {
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007605> "gene:SCARF2(ENSG00000244486);zygosity:2" .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007603> "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007601> "00058060-3736-4033-b1c4-2e78e1840311" .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_Q96GP6"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN3705_7879e5d1-28ad-4f5b-aa63-83d6b456f91c" .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007607> "http://transformunify.org/ontologies/TURBO_0000590"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000422"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007610> "some value" .
+              }
+              Graph pmbb:LOFShortcuts_2
+              {
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007605> "gene:SCARF2(ENSG00000244486);zygosity:2" .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007603> "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007601> "00058060-3736-4033-b1c4-2e78e1840311" .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_Q96GP6"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN3705_7879e5d1-28ad-4f5b-aa63-83d6b456f91c" .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007607> "http://transformunify.org/ontologies/TURBO_0000590"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000422"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  # <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007610> "some value" .
+              }
+              Graph pmbb:LOFShortcuts_3
+              {
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007605> "gene:SCARF2(ENSG00000244486);zygosity:2" .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007603> "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007601> "00058060-3736-4033-b1c4-2e78e1840311" .
+                  # <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_Q96GP6"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN3705_7879e5d1-28ad-4f5b-aa63-83d6b456f91c" .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007607> "http://transformunify.org/ontologies/TURBO_0000590"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000422"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  # <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007610> "some value" .
+              }
+              Graph pmbb:LOFShortcuts_4
+              {
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007605> "gene:SCARF2(ENSG00000244486);zygosity:2" .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007603> "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007601> "00058060-3736-4033-b1c4-2e78e1840311" .
+                  # <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_Q96GP6"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN3705_7879e5d1-28ad-4f5b-aa63-83d6b456f91c" .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007607> "http://transformunify.org/ontologies/TURBO_0000590"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000422"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007610> "some value" .
+              }
+          }
+          """
+          update.updateSparql(cxn, sparqlPrefixes + insert)
+          
+          helper.consolidateLOFShortcutGraphs(cxn)
+          
+          val ask1 = """
+            ASK
+            {
+                values ?g
+                {
+                    pmbb:LOFShortcuts_1
+                    pmbb:LOFShortcuts_2
+                    pmbb:LOFShortcuts_3
+                    pmbb:LOFShortcuts_4
+                }
+                graph ?g
+                {
+                    ?s ?p ?o .
+                }
+            }
+            """
+          
+          update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get should be (false)
+        
+        val ask2 = """
+          ASK
+          {
+              graph ?g
+              {
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007605> "gene:SCARF2(ENSG00000244486);zygosity:2" .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007603> "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007601> "00058060-3736-4033-b1c4-2e78e1840311" .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_Q96GP6"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN3705_7879e5d1-28ad-4f5b-aa63-83d6b456f91c" .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007607> "http://transformunify.org/ontologies/TURBO_0000590"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000422"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/f1d153d747ef47e1a2eedd25c60731ce> <http://transformunify.org/ontologies/TURBO_0007610> "some value" .   
+              
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007605> "gene:SCARF2(ENSG00000244486);zygosity:2" .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007603> "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007601> "00058060-3736-4033-b1c4-2e78e1840311" .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_Q96GP6"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN3705_7879e5d1-28ad-4f5b-aa63-83d6b456f91c" .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007607> "http://transformunify.org/ontologies/TURBO_0000590"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000422"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  # <http://localhost:8080/source/alleleInfo/e2d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007610> "some value" .
+                  
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007605> "gene:SCARF2(ENSG00000244486);zygosity:2" .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007603> "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007601> "00058060-3736-4033-b1c4-2e78e1840311" .
+                  # <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_Q96GP6"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN3705_7879e5d1-28ad-4f5b-aa63-83d6b456f91c" .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007607> "http://transformunify.org/ontologies/TURBO_0000590"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000422"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  # <http://localhost:8080/source/alleleInfo/d3d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007610> "some value" .
+                  
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007608> "eve.UPENN_Freeze_One.L2.M3.lofMatrix.txt" .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007605> "gene:SCARF2(ENSG00000244486);zygosity:2" .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007603> "http://transformunify.org/ontologies/TURBO_0000451"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001352> .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007601> "00058060-3736-4033-b1c4-2e78e1840311" .
+                  # <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007604> "http://purl.obolibrary.org/obo/PR_Q96GP6"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007602> "UPENN_UPENN3705_7879e5d1-28ad-4f5b-aa63-83d6b456f91c" .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007607> "http://transformunify.org/ontologies/TURBO_0000590"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007609> "http://transformunify.org/ontologies/TURBO_0000422"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
+                  <http://localhost:8080/source/alleleInfo/c4d153d747ef47e1a2eedd25c60731cd> <http://transformunify.org/ontologies/TURBO_0007610> "some value" .
+              }
+              filter (strStarts(str(?g), "http://www.itmat.upenn.edu/biobank/LOFShortcuts_consolidated_"))
+          }
+          """
+        
+        update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get should be (true)
+    }
 }

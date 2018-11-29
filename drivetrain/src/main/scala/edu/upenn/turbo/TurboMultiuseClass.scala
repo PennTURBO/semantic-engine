@@ -893,4 +893,84 @@ class TurboMultiuseClass
           """
         updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "dsTitle")
     }
+    
+    def consolidateLOFShortcutGraphs(cxn: RepositoryConnection)
+    {
+        val lofGraphs: String = generateShortcutNamedGraphsString(cxn, false, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
+        //first count the number of unexpanded rows of LOF data
+        val countquery = """
+          select (count (?lof) as ?lofcount) where
+          {
+              ?lof turbo:TURBO_0007603 ?o .   
+          }
+          """
+        val count = updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countquery, "lofcount")(0).toString.split("\"")(1).toInt
+        //if count < 700,000 safe to consolidate
+        if (count < 700000)
+        {
+            val uuidForNewGraph = UUID.randomUUID().toString().replaceAll("-", "")
+            val consolidate = """
+              delete
+              {
+                  	graph ?g
+                  	{
+                          ?alleleSC a obo:OBI_0001352 ;
+                          turbo:TURBO_0007607 ?zygosityValURI ;
+                          turbo:TURBO_0007601 ?bbEncSymb ;
+                          turbo:TURBO_0007602 ?genomeCridSymbLit ;
+                          turbo:TURBO_0007603 ?genomeReg ;
+                          turbo:TURBO_0007605 ?geneText ;
+                          turbo:TURBO_0007608 ?datasetTitle ;
+                          turbo:TURBO_0007609 ?bbEncReg ;
+                          turbo:TURBO_0007610 ?geneTerm ;
+                          turbo:TURBO_0007604 ?unnecessary .
+                  	}
+              }
+              insert
+              {
+                  graph pmbb:LOFShortcuts_consolidated_"""+uuidForNewGraph+"""
+                  {
+                      ?alleleSC a obo:OBI_0001352 ;
+                      turbo:TURBO_0007607 ?zygosityValURI ;
+                      turbo:TURBO_0007601 ?bbEncSymb ;
+                      turbo:TURBO_0007602 ?genomeCridSymbLit ;
+                      turbo:TURBO_0007603 ?genomeReg ;
+                      turbo:TURBO_0007605 ?geneText ;
+                      turbo:TURBO_0007608 ?datasetTitle ;
+                      turbo:TURBO_0007609 ?bbEncReg ;
+                      turbo:TURBO_0007610 ?geneTerm ;
+                      turbo:TURBO_0007604 ?unnecessary .
+                  }
+              }
+              where
+              {
+                  values ?g 
+                  {
+                  """ + lofGraphs + """
+                  }
+              	graph ?g
+              	{
+                      ?alleleSC a obo:OBI_0001352 ;
+                      turbo:TURBO_0007607 ?zygosityValURI ;
+                      turbo:TURBO_0007601 ?bbEncSymb ;
+                      turbo:TURBO_0007602 ?genomeCridSymbLit ;
+                      turbo:TURBO_0007603 ?genomeReg ;
+                      turbo:TURBO_0007605 ?geneText ;
+                      turbo:TURBO_0007608 ?datasetTitle ;
+                      turbo:TURBO_0007609 ?bbEncReg .
+                      optional
+                      {
+                          ?alleleSC turbo:TURBO_0007610 ?geneTerm .   
+                      }
+                      optional
+                      {
+                          ?alleleSC turbo:TURBO_0007604 ?unnecessary .   
+                      }
+              	}
+              }
+              
+            """
+            updater.updateSparql(cxn, sparqlPrefixes + consolidate)
+        }
+    }
 }
