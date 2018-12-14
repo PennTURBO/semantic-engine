@@ -67,7 +67,7 @@ class OntologyLoader extends ProjectwideGlobals
     def addDiseaseOntologies(cxn: RepositoryConnection)
     {
         val diseaseOntologies: Map[String, Map[String, RDFFormat]] = Map(
-        "https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl" -> Map("https://raw.githubusercontent.com/monarch-initiative/monarch-disease-ontology/master/src/mondo/mondo.owl" -> RDFFormat.RDFXML),
+        "http://purl.obolibrary.org/obo/mondo.owl" -> Map("http://purl.obolibrary.org/obo/mondo.owl" -> RDFFormat.RDFXML),
         "http://data.bioontology.org/ontologies/ICD10CM/submissions/"+getBioportalSubmissionInfo("ICD10CM").get+"/download?apikey="+bioportalAPIkey -> 
                 Map("http://data.bioontology.org/ontologies/ICD10CM/" -> RDFFormat.TURTLE),
         "http://data.bioontology.org/ontologies/ICD9CM/submissions/"+getBioportalSubmissionInfo("ICD9CM").get+"/download?apikey="+bioportalAPIkey -> 

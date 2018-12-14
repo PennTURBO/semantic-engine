@@ -914,32 +914,14 @@ class TurboMultiuseClass
               {
                   	graph ?g
                   	{
-                          ?alleleSC a obo:OBI_0001352 ;
-                          turbo:TURBO_0007607 ?zygosityValURI ;
-                          turbo:TURBO_0007601 ?bbEncSymb ;
-                          turbo:TURBO_0007602 ?genomeCridSymbLit ;
-                          turbo:TURBO_0007603 ?genomeReg ;
-                          turbo:TURBO_0007605 ?geneText ;
-                          turbo:TURBO_0007608 ?datasetTitle ;
-                          turbo:TURBO_0007609 ?bbEncReg ;
-                          turbo:TURBO_0007610 ?geneTerm ;
-                          turbo:TURBO_0007604 ?unnecessary .
+                          ?s ?p ?o .
                   	}
               }
               insert
               {
                   graph pmbb:LOFShortcuts_consolidated_"""+uuidForNewGraph+"""
                   {
-                      ?alleleSC a obo:OBI_0001352 ;
-                      turbo:TURBO_0007607 ?zygosityValURI ;
-                      turbo:TURBO_0007601 ?bbEncSymb ;
-                      turbo:TURBO_0007602 ?genomeCridSymbLit ;
-                      turbo:TURBO_0007603 ?genomeReg ;
-                      turbo:TURBO_0007605 ?geneText ;
-                      turbo:TURBO_0007608 ?datasetTitle ;
-                      turbo:TURBO_0007609 ?bbEncReg ;
-                      turbo:TURBO_0007610 ?geneTerm ;
-                      turbo:TURBO_0007604 ?unnecessary .
+                      ?s ?p ?o .
                   }
               }
               where
@@ -950,22 +932,7 @@ class TurboMultiuseClass
                   }
               	graph ?g
               	{
-                      ?alleleSC a obo:OBI_0001352 ;
-                      turbo:TURBO_0007607 ?zygosityValURI ;
-                      turbo:TURBO_0007601 ?bbEncSymb ;
-                      turbo:TURBO_0007602 ?genomeCridSymbLit ;
-                      turbo:TURBO_0007603 ?genomeReg ;
-                      turbo:TURBO_0007605 ?geneText ;
-                      turbo:TURBO_0007608 ?datasetTitle ;
-                      turbo:TURBO_0007609 ?bbEncReg .
-                      optional
-                      {
-                          ?alleleSC turbo:TURBO_0007610 ?geneTerm .   
-                      }
-                      optional
-                      {
-                          ?alleleSC turbo:TURBO_0007604 ?unnecessary .   
-                      }
+                      ?s ?p ?o .
               	}
               }
               
