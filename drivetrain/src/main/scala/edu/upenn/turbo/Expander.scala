@@ -739,7 +739,7 @@ class Expander extends ProjectwideGlobals
                 	            turbo:TURBO_0007608 ?datasetTitle ;
                 	            turbo:TURBO_0007609 ?bbEncReg ;
                 	            turbo:TURBO_0007610 ?geneTerm ;
-                	            turbo:TURBO_0007604 ?unnecessary ;
+                	            turbo:TURBO_0007604 ?unnecessary .
                 	            
                 	    ?alleleSC graphBuilder:willBeLinkedWith ?bbEnc .
                 	   

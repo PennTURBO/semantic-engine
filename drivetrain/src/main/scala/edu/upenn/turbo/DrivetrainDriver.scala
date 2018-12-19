@@ -210,7 +210,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runConclusionating(cxn: RepositoryConnection, biosexThreshold: Double, dateofbirthThreshold: Double): Boolean =
   {
-      /*concNamedGraph = Some(conclusionate.runConclusionationProcess(cxn, biosexThreshold, dateofbirthThreshold))
+      concNamedGraph = Some(conclusionate.runConclusionationProcess(cxn, biosexThreshold, dateofbirthThreshold))
       logger.info("Finished conclusionation process")
       logger.info("Applying inverses and symmetrical properties")
       //helper.applyInverses(cxn, concNamedGraph.get)
@@ -223,10 +223,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
           helper.addLabelsToEverything(cxn, "http://www.itmat.upenn.edu/biobank/entityLinkData")
           helper.addLabelsToEverything(cxn, concNamedGraph.get.toString)
       }
-      logger.info("running post-conclusionation checks")*/
+      logger.info("running post-conclusionation checks")
       helper.consolidateLOFShortcutGraphs(cxn)
-      true
-      //validateDataInRepository(cxn)
+      validateDataInRepository(cxn)
   }
   
   def validateDataInRepository(cxn: RepositoryConnection): Boolean =
@@ -257,7 +256,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runMedicationMapping(cxn: RepositoryConnection)
   {
-      medmap.runMedicationMapping(cxn)
+      //medmap.runMedicationMapping(cxn)
   }
   
   def runInferenceWithAddedOntologies(cxn: RepositoryConnection)
