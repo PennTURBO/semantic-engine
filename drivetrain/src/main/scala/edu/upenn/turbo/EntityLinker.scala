@@ -478,7 +478,7 @@ class EntityLinker extends ProjectwideGlobals
     
     def linkUnexpandedHcEncountersToUnexpandedConsenters(cxn: RepositoryConnection, globalUUID: String)
     {
-        val createLinks: String = """
+        val createLinks_oldExpansionPattern: String = """
           Insert
           {
               Graph pmbb:expanded
@@ -488,7 +488,6 @@ class EntityLinker extends ProjectwideGlobals
           }
           Where
           {
-              Values ?regValues {turbo:TURBO_0000610 turbo:TURBO_0003610}
               Graph ?g1
               {
                   ?hcEnc a obo:OGMS_0000097 .
@@ -499,18 +498,15 @@ class EntityLinker extends ProjectwideGlobals
               Graph ?g2
               {
                   ?consenter a turbo:TURBO_0000502 .
-                  ?consenter ?regValues ?consenterRegistryUriString .
+                  ?consenter turbo:TURBO_0000610 ?consenterRegistryUriString .
               }
               BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + globalUUID + """", str(?consenter))))) AS ?expandedConsenter)
               BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc encounter", """" + globalUUID + """", str(?hcEnc))))) AS ?expandedEncounter)
           }
           """
-          update.updateSparql(cxn, sparqlPrefixes + createLinks)
-    }
-    
-    def linkUnexpandedBbEncountersToUnexpandedConsenters(cxn: RepositoryConnection, globalUUID: String)
-    {
-        val createLinks: String = """
+          update.updateSparql(cxn, sparqlPrefixes + createLinks_oldExpansionPattern)
+
+          val createLinks_newExpansionPattern: String = """
           Insert
           {
               Graph pmbb:expanded
@@ -520,7 +516,39 @@ class EntityLinker extends ProjectwideGlobals
           }
           Where
           {
-              Values ?regValues {turbo:TURBO_0000610 turbo:TURBO_0003610}
+              Graph ?g1
+              {
+                  ?hcEnc a obo:OGMS_0000097 .
+                  ?hcEnc turbo:ScHcEnc2UnexpandedConsenter ?consenterUriString .
+                  ?hcEnc turbo:TURBO_0010002 ?consenterRegistryUriString .
+                  Bind(uri(?consenterUriString) as ?consenter)
+              }
+              Graph ?g2
+              {
+                  ?consenter a turbo:TURBO_0000502 .
+                  ?crid a turbo:TURBO_0000503 .
+                  ?crid obo:IAO_0000219 ?consenter .
+                  ?crid turbo:TURBO_0003610 ?consenterRegistryUriString .
+              }
+              BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + globalUUID + """", str(?consenter))))) AS ?expandedConsenter)
+              BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("hc encounter", """" + globalUUID + """", str(?hcEnc))))) AS ?expandedEncounter)
+          }
+          """
+          update.updateSparql(cxn, sparqlPrefixes + createLinks_newExpansionPattern)
+    }
+    
+    def linkUnexpandedBbEncountersToUnexpandedConsenters(cxn: RepositoryConnection, globalUUID: String)
+    {
+        val createLinks_oldExpansionPattern: String = """
+          Insert
+          {
+              Graph pmbb:expanded
+              {
+                  ?expandedConsenter obo:RO_0000056 ?expandedEncounter .
+              }
+          }
+          Where
+          {
               Graph ?g1
               {
                   ?bbEnc a turbo:TURBO_0000527 .
@@ -531,13 +559,43 @@ class EntityLinker extends ProjectwideGlobals
               Graph ?g2
               {
                   ?consenter a turbo:TURBO_0000502 .
-                  ?consenter ?regValues ?consenterRegistryUriString .
+                  ?consenter turbo:TURBO_0000610 ?consenterRegistryUriString .
               }
               BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + globalUUID + """", str(?consenter))))) AS ?expandedConsenter)
               BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("bb encounter", """" + globalUUID + """", str(?bbEnc))))) AS ?expandedEncounter)
           }
           """
-          update.updateSparql(cxn, sparqlPrefixes + createLinks)
+          update.updateSparql(cxn, sparqlPrefixes + createLinks_oldExpansionPattern)
+
+          val createLinks_newExpansionPattern: String = """
+          Insert
+          {
+              Graph pmbb:expanded
+              {
+                  ?expandedConsenter obo:RO_0000056 ?expandedEncounter .
+              }
+          }
+          Where
+          {
+              Graph ?g1
+              {
+                  ?bbEnc a turbo:TURBO_0000527 .
+                  ?bbEnc turbo:ScBbEnc2UnexpandedConsenter ?consenterUriString .
+                  ?bbEnc turbo:TURBO_0010012 ?consenterRegistryUriString .
+                  Bind(uri(?consenterUriString) as ?consenter)
+              }
+              Graph ?g2
+              {
+                  ?consenter a turbo:TURBO_0000502 .
+                  ?crid a turbo:TURBO_0000503 .
+                  ?crid obo:IAO_0000219 ?consenter .
+                  ?crid turbo:TURBO_0003610 ?consenterRegistryUriString .
+              }
+              BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("consenter", """" + globalUUID + """", str(?consenter))))) AS ?expandedConsenter)
+              BIND(uri(concat("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("bb encounter", """" + globalUUID + """", str(?bbEnc))))) AS ?expandedEncounter)
+          }
+          """
+          update.updateSparql(cxn, sparqlPrefixes + createLinks_newExpansionPattern)
     }
     
     def createJoinDataFromUnlinkedHcEncounters(cxn: RepositoryConnection, globalUUID: String)

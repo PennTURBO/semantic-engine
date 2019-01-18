@@ -8,6 +8,7 @@ import org.eclipse.rdf4j.model.IRI
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.HashMap
 import java.io.File
 import java.io.Reader
 import java.io.FileReader
@@ -40,17 +41,17 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
     
     before
     {
-        /*val graphDBMaterials: TurboGraphConnection = connect.initializeGraphLoadData(false)
+        val graphDBMaterials: TurboGraphConnection = connect.initializeGraphLoadData(false)
         cxn = graphDBMaterials.getConnection()
         repoManager = graphDBMaterials.getRepoManager()
-        repository = graphDBMaterials.getRepository()*/
+        repository = graphDBMaterials.getRepository()
     }
     after
     {
-        //connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
-    test("query API with drug roles")
+    /*test("query API with drug roles")
     {
         val inputList = Array(
         "http://purl.obolibrary.org/obo/CHEBI_36047",					
@@ -292,12 +293,100 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
         // convert JSON to MedLookupResult using json4s methods
         val res = parse(responseString).extract[DrugResult]
         println("result size: " + res.resultsList.size)
+        var finalResMap = new HashMap[String, HashMap[String, Integer]]
         for ((k,v) <- res.resultsList)
         {
-            if (v.size > 1 && v(0).length != v(1).length)
+            var tempMap = new HashMap[String, Integer]
+            for (a <- v)
             {
-                println("mismatch: " + k) 
+                val pathList = a.split(",")
+                for ((b, count) <- pathList.zipWithIndex)
+                {
+                    val newURI = b.replaceAll("\\[","").replaceAll("\\]","").replaceAll(" ","")
+                    if (tempMap.contains(newURI))
+                    {
+                        if (tempMap(newURI) > pathList.size - count - 1)
+                        {
+                            tempMap(newURI) = pathList.size - count - 1
+                        }
+                    }
+                    else
+                    {
+                        tempMap += newURI -> (pathList.size - count - 1)
+                    }
+                }
+            }
+            finalResMap += k -> tempMap
+        }
+        /*for ((k,v) <- finalResMap)
+        {
+            println("key: " + k)
+            for ((k1,v1) <- v)
+            {
+                println("value: " + k1 + " " + v1)
+            }
+        }*/
+
+        val pw = new PrintWriter(new File("drugReport2.csv"))
+        pw.write("Drug,Drug label,Role,Role label,Hops from Drug class")
+        pw.println()
+
+        val buffsource = io.Source.fromFile("drug_report.csv")
+        for (line <- buffsource.getLines())
+        {
+            val lineArr = line.split(",")
+            var firstPart = ""
+            //val roleLabel: String = getRoleLabel(cxn, lineArr(lineArr.size-2))
+            for (a <- 0 to lineArr.size-3) firstPart += lineArr(a) + ","
+            for ((k,v) <- finalResMap(lineArr(lineArr.size-2)))
+            {
+                pw.write(firstPart+k+", ,"+v.toString)
+                pw.println()
             }
         }
+        pw.close()
+        buffsource.close()
+    }*/
+
+    test("add labels to roles")
+    {
+        val buffsource = io.Source.fromFile("drugReport2.csv")
+        val pw = new PrintWriter(new File("drugReport3.csv"))
+
+        pw.write("Drug,Drug label,Role,Role label,Hops from Drug class")
+        pw.println()
+
+        var newMap = new HashMap[String, String]
+
+        for (line <- buffsource.getLines())
+        {
+            //println("processing line: " + line)
+            val lineArr = line.split(",")
+            if (lineArr(0) != "Drug")
+            {
+                var labelForUri = ""
+                val uriToLookup = lineArr(lineArr.size - 3)
+                if (newMap.contains(uriToLookup)) labelForUri = newMap(uriToLookup)
+                else
+                {
+                    val query: String = """
+                    select ?label where
+                    {
+                        <"""+uriToLookup+"""> rdfs:label ?label .
+                    }
+                    """
+                    labelForUri = update.querySparqlAndUnpackTuple(cxn, query, "label")(0).replaceAll("\"","").split("\\^")(0)
+                    newMap += uriToLookup -> labelForUri
+                    //println("found label: " + labelForUri)
+                }
+                var firstPart = ""
+                for (a <- 0 to lineArr.size-4) firstPart += lineArr(a) + ","
+                pw.write(firstPart+uriToLookup+","+labelForUri+","+lineArr(lineArr.size-1))
+                pw.println()
+
+                if (labelForUri == "") println("found a missing label: " + uriToLookup)
+            }
+        }
+        
     }
-}
+}   

@@ -254,7 +254,24 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
                     }
                 }        
             }"""
-        operation.runSparqlCheck(cxn, check, ArrayBuffer("part"), "pre-expansion", "minimum for participant not found")
+        val bool1 = operation.runSparqlCheck(cxn, check, ArrayBuffer("part"), "pre-expansion", "minimum for participant not found")
+    
+        val check2: String = """
+            SELECT distinct ?part WHERE 
+            {
+                Values ?g {""" + graphsList + """}
+                GRAPH ?g {
+                    ?part a turbo:TURBO_0000502 .
+                    ?crid obo:IAO_0000219 ?part .
+                    MINUS {
+                        ?crid turbo:TURBO_0003603 ?someval1 .
+                        ?crid turbo:TURBO_0003608 ?someval2 .
+                        ?crid turbo:TURBO_0003610 ?someval3 .
+                    }
+                }        
+            }"""
+        val bool2 = operation.runSparqlCheck(cxn, check2, ArrayBuffer("part"), "pre-expansion", "minimum for participant not found")      
+        bool1 || bool2
     }
     
     def checkForRequiredHealthcareEncounterShortcuts (cxn: RepositoryConnection, graphsList: String): Boolean =
@@ -747,6 +764,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
                   FILTER (?p != turbo:ScHcEnc2UnexpandedConsenter)
                   FILTER (?p != turbo:TURBO_0010013)
                   FILTER (?p != turbo:TURBO_0010014)
+                  FILTER (?p != obo:IAO_0000219)
                 }
           """
         
@@ -795,6 +813,7 @@ def checkForValidParticipantBirthShortcuts (cxn: RepositoryConnection, graphsLis
               
               FILTER (?p != obo:RO_0002234)
               FILTER (?p != turbo:TURBO_0000302)
+              FILTER (?p != obo:IAO_0000219)
           }
           """
         operation.runSparqlCheck(cxn, check, ArrayBuffer("o"), "pre-expansion", "found URI where literal was expected")
