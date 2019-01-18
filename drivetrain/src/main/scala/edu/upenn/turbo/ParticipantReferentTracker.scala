@@ -94,8 +94,16 @@ class ParticipantReferentTracker extends ProjectwideGlobals
                 GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
                 ?participant a turbo:TURBO_0000502 .
                 ?participant turbo:TURBO_0006500 'true'^^xsd:boolean .
+
                 ?patientCrid obo:IAO_0000219 ?participant .
                 ?patientCrid a turbo:TURBO_0000503 .
+                ?patientCrid obo:BFO_0000051 ?cridSymb .
+                ?patientCrid obo:BFO_0000051 ?cridReg .
+                ?cridSymb a turbo:TURBO_0000504 .
+                ?cridReg a turbo:TURBO_0000505 .
+                ?cridSymb turbo:TURBO_0006510 ?cridSymbVal .
+                ?cridReg obo:IAO_0000219 ?cridRegUri .
+
                 ?biosex a obo:PATO_0000047 .
                 ?participant obo:RO_0000086 ?biosex .
                 ?birth a obo:UBERON_0035946 .
@@ -108,9 +116,6 @@ class ParticipantReferentTracker extends ProjectwideGlobals
             		?weight a obo:PATO_0000128 .
                 
                 OPTIONAL {
-                  ?patientCrid2 obo:IAO_0000219 ?participant .
-                  ?patientCrid2 a turbo:TURBO_0000503 .
-                  ?patientCrid2 turbo:TURBO_0006500 'true'^^xsd:boolean .
                   ?participant obo:RO_0000086 ?biosex2 .
                   ?biosex2 a obo:PATO_0000047 .
                   ?biosex2 turbo:TURBO_0006500 'true'^^xsd:boolean .
@@ -127,6 +132,19 @@ class ParticipantReferentTracker extends ProjectwideGlobals
             		  ?weight2 a obo:PATO_0000128 .
             		  ?weight2 turbo:TURBO_0006500 'true'^^xsd:boolean .
                 }
+
+                Optional
+                {
+                    ?patientCrid2 obo:IAO_0000219 ?participant .
+                    ?patientCrid2 a turbo:TURBO_0000503 .
+                    ?patientCrid2 turbo:TURBO_0006500 'true'^^xsd:boolean .
+                    ?patientCrid2 obo:BFO_0000051 ?cridSymb2 .
+                    ?patientCrid2 obo:BFO_0000051 ?cridReg2 .
+                    ?cridSymb2 a turbo:TURBO_0000504 .
+                    ?cridReg2 a turbo:TURBO_0000505 .
+                    ?cridSymb2 turbo:TURBO_0006510 ?cridSymbVal .
+                    ?cridReg2 obo:IAO_0000219 ?cridRegUri .
+                  }
                 
                 MINUS {
                   ?patientCrid turbo:TURBO_0006500 'true'^^xsd:boolean .
@@ -153,7 +171,7 @@ class ParticipantReferentTracker extends ProjectwideGlobals
                 }
                 
                 BIND (IF (bound(?biosex2), ?biosex2, uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("reftracked biosex", str(?participant)))))) AS ?biosexDestination)
-                BIND (IF (bound(?patientCrid2), ?patientCrid2, uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("reftracked psc", str(?participant)))))) AS ?cridSymbolIdDestination)
+                BIND (IF (bound(?patientCrid2), ?patientCrid2, uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("reftracked psc", str(?participant), str(?cridSymbVal), str(?cridRegUri)))))) AS ?cridSymbolIdDestination)
                 BIND (IF (bound(?birth2), ?birth2, uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("reftracked birth", str(?participant)))))) AS ?birthDestination)
                 BIND (IF (bound(?adipose2), ?adipose2, uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("reftracked adipose", str(?participant)))))) AS ?adiposeDestination)
                 BIND (IF (bound(?height2), ?height2, uri(CONCAT("http://www.itmat.upenn.edu/biobank/", md5(CONCAT("reftracked height", str(?participant)))))) AS ?heightDestination)
@@ -232,6 +250,8 @@ class ParticipantReferentTracker extends ProjectwideGlobals
         val nonReftrackedConsenters: String = """
           SELECT distinct ?participant ?pscLit ?patientRegId WHERE 
           {
+              # ref tracking only on EMPIs for now - support multiple identifier ref tracking later?
+              values ?patientRegId {turbo:TURBO_0000402}
               GRAPH pmbb:expanded {
               ?participant a turbo:TURBO_0000502 .
               ?patientCrid obo:IAO_0000219 ?participant .
