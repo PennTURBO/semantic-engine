@@ -335,7 +335,7 @@ def checkForInvalidClasses (cxn: RepositoryConnection, namedGraph: String, stage
                   a owl:DatatypeProperty
               }
         		  # BIND (STRDT(substr(str(NOW()),1,10), xsd:date) AS ?nowTime)
-              FILTER (?dateLit < "1900-01-01"^^xsd:date || ?dateLit > "2019-01-01"^^xsd:date)
+              FILTER (?dateLit < "1900-01-01"^^xsd:date || ?dateLit > "2020-01-01"^^xsd:date)
           }
           """
               

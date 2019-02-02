@@ -69,7 +69,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       if (postexpandProceed)
                       {
                           runReferentTracking(cxn)
-                          runEntityLinking(cxn, globalUUID, true, instantiation.get)
+                          var loadLOF = true
+                          if (loadLOFdata == "false") loadLOF = false 
+                          runEntityLinking(cxn, globalUUID, loadLOF, instantiation.get)
                           val concProceed = runConclusionating(cxn, thresholds.get(0), thresholds.get(1))
                           if (concProceed) 
                           {
