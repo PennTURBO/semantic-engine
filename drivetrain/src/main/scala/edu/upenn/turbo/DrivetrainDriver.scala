@@ -23,7 +23,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   val ontLoad: OntologyLoader = new OntologyLoader()
   val reasoner: ReasoningManager = new ReasoningManager()
   val simpleBenchmark: SimpleBenchmark = new SimpleBenchmark()
-  //val future: Futures = new Futures()
+  val graphOps: DrivetrainGraphOperations = new DrivetrainGraphOperations()
   
   //globally available Conclusionation Named Graph IRI
   var concNamedGraph: Option[IRI] = None : Option[IRI]
@@ -117,6 +117,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
               else if (args(0) == "simpleBenchmark") simpleBenchmark.runSimpleBenchmark(cxn)
               else if (args(0) == "validateShortcuts") logger.info("shortcuts valid: " + sparqlChecks.preExpansionChecks(cxn))
+              else if (args(0) == "compareHealthcareEncounterDates") graphOps.addDateOrderingToHealthcareEncounters(cxn)
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
