@@ -39,7 +39,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   {
       val globalUUID = UUID.randomUUID().toString().replaceAll("-", "")
       if (args.size == 0) logger.info("At least one command line argument required to run the drivetrain application.")
-      else if (args(0) == "benchmark") benchmark.runBenchmarking(args, globalUUID)
+      /*else if (args(0) == "benchmark") benchmark.runBenchmarking(args, globalUUID)
       else
       {
           if (args(0) != "all") logger.info("Note that running Drivetrain with any command other than 'all' is supported for testing but should not be executed in production.")
@@ -116,15 +116,15 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
               else if (args(0) == "simpleBenchmark") simpleBenchmark.runSimpleBenchmark(cxn)
-              else if (args(0) == "validateShortcuts") logger.info("shortcuts valid: " + sparqlChecks.preExpansionChecks(cxn))
-              else if (args(0) == "compareHealthcareEncounterDates") graphOps.addDateOrderingToHealthcareEncounters(cxn)
+              else if (args(0) == "validateShortcuts") logger.info("shortcuts valid: " + sparqlChecks.preExpansionChecks(cxn))*/
+              else if (args(0) == "buildQuery") buildQuery(/*cxn*/)
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
-          }
+          /*}
           finally 
           {
               connect.closeGraphConnection(cxn, repoManager, repository, false)
           }
-      }
+      }*/
   }
   
   def checkConclusionatorArguments(args: Array[String]): Option[Array[Double]] =
@@ -285,5 +285,24 @@ object DrivetrainDriver extends ProjectwideGlobals {
               i2i2c2c.exportCSVsFromQueries(cxn)   
           }
       }
+  }
+  
+  def buildQuery(/*cxn: RepositoryConnection*/)
+  {
+      val consenter = new Consenter()
+      val biobankEncounter = new BiobankEncounter()
+      
+      val queryBuilder = new QueryBuilder()
+      
+      val whereClause = queryBuilder.whereBuilder(
+          Map(consenter -> false, biobankEncounter -> false),
+          Map(consenter -> biobankEncounter))
+          
+      val selectClause = queryBuilder.selectBuilder(Array(consenter, biobankEncounter))
+      
+      val finalQuery = selectClause + "\n" + whereClause
+      println(finalQuery)
+      
+      //update.querySparqlAndUnpackTuple(cxn, query)
   }
 }
