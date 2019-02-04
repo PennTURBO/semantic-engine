@@ -32,5 +32,8 @@ class BiobankEncounter extends GraphObject
     
     val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
-    val variablesToSelect = Array("biobankEncounter", "biobankEncounterSymbol", "biobankEncounterRegistry")
+    val variablesToSelect = Array("biobankEncounter", "biobankEncounterSymbolValue", "biobankEncounterRegistry")
+
+    def getValuesKey(): String = "biobankEncounterSymbolValue"
+    def getRegistryKey(): String = "biobankEncounterRegistry"
 }

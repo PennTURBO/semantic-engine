@@ -39,7 +39,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   {
       val globalUUID = UUID.randomUUID().toString().replaceAll("-", "")
       if (args.size == 0) logger.info("At least one command line argument required to run the drivetrain application.")
-      /*else if (args(0) == "benchmark") benchmark.runBenchmarking(args, globalUUID)
+      else if (args(0) == "benchmark") benchmark.runBenchmarking(args, globalUUID)
       else
       {
           if (args(0) != "all") logger.info("Note that running Drivetrain with any command other than 'all' is supported for testing but should not be executed in production.")
@@ -116,15 +116,15 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
               else if (args(0) == "simpleBenchmark") simpleBenchmark.runSimpleBenchmark(cxn)
-              else if (args(0) == "validateShortcuts") logger.info("shortcuts valid: " + sparqlChecks.preExpansionChecks(cxn))*/
-              else if (args(0) == "buildQuery") buildQuery(/*cxn*/)
+              else if (args(0) == "validateShortcuts") logger.info("shortcuts valid: " + sparqlChecks.preExpansionChecks(cxn))
+              else if (args(0) == "buildQuery") buildQuery(cxn, globalUUID)
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
-          /*}
+          }
           finally 
           {
               connect.closeGraphConnection(cxn, repoManager, repository, false)
           }
-      }*/
+      }
   }
   
   def checkConclusionatorArguments(args: Array[String]): Option[Array[Double]] =
@@ -287,22 +287,25 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
   }
   
-  def buildQuery(/*cxn: RepositoryConnection*/)
+  def buildQuery(cxn: RepositoryConnection, globalUUID: String)
   {
+      val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
+      val shortcutConsenter = new ShortcutConsenter()
       val consenter = new Consenter()
-      val biobankEncounter = new BiobankEncounter()
       
-      val queryBuilder = new QueryBuilder()
+      val query = new Query()
       
-      val whereClause = queryBuilder.whereBuilder(
-          Map(consenter -> false, biobankEncounter -> false),
-          Map(consenter -> biobankEncounter))
+      query.buildWhereClause(
+          Map(shortcutConsenter -> true),
+          Map())
           
-      val selectClause = queryBuilder.selectBuilder(Array(consenter, biobankEncounter))
-      
-      val finalQuery = selectClause + "\n" + whereClause
+      query.buildBindClause(Array(shortcutConsenter), randomUUID, globalUUID)
+
+      val finalQuery = query.buildSelectQuery()
       println(finalQuery)
+      println()
       
-      //update.querySparqlAndUnpackTuple(cxn, query)
+      //val queryResults = update.querySparqlAndUnpackToMap(cxn, sparqlPrefixes + finalQuery)
+
   }
 }

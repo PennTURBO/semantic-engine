@@ -46,4 +46,7 @@ class Consenter extends GraphObject
     val typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
     
     val variablesToSelect = Array("part", "partSymb", "partReg")
+
+    def getValuesKey(): String = "partSymb"
+    def getRegistryKey(): String = "partReg"
 }

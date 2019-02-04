@@ -10,41 +10,19 @@ import java.util.UUID
 
 class QueryBuilder 
 {
-    def whereBuilder(buildList: Map[GraphObject, Boolean], connectionList: Map[GraphObject, GraphObject]): String =
+    def whereBuilder(nodeType: GraphObject, notOptional: Boolean): String =
     {
         var entry: String = ""
         
-        for ((key,value) <- buildList)
-        {
-            entry += "GRAPH <" + key.namedGraph + "> {"
-            if (!value) entry += "OPTIONAL {"
-            entry += key.pattern
-            if (!value) entry += "}"
-            if (connectionList.contains(key))
-            {
-                val connectedElement = connectionList(key)
-                var optionalConnection = false
-                if (!value || !buildList(connectedElement))
-                {
-                    entry += "OPTIONAL {"
-                    optionalConnection = true
-                }
-                val connectionPredicate = key.connections(connectedElement.typeURI)
-                entry += "?" + key.baseVariableName + " <" + connectionPredicate + "> ?" + connectedElement.baseVariableName + " ."
-                if (optionalConnection) entry += "}"
-            }
-            
-            entry += "} \n"
-        }
-        
-        var where: String = "WHERE { " + entry + " }"
-        
-        where
+        entry += "GRAPH <" + nodeType.namedGraph + "> {"
+        if (!notOptional) entry += "OPTIONAL {"
+        entry += nodeType.pattern
+        entry
     }
     
     def selectBuilder(buildTypes: Array[GraphObject]): String =
     {
-        var select = "SELECT "
+        var select = ""
       
         for (item <- buildTypes)
         {

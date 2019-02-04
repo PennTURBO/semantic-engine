@@ -83,6 +83,15 @@ class SparqlUpdater
           result.get.close()
           unpackedResult
       }
+
+      def querySparqlAndUnpackToMap(cxn: RepositoryConnection, query: String): HashMap[String, ArrayBuffer[Value]] =
+      {
+          val result: Option[TupleQueryResult] = querySparql(cxn, query)
+          val unpackedResult: HashMap[String, ArrayBuffer[Value]] = unpackTupleToMap(result.get)
+          //close tupleQueryResult to free resources
+          result.get.close()
+          unpackedResult
+      }
       
       /**
        * QuerySparql() is a generic SPARQL query method which uses the RepositoryConnection object
@@ -193,6 +202,27 @@ class SparqlUpdater
             resultList += oneResult
         }
         //Return list of lists of Value objects
+        resultList
+    }
+
+    def unpackTupleToMap(resultTuple: TupleQueryResult): HashMap[String, ArrayBuffer[Value]] =
+    {
+        //Create empty map of lists to be populated and returned
+        var resultList: HashMap[String, ArrayBuffer[Value]] = new HashMap[String, ArrayBuffer[Value]]
+        //For each result, add it to the list. Note that this method does not convert to Strings but leaves results as Values
+        while (resultTuple.hasNext())
+        {
+            val oneResult: ArrayBuffer[Value] = new ArrayBuffer[Value]
+            val bindingset: BindingSet = resultTuple.next()
+            for (a <- bindingset.getBindingNames().toArray)
+            {
+                val variableName = a.toString
+                val result: Value = bindingset.getValue(variableName)
+                if (resultList.contains(variableName)) resultList(variableName) += result
+                else resultList += variableName -> ArrayBuffer(result)
+            }
+        }
+        //Return map of lists of Value objects
         resultList
     }
     
