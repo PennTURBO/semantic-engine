@@ -14,7 +14,7 @@ import java.util.Date
 import java.text.DateFormat
 import org.eclipse.rdf4j.model.util.ModelBuilder
 
-class DrivetrainGraphOperations extends ProjectwideGlobals
+class EncounterDateOperations extends ProjectwideGlobals
 {
     val builder = new ModelBuilder() 
     val factory = SimpleValueFactory.getInstance()

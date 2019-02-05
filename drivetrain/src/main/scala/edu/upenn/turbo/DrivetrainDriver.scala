@@ -23,7 +23,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   val ontLoad: OntologyLoader = new OntologyLoader()
   val reasoner: ReasoningManager = new ReasoningManager()
   val simpleBenchmark: SimpleBenchmark = new SimpleBenchmark()
-  val graphOps: DrivetrainGraphOperations = new DrivetrainGraphOperations()
+  val graphOps: EncounterDateOperations = new EncounterDateOperations()
   
   //globally available Conclusionation Named Graph IRI
   var concNamedGraph: Option[IRI] = None : Option[IRI]
@@ -289,23 +289,28 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def buildQuery(cxn: RepositoryConnection, globalUUID: String)
   {
+      val instantiationUUID = "http://www.itmat.upenn.edu/biobank/test_instantiation_1"
+      val namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts"
       val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
-      val shortcutConsenter = new ShortcutConsenter()
+
+      val shortcutConsenter = new ShortcutConsenter(instantiationUUID, namedGraph)
       val consenter = new Consenter()
       
-      val query = new Query()
+      val queryBuilder = new QueryBuilder()
       
-      query.buildWhereClause(
+      queryBuilder.whereBuilder(
           Map(shortcutConsenter -> true),
           Map())
           
-      query.buildBindClause(Array(shortcutConsenter), randomUUID, globalUUID)
+      queryBuilder.bindBuilder(Array(shortcutConsenter), randomUUID, globalUUID)
 
-      val finalQuery = query.buildSelectQuery()
+      queryBuilder.insertBuilder(Array(consenter))
+
+      val finalQuery = queryBuilder.buildInsertQuery()
       println(finalQuery)
       println()
       
-      //val queryResults = update.querySparqlAndUnpackToMap(cxn, sparqlPrefixes + finalQuery)
+      val queryResults = update.updateSparql(cxn, sparqlPrefixes + finalQuery)
 
   }
 }

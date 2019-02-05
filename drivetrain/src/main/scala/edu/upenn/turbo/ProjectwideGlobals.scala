@@ -10,7 +10,6 @@ trait ProjectwideGlobals
     
     //make sparqlPrefixes for use in all queries globally available
     val sparqlPrefixes = """
-			PREFIX  :     <http://transformunify.org/ontologies/>
 			PREFIX  dc11: <http://purl.org/dc/elements/1.1/>
 			PREFIX  obo:  <http://purl.obolibrary.org/obo/>
 			PREFIX  owl:  <http://www.w3.org/2002/07/owl#>

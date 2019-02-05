@@ -1,13 +1,15 @@
 package edu.upenn.turbo
 
-class BiobankEncounter extends GraphObject
+class BiobankEncounter extends ExpandedGraphObject
 {
-    val pattern = """
+    val baseVariableName = "biobankEncounter"
+
+    val pattern = s"""
           
-      ?biobankEncounter a turbo:TURBO_0000527 .
-  		?biobankEncounter turbo:TURBO_0006601 ?shortcutbiobankEncounterName .
+      ?$baseVariableName a turbo:TURBO_0000527 .
+  		?$baseVariableName turbo:TURBO_0006601 ?shortcutbiobankEncounterName .
   		?biobankEncounterCrid a turbo:TURBO_0000533 .
-  		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
+  		?biobankEncounterCrid obo:IAO_0000219 ?$baseVariableName .
   		?biobankEncounterCrid obo:BFO_0000051 ?biobankEncounterSymbol .
   		?biobankEncounterCrid obo:BFO_0000051 ?biobankEncounterRegDen .
   		?biobankEncounterSymbol a turbo:TURBO_0000534 . 
@@ -17,18 +19,18 @@ class BiobankEncounter extends GraphObject
   		?biobankEncounterRegistry a turbo:TURBO_0000543 .
   		
   		?biobankEncounterStart a turbo:TURBO_0000531 .
-  		?biobankEncounterStart obo:RO_0002223 ?biobankEncounter .
+  		?biobankEncounterStart obo:RO_0002223 ?$baseVariableName .
   		?biobankEncounterDate a turbo:TURBO_0000532 .
   		?biobankEncounterDate obo:IAO_0000136 ?biobankEncounterStart .
       """
+
+    val optionalPatterns = new Array[ExpandedGraphObject](0)
     
     val connections = Map(
         "" -> ""
     )
     
     val namedGraph = "http://www.itmat.upenn.edu/biobank/expanded"
-    
-    val baseVariableName = "biobankEncounter"
     
     val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
