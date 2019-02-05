@@ -29,6 +29,9 @@ class CancerSumStageExpansionTests extends FunSuiteLike with BeforeAndAfter with
   }
 
   test("monolithic") {
+    
+    // the fact that the patient registry is of a particular type
+    // should come from the ontology, not from data triples
 
     val insertScStmt: String = """
   insert data { graph pmbb:Shortcuts_sumStage { 
