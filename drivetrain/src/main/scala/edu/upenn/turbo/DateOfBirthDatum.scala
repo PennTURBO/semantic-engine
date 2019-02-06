@@ -8,8 +8,8 @@ class DateOfBirthDatum(consenter:Consenter) extends ExpandedGraphObject
     val pattern = s"""
           
           ?$baseVariableName a <http://www.ebi.ac.uk/efo/EFO_0004950> .
-          ?$baseVariableName :TURBO_0006510 ?dobValue .
-          ?$baseVariableName :TURBO_0006511 ?dobDate .
+          ?$baseVariableName turbo:TURBO_0006510 ?dobValue .
+          ?$baseVariableName turbo:TURBO_0006511 ?dobDate .
           ?$baseVariableName obo:BFO_0000050 ?dataset .
           ?dataset obo:BFO_0000051 ?$baseVariableName .
           ?$baseVariableName obo:IAO_0000136 ?$birthBvn .

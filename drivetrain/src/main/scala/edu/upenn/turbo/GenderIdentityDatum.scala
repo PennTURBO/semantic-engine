@@ -7,7 +7,7 @@ class GenderIdentityDatum(consenter:Consenter) extends ExpandedGraphObject
 
     val pattern = s"""
           
-          ?$baseVariableName :TURBO_0006510 ?gidValue .
+          ?$baseVariableName turbo:TURBO_0006510 ?gidValue .
           ?$baseVariableName a ?gidType .
           ?$baseVariableName obo:BFO_0000050 ?dataset .
           ?dataset obo:BFO_0000051 ?$baseVariableName .

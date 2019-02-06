@@ -59,6 +59,7 @@ class QueryBuilder extends Query with IRIConstructionRules
         for (a <- buildTypes)
         {
             val dependencyConversions = a.expandedVariableShortcutDependencies
+            val bindAsConversions = a.expandedVariableShortcutBindings
             for ((rule,list) <- a.variableExpansions)
             {
                 for (element <- list)
@@ -67,7 +68,8 @@ class QueryBuilder extends Query with IRIConstructionRules
                                         .replaceAll("localUUID",localUUID)
                                         .replaceAll("globalUUID",globalUUID)
                                         .replaceAll("mainExpansionTypeVariableName",a.baseVariableName)
-                    if (thisBind.contains("original")) thisBind = thisBind.replaceAll("original",dependencyConversions(element))
+                    if (thisBind.contains("dependent")) thisBind = thisBind.replaceAll("dependent",dependencyConversions(element))
+                    if (thisBind.contains("original")) thisBind = thisBind.replaceAll("original",bindAsConversions(element))
                     thisBind = thisBind.replaceAll("\\?instantiationUUID","\""+a.instantiation+"\"")
                     bindClause += thisBind+"\n"
                 }

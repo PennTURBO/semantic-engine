@@ -68,23 +68,26 @@ class ShortcutConsenter(newInstantiation: String, newNamedGraph: String) extends
                               BindAs -> Array("dobValue", "ridValue", "gidValue", "dobDate", "partSymbolValue")
                             )
 
-    val expandedVariableShortcutDependencies = Map(
-                                          "instantiation" -> "instantiationUUID", 
-                                          "partReg" -> "consenterRegistryString", 
-                                          "gidValue" -> "genderIdentityDatumValue", 
-                                          "ridType" -> "ridTypeString", 
-                                          "shortcutPartName" -> "shortcutPart", 
+    val expandedVariableShortcutDependencies = Map( 
                                           "gid" -> "genderIdentityDatumValue", 
                                           "rid" -> "ridTypeString", 
                                           "rip" -> "ridTypeString", 
-                                          "gidType" -> "gidTypeString", 
                                           "dateDataset" -> "dateOfBirthStringValue", 
                                           "raceDataset" -> "ridTypeString", 
                                           "genderDataset" -> "genderIdentityDatumValue",
                                           "dob" -> "dateOfBirthStringValue",
+                                          "gidType" -> "gidTypeString"
+                                        )
+
+    val expandedVariableShortcutBindings = Map(
                                           "ridValue" -> "ridString",
                                           "dobValue" -> "dateOfBirthStringValue",
                                           "dobDate" -> "dateOfBirthDateValue",
-                                          "partSymbolValue" -> "consenterSymbolValue"
+                                          "partSymbolValue" -> "consenterSymbolValue",
+                                          "partReg" -> "consenterRegistryString", 
+                                          "gidValue" -> "genderIdentityDatumValue", 
+                                          "ridType" -> "ridTypeString",
+                                          "shortcutPartName" -> "shortcutPart",
+                                          "instantiation" -> "instantiationUUID"
                                         )
 }

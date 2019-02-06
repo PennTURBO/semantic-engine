@@ -113,18 +113,18 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           ASK {GRAPH pmbb:postExpansionCheck {
         		
         		?dataset a obo:IAO_0000100 .
-        		?part rdf:type :TURBO_0000502 .
+        		?part rdf:type turbo:TURBO_0000502 .
 
-        		?gid :TURBO_0006510 "F" .
+        		?gid turbo:TURBO_0006510 "F" .
         		?gid obo:BFO_0000050 ?dataset .
         		?gid rdf:type obo:OMRSE_00000138 .
         		?gid obo:IAO_0000136 ?part .
         		
-        		?part :TURBO_0000303 ?birth .
+        		?part turbo:TURBO_0000303 ?birth .
         		?birth rdf:type obo:UBERON_0035946 .
         		?dob rdf:type <http://www.ebi.ac.uk/efo/EFO_0004950> .
-        		?dob :TURBO_0006510 "04/May/1969" .
-        		?dob :TURBO_0006511 "1969-05-04"^^xsd:date .
+        		?dob turbo:TURBO_0006510 "04/May/1969" .
+        		?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
         		?dob obo:IAO_0000136 ?birth .
         		?dob obo:BFO_0000050 ?dataset .
         		
@@ -325,20 +325,20 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         
         val dateNoXsd: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
-        		?part rdf:type :TURBO_0000502 .
+        		?part rdf:type turbo:TURBO_0000502 .
         		?part turbo:TURBO_0000303 ?birth .
         		?birth rdf:type obo:UBERON_0035946 .
         		?dob rdf:type <http://www.ebi.ac.uk/efo/EFO_0004950> .
-        		?dob :TURBO_0006510 "04/May/1969" .
+        		?dob turbo:TURBO_0006510 "04/May/1969" .
         		?dob obo:BFO_0000050 ?dataset .
         		?dataset a obo:IAO_0000100 .
-        		# ?dob :TURBO_0006511 "1969-05-04"^^xsd:date .
+        		# ?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
           }}
           """
         
         val gidNoXsd: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
-        		?part rdf:type :TURBO_0000502 .
+        		?part rdf:type turbo:TURBO_0000502 .
         		?gid obo:IAO_0000136 ?part .
         		?gid a obo:OMRSE_00000133 .
         		?gid obo:BFO_0000050 ?dataset .
@@ -426,14 +426,14 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
         	
-        		?part a :TURBO_0000502 .
+        		?part a turbo:TURBO_0000502 .
         		pmbb:test_instantiation_1 a turbo:TURBO_0000522 .
         		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
         		?dataset a obo:IAO_0000100 .
         		?dataset dc11:title "dataset1" .
         		?consenter turbo:TURBO_0006601 ?previousUriText .
         		
-        		?part :TURBO_0000303 ?birth .
+        		?part turbo:TURBO_0000303 ?birth .
         		?birth a obo:UBERON_0035946 .
         		?part obo:RO_0000086 ?biosex .
         		?biosex a obo:PATO_0000047 .
@@ -445,15 +445,15 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?part obo:RO_0000086 ?height .
         		?height a obo:PATO_0000128 .
 
-        		?gid :TURBO_0006510 "F" .
+        		?gid turbo:TURBO_0006510 "F" .
         		?gid obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?gid .
         		?gid a obo:OMRSE_00000138 .
         		?gid obo:IAO_0000136 ?part .
         		
         		?dob a <http://www.ebi.ac.uk/efo/EFO_0004950> .
-        		?dob :TURBO_0006510 "04/May/1969" .
-        		?dob :TURBO_0006511 "1969-05-04"^^xsd:date .
+        		?dob turbo:TURBO_0006510 "04/May/1969" .
+        		?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
         		?dob obo:IAO_0000136 ?birth .
         		?dob obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?dob .
@@ -571,7 +571,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
         	
-        		?part a :TURBO_0000502 .
+        		?part a turbo:TURBO_0000502 .
         		pmbb:test_instantiation_1 a turbo:TURBO_0000522 .
         		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset1 .
         		?dataset1 a obo:IAO_0000100 .
@@ -584,7 +584,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?dataset3 dc11:title "dataset3" .
         		?consenter turbo:TURBO_0006601 ?previousUriText .
         		
-        		?part :TURBO_0000303 ?birth .
+        		?part turbo:TURBO_0000303 ?birth .
         		?birth a obo:UBERON_0035946 .
         		?part obo:RO_0000086 ?biosex .
         		?biosex a obo:PATO_0000047 .
@@ -596,15 +596,15 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?part obo:RO_0000086 ?height .
         		?height a obo:PATO_0000128 .
 
-        		?gid :TURBO_0006510 "F" .
+        		?gid turbo:TURBO_0006510 "F" .
         		?gid obo:BFO_0000050 ?dataset1 .
         		?dataset1 obo:BFO_0000051 ?gid .
         		?gid a obo:OMRSE_00000138 .
         		?gid obo:IAO_0000136 ?part .
         		
         		?dob a <http://www.ebi.ac.uk/efo/EFO_0004950> .
-        		?dob :TURBO_0006510 "04/May/1969" .
-        		?dob :TURBO_0006511 "1969-05-04"^^xsd:date .
+        		?dob turbo:TURBO_0006510 "04/May/1969" .
+        		?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
         		?dob obo:IAO_0000136 ?birth .
         		?dob obo:BFO_0000050 ?dataset2 .
         		?dataset2 obo:BFO_0000051 ?dob .
@@ -717,14 +717,14 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
         	
-        		?part a :TURBO_0000502 .
+        		?part a turbo:TURBO_0000502 .
         		pmbb:test_instantiation_1 a turbo:TURBO_0000522 .
         		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
         		?dataset a obo:IAO_0000100 .
         		?dataset dc11:title "dataset1" .
         		?consenter turbo:TURBO_0006601 ?previousUriText .
         		
-        		?part :TURBO_0000303 ?birth .
+        		?part turbo:TURBO_0000303 ?birth .
         		?birth a obo:UBERON_0035946 .
         		?part obo:RO_0000086 ?biosex .
         		?biosex a obo:PATO_0000047 .
@@ -736,15 +736,15 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?part obo:RO_0000086 ?height .
         		?height a obo:PATO_0000128 .
 
-        		?gid :TURBO_0006510 "F" .
+        		?gid turbo:TURBO_0006510 "F" .
         		?gid obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?gid .
         		?gid a obo:OMRSE_00000138 .
         		?gid obo:IAO_0000136 ?part .
         		
         		?dob a <http://www.ebi.ac.uk/efo/EFO_0004950> .
-        		?dob :TURBO_0006510 "04/May/1969" .
-        		?dob :TURBO_0006511 "1969-05-04"^^xsd:date .
+        		?dob turbo:TURBO_0006510 "04/May/1969" .
+        		?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
         		?dob obo:IAO_0000136 ?birth .
         		?dob obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?dob .
@@ -861,7 +861,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
         	
-        		?part a :TURBO_0000502 .
+        		?part a turbo:TURBO_0000502 .
         		pmbb:test_instantiation_1 a turbo:TURBO_0000522 .
         		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset1 .
         		?dataset1 a obo:IAO_0000100 .
@@ -871,7 +871,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?dataset2 dc11:title "dataset2" .
         		?consenter turbo:TURBO_0006601 ?previousUriText .
         		
-        		?part :TURBO_0000303 ?birth .
+        		?part turbo:TURBO_0000303 ?birth .
         		?birth a obo:UBERON_0035946 .
         		?part obo:RO_0000086 ?biosex .
         		?biosex a obo:PATO_0000047 .
@@ -883,15 +883,15 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?part obo:RO_0000086 ?height .
         		?height a obo:PATO_0000128 .
 
-        		?gid :TURBO_0006510 "F" .
+        		?gid turbo:TURBO_0006510 "F" .
         		?gid obo:BFO_0000050 ?dataset1 .
         		?dataset1 obo:BFO_0000051 ?gid .
         		?gid a obo:OMRSE_00000138 .
         		?gid obo:IAO_0000136 ?part .
         		
         		?dob a <http://www.ebi.ac.uk/efo/EFO_0004950> .
-        		?dob :TURBO_0006510 "04/May/1969" .
-        		?dob :TURBO_0006511 "1969-05-04"^^xsd:date .
+        		?dob turbo:TURBO_0006510 "04/May/1969" .
+        		?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
         		?dob obo:IAO_0000136 ?birth .
         		?dob obo:BFO_0000050 ?dataset1 .
         		?dataset1 obo:BFO_0000051 ?dob .

@@ -26,11 +26,11 @@ trait IRIConstructionRules
     val DatasetIRI: String = """BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/",
                                 md5(CONCAT("replacement", "globalUUID", str(?datasetTitle))))) AS ?replacement)"""
 
-    val BiologicalSexIRI: String = """BIND(IF(BOUND(?original), uri(?original), obo:OMRSE_00000133) AS ?replacement)"""
+    val BiologicalSexIRI: String = """BIND(IF(BOUND(?dependent), uri(?dependent), obo:OMRSE_00000133) AS ?replacement)"""
 
-    val BindIfBoundDataset: String = """BIND(IF(BOUND(?original), ?dataset, ?unbound) AS ?replacement)"""
+    val BindIfBoundDataset: String = """BIND(IF(BOUND(?dependent), ?dataset, ?unbound) AS ?replacement)"""
 
-    val BindIfBoundMD5LocalRandom: String = """BIND (IF (BOUND(?original), uri(concat("http://www.itmat.upenn.edu/biobank/",
+    val BindIfBoundMD5LocalRandom: String = """BIND (IF (BOUND(?dependent), uri(concat("http://www.itmat.upenn.edu/biobank/",
                                         md5(CONCAT("replacement", "localUUID", str(?mainExpansionTypeVariableName))))), ?unbound) AS ?replacement)"""
 
     val BindAs: String = """BIND (?original AS ?replacement)"""
