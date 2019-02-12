@@ -1,30 +1,33 @@
 package edu.upenn.turbo
 
-class BiobankEncounter extends ExpandedGraphObject
+class BiobankEncounter extends Encounter
 {
     val baseVariableName = "biobankEncounter"
+    val encounterDateVariableName = "biobankEncounterDate"
 
     val pattern = s"""
           
+      ?instantiation a turbo:TURBO_0000522 .
+  		?instantiation obo:OBI_0000293 ?dataset .
+  		?dataset a obo:IAO_0000100 .
+  		?dataset dc11:title ?dsTitle .
+        		
       ?$baseVariableName a turbo:TURBO_0000527 .
   		?$baseVariableName turbo:TURBO_0006601 ?shortcutbiobankEncounterName .
-  		?biobankEncounterCrid a turbo:TURBO_0000533 .
-  		?biobankEncounterCrid obo:IAO_0000219 ?$baseVariableName .
-  		?biobankEncounterCrid obo:BFO_0000051 ?biobankEncounterSymbol .
-  		?biobankEncounterCrid obo:BFO_0000051 ?biobankEncounterRegDen .
-  		?biobankEncounterSymbol a turbo:TURBO_0000534 . 
-  		?biobankEncounterSymbol turbo:TURBO_0006510 ?biobankEncounterSymbolValue .
-  		?biobankEncounterRegDen a turbo:TURBO_0000535 .
-  		?biobankEncounterRegDen obo:IAO_0000219 ?biobankEncounterRegistry .
-  		?biobankEncounterRegistry a turbo:TURBO_0000543 .
   		
   		?biobankEncounterStart a turbo:TURBO_0000531 .
   		?biobankEncounterStart obo:RO_0002223 ?$baseVariableName .
-  		?biobankEncounterDate a turbo:TURBO_0000532 .
-  		?biobankEncounterDate obo:IAO_0000136 ?biobankEncounterStart .
+  		?$encounterDateVariableName a turbo:TURBO_0000532 .
+  		?$encounterDateVariableName obo:IAO_0000136 ?biobankEncounterStart .
       """
 
-    val optionalPatterns = new Array[ExpandedGraphObject](0)
+    val optionalPatterns = Array(
+        new BMI(this), new Height(this), new Weight(this)
+    )
+
+    val mandatoryPatterns: Array[ExpandedGraphObject] = Array(
+        new BiobankEncounterIdentifier(this)
+    )
     
     val connections = Map(
         "" -> ""
@@ -34,8 +37,5 @@ class BiobankEncounter extends ExpandedGraphObject
     
     val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
-    val variablesToSelect = Array("biobankEncounter", "biobankEncounterSymbolValue", "biobankEncounterRegistry")
-
-    def getValuesKey(): String = "biobankEncounterSymbolValue"
-    def getRegistryKey(): String = "biobankEncounterRegistry"
+    val variablesToSelect = Array(baseVariableName)
 }

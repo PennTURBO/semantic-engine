@@ -293,18 +293,18 @@ object DrivetrainDriver extends ProjectwideGlobals {
       val namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts"
       val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
 
-      val shortcutConsenter = new ShortcutConsenter(instantiationUUID, namedGraph)
-      val consenter = new Consenter()
+      val shortcutEncounter = new ShortcutBiobankEncounter(instantiationUUID, namedGraph)
+      val encounter = new BiobankEncounter()
       
       val queryBuilder = new QueryBuilder()
       
       queryBuilder.whereBuilder(
-          Map(shortcutConsenter -> true),
+          Map(shortcutEncounter -> true),
           Map())
           
-      queryBuilder.bindBuilder(Array(shortcutConsenter), randomUUID, globalUUID)
+      queryBuilder.bindBuilder(Array(shortcutEncounter), randomUUID, globalUUID)
 
-      queryBuilder.insertBuilder(Array(consenter))
+      queryBuilder.insertBuilder(Array(encounter))
 
       val finalQuery = queryBuilder.buildInsertQuery()
       println(finalQuery)

@@ -548,7 +548,7 @@ class Expander extends ProjectwideGlobals
      */
     def expandBiobankEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, globalUUID: String)
     {
-        val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
+        /*val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         val biobankEncounterExpansion = """
           insert {
         	GRAPH <http://www.itmat.upenn.edu/biobank/postExpansionCheck> {
@@ -679,7 +679,8 @@ class Expander extends ProjectwideGlobals
             	}
             }"""
                 
-          update.updateSparql(cxn, sparqlPrefixes + biobankEncounterExpansion)   
+          update.updateSparql(cxn, sparqlPrefixes + biobankEncounterExpansion)  */
+          DrivetrainDriver.main(Array("buildQuery"))
     }
     
     /**

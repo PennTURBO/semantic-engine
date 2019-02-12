@@ -91,6 +91,12 @@ class QueryBuilder extends Query with IRIConstructionRules
                 insertClause += nodeType.pattern
                 insertClause += "}"
             }
+            for (nodeType <- a.mandatoryPatterns)
+            {
+                insertClause += " GRAPH <" + a.namedGraph + "> {"
+                insertClause += nodeType.pattern
+                insertClause += "}"
+            }
         }
         insertClause += "}"
     }

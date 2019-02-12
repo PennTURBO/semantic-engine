@@ -33,5 +33,8 @@ trait IRIConstructionRules
     val BindIfBoundMD5LocalRandom: String = """BIND (IF (BOUND(?dependent), uri(concat("http://www.itmat.upenn.edu/biobank/",
                                         md5(CONCAT("replacement", "localUUID", str(?mainExpansionTypeVariableName))))), ?unbound) AS ?replacement)"""
 
+    val BindIfBoundRandomUUID: String = """BIND(IF (BOUND(?dependent), uri(concat("http://www.itmat.upenn.edu/biobank/", 
+                                            REPLACE(struuid(), "-", ""))), ?unbound) AS ?replacement)"""
+
     val BindAs: String = """BIND (?original AS ?replacement)"""
 }
