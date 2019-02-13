@@ -25,12 +25,14 @@ class Consenter extends ExpandedGraphObject
           ?$baseVariableName turbo:TURBO_0006601 ?shortcutPartName .
           
       """
+
+    val optionalPattern = """"""
           
-    val mandatoryPatterns: Array[ExpandedGraphObject] = Array(
+    val mandatoryLinks: Array[ExpandedGraphObject] = Array(
         new ConsenterIdentifier(this)
     )
 
-    val optionalPatterns = Array(
+    val optionalLinks = Array(
         new GenderIdentityDatum(this), new RaceIdentityDatum(this), new DateOfBirthDatum(this)
     )
     

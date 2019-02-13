@@ -35,7 +35,7 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000625 ?biobankEncounterDateDateValue .
+            ?$baseVariableName turbo:TURBO_0000625 ?ShortcutBiobankEncounterDateDateValue .
           }
       """
 
@@ -49,7 +49,7 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
 
     val variableExpansions = LinkedHashMap(
                               StringToURI -> Array("instantiation", "biobankEncounterRegistry"),
-                              URIToString -> Array("biobankEncounterName"),
+                              URIToString -> Array("shortcutBiobankEncounterName"),
                               MD5GlobalRandom -> Array("biobankEncounter"),
                               DatasetIRI -> Array("dataset"),
                               RandomUUID -> Array("biobankEncounterCrid", "biobankEncounterDate", "biobankEncounterStart",
@@ -57,12 +57,12 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
                               BindIfBoundRandomUUID -> Array("BMI", "BMIvalspec", "heightValSpec", "heightAssay",
                                                              "heightDatum", "weightValSpec", "weightAssay", "weightDatum"),
                               BindAs -> Array("bmiValue", "heightValue", "weightValue", "biobankEncounterDateStringValue",
-                                              "biobankEncounterIdValue", "dsTitle"),
+                                              "biobankEncounterIdValue", "dsTitle", "biobankEncounterDateDateValue"),
                               BindIfBoundDataset -> Array("dateDataset")
                             )
 
     val expandedVariableShortcutDependencies = Map( 
-                                          "dateDataset" -> "biobankEncounterDateStringValue", 
+                                          "dateDataset" -> "ShortcutBiobankEncounterDateStringValue", 
                                           "BMI" -> "ShortcutBmiValue",
                                           "BMIvalspec" -> "BMI",
                                           "heightValSpec" -> "ShortcutHeightValue",
@@ -75,12 +75,13 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
 
     val expandedVariableShortcutBindings = Map(
                                           "biobankEncounterRegistry" -> registryKey, 
-                                          "biobankEncounterName" -> baseVariableName,
+                                          "shortcutBiobankEncounterName" -> baseVariableName,
                                           "instantiation" -> "instantiationUUID",
                                           "bmiValue" -> "ShortcutBmiValue",
                                           "heightValue" -> "ShortcutHeightValue",
                                           "weightValue" -> "ShortcutWeightValue",
                                           "biobankEncounterDateStringValue" -> "ShortcutBiobankEncounterDateStringValue",
+                                          "biobankEncounterDateDateValue" -> "ShortcutBiobankEncounterDateDateValue",
                                           "biobankEncounterIdValue" -> valuesKey,
                                           "dsTitle" -> "shortcutDatasetTitle"
                                         )

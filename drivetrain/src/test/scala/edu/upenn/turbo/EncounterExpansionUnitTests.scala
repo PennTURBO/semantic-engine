@@ -117,27 +117,28 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
         		?dataset obo:BFO_0000051 ?heightDatum .
         		?dataset a obo:IAO_0000100 .
         		
+            ?encounter a turbo:TURBO_0000527 .
         		?encounter obo:OBI_0000299 ?BMI .
         		?BMI a <http://www.ebi.ac.uk/efo/EFO_0004340> .
         		?BMI obo:OBI_0001938 ?BMIvalspec .
         		?BMIvalspec a obo:OBI_0001933 .
         		?BMIvalspec obo:OBI_0002135 "18.8252626423"^^xsd:float .
         		?BMI obo:IAO_0000581 ?EncDate1 .
-        		?BMI obo:BFO_0000050 ?Dataset1 .
+        		?BMI obo:BFO_0000050 ?dataset .
         		?heightValSpec rdf:type obo:OBI_0001931 ;
         		               obo:IAO_0000039 obo:UO_0000015 ;
         		               obo:OBI_0002135 "180.34"^^xsd:float  .
       	    ?heightAssay rdf:type turbo:TURBO_0001511 ;
-      	                 obo:BFO_0000050 ?Encounter1 ;
+      	                 obo:BFO_0000050 ?encounter ;
       	                 obo:OBI_0000299 ?heightDatum  .
       	    ?heightDatum rdf:type obo:IAO_0000408 ;
       	                 obo:OBI_0001938 ?heightValSpec .
       	    ?weightAssay rdf:type obo:OBI_0000445 ;
-      	                 obo:BFO_0000050 ?Encounter1 ;
+      	                 obo:BFO_0000050 ?encounter ;
       	                 obo:OBI_0000299 ?weightDatum  .
       	    ?weightDatum rdf:type obo:IAO_0000414 ;
       	                 obo:OBI_0001938 ?weightValSpec ;
-      	                 obo:BFO_0000050 ?Dataset1 .
+      	                 obo:BFO_0000050 ?dataset .
       	    ?weightValSpec rdf:type obo:OBI_0001931 ;
       	                   obo:IAO_0000039 obo:UO_0000009 ;
       	                   obo:OBI_0002135 "61.2244897959"^^xsd:float .
@@ -400,7 +401,6 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/OBI_0002135", 
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0006510",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -415,12 +415,13 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0001938",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0001938",
-            "http://purl.obolibrary.org/obo/IAO_0000039", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" 
+            "http://purl.obolibrary.org/obo/IAO_0000039", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/BFO_0000050"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (60)
+        result.size should be (59)
     }
     
     test("hc encounter with minimum required for expansion")
@@ -845,7 +846,6 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0006510",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/RO_0002223",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006512",
@@ -858,12 +858,12 @@ class EncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0001938",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0001938",
-            "http://purl.obolibrary.org/obo/IAO_0000039"
+            "http://purl.obolibrary.org/obo/IAO_0000039", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (59)
+        result.size should be (58)
     }
     
     test("ensure diagnosis info stays together with duplicate hc enc URI")

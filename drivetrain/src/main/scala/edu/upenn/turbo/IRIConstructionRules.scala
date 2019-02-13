@@ -24,7 +24,7 @@ trait IRIConstructionRules
     val URIToString: String = """BIND(str(?original) AS ?replacement)"""
 
     val DatasetIRI: String = """BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/",
-                                md5(CONCAT("replacement", "globalUUID", str(?datasetTitle))))) AS ?replacement)"""
+                                md5(CONCAT("replacement", "globalUUID", str(?shortcutDatasetTitle))))) AS ?replacement)"""
 
     val BiologicalSexIRI: String = """BIND(IF(BOUND(?dependent), uri(?dependent), obo:OMRSE_00000133) AS ?replacement)"""
 

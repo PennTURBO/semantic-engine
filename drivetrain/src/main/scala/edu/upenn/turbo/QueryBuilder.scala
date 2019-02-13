@@ -81,23 +81,25 @@ class QueryBuilder extends Query with IRIConstructionRules
     {
         for (a <- buildTypes)
         {
-            insertClause += " GRAPH <" + a.namedGraph + "> {"
-            insertClause += a.pattern
-            insertClause += "}"
+            addInsertClauseToString(a)
 
-            for (nodeType <- a.optionalPatterns)
+            for (nodeType <- a.optionalLinks)
             {
-                insertClause += " GRAPH <" + a.namedGraph + "> {"
-                insertClause += nodeType.pattern
-                insertClause += "}"
+                addInsertClauseToString(nodeType)
             }
-            for (nodeType <- a.mandatoryPatterns)
+            for (nodeType <- a.mandatoryLinks)
             {
-                insertClause += " GRAPH <" + a.namedGraph + "> {"
-                insertClause += nodeType.pattern
-                insertClause += "}"
+                addInsertClauseToString(nodeType)
             }
         }
+        insertClause += "}"
+    }
+
+    def addInsertClauseToString(buildType: ExpandedGraphObject)
+    {
+        insertClause += " GRAPH <" + buildType.namedGraph + "> {"
+        insertClause += buildType.pattern
+        insertClause += buildType.optionalPattern
         insertClause += "}"
     }
 

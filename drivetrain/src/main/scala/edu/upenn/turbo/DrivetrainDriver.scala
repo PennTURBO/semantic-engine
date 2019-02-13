@@ -290,7 +290,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   def buildQuery(cxn: RepositoryConnection, globalUUID: String)
   {
       val instantiationUUID = "http://www.itmat.upenn.edu/biobank/test_instantiation_1"
-      val namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts"
+      val namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts"
       val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
 
       val shortcutEncounter = new ShortcutBiobankEncounter(instantiationUUID, namedGraph)

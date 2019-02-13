@@ -33,9 +33,10 @@ class ConsenterIdentifier (consenter:Consenter) extends ExpandedGraphObject
           ?instantiation obo:OBI_0000293 ?dataset .
           
       """
+    val optionalPattern = """"""
       
-    val optionalPatterns = new Array[ExpandedGraphObject](0)
-    val mandatoryPatterns = new Array[ExpandedGraphObject](0)
+    val optionalLinks = new Array[ExpandedGraphObject](0)
+    val mandatoryLinks = new Array[ExpandedGraphObject](0)
 
     val connections = Map(
       "" -> ""

@@ -4,7 +4,7 @@ class DateOfBirthDatum(consenter:Consenter) extends ExpandedGraphObject
 {
     val baseVariableName = "dob"
     val birthBvn = consenter.birthVariableName
-    val valuesKey = "dobString"
+    val valuesKey = "dobValue"
     val dateKey = "dobDate"
     
     val pattern = s"""
@@ -20,8 +20,9 @@ class DateOfBirthDatum(consenter:Consenter) extends ExpandedGraphObject
           
       """
 
-    val optionalPatterns = new Array[ExpandedGraphObject](0)
-    val mandatoryPatterns = new Array[ExpandedGraphObject](0)
+    val optionalPattern = """"""
+    val optionalLinks = new Array[ExpandedGraphObject](0)
+    val mandatoryLinks = new Array[ExpandedGraphObject](0)
     
     val connections = Map(
         "" -> ""

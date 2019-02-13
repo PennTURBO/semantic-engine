@@ -4,15 +4,17 @@ class BiobankEncounterIdentifier (biobankEncounter:BiobankEncounter) extends Exp
 {
     val baseVariableName = "biobankEncounterCrid"
     val biobankEncounterBvn = biobankEncounter.baseVariableName
-    val valuesKey = "biobankEncounterSymbolValue"
+    val valuesKey = "biobankEncounterIdValue"
     val registryKey = "biobankEncounterRegistry"
 
     val pattern = s"""
           
           ?$baseVariableName a turbo:TURBO_0000533 .
-      		?$baseVariableName obo:IAO_0000219 ?$baseVariableName .
+      		?$baseVariableName obo:IAO_0000219 ?$biobankEncounterBvn .
       		?$baseVariableName obo:BFO_0000051 ?biobankEncounterSymbol .
       		?$baseVariableName obo:BFO_0000051 ?biobankEncounterRegDen .
+          ?biobankEncounterSymbol obo:BFO_0000050 ?$baseVariableName .
+          ?biobankEncounterRegDen obo:BFO_0000050 ?$baseVariableName .
       		?biobankEncounterSymbol a turbo:TURBO_0000534 . 
       		?biobankEncounterSymbol turbo:TURBO_0006510 ?$valuesKey .
       		?biobankEncounterRegDen a turbo:TURBO_0000535 .
@@ -29,9 +31,9 @@ class BiobankEncounterIdentifier (biobankEncounter:BiobankEncounter) extends Exp
           ?instantiation obo:OBI_0000293 ?dataset .
           
       """
-      
-    val optionalPatterns = new Array[ExpandedGraphObject](0)
-    val mandatoryPatterns = new Array[ExpandedGraphObject](0)
+    val optionalPattern = """"""
+    val optionalLinks = new Array[ExpandedGraphObject](0)
+    val mandatoryLinks = new Array[ExpandedGraphObject](0)
 
     val connections = Map(
       "" -> ""
