@@ -6,12 +6,7 @@ class BiobankEncounter extends Encounter
     val encounterDateVariableName = "biobankEncounterDate"
 
     val pattern = s"""
-          
-      ?instantiation a turbo:TURBO_0000522 .
-  		?instantiation obo:OBI_0000293 ?dataset .
-  		?dataset a obo:IAO_0000100 .
-  		?dataset dc11:title ?dsTitle .
-        		
+              		
       ?$baseVariableName a turbo:TURBO_0000527 .
   		?$baseVariableName turbo:TURBO_0006601 ?shortcutBiobankEncounterName .
   		

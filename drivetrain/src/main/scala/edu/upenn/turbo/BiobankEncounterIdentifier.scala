@@ -27,6 +27,7 @@ class BiobankEncounterIdentifier (biobankEncounter:BiobankEncounter) extends Exp
           ?dataset obo:BFO_0000051 ?biobankEncounterRegDen .
           ?biobankEncounterSymbol obo:BFO_0000050 ?dataset .
           ?dataset obo:BFO_0000051 ?biobankEncounterSymbol .
+          
           ?instantiation a turbo:TURBO_0000522 .
           ?instantiation obo:OBI_0000293 ?dataset .
           

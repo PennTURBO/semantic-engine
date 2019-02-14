@@ -7,8 +7,8 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
 
     val instantiation = newInstantiation
     val baseVariableName = "shortcutBiobankEncounter"
-    val valuesKey = "ShortcutBiobankEncounterIdValue"
-    val registryKey = "biobankEncounterRegistryString"
+    val valuesKey = "shortcutBiobankEncounterIdValue"
+    val registryKey = "shortcutBiobankEncounterRegistryString"
     
     val pattern = s"""
           
@@ -19,23 +19,23 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
 
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000635 ?ShortcutBmiValue .
+            ?$baseVariableName turbo:TURBO_0000635 ?shortcutBmiValue .
           }
           OPTIONAL
           {
-          ?$baseVariableName turbo:TURBO_0000627 ?ShortcutWeightValue .
+          ?$baseVariableName turbo:TURBO_0000627 ?shortcutWeightValue .
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000626 ?ShortcutHeightValue .
+            ?$baseVariableName turbo:TURBO_0000626 ?shortcutHeightValue .
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000624 ?ShortcutBiobankEncounterDateStringValue .
+            ?$baseVariableName turbo:TURBO_0000624 ?shortcutBiobankEncounterDateStringValue .
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000625 ?ShortcutBiobankEncounterDateDateValue .
+            ?$baseVariableName turbo:TURBO_0000625 ?shortcutBiobankEncounterDateDateValue .
           }
       """
 
@@ -62,27 +62,27 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
                             )
 
     val expandedVariableShortcutDependencies = Map( 
-                                          "dateDataset" -> "ShortcutBiobankEncounterDateStringValue", 
-                                          "BMI" -> "ShortcutBmiValue",
+                                          "dateDataset" -> "shortcutBiobankEncounterDateStringValue", 
+                                          "BMI" -> "shortcutBmiValue",
                                           "BMIvalspec" -> "BMI",
-                                          "heightValSpec" -> "ShortcutHeightValue",
-                                          "heightAssay" -> "ShortcutHeightValue",
-                                          "heightDatum" -> "ShortcutHeightValue",
-                                          "weightValSpec" -> "ShortcutWeightValue",
-                                          "weightAssay" -> "ShortcutWeightValue",
-                                          "weightDatum" -> "ShortcutWeightValue"
+                                          "heightValSpec" -> "shortcutHeightValue",
+                                          "heightAssay" -> "shortcutHeightValue",
+                                          "heightDatum" -> "shortcutHeightValue",
+                                          "weightValSpec" -> "shortcutWeightValue",
+                                          "weightAssay" -> "shortcutWeightValue",
+                                          "weightDatum" -> "shortcutWeightValue"
                                         )
 
     val expandedVariableShortcutBindings = Map(
                                           "biobankEncounterRegistry" -> registryKey, 
                                           "shortcutBiobankEncounterName" -> baseVariableName,
                                           "instantiation" -> "instantiationUUID",
-                                          "bmiValue" -> "ShortcutBmiValue",
-                                          "heightValue" -> "ShortcutHeightValue",
-                                          "weightValue" -> "ShortcutWeightValue",
-                                          "biobankEncounterDateStringValue" -> "ShortcutBiobankEncounterDateStringValue",
-                                          "biobankEncounterDateDateValue" -> "ShortcutBiobankEncounterDateDateValue",
+                                          "bmiValue" -> "shortcutBmiValue",
+                                          "heightValue" -> "shortcutHeightValue",
+                                          "weightValue" -> "shortcutWeightValue",
+                                          "biobankEncounterDateStringValue" -> "shortcutBiobankEncounterDateStringValue",
+                                          "biobankEncounterDateDateValue" -> "shortcutBiobankEncounterDateDateValue",
                                           "biobankEncounterIdValue" -> valuesKey,
-                                          "dsTitle" -> "shortcutDatasetTitle"
+                                          "datasetTitle" -> "shortcutDatasetTitle"
                                         )
 }
