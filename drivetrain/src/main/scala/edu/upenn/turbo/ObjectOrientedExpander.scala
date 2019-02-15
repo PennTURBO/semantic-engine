@@ -13,14 +13,18 @@ class ObjectOrientedExpander extends ProjectwideGlobals
     def runAllExpansionProcesses(cxn: RepositoryConnection, globalUUID: String)
     {
         val instantiation = helper.genPmbbIRI()
+        val namedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn)
         
-        val partipantExpansion = buildParticipantExpansionQuery(instantiation, globalUUID)
-        val biobankEncounterExpansion = buildBiobankEncounterExpansionQuery(instantiation, globalUUID)
-        val healthcareEncounterExpansion = buildHealthcareEncounterExpansionQuery(instantiation, globalUUID)
-        
-        update.updateSparql(cxn, partipantExpansion)
-        update.updateSparql(cxn, biobankEncounterExpansion)
-        update.updateSparql(cxn, healthcareEncounterExpansion)
+        for (namedGraph <- namedGraphsList)
+        {
+          val partipantExpansion = buildParticipantExpansionQuery(instantiation, globalUUID, namedGraph)
+          val biobankEncounterExpansion = buildBiobankEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
+          val healthcareEncounterExpansion = buildHealthcareEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
+          
+          update.updateSparql(cxn, partipantExpansion)
+          update.updateSparql(cxn, biobankEncounterExpansion)
+          update.updateSparql(cxn, healthcareEncounterExpansion)
+        }
         
         val participantToBiobankEncounterLinking = buildParticipantToBiobankEncounterLinkingQuery()
         val participantToHealthcareEncounterLinking = buildParticipantToHealthcareEncounterLinkingQuery()
@@ -29,10 +33,9 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         update.updateSparql(cxn, participantToHealthcareEncounterLinking)
     }
     
-    def buildParticipantExpansionQuery(instantiation: String, globalUUID: String): String =
+    def buildParticipantExpansionQuery(instantiation: String, globalUUID: String, namedGraph: String): String =
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
-        val namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts"
         val shortcutConsenter = new ShortcutConsenter(instantiation, namedGraph)
         val consenter = new Consenter()
         
@@ -47,9 +50,8 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         queryBuilder.buildInsertQuery()
     }
     
-    def buildBiobankEncounterExpansionQuery(instantiation: String, globalUUID: String): String =
+    def buildBiobankEncounterExpansionQuery(instantiation: String, globalUUID: String, namedGraph: String): String =
     {
-        val namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts"
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
   
         val shortcutEncounter = new ShortcutBiobankEncounter(instantiation, namedGraph)
@@ -66,9 +68,8 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         queryBuilder.buildInsertQuery()
     }
     
-    def buildHealthcareEncounterExpansionQuery(instantiation: String, globalUUID: String): String =
+    def buildHealthcareEncounterExpansionQuery(instantiation: String, globalUUID: String, namedGraph: String): String =
     {
-        val namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts"
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
   
         val shortcutEncounter = new ShortcutHealthcareEncounter(instantiation, namedGraph)
