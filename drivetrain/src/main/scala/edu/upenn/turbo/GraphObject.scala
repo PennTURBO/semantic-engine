@@ -8,4 +8,6 @@ abstract class GraphObject
     val typeURI: String
     val variablesToSelect: Array[String]
     val connections: Map[String, String]
+    val optionalLinks: Map[String, ExpandedGraphObject]
+    val mandatoryLinks: Map[String, ExpandedGraphObject]
 }

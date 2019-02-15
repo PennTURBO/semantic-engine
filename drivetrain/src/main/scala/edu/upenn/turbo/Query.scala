@@ -9,17 +9,22 @@ import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 import scala.collection.mutable.HashMap
 
-class Query
+class Query extends ProjectwideGlobals
 {
     var insertClause: String = "INSERT {"
     var deleteClause: String = "DELETE {"
     var selectClause: String = "SELECT "
     var whereClause: String = "WHERE {"
     var bindClause: String = ""
+    var filterClause: String = ""
 
-    def buildInsertQuery(): String = {insertClause + "\n" + whereClause + "\n" + bindClause + "}"}
-    def buildSelectQuery(): String = {selectClause + "\n" + whereClause + "\n" + bindClause + "}"}
-    def buildDeleteQuery(): String = {deleteClause + "\n" + whereClause + "\n" + bindClause + "}"}
-    def buildInsertWithDeleteQuery(): String = {deleteClause + "\n" + insertClause + "\n" + whereClause + "\n" + bindClause + "}"}
+    def buildInsertQuery(): String = {sparqlPrefixes + "\n" + insertClause + "\n" + whereClause + "\n" + 
+                                      bindClause + "\n" + filterClause + "}" }
+    def buildSelectQuery(): String = {sparqlPrefixes + "\n" + selectClause + "\n" + whereClause + "\n" + 
+                                      bindClause + "\n" + filterClause + "}" }
+    def buildDeleteQuery(): String = {sparqlPrefixes + "\n" + deleteClause + "\n" + whereClause + "\n" + 
+                                      bindClause + "\n" + filterClause + "}" }
+    def buildInsertWithDeleteQuery(): String = {sparqlPrefixes + "\n"+ deleteClause + "\n" + insertClause + 
+                                                "\n" + whereClause + "\n" + bindClause + "\n" + filterClause + "}" }
 
 }

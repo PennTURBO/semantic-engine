@@ -26,7 +26,7 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
           		    
           		    optional 
           		    {
-          			    ?shortcutDiagnosis turbo:TURBO_0004603 ?diagnosisCodeRegistryURIAsString .
+          			    ?shortcutDiagnosis turbo:TURBO_0004603 ?shortcutDiagnosisCodeRegistryURI .
               	  }
               		optional 
               		{
@@ -64,7 +64,7 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
           	  }
           		optional 
           		{
-          			?$baseVariableName turbo:TURBO_0000645 ?shortcutHealthcareEncounterDateDateString .
+          			?$baseVariableName turbo:TURBO_0000645 ?shortcutHealthcareEncounterDateDateValue .
           		}
           		optional 
           		{
@@ -78,7 +78,15 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
           		{
           		    ?$baseVariableName turbo:TURBO_0000655 ?shortcutBmiValue .
           		}
-        }
+          		OPTIONAL
+              {
+                ?$baseVariableName turbo:TURBO_0010002 ?shortcutConsenterRegistryString .
+              }
+              OPTIONAL
+              {
+                ?$baseVariableName turbo:TURBO_0010000 ?shortcutConsenterSymbol .
+              }
+            
       """
 
     val connections = Map("" -> "")
@@ -90,28 +98,27 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
     val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
 
     val variableExpansions = LinkedHashMap(
-                              StringToURI -> Array("instantiation", "healthcareEncounterRegistry", "drugURI", "diagnosisRegistry"),
+                              StringToURI -> Array("instantiation", "healthcareEncounterRegistry", "drugURI", "diagnosisRegistry",
+                                                  "consenterRegistry"),
                               URIToString -> Array("shortcutHealthcareEncounterName"),
                               MD5GlobalRandom -> Array("healthcareEncounter"),
                               DatasetIRI -> Array("dataset"),
                               RandomUUID -> Array("healthcareEncounterCrid", "healthcareEncounterDate", "healthcareEncounterStart",
-                                                  "healthcareEncounterRegDen", "healthcareEncounterSymbol"),
+                                                  "healthcareEncounterRegistryDenoter", "healthcareEncounterSymbol"),
                               BindIfBoundMD5LocalRandomWithDependent -> Array("diagnosis", "heightValSpec", "heightAssay", "heightDatum",
                                                                               "weightValSpec", "weightAssay", "weightDatum", "BMI", "BMIvalspec",
                                                                               "prescription", "medCrid", "medSymb"),
                               BindAs -> Array("bmiValue", "heightValue", "weightValue", "healthcareEncounterDateStringValue",
-                                              "healthcareEncounterIdValue", "datasetTitle", "healthcareEncounterDateDateValue"),
-                              BindIfBoundDataset -> Array("dateDataset"),
-                              BindIfICD9 -> Array("icd9term"),
-                              BindIfICD10 -> Array("icd10term"),
-                              BindIfBoundAndOtherNotBoundLeaveUnbound -> Array("diagnosisRegistry"),
-                              BindIfBoundAndOtherNotBoundKeepOriginal -> Array("diagnosisRegistry")
+                                              "healthcareEncounterIdValue", "datasetTitle", "healthcareEncounterDateDateValue", 
+                                              "orderNameString", "medId", "diagCodeRegTextVal", "primaryDiag", "diagnosisCodeValue",
+                                              "diagSequence", "consenterSymbol"),
+                              BindIfBoundDataset -> Array("dateDataset")
                             )
 
     val expandedVariableShortcutDependencies = Map( 
                                           "dateDataset" -> "shortcutHealthcareEncounterDateStringValue", 
                                           "BMI" -> "shortcutBmiValue",
-                                          "BMIvalspec" -> "BMI",
+                                          "BMIvalspec" -> "shortcutBmiValue",
                                           "heightValSpec" -> "shortcutHeightValue",
                                           "heightAssay" -> "shortcutHeightValue",
                                           "heightDatum" -> "shortcutHeightValue",
@@ -121,24 +128,39 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
                                           "diagnosis" -> "shortcutDiagnosis",
                                           "prescription" -> "shortcutPrescription",
                                           "medCrid" -> "prescription",
-                                          "medSymb" -> "prescription",
-                                          "diagnosisRegistry" -> "shortcutDiagnosisCode"
+                                          "medSymb" -> "prescription"
                                         )
 
     val expandedVariableShortcutBindings = Map(
                                           "healthcareEncounterRegistry" -> registryKey, 
                                           "shortcutHealthcareEncounterName" -> baseVariableName,
                                           "instantiation" -> "instantiationUUID",
-                                          "bmiValue" -> "ShortcutBmiValue",
-                                          "heightValue" -> "ShortcutHeightValue",
-                                          "weightValue" -> "ShortcutWeightValue",
+                                          "bmiValue" -> "shortcutBmiValue",
+                                          "heightValue" -> "shortcutHeightValue",
+                                          "weightValue" -> "shortcutWeightValue",
                                           "healthcareEncounterDateStringValue" -> "shortcutHealthcareEncounterDateStringValue",
-                                          "healthcareEncounterDateDateValue" -> "ShortcutHealthcareEncounterDateDateValue",
+                                          "healthcareEncounterDateDateValue" -> "shortcutHealthcareEncounterDateDateValue",
                                           "healthcareEncounterIdValue" -> valuesKey,
                                           "datasetTitle" -> "shortcutDatasetTitle",
                                           "drugURI" -> "shortcutMedMapping",
-                                          "diagnosisRegistry" -> "diagnosisCodeRegistryURIAsString",
-                                          "icd9term" -> "diagnosisRegistry",
-                                          "icd10term" -> "diagnosisRegistry"
+                                          "diagnosisRegistry" -> "shortcutDiagnosisCodeRegistryURI",
+                                          "orderNameString" -> "shortcutMedOrderName",
+                                          "medId" -> "shortcutMedId",
+                                          "diagCodeRegTextVal" -> "shortcutDiagnosisCodeRegistryString",
+                                          "primaryDiag" -> "shortcutPrimaryDiagnosisBoolean",
+                                          "diagnosisCodeValue" -> "shortcutDiagnosisCode",
+                                          "diagSequence" -> "shortcutDiagnosisSequence",
+                                          "consenterRegistry" -> "shortcutConsenterRegistryString",
+                                          "consenterSymbol" -> "shortcutConsenterSymbol"
                                         )
+                                        
+    val appendToBind = """
+        BIND(IF (?diagnosisRegistry = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat("http://purl.bioontology.org/ontology/ICD9CM/", ?shortcutDiagnosisCode)), ?unbound) AS ?icd9term)
+        BIND(IF (?diagnosisRegistry = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat("http://purl.bioontology.org/ontology/ICD10CM/", ?shortcutDiagnosisCode)), ?unbound) AS ?icd10term)
+        BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?concatIcdTerm)
+        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?concatIcdTerm) as ?concatIcdTerm)
+      """
+    
+    val optionalLinks: Map[String, ExpandedGraphObject] = Map()
+    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
 }

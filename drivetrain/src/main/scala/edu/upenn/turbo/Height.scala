@@ -5,6 +5,7 @@ class Height (encounter:Encounter) extends ExpandedGraphObject
     val baseVariableName = "heightAssay"
     val encounterVariableName = encounter.baseVariableName
     val valuesKey = "heightValue"
+    val datumKey = "heightDatum"
     
     val pattern = s"""
       
@@ -13,22 +14,22 @@ class Height (encounter:Encounter) extends ExpandedGraphObject
              obo:OBI_0002135 ?$valuesKey .
         		               
   	    ?$baseVariableName a turbo:TURBO_0001511 ;
-  	         obo:OBI_0000299 ?heightDatum .
+  	         obo:OBI_0000299 ?$datumKey .
 
-      	?heightDatum a obo:IAO_0000408 ;
+      	?$datumKey a obo:IAO_0000408 ;
       	     obo:OBI_0001938 ?heightValSpec .
       	     
       	?$encounterVariableName obo:BFO_0000051 ?$baseVariableName .
         ?$baseVariableName obo:BFO_0000050 ?$encounterVariableName .
         
-        ?dataset obo:BFO_0000051 ?heightDatum .
-        ?heightDatum obo:BFO_0000050 ?dataset .
+        ?dataset obo:BFO_0000051 ?$datumKey .
+        ?$datumKey obo:BFO_0000050 ?dataset .
         ?dataset a obo:IAO_0000100 .
     		
       """
       val optionalPattern = """"""
-      val optionalLinks = new Array[ExpandedGraphObject](0)
-      val mandatoryLinks = new Array[ExpandedGraphObject](0)
+      val optionalLinks: Map[String, ExpandedGraphObject] = Map()
+      val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
       
       val connections = Map(
           "" -> ""

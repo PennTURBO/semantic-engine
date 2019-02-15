@@ -4,6 +4,8 @@ class HealthcareEncounter extends Encounter
 {
     val baseVariableName = "healthcareEncounter"
     val encounterDateVariableName = "healthcareEncounterDate"
+    val linkedConsenterRegistry = "consenterRegistry"
+    val linkedConsenterSymbol = "consenterSymbol"
 
     val pattern = s"""
           
@@ -18,6 +20,9 @@ class HealthcareEncounter extends Encounter
   		            
   		?$encounterDateVariableName a turbo:TURBO_0000512 .
   		?$encounterDateVariableName obo:IAO_0000136 ?healthcareEncounterStart .
+  		
+  		?$baseVariableName <http://graphBuilder.org/linksToConsenterWithRegistry> ?$linkedConsenterRegistry .
+  		?$baseVariableName <http://graphBuilder.org/linksToConsenterWithSymbol> ?$linkedConsenterSymbol .
 
       """
 
@@ -30,12 +35,16 @@ class HealthcareEncounter extends Encounter
 
         """
 
-    val optionalLinks = Array(
-        new BMI(this), new Height(this), new Weight(this), new Diagnosis(this), new Prescription(this)
+    val optionalLinks = Map(
+        "BMI" -> new BMI(this), 
+        "Height" -> new Height(this), 
+        "Weight" -> new Weight(this), 
+        "Diagnosis" -> new Diagnosis(this),
+        "Prescription" -> new Prescription(this)
     )
 
-    val mandatoryLinks: Array[ExpandedGraphObject] = Array(
-        new HealthcareEncounterIdentifier(this)
+    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map(
+        "Identifier" -> new HealthcareEncounterIdentifier(this)
     )
     
     val connections = Map(

@@ -15,7 +15,7 @@ class BMI (encounter:Encounter) extends ExpandedGraphObject
     		?BMIvalspec obo:OBI_0002135 ?$valuesKey .
     		?$baseVariableName obo:IAO_0000581 ?$encounterDate .
     		
-        ?$encounterVariableName obo:OBI_0000299 ?BMI .
+        ?$encounterVariableName obo:RO_0002234 ?BMI .
     		?dataset obo:BFO_0000051 ?$baseVariableName .
         ?$baseVariableName obo:BFO_0000050 ?dataset .
         ?dataset a obo:IAO_0000100 .
@@ -24,8 +24,8 @@ class BMI (encounter:Encounter) extends ExpandedGraphObject
 
     val optionalPattern = """"""
   
-      val optionalLinks = new Array[ExpandedGraphObject](0)
-      val mandatoryLinks = new Array[ExpandedGraphObject](0)
+      val optionalLinks: Map[String, ExpandedGraphObject] = Map()
+      val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
       
       val connections = Map(
           "" -> ""

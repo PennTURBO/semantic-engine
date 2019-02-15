@@ -19,8 +19,8 @@ class GenderIdentityDatum(consenter:Consenter) extends ExpandedGraphObject
           
       """
     val optionalPattern = """"""
-    val optionalLinks = new Array[ExpandedGraphObject](0)
-    val mandatoryLinks = new Array[ExpandedGraphObject](0)
+    val optionalLinks: Map[String, ExpandedGraphObject] = Map()
+    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
     
     val connections = Map(
       "" -> ""

@@ -89,4 +89,9 @@ class ShortcutConsenter(newInstantiation: String, newNamedGraph: String) extends
                                           "instantiation" -> "instantiationUUID",
                                           "datasetTitle" -> "shortcutDatasetTitle"
                                         )
+                                        
+     val appendToBind = """"""
+     
+     val optionalLinks: Map[String, ExpandedGraphObject] = Map()
+     val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
 }

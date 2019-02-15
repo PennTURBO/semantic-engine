@@ -8,4 +8,5 @@ abstract class ShortcutGraphObject extends GraphObject with IRIConstructionRules
     val instantiation: String
     val expandedVariableShortcutDependencies: Map[String, String]
     val expandedVariableShortcutBindings: Map[String, String]
+    val appendToBind: String
 }

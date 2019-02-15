@@ -5,13 +5,14 @@ class Weight (encounter:Encounter) extends ExpandedGraphObject
     val baseVariableName = "weightAssay"
     val encounterVariableName = encounter.baseVariableName
     val valuesKey = "weightValue"
+    val datumKey = "weightDatum"
     
     val pattern = s"""
       
         ?$baseVariableName a obo:OBI_0000445 ;
-  	                 obo:OBI_0000299 ?weightDatum .
+  	                 obo:OBI_0000299 ?$datumKey.
 
-  	    ?weightDatum a obo:IAO_0000414 ;
+  	    ?$datumKey a obo:IAO_0000414 ;
   	                 obo:OBI_0001938 ?weightValSpec .
 
   	    ?weightValSpec a obo:OBI_0001931 ;
@@ -21,14 +22,14 @@ class Weight (encounter:Encounter) extends ExpandedGraphObject
   	    ?$encounterVariableName obo:BFO_0000051 ?$baseVariableName .
         ?$baseVariableName obo:BFO_0000050 ?$encounterVariableName .
         
-        ?dataset obo:BFO_0000051 ?weightDatum .
-        ?weightDatum obo:BFO_0000050 ?dataset .
+        ?dataset obo:BFO_0000051 ?$datumKey.
+        ?$datumKey obo:BFO_0000050 ?dataset .
         ?dataset a obo:IAO_0000100 .
     		
       """
       val optionalPattern = """"""
-      val optionalLinks = new Array[ExpandedGraphObject](0)
-      val mandatoryLinks = new Array[ExpandedGraphObject](0)
+      val optionalLinks: Map[String, ExpandedGraphObject] = Map()
+      val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
       
       val connections = Map(
           "" -> ""

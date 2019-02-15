@@ -4,8 +4,8 @@ class Consenter extends ExpandedGraphObject
 {
     val baseVariableName = "part"
     val birthVariableName = "birth"
-    val valuesKey = "partSymb"
-    val registryKey = "partReg"
+    val heightKey = "height"
+    val weightKey = "weight"
     
     val pattern = s"""
           
@@ -14,10 +14,10 @@ class Consenter extends ExpandedGraphObject
           ?biosex a obo:PATO_0000047 .
           ?$baseVariableName turbo:TURBO_0000303 ?$birthVariableName .
           ?$birthVariableName a obo:UBERON_0035946 .
-          ?$baseVariableName obo:RO_0000086 ?height .
-          ?height a obo:PATO_0000119 .
-          ?$baseVariableName obo:RO_0000086 ?weight .
-          ?weight a obo:PATO_0000128 .
+          ?$baseVariableName obo:RO_0000086 ?$heightKey .
+          ?$heightKey a obo:PATO_0000119 .
+          ?$baseVariableName obo:RO_0000086 ?$weightKey .
+          ?$weightKey a obo:PATO_0000128 .
           ?$baseVariableName obo:BFO_0000051 ?adipose .
           ?adipose obo:BFO_0000050 ?$baseVariableName .
           ?adipose a obo:UBERON_0001013 .
@@ -28,12 +28,14 @@ class Consenter extends ExpandedGraphObject
 
     val optionalPattern = """"""
           
-    val mandatoryLinks: Array[ExpandedGraphObject] = Array(
-        new ConsenterIdentifier(this)
+    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map(
+        "Identifier" -> new ConsenterIdentifier(this)
     )
 
-    val optionalLinks = Array(
-        new GenderIdentityDatum(this), new RaceIdentityDatum(this), new DateOfBirthDatum(this)
+    val optionalLinks = Map(
+        "GenderIdentityDatum" -> new GenderIdentityDatum(this), 
+        "RaceIdentityDatum" -> new RaceIdentityDatum(this), 
+        "DateOfBirthDatum" -> new DateOfBirthDatum(this)
     )
     
     val connections = Map(
@@ -45,5 +47,5 @@ class Consenter extends ExpandedGraphObject
     
     val typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
     
-    val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
+    val variablesToSelect = Array(baseVariableName)
 }

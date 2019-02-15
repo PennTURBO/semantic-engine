@@ -24,12 +24,12 @@ class Prescription (healthcareEncounter:HealthcareEncounter) extends ExpandedGra
   	    ?dataset obo:BFO_0000051 ?medSymb .
     		?medSymb obo:BFO_0000050 ?dataset .
     		?dataset obo:BFO_0000051 ?$baseVariableName .
-    		?drugPrescript obo:BFO_0000050 ?dataset .
+    		?$baseVariableName obo:BFO_0000050 ?dataset .
     		
       """
       val optionalPattern = """"""
-      val optionalLinks = new Array[ExpandedGraphObject](0)
-      val mandatoryLinks = new Array[ExpandedGraphObject](0)
+      val optionalLinks: Map[String, ExpandedGraphObject] = Map()
+      val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
       
       val connections = Map(
           "" -> ""

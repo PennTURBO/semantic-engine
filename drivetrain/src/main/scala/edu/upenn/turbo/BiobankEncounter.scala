@@ -4,6 +4,8 @@ class BiobankEncounter extends Encounter
 {
     val baseVariableName = "biobankEncounter"
     val encounterDateVariableName = "biobankEncounterDate"
+    val linkedConsenterSymbol = "consenterSymbol"
+    val linkedConsenterRegistry = "consenterRegistry"
 
     val pattern = s"""
               		
@@ -14,6 +16,9 @@ class BiobankEncounter extends Encounter
   		?biobankEncounterStart obo:RO_0002223 ?$baseVariableName .
   		?$encounterDateVariableName a turbo:TURBO_0000532 .
   		?$encounterDateVariableName obo:IAO_0000136 ?biobankEncounterStart .
+  		
+  		?$baseVariableName <http://graphBuilder.org/linksToConsenterWithSymbol> ?$linkedConsenterSymbol .
+  		?$baseVariableName <http://graphBuilder.org/linksToConsenterWithSymbol> ?$linkedConsenterRegistry .
 
       """
 
@@ -26,12 +31,12 @@ class BiobankEncounter extends Encounter
 
         """
 
-    val optionalLinks = Array(
-        new BMI(this), new Height(this), new Weight(this)
+    val optionalLinks = Map(
+        "BMI" -> new BMI(this), "Height" -> new Height(this), "Weight" -> new Weight(this)
     )
 
-    val mandatoryLinks: Array[ExpandedGraphObject] = Array(
-        new BiobankEncounterIdentifier(this)
+    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map(
+        "Identifier" -> new BiobankEncounterIdentifier(this)
     )
     
     val connections = Map(

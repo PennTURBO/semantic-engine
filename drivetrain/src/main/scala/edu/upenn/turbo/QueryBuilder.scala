@@ -11,16 +11,28 @@ import scala.collection.mutable.HashMap
 
 class QueryBuilder extends Query with IRIConstructionRules
 {
-    def whereBuilder(buildList: Map[GraphObject, Boolean], connectionList: Map[GraphObject, GraphObject], limit: Integer = null)
+    def whereBuilder(buildList: Map[GraphObject, Boolean], connectionList: Map[GraphObject, GraphObject], valuesList: Map[String, Array[String]], limit: Integer = null)
     {
         var whereBlocks = new HashMap[GraphObject, String]
         var connectionStrings = ""
+        for ((k,v) <- valuesList)
+        {
+            whereClause += "Values ?" + k + "{"
+            for (value <- v) whereClause += " " + value
+            whereClause += "}\n"
+        }
         for ((k,v) <- buildList)
         {
             var entry: String = ""
             entry += "GRAPH <" + k.namedGraph + "> {"
             if (!v) entry += "OPTIONAL {"
             entry += k.pattern
+            
+            for ((key, value) <- k.mandatoryLinks)
+            {
+               entry += value.pattern
+            }
+                
             whereBlocks += k -> entry
         }
         for ((k,v) <- connectionList) 
@@ -40,18 +52,15 @@ class QueryBuilder extends Query with IRIConstructionRules
         if (limit != null) whereClause += "LIMIT " + limit.toString
     }
     
-    def selectBuilder(buildTypes: Array[GraphObject]): String =
-    {
-        var select = ""
-      
+    def selectBuilder(buildTypes: Array[GraphObject])
+    {      
         for (item <- buildTypes)
         {
             for (variable <- item.variablesToSelect)
             {
-                select += "?" + variable + " "
+                selectClause += "?" + variable + " "
             }
         }
-        select
     }
 
     def bindBuilder(buildTypes: Array[ShortcutGraphObject], localUUID: String, globalUUID: String)
@@ -74,6 +83,7 @@ class QueryBuilder extends Query with IRIConstructionRules
                     bindClause += thisBind+"\n"
                 }
             }
+            bindClause += a.appendToBind+"\n"
         }
     }
 
@@ -83,11 +93,11 @@ class QueryBuilder extends Query with IRIConstructionRules
         {
             addInsertClauseToString(a)
 
-            for (nodeType <- a.optionalLinks)
+            for ((k,nodeType) <- a.optionalLinks)
             {
                 addInsertClauseToString(nodeType)
             }
-            for (nodeType <- a.mandatoryLinks)
+            for ((k,nodeType) <- a.mandatoryLinks)
             {
                 addInsertClauseToString(nodeType)
             }
@@ -104,4 +114,12 @@ class QueryBuilder extends Query with IRIConstructionRules
     }
 
     def deleteBuilder(){}
+    
+    def filterBuilder(equivalencyList: (Map[String, String]))
+    {
+        for ((k,v) <- equivalencyList)
+        {
+            whereClause = whereClause.replaceAll("\\?" + k + " ", "\\?" + v + " ")
+        }
+    }
 }

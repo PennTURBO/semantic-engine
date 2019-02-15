@@ -37,6 +37,14 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
           {
             ?$baseVariableName turbo:TURBO_0000625 ?shortcutBiobankEncounterDateDateValue .
           }
+          OPTIONAL
+          {
+            ?$baseVariableName turbo:TURBO_0010012 ?shortcutConsenterRegistryString .
+          }
+          OPTIONAL
+          {
+            ?$baseVariableName turbo:TURBO_0010010 ?shortcutConsenterSymbol .
+          }
       """
 
     val connections = Map("" -> "")
@@ -48,7 +56,7 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
     val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
 
     val variableExpansions = LinkedHashMap(
-                              StringToURI -> Array("instantiation", "biobankEncounterRegistry"),
+                              StringToURI -> Array("instantiation", "biobankEncounterRegistry", "consenterRegistry"),
                               URIToString -> Array("shortcutBiobankEncounterName"),
                               MD5GlobalRandom -> Array("biobankEncounter"),
                               DatasetIRI -> Array("dataset"),
@@ -57,7 +65,8 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
                               BindIfBoundRandomUUID -> Array("BMI", "BMIvalspec", "heightValSpec", "heightAssay",
                                                              "heightDatum", "weightValSpec", "weightAssay", "weightDatum"),
                               BindAs -> Array("bmiValue", "heightValue", "weightValue", "biobankEncounterDateStringValue",
-                                              "biobankEncounterIdValue", "dsTitle", "biobankEncounterDateDateValue"),
+                                              "biobankEncounterIdValue", "datasetTitle", "biobankEncounterDateDateValue",
+                                              "consenterSymbol"),
                               BindIfBoundDataset -> Array("dateDataset")
                             )
 
@@ -83,6 +92,12 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
                                           "biobankEncounterDateStringValue" -> "shortcutBiobankEncounterDateStringValue",
                                           "biobankEncounterDateDateValue" -> "shortcutBiobankEncounterDateDateValue",
                                           "biobankEncounterIdValue" -> valuesKey,
-                                          "datasetTitle" -> "shortcutDatasetTitle"
+                                          "datasetTitle" -> "shortcutDatasetTitle",
+                                          "consenterRegistry" -> "shortcutConsenterRegistryString",
+                                          "consenterSymbol" -> "shortcutConsenterSymbol"
                                         )
+    val appendToBind = """"""
+    
+    val optionalLinks: Map[String, ExpandedGraphObject] = Map()
+    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
 }

@@ -40,14 +40,5 @@ trait IRIConstructionRules
                                             REPLACE(struuid(), "-", ""))), ?unbound) AS ?replacement)"""
 
     val BindAs: String = """BIND (?original AS ?replacement)"""
-    
-    val BindIfICD9 = """BIND(IF (?dependent = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat("http://purl.bioontology.org/ontology/ICD9CM/", 
-                          ?original)), ?unbound) AS ?replacement)"""
-    
-    val BindIfICD10 = """BIND(IF (?dependent = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat("http://purl.bioontology.org/ontology/ICD10CM/", 
-                          ?original)), ?unbound) AS ?replacement)"""
-    
-    val BindIfBoundAndOtherNotBoundLeaveUnbound = """BIND(IF (bound(?dependent) && !bound(?original),?dependent,?unbound) as ?replacement)"""
-    
-    val BindIfBoundAndOtherNotBoundKeepOriginal = """BIND(IF (bound(?dependent) && !bound(?original),?dependent,?replacement) as ?replacement)"""
+  
 }
