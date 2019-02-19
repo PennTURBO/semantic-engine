@@ -6,32 +6,40 @@ class HealthcareEncounterIdentifier (healthcareEncounter:HealthcareEncounter) ex
     val healthcareEncounterBvn = healthcareEncounter.baseVariableName
     val valuesKey = "healthcareEncounterIdValue"
     val registryKey = "healthcareEncounterRegistry"
+    
+    val instantiationKey = "instantiation"
+    
+    val encounterSymbol = "healthcareEncounterSymbol"
+    val encounterRegistryDenoter = "healthcareEncounterRegDen"
+    
+    val dataset = "dataset"
+    val datasetTitle = "datasetTitle"
 
     val pattern = s"""
           
       ?$baseVariableName a turbo:TURBO_0000508 .
   		?$baseVariableName obo:IAO_0000219 ?$healthcareEncounterBvn .
-  		?$baseVariableName obo:BFO_0000051 ?healthcareEncounterSymbol .
-  		?$baseVariableName obo:BFO_0000051 ?healthcareEncounterRegistryDenoter .
+  		?$baseVariableName obo:BFO_0000051 ?$encounterSymbol .
+  		?$baseVariableName obo:BFO_0000051 ?$encounterRegistryDenoter .
   		
-  		?healthcareEncounterSymbol obo:BFO_0000050 ?$baseVariableName .
-  		?healthcareEncounterSymbol a turbo:TURBO_0000509 .
-  		?healthcareEncounterSymbol turbo:TURBO_0006510 ?$valuesKey .
+  		?$encounterSymbol obo:BFO_0000050 ?$baseVariableName .
+  		?$encounterSymbol a turbo:TURBO_0000509 .
+  		?$encounterSymbol turbo:TURBO_0006510 ?$valuesKey .
   		
-  		?healthcareEncounterRegistryDenoter obo:BFO_0000050 ?$baseVariableName .
-  		?healthcareEncounterRegistryDenoter a turbo:TURBO_0000510 .
-  		?healthcareEncounterRegistryDenoter obo:IAO_0000219 ?$registryKey .
+  		?$encounterRegistryDenoter obo:BFO_0000050 ?$baseVariableName .
+  		?$encounterRegistryDenoter a turbo:TURBO_0000510 .
+  		?$encounterRegistryDenoter obo:IAO_0000219 ?$registryKey .
   		?$registryKey a turbo:TURBO_0000513  .
   		
-  		?instantiation a turbo:TURBO_0000522 .
-      ?instantiation obo:OBI_0000293 ?dataset .
-      ?dataset a obo:IAO_0000100 .
-  		?dataset dc11:title ?datasetTitle .
+  		?$instantiationKey a turbo:TURBO_0000522 .
+      ?$instantiationKey obo:OBI_0000293 ?$dataset .
+      ?$dataset a obo:IAO_0000100 .
+  		?$dataset dc11:title ?$datasetTitle .
   		
-  		?dataset obo:BFO_0000051 ?healthcareEncounterSymbol .
-  		?healthcareEncounterSymbol obo:BFO_0000050 ?dataset .
-  		?dataset obo:BFO_0000051 ?healthcareEncounterRegistryDenoter .
-      ?healthcareEncounterRegistryDenoter obo:BFO_0000050 ?dataset .
+  		?$dataset obo:BFO_0000051 ?$encounterSymbol .
+  		?$encounterSymbol obo:BFO_0000050 ?$dataset .
+  		?$dataset obo:BFO_0000051 ?$encounterRegistryDenoter .
+      ?$encounterRegistryDenoter obo:BFO_0000050 ?$dataset .
           
       """
     val optionalPattern = """"""

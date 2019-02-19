@@ -3,35 +3,37 @@ package edu.upenn.turbo
 class HealthcareEncounter extends Encounter
 {
     val baseVariableName = "healthcareEncounter"
-    val encounterDateVariableName = "healthcareEncounterDate"
+    val encounterDate = "healthcareEncounterDate"
     val linkedConsenterRegistry = "consenterRegistry"
     val linkedConsenterSymbol = "consenterSymbol"
-
+    
+    val shortcutName = "shortcutHealthcareEncounterName"
+    
+    val encounterStart = "healthcareEncounterStart"
+    val dateOfHealthcareEncounterStringValue = "healthcareEncounterDateStringValue"
+    val dateOfHealthcareEncounterDateValue = "healthcareEncounterDateDateValue"
+    
+    val dataset = "dateDataset"
+    
     val pattern = s"""
-          
-      ?instantiation a turbo:TURBO_0000522 .
-  		?instantiation obo:OBI_0000293 ?dataset .
   	
   		?$baseVariableName a obo:OGMS_0000097 .
-  		?$baseVariableName turbo:TURBO_0006601 ?shortcutHealthcareEncounterName .
+  		?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
   		
-  		?healthcareEncounterStart a turbo:TURBO_0000511 .
-  		?healthcareEncounterStart obo:RO_0002223 ?$baseVariableName .
+  		?$encounterStart a turbo:TURBO_0000511 .
+  		?$encounterStart obo:RO_0002223 ?$baseVariableName .
   		            
-  		?$encounterDateVariableName a turbo:TURBO_0000512 .
-  		?$encounterDateVariableName obo:IAO_0000136 ?healthcareEncounterStart .
-  		
-  		?$baseVariableName <http://graphBuilder.org/linksToConsenterWithRegistry> ?$linkedConsenterRegistry .
-  		?$baseVariableName <http://graphBuilder.org/linksToConsenterWithSymbol> ?$linkedConsenterSymbol .
+  		?$encounterDate a turbo:TURBO_0000512 .
+  		?$encounterDate obo:IAO_0000136 ?$encounterStart .
 
       """
 
     val optionalPattern = s"""
       
-      ?$encounterDateVariableName turbo:TURBO_0006512 ?healthcareEncounterDateStringValue .
-  		?$encounterDateVariableName turbo:TURBO_0006511 ?healthcareEncounterDateDateValue .
-      ?$encounterDateVariableName obo:BFO_0000050 ?dateDataset .
-      ?dateDataset obo:BFO_0000051 ?$encounterDateVariableName .
+      ?$encounterDate turbo:TURBO_0006512 ?$dateOfHealthcareEncounterStringValue .
+  		?$encounterDate turbo:TURBO_0006511 ?$dateOfHealthcareEncounterDateValue .
+      ?$encounterDate obo:BFO_0000050 ?$dataset .
+      ?$dataset obo:BFO_0000051 ?$encounterDate .
 
         """
 

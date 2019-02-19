@@ -16,6 +16,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
     var repository: Repository = null
     val clearDatabaseAfterRun: Boolean = true
     val expand = new Expander
+    val objectOrientedExpander = new ObjectOrientedExpander
     
     var conclusionationNamedGraph: IRI = null
     var masterConclusionation: IRI = null
@@ -140,8 +141,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
-            " <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ", randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterMinimum).get should be (true)
@@ -201,8 +201,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
-            " <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ", randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterMinimum).get should be (true)
@@ -244,8 +243,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
-            " <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ", randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterMinimum).get should be (false)
@@ -269,8 +267,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
-            " <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ", randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterMinimum).get should be (false)
@@ -294,8 +291,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
-            " <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ", randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
             
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + biobankEncounterMinimum).get should be (false)
@@ -325,8 +321,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandBiobankEncounterShortcuts(cxn, cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
-            " <http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts> ", randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         val dateNoXsd: String = """
           ask {

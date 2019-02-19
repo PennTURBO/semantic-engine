@@ -3,31 +3,34 @@ package edu.upenn.turbo
 class BiobankEncounter extends Encounter
 {
     val baseVariableName = "biobankEncounter"
-    val encounterDateVariableName = "biobankEncounterDate"
-    val linkedConsenterSymbol = "consenterSymbol"
-    val linkedConsenterRegistry = "consenterRegistry"
+    
+    val encounterDate = "biobankEncounterDate"
+    val shortcutName = "shortcutBiobankEncounterName"
+    val encounterStart = "biobankEncounterStart"
+    
+    val dateOfBiobankEncounterStringValue = "biobankEncounterDateStringValue"
+    val dateOfBiobankEncounterDateValue = "biobankEncounterDateDateValue"
+    
+    val dataset = "dateDataset"
 
     val pattern = s"""
               		
       ?$baseVariableName a turbo:TURBO_0000527 .
-  		?$baseVariableName turbo:TURBO_0006601 ?shortcutBiobankEncounterName .
+  		?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
   		
-  		?biobankEncounterStart a turbo:TURBO_0000531 .
-  		?biobankEncounterStart obo:RO_0002223 ?$baseVariableName .
-  		?$encounterDateVariableName a turbo:TURBO_0000532 .
-  		?$encounterDateVariableName obo:IAO_0000136 ?biobankEncounterStart .
-  		
-  		?$baseVariableName <http://graphBuilder.org/linksToConsenterWithSymbol> ?$linkedConsenterSymbol .
-  		?$baseVariableName <http://graphBuilder.org/linksToConsenterWithSymbol> ?$linkedConsenterRegistry .
+  		?$encounterStart a turbo:TURBO_0000531 .
+  		?$encounterStart obo:RO_0002223 ?$baseVariableName .
+  		?$encounterDate a turbo:TURBO_0000532 .
+  		?$encounterDate obo:IAO_0000136 ?$encounterStart .
 
       """
 
     val optionalPattern = s"""
       
-      ?$encounterDateVariableName turbo:TURBO_0006511 ?biobankEncounterDateDateValue .
-      ?$encounterDateVariableName turbo:TURBO_0006512 ?biobankEncounterDateStringValue .
-      ?$encounterDateVariableName obo:BFO_0000050 ?dateDataset .
-      ?dateDataset obo:BFO_0000051 ?$encounterDateVariableName .
+      ?$encounterDate turbo:TURBO_0006511 ?$dateOfBiobankEncounterDateValue .
+      ?$encounterDate turbo:TURBO_0006512 ?$dateOfBiobankEncounterStringValue .
+      ?$encounterDate obo:BFO_0000050 ?$dataset .
+      ?$dataset obo:BFO_0000051 ?$encounterDate .
 
         """
 

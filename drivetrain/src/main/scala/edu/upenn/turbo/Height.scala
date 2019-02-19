@@ -7,9 +7,15 @@ class Height (encounter:Encounter) extends ExpandedGraphObject
     val valuesKey = "heightValue"
     val datumKey = "heightDatum"
     
+    val heightValue = "heightValue"
+    
+    val valueSpecification = "heightValSpec"
+    
+    val dataset = "dataset"
+    
     val pattern = s"""
       
-        ?heightValSpec a obo:OBI_0001931 ;
+        ?$valueSpecification a obo:OBI_0001931 ;
              obo:IAO_0000039 obo:UO_0000015 ;
              obo:OBI_0002135 ?$valuesKey .
         		               
@@ -17,14 +23,14 @@ class Height (encounter:Encounter) extends ExpandedGraphObject
   	         obo:OBI_0000299 ?$datumKey .
 
       	?$datumKey a obo:IAO_0000408 ;
-      	     obo:OBI_0001938 ?heightValSpec .
+      	     obo:OBI_0001938 ?$valueSpecification .
       	     
       	?$encounterVariableName obo:BFO_0000051 ?$baseVariableName .
         ?$baseVariableName obo:BFO_0000050 ?$encounterVariableName .
         
-        ?dataset obo:BFO_0000051 ?$datumKey .
-        ?$datumKey obo:BFO_0000050 ?dataset .
-        ?dataset a obo:IAO_0000100 .
+        ?$dataset obo:BFO_0000051 ?$datumKey .
+        ?$datumKey obo:BFO_0000050 ?$dataset .
+        ?$dataset a obo:IAO_0000100 .
     		
       """
       val optionalPattern = """"""

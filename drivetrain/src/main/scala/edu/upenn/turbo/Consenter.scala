@@ -6,23 +6,26 @@ class Consenter extends ExpandedGraphObject
     val birthVariableName = "birth"
     val heightKey = "height"
     val weightKey = "weight"
+    val adiposeKey = "adipose"
+    val biosexKey = "biosex"
+    val shortcutName = "shortcutPartName"
     
     val pattern = s"""
           
           ?$baseVariableName a turbo:TURBO_0000502 .
-          ?$baseVariableName obo:RO_0000086 ?biosex .
-          ?biosex a obo:PATO_0000047 .
+          ?$baseVariableName obo:RO_0000086 ?$biosexKey .
+          ?$biosexKey a obo:PATO_0000047 .
           ?$baseVariableName turbo:TURBO_0000303 ?$birthVariableName .
           ?$birthVariableName a obo:UBERON_0035946 .
           ?$baseVariableName obo:RO_0000086 ?$heightKey .
           ?$heightKey a obo:PATO_0000119 .
           ?$baseVariableName obo:RO_0000086 ?$weightKey .
           ?$weightKey a obo:PATO_0000128 .
-          ?$baseVariableName obo:BFO_0000051 ?adipose .
-          ?adipose obo:BFO_0000050 ?$baseVariableName .
-          ?adipose a obo:UBERON_0001013 .
+          ?$baseVariableName obo:BFO_0000051 ?$adiposeKey .
+          ?$adiposeKey obo:BFO_0000050 ?$baseVariableName .
+          ?$adiposeKey a obo:UBERON_0001013 .
           
-          ?$baseVariableName turbo:TURBO_0006601 ?shortcutPartName .
+          ?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
           
       """
 

@@ -2,48 +2,66 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) extends ShortcutGraphObject
+class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String, biobankEncounter: BiobankEncounter) extends ShortcutGraphObject
 {
+    val biobankEncounterIdentifier = biobankEncounter.mandatoryLinks("Identifier").asInstanceOf[BiobankEncounterIdentifier]
+    val BMI = biobankEncounter.optionalLinks("BMI").asInstanceOf[BMI]
+    val height = biobankEncounter.optionalLinks("Height").asInstanceOf[Height]
+    val weight = biobankEncounter.optionalLinks("Weight").asInstanceOf[Weight]
 
     val instantiation = newInstantiation
+    val instantiationKey = "instantiation"
     val baseVariableName = "shortcutBiobankEncounter"
+    
     val valuesKey = "shortcutBiobankEncounterIdValue"
     val registryKey = "shortcutBiobankEncounterRegistryString"
+    
+    val datasetTitle = "shortcutDatasetTitle"
+    
+    val bmiValue = "shortcutBiobankEncounterBmiValue"
+    val weightValue = "shortcutBiobankEncounterWeightValue"
+    val heightValue = "shortcutBiobankEncounterHeightValue"
+    
+    val dateOfBiobankEncounterStringValue = "shortcutBiobankEncounterDateStringValue"
+    val dateOfBiobankEncounterDateValue = "shortcutBiobankEncounterDateDateValue"
+    
+    val consenterRegistry = "shortcutConsenterRegistryStringForBiobankEncounter"
+    val consenterSymbol = "shortcutConsenterSymbolValueForBiobankEncounter"
     
     val pattern = s"""
           
           ?$baseVariableName a turbo:TURBO_0000527 ;
-              turbo:TURBO_0000623   ?shortcutDatasetTitle;
+              turbo:TURBO_0000623   ?$datasetTitle;
               turbo:TURBO_0000628   ?$valuesKey ;
               turbo:TURBO_0000630   ?$registryKey .
 
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000635 ?shortcutBmiValue .
+            ?$baseVariableName turbo:TURBO_0000635 ?$bmiValue .
           }
           OPTIONAL
           {
-          ?$baseVariableName turbo:TURBO_0000627 ?shortcutWeightValue .
+          ?$baseVariableName turbo:TURBO_0000627 ?$weightValue .
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000626 ?shortcutHeightValue .
+            ?$baseVariableName turbo:TURBO_0000626 ?$heightValue .
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000624 ?shortcutBiobankEncounterDateStringValue .
+            ?$baseVariableName turbo:TURBO_0000624 ?$dateOfBiobankEncounterStringValue .
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000625 ?shortcutBiobankEncounterDateDateValue .
+            ?$baseVariableName turbo:TURBO_0000625 ?$dateOfBiobankEncounterDateValue .
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0010012 ?shortcutConsenterRegistryString .
+            ?$baseVariableName turbo:TURBO_0010012 ?$consenterRegistry .
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0010010 ?shortcutConsenterSymbol .
+            ?$baseVariableName turbo:TURBO_0010010 ?$consenterSymbol .
           }
       """
 
@@ -56,45 +74,46 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String) 
     val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
 
     val variableExpansions = LinkedHashMap(
-                              StringToURI -> Array("instantiation", "biobankEncounterRegistry", "consenterRegistry"),
-                              URIToString -> Array("shortcutBiobankEncounterName"),
-                              MD5GlobalRandom -> Array("biobankEncounter"),
-                              DatasetIRI -> Array("dataset"),
-                              RandomUUID -> Array("biobankEncounterCrid", "biobankEncounterDate", "biobankEncounterStart",
-                                                  "biobankEncounterRegDen", "biobankEncounterSymbol"),
-                              BindIfBoundRandomUUID -> Array("BMI", "BMIvalspec", "heightValSpec", "heightAssay",
-                                                             "heightDatum", "weightValSpec", "weightAssay", "weightDatum"),
-                              BindAs -> Array("bmiValue", "heightValue", "weightValue", "biobankEncounterDateStringValue",
-                                              "biobankEncounterIdValue", "datasetTitle", "biobankEncounterDateDateValue",
-                                              "consenterSymbol"),
-                              BindIfBoundDataset -> Array("dateDataset")
+                              StringToURI -> Array(biobankEncounterIdentifier.registryKey),
+                              InstantiationStringToURI -> Array(biobankEncounterIdentifier.instantiationKey),
+                              URIToString -> Array(biobankEncounter.shortcutName),
+                              MD5GlobalRandom -> Array(biobankEncounter.baseVariableName),
+                              DatasetIRI -> Array(biobankEncounterIdentifier.dataset),
+                              RandomUUID -> Array(biobankEncounterIdentifier.baseVariableName, biobankEncounter.encounterDate,
+                                                  biobankEncounter.encounterStart, biobankEncounterIdentifier.encounterRegistryDenoter, 
+                                                  biobankEncounterIdentifier.encounterSymbol),
+                              BindIfBoundRandomUUID -> Array(BMI.baseVariableName, BMI.valueSpecification, height.valueSpecification, 
+                                                            height.baseVariableName, height.datumKey, weight.valueSpecification, 
+                                                            weight.baseVariableName, weight.datumKey),
+                              BindAs -> Array(BMI.bmiValue, height.heightValue, weight.weightValue, biobankEncounter.dateOfBiobankEncounterStringValue,
+                                              biobankEncounterIdentifier.valuesKey, biobankEncounterIdentifier.datasetTitle, 
+                                              biobankEncounter.dateOfBiobankEncounterDateValue),
+                              BindIfBoundDataset -> Array(biobankEncounter.dataset)
                             )
 
     val expandedVariableShortcutDependencies = Map( 
-                                          "dateDataset" -> "shortcutBiobankEncounterDateStringValue", 
-                                          "BMI" -> "shortcutBmiValue",
-                                          "BMIvalspec" -> "BMI",
-                                          "heightValSpec" -> "shortcutHeightValue",
-                                          "heightAssay" -> "shortcutHeightValue",
-                                          "heightDatum" -> "shortcutHeightValue",
-                                          "weightValSpec" -> "shortcutWeightValue",
-                                          "weightAssay" -> "shortcutWeightValue",
-                                          "weightDatum" -> "shortcutWeightValue"
+                                          biobankEncounter.dataset -> dateOfBiobankEncounterStringValue, 
+                                          BMI.baseVariableName -> bmiValue,
+                                          BMI.valueSpecification -> bmiValue,
+                                          height.valueSpecification -> heightValue,
+                                          height.baseVariableName -> heightValue,
+                                          height.datumKey -> heightValue,
+                                          weight.valueSpecification -> weightValue,
+                                          weight.baseVariableName -> weightValue,
+                                          weight.datumKey -> weightValue
                                         )
 
     val expandedVariableShortcutBindings = Map(
-                                          "biobankEncounterRegistry" -> registryKey, 
-                                          "shortcutBiobankEncounterName" -> baseVariableName,
-                                          "instantiation" -> "instantiationUUID",
-                                          "bmiValue" -> "shortcutBmiValue",
-                                          "heightValue" -> "shortcutHeightValue",
-                                          "weightValue" -> "shortcutWeightValue",
-                                          "biobankEncounterDateStringValue" -> "shortcutBiobankEncounterDateStringValue",
-                                          "biobankEncounterDateDateValue" -> "shortcutBiobankEncounterDateDateValue",
-                                          "biobankEncounterIdValue" -> valuesKey,
-                                          "datasetTitle" -> "shortcutDatasetTitle",
-                                          "consenterRegistry" -> "shortcutConsenterRegistryString",
-                                          "consenterSymbol" -> "shortcutConsenterSymbol"
+                                          biobankEncounterIdentifier.registryKey -> registryKey, 
+                                          biobankEncounter.shortcutName -> baseVariableName,
+                                          biobankEncounterIdentifier.instantiationKey -> instantiationKey,
+                                          BMI.bmiValue -> bmiValue,
+                                          height.heightValue -> heightValue,
+                                          weight.weightValue -> weightValue,
+                                          biobankEncounter.dateOfBiobankEncounterStringValue -> dateOfBiobankEncounterStringValue,
+                                          biobankEncounter.dateOfBiobankEncounterDateValue -> dateOfBiobankEncounterDateValue,
+                                          biobankEncounterIdentifier.valuesKey -> valuesKey,
+                                          biobankEncounterIdentifier.datasetTitle -> datasetTitle
                                         )
     val appendToBind = """"""
     

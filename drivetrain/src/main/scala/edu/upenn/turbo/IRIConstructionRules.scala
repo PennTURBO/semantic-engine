@@ -20,6 +20,8 @@ trait IRIConstructionRules
                                 md5(CONCAT("replacement","globalUUID", str(?mainExpansionTypeVariableName))))) AS ?replacement)"""
 
     val StringToURI: String = """BIND(uri(?original) AS ?replacement)"""
+    
+    val InstantiationStringToURI: String = """BIND(uri(instantiationPlaceholder) AS ?replacement)"""
 
     val URIToString: String = """BIND(str(?original) AS ?replacement)"""
 

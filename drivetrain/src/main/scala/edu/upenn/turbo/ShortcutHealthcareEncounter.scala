@@ -2,89 +2,119 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: String) extends ShortcutGraphObject
+class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: String, healthcareEncounter: HealthcareEncounter) extends ShortcutGraphObject
 {
+    val healthcareEncounterIdentifier = healthcareEncounter.mandatoryLinks("Identifier").asInstanceOf[HealthcareEncounterIdentifier]
+    val BMI = healthcareEncounter.optionalLinks("BMI").asInstanceOf[BMI]
+    val height = healthcareEncounter.optionalLinks("Height").asInstanceOf[Height]
+    val weight = healthcareEncounter.optionalLinks("Weight").asInstanceOf[Weight]
+    val diagnosisInstance = healthcareEncounter.optionalLinks("Diagnosis").asInstanceOf[Diagnosis]
+    val prescriptionInstance = healthcareEncounter.optionalLinks("Prescription").asInstanceOf[Prescription]
 
     val instantiation = newInstantiation
     val baseVariableName = "shortcutHealthcareEncounter"
     val valuesKey = "shortcutHealthcareEncounterIdValue"
     val registryKey = "shortcutHealthcareEncounterRegistryString"
     
+    val diagnosis = "shortcutDiagnosis"
+    val diagnosisCodeRegistryString = "shortcutDiagnosisCodeRegistryString"
+    val diagnosisCodeRegistryURI = "shortcutDiagnosisCodeRegistryURI"
+    val diagnosisCode = "shortcutDiagnosisCode"
+    val primaryDiagnosis = "shortcutPrimaryDiagnosisBoolean"
+    val diagnosisSequence = "shortcutDiagnosisSequence"
+    
+    val prescription = "shortcutPrescription"
+    val medicationSymbolValue = "shortcutMedId"
+    val medicationOrderName = "shortcutMedOrderName"
+    val mappedMedicationTerm = "shortcutMedMap"
+    
+    val dateOfHealthcareEncounterStringValue = "healthcareEncounterDateString"
+    val dateOfHealthcareEncounterDateValue = "healthcareEncounterFormattedDate"
+    
+    val heightValue = "healthcareEncounterHeight"
+    val weightValue = "healthcareEncounterWeight"
+    val bmiValue = "healthcareEncounterBmi"
+    
+    val consenterRegistry = "healthcareEncounterConsenterRegistry"
+    val consenterSymbol = "healthcareEncounterConsenterSymbol"
+    
+    val datasetTitle = "datasetTitle"
+    
     val pattern = s"""
           
         ?$baseVariableName a obo:OGMS_0000097 ;
-          		turbo:TURBO_0000643  ?shortcutDatasetTitle ;
+          		turbo:TURBO_0000643  ?$datasetTitle ;
         			turbo:TURBO_0000648  ?$valuesKey ;
           		turbo:TURBO_0000650 ?$registryKey .
           		
           		optional 
           		{
           		
-          		    ?$baseVariableName obo:RO_0002234 ?shortcutDiagnosis .
-          		    ?shortcutDiagnosis a obo:OGMS_0000073 .
-          		    ?shortcutDiagnosis turbo:TURBO_0004602  ?shortcutDiagnosisCodeRegistryString .
+          		    ?$baseVariableName obo:RO_0002234 ?$diagnosis .
+          		    ?$diagnosis a obo:OGMS_0000073 .
+          		    ?$diagnosis turbo:TURBO_0004602  ?$diagnosisCodeRegistryString .
           		    
           		    optional 
           		    {
-          			    ?shortcutDiagnosis turbo:TURBO_0004603 ?shortcutDiagnosisCodeRegistryURI .
+          			    ?$diagnosis turbo:TURBO_0004603 ?$diagnosisCodeRegistryURI .
               	  }
               		optional 
               		{
-              		   ?shortcutDiagnosis turbo:TURBO_0004601 ?shortcutDiagnosisCode .
+              		   ?$diagnosis turbo:TURBO_0004601 ?$diagnosisCode .
               		}
               		optional
               		{
-              		    ?shortcutDiagnosis turbo:TURBO_0010013 ?shortcutPrimaryDiagnosisBoolean .
+              		    ?$diagnosis turbo:TURBO_0010013 ?$primaryDiagnosis .
               		}
               		optional
               		{
-              		    ?shortcutDiagnosis turbo:TURBO_0010014 ?shortcutDiagnosisSequence .
+              		    ?$diagnosis turbo:TURBO_0010014 ?$diagnosisSequence .
               		}
           		}
           		
           		optional 
           		{
-          		    ?$baseVariableName obo:RO_0002234 ?shortcutPrescription .
-          		    ?shortcutPrescription a obo:PDRO_0000001 .
-          		    ?shortcutPrescription turbo:TURBO_0005601  ?shortcutMedId .
+          		    ?$baseVariableName obo:RO_0002234 ?$prescription .
+          		    ?$prescription a obo:PDRO_0000001 .
+          		    ?$prescription turbo:TURBO_0005601  ?medicationSymbolValue .
           		    
           		    optional
           		    {
-          		        ?shortcutPrescription turbo:TURBO_0005611  ?shortcutMedOrderName .
+          		        ?$prescription turbo:TURBO_0005611  ?$medicationOrderName .
           		    }
           		    optional
           		    {
-          		        ?shortcutPrescription turbo:TURBO_0005612 ?shortcutMedMapping .
+          		        ?$prescription turbo:TURBO_0005612 ?$mappedMedicationTerm .
           		    }
           		}
           		
           		optional 
           		{
-          			?$baseVariableName turbo:TURBO_0000644 ?shortcutHealthcareEncounterDateStringValue .
+          			?$baseVariableName turbo:TURBO_0000644 ?$dateOfHealthcareEncounterStringValue .
           	  }
           		optional 
           		{
-          			?$baseVariableName turbo:TURBO_0000645 ?shortcutHealthcareEncounterDateDateValue .
+          			?$baseVariableName turbo:TURBO_0000645 ?$dateOfHealthcareEncounterStringValue .
           		}
           		optional 
           		{
-          		    ?$baseVariableName turbo:TURBO_0000646 ?shortcutHeightValue .
+          		    ?$baseVariableName turbo:TURBO_0000646 ?$heightValue .
           		}
           		optional 
               {
-          		    ?$baseVariableName turbo:TURBO_0000647 ?shortcutWeightValue .
+          		    ?$baseVariableName turbo:TURBO_0000647 ?$weightValue .
           		}
           		optional
           		{
-          		    ?$baseVariableName turbo:TURBO_0000655 ?shortcutBmiValue .
+          		    ?$baseVariableName turbo:TURBO_0000655 ?$bmiValue .
           		}
           		OPTIONAL
               {
-                ?$baseVariableName turbo:TURBO_0010002 ?shortcutConsenterRegistryString .
+                ?$baseVariableName turbo:TURBO_0010002 ?$consenterRegistry .
               }
               OPTIONAL
               {
-                ?$baseVariableName turbo:TURBO_0010000 ?shortcutConsenterSymbol .
+                ?$baseVariableName turbo:TURBO_0010000 ?$consenterSymbol .
               }
             
       """
@@ -98,60 +128,62 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
     val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
 
     val variableExpansions = LinkedHashMap(
-                              StringToURI -> Array("instantiation", "healthcareEncounterRegistry", "drugURI", "diagnosisRegistry",
-                                                  "consenterRegistry"),
-                              URIToString -> Array("shortcutHealthcareEncounterName"),
-                              MD5GlobalRandom -> Array("healthcareEncounter"),
-                              DatasetIRI -> Array("dataset"),
-                              RandomUUID -> Array("healthcareEncounterCrid", "healthcareEncounterDate", "healthcareEncounterStart",
-                                                  "healthcareEncounterRegistryDenoter", "healthcareEncounterSymbol"),
-                              BindIfBoundMD5LocalRandomWithDependent -> Array("diagnosis", "heightValSpec", "heightAssay", "heightDatum",
-                                                                              "weightValSpec", "weightAssay", "weightDatum", "BMI", "BMIvalspec",
-                                                                              "prescription", "medCrid", "medSymb"),
-                              BindAs -> Array("bmiValue", "heightValue", "weightValue", "healthcareEncounterDateStringValue",
-                                              "healthcareEncounterIdValue", "datasetTitle", "healthcareEncounterDateDateValue", 
-                                              "orderNameString", "medId", "diagCodeRegTextVal", "primaryDiag", "diagnosisCodeValue",
-                                              "diagSequence", "consenterSymbol"),
-                              BindIfBoundDataset -> Array("dateDataset")
+                              StringToURI -> Array(healthcareEncounterIdentifier.registryKey, prescriptionInstance.mappedMedicationTerm, 
+                                                   diagnosisInstance.registryKey),
+                              InstantiationStringToURI -> Array("instantiationKey"),
+                              URIToString -> Array(healthcareEncounter.shortcutName),
+                              MD5GlobalRandom -> Array(healthcareEncounter.baseVariableName),
+                              DatasetIRI -> Array(healthcareEncounterIdentifier.dataset),
+                              RandomUUID -> Array(healthcareEncounterIdentifier.baseVariableName, healthcareEncounter.encounterDate, 
+                                                  healthcareEncounter.encounterStart, healthcareEncounterIdentifier.encounterRegistryDenoter, 
+                                                  healthcareEncounterIdentifier.encounterSymbol),
+                              BindIfBoundMD5LocalRandomWithDependent -> Array(diagnosisInstance.baseVariableName, height.valueSpecification, 
+                                                                              height.baseVariableName, height.datumKey, weight.valueSpecification,
+                                                                              weight.baseVariableName, weight.datumKey, BMI.baseVariableName, 
+                                                                              BMI.valueSpecification, prescriptionInstance.baseVariableName,
+                                                                              prescriptionInstance.prescriptionCrid, prescriptionInstance.medicationSymbol),
+                              BindAs -> Array(BMI.valuesKey, height.valuesKey, weight.valuesKey, healthcareEncounter.dateOfHealthcareEncounterStringValue,
+                                              healthcareEncounterIdentifier.valuesKey, healthcareEncounter.dateOfHealthcareEncounterDateValue, 
+                                              prescriptionInstance.medicationOrderName, diagnosisInstance.registryKey, diagnosisInstance.primaryDiagnosis,  
+                                              diagnosisInstance.valuesKey, diagnosisInstance.diagnosisSequence, healthcareEncounterIdentifier.valuesKey),
+                              BindIfBoundDataset -> Array(healthcareEncounter.dataset)
                             )
 
     val expandedVariableShortcutDependencies = Map( 
-                                          "dateDataset" -> "shortcutHealthcareEncounterDateStringValue", 
-                                          "BMI" -> "shortcutBmiValue",
-                                          "BMIvalspec" -> "shortcutBmiValue",
-                                          "heightValSpec" -> "shortcutHeightValue",
-                                          "heightAssay" -> "shortcutHeightValue",
-                                          "heightDatum" -> "shortcutHeightValue",
-                                          "weightValSpec" -> "shortcutWeightValue",
-                                          "weightAssay" -> "shortcutWeightValue",
-                                          "weightDatum" -> "shortcutWeightValue",
-                                          "diagnosis" -> "shortcutDiagnosis",
-                                          "prescription" -> "shortcutPrescription",
-                                          "medCrid" -> "prescription",
-                                          "medSymb" -> "prescription"
+                                          healthcareEncounter.dataset -> dateOfHealthcareEncounterStringValue, 
+                                          BMI.baseVariableName -> bmiValue,
+                                          BMI.valueSpecification -> bmiValue,
+                                          height.valueSpecification -> heightValue,
+                                          height.baseVariableName -> heightValue,
+                                          height.datumKey -> heightValue,
+                                          weight.valueSpecification -> weightValue,
+                                          weight.baseVariableName -> weightValue,
+                                          weight.datumKey -> weightValue,
+                                          diagnosisInstance.baseVariableName -> diagnosis,
+                                          prescriptionInstance.baseVariableName -> prescription,
+                                          prescriptionInstance.prescriptionCrid -> prescription,
+                                          prescriptionInstance.medicationSymbol -> prescription
                                         )
 
     val expandedVariableShortcutBindings = Map(
-                                          "healthcareEncounterRegistry" -> registryKey, 
-                                          "shortcutHealthcareEncounterName" -> baseVariableName,
-                                          "instantiation" -> "instantiationUUID",
-                                          "bmiValue" -> "shortcutBmiValue",
-                                          "heightValue" -> "shortcutHeightValue",
-                                          "weightValue" -> "shortcutWeightValue",
-                                          "healthcareEncounterDateStringValue" -> "shortcutHealthcareEncounterDateStringValue",
-                                          "healthcareEncounterDateDateValue" -> "shortcutHealthcareEncounterDateDateValue",
-                                          "healthcareEncounterIdValue" -> valuesKey,
-                                          "datasetTitle" -> "shortcutDatasetTitle",
-                                          "drugURI" -> "shortcutMedMapping",
-                                          "diagnosisRegistry" -> "shortcutDiagnosisCodeRegistryURI",
-                                          "orderNameString" -> "shortcutMedOrderName",
-                                          "medId" -> "shortcutMedId",
-                                          "diagCodeRegTextVal" -> "shortcutDiagnosisCodeRegistryString",
-                                          "primaryDiag" -> "shortcutPrimaryDiagnosisBoolean",
-                                          "diagnosisCodeValue" -> "shortcutDiagnosisCode",
-                                          "diagSequence" -> "shortcutDiagnosisSequence",
-                                          "consenterRegistry" -> "shortcutConsenterRegistryString",
-                                          "consenterSymbol" -> "shortcutConsenterSymbol"
+                                          healthcareEncounterIdentifier.registryKey -> registryKey, 
+                                          healthcareEncounter.shortcutName -> baseVariableName,
+                                          healthcareEncounterIdentifier.instantiationKey -> instantiation,
+                                          BMI.bmiValue -> bmiValue,
+                                          height.heightValue -> heightValue,
+                                          weight.weightValue -> weightValue,
+                                          healthcareEncounter.dateOfHealthcareEncounterStringValue -> dateOfHealthcareEncounterStringValue,
+                                          healthcareEncounter.dateOfHealthcareEncounterDateValue -> dateOfHealthcareEncounterDateValue,
+                                          healthcareEncounterIdentifier.valuesKey -> valuesKey,
+                                          healthcareEncounterIdentifier.datasetTitle -> datasetTitle,
+                                          prescriptionInstance.mappedMedicationTerm -> mappedMedicationTerm,
+                                          diagnosisInstance.diagnosisCodeRegistryString -> diagnosisCodeRegistryString,
+                                          prescriptionInstance.medicationOrderName -> medicationOrderName,
+                                          prescriptionInstance.medicationSymbolValue -> medicationSymbolValue,
+                                          diagnosisInstance.primaryDiagnosis -> primaryDiagnosis,
+                                          diagnosisInstance.diagnosisCode -> diagnosisCode,
+                                          diagnosisInstance.diagnosisSequence -> diagnosisSequence,
+                                          diagnosisInstance.registryKey -> registryKey
                                         )
                                         
     val appendToBind = """

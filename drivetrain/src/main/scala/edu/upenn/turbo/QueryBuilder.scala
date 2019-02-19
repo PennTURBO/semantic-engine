@@ -79,7 +79,7 @@ class QueryBuilder extends Query with IRIConstructionRules
                                         .replaceAll("mainExpansionTypeVariableName",a.baseVariableName)
                     if (thisBind.contains("dependent")) thisBind = thisBind.replaceAll("dependent",dependencyConversions(element))
                     if (thisBind.contains("original")) thisBind = thisBind.replaceAll("original",bindAsConversions(element))
-                    thisBind = thisBind.replaceAll("\\?instantiationUUID","\""+a.instantiation+"\"")
+                    thisBind = thisBind.replaceAll("instantiationPlaceholder","\""+a.instantiation+"\"")
                     bindClause += thisBind+"\n"
                 }
             }

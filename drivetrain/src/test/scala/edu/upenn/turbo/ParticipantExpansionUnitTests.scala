@@ -17,6 +17,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     var repository: Repository = null
     val clearDatabaseAfterRun: Boolean = true
     val expand = new Expander
+    val objectOrientedExpander = new ObjectOrientedExpander
     
     var conclusionationNamedGraph: IRI = null
     var masterConclusionation: IRI = null
@@ -85,7 +86,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
-    /*test("participant with all fields")
+    test("participant with all fields")
     {
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
@@ -108,9 +109,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0003603 "part_expand" .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandParticipantsMultipleIdentifiers(cxn, 
-            cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         val extraFields: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
@@ -183,7 +182,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (50)
-    }*/
+    }
     
     test("participant with minimum required for expansion")
     {
@@ -197,9 +196,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0003610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandParticipantsMultipleIdentifiers(cxn, 
-            cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (true)
@@ -245,9 +242,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0003610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandParticipantsMultipleIdentifiers(cxn, 
-            cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -269,9 +264,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0003610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandParticipantsMultipleIdentifiers(cxn, 
-            cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -293,9 +286,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0003603 "part_expand" .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandParticipantsMultipleIdentifiers(cxn, 
-            cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -325,9 +316,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandParticipantsMultipleIdentifiers(cxn, 
-            cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         val dateNoXsd: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
@@ -422,9 +411,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
 
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandParticipantsMultipleIdentifiers(cxn, 
-            cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts>",
-            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
     
         val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
@@ -566,11 +553,8 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           
           }"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandParticipantsMultipleIdentifiers(cxn, 
-            cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), 
-            "<http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts1><http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts2><http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts3>",
-            UUID.randomUUID().toString.replaceAll("-", ""), randomUUID)
-    
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
+        
           val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
         	
@@ -675,9 +659,9 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
         result.size should be (86)
-    }
+    }*/
     
-    test("combining deprecated and multi-ID consenter shortcuts - single dataset")
+    /*test("combining deprecated and multi-ID consenter shortcuts - single dataset")
     {
         val insert: String = """
           INSERT DATA {

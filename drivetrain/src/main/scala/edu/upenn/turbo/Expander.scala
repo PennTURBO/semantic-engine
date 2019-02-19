@@ -397,7 +397,7 @@ class Expander extends ProjectwideGlobals
      */
     def expandParticipantsMultipleIdentifiers(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, randomUUID: String, globalUUID: String)
     {
-        /*val participantExpansion = """
+        val participantExpansion = """
         INSERT {
         	GRAPH pmbb:postExpansionCheck {
         	
@@ -540,30 +540,7 @@ class Expander extends ProjectwideGlobals
         	}
         }          
         """
-        update.updateSparql(cxn, sparqlPrefixes + participantExpansion)*/
-      
-        val instantiationUUID = "http://www.itmat.upenn.edu/biobank/test_instantiation_1"
-        val namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_participantShortcuts"
-        val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
-  
-        val shortcutConsenter = new ShortcutConsenter(instantiationUUID, namedGraph)
-        val consenter = new Consenter()
-        
-        val queryBuilder = new QueryBuilder()
-        
-        queryBuilder.whereBuilder(
-            Map(shortcutConsenter -> true),
-            Map(), Map())
-            
-        queryBuilder.bindBuilder(Array(shortcutConsenter), randomUUID, globalUUID)
-  
-        queryBuilder.insertBuilder(Array(consenter))
-  
-        val finalQuery = queryBuilder.buildInsertQuery()
-        println(finalQuery)
-        println()
-        
-        val queryResults = update.updateSparql(cxn, sparqlPrefixes + finalQuery)
+        update.updateSparql(cxn, sparqlPrefixes + participantExpansion)
     }
     
     /**
@@ -571,7 +548,7 @@ class Expander extends ProjectwideGlobals
      */
     def expandBiobankEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, globalUUID: String)
     {
-        /*val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
+        val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         val biobankEncounterExpansion = """
           insert {
         	GRAPH <http://www.itmat.upenn.edu/biobank/postExpansionCheck> {
@@ -702,30 +679,7 @@ class Expander extends ProjectwideGlobals
             	}
             }"""
                 
-          update.updateSparql(cxn, sparqlPrefixes + biobankEncounterExpansion)  */
-          logger.info("starting biobank encounter expansion")
-          val instantiationUUID = "http://www.itmat.upenn.edu/biobank/test_instantiation_1"
-          val namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts"
-          val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
-    
-          val shortcutEncounter = new ShortcutBiobankEncounter(instantiationUUID, namedGraph)
-          val encounter = new BiobankEncounter()
-          
-          val queryBuilder = new QueryBuilder()
-          
-          queryBuilder.whereBuilder(
-              Map(shortcutEncounter -> true),
-              Map(), Map())
-              
-          queryBuilder.bindBuilder(Array(shortcutEncounter), randomUUID, globalUUID)
-    
-          queryBuilder.insertBuilder(Array(encounter))
-    
-          val finalQuery = queryBuilder.buildInsertQuery()
-          //println(finalQuery)
-          println()
-          
-          val queryResults = update.updateSparql(cxn, sparqlPrefixes + finalQuery)
+          update.updateSparql(cxn, sparqlPrefixes + biobankEncounterExpansion)  
     }
     
     /**
@@ -734,7 +688,7 @@ class Expander extends ProjectwideGlobals
     def expandHealthcareEncounterShortcuts(cxn: RepositoryConnection, instantiation: IRI, graphsString: String, globalUUID: String)
     {
         //collect list of all healthcare encounters
-        /*logger.info("running hc enc expansion")
+        logger.info("running hc enc expansion")
         val getShortcutHcEncs: String = """
           select * where
           {
@@ -763,29 +717,7 @@ class Expander extends ProjectwideGlobals
                 encounterList = ""
             }
         }
-        runBatchedHealthcareEncounterExpansion(cxn, randomUUID, globalUUID, graphsString, encounterList, instantiation)*/
-        val instantiationUUID = "http://www.itmat.upenn.edu/biobank/test_instantiation_1"
-        val namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts"
-        val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
-  
-        val shortcutEncounter = new ShortcutHealthcareEncounter(instantiationUUID, namedGraph)
-        val encounter = new HealthcareEncounter()
-        
-        val queryBuilder = new QueryBuilder()
-        
-        queryBuilder.whereBuilder(
-            Map(shortcutEncounter -> true),
-            Map(), Map())
-            
-        queryBuilder.bindBuilder(Array(shortcutEncounter), randomUUID, globalUUID)
-  
-        queryBuilder.insertBuilder(Array(encounter))
-  
-        val finalQuery = queryBuilder.buildInsertQuery()
-        println(finalQuery)
-        println()
-        
-        val queryResults = update.updateSparql(cxn, sparqlPrefixes + finalQuery)
+        runBatchedHealthcareEncounterExpansion(cxn, randomUUID, globalUUID, graphsString, encounterList, instantiation)
     }
     
     def expandLossOfFunctionShortcuts(cxn: RepositoryConnection, instantiation: String, lofGraphs: ArrayBuffer[String], globalUUID: String)

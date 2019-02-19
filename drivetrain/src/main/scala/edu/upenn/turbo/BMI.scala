@@ -3,22 +3,27 @@ package edu.upenn.turbo
 class BMI (encounter:Encounter) extends ExpandedGraphObject
 {
     val baseVariableName = "BMI"
-    val encounterDate = encounter.encounterDateVariableName
+    val encounterDate = encounter.encounterDate
     val encounterVariableName = encounter.baseVariableName
     val valuesKey = "bmiValue"
+    
+    val bmiValue = "bmiValue"
+    
+    val valueSpecification = "BmiValSpec"
+    val dataset = "dataset"
     
     val pattern = s"""
       
         ?$baseVariableName a efo:EFO_0004340 .
-    		?$baseVariableName obo:OBI_0001938 ?BMIvalspec .
-    		?BMIvalspec a obo:OBI_0001933 .
-    		?BMIvalspec obo:OBI_0002135 ?$valuesKey .
+    		?$baseVariableName obo:OBI_0001938 ?$valueSpecification .
+    		?$valueSpecification a obo:OBI_0001933 .
+    		?$valueSpecification obo:OBI_0002135 ?$valuesKey .
     		?$baseVariableName obo:IAO_0000581 ?$encounterDate .
     		
-        ?$encounterVariableName obo:RO_0002234 ?BMI .
-    		?dataset obo:BFO_0000051 ?$baseVariableName .
-        ?$baseVariableName obo:BFO_0000050 ?dataset .
-        ?dataset a obo:IAO_0000100 .
+        ?$encounterVariableName obo:OBI_0000299 ?$baseVariableName .
+    		?$dataset obo:BFO_0000051 ?$baseVariableName .
+        ?$baseVariableName obo:BFO_0000050 ?$dataset .
+        ?$dataset a obo:IAO_0000100 .
     		
       """
 
