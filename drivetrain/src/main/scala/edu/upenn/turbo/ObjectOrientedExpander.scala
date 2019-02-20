@@ -16,14 +16,20 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         
         for (namedGraph <- namedGraphsList)
         {
+          val createHealthcareJoinShortcuts = buildHealthcareEncounterJoinShortcutsQuery(namedGraph)
+          val createBiobankJoinShortcuts = buildBiobankEncounterJoinShortcuts(namedGraph)
+          
           val partipantExpansion = buildParticipantExpansionQuery(instantiation, globalUUID, namedGraph)
           val biobankEncounterExpansion = buildBiobankEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
           val healthcareEncounterExpansion = buildHealthcareEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
+          val consenterToEncounterJoinExpansion = buildConsenterToEncounterJoinQuery(namedGraph)
           println(healthcareEncounterExpansion)
           
+          update.updateSparql(cxn, createJoinShortcuts)
           update.updateSparql(cxn, partipantExpansion)
           update.updateSparql(cxn, biobankEncounterExpansion)
           update.updateSparql(cxn, healthcareEncounterExpansion)
+          update.updateSparql(cxn, consenterToEncounterJoinExpansion)
         }
         
         /*val participantToBiobankEncounterLinking = buildParticipantToBiobankEncounterLinkingQuery()
@@ -31,6 +37,11 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         
         update.updateSparql(cxn, participantToBiobankEncounterLinking)
         update.updateSparql(cxn, participantToHealthcareEncounterLinking)*/
+    }
+    
+    def buildHealthcareEncounterJoinShortcutsQuery(namedGraph: String): String =
+    {
+        
     }
     
     def buildParticipantExpansionQuery(instantiation: String, globalUUID: String, namedGraph: String): String =
@@ -84,6 +95,11 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         queryBuilder.bindBuilder(Array(shortcutEncounter), randomUUID, globalUUID)
         queryBuilder.insertBuilder(Array(encounter))
         queryBuilder.buildInsertQuery()
+    }
+    
+    def buildConsenterToEncounterJoinQuery(namedGraph: String): String =
+    {
+        
     }
     
     /*def buildParticipantToBiobankEncounterLinkingQuery(): String =
