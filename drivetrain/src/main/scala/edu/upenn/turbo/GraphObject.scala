@@ -10,4 +10,5 @@ abstract class GraphObject
     val connections: Map[String, String]
     val optionalLinks: Map[String, ExpandedGraphObject]
     val mandatoryLinks: Map[String, ExpandedGraphObject]
+    val optionalPattern: String
 }

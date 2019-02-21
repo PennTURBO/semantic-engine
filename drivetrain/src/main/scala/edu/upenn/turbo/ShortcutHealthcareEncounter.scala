@@ -2,7 +2,9 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: String, healthcareEncounter: HealthcareEncounter) extends ShortcutGraphObject
+class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: String, 
+                                  healthcareEncounter: HealthcareEncounter, join: ShortcutParticipantToEncounterJoin) 
+                                  extends ShortcutGraphObject
 {
     val healthcareEncounterIdentifier = healthcareEncounter.mandatoryLinks("Identifier").asInstanceOf[HealthcareEncounterIdentifier]
     val BMI = healthcareEncounter.optionalLinks("BMI").asInstanceOf[BMI]
@@ -37,6 +39,7 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
     
     val consenterRegistry = "healthcareEncounterConsenterRegistry"
     val consenterSymbol = "healthcareEncounterConsenterSymbol"
+    val consenterURI = "shortcutConsenterURI"
     
     val datasetTitle = "datasetTitle"
     
@@ -111,14 +114,14 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
           		OPTIONAL
               {
                 ?$baseVariableName turbo:TURBO_0010002 ?$consenterRegistry .
-              }
-              OPTIONAL
-              {
                 ?$baseVariableName turbo:TURBO_0010000 ?$consenterSymbol .
+                ?$baseVariableName graphBuilder:linksToConsenterURI ?$consenterSymbol .
               }
             
       """
 
+    val optionalPattern = """"""
+                
     val connections = Map("" -> "")
     
     val namedGraph = newNamedGraph
@@ -133,6 +136,7 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
                               InstantiationStringToURI -> Array("instantiationKey"),
                               URIToString -> Array(healthcareEncounter.shortcutName),
                               MD5GlobalRandom -> Array(healthcareEncounter.baseVariableName),
+                              MD5GlobalRandomWithOriginal -> Array(join.consenterName),
                               DatasetIRI -> Array(healthcareEncounterIdentifier.dataset),
                               RandomUUID -> Array(healthcareEncounterIdentifier.baseVariableName, healthcareEncounter.encounterDate, 
                                                   healthcareEncounter.encounterStart, healthcareEncounterIdentifier.encounterRegistryDenoter, 
@@ -145,7 +149,8 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
                               BindAs -> Array(BMI.valuesKey, height.valuesKey, weight.valuesKey, healthcareEncounter.dateOfHealthcareEncounterStringValue,
                                               healthcareEncounterIdentifier.valuesKey, healthcareEncounter.dateOfHealthcareEncounterDateValue, 
                                               prescriptionInstance.medicationOrderName, diagnosisInstance.registryKey, diagnosisInstance.primaryDiagnosis,  
-                                              diagnosisInstance.valuesKey, diagnosisInstance.diagnosisSequence, healthcareEncounterIdentifier.valuesKey),
+                                              diagnosisInstance.valuesKey, diagnosisInstance.diagnosisSequence, healthcareEncounterIdentifier.valuesKey,
+                                              join.encounterName),
                               BindIfBoundDataset -> Array(healthcareEncounter.dataset)
                             )
 
@@ -183,7 +188,9 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
                                           diagnosisInstance.primaryDiagnosis -> primaryDiagnosis,
                                           diagnosisInstance.diagnosisCode -> diagnosisCode,
                                           diagnosisInstance.diagnosisSequence -> diagnosisSequence,
-                                          diagnosisInstance.registryKey -> registryKey
+                                          diagnosisInstance.registryKey -> registryKey,
+                                          join.encounterName -> healthcareEncounter.baseVariableName,
+                                          join.consenterName -> consenterURI
                                         )
                                         
     val appendToBind = """

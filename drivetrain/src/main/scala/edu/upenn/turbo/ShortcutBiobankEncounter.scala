@@ -2,7 +2,9 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String, biobankEncounter: BiobankEncounter) extends ShortcutGraphObject
+class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String, 
+                              biobankEncounter: BiobankEncounter, join: ShortcutParticipantToEncounterJoin) 
+                              extends ShortcutGraphObject
 {
     val biobankEncounterIdentifier = biobankEncounter.mandatoryLinks("Identifier").asInstanceOf[BiobankEncounterIdentifier]
     val BMI = biobankEncounter.optionalLinks("BMI").asInstanceOf[BMI]
@@ -27,6 +29,7 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String, 
     
     val consenterRegistry = "shortcutConsenterRegistryStringForBiobankEncounter"
     val consenterSymbol = "shortcutConsenterSymbolValueForBiobankEncounter"
+    val consenterURI = "shortcutConsenterURI"
     
     val pattern = s"""
           
@@ -58,13 +61,13 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String, 
           OPTIONAL
           {
             ?$baseVariableName turbo:TURBO_0010012 ?$consenterRegistry .
-          }
-          OPTIONAL
-          {
             ?$baseVariableName turbo:TURBO_0010010 ?$consenterSymbol .
+            ?$baseVariableName graphBuilder:linksToConsenterURI ?$consenterURI .
           }
       """
-
+    
+    val optionalPattern = """"""
+    
     val connections = Map("" -> "")
     
     val namedGraph = newNamedGraph
@@ -78,6 +81,7 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String, 
                               InstantiationStringToURI -> Array(biobankEncounterIdentifier.instantiationKey),
                               URIToString -> Array(biobankEncounter.shortcutName),
                               MD5GlobalRandom -> Array(biobankEncounter.baseVariableName),
+                              MD5GlobalRandomWithOriginal -> Array(join.consenterName),
                               DatasetIRI -> Array(biobankEncounterIdentifier.dataset),
                               RandomUUID -> Array(biobankEncounterIdentifier.baseVariableName, biobankEncounter.encounterDate,
                                                   biobankEncounter.encounterStart, biobankEncounterIdentifier.encounterRegistryDenoter, 
@@ -87,7 +91,7 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String, 
                                                             weight.baseVariableName, weight.datumKey),
                               BindAs -> Array(BMI.bmiValue, height.heightValue, weight.weightValue, biobankEncounter.dateOfBiobankEncounterStringValue,
                                               biobankEncounterIdentifier.valuesKey, biobankEncounterIdentifier.datasetTitle, 
-                                              biobankEncounter.dateOfBiobankEncounterDateValue),
+                                              biobankEncounter.dateOfBiobankEncounterDateValue, join.encounterName),
                               BindIfBoundDataset -> Array(biobankEncounter.dataset)
                             )
 
@@ -113,8 +117,11 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String, 
                                           biobankEncounter.dateOfBiobankEncounterStringValue -> dateOfBiobankEncounterStringValue,
                                           biobankEncounter.dateOfBiobankEncounterDateValue -> dateOfBiobankEncounterDateValue,
                                           biobankEncounterIdentifier.valuesKey -> valuesKey,
-                                          biobankEncounterIdentifier.datasetTitle -> datasetTitle
-                                        )
+                                          biobankEncounterIdentifier.datasetTitle -> datasetTitle,
+                                          join.encounterName -> biobankEncounter.baseVariableName,
+                                          join.consenterName -> consenterURI
+                                          )
+                                          
     val appendToBind = """"""
     
     val optionalLinks: Map[String, ExpandedGraphObject] = Map()

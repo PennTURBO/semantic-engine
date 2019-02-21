@@ -87,7 +87,7 @@ class QueryBuilder extends Query with IRIConstructionRules
         }
     }
 
-    def insertBuilder(buildTypes: Array[ExpandedGraphObject])
+    def insertBuilder(buildTypes: Array[GraphObject])
     {
         for (a <- buildTypes)
         {
@@ -105,7 +105,7 @@ class QueryBuilder extends Query with IRIConstructionRules
         insertClause += "}"
     }
 
-    def addInsertClauseToString(buildType: ExpandedGraphObject)
+    def addInsertClauseToString(buildType: GraphObject)
     {
         insertClause += " GRAPH <" + buildType.namedGraph + "> {"
         insertClause += buildType.pattern

@@ -18,6 +18,9 @@ trait IRIConstructionRules
 
     val MD5GlobalRandom: String = """BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",
                                 md5(CONCAT("replacement","globalUUID", str(?mainExpansionTypeVariableName))))) AS ?replacement)"""
+    
+    val MD5GlobalRandomWithOriginal: String = """BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",
+                                md5(CONCAT("replacement","globalUUID", str(?original))))) AS ?replacement)"""
 
     val StringToURI: String = """BIND(uri(?original) AS ?replacement)"""
     

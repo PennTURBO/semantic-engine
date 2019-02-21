@@ -63,6 +63,8 @@ class ShortcutConsenter(newInstantiation: String, newNamedGraph: String, consent
             ?$baseVariableName turbo:TURBO_0000615 ?$raceIdentityValue .
           }
       """
+            
+    val optionalPattern = """"""
 
     val connections = Map("" -> "")
     
