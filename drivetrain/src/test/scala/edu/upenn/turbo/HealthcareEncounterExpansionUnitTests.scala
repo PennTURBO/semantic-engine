@@ -126,7 +126,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
     val healthcareHeightWeightAndBMI: String = """
           ASK { GRAPH <http://www.itmat.upenn.edu/biobank/postExpansionCheck> {
           
-                ?encounter obo:RO_0002234 ?BMI .
+                ?encounter obo:OBI_0000299 ?BMI .
                 ?encounter a obo:OGMS_0000097 .
             		?BMI a <http://www.ebi.ac.uk/efo/EFO_0004340> .
             		?BMI obo:OBI_0001938 ?BMIvalspec .
@@ -235,7 +235,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006601",
-            "http://purl.obolibrary.org/obo/RO_0002234", "http://purl.obolibrary.org/obo/RO_0002234", 
+            "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/RO_0002234", 
             "http://purl.obolibrary.org/obo/RO_0002234", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -350,7 +350,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "s")
-        result.size should be (22)
+        result.size should be (0)
     }
    
     test("hc encounter without registry")
@@ -376,7 +376,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:postExpansionCheck {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "s")
-        result.size should be (21)
+        result.size should be (0)
     }
     
     test("hc encounter without dataset")
@@ -473,7 +473,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006601",
-            "http://purl.obolibrary.org/obo/RO_0002234", "http://purl.obolibrary.org/obo/RO_0002234", 
+            "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/RO_0002234", 
             "http://purl.obolibrary.org/obo/RO_0002234", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",

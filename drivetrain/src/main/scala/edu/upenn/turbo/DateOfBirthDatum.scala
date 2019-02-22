@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-class DateOfBirthDatum(consenter:Consenter) extends ExpandedGraphObject
+class DateOfBirthDatum(consenter:Consenter) extends GraphObject
 {
     val baseVariableName = "dob"
     val birthBvn = consenter.birthVariableName
@@ -21,18 +21,10 @@ class DateOfBirthDatum(consenter:Consenter) extends ExpandedGraphObject
           ?$dataset a obo:IAO_0000100 .
           
       """
-
-    val optionalPattern = """"""
-    val optionalLinks: Map[String, ExpandedGraphObject] = Map()
-    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
-    
-    val connections = Map(
-        "" -> ""
-    )
-    
+      
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004950"
+    override val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004950"
     
     val variablesToSelect = Array(birthBvn, dateOfBirthString, dateOfBirthDate)
 }

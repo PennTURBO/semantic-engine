@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-class ParticipantToEncounterJoin (consenter: Consenter, encounter: Encounter) extends ExpandedGraphObject
+class ParticipantToEncounterJoin (consenter: Consenter, encounter: Encounter) extends GraphObject
 {
     val baseVariableName = "participantUnderInvestigationRole"
     val consenterName = consenter.baseVariableName
@@ -46,11 +46,7 @@ class ParticipantToEncounterJoin (consenter: Consenter, encounter: Encounter) ex
       		
     val namedGraph: String = "http://www.itmat.upenn.edu/biobank/expanded"
 
-    val typeURI: String = "http://purl.obolibrary.org/obo/OBI_0000097"
-    val variablesToSelect: Array[String] = Array(consenterName, encounterName)
-    val connections: Map[String, String] = Map()
+    override val typeURI: String = "http://purl.obolibrary.org/obo/OBI_0000097"
     
-    val optionalPattern = """"""
-    val optionalLinks: Map[String, ExpandedGraphObject] = Map()
-    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
+    val variablesToSelect: Array[String] = Array(consenterName, encounterName)
 }

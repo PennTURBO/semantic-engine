@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-class ConsenterIdentifier (consenter:Consenter) extends ExpandedGraphObject
+class ConsenterIdentifier (consenter:Consenter) extends GraphObject
 {
     val baseVariableName = "consenterCrid"
     val consenterBvn = consenter.baseVariableName
@@ -43,18 +43,16 @@ class ConsenterIdentifier (consenter:Consenter) extends ExpandedGraphObject
           ?$instantiation obo:OBI_0000293 ?$dataset .
           
       """
-    val optionalPattern = """"""
+    
       
-    val optionalLinks: Map[String, ExpandedGraphObject] = Map()
-    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
+    
+    
 
-    val connections = Map(
-      "" -> ""
-    )
+    
     
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    val typeURI = """http://transformunify.org/ontologies/TURBO_0000503"""
+    override val typeURI = """http://transformunify.org/ontologies/TURBO_0000503"""
     
     val variablesToSelect = Array(consenterBvn, valuesKey, registryKey)
 }

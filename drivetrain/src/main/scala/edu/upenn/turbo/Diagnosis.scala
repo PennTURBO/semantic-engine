@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-class Diagnosis (healthcareEncounter:HealthcareEncounter) extends ExpandedGraphObject
+class Diagnosis (healthcareEncounter:HealthcareEncounter) extends GraphObject
 {
     val baseVariableName = "diagnosis"
     val encounterVariableName = healthcareEncounter.baseVariableName
@@ -31,17 +31,10 @@ class Diagnosis (healthcareEncounter:HealthcareEncounter) extends ExpandedGraphO
         ?$baseVariableName obo:BFO_0000050 ?$dataset .
     		
       """
-      val optionalPattern = """"""
-      val optionalLinks: Map[String, ExpandedGraphObject] = Map()
-      val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
-      
-      val connections = Map(
-          "" -> ""
-      )
       
       val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000073"
+      override val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000073"
       
       val variablesToSelect = Array(encounterVariableName, valuesKey, registryKey)
 }

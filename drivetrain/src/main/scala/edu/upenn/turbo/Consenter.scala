@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-class Consenter extends ExpandedGraphObject
+class Consenter extends GraphObject
 {
     val baseVariableName = "part"
     val birthVariableName = "birth"
@@ -29,26 +29,19 @@ class Consenter extends ExpandedGraphObject
           
       """
 
-    val optionalPattern = """"""
-          
-    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map(
+    override val mandatoryLinks: Map[String, GraphObject] = Map(
         "Identifier" -> new ConsenterIdentifier(this)
     )
 
-    val optionalLinks = Map(
+    override val optionalLinks = Map(
         "GenderIdentityDatum" -> new GenderIdentityDatum(this), 
         "RaceIdentityDatum" -> new RaceIdentityDatum(this), 
         "DateOfBirthDatum" -> new DateOfBirthDatum(this)
     )
-    
-    val connections = Map(
-        "http://transformunify.org/ontologies/OGMS_0000097" -> "http://purl.obolibrary.org/obo/RO_0000056",
-        "http://transformunify.org/ontologies/TURBO_0000527" -> "http://purl.obolibrary.org/obo/RO_0000056"
-    )
-    
+
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    val typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
+    override val typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
     
     val variablesToSelect = Array(baseVariableName)
 }

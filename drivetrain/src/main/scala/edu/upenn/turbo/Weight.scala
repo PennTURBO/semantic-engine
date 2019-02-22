@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-class Weight (encounter:Encounter) extends ExpandedGraphObject
+class Weight (encounter:Encounter) extends GraphObject
 {
     val baseVariableName = "weightAssay"
     val encounterVariableName = encounter.baseVariableName
@@ -33,17 +33,10 @@ class Weight (encounter:Encounter) extends ExpandedGraphObject
         ?$dataset a obo:IAO_0000100 .
     		
       """
-      val optionalPattern = """"""
-      val optionalLinks: Map[String, ExpandedGraphObject] = Map()
-      val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
-      
-      val connections = Map(
-          "" -> ""
-      )
       
       val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
+      override val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
       
       val variablesToSelect = Array(encounterVariableName, valuesKey)
 }

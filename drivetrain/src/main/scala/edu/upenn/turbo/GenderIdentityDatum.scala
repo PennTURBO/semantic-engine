@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-class GenderIdentityDatum(consenter:Consenter) extends ExpandedGraphObject
+class GenderIdentityDatum(consenter:Consenter) extends GraphObject
 {
     val baseVariableName = "gid"
     val consenterBvn = consenter.baseVariableName
@@ -20,17 +20,14 @@ class GenderIdentityDatum(consenter:Consenter) extends ExpandedGraphObject
           ?$dataset a obo:IAO_0000100 .
           
       """
-    val optionalPattern = """"""
-    val optionalLinks: Map[String, ExpandedGraphObject] = Map()
-    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
-    
-    val connections = Map(
-      "" -> ""
-    )
-    
+  
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    val typeURI = s"""values ?genderIdentityType {obo:OMRSE_00000133 obo:OMRSE_00000138 obo:OMRSE_00000141}"""
+    override val typeURI = s"""values ?genderIdentityType {
+                                      obo:OMRSE_00000133 
+                                      obo:OMRSE_00000138 
+                                      obo:OMRSE_00000141
+                                    }"""
     
     val variablesToSelect = Array(genderIdentityType, genderIdentityValue)
 }

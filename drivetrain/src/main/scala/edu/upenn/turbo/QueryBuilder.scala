@@ -67,21 +67,22 @@ class QueryBuilder extends Query with IRIConstructionRules
     {
         for (a <- buildTypes)
         {
-            val dependencyConversions = a.expandedVariableShortcutDependencies
-            val bindAsConversions = a.expandedVariableShortcutBindings
-            for ((rule,list) <- a.variableExpansions)
+            val expansionRules = a.expansionRules
+            for (expansionRule <- expansionRules)
             {
-                for (element <- list)
-                {
-                    var thisBind = rule.replaceAll("replacement",element)
-                                        .replaceAll("localUUID",localUUID)
-                                        .replaceAll("globalUUID",globalUUID)
-                                        .replaceAll("mainExpansionTypeVariableName",a.baseVariableName)
-                    if (thisBind.contains("dependent")) thisBind = thisBind.replaceAll("dependent",dependencyConversions(element))
-                    if (thisBind.contains("original")) thisBind = thisBind.replaceAll("original",bindAsConversions(element))
-                    thisBind = thisBind.replaceAll("instantiationPlaceholder","\""+a.instantiation+"\"")
-                    bindClause += thisBind+"\n"
-                }
+                val rule = expansionRule.rule
+                val shortcutVariable = expansionRule.shortcutVariableName
+                val expandedVariable = expansionRule.expandedVariableName
+                val dependent = expansionRule.dependent
+                
+                var thisBind = rule.replaceAll("replacement",expandedVariable)
+                                    .replaceAll("localUUID",localUUID)
+                                    .replaceAll("globalUUID",globalUUID)
+                                    .replaceAll("mainExpansionTypeVariableName",a.baseVariableName)
+                if (thisBind.contains("dependent")) thisBind = thisBind.replaceAll("dependent",dependent)
+                if (thisBind.contains("original")) thisBind = thisBind.replaceAll("original",shortcutVariable)
+                thisBind = thisBind.replaceAll("instantiationPlaceholder","\""+a.instantiation+"\"")
+                bindClause += thisBind+"\n"
             }
             bindClause += a.appendToBind+"\n"
         }

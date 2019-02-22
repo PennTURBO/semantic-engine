@@ -21,15 +21,15 @@ trait IRIConstructionRules
     
     val MD5GlobalRandomWithOriginal: String = """BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",
                                 md5(CONCAT("replacement","globalUUID", str(?original))))) AS ?replacement)"""
+    
+    val MD5GlobalRandomWithDependent: String = """BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/",
+                                md5(CONCAT("replacement", "globalUUID", str(?dependent))))) AS ?replacement)"""
 
     val StringToURI: String = """BIND(uri(?original) AS ?replacement)"""
     
     val InstantiationStringToURI: String = """BIND(uri(instantiationPlaceholder) AS ?replacement)"""
 
     val URIToString: String = """BIND(str(?original) AS ?replacement)"""
-
-    val DatasetIRI: String = """BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/",
-                                md5(CONCAT("replacement", "globalUUID", str(?shortcutDatasetTitle))))) AS ?replacement)"""
 
     val BiologicalSexIRI: String = """BIND(IF(BOUND(?dependent), uri(?dependent), obo:OMRSE_00000133) AS ?replacement)"""
 

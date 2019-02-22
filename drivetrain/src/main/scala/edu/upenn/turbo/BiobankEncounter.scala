@@ -25,7 +25,7 @@ class BiobankEncounter extends Encounter
 
       """
 
-    val optionalPattern = s"""
+    override val optionalPattern = s"""
       
       ?$encounterDate turbo:TURBO_0006511 ?$dateOfBiobankEncounterDateValue .
       ?$encounterDate turbo:TURBO_0006512 ?$dateOfBiobankEncounterStringValue .
@@ -34,21 +34,17 @@ class BiobankEncounter extends Encounter
 
         """
 
-    val optionalLinks = Map(
+    override val optionalLinks = Map(
         "BMI" -> new BMI(this), "Height" -> new Height(this), "Weight" -> new Weight(this)
     )
 
-    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map(
+    override val mandatoryLinks: Map[String, GraphObject] = Map(
         "Identifier" -> new BiobankEncounterIdentifier(this)
-    )
-    
-    val connections = Map(
-        "" -> ""
     )
     
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
+    override val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
     val variablesToSelect = Array(baseVariableName)
 }

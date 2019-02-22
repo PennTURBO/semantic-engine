@@ -13,7 +13,8 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
     val diagnosisInstance = healthcareEncounter.optionalLinks("Diagnosis").asInstanceOf[Diagnosis]
     val prescriptionInstance = healthcareEncounter.optionalLinks("Prescription").asInstanceOf[Prescription]
 
-    val instantiation = newInstantiation
+    override val instantiation = newInstantiation
+
     val baseVariableName = "shortcutHealthcareEncounter"
     val valuesKey = "shortcutHealthcareEncounterIdValue"
     val registryKey = "shortcutHealthcareEncounterRegistryString"
@@ -79,7 +80,7 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
           		{
           		    ?$baseVariableName obo:RO_0002234 ?$prescription .
           		    ?$prescription a obo:PDRO_0000001 .
-          		    ?$prescription turbo:TURBO_0005601  ?medicationSymbolValue .
+          		    ?$prescription turbo:TURBO_0005601  ?$medicationSymbolValue .
           		    
           		    optional
           		    {
@@ -97,7 +98,7 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
           	  }
           		optional 
           		{
-          			?$baseVariableName turbo:TURBO_0000645 ?$dateOfHealthcareEncounterStringValue .
+          			?$baseVariableName turbo:TURBO_0000645 ?$dateOfHealthcareEncounterDateValue .
           		}
           		optional 
           		{
@@ -115,29 +116,25 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
               {
                 ?$baseVariableName turbo:TURBO_0010002 ?$consenterRegistry .
                 ?$baseVariableName turbo:TURBO_0010000 ?$consenterSymbol .
-                ?$baseVariableName graphBuilder:linksToConsenterURI ?$consenterSymbol .
+                ?$baseVariableName turbo:ScHcEnc2UnexpandedConsenter ?$consenterSymbol .
               }
             
-      """
-
-    val optionalPattern = """"""
-                
-    val connections = Map("" -> "")
+      """  
     
     val namedGraph = newNamedGraph
     
-    val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
+    override val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
     
     val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
 
     val variableExpansions = LinkedHashMap(
                               StringToURI -> Array(healthcareEncounterIdentifier.registryKey, prescriptionInstance.mappedMedicationTerm, 
                                                    diagnosisInstance.registryKey),
-                              InstantiationStringToURI -> Array("instantiationKey"),
+                              InstantiationStringToURI -> Array(healthcareEncounterIdentifier.instantiationKey),
                               URIToString -> Array(healthcareEncounter.shortcutName),
                               MD5GlobalRandom -> Array(healthcareEncounter.baseVariableName),
                               MD5GlobalRandomWithOriginal -> Array(join.consenterName),
-                              DatasetIRI -> Array(healthcareEncounterIdentifier.dataset),
+                              MD5GlobalRandomWithDependent -> Array(healthcareEncounterIdentifier.dataset),
                               RandomUUID -> Array(healthcareEncounterIdentifier.baseVariableName, healthcareEncounter.encounterDate, 
                                                   healthcareEncounter.encounterStart, healthcareEncounterIdentifier.encounterRegistryDenoter, 
                                                   healthcareEncounterIdentifier.encounterSymbol),
@@ -148,9 +145,9 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
                                                                               prescriptionInstance.prescriptionCrid, prescriptionInstance.medicationSymbol),
                               BindAs -> Array(BMI.valuesKey, height.valuesKey, weight.valuesKey, healthcareEncounter.dateOfHealthcareEncounterStringValue,
                                               healthcareEncounterIdentifier.valuesKey, healthcareEncounter.dateOfHealthcareEncounterDateValue, 
-                                              prescriptionInstance.medicationOrderName, diagnosisInstance.registryKey, diagnosisInstance.primaryDiagnosis,  
+                                              prescriptionInstance.medicationOrderName, diagnosisInstance.primaryDiagnosis, join.encounterName,
                                               diagnosisInstance.valuesKey, diagnosisInstance.diagnosisSequence, healthcareEncounterIdentifier.valuesKey,
-                                              join.encounterName),
+                                              diagnosisInstance.diagnosisCodeRegistryString, prescriptionInstance.medicationSymbolValue),
                               BindIfBoundDataset -> Array(healthcareEncounter.dataset)
                             )
 
@@ -167,7 +164,8 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
                                           diagnosisInstance.baseVariableName -> diagnosis,
                                           prescriptionInstance.baseVariableName -> prescription,
                                           prescriptionInstance.prescriptionCrid -> prescription,
-                                          prescriptionInstance.medicationSymbol -> prescription
+                                          prescriptionInstance.medicationSymbol -> prescription,
+                                          healthcareEncounterIdentifier.dataset -> datasetTitle
                                         )
 
     val expandedVariableShortcutBindings = Map(
@@ -188,18 +186,15 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
                                           diagnosisInstance.primaryDiagnosis -> primaryDiagnosis,
                                           diagnosisInstance.diagnosisCode -> diagnosisCode,
                                           diagnosisInstance.diagnosisSequence -> diagnosisSequence,
-                                          diagnosisInstance.registryKey -> registryKey,
+                                          diagnosisInstance.registryKey -> diagnosisCodeRegistryURI,
                                           join.encounterName -> healthcareEncounter.baseVariableName,
                                           join.consenterName -> consenterURI
                                         )
                                         
-    val appendToBind = """
+    override val appendToBind = """
         BIND(IF (?diagnosisRegistry = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat("http://purl.bioontology.org/ontology/ICD9CM/", ?shortcutDiagnosisCode)), ?unbound) AS ?icd9term)
         BIND(IF (?diagnosisRegistry = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat("http://purl.bioontology.org/ontology/ICD10CM/", ?shortcutDiagnosisCode)), ?unbound) AS ?icd10term)
         BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?concatIcdTerm)
         BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?concatIcdTerm) as ?concatIcdTerm)
       """
-    
-    val optionalLinks: Map[String, ExpandedGraphObject] = Map()
-    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
 }

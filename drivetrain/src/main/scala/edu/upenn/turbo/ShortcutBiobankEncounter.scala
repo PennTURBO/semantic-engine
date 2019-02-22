@@ -11,7 +11,8 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String,
     val height = biobankEncounter.optionalLinks("Height").asInstanceOf[Height]
     val weight = biobankEncounter.optionalLinks("Weight").asInstanceOf[Weight]
 
-    val instantiation = newInstantiation
+    override val instantiation = newInstantiation
+    
     val instantiationKey = "instantiation"
     val baseVariableName = "shortcutBiobankEncounter"
     
@@ -62,17 +63,13 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String,
           {
             ?$baseVariableName turbo:TURBO_0010012 ?$consenterRegistry .
             ?$baseVariableName turbo:TURBO_0010010 ?$consenterSymbol .
-            ?$baseVariableName graphBuilder:linksToConsenterURI ?$consenterURI .
+            ?$baseVariableName turbo:ScBbEnc2UnexpandedConsenter ?$consenterURI .
           }
       """
-    
-    val optionalPattern = """"""
-    
-    val connections = Map("" -> "")
-    
+
     val namedGraph = newNamedGraph
     
-    val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
+    override val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
     val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
 
@@ -82,7 +79,7 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String,
                               URIToString -> Array(biobankEncounter.shortcutName),
                               MD5GlobalRandom -> Array(biobankEncounter.baseVariableName),
                               MD5GlobalRandomWithOriginal -> Array(join.consenterName),
-                              DatasetIRI -> Array(biobankEncounterIdentifier.dataset),
+                              MD5GlobalRandomWithDependent -> Array(biobankEncounterIdentifier.dataset),
                               RandomUUID -> Array(biobankEncounterIdentifier.baseVariableName, biobankEncounter.encounterDate,
                                                   biobankEncounter.encounterStart, biobankEncounterIdentifier.encounterRegistryDenoter, 
                                                   biobankEncounterIdentifier.encounterSymbol),
@@ -104,7 +101,8 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String,
                                           height.datumKey -> heightValue,
                                           weight.valueSpecification -> weightValue,
                                           weight.baseVariableName -> weightValue,
-                                          weight.datumKey -> weightValue
+                                          weight.datumKey -> weightValue,
+                                          biobankEncounterIdentifier.dataset -> datasetTitle
                                         )
 
     val expandedVariableShortcutBindings = Map(
@@ -122,8 +120,5 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String,
                                           join.consenterName -> consenterURI
                                           )
                                           
-    val appendToBind = """"""
-    
-    val optionalLinks: Map[String, ExpandedGraphObject] = Map()
-    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
+      
 }

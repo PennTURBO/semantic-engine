@@ -4,8 +4,6 @@ class HealthcareEncounter extends Encounter
 {
     val baseVariableName = "healthcareEncounter"
     val encounterDate = "healthcareEncounterDate"
-    val linkedConsenterRegistry = "consenterRegistry"
-    val linkedConsenterSymbol = "consenterSymbol"
     
     val shortcutName = "shortcutHealthcareEncounterName"
     
@@ -28,7 +26,7 @@ class HealthcareEncounter extends Encounter
 
       """
 
-    val optionalPattern = s"""
+    override val optionalPattern = s"""
       
       ?$encounterDate turbo:TURBO_0006512 ?$dateOfHealthcareEncounterStringValue .
   		?$encounterDate turbo:TURBO_0006511 ?$dateOfHealthcareEncounterDateValue .
@@ -37,7 +35,7 @@ class HealthcareEncounter extends Encounter
 
         """
 
-    val optionalLinks = Map(
+    override val optionalLinks = Map(
         "BMI" -> new BMI(this), 
         "Height" -> new Height(this), 
         "Weight" -> new Weight(this), 
@@ -45,17 +43,13 @@ class HealthcareEncounter extends Encounter
         "Prescription" -> new Prescription(this)
     )
 
-    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map(
+    override val mandatoryLinks: Map[String, GraphObject] = Map(
         "Identifier" -> new HealthcareEncounterIdentifier(this)
-    )
-    
-    val connections = Map(
-        "" -> ""
     )
     
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
+    override val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
     
     val variablesToSelect = Array(baseVariableName)
 }

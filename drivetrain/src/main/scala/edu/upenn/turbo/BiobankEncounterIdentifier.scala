@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-class BiobankEncounterIdentifier (biobankEncounter:BiobankEncounter) extends ExpandedGraphObject
+class BiobankEncounterIdentifier (biobankEncounter:BiobankEncounter) extends GraphObject
 {
     val baseVariableName = "biobankEncounterCrid"
     val biobankEncounterBvn = biobankEncounter.baseVariableName
@@ -41,17 +41,15 @@ class BiobankEncounterIdentifier (biobankEncounter:BiobankEncounter) extends Exp
           ?$instantiationKey obo:OBI_0000293 ?$dataset .
           
       """
-    val optionalPattern = """"""
-    val optionalLinks: Map[String, ExpandedGraphObject] = Map()
-    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
+    
+    
+    
 
-    val connections = Map(
-      "" -> ""
-    )
+    
     
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    val typeURI = """http://transformunify.org/ontologies/TURBO_0000533"""
+    override val typeURI = """http://transformunify.org/ontologies/TURBO_0000533"""
     
     val variablesToSelect = Array(biobankEncounterBvn, valuesKey, registryKey)
 }

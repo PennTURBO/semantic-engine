@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-class RaceIdentityDatum(consenter:Consenter) extends ExpandedGraphObject
+class RaceIdentityDatum(consenter:Consenter) extends GraphObject
 {
     val baseVariableName = "rid"
     val consenterBvn = consenter.baseVariableName
@@ -23,17 +23,10 @@ class RaceIdentityDatum(consenter:Consenter) extends ExpandedGraphObject
           ?$dataset a obo:IAO_0000100 .
           
       """
-    val optionalPattern = """"""
-    val optionalLinks: Map[String, ExpandedGraphObject] = Map()
-    val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
 
-    val connections = Map(
-      "" -> ""
-    )
-    
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    val typeURI = s"""values ?raceIdentityType {}"""
+    override val typeURI = s"""values ?raceIdentityType {}"""
     
     val variablesToSelect = Array(consenterBvn, raceIdentityType, raceIdentityValue)
 }

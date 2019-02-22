@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-class BMI (encounter:Encounter) extends ExpandedGraphObject
+class BMI (encounter:Encounter) extends GraphObject
 {
     val baseVariableName = "BMI"
     val encounterDate = encounter.encounterDate
@@ -27,18 +27,16 @@ class BMI (encounter:Encounter) extends ExpandedGraphObject
     		
       """
 
-    val optionalPattern = """"""
+    
   
-      val optionalLinks: Map[String, ExpandedGraphObject] = Map()
-      val mandatoryLinks: Map[String, ExpandedGraphObject] = Map()
       
-      val connections = Map(
-          "" -> ""
-      )
+      
+      
+      
       
       val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004340"
+      override val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004340"
       
       val variablesToSelect = Array(encounterDate, valuesKey)
 }
