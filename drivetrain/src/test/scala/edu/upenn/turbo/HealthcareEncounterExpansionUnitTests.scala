@@ -14,7 +14,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
     var cxn: RepositoryConnection = null
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
-    val clearDatabaseAfterRun: Boolean = true
+    val clearDatabaseAfterRun: Boolean = false
     val expand = new Expander
     val objectOrientedExpander = new ObjectOrientedExpander
     

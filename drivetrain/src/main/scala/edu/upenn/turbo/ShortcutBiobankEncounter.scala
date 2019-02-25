@@ -72,53 +72,37 @@ class ShortcutBiobankEncounter(newInstantiation: String, newNamedGraph: String,
     override val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
     val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
-
-    val variableExpansions = LinkedHashMap(
-                              StringToURI -> Array(biobankEncounterIdentifier.registryKey),
-                              InstantiationStringToURI -> Array(biobankEncounterIdentifier.instantiationKey),
-                              URIToString -> Array(biobankEncounter.shortcutName),
-                              MD5GlobalRandom -> Array(biobankEncounter.baseVariableName),
-                              MD5GlobalRandomWithOriginal -> Array(join.consenterName),
-                              MD5GlobalRandomWithDependent -> Array(biobankEncounterIdentifier.dataset),
-                              RandomUUID -> Array(biobankEncounterIdentifier.baseVariableName, biobankEncounter.encounterDate,
-                                                  biobankEncounter.encounterStart, biobankEncounterIdentifier.encounterRegistryDenoter, 
-                                                  biobankEncounterIdentifier.encounterSymbol),
-                              BindIfBoundRandomUUID -> Array(BMI.baseVariableName, BMI.valueSpecification, height.valueSpecification, 
-                                                            height.baseVariableName, height.datumKey, weight.valueSpecification, 
-                                                            weight.baseVariableName, weight.datumKey),
-                              BindAs -> Array(BMI.bmiValue, height.heightValue, weight.weightValue, biobankEncounter.dateOfBiobankEncounterStringValue,
-                                              biobankEncounterIdentifier.valuesKey, biobankEncounterIdentifier.datasetTitle, 
-                                              biobankEncounter.dateOfBiobankEncounterDateValue, join.encounterName),
-                              BindIfBoundDataset -> Array(biobankEncounter.dataset)
-                            )
-
-    val expandedVariableShortcutDependencies = Map( 
-                                          biobankEncounter.dataset -> dateOfBiobankEncounterStringValue, 
-                                          BMI.baseVariableName -> bmiValue,
-                                          BMI.valueSpecification -> bmiValue,
-                                          height.valueSpecification -> heightValue,
-                                          height.baseVariableName -> heightValue,
-                                          height.datumKey -> heightValue,
-                                          weight.valueSpecification -> weightValue,
-                                          weight.baseVariableName -> weightValue,
-                                          weight.datumKey -> weightValue,
-                                          biobankEncounterIdentifier.dataset -> datasetTitle
-                                        )
-
-    val expandedVariableShortcutBindings = Map(
-                                          biobankEncounterIdentifier.registryKey -> registryKey, 
-                                          biobankEncounter.shortcutName -> baseVariableName,
-                                          biobankEncounterIdentifier.instantiationKey -> instantiationKey,
-                                          BMI.bmiValue -> bmiValue,
-                                          height.heightValue -> heightValue,
-                                          weight.weightValue -> weightValue,
-                                          biobankEncounter.dateOfBiobankEncounterStringValue -> dateOfBiobankEncounterStringValue,
-                                          biobankEncounter.dateOfBiobankEncounterDateValue -> dateOfBiobankEncounterDateValue,
-                                          biobankEncounterIdentifier.valuesKey -> valuesKey,
-                                          biobankEncounterIdentifier.datasetTitle -> datasetTitle,
-                                          join.encounterName -> biobankEncounter.baseVariableName,
-                                          join.consenterName -> consenterURI
-                                          )
-                                          
-      
+    
+    override val expansionRules = Array(
+        
+        ExpansionFromShortcutValue.create(biobankEncounterIdentifier.registryKey, registryKey, StringToURI),
+        ExpansionFromShortcutValue.create(biobankEncounterIdentifier.instantiationKey, instantiationKey, InstantiationStringToURI),
+        ExpansionFromShortcutValue.create(biobankEncounter.shortcutName, baseVariableName, URIToString),
+        ExpansionFromShortcutValue.create(join.consenterName, consenterURI, MD5GlobalRandomWithOriginal),
+        ExpansionFromShortcutValue.create(BMI.bmiValue, bmiValue, BindAs),
+        ExpansionFromShortcutValue.create(height.heightValue, heightValue, BindAs),
+        ExpansionFromShortcutValue.create(weight.weightValue, weightValue, BindAs),
+        ExpansionFromShortcutValue.create(biobankEncounter.dateOfBiobankEncounterStringValue, dateOfBiobankEncounterStringValue, BindAs),
+        ExpansionFromShortcutValue.create(biobankEncounter.dateOfBiobankEncounterDateValue, dateOfBiobankEncounterDateValue, BindAs),
+        ExpansionFromShortcutValue.create(biobankEncounterIdentifier.valuesKey, valuesKey, BindAs),
+        ExpansionFromShortcutValue.create(biobankEncounterIdentifier.datasetTitle, datasetTitle, BindAs),
+       
+        ExpansionOfIntermediateNode.create(biobankEncounter.baseVariableName, MD5GlobalRandom),
+        ExpansionOfIntermediateNode.create(biobankEncounterIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
+        ExpansionOfIntermediateNode.create(biobankEncounterIdentifier.baseVariableName, RandomUUID),
+        ExpansionOfIntermediateNode.create(biobankEncounter.encounterDate, RandomUUID),
+        ExpansionOfIntermediateNode.create(biobankEncounter.encounterStart, RandomUUID),
+        ExpansionOfIntermediateNode.create(biobankEncounterIdentifier.encounterRegistryDenoter, RandomUUID),
+        ExpansionOfIntermediateNode.create(biobankEncounterIdentifier.encounterSymbol, RandomUUID),
+        ExpansionOfIntermediateNode.create(BMI.baseVariableName, BindIfBoundRandomUUID, bmiValue),
+        ExpansionOfIntermediateNode.create(BMI.valueSpecification, BindIfBoundRandomUUID, bmiValue),
+        ExpansionOfIntermediateNode.create(height.baseVariableName, BindIfBoundRandomUUID, heightValue),
+        ExpansionOfIntermediateNode.create(height.valueSpecification, BindIfBoundRandomUUID, heightValue),
+        ExpansionOfIntermediateNode.create(height.datumKey, BindIfBoundRandomUUID, heightValue),
+        ExpansionOfIntermediateNode.create(weight.baseVariableName, BindIfBoundRandomUUID, weightValue),
+        ExpansionOfIntermediateNode.create(weight.valueSpecification, BindIfBoundRandomUUID, weightValue),
+        ExpansionOfIntermediateNode.create(weight.datumKey, BindIfBoundRandomUUID, weightValue),
+        ExpansionOfIntermediateNode.create(biobankEncounter.dataset, BindIfBoundDataset, dateOfBiobankEncounterStringValue)
+        
+    )
 }

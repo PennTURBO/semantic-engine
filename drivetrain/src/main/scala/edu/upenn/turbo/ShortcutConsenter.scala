@@ -75,7 +75,7 @@ class ShortcutConsenter(newInstantiation: String, newNamedGraph: String, consent
         
         ExpansionFromShortcutValue.create(raceIdentityDatum.raceIdentityValue, raceIdentityValue, BindAs),
         ExpansionFromShortcutValue.create(dateOfBirthDatum.dateOfBirthString, dateOfBirthString, BindAs),
-        ExpansionFromShortcutValue.create(dateOfBirthDatum.dateOfBirthDate, dateOfBirthString, BindAs),
+        ExpansionFromShortcutValue.create(dateOfBirthDatum.dateOfBirthDate, dateOfBirthDate, BindAs),
         ExpansionFromShortcutValue.create(consenterIdentifier.valuesKey, valuesKey, BindAs),
         ExpansionFromShortcutValue.create(consenterIdentifier.registryKey, registryKey, StringToURI),
         ExpansionFromShortcutValue.create(genderIdentityDatum.genderIdentityValue, genderIdentityValue, BindAs),
@@ -103,48 +103,6 @@ class ShortcutConsenter(newInstantiation: String, newNamedGraph: String, consent
         ExpansionOfIntermediateNode.create(dateOfBirthDatum.dataset, BindIfBoundDataset, dateOfBirthString),
         ExpansionOfIntermediateNode.create(raceIdentityDatum.dataset, BindIfBoundDataset, raceIdentityType),
         ExpansionOfIntermediateNode.create(genderIdentityDatum.dataset, BindIfBoundDataset, genderIdentityValue)
+        
         )
-
-    val variableExpansions = LinkedHashMap(
-                              StringToURI -> Array(consenterIdentifier.registryKey, raceIdentityDatum.raceIdentityType),
-                              InstantiationStringToURI -> Array(consenterIdentifier.instantiation),
-                              URIToString -> Array(consenter.shortcutName),
-                              MD5LocalRandom -> Array(consenter.biosexKey, consenter.birthVariableName, consenter.heightKey, consenter.weightKey,
-                                                      consenter.adiposeKey),
-                              MD5GlobalRandom -> Array(consenter.baseVariableName),
-                              MD5GlobalRandomWithDependent -> Array(consenterIdentifier.dataset),
-                              RandomUUID -> Array(consenterIdentifier.baseVariableName, consenterIdentifier.consenterSymbol, consenterIdentifier.consenterRegistry),
-                              BindIfBoundMD5LocalRandom -> Array(genderIdentityDatum.baseVariableName, raceIdentityDatum.baseVariableName, 
-                                                                 raceIdentityDatum.raceIdentificationProcess, dateOfBirthDatum.baseVariableName),
-                              BiologicalSexIRI -> Array(genderIdentityDatum.genderIdentityType),
-                              BindIfBoundDataset -> Array(dateOfBirthDatum.dataset, raceIdentityDatum.dataset, genderIdentityDatum.dataset),
-                              BindAs -> Array(dateOfBirthDatum.dateOfBirthDate, raceIdentityDatum.raceIdentityValue, genderIdentityDatum.genderIdentityValue, 
-                                              dateOfBirthDatum.dateOfBirthString, consenterIdentifier.valuesKey, consenterIdentifier.datasetTitle)
-                            )
-
-    val expandedVariableShortcutDependencies = Map( 
-                                          genderIdentityDatum.baseVariableName -> genderIdentityValue, 
-                                          raceIdentityDatum.baseVariableName -> raceIdentityType, 
-                                          raceIdentityDatum.raceIdentificationProcess -> raceIdentityType, 
-                                          dateOfBirthDatum.dataset -> dateOfBirthString, 
-                                          raceIdentityDatum.dataset -> raceIdentityType, 
-                                          genderIdentityDatum.dataset -> genderIdentityValue,
-                                          dateOfBirthDatum.baseVariableName -> dateOfBirthString,
-                                          genderIdentityDatum.genderIdentityType -> genderIdentityType,
-                                          consenterIdentifier.dataset -> datasetTitle
-                                        )
-
-    val expandedVariableShortcutBindings = Map(
-                                          raceIdentityDatum.raceIdentityValue -> raceIdentityValue,
-                                          dateOfBirthDatum.dateOfBirthString -> dateOfBirthString,
-                                          dateOfBirthDatum.dateOfBirthDate -> dateOfBirthDate,
-                                          consenterIdentifier.valuesKey -> valuesKey,
-                                          consenterIdentifier.registryKey -> registryKey, 
-                                          genderIdentityDatum.genderIdentityValue -> genderIdentityValue, 
-                                          raceIdentityDatum.raceIdentityType -> raceIdentityType,
-                                          consenter.shortcutName -> shortcutName,
-                                          consenterIdentifier.instantiation -> instantiationKey,
-                                          consenterIdentifier.datasetTitle -> datasetTitle
-                                        )
-     
 }

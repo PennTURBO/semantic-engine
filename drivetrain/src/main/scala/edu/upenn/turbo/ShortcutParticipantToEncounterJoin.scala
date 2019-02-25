@@ -19,10 +19,9 @@ class ShortcutParticipantToEncounterJoin(expandedJoin: ParticipantToEncounterJoi
     
     val variablesToSelect = Array(consenterName, encounterName)
     
-    val variableExpansions = LinkedHashMap(
-                                RandomUUID -> Array(expandedJoin.baseVariableName)
-                             )
-    
-    val expandedVariableShortcutDependencies: Map[String, String] = Map()
-    val expandedVariableShortcutBindings: Map[String, String] = Map()
+    override val expansionRules: Array[ExpansionRule] = Array(
+        
+             ExpansionOfIntermediateNode.create(expandedJoin.baseVariableName, RandomUUID)  
+             
+    )
 }

@@ -19,7 +19,7 @@ class ObjectOrientedExpander extends ProjectwideGlobals
           val partipantExpansion = buildParticipantExpansionQuery(instantiation, globalUUID, namedGraph)
           val biobankEncounterExpansion = buildBiobankEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
           val healthcareEncounterExpansion = buildHealthcareEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
-          println(partipantExpansion)
+          println(healthcareEncounterExpansion)
           update.updateSparql(cxn, partipantExpansion)
           update.updateSparql(cxn, biobankEncounterExpansion)
           update.updateSparql(cxn, healthcareEncounterExpansion)

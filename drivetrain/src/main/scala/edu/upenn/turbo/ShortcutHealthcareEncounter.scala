@@ -126,6 +126,50 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
     override val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
     
     val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
+    
+    override val expansionRules = Array(
+        
+        ExpansionFromShortcutValue.create(healthcareEncounterIdentifier.registryKey, registryKey, StringToURI),
+        ExpansionFromShortcutValue.create(prescriptionInstance.mappedMedicationTerm, mappedMedicationTerm, StringToURI),
+        ExpansionFromShortcutValue.create(diagnosisInstance.registryKey, diagnosisCodeRegistryURI, StringToURI),
+        ExpansionFromShortcutValue.create(healthcareEncounterIdentifier.instantiationKey, instantiation, InstantiationStringToURI),
+        ExpansionFromShortcutValue.create(healthcareEncounter.shortcutName, baseVariableName, URIToString),
+        ExpansionFromShortcutValue.create(join.consenterName, consenterURI, MD5GlobalRandomWithOriginal),
+        ExpansionFromShortcutValue.create(BMI.valuesKey, bmiValue, BindAs),
+        ExpansionFromShortcutValue.create(height.valuesKey, heightValue, BindAs),
+        ExpansionFromShortcutValue.create(weight.valuesKey, weightValue, BindAs),
+        ExpansionFromShortcutValue.create(healthcareEncounter.dateOfHealthcareEncounterStringValue, dateOfHealthcareEncounterStringValue, BindAs),
+        ExpansionFromShortcutValue.create(healthcareEncounter.dateOfHealthcareEncounterDateValue, dateOfHealthcareEncounterDateValue, BindAs),
+        ExpansionFromShortcutValue.create(healthcareEncounterIdentifier.valuesKey, valuesKey, BindAs),
+        ExpansionFromShortcutValue.create(prescriptionInstance.medicationOrderName, medicationOrderName, BindAs),
+        ExpansionFromShortcutValue.create(prescriptionInstance.medicationSymbolValue, medicationSymbolValue, BindAs),
+        ExpansionFromShortcutValue.create(diagnosisInstance.primaryDiagnosis, primaryDiagnosis, BindAs),
+        ExpansionFromShortcutValue.create(diagnosisInstance.valuesKey, valuesKey, BindAs),
+        ExpansionFromShortcutValue.create(diagnosisInstance.diagnosisSequence, diagnosisSequence, BindAs),
+        ExpansionFromShortcutValue.create(diagnosisInstance.diagnosisCodeRegistryString, diagnosisCodeRegistryString, BindAs),
+        ExpansionFromShortcutValue.create(diagnosisInstance.diagnosisCode, diagnosisCode, BindAs),
+        
+        ExpansionOfIntermediateNode.create(healthcareEncounter.baseVariableName, MD5GlobalRandom),
+        ExpansionOfIntermediateNode.create(healthcareEncounterIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
+        ExpansionOfIntermediateNode.create(healthcareEncounterIdentifier.baseVariableName, RandomUUID),
+        ExpansionOfIntermediateNode.create(healthcareEncounter.encounterDate, RandomUUID),
+        ExpansionOfIntermediateNode.create(healthcareEncounter.encounterStart, RandomUUID),
+        ExpansionOfIntermediateNode.create(healthcareEncounterIdentifier.encounterRegistryDenoter, RandomUUID),
+        ExpansionOfIntermediateNode.create(healthcareEncounterIdentifier.encounterSymbol, RandomUUID),
+        ExpansionOfIntermediateNode.create(diagnosisInstance.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, diagnosis),
+        ExpansionOfIntermediateNode.create(height.valueSpecification, BindIfBoundMD5LocalRandomWithDependent, heightValue),
+        ExpansionOfIntermediateNode.create(height.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, heightValue),
+        ExpansionOfIntermediateNode.create(height.datumKey, BindIfBoundMD5LocalRandomWithDependent, heightValue),
+        ExpansionOfIntermediateNode.create(weight.valueSpecification, BindIfBoundMD5LocalRandomWithDependent, weightValue),
+        ExpansionOfIntermediateNode.create(weight.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, weightValue),
+        ExpansionOfIntermediateNode.create(weight.datumKey, BindIfBoundMD5LocalRandomWithDependent, weightValue),
+        ExpansionOfIntermediateNode.create(BMI.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, bmiValue),
+        ExpansionOfIntermediateNode.create(BMI.valueSpecification, BindIfBoundMD5LocalRandomWithDependent, bmiValue),
+        ExpansionOfIntermediateNode.create(prescriptionInstance.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, prescription),
+        ExpansionOfIntermediateNode.create(prescriptionInstance.prescriptionCrid, BindIfBoundMD5LocalRandomWithDependent, prescription),
+        ExpansionOfIntermediateNode.create(prescriptionInstance.medicationSymbol, BindIfBoundMD5LocalRandomWithDependent, prescription),
+        ExpansionOfIntermediateNode.create(healthcareEncounter.dataset, BindIfBoundDataset, dateOfHealthcareEncounterStringValue)
+    )
 
     val variableExpansions = LinkedHashMap(
                               StringToURI -> Array(healthcareEncounterIdentifier.registryKey, prescriptionInstance.mappedMedicationTerm, 
