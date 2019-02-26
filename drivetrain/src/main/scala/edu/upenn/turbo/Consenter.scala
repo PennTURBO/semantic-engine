@@ -1,8 +1,8 @@
 package edu.upenn.turbo
 
-class Consenter extends GraphObject
+object Consenter extends GraphObject
 {
-    val baseVariableName = "part"
+    baseVariableName = "part"
     val birthVariableName = "birth"
     val heightKey = "height"
     val weightKey = "weight"
@@ -10,7 +10,7 @@ class Consenter extends GraphObject
     val biosexKey = "biosex"
     val shortcutName = "shortcutPartName"
     
-    val pattern = s"""
+    pattern = s"""
           
           ?$baseVariableName a turbo:TURBO_0000502 .
           ?$baseVariableName obo:RO_0000086 ?$biosexKey .
@@ -29,19 +29,19 @@ class Consenter extends GraphObject
           
       """
 
-    override val mandatoryLinks: Map[String, GraphObject] = Map(
-        "Identifier" -> new ConsenterIdentifier(this)
+    mandatoryLinks = Map(
+        "Identifier" -> ConsenterIdentifier
     )
 
-    override val optionalLinks = Map(
-        "GenderIdentityDatum" -> new GenderIdentityDatum(this), 
-        "RaceIdentityDatum" -> new RaceIdentityDatum(this), 
-        "DateOfBirthDatum" -> new DateOfBirthDatum(this)
+    optionalLinks = Map(
+        "GenderIdentityDatum" -> GenderIdentityDatum, 
+        "RaceIdentityDatum" -> RaceIdentityDatum, 
+        "DateOfBirthDatum" -> DateOfBirthDatum
     )
 
-    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    override val typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
+    typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
     
-    val variablesToSelect = Array(baseVariableName)
+    variablesToSelect = Array(baseVariableName)
 }

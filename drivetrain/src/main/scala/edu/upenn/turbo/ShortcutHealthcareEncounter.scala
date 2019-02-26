@@ -2,20 +2,9 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: String, 
-                                  healthcareEncounter: HealthcareEncounter, join: ShortcutParticipantToEncounterJoin) 
-                                  extends ShortcutGraphObject
+object ShortcutHealthcareEncounter extends ShortcutGraphObject
 {
-    val healthcareEncounterIdentifier = healthcareEncounter.mandatoryLinks("Identifier").asInstanceOf[HealthcareEncounterIdentifier]
-    val BMI = healthcareEncounter.optionalLinks("BMI").asInstanceOf[BMI]
-    val height = healthcareEncounter.optionalLinks("Height").asInstanceOf[Height]
-    val weight = healthcareEncounter.optionalLinks("Weight").asInstanceOf[Weight]
-    val diagnosisInstance = healthcareEncounter.optionalLinks("Diagnosis").asInstanceOf[Diagnosis]
-    val prescriptionInstance = healthcareEncounter.optionalLinks("Prescription").asInstanceOf[Prescription]
-
-    override val instantiation = newInstantiation
-
-    val baseVariableName = "shortcutHealthcareEncounter"
+    baseVariableName = "shortcutHealthcareEncounter"
     val valuesKey = "shortcutHealthcareEncounterIdValue"
     val registryKey = "shortcutHealthcareEncounterRegistryString"
     
@@ -44,7 +33,9 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
     
     val datasetTitle = "datasetTitle"
     
-    val pattern = s"""
+    val instantiationKey = "instantiation"
+    
+    pattern = s"""
           
         ?$baseVariableName a obo:OGMS_0000097 ;
           		turbo:TURBO_0000643  ?$datasetTitle ;
@@ -121,124 +112,63 @@ class ShortcutHealthcareEncounter(newInstantiation: String, newNamedGraph: Strin
             
       """  
     
-    val namedGraph = newNamedGraph
+    typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
     
-    override val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
+    variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
     
-    val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
-    
-    override val expansionRules = Array(
+    expansionRules = Array(
         
-        ExpansionFromShortcutValue.create(healthcareEncounterIdentifier.registryKey, registryKey, StringToURI),
-        ExpansionFromShortcutValue.create(prescriptionInstance.mappedMedicationTerm, mappedMedicationTerm, StringToURI),
-        ExpansionFromShortcutValue.create(diagnosisInstance.registryKey, diagnosisCodeRegistryURI, StringToURI),
-        ExpansionFromShortcutValue.create(healthcareEncounterIdentifier.instantiationKey, instantiation, InstantiationStringToURI),
-        ExpansionFromShortcutValue.create(healthcareEncounter.shortcutName, baseVariableName, URIToString),
-        ExpansionFromShortcutValue.create(join.consenterName, consenterURI, MD5GlobalRandomWithOriginal),
-        ExpansionFromShortcutValue.create(BMI.valuesKey, bmiValue, BindAs),
-        ExpansionFromShortcutValue.create(height.valuesKey, heightValue, BindAs),
-        ExpansionFromShortcutValue.create(weight.valuesKey, weightValue, BindAs),
-        ExpansionFromShortcutValue.create(healthcareEncounter.dateOfHealthcareEncounterStringValue, dateOfHealthcareEncounterStringValue, BindAs),
-        ExpansionFromShortcutValue.create(healthcareEncounter.dateOfHealthcareEncounterDateValue, dateOfHealthcareEncounterDateValue, BindAs),
-        ExpansionFromShortcutValue.create(healthcareEncounterIdentifier.valuesKey, valuesKey, BindAs),
-        ExpansionFromShortcutValue.create(prescriptionInstance.medicationOrderName, medicationOrderName, BindAs),
-        ExpansionFromShortcutValue.create(prescriptionInstance.medicationSymbolValue, medicationSymbolValue, BindAs),
-        ExpansionFromShortcutValue.create(diagnosisInstance.primaryDiagnosis, primaryDiagnosis, BindAs),
-        ExpansionFromShortcutValue.create(diagnosisInstance.valuesKey, valuesKey, BindAs),
-        ExpansionFromShortcutValue.create(diagnosisInstance.diagnosisSequence, diagnosisSequence, BindAs),
-        ExpansionFromShortcutValue.create(diagnosisInstance.diagnosisCodeRegistryString, diagnosisCodeRegistryString, BindAs),
-        ExpansionFromShortcutValue.create(diagnosisInstance.diagnosisCode, diagnosisCode, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounterIdentifier.registryKey, registryKey, StringToURI),
+        ExpansionFromShortcutValue.create(Prescription.mappedMedicationTerm, mappedMedicationTerm, StringToURI),
+        ExpansionFromShortcutValue.create(Diagnosis.registryKey, diagnosisCodeRegistryURI, StringToURI),
+        ExpansionFromShortcutValue.create(HealthcareEncounterIdentifier.instantiationKey, instantiationKey, InstantiationStringToURI),
+        ExpansionFromShortcutValue.create(HealthcareEncounter.shortcutName, baseVariableName, URIToString),
+        ExpansionFromShortcutValue.create(ConsenterToHealthcareEncounterJoin.consenterName, consenterURI, MD5GlobalRandomWithOriginal),
+        ExpansionFromShortcutValue.create(HealthcareEncounterBMI.valuesKey, bmiValue, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounterWeight.valuesKey, heightValue, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounterWeight.valuesKey, weightValue, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounter.dateOfHealthcareEncounterStringValue, dateOfHealthcareEncounterStringValue, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounter.dateOfHealthcareEncounterDateValue, dateOfHealthcareEncounterDateValue, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounterIdentifier.valuesKey, valuesKey, BindAs),
+        ExpansionFromShortcutValue.create(Prescription.medicationOrderName, medicationOrderName, BindAs),
+        ExpansionFromShortcutValue.create(Prescription.medicationSymbolValue, medicationSymbolValue, BindAs),
+        ExpansionFromShortcutValue.create(Diagnosis.primaryDiagnosis, primaryDiagnosis, BindAs),
+        ExpansionFromShortcutValue.create(Diagnosis.valuesKey, valuesKey, BindAs),
+        ExpansionFromShortcutValue.create(Diagnosis.diagnosisSequence, diagnosisSequence, BindAs),
+        ExpansionFromShortcutValue.create(Diagnosis.diagnosisCodeRegistryString, diagnosisCodeRegistryString, BindAs),
+        ExpansionFromShortcutValue.create(Diagnosis.diagnosisCode, diagnosisCode, BindAs),
         
-        ExpansionOfIntermediateNode.create(healthcareEncounter.baseVariableName, MD5GlobalRandom),
-        ExpansionOfIntermediateNode.create(healthcareEncounterIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
-        ExpansionOfIntermediateNode.create(healthcareEncounterIdentifier.baseVariableName, RandomUUID),
-        ExpansionOfIntermediateNode.create(healthcareEncounter.encounterDate, RandomUUID),
-        ExpansionOfIntermediateNode.create(healthcareEncounter.encounterStart, RandomUUID),
-        ExpansionOfIntermediateNode.create(healthcareEncounterIdentifier.encounterRegistryDenoter, RandomUUID),
-        ExpansionOfIntermediateNode.create(healthcareEncounterIdentifier.encounterSymbol, RandomUUID),
-        ExpansionOfIntermediateNode.create(diagnosisInstance.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, diagnosis),
-        ExpansionOfIntermediateNode.create(height.valueSpecification, BindIfBoundMD5LocalRandomWithDependent, heightValue),
-        ExpansionOfIntermediateNode.create(height.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, heightValue),
-        ExpansionOfIntermediateNode.create(height.datumKey, BindIfBoundMD5LocalRandomWithDependent, heightValue),
-        ExpansionOfIntermediateNode.create(weight.valueSpecification, BindIfBoundMD5LocalRandomWithDependent, weightValue),
-        ExpansionOfIntermediateNode.create(weight.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, weightValue),
-        ExpansionOfIntermediateNode.create(weight.datumKey, BindIfBoundMD5LocalRandomWithDependent, weightValue),
-        ExpansionOfIntermediateNode.create(BMI.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, bmiValue),
-        ExpansionOfIntermediateNode.create(BMI.valueSpecification, BindIfBoundMD5LocalRandomWithDependent, bmiValue),
-        ExpansionOfIntermediateNode.create(prescriptionInstance.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, prescription),
-        ExpansionOfIntermediateNode.create(prescriptionInstance.prescriptionCrid, BindIfBoundMD5LocalRandomWithDependent, prescription),
-        ExpansionOfIntermediateNode.create(prescriptionInstance.medicationSymbol, BindIfBoundMD5LocalRandomWithDependent, prescription),
-        ExpansionOfIntermediateNode.create(healthcareEncounter.dataset, BindIfBoundDataset, dateOfHealthcareEncounterStringValue)
+        ExpansionOfIntermediateNode.create(HealthcareEncounter.baseVariableName, MD5GlobalRandom),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.baseVariableName, RandomUUID),
+        ExpansionOfIntermediateNode.create(HealthcareEncounter.encounterDate, RandomUUID),
+        ExpansionOfIntermediateNode.create(HealthcareEncounter.encounterStart, RandomUUID),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.encounterRegistryDenoter, RandomUUID),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.encounterSymbol, RandomUUID),
+        ExpansionOfIntermediateNode.create(Diagnosis.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, diagnosis),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterHeight.valueSpecification, BindIfBoundMD5LocalRandomWithDependent, heightValue),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterHeight.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, heightValue),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterHeight.datumKey, BindIfBoundMD5LocalRandomWithDependent, heightValue),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterWeight.valueSpecification, BindIfBoundMD5LocalRandomWithDependent, weightValue),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterWeight.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, weightValue),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterWeight.datumKey, BindIfBoundMD5LocalRandomWithDependent, weightValue),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterBMI.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, bmiValue),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterBMI.valueSpecification, BindIfBoundMD5LocalRandomWithDependent, bmiValue),
+        ExpansionOfIntermediateNode.create(Prescription.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, prescription),
+        ExpansionOfIntermediateNode.create(Prescription.prescriptionCrid, BindIfBoundMD5LocalRandomWithDependent, prescription),
+        ExpansionOfIntermediateNode.create(Prescription.medicationSymbol, BindIfBoundMD5LocalRandomWithDependent, prescription),
+        ExpansionOfIntermediateNode.create(HealthcareEncounter.dataset, BindIfBoundDataset, dateOfHealthcareEncounterStringValue)
     )
-
-    val variableExpansions = LinkedHashMap(
-                              StringToURI -> Array(healthcareEncounterIdentifier.registryKey, prescriptionInstance.mappedMedicationTerm, 
-                                                   diagnosisInstance.registryKey),
-                              InstantiationStringToURI -> Array(healthcareEncounterIdentifier.instantiationKey),
-                              URIToString -> Array(healthcareEncounter.shortcutName),
-                              MD5GlobalRandom -> Array(healthcareEncounter.baseVariableName),
-                              MD5GlobalRandomWithOriginal -> Array(join.consenterName),
-                              MD5GlobalRandomWithDependent -> Array(healthcareEncounterIdentifier.dataset),
-                              RandomUUID -> Array(healthcareEncounterIdentifier.baseVariableName, healthcareEncounter.encounterDate, 
-                                                  healthcareEncounter.encounterStart, healthcareEncounterIdentifier.encounterRegistryDenoter, 
-                                                  healthcareEncounterIdentifier.encounterSymbol),
-                              BindIfBoundMD5LocalRandomWithDependent -> Array(diagnosisInstance.baseVariableName, height.valueSpecification, 
-                                                                              height.baseVariableName, height.datumKey, weight.valueSpecification,
-                                                                              weight.baseVariableName, weight.datumKey, BMI.baseVariableName, 
-                                                                              BMI.valueSpecification, prescriptionInstance.baseVariableName,
-                                                                              prescriptionInstance.prescriptionCrid, prescriptionInstance.medicationSymbol),
-                              BindAs -> Array(BMI.valuesKey, height.valuesKey, weight.valuesKey, healthcareEncounter.dateOfHealthcareEncounterStringValue,
-                                              healthcareEncounterIdentifier.valuesKey, healthcareEncounter.dateOfHealthcareEncounterDateValue, 
-                                              prescriptionInstance.medicationOrderName, diagnosisInstance.primaryDiagnosis, join.encounterName,
-                                              diagnosisInstance.valuesKey, diagnosisInstance.diagnosisSequence, healthcareEncounterIdentifier.valuesKey,
-                                              diagnosisInstance.diagnosisCodeRegistryString, prescriptionInstance.medicationSymbolValue),
-                              BindIfBoundDataset -> Array(healthcareEncounter.dataset)
-                            )
-
-    val expandedVariableShortcutDependencies = Map( 
-                                          healthcareEncounter.dataset -> dateOfHealthcareEncounterStringValue, 
-                                          BMI.baseVariableName -> bmiValue,
-                                          BMI.valueSpecification -> bmiValue,
-                                          height.valueSpecification -> heightValue,
-                                          height.baseVariableName -> heightValue,
-                                          height.datumKey -> heightValue,
-                                          weight.valueSpecification -> weightValue,
-                                          weight.baseVariableName -> weightValue,
-                                          weight.datumKey -> weightValue,
-                                          diagnosisInstance.baseVariableName -> diagnosis,
-                                          prescriptionInstance.baseVariableName -> prescription,
-                                          prescriptionInstance.prescriptionCrid -> prescription,
-                                          prescriptionInstance.medicationSymbol -> prescription,
-                                          healthcareEncounterIdentifier.dataset -> datasetTitle
-                                        )
-
-    val expandedVariableShortcutBindings = Map(
-                                          healthcareEncounterIdentifier.registryKey -> registryKey, 
-                                          healthcareEncounter.shortcutName -> baseVariableName,
-                                          healthcareEncounterIdentifier.instantiationKey -> instantiation,
-                                          BMI.bmiValue -> bmiValue,
-                                          height.heightValue -> heightValue,
-                                          weight.weightValue -> weightValue,
-                                          healthcareEncounter.dateOfHealthcareEncounterStringValue -> dateOfHealthcareEncounterStringValue,
-                                          healthcareEncounter.dateOfHealthcareEncounterDateValue -> dateOfHealthcareEncounterDateValue,
-                                          healthcareEncounterIdentifier.valuesKey -> valuesKey,
-                                          healthcareEncounterIdentifier.datasetTitle -> datasetTitle,
-                                          prescriptionInstance.mappedMedicationTerm -> mappedMedicationTerm,
-                                          diagnosisInstance.diagnosisCodeRegistryString -> diagnosisCodeRegistryString,
-                                          prescriptionInstance.medicationOrderName -> medicationOrderName,
-                                          prescriptionInstance.medicationSymbolValue -> medicationSymbolValue,
-                                          diagnosisInstance.primaryDiagnosis -> primaryDiagnosis,
-                                          diagnosisInstance.diagnosisCode -> diagnosisCode,
-                                          diagnosisInstance.diagnosisSequence -> diagnosisSequence,
-                                          diagnosisInstance.registryKey -> diagnosisCodeRegistryURI,
-                                          join.encounterName -> healthcareEncounter.baseVariableName,
-                                          join.consenterName -> consenterURI
-                                        )
+    
+    val diagRegKey: String = Diagnosis.registryKey
+    val diagIcdTerm: String = Diagnosis.icdTerm
                                         
-    override val appendToBind = """
-        BIND(IF (?diagnosisRegistry = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat("http://purl.bioontology.org/ontology/ICD9CM/", ?shortcutDiagnosisCode)), ?unbound) AS ?icd9term)
-        BIND(IF (?diagnosisRegistry = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat("http://purl.bioontology.org/ontology/ICD10CM/", ?shortcutDiagnosisCode)), ?unbound) AS ?icd10term)
-        BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?concatIcdTerm)
-        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?concatIcdTerm) as ?concatIcdTerm)
+    appendToBind = s"""
+        BIND(IF (?$diagRegKey = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat("http://purl.bioontology.org/ontology/ICD9CM/", ?$diagnosisCode)), ?unbound) AS ?icd9term)
+        BIND(IF (?$diagRegKey = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat("http://purl.bioontology.org/ontology/ICD10CM/", ?$diagnosisCode)), ?unbound) AS ?icd10term)
+        BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?$diagIcdTerm)
+        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?concatIcdTerm) as ?$diagIcdTerm)
       """
+        
+    namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_*"
 }

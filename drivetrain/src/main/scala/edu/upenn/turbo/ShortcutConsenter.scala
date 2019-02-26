@@ -2,17 +2,21 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-class ShortcutConsenter(newInstantiation: String, newNamedGraph: String, consenter:Consenter) extends ShortcutGraphObject
+class ShortcutConsenter(instantiation: String, namedGraph: String, optional: Boolean) 
+extends ShortcutGraphObject(instantiation: String, namedGraph: String, optional: Boolean)
 {
-    val consenterIdentifier = consenter.mandatoryLinks("Identifier").asInstanceOf[ConsenterIdentifier]
-    val dateOfBirthDatum = consenter.optionalLinks("DateOfBirthDatum").asInstanceOf[DateOfBirthDatum]
-    val genderIdentityDatum = consenter.optionalLinks("GenderIdentityDatum").asInstanceOf[GenderIdentityDatum]
-    val raceIdentityDatum = consenter.optionalLinks("RaceIdentityDatum").asInstanceOf[RaceIdentityDatum]
 
-    override val instantiation = newInstantiation
+}
+
+object ShortcutConsenter extends ShortcutGraphObject()
+{    
+    def create(instantiation: String, namedGraph: String, optional: Boolean = false): ShortcutConsenter =
+    {
+        new ShortcutConsenter(instantiation, namedGraph, optional)
+    }
     
     val instantiationKey = "instantiation"
-    val baseVariableName = "shortcutPart"
+    baseVariableName = "shortcutPart"
     
     val shortcutName = "shortcutPart"
     val valuesKey = "consenterSymbolValue"
@@ -30,7 +34,7 @@ class ShortcutConsenter(newInstantiation: String, newNamedGraph: String, consent
     val raceIdentityValue = "raceIdentityDatumValue"
     val raceIdentityType = "raceIdentityTypeString"
     
-    val pattern = s"""
+    pattern = s"""
           
           ?$baseVariableName a turbo:TURBO_0000502 .
           ?$cridKey a turbo:TURBO_0000503 .
@@ -65,44 +69,42 @@ class ShortcutConsenter(newInstantiation: String, newNamedGraph: String, consent
           }
       """
     
-    val namedGraph = newNamedGraph
+    typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
     
-    override val typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
+    variablesToSelect = Array(baseVariableName, registryKey, valuesKey)
     
-    val variablesToSelect = Array(baseVariableName, registryKey, valuesKey)
-    
-    override val expansionRules = Array(
+    expansionRules = Array(
         
-        ExpansionFromShortcutValue.create(raceIdentityDatum.raceIdentityValue, raceIdentityValue, BindAs),
-        ExpansionFromShortcutValue.create(dateOfBirthDatum.dateOfBirthString, dateOfBirthString, BindAs),
-        ExpansionFromShortcutValue.create(dateOfBirthDatum.dateOfBirthDate, dateOfBirthDate, BindAs),
-        ExpansionFromShortcutValue.create(consenterIdentifier.valuesKey, valuesKey, BindAs),
-        ExpansionFromShortcutValue.create(consenterIdentifier.registryKey, registryKey, StringToURI),
-        ExpansionFromShortcutValue.create(genderIdentityDatum.genderIdentityValue, genderIdentityValue, BindAs),
-        ExpansionFromShortcutValue.create(genderIdentityDatum.genderIdentityValue, genderIdentityValue, BindAs),
-        ExpansionFromShortcutValue.create(raceIdentityDatum.raceIdentityType, raceIdentityType, StringToURI),
-        ExpansionFromShortcutValue.create(consenter.shortcutName, shortcutName, URIToString),
-        ExpansionFromShortcutValue.create(consenterIdentifier.instantiation, instantiationKey, InstantiationStringToURI),
-        ExpansionFromShortcutValue.create(consenterIdentifier.datasetTitle, datasetTitle, BindAs),
+        ExpansionFromShortcutValue.create(RaceIdentityDatum.raceIdentityValue, raceIdentityValue, BindAs),
+        ExpansionFromShortcutValue.create(DateOfBirthDatum.dateOfBirthString, dateOfBirthString, BindAs),
+        ExpansionFromShortcutValue.create(DateOfBirthDatum.dateOfBirthDate, dateOfBirthDate, BindAs),
+        ExpansionFromShortcutValue.create(ConsenterIdentifier.valuesKey, valuesKey, BindAs),
+        ExpansionFromShortcutValue.create(ConsenterIdentifier.registryKey, registryKey, StringToURI),
+        ExpansionFromShortcutValue.create(GenderIdentityDatum.genderIdentityValue, genderIdentityValue, BindAs),
+        ExpansionFromShortcutValue.create(GenderIdentityDatum.genderIdentityValue, genderIdentityValue, BindAs),
+        ExpansionFromShortcutValue.create(RaceIdentityDatum.raceIdentityType, raceIdentityType, StringToURI),
+        ExpansionFromShortcutValue.create(Consenter.shortcutName, shortcutName, URIToString),
+        ExpansionFromShortcutValue.create(ConsenterIdentifier.instantiation, instantiationKey, InstantiationStringToURI),
+        ExpansionFromShortcutValue.create(ConsenterIdentifier.datasetTitle, datasetTitle, BindAs),
         
-        ExpansionOfIntermediateNode.create(consenter.biosexKey, MD5LocalRandom),
-        ExpansionOfIntermediateNode.create(consenter.birthVariableName, MD5LocalRandom),
-        ExpansionOfIntermediateNode.create(consenter.heightKey, MD5LocalRandom),
-        ExpansionOfIntermediateNode.create(consenter.weightKey, MD5LocalRandom),
-        ExpansionOfIntermediateNode.create(consenter.adiposeKey, MD5LocalRandom),
-        ExpansionOfIntermediateNode.create(consenter.baseVariableName, MD5GlobalRandom),
-        ExpansionOfIntermediateNode.create(consenterIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
-        ExpansionOfIntermediateNode.create(consenterIdentifier.baseVariableName, RandomUUID),
-        ExpansionOfIntermediateNode.create(consenterIdentifier.consenterSymbol, RandomUUID),
-        ExpansionOfIntermediateNode.create(consenterIdentifier.consenterRegistry, RandomUUID),
-        ExpansionOfIntermediateNode.create(genderIdentityDatum.baseVariableName, BindIfBoundMD5LocalRandom, genderIdentityValue),
-        ExpansionOfIntermediateNode.create(raceIdentityDatum.baseVariableName, BindIfBoundMD5LocalRandom, raceIdentityType),
-        ExpansionOfIntermediateNode.create(raceIdentityDatum.raceIdentificationProcess, BindIfBoundMD5LocalRandom, raceIdentityType),
-        ExpansionOfIntermediateNode.create(dateOfBirthDatum.baseVariableName, BindIfBoundMD5LocalRandom, dateOfBirthString),
-        ExpansionOfIntermediateNode.create(genderIdentityDatum.genderIdentityType, BiologicalSexIRI, genderIdentityType),
-        ExpansionOfIntermediateNode.create(dateOfBirthDatum.dataset, BindIfBoundDataset, dateOfBirthString),
-        ExpansionOfIntermediateNode.create(raceIdentityDatum.dataset, BindIfBoundDataset, raceIdentityType),
-        ExpansionOfIntermediateNode.create(genderIdentityDatum.dataset, BindIfBoundDataset, genderIdentityValue)
+        ExpansionOfIntermediateNode.create(Consenter.biosexKey, MD5LocalRandom),
+        ExpansionOfIntermediateNode.create(Consenter.birthVariableName, MD5LocalRandom),
+        ExpansionOfIntermediateNode.create(Consenter.heightKey, MD5LocalRandom),
+        ExpansionOfIntermediateNode.create(Consenter.weightKey, MD5LocalRandom),
+        ExpansionOfIntermediateNode.create(Consenter.adiposeKey, MD5LocalRandom),
+        ExpansionOfIntermediateNode.create(Consenter.baseVariableName, MD5GlobalRandom),
+        ExpansionOfIntermediateNode.create(ConsenterIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
+        ExpansionOfIntermediateNode.create(ConsenterIdentifier.baseVariableName, RandomUUID),
+        ExpansionOfIntermediateNode.create(ConsenterIdentifier.consenterSymbol, RandomUUID),
+        ExpansionOfIntermediateNode.create(ConsenterIdentifier.consenterRegistry, RandomUUID),
+        ExpansionOfIntermediateNode.create(GenderIdentityDatum.baseVariableName, BindIfBoundMD5LocalRandom, genderIdentityValue),
+        ExpansionOfIntermediateNode.create(RaceIdentityDatum.baseVariableName, BindIfBoundMD5LocalRandom, raceIdentityType),
+        ExpansionOfIntermediateNode.create(RaceIdentityDatum.raceIdentificationProcess, BindIfBoundMD5LocalRandom, raceIdentityType),
+        ExpansionOfIntermediateNode.create(DateOfBirthDatum.baseVariableName, BindIfBoundMD5LocalRandom, dateOfBirthString),
+        ExpansionOfIntermediateNode.create(GenderIdentityDatum.genderIdentityType, BiologicalSexIRI, genderIdentityType),
+        ExpansionOfIntermediateNode.create(DateOfBirthDatum.dataset, BindIfBoundDataset, dateOfBirthString),
+        ExpansionOfIntermediateNode.create(RaceIdentityDatum.dataset, BindIfBoundDataset, raceIdentityType),
+        ExpansionOfIntermediateNode.create(GenderIdentityDatum.dataset, BindIfBoundDataset, genderIdentityValue)
         
         )
 }

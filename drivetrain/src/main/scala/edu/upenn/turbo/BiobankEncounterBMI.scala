@@ -1,18 +1,18 @@
 package edu.upenn.turbo
 
-class BMI (encounter:Encounter) extends GraphObject
+object BiobankEncounterBMI extends GraphObject
 {
-    val baseVariableName = "BMI"
-    val encounterDate = encounter.encounterDate
-    val encounterVariableName = encounter.baseVariableName
-    val valuesKey = "bmiValue"
+    baseVariableName = "BiobankEncounterBMI"
+    val encounterDate = BiobankEncounter.encounterDate
+    val encounterVariableName = BiobankEncounter.baseVariableName
+    val valuesKey = "BiobankEncounterBmiValue"
     
-    val bmiValue = "bmiValue"
+    val bmiValue = valuesKey
     
-    val valueSpecification = "BmiValSpec"
+    val valueSpecification = "BiobankEncounterBmiValSpec"
     val dataset = "dataset"
     
-    val pattern = s"""
+    pattern = s"""
       
         ?$baseVariableName a efo:EFO_0004340 .
     		?$baseVariableName obo:OBI_0001938 ?$valueSpecification .
@@ -26,17 +26,10 @@ class BMI (encounter:Encounter) extends GraphObject
         ?$dataset a obo:IAO_0000100 .
     		
       """
-
-    
-  
       
+      namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
+      typeURI = "http://www.ebi.ac.uk/efo/EFO_0004340"
       
-      
-      
-      val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-      
-      override val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004340"
-      
-      val variablesToSelect = Array(encounterDate, valuesKey)
+      variablesToSelect = Array(encounterDate, valuesKey)
 }

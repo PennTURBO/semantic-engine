@@ -1,9 +1,9 @@
 package edu.upenn.turbo
 
-class ConsenterIdentifier (consenter:Consenter) extends GraphObject
+object ConsenterIdentifier extends GraphObject
 {
-    val baseVariableName = "consenterCrid"
-    val consenterBvn = consenter.baseVariableName
+    baseVariableName = "consenterCrid"
+    val consenterBvn = Consenter.baseVariableName
     
     val valuesKey = "partSymbolValue"
     val registryKey = "partReg"
@@ -17,7 +17,7 @@ class ConsenterIdentifier (consenter:Consenter) extends GraphObject
    
     val instantiation = "instantiation"
 
-    val pattern = s"""
+    pattern = s"""
           
           ?$baseVariableName a turbo:TURBO_0000503 .
           ?$baseVariableName obo:IAO_0000219 ?$consenterBvn .
@@ -50,9 +50,9 @@ class ConsenterIdentifier (consenter:Consenter) extends GraphObject
 
     
     
-    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    override val typeURI = """http://transformunify.org/ontologies/TURBO_0000503"""
+    typeURI = """http://transformunify.org/ontologies/TURBO_0000503"""
     
-    val variablesToSelect = Array(consenterBvn, valuesKey, registryKey)
+    variablesToSelect = Array(consenterBvn, valuesKey, registryKey)
 }

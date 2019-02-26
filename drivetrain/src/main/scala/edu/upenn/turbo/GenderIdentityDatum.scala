@@ -1,15 +1,15 @@
 package edu.upenn.turbo
 
-class GenderIdentityDatum(consenter:Consenter) extends GraphObject
+object GenderIdentityDatum extends GraphObject
 {
-    val baseVariableName = "gid"
-    val consenterBvn = consenter.baseVariableName
+    baseVariableName = "gid"
+    val consenterBvn = Consenter.baseVariableName
     val genderIdentityValue = "gidValue"
     val genderIdentityType = "gidType"
     
     val dataset = "genderDataset"
 
-    val pattern = s"""
+    pattern = s"""
           
           ?$baseVariableName turbo:TURBO_0006510 ?$genderIdentityValue .
           ?$baseVariableName a ?$genderIdentityType .
@@ -21,13 +21,13 @@ class GenderIdentityDatum(consenter:Consenter) extends GraphObject
           
       """
   
-    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    override val typeURI = s"""values ?genderIdentityType {
+    typeURI = s"""values ?genderIdentityType {
                                       obo:OMRSE_00000133 
                                       obo:OMRSE_00000138 
                                       obo:OMRSE_00000141
                                     }"""
     
-    val variablesToSelect = Array(genderIdentityType, genderIdentityValue)
+    variablesToSelect = Array(genderIdentityType, genderIdentityValue)
 }

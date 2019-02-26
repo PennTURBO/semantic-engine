@@ -1,8 +1,8 @@
 package edu.upenn.turbo
 
-class BiobankEncounter extends Encounter
+object BiobankEncounter extends GraphObject
 {
-    val baseVariableName = "biobankEncounter"
+    baseVariableName = "biobankEncounter"
     
     val encounterDate = "biobankEncounterDate"
     val shortcutName = "shortcutBiobankEncounterName"
@@ -13,7 +13,7 @@ class BiobankEncounter extends Encounter
     
     val dataset = "dateDataset"
 
-    val pattern = s"""
+    pattern = s"""
               		
       ?$baseVariableName a turbo:TURBO_0000527 .
   		?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
@@ -25,7 +25,7 @@ class BiobankEncounter extends Encounter
 
       """
 
-    override val optionalPattern = s"""
+    optionalPattern = s"""
       
       ?$encounterDate turbo:TURBO_0006511 ?$dateOfBiobankEncounterDateValue .
       ?$encounterDate turbo:TURBO_0006512 ?$dateOfBiobankEncounterStringValue .
@@ -34,17 +34,17 @@ class BiobankEncounter extends Encounter
 
         """
 
-    override val optionalLinks = Map(
-        "BMI" -> new BMI(this), "Height" -> new Height(this), "Weight" -> new Weight(this)
+    optionalLinks = Map(
+        "BMI" -> BiobankEncounterBMI, "Height" -> BiobankEncounterHeight, "Weight" -> BiobankEncounterWeight
     )
 
-    override val mandatoryLinks: Map[String, GraphObject] = Map(
-        "Identifier" -> new BiobankEncounterIdentifier(this)
+    mandatoryLinks = Map(
+        "Identifier" -> BiobankEncounterIdentifier
     )
     
-    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    override val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
+    typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
-    val variablesToSelect = Array(baseVariableName)
+    variablesToSelect = Array(baseVariableName)
 }

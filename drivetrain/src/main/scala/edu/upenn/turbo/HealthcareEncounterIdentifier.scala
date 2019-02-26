@@ -1,9 +1,9 @@
 package edu.upenn.turbo
 
-class HealthcareEncounterIdentifier (healthcareEncounter:HealthcareEncounter) extends GraphObject
+object HealthcareEncounterIdentifier extends GraphObject
 {
-    val baseVariableName = "healthcareEncounterCrid"
-    val healthcareEncounterBvn = healthcareEncounter.baseVariableName
+    baseVariableName = "healthcareEncounterCrid"
+    val healthcareEncounterBvn = HealthcareEncounter.baseVariableName
     val valuesKey = "healthcareEncounterIdValue"
     val registryKey = "healthcareEncounterRegistry"
     
@@ -15,7 +15,7 @@ class HealthcareEncounterIdentifier (healthcareEncounter:HealthcareEncounter) ex
     val dataset = "dataset"
     val datasetTitle = "datasetTitle"
 
-    val pattern = s"""
+    pattern = s"""
           
       ?$baseVariableName a turbo:TURBO_0000508 .
   		?$baseVariableName obo:IAO_0000219 ?$healthcareEncounterBvn .
@@ -43,9 +43,9 @@ class HealthcareEncounterIdentifier (healthcareEncounter:HealthcareEncounter) ex
           
       """
   
-    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    override val typeURI = """http://transformunify.org/ontologies/TURBO_0000508"""
+    typeURI = """http://transformunify.org/ontologies/TURBO_0000508"""
     
-    val variablesToSelect = Array(healthcareEncounterBvn, valuesKey, registryKey)
+    variablesToSelect = Array(healthcareEncounterBvn, valuesKey, registryKey)
 }

@@ -1,9 +1,9 @@
 package edu.upenn.turbo
 
-class Diagnosis (healthcareEncounter:HealthcareEncounter) extends GraphObject
+object Diagnosis extends GraphObject
 {
-    val baseVariableName = "diagnosis"
-    val encounterVariableName = healthcareEncounter.baseVariableName
+    baseVariableName = "diagnosis"
+    val encounterVariableName = HealthcareEncounter.baseVariableName
     val valuesKey = "diagnosisCodeValue"
     val registryKey = "diagnosisRegistry"
     
@@ -16,7 +16,7 @@ class Diagnosis (healthcareEncounter:HealthcareEncounter) extends GraphObject
     
     val dataset = "dataset"
     
-    val pattern = s"""
+    pattern = s"""
       
         ?$encounterVariableName obo:RO_0002234 ?$baseVariableName .
         ?$baseVariableName a obo:OGMS_0000073 .
@@ -32,9 +32,9 @@ class Diagnosis (healthcareEncounter:HealthcareEncounter) extends GraphObject
     		
       """
       
-      val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+      namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      override val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000073"
+      typeURI = "http://purl.obolibrary.org/obo/OGMS_0000073"
       
-      val variablesToSelect = Array(encounterVariableName, valuesKey, registryKey)
+      variablesToSelect = Array(encounterVariableName, valuesKey, registryKey)
 }

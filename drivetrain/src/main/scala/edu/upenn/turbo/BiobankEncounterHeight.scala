@@ -1,19 +1,19 @@
 package edu.upenn.turbo
 
-class Height (encounter:Encounter) extends GraphObject
+object BiobankEncounterHeight extends GraphObject
 {
-    val baseVariableName = "heightAssay"
-    val encounterVariableName = encounter.baseVariableName
-    val valuesKey = "heightValue"
-    val datumKey = "heightDatum"
+    baseVariableName = "BiobankEncounterHeightAssay"
+    val encounterVariableName = BiobankEncounter.baseVariableName
+    val valuesKey = "BiobankEncounterHeightValue"
+    val datumKey = "BiobankEncounterHeightDatum"
     
-    val heightValue = "heightValue"
+    val heightValue = valuesKey
     
-    val valueSpecification = "heightValSpec"
+    val valueSpecification = "BiobankEncounterBmiValSpec"
     
     val dataset = "dataset"
     
-    val pattern = s"""
+    pattern = s"""
       
         ?$valueSpecification a obo:OBI_0001931 ;
              obo:IAO_0000039 obo:UO_0000015 ;
@@ -34,9 +34,9 @@ class Height (encounter:Encounter) extends GraphObject
     		
       """
     
-      val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+      namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      override val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
+      typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
       
-      val variablesToSelect = Array(encounterVariableName, valuesKey)
+      variablesToSelect = Array(encounterVariableName, valuesKey)
 }

@@ -1,8 +1,8 @@
 package edu.upenn.turbo
 
-class HealthcareEncounter extends Encounter
+object HealthcareEncounter extends GraphObject
 {
-    val baseVariableName = "healthcareEncounter"
+    baseVariableName = "healthcareEncounter"
     val encounterDate = "healthcareEncounterDate"
     
     val shortcutName = "shortcutHealthcareEncounterName"
@@ -13,7 +13,7 @@ class HealthcareEncounter extends Encounter
     
     val dataset = "dateDataset"
     
-    val pattern = s"""
+    pattern = s"""
   	
   		?$baseVariableName a obo:OGMS_0000097 .
   		?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
@@ -26,7 +26,7 @@ class HealthcareEncounter extends Encounter
 
       """
 
-    override val optionalPattern = s"""
+    optionalPattern = s"""
       
       ?$encounterDate turbo:TURBO_0006512 ?$dateOfHealthcareEncounterStringValue .
   		?$encounterDate turbo:TURBO_0006511 ?$dateOfHealthcareEncounterDateValue .
@@ -35,21 +35,21 @@ class HealthcareEncounter extends Encounter
 
         """
 
-    override val optionalLinks = Map(
-        "BMI" -> new BMI(this), 
-        "Height" -> new Height(this), 
-        "Weight" -> new Weight(this), 
-        "Diagnosis" -> new Diagnosis(this),
-        "Prescription" -> new Prescription(this)
+    optionalLinks = Map(
+        "BMI" -> HealthcareEncounterBMI, 
+        "Height" -> HealthcareEncounterHeight, 
+        "Weight" -> HealthcareEncounterWeight, 
+        "Diagnosis" -> Diagnosis,
+        "Prescription" -> Prescription
     )
 
-    override val mandatoryLinks: Map[String, GraphObject] = Map(
-        "Identifier" -> new HealthcareEncounterIdentifier(this)
+    mandatoryLinks = Map(
+        "Identifier" -> HealthcareEncounterIdentifier
     )
     
-    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    override val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
+    typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
     
-    val variablesToSelect = Array(baseVariableName)
+    variablesToSelect = Array(baseVariableName)
 }

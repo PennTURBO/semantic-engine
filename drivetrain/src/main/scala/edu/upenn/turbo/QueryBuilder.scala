@@ -11,45 +11,46 @@ import scala.collection.mutable.HashMap
 
 class QueryBuilder extends Query with IRIConstructionRules
 {
-    def whereBuilder(buildList: Map[GraphObject, Boolean], connectionList: Map[GraphObject, GraphObject], valuesList: Map[String, Array[String]], limit: Integer = null)
+    def whereBuilder(args: WhereBuilderQueryArgs)
     {
         var whereBlocks = new HashMap[GraphObject, String]
         var connectionStrings = ""
-        for ((k,v) <- valuesList)
+        for ((k,v) <- args.valuesList)
         {
             whereClause += "Values ?" + k + "{"
             for (value <- v) whereClause += " " + value
             whereClause += "}\n"
         }
-        for ((k,v) <- buildList)
+        for (element <- args.buildList)
         {
+            val elementOptional = element.optional
             var entry: String = ""
-            entry += "GRAPH <" + k.namedGraph + "> {"
-            if (!v) entry += "OPTIONAL {"
-            entry += k.pattern
+            entry += "GRAPH <" + element.namedGraph + "> {"
+            if (elementOptional) entry += "OPTIONAL {"
+            entry += element.pattern
             
-            for ((key, value) <- k.mandatoryLinks)
+            for ((key, value) <- element.mandatoryLinks)
             {
                entry += value.pattern
             }
                 
-            whereBlocks += k -> entry
+            whereBlocks += element -> entry
         }
-        for ((k,v) <- connectionList) 
+        /*for ((k,v) <- connectionList) 
         {
             val connectionPredicate = k.connections(v.typeURI)
             val entry = "?" + k.baseVariableName + " <" + connectionPredicate + "> ?" + v.baseVariableName + " ."
-            if (!buildList(k)) whereBlocks(k) += entry
-            else if (!buildList(v)) whereBlocks(v) += entry
+            if (!args.buildList(k)) whereBlocks(k) += entry
+            else if (!args.buildList(v)) whereBlocks(v) += entry
             else connectionStrings += entry + "\n"
-        }
+        }*/
         for ((k,v) <- whereBlocks)
         {
             whereClause += v + "}\n"
-            if (!buildList(k)) whereClause += "}\n"
+            if (k.optional) whereClause += "}\n"
         } 
         whereClause += connectionStrings
-        if (limit != null) whereClause += "LIMIT " + limit.toString
+        if (args.limit != null) whereClause += "LIMIT " + args.limit.toString
     }
     
     def selectBuilder(buildTypes: Array[GraphObject])

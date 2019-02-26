@@ -1,15 +1,15 @@
 package edu.upenn.turbo
 
-class DateOfBirthDatum(consenter:Consenter) extends GraphObject
+object DateOfBirthDatum extends GraphObject
 {
-    val baseVariableName = "dob"
-    val birthBvn = consenter.birthVariableName
+    baseVariableName = "dob"
+    val birthBvn = Consenter.birthVariableName
     val dateOfBirthString = "dobValue"
     val dateOfBirthDate = "dobDate"
     
     val dataset = "dateDataset"
     
-    val pattern = s"""
+    pattern = s"""
           
           ?$baseVariableName a <http://www.ebi.ac.uk/efo/EFO_0004950> .
           ?$baseVariableName turbo:TURBO_0006510 ?$dateOfBirthString .
@@ -22,9 +22,9 @@ class DateOfBirthDatum(consenter:Consenter) extends GraphObject
           
       """
       
-    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    override val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004950"
+    typeURI = "http://www.ebi.ac.uk/efo/EFO_0004950"
     
-    val variablesToSelect = Array(birthBvn, dateOfBirthString, dateOfBirthDate)
+    variablesToSelect = Array(birthBvn, dateOfBirthString, dateOfBirthDate)
 }

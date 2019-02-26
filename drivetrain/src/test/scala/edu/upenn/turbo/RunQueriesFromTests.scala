@@ -102,7 +102,7 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
     {
         val br = io.Source.fromFile("mondoToIcdMappings.csv")
         var builder = new ModelBuilder()
-        val namedGraph = "http://graphBuilder.org/mondoToIcdMappingsFullSemantics"
+        override val namedGraph = "http://graphBuilder.org/mondoToIcdMappingsFullSemantics"
         val factory = SimpleValueFactory.getInstance()
         var count = 0
         for (line <- br.getLines())

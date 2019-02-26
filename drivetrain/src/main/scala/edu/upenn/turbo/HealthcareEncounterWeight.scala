@@ -1,19 +1,19 @@
 package edu.upenn.turbo
 
-class Weight (encounter:Encounter) extends GraphObject
+object HealthcareEncounterWeight extends GraphObject
 {
-    val baseVariableName = "weightAssay"
-    val encounterVariableName = encounter.baseVariableName
-    val valuesKey = "weightValue"
-    val datumKey = "weightDatum"
+    baseVariableName = "HealthcareEncounterWeightAssay"
+    val encounterVariableName = HealthcareEncounter.baseVariableName
+    val valuesKey = "HealthcareEncounterWeightValue"
+    val datumKey = "HealthcareEncounterWeightDatum"
     
-    val weightValue = "weightValue"
+    val weightValue = valuesKey
     
-    val valueSpecification = "weightValSpec"
+    val valueSpecification = "HealthcareEncounterWeightValSpec"
     
     val dataset = "dataset"
     
-    val pattern = s"""
+    pattern = s"""
       
         ?$baseVariableName a obo:OBI_0000445 ;
   	                 obo:OBI_0000299 ?$datumKey.
@@ -34,9 +34,9 @@ class Weight (encounter:Encounter) extends GraphObject
     		
       """
       
-      val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+      namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      override val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
+      typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
       
-      val variablesToSelect = Array(encounterVariableName, valuesKey)
+      variablesToSelect = Array(encounterVariableName, valuesKey)
 }

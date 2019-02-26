@@ -17,98 +17,80 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         for (namedGraph <- namedGraphsList)
         {
           val partipantExpansion = buildParticipantExpansionQuery(instantiation, globalUUID, namedGraph)
-          val biobankEncounterExpansion = buildBiobankEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
-          val healthcareEncounterExpansion = buildHealthcareEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
-          println(healthcareEncounterExpansion)
+          //val biobankEncounterExpansion = buildBiobankEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
+          //val healthcareEncounterExpansion = buildHealthcareEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
+          println(partipantExpansion)
           update.updateSparql(cxn, partipantExpansion)
-          update.updateSparql(cxn, biobankEncounterExpansion)
-          update.updateSparql(cxn, healthcareEncounterExpansion)
+          //update.updateSparql(cxn, biobankEncounterExpansion)
+          //update.updateSparql(cxn, healthcareEncounterExpansion)
         }
         
-        val biobankEntityLinkingExpansion = buildConsenterToBiobankEncounterLinkingExpansionQuery(globalUUID)
-        val healthcareEntityLinkingExpansion = buildConsenterToHealthcareEncounterLinkingExpansionQuery(globalUUID)
-        update.updateSparql(cxn, biobankEntityLinkingExpansion)
-        update.updateSparql(cxn, healthcareEntityLinkingExpansion)
+        //val biobankEntityLinkingExpansion = buildConsenterToBiobankEncounterLinkingExpansionQuery(globalUUID)
+        //val healthcareEntityLinkingExpansion = buildConsenterToHealthcareEncounterLinkingExpansionQuery(globalUUID)
+        //update.updateSparql(cxn, biobankEntityLinkingExpansion)
+        //update.updateSparql(cxn, healthcareEntityLinkingExpansion)
     }
     
     def buildParticipantExpansionQuery(instantiation: String, globalUUID: String, namedGraph: String): String =
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
-        val consenter = new Consenter()
-        val shortcutConsenter = new ShortcutConsenter(instantiation, namedGraph, consenter)
-        
         val queryBuilder = new QueryBuilder()
         
-        queryBuilder.whereBuilder(
-            Map(shortcutConsenter -> true),
-            Map(), Map())
-            
-        queryBuilder.bindBuilder(Array(shortcutConsenter), randomUUID, globalUUID)
-        queryBuilder.insertBuilder(Array(consenter))
+        println("values " + instantiation + " : " + namedGraph)
+        val shortcutConsenter = ShortcutConsenter.create(instantiation, namedGraph, false)
+        println("values " + shortcutConsenter.instantiation + " : " + namedGraph)
+        val buildList = Array(shortcutConsenter)
+        
+        val whereBuilderArgs = WhereBuilderQueryArgs.create(buildList)
+        
+        queryBuilder.whereBuilder(whereBuilderArgs)
+        queryBuilder.bindBuilder(Array(ShortcutConsenter), randomUUID, globalUUID)
+        queryBuilder.insertBuilder(Array(Consenter))
+        
         queryBuilder.buildInsertQuery()
     }
     
-    def buildBiobankEncounterExpansionQuery(instantiation: String, globalUUID: String, namedGraph: String): String =
+    /*def buildBiobankEncounterExpansionQuery(instantiation: String, globalUUID: String, namedGraph: String): String =
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
-  
-        val encounter = new BiobankEncounter()
-        val consenter = new Consenter()
-        val join = new ParticipantToEncounterJoin(consenter, encounter)
-        val shortcutJoin = new ShortcutParticipantToEncounterJoin(join, consenter, encounter)
-        
-        val shortcutEncounter = new ShortcutBiobankEncounter(instantiation, namedGraph, encounter, shortcutJoin)
         
         val queryBuilder = new QueryBuilder()
         
         queryBuilder.whereBuilder(
-            Map(shortcutEncounter -> true),
+            Map(ShortcutBiobankEncounter -> true),
             Map(), Map())
             
-        queryBuilder.bindBuilder(Array(shortcutEncounter), randomUUID, globalUUID)
-        queryBuilder.insertBuilder(Array(encounter, shortcutJoin))
+        queryBuilder.bindBuilder(Array(ShortcutBiobankEncounter), randomUUID, globalUUID, instantiation)
+        queryBuilder.insertBuilder(Array(BiobankEncounter, ShortcutConsenterToBiobankEncounterJoin))
         queryBuilder.buildInsertQuery()
     }
     
     def buildHealthcareEncounterExpansionQuery(instantiation: String, globalUUID: String, namedGraph: String): String =
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
-  
-        val encounter = new HealthcareEncounter()
-        val consenter = new Consenter()
-        val join = new ParticipantToEncounterJoin(consenter, encounter)
-        val shortcutJoin = new ShortcutParticipantToEncounterJoin(join, consenter, encounter)
-        
-        val shortcutEncounter = new ShortcutHealthcareEncounter(instantiation, namedGraph, encounter, shortcutJoin)
         
         val queryBuilder = new QueryBuilder()
         
         queryBuilder.whereBuilder(
-            Map(shortcutEncounter -> true),
+            Map(ShortcutHealthcareEncounter -> true),
             Map(), Map())
             
-        queryBuilder.bindBuilder(Array(shortcutEncounter), randomUUID, globalUUID)
-        queryBuilder.insertBuilder(Array(encounter))
+        queryBuilder.bindBuilder(Array(ShortcutHealthcareEncounter), randomUUID, globalUUID, instantiation)
+        queryBuilder.insertBuilder(Array(HealthcareEncounter))
         queryBuilder.buildInsertQuery()
     }
     
     def buildConsenterToBiobankEncounterLinkingExpansionQuery(globalUUID: String): String =
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
-        
-        val consenter = new Consenter()
-        val encounter = new BiobankEncounter()
-        
-        val join = new ParticipantToEncounterJoin(consenter, encounter)
-        val shortcutJoin = new ShortcutParticipantToEncounterJoin(join, consenter, encounter)
-        
+       
         val queryBuilder = new QueryBuilder()
         
         queryBuilder.whereBuilder(
-             Map(shortcutJoin -> true, consenter -> true, encounter -> true), Map(), Map())
+             Map(ShortcutConsenterToBiobankEncounterJoin -> true, Consenter -> true, BiobankEncounter -> true), Map(), Map())
              
-        queryBuilder.bindBuilder(Array(shortcutJoin), randomUUID, globalUUID)
-        queryBuilder.insertBuilder(Array(join))
+        queryBuilder.bindBuilder(Array(ShortcutConsenterToBiobankEncounterJoin), randomUUID, globalUUID)
+        queryBuilder.insertBuilder(Array(ConsenterToBiobankEncounterJoin))
         queryBuilder.buildInsertQuery()
     }
     
@@ -116,19 +98,13 @@ class ObjectOrientedExpander extends ProjectwideGlobals
     {
         val randomUUID = UUID.randomUUID().toString().replaceAll("-", "")
         
-        val consenter = new Consenter()
-        val encounter = new HealthcareEncounter()
-        
-        val join = new ParticipantToEncounterJoin(consenter, encounter)
-        val shortcutJoin = new ShortcutParticipantToEncounterJoin(join, consenter, encounter)
-        
         val queryBuilder = new QueryBuilder()
         
         queryBuilder.whereBuilder(
-             Map(shortcutJoin -> true, consenter -> true, encounter -> true), Map(), Map())
+             Map(ShortcutConsenterToHealthcareEncounterJoin -> true, Consenter -> true, HealthcareEncounter -> true), Map(), Map())
              
-        queryBuilder.bindBuilder(Array(shortcutJoin), randomUUID, globalUUID)
-        queryBuilder.insertBuilder(Array(join))
+        queryBuilder.bindBuilder(Array(ShortcutConsenterToHealthcareEncounterJoin), randomUUID, globalUUID)
+        queryBuilder.insertBuilder(Array(ConsenterToHealthcareEncounterJoin))
         queryBuilder.buildInsertQuery()
-    }
+    }*/
 }
