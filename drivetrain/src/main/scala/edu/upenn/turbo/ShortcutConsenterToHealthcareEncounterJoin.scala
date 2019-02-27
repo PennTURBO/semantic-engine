@@ -2,7 +2,7 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-object ShortcutConsenterToHealthcareEncounterJoin extends ShortcutGraphObject
+object ShortcutConsenterToHealthcareEncounterJoin extends ShortcutGraphObjectSingleton
 {
     baseVariableName = "shortcutConsenterToHealthcareEncounterJoin"
     
@@ -14,8 +14,6 @@ object ShortcutConsenterToHealthcareEncounterJoin extends ShortcutGraphObject
       ?$consenterName graphBuilder:linksToEncounter ?$encounterName .
       
     """
-    
-    namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_entityLinkingShortcuts"
     
     variablesToSelect = Array(consenterName, encounterName)
     

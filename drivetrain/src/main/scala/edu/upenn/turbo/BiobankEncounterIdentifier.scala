@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-object BiobankEncounterIdentifier extends GraphObject
+object BiobankEncounterIdentifier extends ExpandedGraphObjectSingleton
 {
     baseVariableName = "biobankEncounterCrid"
     val biobankEncounterBvn = BiobankEncounter.baseVariableName

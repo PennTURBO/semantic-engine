@@ -2,7 +2,7 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-object ShortcutBiobankEncounter extends ShortcutGraphObject
+object ShortcutBiobankEncounter extends ShortcutGraphObjectSingleton
 {    
     val instantiationKey = "instantiation"
     baseVariableName = "shortcutBiobankEncounter"
@@ -94,6 +94,4 @@ object ShortcutBiobankEncounter extends ShortcutGraphObject
         ExpansionOfIntermediateNode.create(BiobankEncounter.dataset, BindIfBoundDataset, dateOfBiobankEncounterStringValue)
         
     )
-    
-    namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_*"
 }

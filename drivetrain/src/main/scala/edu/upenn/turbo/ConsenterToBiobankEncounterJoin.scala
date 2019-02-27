@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-object ConsenterToBiobankEncounterJoin extends GraphObject
+object ConsenterToBiobankEncounterJoin extends ExpandedGraphObjectSingleton
 {
     baseVariableName = "participantUnderInvestigationRole"
     val consenterName = Consenter.baseVariableName

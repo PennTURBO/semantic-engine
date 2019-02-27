@@ -2,13 +2,28 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-class ShortcutConsenter(instantiation: String, namedGraph: String, optional: Boolean) 
-extends ShortcutGraphObject(instantiation: String, namedGraph: String, optional: Boolean)
+class ShortcutConsenter extends ShortcutGraphObjectInstance
 {
-
+    def this(instantiation: String, namedGraph: String, optional: Boolean)
+    {
+        this()
+        this.instantiation = instantiation
+        this.namedGraph = namedGraph
+        this.optional = optional
+    }
+  
+    var instantiation: String = null
+    var namedGraph: String = null
+    var optional: Boolean = false
+    
+    val pattern = ShortcutConsenter.pattern
+    val baseVariableName = ShortcutConsenter.baseVariableName
+    val typeURI = ShortcutConsenter.typeURI
+    val expansionRules = ShortcutConsenter.expansionRules
+    val variablesToSelect = ShortcutConsenter.variablesToSelect
 }
 
-object ShortcutConsenter extends ShortcutGraphObject()
+object ShortcutConsenter extends ShortcutGraphObjectSingleton
 {    
     def create(instantiation: String, namedGraph: String, optional: Boolean = false): ShortcutConsenter =
     {
@@ -16,7 +31,7 @@ object ShortcutConsenter extends ShortcutGraphObject()
     }
     
     val instantiationKey = "instantiation"
-    baseVariableName = "shortcutPart"
+    val baseVariableName = "shortcutPart"
     
     val shortcutName = "shortcutPart"
     val valuesKey = "consenterSymbolValue"
@@ -34,7 +49,7 @@ object ShortcutConsenter extends ShortcutGraphObject()
     val raceIdentityValue = "raceIdentityDatumValue"
     val raceIdentityType = "raceIdentityTypeString"
     
-    pattern = s"""
+    val pattern = s"""
           
           ?$baseVariableName a turbo:TURBO_0000502 .
           ?$cridKey a turbo:TURBO_0000503 .
@@ -69,11 +84,11 @@ object ShortcutConsenter extends ShortcutGraphObject()
           }
       """
     
-    typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
+    val typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
     
-    variablesToSelect = Array(baseVariableName, registryKey, valuesKey)
+    val variablesToSelect = Array(baseVariableName, registryKey, valuesKey)
     
-    expansionRules = Array(
+    val expansionRules = Array(
         
         ExpansionFromShortcutValue.create(RaceIdentityDatum.raceIdentityValue, raceIdentityValue, BindAs),
         ExpansionFromShortcutValue.create(DateOfBirthDatum.dateOfBirthString, dateOfBirthString, BindAs),

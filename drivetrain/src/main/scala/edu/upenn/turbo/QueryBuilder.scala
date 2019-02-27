@@ -13,7 +13,7 @@ class QueryBuilder extends Query with IRIConstructionRules
 {
     def whereBuilder(args: WhereBuilderQueryArgs)
     {
-        var whereBlocks = new HashMap[GraphObject, String]
+        var whereBlocks = new HashMap[GraphObjectInstance, String]
         var connectionStrings = ""
         for ((k,v) <- args.valuesList)
         {
@@ -23,6 +23,7 @@ class QueryBuilder extends Query with IRIConstructionRules
         }
         for (element <- args.buildList)
         {
+            var elementAsSpecificType: GraphObjectInstance = null
             val elementOptional = element.optional
             var entry: String = ""
             entry += "GRAPH <" + element.namedGraph + "> {"
@@ -53,7 +54,7 @@ class QueryBuilder extends Query with IRIConstructionRules
         if (args.limit != null) whereClause += "LIMIT " + args.limit.toString
     }
     
-    def selectBuilder(buildTypes: Array[GraphObject])
+    def selectBuilder(buildTypes: Array[GraphObjectInstance])
     {      
         for (item <- buildTypes)
         {
@@ -64,7 +65,7 @@ class QueryBuilder extends Query with IRIConstructionRules
         }
     }
 
-    def bindBuilder(buildTypes: Array[ShortcutGraphObject], localUUID: String, globalUUID: String)
+    def bindBuilder(buildTypes: Array[ShortcutGraphObjectInstance], localUUID: String, globalUUID: String)
     {
         for (a <- buildTypes)
         {
@@ -89,7 +90,7 @@ class QueryBuilder extends Query with IRIConstructionRules
         }
     }
 
-    def insertBuilder(buildTypes: Array[GraphObject])
+    def insertBuilder(buildTypes: Array[GraphObjectInstance])
     {
         for (a <- buildTypes)
         {
@@ -97,17 +98,19 @@ class QueryBuilder extends Query with IRIConstructionRules
 
             for ((k,nodeType) <- a.optionalLinks)
             {
-                addInsertClauseToString(nodeType)
+                val newInstance = nodeType.asInstanceOf[ExpandedGraphObjectSingleton].create(false)
+                addInsertClauseToString(newInstance)
             }
             for ((k,nodeType) <- a.mandatoryLinks)
             {
-                addInsertClauseToString(nodeType)
+                val newInstance = nodeType.asInstanceOf[ExpandedGraphObjectSingleton].create(false)
+                addInsertClauseToString(newInstance)
             }
         }
         insertClause += "}"
     }
 
-    def addInsertClauseToString(buildType: GraphObject)
+    def addInsertClauseToString(buildType: GraphObjectInstance)
     {
         insertClause += " GRAPH <" + buildType.namedGraph + "> {"
         insertClause += buildType.pattern

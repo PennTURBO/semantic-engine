@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-object BiobankEncounterBMI extends GraphObject
+object BiobankEncounterBMI extends ExpandedGraphObjectSingleton
 {
     baseVariableName = "BiobankEncounterBMI"
     val encounterDate = BiobankEncounter.encounterDate

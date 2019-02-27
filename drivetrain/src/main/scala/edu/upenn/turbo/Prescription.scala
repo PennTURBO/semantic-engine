@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-object Prescription extends GraphObject
+object Prescription extends ExpandedGraphObjectSingleton
 {
     baseVariableName = "prescription"
     val encounterVariableName = HealthcareEncounter.baseVariableName

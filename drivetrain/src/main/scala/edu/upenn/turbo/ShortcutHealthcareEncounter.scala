@@ -2,7 +2,7 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-object ShortcutHealthcareEncounter extends ShortcutGraphObject
+object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingleton
 {
     baseVariableName = "shortcutHealthcareEncounter"
     val valuesKey = "shortcutHealthcareEncounterIdValue"
@@ -169,6 +169,4 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObject
         BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?$diagIcdTerm)
         BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?concatIcdTerm) as ?$diagIcdTerm)
       """
-        
-    namedGraph = "http://www.itmat.upenn.edu/biobank/Shortcuts_*"
 }

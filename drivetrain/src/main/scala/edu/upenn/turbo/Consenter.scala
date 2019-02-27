@@ -1,8 +1,18 @@
 package edu.upenn.turbo
 
-object Consenter extends GraphObject
+class Consenter(optional: Boolean) extends GraphObjectInstance
 {
-    baseVariableName = "part"
+    
+}
+
+object Consenter extends ExpandedGraphObjectSingleton
+{
+    def create(optional: Boolean): Consenter =
+    {
+        new Consenter(optional)
+    }
+    
+    val baseVariableName = "part"
     val birthVariableName = "birth"
     val heightKey = "height"
     val weightKey = "weight"
@@ -10,7 +20,7 @@ object Consenter extends GraphObject
     val biosexKey = "biosex"
     val shortcutName = "shortcutPartName"
     
-    pattern = s"""
+    val pattern = s"""
           
           ?$baseVariableName a turbo:TURBO_0000502 .
           ?$baseVariableName obo:RO_0000086 ?$biosexKey .
@@ -29,19 +39,19 @@ object Consenter extends GraphObject
           
       """
 
-    mandatoryLinks = Map(
+    val mandatoryLinks = Map(
         "Identifier" -> ConsenterIdentifier
     )
 
-    optionalLinks = Map(
+    val optionalLinks = Map(
         "GenderIdentityDatum" -> GenderIdentityDatum, 
         "RaceIdentityDatum" -> RaceIdentityDatum, 
         "DateOfBirthDatum" -> DateOfBirthDatum
     )
 
-    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
+    val typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
     
-    variablesToSelect = Array(baseVariableName)
+    val variablesToSelect = Array(baseVariableName)
 }

@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-object BiobankEncounter extends GraphObject
+object BiobankEncounter extends ExpandedGraphObjectSingleton
 {
     baseVariableName = "biobankEncounter"
     

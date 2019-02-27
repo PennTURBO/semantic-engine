@@ -1,6 +1,6 @@
 package edu.upenn.turbo
 
-object BiobankEncounterHeight extends GraphObject
+object BiobankEncounterHeight extends ExpandedGraphObjectSingleton
 {
     baseVariableName = "BiobankEncounterHeightAssay"
     val encounterVariableName = BiobankEncounter.baseVariableName

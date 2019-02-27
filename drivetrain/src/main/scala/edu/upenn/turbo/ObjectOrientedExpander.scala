@@ -37,6 +37,7 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         val queryBuilder = new QueryBuilder()
         
         println("values " + instantiation + " : " + namedGraph)
+        val consenter = Consenter.create(false)
         val shortcutConsenter = ShortcutConsenter.create(instantiation, namedGraph, false)
         println("values " + shortcutConsenter.instantiation + " : " + namedGraph)
         val buildList = Array(shortcutConsenter)
@@ -44,8 +45,8 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         val whereBuilderArgs = WhereBuilderQueryArgs.create(buildList)
         
         queryBuilder.whereBuilder(whereBuilderArgs)
-        queryBuilder.bindBuilder(Array(ShortcutConsenter), randomUUID, globalUUID)
-        queryBuilder.insertBuilder(Array(Consenter))
+        queryBuilder.bindBuilder(Array(shortcutConsenter), randomUUID, globalUUID)
+        queryBuilder.insertBuilder(Array(consenter))
         
         queryBuilder.buildInsertQuery()
     }

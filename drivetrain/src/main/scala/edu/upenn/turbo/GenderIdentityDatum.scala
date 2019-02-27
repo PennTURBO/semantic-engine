@@ -1,15 +1,15 @@
 package edu.upenn.turbo
 
-object GenderIdentityDatum extends GraphObject
+object GenderIdentityDatum extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "gid"
+    val baseVariableName = "gid"
     val consenterBvn = Consenter.baseVariableName
     val genderIdentityValue = "gidValue"
     val genderIdentityType = "gidType"
     
     val dataset = "genderDataset"
 
-    pattern = s"""
+    val pattern = s"""
           
           ?$baseVariableName turbo:TURBO_0006510 ?$genderIdentityValue .
           ?$baseVariableName a ?$genderIdentityType .
@@ -21,13 +21,13 @@ object GenderIdentityDatum extends GraphObject
           
       """
   
-    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    typeURI = s"""values ?genderIdentityType {
+    val typeURI = s"""values ?genderIdentityType {
                                       obo:OMRSE_00000133 
                                       obo:OMRSE_00000138 
                                       obo:OMRSE_00000141
                                     }"""
     
-    variablesToSelect = Array(genderIdentityType, genderIdentityValue)
+    val variablesToSelect = Array(genderIdentityType, genderIdentityValue)
 }

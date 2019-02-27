@@ -1,8 +1,8 @@
 package edu.upenn.turbo
 
-object RaceIdentityDatum extends GraphObject
+object RaceIdentityDatum extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "rid"
+    val baseVariableName = "rid"
     val consenterBvn = Consenter.baseVariableName
     val raceIdentityValue = "ridValue"
     val raceIdentityType = "ridType"
@@ -10,7 +10,7 @@ object RaceIdentityDatum extends GraphObject
     val dataset = "raceDataset"
     val raceIdentificationProcess = "raceIdentificationProcess"
 
-    pattern = s"""
+    val pattern = s"""
           
           ?$raceIdentificationProcess a obo:OMRSE_00000099 .
           ?$raceIdentificationProcess obo:OBI_0000299 ?$baseVariableName .
@@ -24,9 +24,9 @@ object RaceIdentityDatum extends GraphObject
           
       """
 
-    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    typeURI = s"""values ?raceIdentityType {}"""
+    val typeURI = s"""values ?raceIdentityType {}"""
     
-    variablesToSelect = Array(consenterBvn, raceIdentityType, raceIdentityValue)
+    val variablesToSelect = Array(consenterBvn, raceIdentityType, raceIdentityValue)
 }
