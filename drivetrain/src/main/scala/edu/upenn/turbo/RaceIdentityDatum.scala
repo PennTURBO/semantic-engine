@@ -1,7 +1,30 @@
 package edu.upenn.turbo
 
+class RaceIdentityDatum extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = RaceIdentityDatum.pattern
+    val baseVariableName = RaceIdentityDatum.baseVariableName
+    val typeURI = RaceIdentityDatum.typeURI
+    val variablesToSelect = RaceIdentityDatum.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object RaceIdentityDatum extends ExpandedGraphObjectSingleton
 {
+    def create(optional: Boolean): RaceIdentityDatum =
+    {
+        new RaceIdentityDatum(optional)
+    }
+    
     val baseVariableName = "rid"
     val consenterBvn = Consenter.baseVariableName
     val raceIdentityValue = "ridValue"

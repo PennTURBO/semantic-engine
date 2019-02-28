@@ -1,7 +1,30 @@
 package edu.upenn.turbo
 
+class GenderIdentityDatum extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = GenderIdentityDatum.pattern
+    val baseVariableName = GenderIdentityDatum.baseVariableName
+    val typeURI = GenderIdentityDatum.typeURI
+    val variablesToSelect = GenderIdentityDatum.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object GenderIdentityDatum extends ExpandedGraphObjectSingleton
 {
+    def create(optional: Boolean): GenderIdentityDatum =
+    {
+        new GenderIdentityDatum(optional)
+    }
+    
     val baseVariableName = "gid"
     val consenterBvn = Consenter.baseVariableName
     val genderIdentityValue = "gidValue"

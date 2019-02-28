@@ -1,8 +1,31 @@
 package edu.upenn.turbo
 
+class HealthcareEncounterBMI extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = HealthcareEncounterBMI.pattern
+    val baseVariableName = HealthcareEncounterBMI.baseVariableName
+    val typeURI = HealthcareEncounterBMI.typeURI
+    val variablesToSelect = HealthcareEncounterBMI.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object HealthcareEncounterBMI extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "HealthcareEncounterBMI"
+    def create(optional: Boolean): HealthcareEncounterBMI =
+    {
+        new HealthcareEncounterBMI(optional)
+    }
+    
+    val baseVariableName = "HealthcareEncounterBMI"
     val encounterDate = HealthcareEncounter.encounterDate
     val encounterVariableName = HealthcareEncounter.baseVariableName
     val valuesKey = "HealthcareEncounterBmiValue"
@@ -10,9 +33,9 @@ object HealthcareEncounterBMI extends ExpandedGraphObjectSingleton
     val bmiValue = valuesKey
     
     val valueSpecification = "HealthcareEncounterBmiValSpec"
-    val dataset = "dataset"
+    val dataset = HealthcareEncounter.dataset
     
-    pattern = s"""
+    val pattern = s"""
       
         ?$baseVariableName a efo:EFO_0004340 .
     		?$baseVariableName obo:OBI_0001938 ?$valueSpecification .
@@ -27,9 +50,9 @@ object HealthcareEncounterBMI extends ExpandedGraphObjectSingleton
     		
       """
       
-      namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+      val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      typeURI = "http://www.ebi.ac.uk/efo/EFO_0004340"
+      val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004340"
       
-      variablesToSelect = Array(encounterDate, valuesKey)
+      val variablesToSelect = Array(encounterDate, valuesKey)
 }

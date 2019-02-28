@@ -1,8 +1,31 @@
 package edu.upenn.turbo
 
+class HealthcareEncounterWeight extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = HealthcareEncounterWeight.pattern
+    val baseVariableName = HealthcareEncounterWeight.baseVariableName
+    val typeURI = HealthcareEncounterWeight.typeURI
+    val variablesToSelect = HealthcareEncounterWeight.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object HealthcareEncounterWeight extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "HealthcareEncounterWeightAssay"
+    def create(optional: Boolean): HealthcareEncounterWeight =
+    {
+        new HealthcareEncounterWeight(optional)
+    }
+    
+    val baseVariableName = "HealthcareEncounterWeightAssay"
     val encounterVariableName = HealthcareEncounter.baseVariableName
     val valuesKey = "HealthcareEncounterWeightValue"
     val datumKey = "HealthcareEncounterWeightDatum"
@@ -11,9 +34,9 @@ object HealthcareEncounterWeight extends ExpandedGraphObjectSingleton
     
     val valueSpecification = "HealthcareEncounterWeightValSpec"
     
-    val dataset = "dataset"
+    val dataset = HealthcareEncounter.dataset
     
-    pattern = s"""
+    val pattern = s"""
       
         ?$baseVariableName a obo:OBI_0000445 ;
   	                 obo:OBI_0000299 ?$datumKey.
@@ -34,9 +57,9 @@ object HealthcareEncounterWeight extends ExpandedGraphObjectSingleton
     		
       """
       
-      namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+      val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
+      val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
       
-      variablesToSelect = Array(encounterVariableName, valuesKey)
+      val variablesToSelect = Array(encounterVariableName, valuesKey)
 }

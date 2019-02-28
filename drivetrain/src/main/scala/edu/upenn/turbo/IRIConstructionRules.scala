@@ -33,8 +33,6 @@ trait IRIConstructionRules
 
     val BiologicalSexIRI: String = """BIND(IF(BOUND(?dependent), uri(?dependent), obo:OMRSE_00000133) AS ?replacement)"""
 
-    val BindIfBoundDataset: String = """BIND(IF(BOUND(?dependent), ?dataset, ?unbound) AS ?replacement)"""
-
     val BindIfBoundMD5LocalRandom: String = """BIND (IF (BOUND(?dependent), uri(concat("http://www.itmat.upenn.edu/biobank/",
                                         md5(CONCAT("replacement", "localUUID", str(?mainExpansionTypeVariableName))))), ?unbound) AS ?replacement)"""
     

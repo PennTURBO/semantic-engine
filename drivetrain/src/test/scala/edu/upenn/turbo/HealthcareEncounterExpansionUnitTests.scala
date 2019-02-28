@@ -14,7 +14,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
     var cxn: RepositoryConnection = null
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
-    val clearDatabaseAfterRun: Boolean = false
+    val clearDatabaseAfterRun: Boolean = true
     val expand = new Expander
     val objectOrientedExpander = new ObjectOrientedExpander
     
@@ -281,7 +281,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         result.size should be (82)
     }
     
-    /*test("hc encounter with minimum required for expansion")
+    test("hc encounter with minimum required for expansion")
     {
         val insert: String = """
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
@@ -588,9 +588,9 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
          update.querySparqlBoolean(cxn, sparqlPrefixes + checkDiag).get should be (true)
          update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "diagnosisCount")(0) should startWith ("\"2")
          update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
-    }*/
+    }
     
-    /*test("ensure medication info stays together with duplicate hc enc URI")
+    test("ensure medication info stays together with duplicate hc enc URI")
     {
         val insert: String = """
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
@@ -670,7 +670,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
          update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
     }
     
-    test("expand hc encs over multiple named graphs")
+    /*test("expand hc encs over multiple named graphs")
     {
         val insert1: String = """
           INSERT DATA

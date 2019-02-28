@@ -2,10 +2,36 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-object ShortcutBiobankEncounter extends ShortcutGraphObjectSingleton
+class ShortcutBiobankEncounter extends ShortcutGraphObjectInstance
+{
+    def this(instantiation: String, namedGraph: String, optional: Boolean)
+    {
+        this()
+        this.instantiation = instantiation
+        this.namedGraph = namedGraph
+        this.optional = optional
+    }
+  
+    var instantiation: String = null
+    var namedGraph: String = null
+    var optional: Boolean = false
+    
+    val pattern = ShortcutBiobankEncounter.pattern
+    val baseVariableName = ShortcutBiobankEncounter.baseVariableName
+    val typeURI = ShortcutBiobankEncounter.typeURI
+    val expansionRules = ShortcutBiobankEncounter.expansionRules
+    val variablesToSelect = ShortcutBiobankEncounter.variablesToSelect
+}
+
+object ShortcutBiobankEncounter extends ShortcutGraphObjectSingletonWithCreate
 {    
+    def create(instantiation: String, namedGraph: String, optional: Boolean = false): ShortcutBiobankEncounter =
+    {
+        new ShortcutBiobankEncounter(instantiation, namedGraph, optional)
+    }
+    
     val instantiationKey = "instantiation"
-    baseVariableName = "shortcutBiobankEncounter"
+    val baseVariableName = "shortcutBiobankEncounter"
     
     val valuesKey = "shortcutBiobankEncounterIdValue"
     val registryKey = "shortcutBiobankEncounterRegistryString"
@@ -23,7 +49,7 @@ object ShortcutBiobankEncounter extends ShortcutGraphObjectSingleton
     val consenterSymbol = "shortcutConsenterSymbolValueForBiobankEncounter"
     val consenterURI = "shortcutConsenterURI"
     
-    pattern = s"""
+    val pattern = s"""
           
           ?$baseVariableName a turbo:TURBO_0000527 ;
               turbo:TURBO_0000623   ?$datasetTitle;
@@ -58,11 +84,11 @@ object ShortcutBiobankEncounter extends ShortcutGraphObjectSingleton
           }
       """
     
-    typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
+    val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
-    variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
+    val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
     
-    expansionRules = Array(
+    val expansionRules = Array(
         
         ExpansionFromShortcutValue.create(BiobankEncounterIdentifier.registryKey, registryKey, StringToURI),
         ExpansionFromShortcutValue.create(BiobankEncounterIdentifier.instantiationKey, instantiationKey, InstantiationStringToURI),

@@ -1,8 +1,31 @@
 package edu.upenn.turbo
 
+class HealthcareEncounterIdentifier extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = HealthcareEncounterIdentifier.pattern
+    val baseVariableName = HealthcareEncounterIdentifier.baseVariableName
+    val typeURI = HealthcareEncounterIdentifier.typeURI
+    val variablesToSelect = HealthcareEncounterIdentifier.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object HealthcareEncounterIdentifier extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "healthcareEncounterCrid"
+    def create(optional: Boolean): HealthcareEncounterIdentifier =
+    {
+        new HealthcareEncounterIdentifier(optional)
+    }
+    
+    val baseVariableName = "healthcareEncounterCrid"
     val healthcareEncounterBvn = HealthcareEncounter.baseVariableName
     val valuesKey = "healthcareEncounterIdValue"
     val registryKey = "healthcareEncounterRegistry"
@@ -12,10 +35,10 @@ object HealthcareEncounterIdentifier extends ExpandedGraphObjectSingleton
     val encounterSymbol = "healthcareEncounterSymbol"
     val encounterRegistryDenoter = "healthcareEncounterRegDen"
     
-    val dataset = "dataset"
+    val dataset = "healthcareEncounterDataset"
     val datasetTitle = "datasetTitle"
 
-    pattern = s"""
+    val pattern = s"""
           
       ?$baseVariableName a turbo:TURBO_0000508 .
   		?$baseVariableName obo:IAO_0000219 ?$healthcareEncounterBvn .
@@ -43,9 +66,9 @@ object HealthcareEncounterIdentifier extends ExpandedGraphObjectSingleton
           
       """
   
-    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    typeURI = """http://transformunify.org/ontologies/TURBO_0000508"""
+    val typeURI = """http://transformunify.org/ontologies/TURBO_0000508"""
     
-    variablesToSelect = Array(healthcareEncounterBvn, valuesKey, registryKey)
+    val variablesToSelect = Array(healthcareEncounterBvn, valuesKey, registryKey)
 }

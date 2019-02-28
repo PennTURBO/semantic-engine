@@ -1,8 +1,31 @@
 package edu.upenn.turbo
 
+class Diagnosis extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = Diagnosis.pattern
+    val baseVariableName = Diagnosis.baseVariableName
+    val typeURI = Diagnosis.typeURI
+    val variablesToSelect = Diagnosis.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object Diagnosis extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "diagnosis"
+    def create(optional: Boolean): Diagnosis =
+    {
+        new Diagnosis(optional)
+    }
+
+    val baseVariableName = "diagnosis"
     val encounterVariableName = HealthcareEncounter.baseVariableName
     val valuesKey = "diagnosisCodeValue"
     val registryKey = "diagnosisRegistry"
@@ -14,9 +37,9 @@ object Diagnosis extends ExpandedGraphObjectSingleton
     val primaryDiagnosis = "primaryDiag"
     val diagnosisSequence = "diagSequence"
     
-    val dataset = "dataset"
+    val dataset = HealthcareEncounter.dataset
     
-    pattern = s"""
+    val pattern = s"""
       
         ?$encounterVariableName obo:RO_0002234 ?$baseVariableName .
         ?$baseVariableName a obo:OGMS_0000073 .
@@ -32,9 +55,9 @@ object Diagnosis extends ExpandedGraphObjectSingleton
     		
       """
       
-      namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+      val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      typeURI = "http://purl.obolibrary.org/obo/OGMS_0000073"
+      val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000073"
       
-      variablesToSelect = Array(encounterVariableName, valuesKey, registryKey)
+      val variablesToSelect = Array(encounterVariableName, valuesKey, registryKey)
 }

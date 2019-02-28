@@ -1,8 +1,31 @@
 package edu.upenn.turbo
 
+class Prescription extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = Prescription.pattern
+    val baseVariableName = Prescription.baseVariableName
+    val typeURI = Prescription.typeURI
+    val variablesToSelect = Prescription.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object Prescription extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "prescription"
+    def create(optional: Boolean): Prescription =
+    {
+        new Prescription(optional)
+    }
+    
+    val baseVariableName = "prescription"
     val encounterVariableName = HealthcareEncounter.baseVariableName
     val valuesKey = "medId"
     
@@ -12,9 +35,9 @@ object Prescription extends ExpandedGraphObjectSingleton
     val medicationSymbolValue = "medId"
     val mappedMedicationTerm = "medMapped"
     
-    val dataset = "dataset"
+    val dataset = HealthcareEncounter.dataset
     
-    pattern = s"""
+    val pattern = s"""
       
         ?$encounterVariableName obo:RO_0002234 ?$baseVariableName .
         ?$baseVariableName a obo:PDRO_0000001 .
@@ -36,9 +59,9 @@ object Prescription extends ExpandedGraphObjectSingleton
     		
       """
       
-      namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+      val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      typeURI = "http://purl.obolibrary.org/obo/PDRO_0000001"
+      val typeURI = "http://purl.obolibrary.org/obo/PDRO_0000001"
       
-      variablesToSelect = Array(encounterVariableName, valuesKey, "medId")
+      val variablesToSelect = Array(encounterVariableName, valuesKey, "medId")
 }

@@ -1,11 +1,35 @@
 package edu.upenn.turbo
 
+class ConsenterToHealthcareEncounterJoin extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = ConsenterToHealthcareEncounterJoin.pattern
+    val baseVariableName = ConsenterToHealthcareEncounterJoin.baseVariableName
+    val typeURI = ConsenterToHealthcareEncounterJoin.typeURI
+    val variablesToSelect = ConsenterToHealthcareEncounterJoin.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
+
 object ConsenterToHealthcareEncounterJoin extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "participantUnderInvestigationRole"
+    def create(optional: Boolean): ConsenterToHealthcareEncounterJoin =
+    {
+        new ConsenterToHealthcareEncounterJoin(optional)
+    }
+    
+    val baseVariableName = "participantUnderInvestigationRole"
     val consenterName = Consenter.baseVariableName
     val encounterName = HealthcareEncounter.baseVariableName
-    val biobankEncounterCrid = HealthcareEncounterIdentifier.baseVariableName
+    val healthcareEncounterCrid = HealthcareEncounterIdentifier.baseVariableName
     val consenterCrid = ConsenterIdentifier.baseVariableName
     val consenterHeight = Consenter.heightKey
     val consenterWeight = Consenter.weightKey
@@ -16,7 +40,7 @@ object ConsenterToHealthcareEncounterJoin extends ExpandedGraphObjectSingleton
     val weightDatum = HealthcareEncounterWeight.datumKey
     
     
-    pattern = s"""
+    val pattern = s"""
       
           ?$consenterName obo:RO_0000056 ?$encounterName .
           
@@ -26,7 +50,7 @@ object ConsenterToHealthcareEncounterJoin extends ExpandedGraphObjectSingleton
       		
       		?$baseVariableName obo:BFO_0000054 ?$encounterName .
       		
-      		?$biobankEncounterCrid turbo:TURBO_0000302 ?$consenterCrid .
+      		?$healthcareEncounterCrid turbo:TURBO_0000302 ?$consenterCrid .
       		
       		?$weightDatum obo:IAO_0000136 ?$consenterName.
       		
@@ -38,13 +62,11 @@ object ConsenterToHealthcareEncounterJoin extends ExpandedGraphObjectSingleton
       		
       		?$weightAssay obo:OBI_0000293 ?$consenterName.
       		
-      		?$weightDatum obo:OBI_0000293 ?$consenterName.
+      		?$weightAssay obo:OBI_0000293 ?$consenterName.
       
       """
-      		
-    namedGraph = "http://www.itmat.upenn.edu/biobank/expanded"
 
-    typeURI = "http://purl.obolibrary.org/obo/OBI_0000097"
+    val typeURI = "http://purl.obolibrary.org/obo/OBI_0000097"
     
-    variablesToSelect = Array(consenterName, encounterName)
+    val variablesToSelect = Array(consenterName, encounterName)
 }

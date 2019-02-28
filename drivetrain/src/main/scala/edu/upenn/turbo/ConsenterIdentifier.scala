@@ -1,7 +1,30 @@
 package edu.upenn.turbo
 
+class ConsenterIdentifier extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = ConsenterIdentifier.pattern
+    val baseVariableName = ConsenterIdentifier.baseVariableName
+    val typeURI = ConsenterIdentifier.typeURI
+    val variablesToSelect = ConsenterIdentifier.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object ConsenterIdentifier extends ExpandedGraphObjectSingleton
 {
+    def create(optional: Boolean): ConsenterIdentifier =
+    {
+        new ConsenterIdentifier(optional)
+    }
+    
     val baseVariableName = "consenterCrid"
     val consenterBvn = Consenter.baseVariableName
     
@@ -12,7 +35,7 @@ object ConsenterIdentifier extends ExpandedGraphObjectSingleton
     val consenterSymbol = "partSymbol"
     val consenterRegistry = "partRegDen"
     
-    val dataset = "dataset"
+    val dataset = "consenterDataset"
     val datasetTitle = "datasetTitle"
    
     val instantiation = "instantiation"
@@ -43,14 +66,6 @@ object ConsenterIdentifier extends ExpandedGraphObjectSingleton
           ?$instantiation obo:OBI_0000293 ?$dataset .
           
       """
-    
-      
-    
-    
-
-    
-    
-    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
     val typeURI = """http://transformunify.org/ontologies/TURBO_0000503"""
     

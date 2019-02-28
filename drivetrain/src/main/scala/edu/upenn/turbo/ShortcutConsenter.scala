@@ -23,7 +23,7 @@ class ShortcutConsenter extends ShortcutGraphObjectInstance
     val variablesToSelect = ShortcutConsenter.variablesToSelect
 }
 
-object ShortcutConsenter extends ShortcutGraphObjectSingleton
+object ShortcutConsenter extends ShortcutGraphObjectSingletonWithCreate
 {    
     def create(instantiation: String, namedGraph: String, optional: Boolean = false): ShortcutConsenter =
     {

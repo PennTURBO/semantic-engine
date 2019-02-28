@@ -1,8 +1,32 @@
 package edu.upenn.turbo
 
+class ConsenterToBiobankEncounterJoin extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = ConsenterToBiobankEncounterJoin.pattern
+    val baseVariableName = ConsenterToBiobankEncounterJoin.baseVariableName
+    val typeURI = ConsenterToBiobankEncounterJoin.typeURI
+    val variablesToSelect = ConsenterToBiobankEncounterJoin.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
+
 object ConsenterToBiobankEncounterJoin extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "participantUnderInvestigationRole"
+    def create(optional: Boolean): ConsenterToBiobankEncounterJoin =
+    {
+        new ConsenterToBiobankEncounterJoin(optional)
+    }
+    
+    val baseVariableName = "participantUnderInvestigationRole"
     val consenterName = Consenter.baseVariableName
     val encounterName = BiobankEncounter.baseVariableName
     val biobankEncounterCrid = BiobankEncounterIdentifier.baseVariableName
@@ -16,7 +40,7 @@ object ConsenterToBiobankEncounterJoin extends ExpandedGraphObjectSingleton
     val weightDatum = BiobankEncounterWeight.datumKey
     
     
-    pattern = s"""
+    val pattern = s"""
       
           ?$consenterName obo:RO_0000056 ?$encounterName .
           
@@ -38,13 +62,11 @@ object ConsenterToBiobankEncounterJoin extends ExpandedGraphObjectSingleton
       		
       		?$weightAssay obo:OBI_0000293 ?$consenterName.
       		
-      		?$weightDatum obo:OBI_0000293 ?$consenterName.
+      		?$weightAssay obo:OBI_0000293 ?$consenterName.
       
       """
-      		
-    namedGraph = "http://www.itmat.upenn.edu/biobank/expanded"
 
-    typeURI = "http://purl.obolibrary.org/obo/OBI_0000097"
+    val typeURI = "http://purl.obolibrary.org/obo/OBI_0000097"
     
-    variablesToSelect = Array(consenterName, encounterName)
+    val variablesToSelect = Array(consenterName, encounterName)
 }

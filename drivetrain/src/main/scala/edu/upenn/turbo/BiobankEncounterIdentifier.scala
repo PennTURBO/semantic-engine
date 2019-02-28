@@ -1,8 +1,30 @@
 package edu.upenn.turbo
 
+class BiobankEncounterIdentifier extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = BiobankEncounterIdentifier.pattern
+    val baseVariableName = BiobankEncounterIdentifier.baseVariableName
+    val typeURI = BiobankEncounterIdentifier.typeURI
+    val variablesToSelect = BiobankEncounterIdentifier.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object BiobankEncounterIdentifier extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "biobankEncounterCrid"
+    def create(optional: Boolean): BiobankEncounterIdentifier =
+    {
+        new BiobankEncounterIdentifier(optional)
+    }
+    val baseVariableName = "biobankEncounterCrid"
     val biobankEncounterBvn = BiobankEncounter.baseVariableName
     
     val valuesKey = "biobankEncounterIdValue"
@@ -11,12 +33,12 @@ object BiobankEncounterIdentifier extends ExpandedGraphObjectSingleton
     val encounterSymbol = "biobankEncounterSymbol"
     val encounterRegistryDenoter = "biobankEncounterRegDen"
     
-    val dataset = "dataset"
+    val dataset = "biobankEncounterDataset"
     val datasetTitle = "datasetTitle"
     
     val instantiationKey = "instantiation"
 
-    pattern = s"""
+    val pattern = s"""
           
           ?$baseVariableName a turbo:TURBO_0000533 .
       		?$baseVariableName obo:IAO_0000219 ?$biobankEncounterBvn .
@@ -42,9 +64,9 @@ object BiobankEncounterIdentifier extends ExpandedGraphObjectSingleton
           
       """
           
-    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    typeURI = """http://transformunify.org/ontologies/TURBO_0000533"""
+    val typeURI = """http://transformunify.org/ontologies/TURBO_0000533"""
     
-    variablesToSelect = Array(biobankEncounterBvn, valuesKey, registryKey)
+    val variablesToSelect = Array(biobankEncounterBvn, valuesKey, registryKey)
 }

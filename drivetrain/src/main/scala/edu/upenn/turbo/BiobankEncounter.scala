@@ -1,8 +1,34 @@
 package edu.upenn.turbo
 
+class BiobankEncounter extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = BiobankEncounter.pattern
+    val baseVariableName = BiobankEncounter.baseVariableName
+    val typeURI = BiobankEncounter.typeURI
+    val variablesToSelect = BiobankEncounter.variablesToSelect
+    override val optionalLinks = BiobankEncounter.optionalLinks
+    override val mandatoryLinks = BiobankEncounter.mandatoryLinks
+    override val optionalPattern = BiobankEncounter.optionalPattern
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object BiobankEncounter extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "biobankEncounter"
+    def create(optional: Boolean): BiobankEncounter =
+    {
+        new BiobankEncounter(optional)
+    }
+    
+    val baseVariableName = "biobankEncounter"
     
     val encounterDate = "biobankEncounterDate"
     val shortcutName = "shortcutBiobankEncounterName"
@@ -13,7 +39,7 @@ object BiobankEncounter extends ExpandedGraphObjectSingleton
     
     val dataset = "dateDataset"
 
-    pattern = s"""
+    val pattern = s"""
               		
       ?$baseVariableName a turbo:TURBO_0000527 .
   		?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
@@ -25,7 +51,7 @@ object BiobankEncounter extends ExpandedGraphObjectSingleton
 
       """
 
-    optionalPattern = s"""
+    override val optionalPattern = s"""
       
       ?$encounterDate turbo:TURBO_0006511 ?$dateOfBiobankEncounterDateValue .
       ?$encounterDate turbo:TURBO_0006512 ?$dateOfBiobankEncounterStringValue .
@@ -34,17 +60,17 @@ object BiobankEncounter extends ExpandedGraphObjectSingleton
 
         """
 
-    optionalLinks = Map(
+    override val optionalLinks = Map(
         "BMI" -> BiobankEncounterBMI, "Height" -> BiobankEncounterHeight, "Weight" -> BiobankEncounterWeight
     )
 
-    mandatoryLinks = Map(
+    override val mandatoryLinks = Map(
         "Identifier" -> BiobankEncounterIdentifier
     )
     
-    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
+    val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
-    variablesToSelect = Array(baseVariableName)
+    val variablesToSelect = Array(baseVariableName)
 }

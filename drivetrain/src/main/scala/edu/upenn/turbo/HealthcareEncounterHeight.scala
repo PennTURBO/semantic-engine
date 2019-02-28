@@ -1,8 +1,31 @@
 package edu.upenn.turbo
 
+class HealthcareEncounterHeight extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = HealthcareEncounterHeight.pattern
+    val baseVariableName = HealthcareEncounterHeight.baseVariableName
+    val typeURI = HealthcareEncounterHeight.typeURI
+    val variablesToSelect = HealthcareEncounterHeight.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object HealthcareEncounterHeight extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "HealthcareEncounterHeightAssay"
+    def create(optional: Boolean): HealthcareEncounterHeight =
+    {
+        new HealthcareEncounterHeight(optional)
+    }
+    
+    val baseVariableName = "HealthcareEncounterHeightAssay"
     val encounterVariableName = HealthcareEncounter.baseVariableName
     val valuesKey = "HealthcareEncounterHeightValue"
     val datumKey = "HealthcareEncounterDatumKey"
@@ -11,9 +34,9 @@ object HealthcareEncounterHeight extends ExpandedGraphObjectSingleton
     
     val valueSpecification = "HealthcareEncounterHeightValSpec"
     
-    val dataset = "dataset"
+    val dataset = HealthcareEncounter.dataset
     
-    pattern = s"""
+    val pattern = s"""
       
         ?$valueSpecification a obo:OBI_0001931 ;
              obo:IAO_0000039 obo:UO_0000015 ;
@@ -34,9 +57,9 @@ object HealthcareEncounterHeight extends ExpandedGraphObjectSingleton
     		
       """
     
-      namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+      val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
+      val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
       
-      variablesToSelect = Array(encounterVariableName, valuesKey)
+      val variablesToSelect = Array(encounterVariableName, valuesKey)
 }

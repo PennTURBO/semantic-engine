@@ -1,7 +1,30 @@
 package edu.upenn.turbo
 
+class DateOfBirthDatum extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = DateOfBirthDatum.pattern
+    val baseVariableName = DateOfBirthDatum.baseVariableName
+    val typeURI = DateOfBirthDatum.typeURI
+    val variablesToSelect = DateOfBirthDatum.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object DateOfBirthDatum extends ExpandedGraphObjectSingleton
 {
+    def create(optional: Boolean): DateOfBirthDatum =
+    {
+        new DateOfBirthDatum(optional)
+    }
+    
     val baseVariableName = "dob"
     val birthBvn = Consenter.birthVariableName
     val dateOfBirthString = "dobValue"
@@ -21,8 +44,6 @@ object DateOfBirthDatum extends ExpandedGraphObjectSingleton
           ?$dataset a obo:IAO_0000100 .
           
       """
-      
-    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
     val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004950"
     

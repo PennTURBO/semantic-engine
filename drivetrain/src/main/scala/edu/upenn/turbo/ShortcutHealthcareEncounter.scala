@@ -2,9 +2,37 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingleton
+class ShortcutHealthcareEncounter extends ShortcutGraphObjectInstance
 {
-    baseVariableName = "shortcutHealthcareEncounter"
+    def this(instantiation: String, namedGraph: String, optional: Boolean)
+    {
+        this()
+        this.instantiation = instantiation
+        this.namedGraph = namedGraph
+        this.optional = optional
+    }
+  
+    var instantiation: String = null
+    var namedGraph: String = null
+    var optional: Boolean = false
+    
+    val pattern = ShortcutHealthcareEncounter.pattern
+    val baseVariableName = ShortcutHealthcareEncounter.baseVariableName
+    val typeURI = ShortcutHealthcareEncounter.typeURI
+    val expansionRules = ShortcutHealthcareEncounter.expansionRules
+    val variablesToSelect = ShortcutHealthcareEncounter.variablesToSelect
+    
+    override val appendToBind = ShortcutHealthcareEncounter.appendToBind
+}
+
+object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreate
+{    
+    def create(instantiation: String, namedGraph: String, optional: Boolean = false): ShortcutHealthcareEncounter =
+    {
+        new ShortcutHealthcareEncounter(instantiation, namedGraph, optional)
+    }
+    
+    val baseVariableName = "shortcutHealthcareEncounter"
     val valuesKey = "shortcutHealthcareEncounterIdValue"
     val registryKey = "shortcutHealthcareEncounterRegistryString"
     
@@ -35,7 +63,7 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingleton
     
     val instantiationKey = "instantiation"
     
-    pattern = s"""
+    val pattern = s"""
           
         ?$baseVariableName a obo:OGMS_0000097 ;
           		turbo:TURBO_0000643  ?$datasetTitle ;
@@ -107,16 +135,16 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingleton
               {
                 ?$baseVariableName turbo:TURBO_0010002 ?$consenterRegistry .
                 ?$baseVariableName turbo:TURBO_0010000 ?$consenterSymbol .
-                ?$baseVariableName turbo:ScHcEnc2UnexpandedConsenter ?$consenterSymbol .
+                ?$baseVariableName turbo:ScHcEnc2UnexpandedConsenter ?$consenterURI .
               }
             
       """  
     
-    typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
+    val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
     
-    variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
+    val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
     
-    expansionRules = Array(
+    val expansionRules = Array(
         
         ExpansionFromShortcutValue.create(HealthcareEncounterIdentifier.registryKey, registryKey, StringToURI),
         ExpansionFromShortcutValue.create(Prescription.mappedMedicationTerm, mappedMedicationTerm, StringToURI),
@@ -125,7 +153,7 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingleton
         ExpansionFromShortcutValue.create(HealthcareEncounter.shortcutName, baseVariableName, URIToString),
         ExpansionFromShortcutValue.create(ConsenterToHealthcareEncounterJoin.consenterName, consenterURI, MD5GlobalRandomWithOriginal),
         ExpansionFromShortcutValue.create(HealthcareEncounterBMI.valuesKey, bmiValue, BindAs),
-        ExpansionFromShortcutValue.create(HealthcareEncounterWeight.valuesKey, heightValue, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounterHeight.valuesKey, heightValue, BindAs),
         ExpansionFromShortcutValue.create(HealthcareEncounterWeight.valuesKey, weightValue, BindAs),
         ExpansionFromShortcutValue.create(HealthcareEncounter.dateOfHealthcareEncounterStringValue, dateOfHealthcareEncounterStringValue, BindAs),
         ExpansionFromShortcutValue.create(HealthcareEncounter.dateOfHealthcareEncounterDateValue, dateOfHealthcareEncounterDateValue, BindAs),
@@ -139,7 +167,7 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingleton
         ExpansionFromShortcutValue.create(Diagnosis.diagnosisCode, diagnosisCode, BindAs),
         
         ExpansionOfIntermediateNode.create(HealthcareEncounter.baseVariableName, MD5GlobalRandom),
-        ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
+        ExpansionOfIntermediateNode.create(HealthcareEncounter.dataset, MD5GlobalRandomWithDependent, datasetTitle),
         ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.baseVariableName, RandomUUID),
         ExpansionOfIntermediateNode.create(HealthcareEncounter.encounterDate, RandomUUID),
         ExpansionOfIntermediateNode.create(HealthcareEncounter.encounterStart, RandomUUID),
@@ -157,13 +185,13 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingleton
         ExpansionOfIntermediateNode.create(Prescription.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, prescription),
         ExpansionOfIntermediateNode.create(Prescription.prescriptionCrid, BindIfBoundMD5LocalRandomWithDependent, prescription),
         ExpansionOfIntermediateNode.create(Prescription.medicationSymbol, BindIfBoundMD5LocalRandomWithDependent, prescription),
-        ExpansionOfIntermediateNode.create(HealthcareEncounter.dataset, BindIfBoundDataset, dateOfHealthcareEncounterStringValue)
+        ExpansionOfIntermediateNode.create(HealthcareEncounter.dateDataset, BindIfBoundDataset, dateOfHealthcareEncounterStringValue)
     )
     
     val diagRegKey: String = Diagnosis.registryKey
     val diagIcdTerm: String = Diagnosis.icdTerm
                                         
-    appendToBind = s"""
+    override val appendToBind = s"""
         BIND(IF (?$diagRegKey = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat("http://purl.bioontology.org/ontology/ICD9CM/", ?$diagnosisCode)), ?unbound) AS ?icd9term)
         BIND(IF (?$diagRegKey = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat("http://purl.bioontology.org/ontology/ICD10CM/", ?$diagnosisCode)), ?unbound) AS ?icd10term)
         BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?$diagIcdTerm)

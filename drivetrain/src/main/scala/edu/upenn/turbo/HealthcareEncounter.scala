@@ -1,8 +1,35 @@
 package edu.upenn.turbo
 
+class HealthcareEncounter extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = HealthcareEncounter.pattern
+    val baseVariableName = HealthcareEncounter.baseVariableName
+    val typeURI = HealthcareEncounter.typeURI
+    val variablesToSelect = HealthcareEncounter.variablesToSelect
+    
+    override val optionalPattern = HealthcareEncounter.optionalPattern
+    override val optionalLinks = HealthcareEncounter.optionalLinks
+    override val mandatoryLinks = HealthcareEncounter.mandatoryLinks
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object HealthcareEncounter extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "healthcareEncounter"
+    def create(optional: Boolean): HealthcareEncounter =
+    {
+        new HealthcareEncounter(optional)
+    }
+    
+    val baseVariableName = "healthcareEncounter"
     val encounterDate = "healthcareEncounterDate"
     
     val shortcutName = "shortcutHealthcareEncounterName"
@@ -11,9 +38,10 @@ object HealthcareEncounter extends ExpandedGraphObjectSingleton
     val dateOfHealthcareEncounterStringValue = "healthcareEncounterDateStringValue"
     val dateOfHealthcareEncounterDateValue = "healthcareEncounterDateDateValue"
     
-    val dataset = "dateDataset"
+    val dateDataset = "dateDataset"
+    val dataset = "healthcareEncounterDataset"
     
-    pattern = s"""
+    val pattern = s"""
   	
   		?$baseVariableName a obo:OGMS_0000097 .
   		?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
@@ -26,16 +54,16 @@ object HealthcareEncounter extends ExpandedGraphObjectSingleton
 
       """
 
-    optionalPattern = s"""
+    override val optionalPattern = s"""
       
       ?$encounterDate turbo:TURBO_0006512 ?$dateOfHealthcareEncounterStringValue .
   		?$encounterDate turbo:TURBO_0006511 ?$dateOfHealthcareEncounterDateValue .
-      ?$encounterDate obo:BFO_0000050 ?$dataset .
-      ?$dataset obo:BFO_0000051 ?$encounterDate .
+      ?$encounterDate obo:BFO_0000050 ?$dateDataset .
+      ?$dateDataset obo:BFO_0000051 ?$encounterDate .
 
         """
 
-    optionalLinks = Map(
+    override val optionalLinks = Map(
         "BMI" -> HealthcareEncounterBMI, 
         "Height" -> HealthcareEncounterHeight, 
         "Weight" -> HealthcareEncounterWeight, 
@@ -43,13 +71,13 @@ object HealthcareEncounter extends ExpandedGraphObjectSingleton
         "Prescription" -> Prescription
     )
 
-    mandatoryLinks = Map(
+    override val mandatoryLinks = Map(
         "Identifier" -> HealthcareEncounterIdentifier
     )
     
-    namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+    val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
+    val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
     
-    variablesToSelect = Array(baseVariableName)
+    val variablesToSelect = Array(baseVariableName)
 }

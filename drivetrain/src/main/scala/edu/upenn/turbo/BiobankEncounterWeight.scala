@@ -1,8 +1,31 @@
 package edu.upenn.turbo
 
+class BiobankEncounterWeight extends GraphObjectInstance
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+    }
+    
+    var optional: Boolean = false
+    
+    val pattern = BiobankEncounterWeight.pattern
+    val baseVariableName = BiobankEncounterWeight.baseVariableName
+    val typeURI = BiobankEncounterWeight.typeURI
+    val variablesToSelect = BiobankEncounterWeight.variablesToSelect
+    
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object BiobankEncounterWeight extends ExpandedGraphObjectSingleton
 {
-    baseVariableName = "BiobankEncounterWeightAssay"
+    def create(optional: Boolean): BiobankEncounterWeight =
+    {
+        new BiobankEncounterWeight(optional)
+    }
+    
+    val baseVariableName = "BiobankEncounterWeightAssay"
     val encounterVariableName = BiobankEncounter.baseVariableName
     val valuesKey = "BiobankEncounterWeightValue"
     val datumKey = "BiobankEncounterWeightDatum"
@@ -13,7 +36,7 @@ object BiobankEncounterWeight extends ExpandedGraphObjectSingleton
     
     val dataset = "dataset"
     
-    pattern = s"""
+    val pattern = s"""
       
         ?$baseVariableName a obo:OBI_0000445 ;
   	                 obo:OBI_0000299 ?$datumKey.
@@ -34,9 +57,9 @@ object BiobankEncounterWeight extends ExpandedGraphObjectSingleton
     		
       """
       
-      namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+      val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
       
-      typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
+      val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
       
-      variablesToSelect = Array(encounterVariableName, valuesKey)
+      val variablesToSelect = Array(encounterVariableName, valuesKey)
 }

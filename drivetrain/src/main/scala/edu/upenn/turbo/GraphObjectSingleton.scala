@@ -12,5 +12,4 @@ abstract class GraphObjectSingleton
     val optionalLinks: Map[String, GraphObjectSingleton] = Map()
     val mandatoryLinks: Map[String, GraphObjectSingleton] = Map()
     val optionalPattern: String = ""
-    val namedGraph: String = ""
 }
