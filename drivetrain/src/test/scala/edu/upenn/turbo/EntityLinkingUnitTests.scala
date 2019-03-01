@@ -39,12 +39,17 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
         connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
    
-    test("biobank encounter expansion with entity linking")
+    test("biobank encounter expansion with entity linking - all fields")
     {
         
     }
     
-    test ("healthcare encounter expansion with entity linking")
+    test("biobank encounter expansion with entity linking - minimum fields")
+    {
+        
+    }
+    
+    test ("healthcare encounter expansion with entity linking - all fields")
     {
         val query = """INSERT DATA { 
           GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
@@ -55,7 +60,12 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           turbo:TURBO_0000650 "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
           turbo:TURBO_0010002 "http://transformunify.org/ontologies/UPHS"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
           turbo:TURBO_0010000 "4" ;
-          turbo:ScHcEnc2UnexpandedConsenter "http://transformunify.org/ontologies/UPHS/4" .
+          turbo:ScHcEnc2UnexpandedConsenter "http://transformunify.org/ontologies/UPHS/4" ;
+          turbo:TURBO_0000646 "12" ;
+          turbo:TURBO_0000647 "13" ;
+          turbo:TURBO_0000655 "14" ;
+          turbo:TURBO_0000644 "01/12/1993" ;
+          turbo:TURBO_0000645 "01/12/1993"^^xsd:Date .
           }
           GRAPH pmbb:Shortcuts_consenterShortcuts {
           <http://transformunify.org/ontologies/UPHS/4> a turbo:TURBO_0000502 .
@@ -103,9 +113,25 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           		?heightAssay obo:OBI_0000299 ?heightDatum .
           		?weightDatum a obo:IAO_0000414 .
           		?weightAssay obo:OBI_0000299 ?weightDatum .
+          		
+          		?consenter obo:BFO_0000051 ?adipose .
+              ?adipose obo:BFO_0000050 ?consenter .
+              ?adipose a obo:UBERON_0001013 .
+              ?adipose obo:IAO_0000136 ?BMI .
+              ?BMI a efo:EFO_0004340 .
+              ?BMI obo:IAO_0000581 ?encounterDate .
+              ?encounterStart a turbo:TURBO_0000511 .
+          		?encounterStart obo:RO_0002223 ?healthcareEncounter .          
+          		?encounterDate a turbo:TURBO_0000512 .
+          		?encounterDate obo:IAO_0000136 ?encounterStart .
           }
           """
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
     }
+    
+    /*test("healthcare encounter expansion with entity linking - minimum fields")
+    {
+      
+    }*/
 }

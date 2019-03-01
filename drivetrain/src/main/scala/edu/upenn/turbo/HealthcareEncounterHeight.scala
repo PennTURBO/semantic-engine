@@ -18,7 +18,7 @@ class HealthcareEncounterHeight extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object HealthcareEncounterHeight extends ExpandedGraphObjectSingleton
+object HealthcareEncounterHeight extends ExpandedGraphObjectSingletonFromDataset
 {
     def create(optional: Boolean): HealthcareEncounterHeight =
     {

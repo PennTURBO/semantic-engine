@@ -47,7 +47,21 @@ object ShortcutConsenterToBiobankEncounterJoin extends ShortcutGraphObjectSingle
     
     val expansionRules: Array[ExpansionRule] = Array(
         
-             ExpansionOfIntermediateNode.create(ConsenterToBiobankEncounterJoin.baseVariableName, RandomUUID)  
+             ExpansionOfIntermediateNode.create(ConsenterToBiobankEncounterJoin.baseVariableName, RandomUUID),  
              
+             ExpansionOfIntermediateNode.create(ConsenterToBiobankEncounterJoin.consenterHeight, 
+                                               SingletonMD5OfOriginalWithDependent, 
+                                               BiobankEncounterHeight.baseVariableName,
+                                               consenterName),
+                                               
+             ExpansionOfIntermediateNode.create(ConsenterToBiobankEncounterJoin.consenterWeight, 
+                                                SingletonMD5OfOriginalWithDependent, 
+                                                BiobankEncounterWeight.baseVariableName,
+                                                consenterName),
+                                                
+             ExpansionOfIntermediateNode.create(ConsenterToBiobankEncounterJoin.consenterAdipose, 
+                                               SingletonMD5OfOriginalWithDependent, 
+                                               BiobankEncounterBMI.baseVariableName,
+                                               consenterName)
     )
 }

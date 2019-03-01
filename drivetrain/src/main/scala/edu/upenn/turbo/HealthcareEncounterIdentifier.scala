@@ -18,7 +18,7 @@ class HealthcareEncounterIdentifier extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object HealthcareEncounterIdentifier extends ExpandedGraphObjectSingleton
+object HealthcareEncounterIdentifier extends ExpandedGraphObjectSingletonFromDataset
 {
     def create(optional: Boolean): HealthcareEncounterIdentifier =
     {
@@ -35,8 +35,8 @@ object HealthcareEncounterIdentifier extends ExpandedGraphObjectSingleton
     val encounterSymbol = "healthcareEncounterSymbol"
     val encounterRegistryDenoter = "healthcareEncounterRegDen"
     
-    val dataset = "healthcareEncounterDataset"
-    val datasetTitle = "datasetTitle"
+    val dataset = HealthcareEncounter.dataset
+    val datasetTitle = "healthcareEncounterDatasetTitle"
 
     val pattern = s"""
           

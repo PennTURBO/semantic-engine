@@ -18,7 +18,7 @@ class ConsenterIdentifier extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object ConsenterIdentifier extends ExpandedGraphObjectSingleton
+object ConsenterIdentifier extends ExpandedGraphObjectSingletonFromDataset
 {
     def create(optional: Boolean): ConsenterIdentifier =
     {
@@ -35,8 +35,8 @@ object ConsenterIdentifier extends ExpandedGraphObjectSingleton
     val consenterSymbol = "partSymbol"
     val consenterRegistry = "partRegDen"
     
-    val dataset = "consenterDataset"
-    val datasetTitle = "datasetTitle"
+    val dataset = Consenter.dataset
+    val datasetTitle = "consenterIdentifierDatasetTitle"
    
     val instantiation = "instantiation"
 

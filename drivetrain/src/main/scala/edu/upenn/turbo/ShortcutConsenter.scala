@@ -38,7 +38,7 @@ object ShortcutConsenter extends ShortcutGraphObjectSingletonWithCreate
     val registryKey = "consenterRegistryString"
     
     val cridKey = "shortcutCrid"
-    val datasetTitle = "shortcutDatasetTitle"
+    val datasetTitle = "shortcutConsenterDatasetTitle"
     
     val dateOfBirthString = "dateOfBirthStringValue"
     val dateOfBirthDate = "dateOfBirthDateValue"
@@ -102,11 +102,8 @@ object ShortcutConsenter extends ShortcutGraphObjectSingletonWithCreate
         ExpansionFromShortcutValue.create(ConsenterIdentifier.instantiation, instantiationKey, InstantiationStringToURI),
         ExpansionFromShortcutValue.create(ConsenterIdentifier.datasetTitle, datasetTitle, BindAs),
         
-        ExpansionOfIntermediateNode.create(Consenter.biosexKey, MD5LocalRandom),
-        ExpansionOfIntermediateNode.create(Consenter.birthVariableName, MD5LocalRandom),
-        ExpansionOfIntermediateNode.create(Consenter.heightKey, MD5LocalRandom),
-        ExpansionOfIntermediateNode.create(Consenter.weightKey, MD5LocalRandom),
-        ExpansionOfIntermediateNode.create(Consenter.adiposeKey, MD5LocalRandom),
+        ExpansionOfIntermediateNode.create(GenderIdentityDatum.biosex, BindIfBoundMD5LocalRandom, genderIdentityValue),
+        ExpansionOfIntermediateNode.create(DateOfBirthDatum.birth, BindIfBoundMD5LocalRandom, dateOfBirthString),
         ExpansionOfIntermediateNode.create(Consenter.baseVariableName, MD5GlobalRandom),
         ExpansionOfIntermediateNode.create(ConsenterIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
         ExpansionOfIntermediateNode.create(ConsenterIdentifier.baseVariableName, RandomUUID),
@@ -116,10 +113,6 @@ object ShortcutConsenter extends ShortcutGraphObjectSingletonWithCreate
         ExpansionOfIntermediateNode.create(RaceIdentityDatum.baseVariableName, BindIfBoundMD5LocalRandom, raceIdentityType),
         ExpansionOfIntermediateNode.create(RaceIdentityDatum.raceIdentificationProcess, BindIfBoundMD5LocalRandom, raceIdentityType),
         ExpansionOfIntermediateNode.create(DateOfBirthDatum.baseVariableName, BindIfBoundMD5LocalRandom, dateOfBirthString),
-        ExpansionOfIntermediateNode.create(GenderIdentityDatum.genderIdentityType, BiologicalSexIRI, genderIdentityType),
-        ExpansionOfIntermediateNode.create(DateOfBirthDatum.dataset, BindIfBoundDataset, dateOfBirthString),
-        ExpansionOfIntermediateNode.create(RaceIdentityDatum.dataset, BindIfBoundDataset, raceIdentityType),
-        ExpansionOfIntermediateNode.create(GenderIdentityDatum.dataset, BindIfBoundDataset, genderIdentityValue)
-        
+        ExpansionOfIntermediateNode.create(GenderIdentityDatum.genderIdentityType, BiologicalSexIRI, genderIdentityType)
         )
 }

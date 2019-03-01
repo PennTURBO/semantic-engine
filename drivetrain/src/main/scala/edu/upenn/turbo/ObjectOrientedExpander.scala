@@ -21,7 +21,6 @@ class ObjectOrientedExpander extends ProjectwideGlobals
           val partipantExpansion = buildParticipantExpansionQuery(instantiation, globalUUID, namedGraph)
           val biobankEncounterExpansion = buildBiobankEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
           val healthcareEncounterExpansion = buildHealthcareEncounterExpansionQuery(instantiation, globalUUID, namedGraph)
-          println(healthcareEncounterExpansion)
           
           update.updateSparql(cxn, partipantExpansion)
           update.updateSparql(cxn, biobankEncounterExpansion)
@@ -32,6 +31,7 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         val healthcareEntityLinkingExpansion = buildConsenterToHealthcareEncounterLinkingExpansionQuery(instantiation, globalUUID)
         update.updateSparql(cxn, biobankEntityLinkingExpansion)
         update.updateSparql(cxn, healthcareEntityLinkingExpansion)
+        println(healthcareEntityLinkingExpansion)
     }
     
     def buildParticipantExpansionQuery(instantiation: String, globalUUID: String, namedGraph: String): String =
@@ -101,8 +101,12 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         val consenterToBiobankEncounterJoin = ConsenterToBiobankEncounterJoin.create(false)
         val biobankEncounterHeight = BiobankEncounterHeight.create(true)
         val biobankEncounterWeight = BiobankEncounterWeight.create(true)
+        val biobankEncounterBMI = BiobankEncounterBMI.create(true)
+        val biobankEncounterDate = BiobankEncounterDate.create(true)
         
-        val buildList = Array(shortcutConsenterToBiobankEncounterJoin, consenter, biobankEncounter, biobankEncounterHeight, biobankEncounterWeight)
+        val buildList = Array(shortcutConsenterToBiobankEncounterJoin, consenter, biobankEncounter, 
+                              biobankEncounterHeight, biobankEncounterWeight, biobankEncounterBMI,
+                              biobankEncounterDate)
         
         val whereBuilderArgs = WhereBuilderQueryArgs.create(buildList)
         
@@ -124,8 +128,12 @@ class ObjectOrientedExpander extends ProjectwideGlobals
         val consenterToHealthcareEncounterJoin = ConsenterToHealthcareEncounterJoin.create(false)
         val healthcareEncounterHeight = HealthcareEncounterHeight.create(true)
         val healthcareEncounterWeight = HealthcareEncounterWeight.create(true)
+        val healthcareEncounterBMI = HealthcareEncounterBMI.create(true)
+        val healthcareEncounterDate = HealthcareEncounterDate.create(true)
         
-        val buildList = Array(shortcutConsenterToHealthcareEncounterJoin, consenter, healthcareEncounter, healthcareEncounterHeight, healthcareEncounterWeight)
+        val buildList = Array(shortcutConsenterToHealthcareEncounterJoin, consenter, healthcareEncounter, 
+                              healthcareEncounterHeight, healthcareEncounterWeight, healthcareEncounterBMI,
+                              healthcareEncounterDate)
         
         val whereBuilderArgs = WhereBuilderQueryArgs.create(buildList)
         

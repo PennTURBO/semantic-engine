@@ -2,12 +2,13 @@ package edu.upenn.turbo
 
 class ExpansionOfIntermediateNode extends ExpansionRule
 {
-    def this(expandedVariableName: String, rule: String, dependent: String = null)
+    def this(expandedVariableName: String, rule: String, dependent: String, shortcutVariableName: String)
     {
         this()
         this.expandedVariableName = expandedVariableName
         this.rule = rule
         this.dependent = dependent
+        this.shortcutVariableName = shortcutVariableName
     }
     
     var expandedVariableName: String = null
@@ -18,8 +19,8 @@ class ExpansionOfIntermediateNode extends ExpansionRule
 
 object ExpansionOfIntermediateNode
 {
-    def create(expandedName: String, rule: String, dependent: String = null): ExpansionOfIntermediateNode =
+    def create(expandedName: String, rule: String, dependent: String = null, shortcutVariableName: String = null): ExpansionOfIntermediateNode =
     {
-        new ExpansionOfIntermediateNode(expandedName, rule, dependent)
+        new ExpansionOfIntermediateNode(expandedName, rule, dependent, shortcutVariableName)
     }
 }

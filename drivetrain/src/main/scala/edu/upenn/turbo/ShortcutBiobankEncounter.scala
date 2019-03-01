@@ -36,7 +36,7 @@ object ShortcutBiobankEncounter extends ShortcutGraphObjectSingletonWithCreate
     val valuesKey = "shortcutBiobankEncounterIdValue"
     val registryKey = "shortcutBiobankEncounterRegistryString"
     
-    val datasetTitle = "shortcutDatasetTitle"
+    val datasetTitle = "shortcutBiobankEncounterDatasetTitle"
     
     val bmiValue = "shortcutBiobankEncounterBmiValue"
     val weightValue = "shortcutBiobankEncounterWeightValue"
@@ -97,16 +97,16 @@ object ShortcutBiobankEncounter extends ShortcutGraphObjectSingletonWithCreate
         ExpansionFromShortcutValue.create(BiobankEncounterBMI.bmiValue, bmiValue, BindAs),
         ExpansionFromShortcutValue.create(BiobankEncounterHeight.heightValue, heightValue, BindAs),
         ExpansionFromShortcutValue.create(BiobankEncounterWeight.weightValue, weightValue, BindAs),
-        ExpansionFromShortcutValue.create(BiobankEncounter.dateOfBiobankEncounterStringValue, dateOfBiobankEncounterStringValue, BindAs),
-        ExpansionFromShortcutValue.create(BiobankEncounter.dateOfBiobankEncounterDateValue, dateOfBiobankEncounterDateValue, BindAs),
+        ExpansionFromShortcutValue.create(BiobankEncounterDate.dateOfBiobankEncounterStringValue, dateOfBiobankEncounterStringValue, BindAs),
+        ExpansionFromShortcutValue.create(BiobankEncounterDate.dateOfBiobankEncounterDateValue, dateOfBiobankEncounterDateValue, BindAs),
         ExpansionFromShortcutValue.create(BiobankEncounterIdentifier.valuesKey, valuesKey, BindAs),
         ExpansionFromShortcutValue.create(BiobankEncounterIdentifier.datasetTitle, datasetTitle, BindAs),
        
         ExpansionOfIntermediateNode.create(BiobankEncounter.baseVariableName, MD5GlobalRandom),
         ExpansionOfIntermediateNode.create(BiobankEncounterIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
         ExpansionOfIntermediateNode.create(BiobankEncounterIdentifier.baseVariableName, RandomUUID),
-        ExpansionOfIntermediateNode.create(BiobankEncounter.encounterDate, RandomUUID),
-        ExpansionOfIntermediateNode.create(BiobankEncounter.encounterStart, RandomUUID),
+        ExpansionOfIntermediateNode.create(BiobankEncounterDate.encounterDate, BindIfBoundRandomUUID, dateOfBiobankEncounterStringValue),
+        ExpansionOfIntermediateNode.create(BiobankEncounterDate.encounterStart, BindIfBoundRandomUUID, dateOfBiobankEncounterStringValue),
         ExpansionOfIntermediateNode.create(BiobankEncounterIdentifier.encounterRegistryDenoter, RandomUUID),
         ExpansionOfIntermediateNode.create(BiobankEncounterIdentifier.encounterSymbol, RandomUUID),
         ExpansionOfIntermediateNode.create(BiobankEncounterBMI.baseVariableName, BindIfBoundRandomUUID, bmiValue),
@@ -116,8 +116,6 @@ object ShortcutBiobankEncounter extends ShortcutGraphObjectSingletonWithCreate
         ExpansionOfIntermediateNode.create(BiobankEncounterHeight.datumKey, BindIfBoundRandomUUID, heightValue),
         ExpansionOfIntermediateNode.create(BiobankEncounterWeight.baseVariableName, BindIfBoundRandomUUID, weightValue),
         ExpansionOfIntermediateNode.create(BiobankEncounterWeight.valueSpecification, BindIfBoundRandomUUID, weightValue),
-        ExpansionOfIntermediateNode.create(BiobankEncounterWeight.datumKey, BindIfBoundRandomUUID, weightValue),
-        ExpansionOfIntermediateNode.create(BiobankEncounter.dataset, BindIfBoundDataset, dateOfBiobankEncounterStringValue)
-        
+        ExpansionOfIntermediateNode.create(BiobankEncounterWeight.datumKey, BindIfBoundRandomUUID, weightValue)
     )
 }

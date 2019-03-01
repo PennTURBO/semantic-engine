@@ -43,5 +43,8 @@ trait IRIConstructionRules
                                             REPLACE(struuid(), "-", ""))), ?unbound) AS ?replacement)"""
 
     val BindAs: String = """BIND (?original AS ?replacement)"""
+    
+    val SingletonMD5OfOriginalWithDependent: String = """BIND(IF(BOUND(?dependent), uri(concat("http://www.itmat.upenn.edu/biobank/",
+                                md5(CONCAT("replacement", str(?original))))), ?unbound) AS ?replacement)"""
   
 }

@@ -18,7 +18,7 @@ class BiobankEncounterIdentifier extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object BiobankEncounterIdentifier extends ExpandedGraphObjectSingleton
+object BiobankEncounterIdentifier extends ExpandedGraphObjectSingletonFromDataset
 {
     def create(optional: Boolean): BiobankEncounterIdentifier =
     {
@@ -33,8 +33,8 @@ object BiobankEncounterIdentifier extends ExpandedGraphObjectSingleton
     val encounterSymbol = "biobankEncounterSymbol"
     val encounterRegistryDenoter = "biobankEncounterRegDen"
     
-    val dataset = "biobankEncounterDataset"
-    val datasetTitle = "datasetTitle"
+    val dataset = BiobankEncounter.dataset
+    val datasetTitle = "biobankEncounterDatasetTitle"
     
     val instantiationKey = "instantiation"
 

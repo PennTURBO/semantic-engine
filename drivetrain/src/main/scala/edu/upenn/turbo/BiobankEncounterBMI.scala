@@ -18,7 +18,7 @@ class BiobankEncounterBMI extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object BiobankEncounterBMI extends ExpandedGraphObjectSingleton
+object BiobankEncounterBMI extends ExpandedGraphObjectSingletonFromDataset
 {
     def create(optional: Boolean): BiobankEncounterBMI =
     {
@@ -26,14 +26,14 @@ object BiobankEncounterBMI extends ExpandedGraphObjectSingleton
     }
     
     val baseVariableName = "BiobankEncounterBMI"
-    val encounterDate = BiobankEncounter.encounterDate
+    val encounterDate = BiobankEncounterDate.baseVariableName
     val encounterVariableName = BiobankEncounter.baseVariableName
     val valuesKey = "BiobankEncounterBmiValue"
     
     val bmiValue = valuesKey
     
     val valueSpecification = "BiobankEncounterBmiValSpec"
-    val dataset = "dataset"
+    val dataset = BiobankEncounter.dataset
     
     val pattern = s"""
       

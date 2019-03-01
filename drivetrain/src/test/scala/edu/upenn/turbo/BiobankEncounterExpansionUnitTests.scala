@@ -50,11 +50,6 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
         		?encregden obo:IAO_0000219 <http://transformunify.org/hcEncReg/biobank> .
         		<http://transformunify.org/hcEncReg/biobank> a turbo:TURBO_0000543 .
         		?dataset <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:IAO_0000100 .
-        		
-        		?encStart <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000531 .
-        		?encStart obo:RO_0002223 ?encounter .
-        		?encounterDate <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000532 .
-        		?encounterDate obo:IAO_0000136 ?encStart .
        }}
       """
     
@@ -222,14 +217,12 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             "http://purl.obolibrary.org/obo/BFO_0000050","http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/RO_0002223",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://purl.obolibrary.org/obo/IAO_0000136",
             "http://purl.obolibrary.org/obo/BFO_0000050"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (25)
+        result.size should be (21)
     }
    
     test("bb encounter without registry")

@@ -18,7 +18,7 @@ class RaceIdentityDatum extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object RaceIdentityDatum extends ExpandedGraphObjectSingleton
+object RaceIdentityDatum extends ExpandedGraphObjectSingletonFromDataset
 {
     def create(optional: Boolean): RaceIdentityDatum =
     {
@@ -30,7 +30,7 @@ object RaceIdentityDatum extends ExpandedGraphObjectSingleton
     val raceIdentityValue = "ridValue"
     val raceIdentityType = "ridType"
     
-    val dataset = "raceDataset"
+    val dataset = Consenter.dataset
     val raceIdentificationProcess = "raceIdentificationProcess"
 
     val pattern = s"""

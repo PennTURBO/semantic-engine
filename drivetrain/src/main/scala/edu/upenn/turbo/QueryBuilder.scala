@@ -114,7 +114,7 @@ class QueryBuilder extends Query with IRIConstructionRules
     {
         insertClause += " GRAPH <" + buildType.namedGraph + "> {"
         insertClause += buildType.pattern
-        insertClause += buildType.optionalPattern
+        for (pattern <- buildType.optionalPatterns) insertClause += pattern
         insertClause += "}"
     }
 

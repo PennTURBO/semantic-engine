@@ -56,11 +56,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         		
         		?encounterSymb a turbo:TURBO_0000509 .
         		?encounterRegDen a turbo:TURBO_0000510 .
-        		
-        		?encStart <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000511 .
-        		?encStart obo:RO_0002223 ?encounter .
-        		?encounterDate <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000512 .
-        		?encounterDate obo:IAO_0000136 ?encStart .
+        	
        }}
       """
     
@@ -317,14 +313,12 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006510",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/RO_0002223",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (25)
+        result.size should be (21)
     }
     
     test("hc encounter without ID")

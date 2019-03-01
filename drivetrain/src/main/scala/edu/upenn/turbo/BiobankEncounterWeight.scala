@@ -18,7 +18,7 @@ class BiobankEncounterWeight extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object BiobankEncounterWeight extends ExpandedGraphObjectSingleton
+object BiobankEncounterWeight extends ExpandedGraphObjectSingletonFromDataset
 {
     def create(optional: Boolean): BiobankEncounterWeight =
     {
@@ -34,7 +34,7 @@ object BiobankEncounterWeight extends ExpandedGraphObjectSingleton
     
     val valueSpecification = "BiobankEncounterWeightValSpec"
     
-    val dataset = "dataset"
+    val dataset = BiobankEncounter.dataset
     
     val pattern = s"""
       

@@ -47,7 +47,21 @@ object ShortcutConsenterToHealthcareEncounterJoin extends ShortcutGraphObjectSin
     
     val expansionRules: Array[ExpansionRule] = Array(
         
-             ExpansionOfIntermediateNode.create(ConsenterToHealthcareEncounterJoin.baseVariableName, RandomUUID)  
+             ExpansionOfIntermediateNode.create(ConsenterToHealthcareEncounterJoin.baseVariableName, RandomUUID),  
              
+             ExpansionOfIntermediateNode.create(ConsenterToHealthcareEncounterJoin.consenterHeight, 
+                                               SingletonMD5OfOriginalWithDependent, 
+                                               HealthcareEncounterHeight.baseVariableName,
+                                               consenterName),
+                                               
+             ExpansionOfIntermediateNode.create(ConsenterToHealthcareEncounterJoin.consenterWeight, 
+                                                SingletonMD5OfOriginalWithDependent, 
+                                                HealthcareEncounterWeight.baseVariableName,
+                                                consenterName),
+                                                
+             ExpansionOfIntermediateNode.create(ConsenterToHealthcareEncounterJoin.consenterAdipose, 
+                                                SingletonMD5OfOriginalWithDependent, 
+                                                HealthcareEncounterBMI.baseVariableName,
+                                                consenterName)
     )
 }

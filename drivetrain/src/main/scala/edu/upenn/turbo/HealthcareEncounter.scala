@@ -15,14 +15,14 @@ class HealthcareEncounter extends GraphObjectInstance
     val typeURI = HealthcareEncounter.typeURI
     val variablesToSelect = HealthcareEncounter.variablesToSelect
     
-    override val optionalPattern = HealthcareEncounter.optionalPattern
+    override val optionalPatterns = HealthcareEncounter.optionalPatterns
     override val optionalLinks = HealthcareEncounter.optionalLinks
     override val mandatoryLinks = HealthcareEncounter.mandatoryLinks
     
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object HealthcareEncounter extends ExpandedGraphObjectSingleton
+object HealthcareEncounter extends ExpandedGraphObjectSingletonFromDataset
 {
     def create(optional: Boolean): HealthcareEncounter =
     {
@@ -46,29 +46,15 @@ object HealthcareEncounter extends ExpandedGraphObjectSingleton
   		?$baseVariableName a obo:OGMS_0000097 .
   		?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
   		
-  		?$encounterStart a turbo:TURBO_0000511 .
-  		?$encounterStart obo:RO_0002223 ?$baseVariableName .
-  		            
-  		?$encounterDate a turbo:TURBO_0000512 .
-  		?$encounterDate obo:IAO_0000136 ?$encounterStart .
-
-      """
-
-    override val optionalPattern = s"""
-      
-      ?$encounterDate turbo:TURBO_0006512 ?$dateOfHealthcareEncounterStringValue .
-  		?$encounterDate turbo:TURBO_0006511 ?$dateOfHealthcareEncounterDateValue .
-      ?$encounterDate obo:BFO_0000050 ?$dateDataset .
-      ?$dateDataset obo:BFO_0000051 ?$encounterDate .
-
-        """
+  		"""
 
     override val optionalLinks = Map(
         "BMI" -> HealthcareEncounterBMI, 
         "Height" -> HealthcareEncounterHeight, 
         "Weight" -> HealthcareEncounterWeight, 
         "Diagnosis" -> Diagnosis,
-        "Prescription" -> Prescription
+        "Prescription" -> Prescription,
+        "Date" -> HealthcareEncounterDate
     )
 
     override val mandatoryLinks = Map(

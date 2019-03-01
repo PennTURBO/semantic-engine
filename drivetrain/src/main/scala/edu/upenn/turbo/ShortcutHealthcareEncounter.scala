@@ -59,7 +59,7 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
     val consenterSymbol = "healthcareEncounterConsenterSymbol"
     val consenterURI = "shortcutConsenterURI"
     
-    val datasetTitle = "datasetTitle"
+    val datasetTitle = "shortcutHealthcareEncounterDatasetTitle"
     
     val instantiationKey = "instantiation"
     
@@ -155,8 +155,8 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
         ExpansionFromShortcutValue.create(HealthcareEncounterBMI.valuesKey, bmiValue, BindAs),
         ExpansionFromShortcutValue.create(HealthcareEncounterHeight.valuesKey, heightValue, BindAs),
         ExpansionFromShortcutValue.create(HealthcareEncounterWeight.valuesKey, weightValue, BindAs),
-        ExpansionFromShortcutValue.create(HealthcareEncounter.dateOfHealthcareEncounterStringValue, dateOfHealthcareEncounterStringValue, BindAs),
-        ExpansionFromShortcutValue.create(HealthcareEncounter.dateOfHealthcareEncounterDateValue, dateOfHealthcareEncounterDateValue, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounterDate.dateOfHealthcareEncounterStringValue, dateOfHealthcareEncounterStringValue, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounterDate.dateOfHealthcareEncounterDateValue, dateOfHealthcareEncounterDateValue, BindAs),
         ExpansionFromShortcutValue.create(HealthcareEncounterIdentifier.valuesKey, valuesKey, BindAs),
         ExpansionFromShortcutValue.create(Prescription.medicationOrderName, medicationOrderName, BindAs),
         ExpansionFromShortcutValue.create(Prescription.medicationSymbolValue, medicationSymbolValue, BindAs),
@@ -165,12 +165,13 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
         ExpansionFromShortcutValue.create(Diagnosis.diagnosisSequence, diagnosisSequence, BindAs),
         ExpansionFromShortcutValue.create(Diagnosis.diagnosisCodeRegistryString, diagnosisCodeRegistryString, BindAs),
         ExpansionFromShortcutValue.create(Diagnosis.diagnosisCode, diagnosisCode, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounterIdentifier.datasetTitle, datasetTitle, BindAs),
         
         ExpansionOfIntermediateNode.create(HealthcareEncounter.baseVariableName, MD5GlobalRandom),
         ExpansionOfIntermediateNode.create(HealthcareEncounter.dataset, MD5GlobalRandomWithDependent, datasetTitle),
         ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.baseVariableName, RandomUUID),
-        ExpansionOfIntermediateNode.create(HealthcareEncounter.encounterDate, RandomUUID),
-        ExpansionOfIntermediateNode.create(HealthcareEncounter.encounterStart, RandomUUID),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterDate.encounterDate, BindIfBoundMD5LocalRandomWithDependent, dateOfHealthcareEncounterStringValue),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterDate.encounterStart, BindIfBoundMD5LocalRandomWithDependent, dateOfHealthcareEncounterStringValue),
         ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.encounterRegistryDenoter, RandomUUID),
         ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.encounterSymbol, RandomUUID),
         ExpansionOfIntermediateNode.create(Diagnosis.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, diagnosis),
@@ -184,8 +185,7 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
         ExpansionOfIntermediateNode.create(HealthcareEncounterBMI.valueSpecification, BindIfBoundMD5LocalRandomWithDependent, bmiValue),
         ExpansionOfIntermediateNode.create(Prescription.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, prescription),
         ExpansionOfIntermediateNode.create(Prescription.prescriptionCrid, BindIfBoundMD5LocalRandomWithDependent, prescription),
-        ExpansionOfIntermediateNode.create(Prescription.medicationSymbol, BindIfBoundMD5LocalRandomWithDependent, prescription),
-        ExpansionOfIntermediateNode.create(HealthcareEncounter.dateDataset, BindIfBoundDataset, dateOfHealthcareEncounterStringValue)
+        ExpansionOfIntermediateNode.create(Prescription.medicationSymbol, BindIfBoundMD5LocalRandomWithDependent, prescription)
     )
     
     val diagRegKey: String = Diagnosis.registryKey
