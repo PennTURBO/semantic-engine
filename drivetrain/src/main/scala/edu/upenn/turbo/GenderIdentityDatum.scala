@@ -25,23 +25,29 @@ object GenderIdentityDatum extends ExpandedGraphObjectSingletonFromDataset
         new GenderIdentityDatum(optional)
     }
     
+    val typeURI = s"""values ?genderIdentityType {
+                                      obo:OMRSE_00000133 
+                                      obo:OMRSE_00000138 
+                                      obo:OMRSE_00000141
+                                    }"""
+    
     val baseVariableName = "gid"
-    val consenterBvn = Consenter.baseVariableName
+    val homoSapiensBvn = HomoSapiens.baseVariableName
     val genderIdentityValue = "gidValue"
     val genderIdentityType = "gidType"
     val biosex = "biologicalSex"
     
-    val dataset = Consenter.dataset
+    val dataset = HomoSapiens.dataset
 
     val pattern = s"""
           
           ?$baseVariableName turbo:TURBO_0006510 ?$genderIdentityValue .
           ?$baseVariableName a ?$genderIdentityType .
           
-          ?$baseVariableName obo:IAO_0000136 ?$consenterBvn .
-          ?$consenterBvn a turbo:TURBO_0000502 .
+          ?$baseVariableName obo:IAO_0000136 ?$homoSapiensBvn .
+          ?$homoSapiensBvn a obo:NCBITaxon_9606 .
           
-          ?$consenterBvn obo:RO_0000086 ?$biosex .
+          ?$homoSapiensBvn obo:RO_0000086 ?$biosex .
           ?$biosex a obo:PATO_0000047 .
           
           ?$dataset a obo:IAO_0000100 .
@@ -51,12 +57,6 @@ object GenderIdentityDatum extends ExpandedGraphObjectSingletonFromDataset
       """
   
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-    
-    val typeURI = s"""values ?genderIdentityType {
-                                      obo:OMRSE_00000133 
-                                      obo:OMRSE_00000138 
-                                      obo:OMRSE_00000141
-                                    }"""
     
     val variablesToSelect = Array(genderIdentityType, genderIdentityValue)
 }

@@ -25,12 +25,14 @@ object RaceIdentityDatum extends ExpandedGraphObjectSingletonFromDataset
         new RaceIdentityDatum(optional)
     }
     
+    val typeURI = s"""values ?raceIdentityType {}"""
+    
     val baseVariableName = "rid"
-    val consenterBvn = Consenter.baseVariableName
+    val homoSapiensBvn = HomoSapiens.baseVariableName
     val raceIdentityValue = "ridValue"
     val raceIdentityType = "ridType"
     
-    val dataset = Consenter.dataset
+    val dataset = HomoSapiens.dataset
     val raceIdentificationProcess = "raceIdentificationProcess"
 
     val pattern = s"""
@@ -41,15 +43,13 @@ object RaceIdentityDatum extends ExpandedGraphObjectSingletonFromDataset
           ?$baseVariableName a ?$raceIdentityType .
           ?$baseVariableName obo:BFO_0000050 ?$dataset .
           ?$dataset obo:BFO_0000051 ?$baseVariableName .
-          ?$baseVariableName obo:IAO_0000136 ?$consenterBvn .
-          ?$consenterBvn a turbo:TURBO_0000502 .
+          ?$baseVariableName obo:IAO_0000136 ?$homoSapiensBvn .
+          ?$homoSapiensBvn a obo:NCBITaxon_9606 .
           ?$dataset a obo:IAO_0000100 .
           
       """
 
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    val typeURI = s"""values ?raceIdentityType {}"""
-    
-    val variablesToSelect = Array(consenterBvn, raceIdentityType, raceIdentityValue)
+    val variablesToSelect = Array(homoSapiensBvn, raceIdentityType, raceIdentityValue)
 }

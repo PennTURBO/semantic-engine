@@ -15,7 +15,6 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
     val clearDatabaseAfterRun: Boolean = true
-    val expand = new Expander
     val objectOrientedExpander = new ObjectOrientedExpander
     
     var conclusionationNamedGraph: IRI = null
@@ -610,8 +609,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           }}"""
         
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        expand.expandHealthcareEncounterShortcuts(cxn, 
-            cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs, randomUUID)
+        objectOrientedExpander.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         val checkDiag: String = """
           Ask

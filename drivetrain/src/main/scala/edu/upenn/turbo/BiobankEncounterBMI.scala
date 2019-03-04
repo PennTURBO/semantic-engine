@@ -25,6 +25,8 @@ object BiobankEncounterBMI extends ExpandedGraphObjectSingletonFromDataset
         new BiobankEncounterBMI(optional)
     }
     
+    val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004340"
+    
     val baseVariableName = "BiobankEncounterBMI"
     val encounterDate = BiobankEncounterDate.baseVariableName
     val encounterVariableName = BiobankEncounter.baseVariableName
@@ -37,7 +39,7 @@ object BiobankEncounterBMI extends ExpandedGraphObjectSingletonFromDataset
     
     val pattern = s"""
       
-        ?$baseVariableName a efo:EFO_0004340 .
+        ?$baseVariableName a <$typeURI> .
     		?$baseVariableName obo:OBI_0001938 ?$valueSpecification .
     		?$valueSpecification a obo:OBI_0001933 .
     		?$valueSpecification obo:OBI_0002135 ?$valuesKey .
@@ -51,8 +53,6 @@ object BiobankEncounterBMI extends ExpandedGraphObjectSingletonFromDataset
       """
       
       val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-      
-      val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004340"
       
       val variablesToSelect = Array(encounterDate, valuesKey)
 }

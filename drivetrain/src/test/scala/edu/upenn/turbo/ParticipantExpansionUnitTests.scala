@@ -16,7 +16,6 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
     val clearDatabaseAfterRun: Boolean = true
-    val expand = new Expander
     val objectOrientedExpander = new ObjectOrientedExpander
     
     var conclusionationNamedGraph: IRI = null
@@ -40,7 +39,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           
           ?part turbo:TURBO_0006601 "http://www.itmat.upenn.edu/biobank/part1" .
           
-          ?part a turbo:TURBO_0000502 .
+          ?part a obo:NCBITaxon_9606 .
           
           ?partCrid a turbo:TURBO_0000503 .
           ?partCrid obo:IAO_0000219 ?part .
@@ -78,7 +77,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               <http://www.itmat.upenn.edu/biobank/part1>
               turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
               turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
-              a turbo:TURBO_0000502 ;
+              a obo:NCBITaxon_9606 ;
               turbo:TURBO_0000604 "04/May/1969" ;
               turbo:TURBO_0000606 "F" ;
               turbo:TURBO_0000609 'inpatient' ;
@@ -100,7 +99,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           ASK {GRAPH pmbb:postExpansionCheck {
         		
         		?dataset a obo:IAO_0000100 .
-        		?part rdf:type turbo:TURBO_0000502 .
+        		?part rdf:type obo:NCBITaxon_9606 .
 
         		?gid turbo:TURBO_0006510 "F" .
         		?gid obo:BFO_0000050 ?dataset .
@@ -174,7 +173,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     {
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
-              <http://www.itmat.upenn.edu/biobank/part1> a turbo:TURBO_0000502 .
+              <http://www.itmat.upenn.edu/biobank/part1> a obo:NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
               a turbo:TURBO_0000503 ;
               turbo:TURBO_0003603 "part_expand" ;
@@ -216,7 +215,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a turbo:TURBO_0000502 .
+              a obo:NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
               a turbo:TURBO_0000503 ;
               turbo:TURBO_0003603 "part_expand" ;
@@ -238,7 +237,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a turbo:TURBO_0000502 .
+              a obo:NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
               a turbo:TURBO_0000503 ;
               turbo:TURBO_0003608 "4" ;
@@ -260,7 +259,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a turbo:TURBO_0000502 .
+              a obo:NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
               a turbo:TURBO_0000503 ;
               turbo:TURBO_0003608 "4" ;
@@ -284,7 +283,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               <http://www.itmat.upenn.edu/biobank/part1>
               # turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
               # turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
-              a turbo:TURBO_0000502 ;
+              a obo:NCBITaxon_9606 ;
               turbo:TURBO_0000604 "04/May/1969" ;
               turbo:TURBO_0000606 "F" .
              
@@ -301,7 +300,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         
         val dateNoXsd: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
-        		?part rdf:type turbo:TURBO_0000502 .
+        		?part rdf:type obo:NCBITaxon_9606 .
         		?part turbo:TURBO_0000303 ?birth .
         		?birth rdf:type obo:UBERON_0035946 .
         		?dob rdf:type <http://www.ebi.ac.uk/efo/EFO_0004950> .
@@ -314,7 +313,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         
         val gidNoXsd: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
-        		?part rdf:type turbo:TURBO_0000502 .
+        		?part rdf:type obo:NCBITaxon_9606 .
         		?gid obo:IAO_0000136 ?part .
         		?gid a obo:OMRSE_00000133 .
         		?gid obo:BFO_0000050 ?dataset .
@@ -355,14 +354,14 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         result.size should be (35)
     }
     
-    test("expand consenter with multiple identifiers - single dataset")
+    test("expand homoSapiens with multiple identifiers - single dataset")
     {
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
             pmbb:part1
             turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
             turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
-            a turbo:TURBO_0000502 ;
+            a obo:NCBITaxon_9606 ;
             turbo:TURBO_0000604 "04/May/1969" ;
             turbo:TURBO_0000606 "F" ;
             turbo:TURBO_0000614 'http://purl.obolibrary.org/obo/OMRSE_00000181'^^xsd:anyURI ;
@@ -394,12 +393,12 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
         	
-        		?part a turbo:TURBO_0000502 .
+        		?part a obo:NCBITaxon_9606 .
         		pmbb:test_instantiation_1 a turbo:TURBO_0000522 .
         		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
         		?dataset a obo:IAO_0000100 .
         		?dataset dc11:title "dataset1" .
-        		?consenter turbo:TURBO_0006601 ?previousUriText .
+        		?homoSapiens turbo:TURBO_0006601 ?previousUriText .
         		
         		?part turbo:TURBO_0000303 ?birth .
         		?birth a obo:UBERON_0035946 .
@@ -484,14 +483,14 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         result.size should be (73)
     }
     
-    test("expand consenter with multiple identifiers - multiple datasets")
+    test("expand homoSapiens with multiple identifiers - multiple datasets")
     {
         val insert: String = """
           INSERT DATA {
           GRAPH pmbb:Shortcuts_participantShortcuts1 {
             pmbb:part1
             turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
-            a turbo:TURBO_0000502 ;
+            a obo:NCBITaxon_9606 ;
             turbo:TURBO_0000606 "F" .
             pmbb:shortcutCrid1 obo:IAO_0000219 pmbb:part1 .
             pmbb:shortcutCrid1 a turbo:TURBO_0000503 .
@@ -501,7 +500,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           }
           
           GRAPH pmbb:Shortcuts_participantShortcuts2 {
-            pmbb:part1 a turbo:TURBO_0000502 ;
+            pmbb:part1 a obo:NCBITaxon_9606 ;
             turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
             turbo:TURBO_0000604 "04/May/1969" .
             pmbb:shortcutCrid2 obo:IAO_0000219 pmbb:part1 .
@@ -512,7 +511,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           }
           
           GRAPH pmbb:Shortcuts_participantShortcuts3 {
-            pmbb:part1 a turbo:TURBO_0000502 ;
+            pmbb:part1 a obo:NCBITaxon_9606 ;
             turbo:TURBO_0000614 'http://purl.obolibrary.org/obo/OMRSE_00000181'^^xsd:anyURI ;
             turbo:TURBO_0000615 'asian' .
             pmbb:shortcutCrid3 obo:IAO_0000219 pmbb:part1 .
@@ -529,7 +528,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
         	
-        		?part a turbo:TURBO_0000502 .
+        		?part a obo:NCBITaxon_9606 .
         		pmbb:test_instantiation_1 a turbo:TURBO_0000522 .
         		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset1 .
         		?dataset1 a obo:IAO_0000100 .
@@ -540,7 +539,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset3 .
         		?dataset3 a obo:IAO_0000100 .
         		?dataset3 dc11:title "dataset3" .
-        		?consenter turbo:TURBO_0006601 ?previousUriText .
+        		?homoSapiens turbo:TURBO_0006601 ?previousUriText .
         		
         		?part turbo:TURBO_0000303 ?birth .
         		?birth a obo:UBERON_0035946 .
@@ -625,7 +624,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         result.size should be (79)
     }
     
-    /*test("combining deprecated and multi-ID consenter shortcuts - single dataset")
+    /*test("combining deprecated and multi-ID homoSapiens shortcuts - single dataset")
     {
         val insert: String = """
           INSERT DATA {
@@ -635,7 +634,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000603 "dataset1" ;
               turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
               turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
-              a turbo:TURBO_0000502 ;
+              a obo:NCBITaxon_9606 ;
               turbo:TURBO_0000608 "jerry" ;
               turbo:TURBO_0000604 "04/May/1969" ;
               turbo:TURBO_0000606 "F" ;
@@ -668,12 +667,12 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
         	
-        		?part a turbo:TURBO_0000502 .
+        		?part a obo:NCBITaxon_9606 .
         		pmbb:test_instantiation_1 a turbo:TURBO_0000522 .
         		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
         		?dataset a obo:IAO_0000100 .
         		?dataset dc11:title "dataset1" .
-        		?consenter turbo:TURBO_0006601 ?previousUriText .
+        		?homoSapiens turbo:TURBO_0006601 ?previousUriText .
         		
         		?part turbo:TURBO_0000303 ?birth .
         		?birth a obo:UBERON_0035946 .
@@ -765,7 +764,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         result.size should be (80)
     }
     
-    test("combining deprecated and multi-ID consenter shortcuts - multiple datasets")
+    test("combining deprecated and multi-ID homoSapiens shortcuts - multiple datasets")
     {
         val insert: String = """
           INSERT DATA {
@@ -775,7 +774,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000603 "dataset1" ;
               turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
               turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
-              a turbo:TURBO_0000502 ;
+              a obo:NCBITaxon_9606 ;
               turbo:TURBO_0000608 "jerry" ;
               turbo:TURBO_0000604 "04/May/1969" ;
               turbo:TURBO_0000606 "F" ;
@@ -787,7 +786,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           }
           GRAPH pmbb:Shortcuts_participantShortcuts2
           {
-              <http://www.itmat.upenn.edu/biobank/part1> a turbo:TURBO_0000502 .
+              <http://www.itmat.upenn.edu/biobank/part1> a obo:NCBITaxon_9606 .
               
               pmbb:shortcutCrid2 obo:IAO_0000219 pmbb:part1 .
               pmbb:shortcutCrid3 obo:IAO_0000219 pmbb:part1 .
@@ -812,7 +811,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val output: String = """
           ASK {GRAPH pmbb:postExpansionCheck {
         	
-        		?part a turbo:TURBO_0000502 .
+        		?part a obo:NCBITaxon_9606 .
         		pmbb:test_instantiation_1 a turbo:TURBO_0000522 .
         		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset1 .
         		?dataset1 a obo:IAO_0000100 .
@@ -820,7 +819,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset2 .
         		?dataset2 a obo:IAO_0000100 .
         		?dataset2 dc11:title "dataset2" .
-        		?consenter turbo:TURBO_0006601 ?previousUriText .
+        		?homoSapiens turbo:TURBO_0006601 ?previousUriText .
         		
         		?part turbo:TURBO_0000303 ?birth .
         		?birth a obo:UBERON_0035946 .

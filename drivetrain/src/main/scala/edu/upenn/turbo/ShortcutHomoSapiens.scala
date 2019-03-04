@@ -2,7 +2,7 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.LinkedHashMap
 
-class ShortcutConsenter extends ShortcutGraphObjectInstance
+class ShortcutHomoSapiens extends ShortcutGraphObjectInstance
 {
     def this(instantiation: String, namedGraph: String, optional: Boolean)
     {
@@ -16,29 +16,31 @@ class ShortcutConsenter extends ShortcutGraphObjectInstance
     var namedGraph: String = null
     var optional: Boolean = false
     
-    val pattern = ShortcutConsenter.pattern
-    val baseVariableName = ShortcutConsenter.baseVariableName
-    val typeURI = ShortcutConsenter.typeURI
-    val expansionRules = ShortcutConsenter.expansionRules
-    val variablesToSelect = ShortcutConsenter.variablesToSelect
+    val pattern = ShortcutHomoSapiens.pattern
+    val baseVariableName = ShortcutHomoSapiens.baseVariableName
+    val typeURI = ShortcutHomoSapiens.typeURI
+    val expansionRules = ShortcutHomoSapiens.expansionRules
+    val variablesToSelect = ShortcutHomoSapiens.variablesToSelect
 }
 
-object ShortcutConsenter extends ShortcutGraphObjectSingletonWithCreate
+object ShortcutHomoSapiens extends ShortcutGraphObjectSingletonWithCreate
 {    
-    def create(instantiation: String, namedGraph: String, optional: Boolean = false): ShortcutConsenter =
+    def create(instantiation: String, namedGraph: String, optional: Boolean = false): ShortcutHomoSapiens =
     {
-        new ShortcutConsenter(instantiation, namedGraph, optional)
+        new ShortcutHomoSapiens(instantiation, namedGraph, optional)
     }
+    
+    val typeURI = "http://purl.obolibrary.org/obo/NCBITaxon_9606"
     
     val instantiationKey = "instantiation"
     val baseVariableName = "shortcutPart"
     
     val shortcutName = "shortcutPart"
-    val valuesKey = "consenterSymbolValue"
-    val registryKey = "consenterRegistryString"
+    val valuesKey = "homoSapiensSymbolValue"
+    val registryKey = "homoSapiensRegistryString"
     
     val cridKey = "shortcutCrid"
-    val datasetTitle = "shortcutConsenterDatasetTitle"
+    val datasetTitle = "shortcutHomoSapiensDatasetTitle"
     
     val dateOfBirthString = "dateOfBirthStringValue"
     val dateOfBirthDate = "dateOfBirthDateValue"
@@ -51,7 +53,7 @@ object ShortcutConsenter extends ShortcutGraphObjectSingletonWithCreate
     
     val pattern = s"""
           
-          ?$baseVariableName a turbo:TURBO_0000502 .
+          ?$baseVariableName a <$typeURI> .
           ?$cridKey a turbo:TURBO_0000503 .
           ?$cridKey obo:IAO_0000219 ?$baseVariableName .
           ?$cridKey turbo:TURBO_0003603 ?$datasetTitle .
@@ -84,8 +86,6 @@ object ShortcutConsenter extends ShortcutGraphObjectSingletonWithCreate
           }
       """
     
-    val typeURI = "http://transformunify.org/ontologies/TURBO_0000502"
-    
     val variablesToSelect = Array(baseVariableName, registryKey, valuesKey)
     
     val expansionRules = Array(
@@ -93,22 +93,22 @@ object ShortcutConsenter extends ShortcutGraphObjectSingletonWithCreate
         ExpansionFromShortcutValue.create(RaceIdentityDatum.raceIdentityValue, raceIdentityValue, BindAs),
         ExpansionFromShortcutValue.create(DateOfBirthDatum.dateOfBirthString, dateOfBirthString, BindAs),
         ExpansionFromShortcutValue.create(DateOfBirthDatum.dateOfBirthDate, dateOfBirthDate, BindAs),
-        ExpansionFromShortcutValue.create(ConsenterIdentifier.valuesKey, valuesKey, BindAs),
-        ExpansionFromShortcutValue.create(ConsenterIdentifier.registryKey, registryKey, StringToURI),
+        ExpansionFromShortcutValue.create(HomoSapiensIdentifier.valuesKey, valuesKey, BindAs),
+        ExpansionFromShortcutValue.create(HomoSapiensIdentifier.registryKey, registryKey, StringToURI),
         ExpansionFromShortcutValue.create(GenderIdentityDatum.genderIdentityValue, genderIdentityValue, BindAs),
         ExpansionFromShortcutValue.create(GenderIdentityDatum.genderIdentityValue, genderIdentityValue, BindAs),
         ExpansionFromShortcutValue.create(RaceIdentityDatum.raceIdentityType, raceIdentityType, StringToURI),
-        ExpansionFromShortcutValue.create(Consenter.shortcutName, shortcutName, URIToString),
-        ExpansionFromShortcutValue.create(ConsenterIdentifier.instantiation, instantiationKey, InstantiationStringToURI),
-        ExpansionFromShortcutValue.create(ConsenterIdentifier.datasetTitle, datasetTitle, BindAs),
+        ExpansionFromShortcutValue.create(HomoSapiens.shortcutName, shortcutName, URIToString),
+        ExpansionFromShortcutValue.create(HomoSapiensIdentifier.instantiation, instantiationKey, InstantiationStringToURI),
+        ExpansionFromShortcutValue.create(HomoSapiensIdentifier.datasetTitle, datasetTitle, BindAs),
         
         ExpansionOfIntermediateNode.create(GenderIdentityDatum.biosex, BindIfBoundMD5LocalRandom, genderIdentityValue),
         ExpansionOfIntermediateNode.create(DateOfBirthDatum.birth, BindIfBoundMD5LocalRandom, dateOfBirthString),
-        ExpansionOfIntermediateNode.create(Consenter.baseVariableName, MD5GlobalRandom),
-        ExpansionOfIntermediateNode.create(ConsenterIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
-        ExpansionOfIntermediateNode.create(ConsenterIdentifier.baseVariableName, RandomUUID),
-        ExpansionOfIntermediateNode.create(ConsenterIdentifier.consenterSymbol, RandomUUID),
-        ExpansionOfIntermediateNode.create(ConsenterIdentifier.consenterRegistry, RandomUUID),
+        ExpansionOfIntermediateNode.create(HomoSapiens.baseVariableName, MD5GlobalRandom),
+        ExpansionOfIntermediateNode.create(HomoSapiensIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
+        ExpansionOfIntermediateNode.create(HomoSapiensIdentifier.baseVariableName, RandomUUID),
+        ExpansionOfIntermediateNode.create(HomoSapiensIdentifier.homoSapiensSymbol, RandomUUID),
+        ExpansionOfIntermediateNode.create(HomoSapiensIdentifier.homoSapiensRegistry, RandomUUID),
         ExpansionOfIntermediateNode.create(GenderIdentityDatum.baseVariableName, BindIfBoundMD5LocalRandom, genderIdentityValue),
         ExpansionOfIntermediateNode.create(RaceIdentityDatum.baseVariableName, BindIfBoundMD5LocalRandom, raceIdentityType),
         ExpansionOfIntermediateNode.create(RaceIdentityDatum.raceIdentificationProcess, BindIfBoundMD5LocalRandom, raceIdentityType),

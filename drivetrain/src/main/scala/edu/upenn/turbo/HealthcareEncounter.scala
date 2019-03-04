@@ -29,6 +29,8 @@ object HealthcareEncounter extends ExpandedGraphObjectSingletonFromDataset
         new HealthcareEncounter(optional)
     }
     
+    val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
+    
     val baseVariableName = "healthcareEncounter"
     val encounterDate = "healthcareEncounterDate"
     
@@ -43,7 +45,7 @@ object HealthcareEncounter extends ExpandedGraphObjectSingletonFromDataset
     
     val pattern = s"""
   	
-  		?$baseVariableName a obo:OGMS_0000097 .
+  		?$baseVariableName a <$typeURI> .
   		?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
   		
   		"""
@@ -62,8 +64,6 @@ object HealthcareEncounter extends ExpandedGraphObjectSingletonFromDataset
     )
     
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-    
-    val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
     
     val variablesToSelect = Array(baseVariableName)
 }

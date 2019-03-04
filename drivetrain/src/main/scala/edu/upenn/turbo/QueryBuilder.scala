@@ -18,7 +18,7 @@ class QueryBuilder extends Query with IRIConstructionRules
         for ((k,v) <- args.valuesList)
         {
             whereClause += "Values ?" + k + "{"
-            for (value <- v) whereClause += " " + value
+            for (value <- v) whereClause += " <" + value + "> "
             whereClause += "}\n"
         }
         for (element <- args.buildList)

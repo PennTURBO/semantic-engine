@@ -25,6 +25,8 @@ object HealthcareEncounterDate extends ExpandedGraphObjectSingletonFromDataset
         new HealthcareEncounterDate(optional)
     }
     
+    val typeURI = "http://transformunify.org/ontologies/TURBO_0000512"
+    
     val baseVariableName = "healthcareEncounterDate"
     val encounterDate = baseVariableName
     
@@ -42,7 +44,7 @@ object HealthcareEncounterDate extends ExpandedGraphObjectSingletonFromDataset
   		?$encounterStart a turbo:TURBO_0000511 .
   		?$encounterStart obo:RO_0002223 ?$healthcareEncounter .
   		            
-  		?$encounterDate a turbo:TURBO_0000512 .
+  		?$encounterDate a <$typeURI> .
   		?$encounterDate obo:IAO_0000136 ?$encounterStart .
   		
   		?$encounterDate turbo:TURBO_0006512 ?$dateOfHealthcareEncounterStringValue .
@@ -53,8 +55,6 @@ object HealthcareEncounterDate extends ExpandedGraphObjectSingletonFromDataset
       """
     
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-    
-    val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
     
     val variablesToSelect = Array(dateOfHealthcareEncounterStringValue, dateOfHealthcareEncounterDateValue)
 }

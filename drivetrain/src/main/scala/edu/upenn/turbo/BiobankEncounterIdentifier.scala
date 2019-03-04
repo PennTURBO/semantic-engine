@@ -24,6 +24,9 @@ object BiobankEncounterIdentifier extends ExpandedGraphObjectSingletonFromDatase
     {
         new BiobankEncounterIdentifier(optional)
     }
+    
+    val typeURI = """http://transformunify.org/ontologies/TURBO_0000533"""
+    
     val baseVariableName = "biobankEncounterCrid"
     val biobankEncounterBvn = BiobankEncounter.baseVariableName
     
@@ -40,7 +43,7 @@ object BiobankEncounterIdentifier extends ExpandedGraphObjectSingletonFromDatase
 
     val pattern = s"""
           
-          ?$baseVariableName a turbo:TURBO_0000533 .
+          ?$baseVariableName a <$typeURI> .
       		?$baseVariableName obo:IAO_0000219 ?$biobankEncounterBvn .
       		?$baseVariableName obo:BFO_0000051 ?$encounterSymbol .
       		?$baseVariableName obo:BFO_0000051 ?$encounterRegistryDenoter  .
@@ -65,8 +68,6 @@ object BiobankEncounterIdentifier extends ExpandedGraphObjectSingletonFromDatase
       """
           
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-    
-    val typeURI = """http://transformunify.org/ontologies/TURBO_0000533"""
     
     val variablesToSelect = Array(biobankEncounterBvn, valuesKey, registryKey)
 }

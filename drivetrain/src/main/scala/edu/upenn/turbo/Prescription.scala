@@ -25,6 +25,8 @@ object Prescription extends ExpandedGraphObjectSingletonFromDataset
         new Prescription(optional)
     }
     
+    val typeURI = "http://purl.obolibrary.org/obo/PDRO_0000001"
+    
     val baseVariableName = "prescription"
     val encounterVariableName = HealthcareEncounter.baseVariableName
     val valuesKey = "medId"
@@ -40,7 +42,7 @@ object Prescription extends ExpandedGraphObjectSingletonFromDataset
     val pattern = s"""
       
         ?$encounterVariableName obo:RO_0002234 ?$baseVariableName .
-        ?$baseVariableName a obo:PDRO_0000001 .
+        ?$baseVariableName a <$typeURI> .
       	?$baseVariableName turbo:TURBO_0006512 ?$medicationOrderName .
       	?$baseVariableName turbo:TURBO_0000307 ?$mappedMedicationTerm .
       	 
@@ -60,8 +62,6 @@ object Prescription extends ExpandedGraphObjectSingletonFromDataset
       """
       
       val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-      
-      val typeURI = "http://purl.obolibrary.org/obo/PDRO_0000001"
       
       val variablesToSelect = Array(encounterVariableName, valuesKey, "medId")
 }

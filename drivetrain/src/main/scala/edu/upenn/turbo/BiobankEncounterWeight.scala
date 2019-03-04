@@ -25,6 +25,8 @@ object BiobankEncounterWeight extends ExpandedGraphObjectSingletonFromDataset
         new BiobankEncounterWeight(optional)
     }
     
+    val typeURI = "http://purl.obolibrary.org/obo/OBI_0000445"
+    
     val baseVariableName = "BiobankEncounterWeightAssay"
     val encounterVariableName = BiobankEncounter.baseVariableName
     val valuesKey = "BiobankEncounterWeightValue"
@@ -38,7 +40,7 @@ object BiobankEncounterWeight extends ExpandedGraphObjectSingletonFromDataset
     
     val pattern = s"""
       
-        ?$baseVariableName a obo:OBI_0000445 ;
+        ?$baseVariableName a <$typeURI> ;
   	                 obo:OBI_0000299 ?$datumKey.
 
   	    ?$datumKey a obo:IAO_0000414 ;
@@ -58,8 +60,6 @@ object BiobankEncounterWeight extends ExpandedGraphObjectSingletonFromDataset
       """
       
       val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-      
-      val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
       
       val variablesToSelect = Array(encounterVariableName, valuesKey)
 }

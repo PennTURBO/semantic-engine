@@ -15,7 +15,6 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
     val clearDatabaseAfterRun: Boolean = true
-    val expand = new Expander
     val objectOrientedExpander = new ObjectOrientedExpander
     
     var conclusionationNamedGraph: IRI = null

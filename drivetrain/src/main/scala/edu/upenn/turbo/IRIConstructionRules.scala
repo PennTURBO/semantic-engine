@@ -46,5 +46,8 @@ trait IRIConstructionRules
     
     val SingletonMD5OfOriginalWithDependent: String = """BIND(IF(BOUND(?dependent), uri(concat("http://www.itmat.upenn.edu/biobank/",
                                 md5(CONCAT("replacement", str(?original))))), ?unbound) AS ?replacement)"""
+    
+    val SingletonMD5OfOriginal: String = """BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",
+                                md5(CONCAT("replacement",str(?original))))) AS ?replacement)"""
   
 }

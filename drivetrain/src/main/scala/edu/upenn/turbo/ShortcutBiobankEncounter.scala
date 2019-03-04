@@ -30,6 +30,8 @@ object ShortcutBiobankEncounter extends ShortcutGraphObjectSingletonWithCreate
         new ShortcutBiobankEncounter(instantiation, namedGraph, optional)
     }
     
+    val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
+    
     val instantiationKey = "instantiation"
     val baseVariableName = "shortcutBiobankEncounter"
     
@@ -45,13 +47,13 @@ object ShortcutBiobankEncounter extends ShortcutGraphObjectSingletonWithCreate
     val dateOfBiobankEncounterStringValue = "shortcutBiobankEncounterDateStringValue"
     val dateOfBiobankEncounterDateValue = "shortcutBiobankEncounterDateDateValue"
     
-    val consenterRegistry = "shortcutConsenterRegistryStringForBiobankEncounter"
-    val consenterSymbol = "shortcutConsenterSymbolValueForBiobankEncounter"
-    val consenterURI = "shortcutConsenterURI"
+    val homoSapiensRegistry = "shortcutHomoSapiensRegistryStringForBiobankEncounter"
+    val homoSapiensSymbol = "shortcutHomoSapiensSymbolValueForBiobankEncounter"
+    val homoSapiensURI = "shortcutHomoSapiensURI"
     
     val pattern = s"""
           
-          ?$baseVariableName a turbo:TURBO_0000527 ;
+          ?$baseVariableName a <$typeURI> ;
               turbo:TURBO_0000623   ?$datasetTitle;
               turbo:TURBO_0000628   ?$valuesKey ;
               turbo:TURBO_0000630   ?$registryKey .
@@ -78,13 +80,11 @@ object ShortcutBiobankEncounter extends ShortcutGraphObjectSingletonWithCreate
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0010012 ?$consenterRegistry .
-            ?$baseVariableName turbo:TURBO_0010010 ?$consenterSymbol .
-            ?$baseVariableName turbo:ScBbEnc2UnexpandedConsenter ?$consenterURI .
+            ?$baseVariableName turbo:TURBO_0010012 ?$homoSapiensRegistry .
+            ?$baseVariableName turbo:TURBO_0010010 ?$homoSapiensSymbol .
+            ?$baseVariableName turbo:ScBbEnc2UnexpandedHomoSapiens ?$homoSapiensURI .
           }
       """
-    
-    val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
     val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
     
@@ -93,7 +93,7 @@ object ShortcutBiobankEncounter extends ShortcutGraphObjectSingletonWithCreate
         ExpansionFromShortcutValue.create(BiobankEncounterIdentifier.registryKey, registryKey, StringToURI),
         ExpansionFromShortcutValue.create(BiobankEncounterIdentifier.instantiationKey, instantiationKey, InstantiationStringToURI),
         ExpansionFromShortcutValue.create(BiobankEncounter.shortcutName, baseVariableName, URIToString),
-        ExpansionFromShortcutValue.create(ConsenterToBiobankEncounterJoin.consenterName, consenterURI, MD5GlobalRandomWithOriginal),
+        ExpansionFromShortcutValue.create(HomoSapiensToBiobankEncounterJoin.homoSapiensName, homoSapiensURI, MD5GlobalRandomWithOriginal),
         ExpansionFromShortcutValue.create(BiobankEncounterBMI.bmiValue, bmiValue, BindAs),
         ExpansionFromShortcutValue.create(BiobankEncounterHeight.heightValue, heightValue, BindAs),
         ExpansionFromShortcutValue.create(BiobankEncounterWeight.weightValue, weightValue, BindAs),

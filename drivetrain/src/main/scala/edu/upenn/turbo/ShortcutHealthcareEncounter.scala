@@ -32,6 +32,8 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
         new ShortcutHealthcareEncounter(instantiation, namedGraph, optional)
     }
     
+    val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
+    
     val baseVariableName = "shortcutHealthcareEncounter"
     val valuesKey = "shortcutHealthcareEncounterIdValue"
     val registryKey = "shortcutHealthcareEncounterRegistryString"
@@ -55,9 +57,9 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
     val weightValue = "healthcareEncounterWeight"
     val bmiValue = "healthcareEncounterBmi"
     
-    val consenterRegistry = "healthcareEncounterConsenterRegistry"
-    val consenterSymbol = "healthcareEncounterConsenterSymbol"
-    val consenterURI = "shortcutConsenterURI"
+    val homoSapiensRegistry = "healthcareEncounterHomoSapiensRegistry"
+    val homoSapiensSymbol = "healthcareEncounterHomoSapiensSymbol"
+    val homoSapiensURI = "shortcutHomoSapiensURI"
     
     val datasetTitle = "shortcutHealthcareEncounterDatasetTitle"
     
@@ -65,7 +67,7 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
     
     val pattern = s"""
           
-        ?$baseVariableName a obo:OGMS_0000097 ;
+        ?$baseVariableName a <$typeURI> ;
           		turbo:TURBO_0000643  ?$datasetTitle ;
         			turbo:TURBO_0000648  ?$valuesKey ;
           		turbo:TURBO_0000650 ?$registryKey .
@@ -133,14 +135,12 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
           		}
           		OPTIONAL
               {
-                ?$baseVariableName turbo:TURBO_0010002 ?$consenterRegistry .
-                ?$baseVariableName turbo:TURBO_0010000 ?$consenterSymbol .
-                ?$baseVariableName turbo:ScHcEnc2UnexpandedConsenter ?$consenterURI .
+                ?$baseVariableName turbo:TURBO_0010002 ?$homoSapiensRegistry .
+                ?$baseVariableName turbo:TURBO_0010000 ?$homoSapiensSymbol .
+                ?$baseVariableName turbo:ScHcEnc2UnexpandedHomoSapiens ?$homoSapiensURI .
               }
             
-      """  
-    
-    val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
+      """
     
     val variablesToSelect = Array(baseVariableName, valuesKey, registryKey)
     
@@ -151,7 +151,7 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
         ExpansionFromShortcutValue.create(Diagnosis.registryKey, diagnosisCodeRegistryURI, StringToURI),
         ExpansionFromShortcutValue.create(HealthcareEncounterIdentifier.instantiationKey, instantiationKey, InstantiationStringToURI),
         ExpansionFromShortcutValue.create(HealthcareEncounter.shortcutName, baseVariableName, URIToString),
-        ExpansionFromShortcutValue.create(ConsenterToHealthcareEncounterJoin.consenterName, consenterURI, MD5GlobalRandomWithOriginal),
+        ExpansionFromShortcutValue.create(HomoSapiensToHealthcareEncounterJoin.homoSapiensName, homoSapiensURI, MD5GlobalRandomWithOriginal),
         ExpansionFromShortcutValue.create(HealthcareEncounterBMI.valuesKey, bmiValue, BindAs),
         ExpansionFromShortcutValue.create(HealthcareEncounterHeight.valuesKey, heightValue, BindAs),
         ExpansionFromShortcutValue.create(HealthcareEncounterWeight.valuesKey, weightValue, BindAs),

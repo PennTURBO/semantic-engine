@@ -25,23 +25,25 @@ object DateOfBirthDatum extends ExpandedGraphObjectSingletonFromDataset
         new DateOfBirthDatum(optional)
     }
     
+    val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004950"
+    
     val baseVariableName = "dobDatum"
     val birth = "dob"
     val dateOfBirthString = "dobValue"
     val dateOfBirthDate = "dobDate"
     
-    val consenter = Consenter.baseVariableName
+    val homoSapiens = HomoSapiens.baseVariableName
     
-    val dataset = Consenter.dataset
+    val dataset = HomoSapiens.dataset
     
     val pattern = s"""
           
-          ?$baseVariableName a <http://www.ebi.ac.uk/efo/EFO_0004950> .
+          ?$baseVariableName a <$typeURI> .
           ?$baseVariableName turbo:TURBO_0006510 ?$dateOfBirthString .
           ?$baseVariableName turbo:TURBO_0006511 ?$dateOfBirthDate .
           
           ?$baseVariableName obo:IAO_0000136 ?$birth .
-          ?$consenter turbo:TURBO_0000303 ?$birth .
+          ?$homoSapiens turbo:TURBO_0000303 ?$birth .
           ?$birth a obo:UBERON_0035946 .
           
           ?$dataset a obo:IAO_0000100 .
@@ -49,8 +51,6 @@ object DateOfBirthDatum extends ExpandedGraphObjectSingletonFromDataset
           ?$dataset obo:BFO_0000051 ?$baseVariableName .
           
       """
-    
-    val typeURI = "http://www.ebi.ac.uk/efo/EFO_0004950"
     
     val variablesToSelect = Array(dateOfBirthString, dateOfBirthDate)
 }

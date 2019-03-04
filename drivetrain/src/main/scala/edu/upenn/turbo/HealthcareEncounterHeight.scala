@@ -25,6 +25,8 @@ object HealthcareEncounterHeight extends ExpandedGraphObjectSingletonFromDataset
         new HealthcareEncounterHeight(optional)
     }
     
+    val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
+    
     val baseVariableName = "HealthcareEncounterHeightAssay"
     val encounterVariableName = HealthcareEncounter.baseVariableName
     val valuesKey = "HealthcareEncounterHeightValue"
@@ -42,7 +44,7 @@ object HealthcareEncounterHeight extends ExpandedGraphObjectSingletonFromDataset
              obo:IAO_0000039 obo:UO_0000015 ;
              obo:OBI_0002135 ?$valuesKey .
         		               
-  	    ?$baseVariableName a turbo:TURBO_0001511 ;
+  	    ?$baseVariableName a <$typeURI> ;
   	         obo:OBI_0000299 ?$datumKey .
 
       	?$datumKey a obo:IAO_0000408 ;
@@ -58,8 +60,6 @@ object HealthcareEncounterHeight extends ExpandedGraphObjectSingletonFromDataset
       """
     
       val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-      
-      val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
       
       val variablesToSelect = Array(encounterVariableName, valuesKey)
 }

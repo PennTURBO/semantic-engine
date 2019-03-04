@@ -25,6 +25,8 @@ object HealthcareEncounterIdentifier extends ExpandedGraphObjectSingletonFromDat
         new HealthcareEncounterIdentifier(optional)
     }
     
+    val typeURI = """http://transformunify.org/ontologies/TURBO_0000508"""
+    
     val baseVariableName = "healthcareEncounterCrid"
     val healthcareEncounterBvn = HealthcareEncounter.baseVariableName
     val valuesKey = "healthcareEncounterIdValue"
@@ -40,7 +42,7 @@ object HealthcareEncounterIdentifier extends ExpandedGraphObjectSingletonFromDat
 
     val pattern = s"""
           
-      ?$baseVariableName a turbo:TURBO_0000508 .
+      ?$baseVariableName a <$typeURI> .
   		?$baseVariableName obo:IAO_0000219 ?$healthcareEncounterBvn .
   		?$baseVariableName obo:BFO_0000051 ?$encounterSymbol .
   		?$baseVariableName obo:BFO_0000051 ?$encounterRegistryDenoter .
@@ -67,8 +69,6 @@ object HealthcareEncounterIdentifier extends ExpandedGraphObjectSingletonFromDat
       """
   
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-    
-    val typeURI = """http://transformunify.org/ontologies/TURBO_0000508"""
     
     val variablesToSelect = Array(healthcareEncounterBvn, valuesKey, registryKey)
 }
