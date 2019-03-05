@@ -1,15 +1,32 @@
 package edu.upenn.turbo
 
-trait GraphObjectSingleton
+trait SimpleGraphObject
+{
+    var pattern: String
+    val baseVariableName: String
+    val typeURI: String
+}
+
+trait GraphObjectSingleton extends SimpleGraphObject
 {
     val optionalLinks: Map[String, GraphObjectSingleton] = Map()
     val mandatoryLinks: Map[String, GraphObjectSingleton] = Map()
     val optionalPatterns: Array[String] = Array()
-    
     val variablesToSelect: Array[String]
-    val pattern: String
-    val baseVariableName: String
-    val typeURI: String
+}
+
+abstract class SimpleGraphObjectInstance extends SimpleGraphObject
+{
+    def this(optional: Boolean)
+    {
+        this()
+        this.optional = optional
+        this.pattern = buildPattern(this)
+    }
+    var optional: Boolean = false
+    
+    def buildPattern(input:SimpleGraphObjectInstance): String = {""}
+    def withPattern(input:GraphObjectSingleton) {}
 }
 
 trait GraphObjectInstance extends GraphObjectSingleton

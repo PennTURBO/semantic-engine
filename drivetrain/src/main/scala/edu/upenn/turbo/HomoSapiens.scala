@@ -20,11 +20,23 @@ class HomoSapiens extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
+class SimpleHomoSapiens extends SimpleGraphObjectInstance
+{    
+    val baseVariableName = HomoSapiens.baseVariableName
+    val typeURI = HomoSapiens.typeURI
+    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
+}
+
 object HomoSapiens extends ExpandedGraphObjectSingletonFromDataset
 {
     def create(optional: Boolean): HomoSapiens =
     {
         new HomoSapiens(optional)
+    }
+    
+    def createSimple(optional: Boolean): SimpleHomoSapiens =
+    {
+        new SimpleHomoSapiens(optional)
     }
     
     val typeURI = "http://purl.obolibrary.org/obo/NCBITaxon_9606"
