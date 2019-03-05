@@ -1,20 +1,18 @@
 package edu.upenn.turbo
 
-abstract class GraphObjectSingleton 
+trait GraphObjectSingleton
 {
-    // these must be implemented by the extending objects
-    val pattern: String
-    val baseVariableName: String
-    val typeURI: String
-    val variablesToSelect: Array[String]
-    
-    //these can be optionally implemented on a case by case basis
     val optionalLinks: Map[String, GraphObjectSingleton] = Map()
     val mandatoryLinks: Map[String, GraphObjectSingleton] = Map()
     val optionalPatterns: Array[String] = Array()
+    
+    val variablesToSelect: Array[String]
+    val pattern: String
+    val baseVariableName: String
+    val typeURI: String
 }
 
-abstract class GraphObjectInstance extends GraphObjectSingleton
+trait GraphObjectInstance extends GraphObjectSingleton
 {
     var optional: Boolean
     var namedGraph: String
@@ -36,12 +34,17 @@ trait ShortcutGraphObjectInstance extends GraphObjectInstance with ShortcutGraph
     var instantiation: String
 }
 
-abstract class ExpandedGraphObjectSingleton extends GraphObjectSingleton
+trait DependentOptionalTrait 
+{
+    var dependent: String
+}
+
+trait ExpandedGraphObjectSingleton extends GraphObjectSingleton
 {
     def create(optional: Boolean = false): GraphObjectInstance
 }
 
-abstract class ExpandedGraphObjectSingletonFromDataset extends ExpandedGraphObjectSingleton
+trait ExpandedGraphObjectSingletonFromDataset extends ExpandedGraphObjectSingleton
 {
     val dataset: String
 }

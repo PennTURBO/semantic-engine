@@ -947,9 +947,9 @@ class TurboMultiuseClass
         val varType = item.typeURI
         
         val query = s"""
-          select ?$baseVar where {?$baseVar a <$varType> .}
+          select ?$baseVar where {graph pmbb:postExpansionCheck {?$baseVar a <$varType> .}}
           """
           
-        updater.querySparqlAndUnpackTuple(cxn, query, baseVar)
+        updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, baseVar)
     }
 }

@@ -15,15 +15,17 @@ class QueryBuilder extends Query with IRIConstructionRules
     {
         var whereBlocks = new HashMap[GraphObjectInstance, String]
         var connectionStrings = ""
-        for ((k,v) <- args.valuesList)
+        if (args.valuesList != null)
         {
-            whereClause += "Values ?" + k + "{"
-            for (value <- v) whereClause += " <" + value + "> "
-            whereClause += "}\n"
+            for ((k,v) <- args.valuesList)
+            {
+                whereClause += "Values ?" + k + "{"
+                for (value <- v) whereClause += " <" + value + "> "
+                whereClause += "}\n"
+            }
         }
         for (element <- args.buildList)
         {
-            var elementAsSpecificType: GraphObjectInstance = null
             val elementOptional = element.optional
             var entry: String = ""
             entry += "GRAPH <" + element.namedGraph + "> {"
@@ -126,5 +128,15 @@ class QueryBuilder extends Query with IRIConstructionRules
         {
             whereClause = whereClause.replaceAll("\\?" + k + " ", "\\?" + v + " ")
         }
+    }
+    
+    def reset()
+    {
+        insertClause = "INSERT {"
+        deleteClause = "DELETE {"
+        selectClause = "SELECT "
+        whereClause = "WHERE {"
+        bindClause = ""
+        filterClause = ""
     }
 }

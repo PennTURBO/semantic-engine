@@ -35,6 +35,9 @@ object HomoSapiensToBiobankEncounterJoin extends ExpandedGraphObjectSingleton
     val biobankEncounterCrid = BiobankEncounterIdentifier.baseVariableName
     val homoSapiensCrid = HomoSapiensIdentifier.baseVariableName
     
+    val homoSapiensType = HomoSapiens.typeURI
+    val biobankEncounterType = BiobankEncounter.typeURI
+    
     val homoSapiensHeight = HomoSapiens.height
     val homoSapiensWeight = HomoSapiens.weight
     val homoSapiensAdipose = HomoSapiens.adipose
@@ -53,7 +56,6 @@ object HomoSapiensToBiobankEncounterJoin extends ExpandedGraphObjectSingleton
       		?$baseVariableName a <$typeURI> .
       		?$baseVariableName obo:BFO_0000054 ?$encounterName .
       		?$biobankEncounterCrid turbo:TURBO_0000302 ?$homoSapiensCrid .
-      
       """
           
     override val optionalPatterns: Array[String] = Array(
