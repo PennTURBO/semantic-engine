@@ -4,30 +4,36 @@ import scala.collection.mutable.LinkedHashMap
 
 class ShortcutHomoSapiens extends ShortcutGraphObjectInstance
 {
-    def this(instantiation: String, namedGraph: String, optional: Boolean)
+    def this(instantiation: String, namedGraph: String, globalUUID: String, optional: Boolean)
     {
         this()
         this.instantiation = instantiation
         this.namedGraph = namedGraph
         this.optional = optional
+        this.globalUUID = globalUUID
     }
   
     var instantiation: String = null
     var namedGraph: String = null
     var optional: Boolean = false
+    var globalUUID: String = null
     
     val pattern = ShortcutHomoSapiens.pattern
     val baseVariableName = ShortcutHomoSapiens.baseVariableName
     val typeURI = ShortcutHomoSapiens.typeURI
     val expansionRules = ShortcutHomoSapiens.expansionRules
     val variablesToSelect = ShortcutHomoSapiens.variablesToSelect
+    
+    val whereTypesForExpansion = ShortcutHomoSapiens.whereTypesForExpansion
+    val insertTypesForExpansion: Array[GraphObjectSingleton] = ShortcutHomoSapiens.insertTypesForExpansion
+    val optionalWhereTypesForExpansion = ShortcutHomoSapiens.optionalWhereTypesForExpansion
 }
 
-object ShortcutHomoSapiens extends ShortcutGraphObjectSingletonWithCreate
+object ShortcutHomoSapiens extends ShortcutGraphObjectSingleton
 {    
-    def create(instantiation: String, namedGraph: String, optional: Boolean = false): ShortcutHomoSapiens =
+    def create(instantiation: String, namedGraph: String, globalUUID: String, optional: Boolean = false): ShortcutHomoSapiens =
     {
-        new ShortcutHomoSapiens(instantiation, namedGraph, optional)
+        new ShortcutHomoSapiens(instantiation, namedGraph, globalUUID, optional)
     }
     
     val typeURI = "http://purl.obolibrary.org/obo/NCBITaxon_9606"
@@ -93,26 +99,31 @@ object ShortcutHomoSapiens extends ShortcutGraphObjectSingletonWithCreate
         ExpansionFromShortcutValue.create(RaceIdentityDatum.raceIdentityValue, raceIdentityValue, BindAs),
         ExpansionFromShortcutValue.create(DateOfBirthDatum.dateOfBirthString, dateOfBirthString, BindAs),
         ExpansionFromShortcutValue.create(DateOfBirthDatum.dateOfBirthDate, dateOfBirthDate, BindAs),
-        ExpansionFromShortcutValue.create(HomoSapiensIdentifier.valuesKey, valuesKey, BindAs),
-        ExpansionFromShortcutValue.create(HomoSapiensIdentifier.registryKey, registryKey, StringToURI),
+        ExpansionFromShortcutValue.create(HomoSapiensSymbol.valuesKey, valuesKey, BindAs),
+        ExpansionFromShortcutValue.create(HomoSapiensRegistry.registryKey, registryKey, StringToURI),
         ExpansionFromShortcutValue.create(GenderIdentityDatum.genderIdentityValue, genderIdentityValue, BindAs),
         ExpansionFromShortcutValue.create(GenderIdentityDatum.genderIdentityValue, genderIdentityValue, BindAs),
         ExpansionFromShortcutValue.create(RaceIdentityDatum.raceIdentityType, raceIdentityType, StringToURI),
         ExpansionFromShortcutValue.create(HomoSapiens.shortcutName, shortcutName, URIToString),
-        ExpansionFromShortcutValue.create(HomoSapiensIdentifier.instantiation, instantiationKey, InstantiationStringToURI),
-        ExpansionFromShortcutValue.create(HomoSapiensIdentifier.datasetTitle, datasetTitle, BindAs),
+        ExpansionFromShortcutValue.create(HomoSapiensDataset.instantiation, instantiationKey, InstantiationStringToURI),
+        ExpansionFromShortcutValue.create(HomoSapiensDataset.datasetTitle, datasetTitle, BindAs),
         
         ExpansionOfIntermediateNode.create(GenderIdentityDatum.biosex, BindIfBoundMD5LocalRandom, genderIdentityValue),
         ExpansionOfIntermediateNode.create(DateOfBirthDatum.birth, BindIfBoundMD5LocalRandom, dateOfBirthString),
         ExpansionOfIntermediateNode.create(HomoSapiens.baseVariableName, MD5GlobalRandom),
-        ExpansionOfIntermediateNode.create(HomoSapiensIdentifier.dataset, MD5GlobalRandomWithDependent, datasetTitle),
+        ExpansionOfIntermediateNode.create(HomoSapiensDataset.baseVariableName, MD5GlobalRandomWithDependent, datasetTitle),
         ExpansionOfIntermediateNode.create(HomoSapiensIdentifier.baseVariableName, RandomUUID),
-        ExpansionOfIntermediateNode.create(HomoSapiensIdentifier.homoSapiensSymbol, RandomUUID),
-        ExpansionOfIntermediateNode.create(HomoSapiensIdentifier.homoSapiensRegistry, RandomUUID),
+        ExpansionOfIntermediateNode.create(HomoSapiensSymbol.baseVariableName, RandomUUID),
+        ExpansionOfIntermediateNode.create(HomoSapiensRegistry.baseVariableName, RandomUUID),
         ExpansionOfIntermediateNode.create(GenderIdentityDatum.baseVariableName, BindIfBoundMD5LocalRandom, genderIdentityValue),
         ExpansionOfIntermediateNode.create(RaceIdentityDatum.baseVariableName, BindIfBoundMD5LocalRandom, raceIdentityType),
         ExpansionOfIntermediateNode.create(RaceIdentityDatum.raceIdentificationProcess, BindIfBoundMD5LocalRandom, raceIdentityType),
         ExpansionOfIntermediateNode.create(DateOfBirthDatum.baseVariableName, BindIfBoundMD5LocalRandom, dateOfBirthString),
         ExpansionOfIntermediateNode.create(GenderIdentityDatum.genderIdentityType, BiologicalSexIRI, genderIdentityType)
         )
+        
+    val whereTypesForExpansion: Array[GraphObjectSingleton] = Array(this)
+    val insertTypesForExpansion: Array[GraphObjectSingleton] = Array(HomoSapiens, HomoSapiensIdentifier, GenderIdentityDatum, RaceIdentityDatum, DateOfBirthDatum,
+                                                                     HomoSapiensSymbol, HomoSapiensRegistry, HomoSapiensDataset)
+                                                                     val optionalWhereTypesForExpansion: Array[GraphObjectSingleton] = Array()
 }

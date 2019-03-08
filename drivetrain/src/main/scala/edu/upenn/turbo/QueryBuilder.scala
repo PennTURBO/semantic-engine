@@ -31,11 +31,6 @@ class QueryBuilder extends Query with IRIConstructionRules
             entry += "GRAPH <" + element.namedGraph + "> {"
             if (elementOptional) entry += "OPTIONAL {"
             entry += element.pattern
-            
-            for ((key, value) <- element.mandatoryLinks)
-            {
-               entry += value.pattern
-            }
                 
             whereBlocks += element -> entry
         }
@@ -97,17 +92,6 @@ class QueryBuilder extends Query with IRIConstructionRules
         for (a <- buildTypes)
         {
             addInsertClauseToString(a)
-
-            for ((k,nodeType) <- a.optionalLinks)
-            {
-                val newInstance = nodeType.asInstanceOf[ExpandedGraphObjectSingleton].create(false)
-                addInsertClauseToString(newInstance)
-            }
-            for ((k,nodeType) <- a.mandatoryLinks)
-            {
-                val newInstance = nodeType.asInstanceOf[ExpandedGraphObjectSingleton].create(false)
-                addInsertClauseToString(newInstance)
-            }
         }
         insertClause += "}"
     }

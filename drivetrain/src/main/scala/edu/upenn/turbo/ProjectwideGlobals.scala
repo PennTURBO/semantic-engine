@@ -42,4 +42,5 @@ trait ProjectwideGlobals
      val bioportalAPIkey = helper.retrievePropertyFromFile("bioportalAPIKey")
      val medMappingRepo = helper.retrievePropertyFromFile("medMappingRepo")
      val loadLOFdata = helper.retrievePropertyFromFile("loadLOFData")
+     val entityLinkingNamedGraph = helper.retrievePropertyFromFile("entityLinkingNamedGraph")
 }

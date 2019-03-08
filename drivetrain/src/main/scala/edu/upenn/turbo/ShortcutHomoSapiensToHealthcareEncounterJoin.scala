@@ -4,30 +4,37 @@ import scala.collection.mutable.LinkedHashMap
 
 class ShortcutHomoSapiensToHealthcareEncounterJoin extends ShortcutGraphObjectInstance
 {
-    def this(instantiation: String, namedGraph: String, optional: Boolean)
+    def this(instantiation: String, namedGraph: String, globalUUID: String, optional: Boolean)
     {
         this()
         this.instantiation = instantiation
         this.namedGraph = namedGraph
         this.optional = optional
+        this.globalUUID = globalUUID
     }
   
     var instantiation: String = null
     var namedGraph: String = null
     var optional: Boolean = false
+    var globalUUID: String = null
     
     val pattern = ShortcutHomoSapiensToHealthcareEncounterJoin.pattern
     val baseVariableName = ShortcutHomoSapiensToHealthcareEncounterJoin.baseVariableName
     val typeURI = ShortcutHomoSapiensToHealthcareEncounterJoin.typeURI
     val expansionRules = ShortcutHomoSapiensToHealthcareEncounterJoin.expansionRules
     val variablesToSelect = ShortcutHomoSapiensToHealthcareEncounterJoin.variablesToSelect
+    
+    val whereTypesForExpansion = ShortcutHomoSapiensToHealthcareEncounterJoin.whereTypesForExpansion
+    val insertTypesForExpansion: Array[GraphObjectSingleton] = ShortcutHomoSapiensToHealthcareEncounterJoin.insertTypesForExpansion
+    val optionalWhereTypesForExpansion = ShortcutHomoSapiensToHealthcareEncounterJoin.optionalWhereTypesForExpansion
+    
 }
 
-object ShortcutHomoSapiensToHealthcareEncounterJoin extends ShortcutGraphObjectSingletonWithCreate
+object ShortcutHomoSapiensToHealthcareEncounterJoin extends ShortcutGraphObjectSingleton
 {    
-    def create(instantiation: String, namedGraph: String, optional: Boolean = false): ShortcutHomoSapiensToHealthcareEncounterJoin =
+    def create(instantiation: String, namedGraph: String, globalUUID: String, optional: Boolean = false): ShortcutHomoSapiensToHealthcareEncounterJoin =
     {
-        new ShortcutHomoSapiensToHealthcareEncounterJoin(instantiation, namedGraph, optional)
+        new ShortcutHomoSapiensToHealthcareEncounterJoin(instantiation, namedGraph, globalUUID, optional)
     }
     
     val typeURI = ""
@@ -66,4 +73,10 @@ object ShortcutHomoSapiensToHealthcareEncounterJoin extends ShortcutGraphObjectS
                                                 HealthcareEncounterBMI.baseVariableName,
                                                 homoSapiensName)
     )
+    
+    val whereTypesForExpansion: Array[GraphObjectSingleton] = Array(this)
+    val optionalWhereTypesForExpansion: Array[GraphObjectSingleton] = Array()
+    val insertTypesForExpansion: Array[GraphObjectSingleton] = Array(HomoSapiens, HomoSapiensIdentifier, HealthcareEncounter, HealthcareEncounterIdentifier, 
+                                                                     HealthcareEncounterBMI, HealthcareEncounterHeight, HealthcareEncounterWeight, 
+                                                                     HealthcareEncounterDate, HomoSapiensToHealthcareEncounterJoin)
 }

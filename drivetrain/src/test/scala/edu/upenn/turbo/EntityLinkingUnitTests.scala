@@ -15,7 +15,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
     var cxn: RepositoryConnection = null
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
-    val clearDatabaseAfterRun: Boolean = true
+    val clearDatabaseAfterRun: Boolean = false
     val ooe = new ObjectOrientedExpander
     
     var conclusionationNamedGraph: IRI = null
@@ -119,7 +119,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
         update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
     }
     
-    test("biobank encounter expansion with entity linking - minimum fields")
+    /*test("biobank encounter expansion with entity linking - minimum fields")
     {
         val query = """INSERT DATA { 
           GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
@@ -329,5 +329,5 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
         update.querySparqlBoolean(cxn, sparqlPrefixes + noHeightWeightAdiposeBmiOrDate).get should be (false)
-    }
+    }*/
 }

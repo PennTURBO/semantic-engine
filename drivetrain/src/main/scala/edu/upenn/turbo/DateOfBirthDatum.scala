@@ -18,7 +18,7 @@ class DateOfBirthDatum extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object DateOfBirthDatum extends ExpandedGraphObjectSingletonFromDataset
+object DateOfBirthDatum extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): DateOfBirthDatum =
     {
@@ -34,8 +34,6 @@ object DateOfBirthDatum extends ExpandedGraphObjectSingletonFromDataset
     
     val homoSapiens = HomoSapiens.baseVariableName
     
-    val dataset = HomoSapiens.dataset
-    
     val pattern = s"""
           
           ?$baseVariableName a <$typeURI> .
@@ -45,10 +43,6 @@ object DateOfBirthDatum extends ExpandedGraphObjectSingletonFromDataset
           ?$baseVariableName obo:IAO_0000136 ?$birth .
           ?$homoSapiens turbo:TURBO_0000303 ?$birth .
           ?$birth a obo:UBERON_0035946 .
-          
-          ?$dataset a obo:IAO_0000100 .
-          ?$baseVariableName obo:BFO_0000050 ?$dataset .
-          ?$dataset obo:BFO_0000051 ?$baseVariableName .
           
       """
     

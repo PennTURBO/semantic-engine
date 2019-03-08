@@ -14,34 +14,18 @@ class HomoSapiens extends GraphObjectInstance
     val baseVariableName = HomoSapiens.baseVariableName
     val typeURI = HomoSapiens.typeURI
     val variablesToSelect = HomoSapiens.variablesToSelect
-    override val optionalLinks = HomoSapiens.optionalLinks
-    override val mandatoryLinks = HomoSapiens.mandatoryLinks
     
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-class SimpleHomoSapiens extends SimpleGraphObjectInstance
-{    
-    val baseVariableName = HomoSapiens.baseVariableName
-    val typeURI = HomoSapiens.typeURI
-    var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-}
-
-object HomoSapiens extends ExpandedGraphObjectSingletonFromDataset
+object HomoSapiens extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): HomoSapiens =
     {
         new HomoSapiens(optional)
     }
     
-    def createSimple(optional: Boolean): SimpleHomoSapiens =
-    {
-        new SimpleHomoSapiens(optional)
-    }
-    
     val typeURI = "http://purl.obolibrary.org/obo/NCBITaxon_9606"
-    
-    val dataset = "homoSapiensDataset"
     
     val baseVariableName = "part"
     val shortcutName = "shortcutPartName"
@@ -56,16 +40,6 @@ object HomoSapiens extends ExpandedGraphObjectSingletonFromDataset
           ?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
           
       """
-
-    override val mandatoryLinks = Map(
-        "Identifier" -> HomoSapiensIdentifier
-    )
-
-    override val optionalLinks = Map(
-        "GenderIdentityDatum" -> GenderIdentityDatum, 
-        "RaceIdentityDatum" -> RaceIdentityDatum, 
-        "DateOfBirthDatum" -> DateOfBirthDatum
-    )
     
     val variablesToSelect = Array(baseVariableName)
 }

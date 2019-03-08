@@ -18,7 +18,7 @@ class Prescription extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object Prescription extends ExpandedGraphObjectSingletonFromDataset
+object Prescription extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): Prescription =
     {

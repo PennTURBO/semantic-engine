@@ -18,7 +18,7 @@ class BiobankEncounterIdentifier extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object BiobankEncounterIdentifier extends ExpandedGraphObjectSingletonFromDataset
+object BiobankEncounterIdentifier extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): BiobankEncounterIdentifier =
     {
@@ -26,18 +26,8 @@ object BiobankEncounterIdentifier extends ExpandedGraphObjectSingletonFromDatase
     }
     
     val typeURI = """http://transformunify.org/ontologies/TURBO_0000533"""
-    
-    val baseVariableName = "biobankEncounterCrid"
+    val baseVariableName = "biobankEncounterIdentifier"
     val biobankEncounterBvn = BiobankEncounter.baseVariableName
-    
-    val valuesKey = "biobankEncounterIdValue"
-    val registryKey = "biobankEncounterRegistry"
-    
-    val encounterSymbol = "biobankEncounterSymbol"
-    val encounterRegistryDenoter = "biobankEncounterRegDen"
-    
-    val dataset = BiobankEncounter.dataset
-    val datasetTitle = "biobankEncounterDatasetTitle"
     
     val instantiationKey = "instantiation"
 
@@ -45,29 +35,10 @@ object BiobankEncounterIdentifier extends ExpandedGraphObjectSingletonFromDatase
           
           ?$baseVariableName a <$typeURI> .
       		?$baseVariableName obo:IAO_0000219 ?$biobankEncounterBvn .
-      		?$baseVariableName obo:BFO_0000051 ?$encounterSymbol .
-      		?$baseVariableName obo:BFO_0000051 ?$encounterRegistryDenoter  .
-          ?$encounterSymbol obo:BFO_0000050 ?$baseVariableName .
-          ?$encounterRegistryDenoter  obo:BFO_0000050 ?$baseVariableName .
-      		?$encounterSymbol a turbo:TURBO_0000534 . 
-      		?$encounterSymbol turbo:TURBO_0006510 ?$valuesKey .
-      		?$encounterRegistryDenoter  a turbo:TURBO_0000535 .
-      		?$encounterRegistryDenoter  obo:IAO_0000219 ?$registryKey .
-      		?$registryKey a turbo:TURBO_0000543 .
-      		
-      		?$dataset a obo:IAO_0000100 .
-          ?$dataset dc11:title ?$datasetTitle .
-          ?$encounterRegistryDenoter  obo:BFO_0000050 ?$dataset .
-          ?$dataset obo:BFO_0000051 ?$encounterRegistryDenoter  .
-          ?$encounterSymbol obo:BFO_0000050 ?$dataset .
-          ?$dataset obo:BFO_0000051 ?$encounterSymbol .
-          
-          ?$instantiationKey a turbo:TURBO_0000522 .
-          ?$instantiationKey obo:OBI_0000293 ?$dataset .
           
       """
           
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     
-    val variablesToSelect = Array(biobankEncounterBvn, valuesKey, registryKey)
+    val variablesToSelect = Array(biobankEncounterBvn)
 }

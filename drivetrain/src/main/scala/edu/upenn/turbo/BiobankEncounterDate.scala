@@ -18,7 +18,7 @@ class BiobankEncounterDate extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object BiobankEncounterDate extends ExpandedGraphObjectSingletonFromDataset
+object BiobankEncounterDate extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): BiobankEncounterDate =
     {
@@ -36,8 +36,6 @@ object BiobankEncounterDate extends ExpandedGraphObjectSingletonFromDataset
     val dateOfBiobankEncounterDateValue = "biobankEncounterDateDateValue"
     
     val biobankEncounter = BiobankEncounter.baseVariableName
-    
-    val dataset = BiobankEncounter.dataset
 
     val pattern = s"""
               		
@@ -50,8 +48,6 @@ object BiobankEncounterDate extends ExpandedGraphObjectSingletonFromDataset
   		
   		?$encounterDate turbo:TURBO_0006511 ?$dateOfBiobankEncounterDateValue .
       ?$encounterDate turbo:TURBO_0006512 ?$dateOfBiobankEncounterStringValue .
-      ?$encounterDate obo:BFO_0000050 ?$dataset .
-      ?$dataset obo:BFO_0000051 ?$encounterDate .
 
       """
 

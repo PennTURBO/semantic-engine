@@ -18,7 +18,7 @@ class BiobankEncounterHeight extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object BiobankEncounterHeight extends ExpandedGraphObjectSingletonFromDataset
+object BiobankEncounterHeight extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): BiobankEncounterHeight =
     {
@@ -36,8 +36,6 @@ object BiobankEncounterHeight extends ExpandedGraphObjectSingletonFromDataset
     
     val valueSpecification = "BiobankEncounterBmiValSpec"
     
-    val dataset = BiobankEncounter.dataset
-    
     val pattern = s"""
       
         ?$valueSpecification a obo:OBI_0001931 ;
@@ -52,10 +50,6 @@ object BiobankEncounterHeight extends ExpandedGraphObjectSingletonFromDataset
       	     
       	?$encounterVariableName obo:BFO_0000051 ?$baseVariableName .
         ?$baseVariableName obo:BFO_0000050 ?$encounterVariableName .
-        
-        ?$dataset obo:BFO_0000051 ?$datumKey .
-        ?$datumKey obo:BFO_0000050 ?$dataset .
-        ?$dataset a obo:IAO_0000100 .
     		
       """
     

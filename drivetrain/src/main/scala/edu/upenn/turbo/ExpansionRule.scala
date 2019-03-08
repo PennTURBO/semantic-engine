@@ -6,4 +6,3 @@ abstract class ExpansionRule extends DependentOptionalTrait
     var expandedVariableName: String
     var shortcutVariableName: String
 }
-

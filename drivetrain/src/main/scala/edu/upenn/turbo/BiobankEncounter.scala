@@ -14,13 +14,11 @@ class BiobankEncounter extends GraphObjectInstance
     val baseVariableName = BiobankEncounter.baseVariableName
     val typeURI = BiobankEncounter.typeURI
     val variablesToSelect = BiobankEncounter.variablesToSelect
-    override val optionalLinks = BiobankEncounter.optionalLinks
-    override val mandatoryLinks = BiobankEncounter.mandatoryLinks
     
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object BiobankEncounter extends ExpandedGraphObjectSingletonFromDataset
+object BiobankEncounter extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): BiobankEncounter =
     {
@@ -32,8 +30,6 @@ object BiobankEncounter extends ExpandedGraphObjectSingletonFromDataset
     val baseVariableName = "biobankEncounter"
     
     val shortcutName = "shortcutBiobankEncounterName"
-    
-    val dataset = "biobankEncounterDataset"
 
     val pattern = s"""
               		
@@ -41,14 +37,6 @@ object BiobankEncounter extends ExpandedGraphObjectSingletonFromDataset
   		?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
 
       """
-
-    override val optionalLinks = Map(
-        "BMI" -> BiobankEncounterBMI, "Height" -> BiobankEncounterHeight, "Weight" -> BiobankEncounterWeight, "Date" -> BiobankEncounterDate
-    )
-
-    override val mandatoryLinks = Map(
-        "Identifier" -> BiobankEncounterIdentifier
-    )
     
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
     

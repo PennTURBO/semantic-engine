@@ -18,7 +18,7 @@ class HealthcareEncounterWeight extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object HealthcareEncounterWeight extends ExpandedGraphObjectSingletonFromDataset
+object HealthcareEncounterWeight extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): HealthcareEncounterWeight =
     {
@@ -36,8 +36,6 @@ object HealthcareEncounterWeight extends ExpandedGraphObjectSingletonFromDataset
     
     val valueSpecification = "HealthcareEncounterWeightValSpec"
     
-    val dataset = HealthcareEncounter.dataset
-    
     val pattern = s"""
       
         ?$baseVariableName a <$typeURI> ;
@@ -52,10 +50,6 @@ object HealthcareEncounterWeight extends ExpandedGraphObjectSingletonFromDataset
   	                  
   	    ?$encounterVariableName obo:BFO_0000051 ?$baseVariableName .
         ?$baseVariableName obo:BFO_0000050 ?$encounterVariableName .
-        
-        ?$dataset obo:BFO_0000051 ?$datumKey.
-        ?$datumKey obo:BFO_0000050 ?$dataset .
-        ?$dataset a obo:IAO_0000100 .
     		
       """
       

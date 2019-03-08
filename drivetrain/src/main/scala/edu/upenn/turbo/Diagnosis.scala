@@ -18,7 +18,7 @@ class Diagnosis extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object Diagnosis extends ExpandedGraphObjectSingletonFromDataset
+object Diagnosis extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): Diagnosis =
     {

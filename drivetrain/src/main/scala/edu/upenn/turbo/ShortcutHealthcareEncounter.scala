@@ -4,17 +4,19 @@ import scala.collection.mutable.LinkedHashMap
 
 class ShortcutHealthcareEncounter extends ShortcutGraphObjectInstance
 {
-    def this(instantiation: String, namedGraph: String, optional: Boolean)
+    def this(instantiation: String, namedGraph: String, globalUUID: String, optional: Boolean)
     {
         this()
         this.instantiation = instantiation
         this.namedGraph = namedGraph
         this.optional = optional
+        this.globalUUID = globalUUID
     }
   
     var instantiation: String = null
     var namedGraph: String = null
     var optional: Boolean = false
+    var globalUUID: String = null
     
     val pattern = ShortcutHealthcareEncounter.pattern
     val baseVariableName = ShortcutHealthcareEncounter.baseVariableName
@@ -23,13 +25,17 @@ class ShortcutHealthcareEncounter extends ShortcutGraphObjectInstance
     val variablesToSelect = ShortcutHealthcareEncounter.variablesToSelect
     
     override val appendToBind = ShortcutHealthcareEncounter.appendToBind
+    
+    val whereTypesForExpansion = ShortcutHealthcareEncounter.whereTypesForExpansion
+    val insertTypesForExpansion: Array[GraphObjectSingleton] = ShortcutHealthcareEncounter.insertTypesForExpansion
+    val optionalWhereTypesForExpansion = ShortcutHealthcareEncounter.optionalWhereTypesForExpansion
 }
 
-object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreate
+object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingleton
 {    
-    def create(instantiation: String, namedGraph: String, optional: Boolean = false): ShortcutHealthcareEncounter =
+    def create(instantiation: String, namedGraph: String, globalUUID: String, optional: Boolean = false): ShortcutHealthcareEncounter =
     {
-        new ShortcutHealthcareEncounter(instantiation, namedGraph, optional)
+        new ShortcutHealthcareEncounter(instantiation, namedGraph, globalUUID, optional)
     }
     
     val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000097"
@@ -146,10 +152,10 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
     
     val expansionRules = Array(
         
-        ExpansionFromShortcutValue.create(HealthcareEncounterIdentifier.registryKey, registryKey, StringToURI),
+        ExpansionFromShortcutValue.create(HealthcareEncounterRegistry.valuesKey, registryKey, StringToURI),
         ExpansionFromShortcutValue.create(Prescription.mappedMedicationTerm, mappedMedicationTerm, StringToURI),
         ExpansionFromShortcutValue.create(Diagnosis.registryKey, diagnosisCodeRegistryURI, StringToURI),
-        ExpansionFromShortcutValue.create(HealthcareEncounterIdentifier.instantiationKey, instantiationKey, InstantiationStringToURI),
+        ExpansionFromShortcutValue.create(HealthcareEncounterDataset.instantiation, instantiationKey, InstantiationStringToURI),
         ExpansionFromShortcutValue.create(HealthcareEncounter.shortcutName, baseVariableName, URIToString),
         ExpansionFromShortcutValue.create(HomoSapiensToHealthcareEncounterJoin.homoSapiensName, homoSapiensURI, MD5GlobalRandomWithOriginal),
         ExpansionFromShortcutValue.create(HealthcareEncounterBMI.valuesKey, bmiValue, BindAs),
@@ -157,7 +163,7 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
         ExpansionFromShortcutValue.create(HealthcareEncounterWeight.valuesKey, weightValue, BindAs),
         ExpansionFromShortcutValue.create(HealthcareEncounterDate.dateOfHealthcareEncounterStringValue, dateOfHealthcareEncounterStringValue, BindAs),
         ExpansionFromShortcutValue.create(HealthcareEncounterDate.dateOfHealthcareEncounterDateValue, dateOfHealthcareEncounterDateValue, BindAs),
-        ExpansionFromShortcutValue.create(HealthcareEncounterIdentifier.valuesKey, valuesKey, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounterSymbol.valuesKey, valuesKey, BindAs),
         ExpansionFromShortcutValue.create(Prescription.medicationOrderName, medicationOrderName, BindAs),
         ExpansionFromShortcutValue.create(Prescription.medicationSymbolValue, medicationSymbolValue, BindAs),
         ExpansionFromShortcutValue.create(Diagnosis.primaryDiagnosis, primaryDiagnosis, BindAs),
@@ -165,15 +171,15 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
         ExpansionFromShortcutValue.create(Diagnosis.diagnosisSequence, diagnosisSequence, BindAs),
         ExpansionFromShortcutValue.create(Diagnosis.diagnosisCodeRegistryString, diagnosisCodeRegistryString, BindAs),
         ExpansionFromShortcutValue.create(Diagnosis.diagnosisCode, diagnosisCode, BindAs),
-        ExpansionFromShortcutValue.create(HealthcareEncounterIdentifier.datasetTitle, datasetTitle, BindAs),
+        ExpansionFromShortcutValue.create(HealthcareEncounterDataset.datasetTitle, datasetTitle, BindAs),
         
         ExpansionOfIntermediateNode.create(HealthcareEncounter.baseVariableName, MD5GlobalRandom),
         ExpansionOfIntermediateNode.create(HealthcareEncounter.dataset, MD5GlobalRandomWithDependent, datasetTitle),
         ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.baseVariableName, RandomUUID),
         ExpansionOfIntermediateNode.create(HealthcareEncounterDate.encounterDate, BindIfBoundMD5LocalRandomWithDependent, dateOfHealthcareEncounterStringValue),
         ExpansionOfIntermediateNode.create(HealthcareEncounterDate.encounterStart, BindIfBoundMD5LocalRandomWithDependent, dateOfHealthcareEncounterStringValue),
-        ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.encounterRegistryDenoter, RandomUUID),
-        ExpansionOfIntermediateNode.create(HealthcareEncounterIdentifier.encounterSymbol, RandomUUID),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterRegistry.baseVariableName, RandomUUID),
+        ExpansionOfIntermediateNode.create(HealthcareEncounterSymbol.baseVariableName, RandomUUID),
         ExpansionOfIntermediateNode.create(Diagnosis.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, diagnosis),
         ExpansionOfIntermediateNode.create(HealthcareEncounterHeight.valueSpecification, BindIfBoundMD5LocalRandomWithDependent, heightValue),
         ExpansionOfIntermediateNode.create(HealthcareEncounterHeight.baseVariableName, BindIfBoundMD5LocalRandomWithDependent, heightValue),
@@ -197,4 +203,13 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingletonWithCreat
         BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?$diagIcdTerm)
         BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?concatIcdTerm) as ?$diagIcdTerm)
       """
+        
+    val whereTypesForExpansion: Array[GraphObjectSingleton] = Array(this)
+    val insertTypesForExpansion: Array[GraphObjectSingleton] = Array(HealthcareEncounter, HealthcareEncounterIdentifier,
+                                                                     HealthcareEncounterBMI, HealthcareEncounterHeight,
+                                                                     HealthcareEncounterWeight, HealthcareEncounterDate,
+                                                                     Diagnosis, Prescription, HealthcareEncounterDataset,
+                                                                     HealthcareEncounterSymbol, HealthcareEncounterRegistry,
+                                                                     ShortcutHomoSapiensToHealthcareEncounterJoin)
+                                                                     val optionalWhereTypesForExpansion: Array[GraphObjectSingleton] = Array()
 }

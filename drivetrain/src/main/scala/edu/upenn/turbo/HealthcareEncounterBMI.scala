@@ -18,7 +18,7 @@ class HealthcareEncounterBMI extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object HealthcareEncounterBMI extends ExpandedGraphObjectSingletonFromDataset
+object HealthcareEncounterBMI extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): HealthcareEncounterBMI =
     {
@@ -35,7 +35,6 @@ object HealthcareEncounterBMI extends ExpandedGraphObjectSingletonFromDataset
     val bmiValue = valuesKey
     
     val valueSpecification = "HealthcareEncounterBmiValSpec"
-    val dataset = HealthcareEncounter.dataset
     
     val pattern = s"""
       
@@ -46,9 +45,6 @@ object HealthcareEncounterBMI extends ExpandedGraphObjectSingletonFromDataset
     		?$baseVariableName obo:IAO_0000581 ?$encounterDate .
     		
         ?$encounterVariableName obo:OBI_0000299 ?$baseVariableName .
-    		?$dataset obo:BFO_0000051 ?$baseVariableName .
-        ?$baseVariableName obo:BFO_0000050 ?$dataset .
-        ?$dataset a obo:IAO_0000100 .
     		
       """
       
