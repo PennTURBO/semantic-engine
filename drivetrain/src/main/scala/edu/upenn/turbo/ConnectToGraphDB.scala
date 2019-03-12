@@ -22,7 +22,7 @@ import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
  * and data file information from the TURBO properties file.
  */
 
-class ConnectToGraphDB extends ProjectwideGlobals
+object ConnectToGraphDB extends ProjectwideGlobals
 {   
     val ontLoad: OntologyLoader = new OntologyLoader
     

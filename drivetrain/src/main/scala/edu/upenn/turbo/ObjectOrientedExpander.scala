@@ -8,15 +8,15 @@ import org.eclipse.rdf4j.rio.RDFFormat
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
-class ObjectOrientedExpander extends ProjectwideGlobals with SparqlBatch
+class ObjectOrientedExpander extends ProjectwideGlobals
 {   
-    def runAllExpansionProcesses(cxn: RepositoryConnection, globalUUID: String, instantiation: String = helper.genPmbbIRI())
+    /*def runAllExpansionProcesses(cxn: RepositoryConnection, globalUUID: String, instantiation: String = helper.genPmbbIRI())
     {
         val namedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn)
         
         for (namedGraph <- namedGraphsList)
         {
-          val shortcutHomoSapiensInstance = ShortcutHomoSapiens.create(instantiation, namedGraph, globalUUID)
+          val shortcutHomoSapiensInstance = ShortcutHomoSapiens.create(instantiation, namedGraph, globalUUID, false)
           val participantExpansion = shortcutHomoSapiensInstance.expand()
           
           val shortcutBiobankEncounterInstance = ShortcutBiobankEncounter.create(instantiation, namedGraph, globalUUID)
@@ -24,19 +24,23 @@ class ObjectOrientedExpander extends ProjectwideGlobals with SparqlBatch
           
           val shortcutHealthcareEncounterInstance = ShortcutHealthcareEncounter.create(instantiation, namedGraph, globalUUID)
           val healthcareEncounterExpansion = shortcutHealthcareEncounterInstance.expand()
-          println(biobankEncounterExpansion)
+          
+          val shortcutHomoSapiensToBiobankEncounterInstance = ShortcutHomoSapiensToBiobankEncounterJoin.create(instantiation, namedGraph, globalUUID)
+          val homoSapiensToBbEncLinkExpansion = shortcutHomoSapiensToBiobankEncounterInstance.expand()
+          
+          val shortcutHomoSapiensToHealthcareEncounterInstance = ShortcutHomoSapiensToHealthcareEncounterJoin.create(instantiation, namedGraph, globalUUID)
+          val homoSapiensToHcEncLinkExpansion = shortcutHomoSapiensToHealthcareEncounterInstance.expand()
+        println(homoSapiensToBbEncLinkExpansion)
           update.updateSparql(cxn, participantExpansion)
           update.updateSparql(cxn, biobankEncounterExpansion)
           update.updateSparql(cxn, healthcareEncounterExpansion)
+          update.updateSparql(cxn, homoSapiensToBbEncLinkExpansion)
+          update.updateSparql(cxn, homoSapiensToHcEncLinkExpansion)
         }
-      
-        val shortcutHomoSapiensToBiobankEncounterInstance = ShortcutHomoSapiensToBiobankEncounterJoin.create(instantiation, entityLinkingNamedGraph, globalUUID)
-        val homoSapiensToBbEncLinkExpansion = shortcutHomoSapiensToBiobankEncounterInstance.expand()
-        
-        val shortcutHomoSapiensToHealthcareEncounterInstance = ShortcutHomoSapiensToHealthcareEncounterJoin.create(instantiation, entityLinkingNamedGraph, globalUUID)
-        val homoSapiensToHcEncLinkExpansion = shortcutHomoSapiensToHealthcareEncounterInstance.expand()
-        //println(homoSapiensToBbEncLinkExpansion)
-        update.updateSparql(cxn, homoSapiensToBbEncLinkExpansion)
-        update.updateSparql(cxn, homoSapiensToHcEncLinkExpansion)
-    }
+    }*/
+  def runAllExpansionProcesses(cxn: RepositoryConnection, globalUUID: String, instantiation: String = helper.genPmbbIRI())
+  {
+      val res = ShortcutHomoSapiensFromGraph.pattern
+      println(res)
+  }
 }

@@ -34,7 +34,7 @@ object BiobankEncounterHeight extends ExpandedGraphObjectSingleton
     
     val heightValue = valuesKey
     
-    val valueSpecification = "BiobankEncounterBmiValSpec"
+    val valueSpecification = "BiobankEncounterHeightValSpec"
     
     val pattern = s"""
       

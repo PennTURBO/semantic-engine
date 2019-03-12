@@ -9,7 +9,7 @@ import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
 object DrivetrainDriver extends ProjectwideGlobals {
-  val connect: ConnectToGraphDB = new ConnectToGraphDB
+  
   /*val sparqlChecks: DrivetrainSparqlChecks = new DrivetrainSparqlChecks
   val expand: Expander = new Expander()
   val reftrack: ReferentTracker = new ReferentTracker()
@@ -44,17 +44,14 @@ object DrivetrainDriver extends ProjectwideGlobals {
       else
       {
           if (args(0) != "all") logger.info("Note that running Drivetrain with any command other than 'all' is supported for testing but should not be executed in production.")
-          var cxn: RepositoryConnection = null
-          var repoManager: RemoteRepositoryManager = null
-          var repository: Repository = null
           try
           {
-              val graphDBMaterials: TurboGraphConnection = connect.initializeGraph(true)
+              val graphDBMaterials: TurboGraphConnection = ConnectToGraphDB.initializeGraph(true)
               cxn = graphDBMaterials.getConnection()
               repoManager = graphDBMaterials.getRepoManager()
               repository = graphDBMaterials.getRepository() 
               if (cxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
-              /*else if (args(0) == "all")
+          /*else if (args(0) == "all")
               {
                   val thresholds: Option[Array[Double]] = checkConclusionatorArguments(args)
                   if (thresholds != None) 
@@ -123,7 +120,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
           }
           finally 
           {
-              connect.closeGraphConnection(cxn, repoManager, repository, false)
+              ConnectToGraphDB.closeGraphConnection(cxn, repoManager, repository, false)
           }
       }
   }
