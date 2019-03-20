@@ -10,10 +10,6 @@ import java.util.UUID
 
 class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
-    val connect: ConnectToGraphDB = new ConnectToGraphDB()
-    var cxn: RepositoryConnection = null
-    var repoManager: RemoteRepositoryManager = null
-    var repository: Repository = null
     val clearDatabaseAfterRun: Boolean = true
     val objectOrientedExpander = new ObjectOrientedExpander
     
@@ -105,7 +101,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
      
     before
     {
-        val graphDBMaterials: TurboGraphConnection = connect.initializeGraphLoadData(false)
+        val graphDBMaterials: TurboGraphConnection = ConnectToGraphDB.initializeGraphLoadData(false)
         cxn = graphDBMaterials.getConnection()
         repoManager = graphDBMaterials.getRepoManager()
         repository = graphDBMaterials.getRepository()
@@ -113,7 +109,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
     }
     after
     {
-        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
+        ConnectToGraphDB.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
   
     test("bb encounter with all fields")

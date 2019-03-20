@@ -8,6 +8,9 @@ import org.eclipse.rdf4j.rio.RDFFormat
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
+import java.io.BufferedReader
+import java.io.FileReader
+
 object DrivetrainDriver extends ProjectwideGlobals {
   
   /*val sparqlChecks: DrivetrainSparqlChecks = new DrivetrainSparqlChecks

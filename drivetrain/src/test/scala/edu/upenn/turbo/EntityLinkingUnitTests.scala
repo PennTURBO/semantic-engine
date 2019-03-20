@@ -11,10 +11,6 @@ import java.util.UUID
 
 class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
-    val connect: ConnectToGraphDB = new ConnectToGraphDB()
-    var cxn: RepositoryConnection = null
-    var repoManager: RemoteRepositoryManager = null
-    var repository: Repository = null
     val clearDatabaseAfterRun: Boolean = false
     val ooe = new ObjectOrientedExpander
     
@@ -27,7 +23,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
     
     before
     {
-        val graphDBMaterials: TurboGraphConnection = connect.initializeGraphLoadData(false)
+        val graphDBMaterials: TurboGraphConnection = ConnectToGraphDB.initializeGraphLoadData(false)
         cxn = graphDBMaterials.getConnection()
         repoManager = graphDBMaterials.getRepoManager()
         repository = graphDBMaterials.getRepository()
@@ -35,7 +31,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
     }
     after
     {
-        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
+        ConnectToGraphDB.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
    
     test("biobank encounter expansion with entity linking - all fields")

@@ -36,6 +36,9 @@ trait ProjectwideGlobals
 			PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 			PREFIX ns1: <http://www.geneontology.org/formats/oboInOwl#>
 			PREFIX graph: <http://haydensgraph.org/>
+			PREFIX j.0: <http://example.com/resource/>
+      PREFIX snomed: <http://purl.bioontology.org/ontology/SNOMEDCT/>
+      PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
 			"""
     
      //properties from file are global variables

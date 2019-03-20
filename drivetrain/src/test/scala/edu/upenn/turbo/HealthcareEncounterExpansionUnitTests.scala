@@ -10,10 +10,6 @@ import java.util.UUID
 
 class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
-    val connect: ConnectToGraphDB = new ConnectToGraphDB()
-    var cxn: RepositoryConnection = null
-    var repoManager: RemoteRepositoryManager = null
-    var repository: Repository = null
     val clearDatabaseAfterRun: Boolean = true
     val objectOrientedExpander = new ObjectOrientedExpander
     
@@ -172,7 +168,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
     
     before
     {
-        val graphDBMaterials: TurboGraphConnection = connect.initializeGraphLoadData(false)
+        val graphDBMaterials: TurboGraphConnection = ConnectToGraphDB.initializeGraphLoadData(false)
         cxn = graphDBMaterials.getConnection()
         repoManager = graphDBMaterials.getRepoManager()
         repository = graphDBMaterials.getRepository()
@@ -180,7 +176,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
     }
     after
     {
-        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
+        ConnectToGraphDB.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
     }
     
     test("hc encounter with all fields")

@@ -40,7 +40,6 @@ class ObjectOrientedExpander extends ProjectwideGlobals
     }*/
   def runAllExpansionProcesses(cxn: RepositoryConnection, globalUUID: String, instantiation: String = helper.genPmbbIRI())
   {
-      val res = ShortcutHomoSapiensFromGraph.pattern
-      println(res)
+      DrivetrainProcessFromGraphModel.runProcess(cxn, "http://haydensgraph.org/homoSapiensExpansionProcess")
   }
 }
