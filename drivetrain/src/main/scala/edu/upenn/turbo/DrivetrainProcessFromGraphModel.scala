@@ -14,9 +14,29 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
 {
     def runProcess(cxn: RepositoryConnection, process: String)
     {
+        val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
+        val globalUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
         val inputs = getInputs(cxn, process)
         val outputs = getOutputs(cxn, process)
-        println(createInsertClause(outputs) + createWhereClause(inputs))
+        val binds = getBind(cxn, process)
+        println(createInsertClause(outputs) + createWhereClause(inputs) + createBindClause(binds, localUUID, globalUUID))
+    }
+    
+    def createBindClause(binds: ArrayBuffer[ArrayBuffer[Value]], localUUID: String, globalUUID: String): String =
+    {
+        var bindClause = ""
+        for (rule <- binds)
+        {
+            var sparqlBind = rule(1).toString.replaceAll("replacement", rule(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_OUTPUT")
+                                         .replaceAll("localUUID", localUUID)
+                                         .replaceAll("globalUUID", globalUUID)
+            if (rule(4) != null) sparqlBind = sparqlBind.replaceAll("mainExpansionTypeVariableName",rule(4).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_OUTPUT")
+            if (rule(3) != null) sparqlBind = sparqlBind.replaceAll("dependent",rule(3).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT")
+            if (rule(2) != null) sparqlBind = sparqlBind.replaceAll("original",rule(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT")
+            
+            bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
+        }
+        bindClause
     }
     
     def createInsertClause(outputs: ArrayBuffer[ArrayBuffer[Value]]): String =
@@ -81,12 +101,13 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          Select ?subject ?predicate ?object ?subjectType ?objectType ?graph ?required
          Where
          {
-            ?s graph:inputTo <$process> .
+            ?connection graph:inputTo <$process> .
+            # ?connection a graph:Connection .
             <$process> graph:inputNamedGraph ?graph .
-            ?s graph:subject ?subject .
-            ?s graph:predicate ?predicate .
-            ?s graph:object ?object .
-            ?s graph:required ?required .
+            ?connection graph:subject ?subject .
+            ?connection graph:predicate ?predicate .
+            ?connection graph:object ?object .
+            ?connection graph:required ?required .
             
             Graph pmbb:ontology {
               Optional
@@ -113,11 +134,12 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          Select ?subject ?predicate ?object ?subjectType ?objectType ?graph
          Where
          {
-            ?s graph:outputOf <$process> .
+            ?connection graph:outputOf <$process> .
+            # ?connection a graph:Connection .
             <$process> graph:outputNamedGraph ?graph .
-            ?s graph:subject ?subject .
-            ?s graph:predicate ?predicate .
-            ?s graph:object ?object .
+            ?connection graph:subject ?subject .
+            ?connection graph:predicate ?predicate .
+            ?connection graph:object ?object .
             
             Graph pmbb:ontology 
             {
@@ -137,5 +159,49 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          """
        
        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph"))
+    }
+    
+    def getBind(cxn: RepositoryConnection, process: String): ArrayBuffer[ArrayBuffer[Value]] =
+    {
+        val query = s"""
+          
+          Select distinct ?expandedEntity ?sparqlString ?shortcutEntity ?dependee ?baseExpansionType
+          Where
+          {
+              ?connection graph:outputOf <$process> .
+              # ?connection a graph:Connection .
+              
+              {
+                  {
+                      ?connection graph:subject ?expandedEntity .
+                  }
+                  Union
+                  {
+                      ?connection graph:object ?expandedEntity .
+                  }
+              }
+              
+              ?expansionRule a graph:ExpansionRule .
+              ?expansionRule graph:creates ?expandedEntity .
+              ?expansionRule graph:usesLogic ?logic .
+              ?logic graph:usesSparql ?sparqlString .
+              
+              Optional
+              {
+                  ?expansionRule graph:hasShortcutSource ?shortcutEntity .
+              }
+              Optional
+              {
+                  ?expansionRule graph:dependsOn ?dependee .
+              }
+              Optional
+              {
+                  ?expansionRule graph:basedOn ?baseExpansionType .
+              }
+          }
+          
+        """
+        
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, Array("expandedEntity", "sparqlString", "shortcutEntity", "dependee", "baseExpansionType"))
     }
 }
