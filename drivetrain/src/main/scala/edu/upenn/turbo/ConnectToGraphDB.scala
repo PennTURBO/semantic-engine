@@ -63,27 +63,21 @@ object ConnectToGraphDB extends ProjectwideGlobals
             repoManager.initialize()
             val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile("namespace"))
             val cxn: RepositoryConnection = repository.getConnection()
+            
+            val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
+            gmRepoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
+            gmRepoManager.initialize()
+            val gmRepository: Repository = gmRepoManager.getRepository("Haydens_graph_model")
+            val gmCxn: RepositoryConnection = gmRepository.getConnection()
+            
             graphConnect.setConnection(cxn)
             graphConnect.setRepoManager(repoManager)
             graphConnect.setRepository(repository)
+            
+            graphConnect.setGmConnection(gmCxn)
+            graphConnect.setGmRepoManager(gmRepoManager)
+            graphConnect.setGmRepository(gmRepository)
         }
-        graphConnect
-    }
-    
-    /**
-     * Overloaded initializeGraph method which creates a connection to a repository provided as a string instead of the properties file.
-     */
-    def initializeGraph(repositoryForConnection: String): TurboGraphConnection =
-    {
-        val graphConnect: TurboGraphConnection = new TurboGraphConnection
-        val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
-        repoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
-        repoManager.initialize()
-        val repository: Repository = repoManager.getRepository(repositoryForConnection)
-        val cxn: RepositoryConnection = repository.getConnection()
-        graphConnect.setConnection(cxn)
-        graphConnect.setRepoManager(repoManager)
-        graphConnect.setRepository(repository)
         graphConnect
     }
     
@@ -179,36 +173,32 @@ object ConnectToGraphDB extends ProjectwideGlobals
      * Used to disconnect Drivetrain from Ontotext Graph DB by closing the relevant RepositoryConnection, RemoteRepositoryManager, and Repository objects.
      * Optionally delete all triples in database before connection close by specifying boolean parameter.
      */
-    def closeGraphConnection(cxn: RepositoryConnection, repoManager: RemoteRepositoryManager, repository: Repository, deleteAllTriples: Boolean = false)
+    def closeGraphConnection(graphCxn: TurboGraphConnection, deleteAllTriples: Boolean = false)
     {
-        if (cxn == null)
+        val cxn = graphCxn.getConnection()
+        val repoManager = graphCxn.getRepoManager()
+        val repository = graphCxn.getRepository() 
+        
+        val gmCxn = graphCxn.getGmConnection()
+        val gmRepoManager = graphCxn.getGmRepoManager()
+        val gmRepository = graphCxn.getGmRepository()
+        
+        if (deleteAllTriples)
         {
-            logger.info("Connection to the repository is not active - could not be closed.")
+             if (!cxn.isActive()) cxn.begin()
+             val deleteAll: String = "DELETE {?s ?p ?o} WHERE {?s ?p ?o .} "
+             val tupleDelete = cxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
+             tupleDelete.execute()
+             cxn.commit()
         }
-        else
-        {
-            if (deleteAllTriples)
-            {
-                 if (!cxn.isActive()) cxn.begin()
-                 val deleteAll: String = "DELETE {?s ?p ?o} WHERE {?s ?p ?o .} "
-                 val tupleDelete = cxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
-                 tupleDelete.execute()
-                 cxn.commit()
-            }
-            cxn.close()
-            repository.shutDown()
-            repoManager.shutDown()
-        }
-    }
-    
-    /**
-     * Overloaded closeGraphConnection method which accepts a TurboGraphConnection instead of its individual components.
-     */
-    def closeGraphConnection(graphConnect: TurboGraphConnection)
-    {
-        graphConnect.getConnection().close()
-        graphConnect.getRepository().shutDown()
-        graphConnect.getRepoManager().shutDown()
+        
+        cxn.close()
+        repository.shutDown()
+        repoManager.shutDown()
+        
+        gmCxn.close()
+        gmRepository.shutDown()
+        gmRepoManager.shutDown()
     }
     
     /**

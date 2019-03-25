@@ -23,7 +23,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
     
     before
     {
-        val graphDBMaterials: TurboGraphConnection = ConnectToGraphDB.initializeGraphLoadData(false)
+        graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
         cxn = graphDBMaterials.getConnection()
         repoManager = graphDBMaterials.getRepoManager()
         repository = graphDBMaterials.getRepository()
@@ -31,7 +31,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
     }
     after
     {
-        ConnectToGraphDB.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
+        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearDatabaseAfterRun)
     }
    
     test("biobank encounter expansion with entity linking - all fields")
@@ -62,7 +62,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           }}"""
         
         update.updateSparql(cxn, sparqlPrefixes + query)
-        ooe.runAllExpansionProcesses(cxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
+        ooe.runAllExpansionProcesses(cxn, gmCxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         val check: String = """
           ASK

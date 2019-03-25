@@ -15,9 +15,15 @@ trait ProjectwideGlobals
     val update: SparqlUpdater = new SparqlUpdater
     val logger = LoggerFactory.getLogger(getClass)
     
+    var graphDBMaterials: TurboGraphConnection = null
+    
     var cxn: RepositoryConnection = null
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
+    
+    var gmCxn: RepositoryConnection = null
+    var gmRepoManager: RemoteRepositoryManager = null
+    var gmRepository: Repository = null
     
     //make sparqlPrefixes for use in all queries globally available
     val sparqlPrefixes = """

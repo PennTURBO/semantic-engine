@@ -21,14 +21,14 @@ class Sandbox extends FunSuiteLike with BeforeAndAfter with Matchers with Projec
     
     before
     {
-        val graphDBMaterials: TurboGraphConnection = ConnectToGraphDB.initializeGraphLoadData(false)
+        graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
         cxn = graphDBMaterials.getConnection()
         repoManager = graphDBMaterials.getRepoManager()
         repository = graphDBMaterials.getRepository()
     }
     after
     {
-        ConnectToGraphDB.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
+        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearDatabaseAfterRun)
     }
     
     test(""){

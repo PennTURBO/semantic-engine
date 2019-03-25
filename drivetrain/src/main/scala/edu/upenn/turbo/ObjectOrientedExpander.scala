@@ -30,7 +30,7 @@ class ObjectOrientedExpander extends ProjectwideGlobals
           
           val shortcutHomoSapiensToHealthcareEncounterInstance = ShortcutHomoSapiensToHealthcareEncounterJoin.create(instantiation, namedGraph, globalUUID)
           val homoSapiensToHcEncLinkExpansion = shortcutHomoSapiensToHealthcareEncounterInstance.expand()
-        println(homoSapiensToBbEncLinkExpansion)
+          println(homoSapiensToBbEncLinkExpansion)
           update.updateSparql(cxn, participantExpansion)
           update.updateSparql(cxn, biobankEncounterExpansion)
           update.updateSparql(cxn, healthcareEncounterExpansion)
@@ -38,8 +38,10 @@ class ObjectOrientedExpander extends ProjectwideGlobals
           update.updateSparql(cxn, homoSapiensToHcEncLinkExpansion)
         }
     }*/
-  def runAllExpansionProcesses(cxn: RepositoryConnection, globalUUID: String, instantiation: String = helper.genPmbbIRI())
+  def runAllExpansionProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String, instantiation: String = helper.genPmbbIRI())
   {
-      DrivetrainProcessFromGraphModel.runProcess(cxn, "http://haydensgraph.org/homoSapiensExpansionProcess")
+      val query = DrivetrainProcessFromGraphModel.runProcess(gmCxn, "http://haydensgraph.org/homoSapiensExpansionProcess", instantiation, globalUUID)
+      println(query)
+      update.updateSparql(cxn, sparqlPrefixes + query)
   }
 }

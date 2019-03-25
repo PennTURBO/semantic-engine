@@ -12,17 +12,18 @@ import java.util.UUID
 
 object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
 {
-    def runProcess(cxn: RepositoryConnection, process: String)
+    def runProcess(gmCxn: RepositoryConnection, process: String, instantiation: String, globalUUID: String): String =
     {
         val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
-        val globalUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
-        val inputs = getInputs(cxn, process)
-        val outputs = getOutputs(cxn, process)
-        val binds = getBind(cxn, process)
-        println(createInsertClause(outputs) + createWhereClause(inputs) + createBindClause(binds, localUUID, globalUUID))
+        
+        val inputs = getInputs(gmCxn, process)
+        val outputs = getOutputs(gmCxn, process)
+        val binds = getBind(gmCxn, process)
+        
+        createInsertClause(outputs) + createWhereClause(inputs) + createBindClause(binds, localUUID, globalUUID, instantiation)
     }
     
-    def createBindClause(binds: ArrayBuffer[ArrayBuffer[Value]], localUUID: String, globalUUID: String): String =
+    def createBindClause(binds: ArrayBuffer[ArrayBuffer[Value]], localUUID: String, globalUUID: String, instantiation: String): String =
     {
         var bindClause = ""
         for (rule <- binds)
@@ -30,13 +31,14 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             var sparqlBind = rule(1).toString.replaceAll("replacement", rule(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_OUTPUT")
                                          .replaceAll("localUUID", localUUID)
                                          .replaceAll("globalUUID", globalUUID)
-            if (rule(4) != null) sparqlBind = sparqlBind.replaceAll("mainExpansionTypeVariableName",rule(4).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_OUTPUT")
-            if (rule(3) != null) sparqlBind = sparqlBind.replaceAll("dependent",rule(3).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT")
-            if (rule(2) != null) sparqlBind = sparqlBind.replaceAll("original",rule(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT")
+                                         .replaceAll("mainExpansionTypeVariableName", rule(4).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT")
+                                         .replaceAll("instantiationPlaceholder", "\"" + instantiation + "\"")
+            if (sparqlBind.contains("dependent")) sparqlBind = sparqlBind.replaceAll("dependent",rule(3).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT")
+            if (sparqlBind.contains("original")) sparqlBind = sparqlBind.replaceAll("original",rule(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT")
             
             bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
         }
-        bindClause
+        bindClause + "}"
     }
     
     def createInsertClause(outputs: ArrayBuffer[ArrayBuffer[Value]]): String =
@@ -74,8 +76,8 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             var required = true
             if (triple(6).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
             if (!required) whereClause += "OPTIONAL { "
-            val subjectVariable = triple(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_OUTPUT"
-            val objectVariable = triple(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_OUTPUT"
+            val subjectVariable = triple(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT"
+            val objectVariable = triple(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT"
             whereClause += "?" + subjectVariable + " <" + triple(1).toString + "> ?" + objectVariable + " ."
             if (!required) whereClause += "}"
             whereClause += "\n"
@@ -90,7 +92,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
                 typeSet += triple(2)
             }
         }
-        whereClause += "}}\n"
+        whereClause += "}\n"
         whereClause
     }
     
@@ -184,6 +186,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
               ?expansionRule a graph:ExpansionRule .
               ?expansionRule graph:creates ?expandedEntity .
               ?expansionRule graph:usesLogic ?logic .
+              ?expansionRule graph:basedOn ?baseExpansionType .
               ?logic graph:usesSparql ?sparqlString .
               
               Optional
@@ -193,10 +196,6 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
               Optional
               {
                   ?expansionRule graph:dependsOn ?dependee .
-              }
-              Optional
-              {
-                  ?expansionRule graph:basedOn ?baseExpansionType .
               }
           }
           

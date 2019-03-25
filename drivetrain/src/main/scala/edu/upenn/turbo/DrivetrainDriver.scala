@@ -49,10 +49,16 @@ object DrivetrainDriver extends ProjectwideGlobals {
           if (args(0) != "all") logger.info("Note that running Drivetrain with any command other than 'all' is supported for testing but should not be executed in production.")
           try
           {
-              val graphDBMaterials: TurboGraphConnection = ConnectToGraphDB.initializeGraph(true)
+              graphDBMaterials = ConnectToGraphDB.initializeGraph(true)
+              
               cxn = graphDBMaterials.getConnection()
               repoManager = graphDBMaterials.getRepoManager()
               repository = graphDBMaterials.getRepository() 
+              
+              gmCxn = graphDBMaterials.getGmConnection()
+              gmRepoManager = graphDBMaterials.getGmRepoManager()
+              gmRepository = graphDBMaterials.getGmRepository() 
+              
               if (cxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
           /*else if (args(0) == "all")
               {
@@ -118,12 +124,12 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
               else if (args(0) == "simpleBenchmark") simpleBenchmark.runSimpleBenchmark(cxn)
               else if (args(0) == "validateShortcuts") logger.info("shortcuts valid: " + sparqlChecks.preExpansionChecks(cxn))*/
-              else if (args(0) == "newExpansion") buildQuery(cxn, globalUUID)
+              else if (args(0) == "newExpansion") buildQuery(cxn, gmCxn, globalUUID)
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
           {
-              ConnectToGraphDB.closeGraphConnection(cxn, repoManager, repository, false)
+              ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
           }
       }
   }
@@ -288,9 +294,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
   }*/
   
-  def buildQuery(cxn: RepositoryConnection, globalUUID: String)
+  def buildQuery(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String)
   {
-      objectOrientedExpander.runAllExpansionProcesses(cxn, globalUUID)
+      objectOrientedExpander.runAllExpansionProcesses(cxn, gmCxn, globalUUID)
 
   }
 }
