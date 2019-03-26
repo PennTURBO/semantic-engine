@@ -66,25 +66,25 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearDatabaseAfterRun)
     }
     
-    /*test("participant with all fields")
+    test("participant with all fields")
     {
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
+              turbo:TURBO_0000607 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
               turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
-              a obo:NCBITaxon_9606 ;
+              a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
               turbo:TURBO_0000604 "04/May/1969" ;
               turbo:TURBO_0000606 "F" ;
               turbo:TURBO_0000609 'inpatient' ;
               
               # adding race data 7/31/18
-              turbo:TURBO_0000614 'http://purl.obolibrary.org/obo/OMRSE_00000181'^^xsd:anyURI ;
+              turbo:TURBO_0000614 <http://purl.obolibrary.org/obo/OMRSE_00000181> ;
               turbo:TURBO_0000615 'asian' .
               
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a turbo:TURBO_0000503 ;
-              turbo:TURBO_0003610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI ;
+              a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> ;
+              turbo:TURBO_0003610 turbo:TURBO_0000410 ;
               turbo:TURBO_0003608 "4" ;
               turbo:TURBO_0003603 "part_expand" .
           }}"""
@@ -99,6 +99,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
 
         		?gid turbo:TURBO_0006510 "F" .
         		?gid obo:BFO_0000050 ?dataset .
+        		?dataset obo:BFO_0000051 ?gid .
         		?gid rdf:type obo:OMRSE_00000138 .
         		?gid obo:IAO_0000136 ?part .
         		
@@ -109,10 +110,12 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
         		?dob obo:IAO_0000136 ?birth .
         		?dob obo:BFO_0000050 ?dataset .
+        		?dataset obo:BFO_0000051 ?dob .
         		
         		?patientCrid obo:IAO_0000219 ?part .
         		?patientCrid a turbo:TURBO_0000503 .
         		?patientCrid obo:BFO_0000051 ?patientRegDen .
+        		?patientRegDen obo:BFO_0000050 ?patientCrid .
         		?patientRegDen a turbo:TURBO_0000505 .
         		# ?patientRegDen turbo:TURBO_0006510 'inpatient' .
         		
@@ -156,16 +159,15 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
             "http://transformunify.org/ontologies/TURBO_0006511", "http://purl.obolibrary.org/obo/OBI_0000299",
-            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0006512",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0006512"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (43)
-    }*/
+        result.size should be (42)
+    }
     
-    test("participant with minimum required for expansion")
+    /*test("participant with minimum required for expansion")
     {
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
@@ -205,16 +207,16 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         result.size should be (20) 
     }
     
-    /*test("participant without psc")
+    test("participant without psc")
     {
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a obo:NCBITaxon_9606 .
+              a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a turbo:TURBO_0000503 ;
+              a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> ;
               turbo:TURBO_0003603 "part_expand" ;
-              turbo:TURBO_0003610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
+              turbo:TURBO_0003610 turbo:TURBO_0000410 .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
         objectOrientedExpander.runAllExpansionProcesses(cxn, gmCxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
@@ -232,11 +234,11 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a obo:NCBITaxon_9606 .
+              a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a turbo:TURBO_0000503 ;
+              a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> ;
               turbo:TURBO_0003608 "4" ;
-              turbo:TURBO_0003610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
+              turbo:TURBO_0003610 turbo:TURBO_0000410 .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
         objectOrientedExpander.runAllExpansionProcesses(cxn, gmCxn, randomUUID, "http://www.itmat.upenn.edu/biobank/test_instantiation_1")
@@ -254,9 +256,9 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a obo:NCBITaxon_9606 .
+              a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a turbo:TURBO_0000503 ;
+              a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> ;
               turbo:TURBO_0003608 "4" ;
               turbo:TURBO_0003603 "part_expand" .
           }}"""
@@ -276,16 +278,16 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              # turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
+              # turbo:TURBO_0000607 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
               # turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
-              a obo:NCBITaxon_9606 ;
+              a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
               turbo:TURBO_0000604 "04/May/1969" ;
               turbo:TURBO_0000606 "F" .
              
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a turbo:TURBO_0000503 ;
+              a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> ;
               turbo:TURBO_0000609 "inpatient" ;
-              turbo:TURBO_0003610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI ;
+              turbo:TURBO_0003610 turbo:TURBO_0000410 ;
               turbo:TURBO_0003603 "part_expand" ;
               turbo:TURBO_0003608 "4" .
               
@@ -299,8 +301,10 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?part turbo:TURBO_0000303 ?birth .
         		?birth rdf:type obo:UBERON_0035946 .
         		?dob rdf:type <http://www.ebi.ac.uk/efo/EFO_0004950> .
+        		?dob obo:IAO_0000136 ?birth .
         		?dob turbo:TURBO_0006510 "04/May/1969" .
         		?dob obo:BFO_0000050 ?dataset .
+        		?dataset obo:BFO_0000051 ?dob .
         		?dataset a obo:IAO_0000100 .
         		# ?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
           }}
@@ -312,6 +316,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?gid obo:IAO_0000136 ?part .
         		?gid a obo:OMRSE_00000133 .
         		?gid obo:BFO_0000050 ?dataset .
+        		?dataset obo:BFO_0000051 ?gid .
         		?dataset a obo:IAO_0000100 .
           }}"""
         
@@ -324,7 +329,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
         
         val expectedPredicates = Array (
-            "http://purl.obolibrary.org/obo/OBI_0000293", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/OBI_0000293", "http://purl.obolibrary.org/obo/IAO_0000136",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.org/dc/elements/1.1/title",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
@@ -340,13 +345,12 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
-            "http://purl.obolibrary.org/obo/IAO_0000136"
+            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (35)
+        result.size should be (34)
     }
     
     test("expand homoSapiens with multiple identifiers - single dataset")
@@ -354,20 +358,20 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
             pmbb:part1
-            turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
+            turbo:TURBO_0000607 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
             turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
-            a obo:NCBITaxon_9606 ;
+            a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
             turbo:TURBO_0000604 "04/May/1969" ;
             turbo:TURBO_0000606 "F" ;
-            turbo:TURBO_0000614 'http://purl.obolibrary.org/obo/OMRSE_00000181'^^xsd:anyURI ;
+            turbo:TURBO_0000614 <http://purl.obolibrary.org/obo/OMRSE_00000181> ;
             turbo:TURBO_0000615 'asian' .
             
             pmbb:shortcutCrid1 obo:IAO_0000219 pmbb:part1 .
             pmbb:shortcutCrid2 obo:IAO_0000219 pmbb:part1 .
             pmbb:shortcutCrid3 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid1 a turbo:TURBO_0000503 .
-            pmbb:shortcutCrid2 a turbo:TURBO_0000503 .
-            pmbb:shortcutCrid3 a turbo:TURBO_0000503 .
+            pmbb:shortcutCrid1 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
+            pmbb:shortcutCrid2 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
+            pmbb:shortcutCrid3 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
             
             pmbb:shortcutCrid1 turbo:TURBO_0003603 'dataset1' .
             pmbb:shortcutCrid2 turbo:TURBO_0003603 'dataset1' .
@@ -377,9 +381,9 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             pmbb:shortcutCrid2 turbo:TURBO_0003608 'kramer' .
             pmbb:shortcutCrid3 turbo:TURBO_0003608 'elaine' .
             
-            pmbb:shortcutCrid1 turbo:TURBO_0003610 "http://transformunify.org/ontologies/TURBO_0000402"^^xsd:anyURI .
-            pmbb:shortcutCrid2 turbo:TURBO_0003610 "http://transformunify.org/ontologies/TURBO_0000403"^^xsd:anyURI .
-            pmbb:shortcutCrid3 turbo:TURBO_0003610 "http://transformunify.org/ontologies/TURBO_0000410"^^xsd:anyURI .
+            pmbb:shortcutCrid1 turbo:TURBO_0003610 <http://transformunify.org/ontologies/TURBO_0000402> .
+            pmbb:shortcutCrid2 turbo:TURBO_0003610 <http://transformunify.org/ontologies/TURBO_0000403> .
+            pmbb:shortcutCrid3 turbo:TURBO_0003610 <http://transformunify.org/ontologies/TURBO_0000410> .
 
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
@@ -427,7 +431,6 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientRegDen1 obo:BFO_0000050 ?patientCrid1 .
         		?patientRegDen1 a turbo:TURBO_0000505 .
         		?patientRegDen1 obo:IAO_0000219 turbo:TURBO_0000402 .
-        		turbo:TURBO_0000402 a turbo:TURBO_0000506 .
         		?patientCrid1 obo:BFO_0000051 ?partSymbol1 .
         		?partSymbol1 obo:BFO_0000050 ?patientCrid1 .
             ?partSymbol1 a turbo:TURBO_0000504 .
@@ -443,7 +446,6 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientRegDen2 obo:BFO_0000050 ?patientCrid2 .
         		?patientRegDen2 a turbo:TURBO_0000505 .
         		?patientRegDen2 obo:IAO_0000219 turbo:TURBO_0000403 .
-        		turbo:TURBO_0000403 a turbo:TURBO_0000506 .
         		?patientCrid2 obo:BFO_0000051 ?partSymbol2 .
         		?partSymbol2 obo:BFO_0000050 ?patientCrid2 .
             ?partSymbol2 a turbo:TURBO_0000504 .
@@ -459,7 +461,6 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientRegDen3 obo:BFO_0000050 ?patientCrid3 .
         		?patientRegDen3 a turbo:TURBO_0000505 .
         		?patientRegDen3 obo:IAO_0000219 turbo:TURBO_0000410 .
-        		turbo:TURBO_0000410 a turbo:TURBO_0000506 .
         		?patientCrid3 obo:BFO_0000051 ?partSymbol3 .
         		?partSymbol3 obo:BFO_0000050 ?patientCrid3 .
             ?partSymbol3 a turbo:TURBO_0000504 .
@@ -475,45 +476,45 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
-        result.size should be (73)
-    }
+        result.size should be (70)
+    }*/
     
-    test("expand homoSapiens with multiple identifiers - multiple datasets")
+    /*test("expand homoSapiens with multiple identifiers - multiple datasets")
     {
         val insert: String = """
           INSERT DATA {
           GRAPH pmbb:Shortcuts_participantShortcuts1 {
             pmbb:part1
             turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
-            a obo:NCBITaxon_9606 ;
+            a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
             turbo:TURBO_0000606 "F" .
             pmbb:shortcutCrid1 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid1 a turbo:TURBO_0000503 .
+            pmbb:shortcutCrid1 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
             pmbb:shortcutCrid1 turbo:TURBO_0003603 'dataset1' .
             pmbb:shortcutCrid1 turbo:TURBO_0003608 'jerry' .
-            pmbb:shortcutCrid1 turbo:TURBO_0003610 "http://transformunify.org/ontologies/TURBO_0000402"^^xsd:anyURI .  
+            pmbb:shortcutCrid1 turbo:TURBO_0003610 <http://transformunify.org/ontologies/TURBO_0000402> .  
           }
           
           GRAPH pmbb:Shortcuts_participantShortcuts2 {
-            pmbb:part1 a obo:NCBITaxon_9606 ;
+            pmbb:part1 a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
             turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
             turbo:TURBO_0000604 "04/May/1969" .
             pmbb:shortcutCrid2 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid2 a turbo:TURBO_0000503 .
+            pmbb:shortcutCrid2 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
             pmbb:shortcutCrid2 turbo:TURBO_0003603 'dataset2' .
             pmbb:shortcutCrid2 turbo:TURBO_0003608 'kramer' .
-            pmbb:shortcutCrid2 turbo:TURBO_0003610 "http://transformunify.org/ontologies/TURBO_0000403"^^xsd:anyURI .
+            pmbb:shortcutCrid2 turbo:TURBO_0003610 <http://transformunify.org/ontologies/TURBO_0000403> .
           }
           
           GRAPH pmbb:Shortcuts_participantShortcuts3 {
-            pmbb:part1 a obo:NCBITaxon_9606 ;
-            turbo:TURBO_0000614 'http://purl.obolibrary.org/obo/OMRSE_00000181'^^xsd:anyURI ;
+            pmbb:part1 a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
+            turbo:TURBO_0000614 <http://purl.obolibrary.org/obo/OMRSE_00000181> ;
             turbo:TURBO_0000615 'asian' .
             pmbb:shortcutCrid3 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid3 a turbo:TURBO_0000503 .
+            pmbb:shortcutCrid3 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
             pmbb:shortcutCrid3 turbo:TURBO_0003603 'dataset3' .
             pmbb:shortcutCrid3 turbo:TURBO_0003608 'elaine' .
-            pmbb:shortcutCrid3 turbo:TURBO_0003610 "http://transformunify.org/ontologies/TURBO_0000410"^^xsd:anyURI .
+            pmbb:shortcutCrid3 turbo:TURBO_0003610 <http://transformunify.org/ontologies/TURBO_0000410> .
           }
           
           }"""
@@ -568,7 +569,6 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientRegDen1 obo:BFO_0000050 ?patientCrid1 .
         		?patientRegDen1 a turbo:TURBO_0000505 .
         		?patientRegDen1 obo:IAO_0000219 turbo:TURBO_0000402 .
-        		turbo:TURBO_0000402 a turbo:TURBO_0000506 .
         		?patientCrid1 obo:BFO_0000051 ?partSymbol1 .
         		?partSymbol1 obo:BFO_0000050 ?patientCrid1 .
             ?partSymbol1 a turbo:TURBO_0000504 .
@@ -584,7 +584,6 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientRegDen2 obo:BFO_0000050 ?patientCrid2 .
         		?patientRegDen2 a turbo:TURBO_0000505 .
         		?patientRegDen2 obo:IAO_0000219 turbo:TURBO_0000403 .
-        		turbo:TURBO_0000403 a turbo:TURBO_0000506 .
         		?patientCrid2 obo:BFO_0000051 ?partSymbol2 .
         		?partSymbol2 obo:BFO_0000050 ?patientCrid2 .
             ?partSymbol2 a turbo:TURBO_0000504 .
@@ -600,7 +599,6 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientRegDen3 obo:BFO_0000050 ?patientCrid3 .
         		?patientRegDen3 a turbo:TURBO_0000505 .
         		?patientRegDen3 obo:IAO_0000219 turbo:TURBO_0000410 .
-        		turbo:TURBO_0000410 a turbo:TURBO_0000506 .
         		?patientCrid3 obo:BFO_0000051 ?partSymbol3 .
         		?partSymbol3 obo:BFO_0000050 ?patientCrid3 .
             ?partSymbol3 a turbo:TURBO_0000504 .
@@ -616,7 +614,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
-        result.size should be (79)
+        result.size should be (76)
     }*/
     
     /*test("combining deprecated and multi-ID homoSapiens shortcuts - single dataset")

@@ -28,13 +28,13 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         var bindClause = ""
         for (rule <- binds)
         {
-            var sparqlBind = rule(1).toString.replaceAll("replacement", rule(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_OUTPUT")
+            var sparqlBind = rule(1).toString.replaceAll("replacement", rule(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_"))
                                          .replaceAll("localUUID", localUUID)
                                          .replaceAll("globalUUID", globalUUID)
-                                         .replaceAll("mainExpansionTypeVariableName", rule(4).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT")
+                                         .replaceAll("mainExpansionTypeVariableName", rule(4).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_"))
                                          .replaceAll("instantiationPlaceholder", "\"" + instantiation + "\"")
-            if (sparqlBind.contains("dependent")) sparqlBind = sparqlBind.replaceAll("dependent",rule(3).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT")
-            if (sparqlBind.contains("original")) sparqlBind = sparqlBind.replaceAll("original",rule(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT")
+            if (sparqlBind.contains("dependent")) sparqlBind = sparqlBind.replaceAll("dependent",rule(3).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_"))
+            if (sparqlBind.contains("original")) sparqlBind = sparqlBind.replaceAll("original",rule(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_"))
             
             bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
         }
@@ -48,8 +48,8 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         var typeSet = new HashSet[Value]
         for (triple <- outputs)
         {
-            val subjectVariable = triple(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_OUTPUT"
-            val objectVariable = triple(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_OUTPUT"
+            val subjectVariable = triple(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
+            val objectVariable = triple(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
             insertClause += "?" + subjectVariable + " <" + triple(1).toString + "> ?" + objectVariable + " .\n"
             if (triple(3) != null && !typeSet.contains(triple(0)))
             {
@@ -76,8 +76,8 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             var required = true
             if (triple(6).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
             if (!required) whereClause += "OPTIONAL { "
-            val subjectVariable = triple(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT"
-            val objectVariable = triple(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_") + "_INPUT"
+            val subjectVariable = triple(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
+            val objectVariable = triple(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
             whereClause += "?" + subjectVariable + " <" + triple(1).toString + "> ?" + objectVariable + " ."
             if (!required) whereClause += "}"
             whereClause += "\n"
