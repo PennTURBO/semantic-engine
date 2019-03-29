@@ -73,7 +73,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               <http://www.itmat.upenn.edu/biobank/part1>
               turbo:TURBO_0000607 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
               turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
-              a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
+              a turbo:shortcut_obo_NCBITaxon_9606 ;
               turbo:TURBO_0000604 "04/May/1969" ;
               turbo:TURBO_0000606 "F" ;
               turbo:TURBO_0000609 'inpatient' ;
@@ -83,7 +83,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0000615 'asian' .
               
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> ;
+              a turbo:shortcut_turbo_TURBO_0000503 ;
               turbo:TURBO_0003610 turbo:TURBO_0000410 ;
               turbo:TURBO_0003608 "4" ;
               turbo:TURBO_0003603 "part_expand" .
@@ -139,6 +139,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
         
         val expectedPredicates = Array (
+            
             "http://purl.obolibrary.org/obo/OBI_0000293", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.org/dc/elements/1.1/title",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
@@ -159,21 +160,29 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
             "http://transformunify.org/ontologies/TURBO_0006511", "http://purl.obolibrary.org/obo/OBI_0000299",
-            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0006512"
+            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0006512",
+            "http://transformunify.org/ontologies/TURBO_0000607", "http://transformunify.org/ontologies/TURBO_0000605", 
+            "http://transformunify.org/ontologies/TURBO_0000604", "http://transformunify.org/ontologies/TURBO_0000606", 
+            "http://transformunify.org/ontologies/TURBO_0000614", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://transformunify.org/ontologies/TURBO_0000615", "http://transformunify.org/ontologies/TURBO_0003610", 
+            "http://transformunify.org/ontologies/TURBO_0003608", "http://transformunify.org/ontologies/TURBO_0003603",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://transformunify.org/ontologies/TURBO_0010113"
+
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (42)
+        result.size should be (55)
     }
     
-    /*test("participant with minimum required for expansion")
+    test("participant with minimum required for expansion")
     {
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
-              <http://www.itmat.upenn.edu/biobank/part1> a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> .
+              <http://www.itmat.upenn.edu/biobank/part1> a turbo:shortcut_obo_NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> ;
+              a turbo:shortcut_turbo_TURBO_0000503 ;
               turbo:TURBO_0003603 "part_expand" ;
               turbo:TURBO_0003608 "4" ;
               turbo:TURBO_0003610 turbo:TURBO_0000410 .
@@ -199,12 +208,17 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050"
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0003603",
+            "http://transformunify.org/ontologies/TURBO_0003608", "http://transformunify.org/ontologies/TURBO_0003610",
+            "http://transformunify.org/ontologies/TURBO_0010113"
+            
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (20) 
+        result.size should be (27) 
     }
     
     test("participant without psc")
@@ -212,9 +226,9 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> .
+              a turbo:shortcut_obo_NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> ;
+              a turbo:shortcut_turbo_TURBO_0000503 ;
               turbo:TURBO_0003603 "part_expand" ;
               turbo:TURBO_0003610 turbo:TURBO_0000410 .
           }}"""
@@ -234,9 +248,9 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> .
+              a turbo:shortcut_obo_NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> ;
+              a turbo:shortcut_turbo_TURBO_0000503 ;
               turbo:TURBO_0003608 "4" ;
               turbo:TURBO_0003610 turbo:TURBO_0000410 .
           }}"""
@@ -256,9 +270,9 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> .
+              a turbo:shortcut_obo_NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> ;
+              a turbo:shortcut_turbo_TURBO_0000503 ;
               turbo:TURBO_0003608 "4" ;
               turbo:TURBO_0003603 "part_expand" .
           }}"""
@@ -280,12 +294,12 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               <http://www.itmat.upenn.edu/biobank/part1>
               # turbo:TURBO_0000607 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
               # turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
-              a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
+              a turbo:shortcut_obo_NCBITaxon_9606 ;
               turbo:TURBO_0000604 "04/May/1969" ;
               turbo:TURBO_0000606 "F" .
              
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> ;
+              a turbo:shortcut_turbo_TURBO_0000503 ;
               turbo:TURBO_0000609 "inpatient" ;
               turbo:TURBO_0003610 turbo:TURBO_0000410 ;
               turbo:TURBO_0003603 "part_expand" ;
@@ -345,12 +359,18 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510"
+            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://transformunify.org/ontologies/TURBO_0000604", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://transformunify.org/ontologies/TURBO_0000606", "http://transformunify.org/ontologies/TURBO_0003610",
+            "http://transformunify.org/ontologies/TURBO_0003608", "http://transformunify.org/ontologies/TURBO_0003603",
+            "http://transformunify.org/ontologies/TURBO_0010113"
+            
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (34)
+        result.size should be (43)
     }
     
     test("expand homoSapiens with multiple identifiers - single dataset")
@@ -360,7 +380,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             pmbb:part1
             turbo:TURBO_0000607 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
             turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
-            a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
+            a turbo:shortcut_obo_NCBITaxon_9606 ;
             turbo:TURBO_0000604 "04/May/1969" ;
             turbo:TURBO_0000606 "F" ;
             turbo:TURBO_0000614 <http://purl.obolibrary.org/obo/OMRSE_00000181> ;
@@ -369,9 +389,9 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             pmbb:shortcutCrid1 obo:IAO_0000219 pmbb:part1 .
             pmbb:shortcutCrid2 obo:IAO_0000219 pmbb:part1 .
             pmbb:shortcutCrid3 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid1 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
-            pmbb:shortcutCrid2 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
-            pmbb:shortcutCrid3 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
+            pmbb:shortcutCrid1 a turbo:shortcut_turbo_TURBO_0000503 .
+            pmbb:shortcutCrid2 a turbo:shortcut_turbo_TURBO_0000503 .
+            pmbb:shortcutCrid3 a turbo:shortcut_turbo_TURBO_0000503 .
             
             pmbb:shortcutCrid1 turbo:TURBO_0003603 'dataset1' .
             pmbb:shortcutCrid2 turbo:TURBO_0003603 'dataset1' .
@@ -476,8 +496,63 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
-        result.size should be (70)
-    }*/
+        
+        val expectedPredicates = Array (
+            
+            "http://purl.obolibrary.org/obo/OBI_0000293", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.org/dc/elements/1.1/title",
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://purl.obolibrary.org/obo/RO_0000086", "http://transformunify.org/ontologies/TURBO_0000303",
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://transformunify.org/ontologies/TURBO_0006601", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
+            "http://transformunify.org/ontologies/TURBO_0006511", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0006512",
+            "http://transformunify.org/ontologies/TURBO_0000607", "http://transformunify.org/ontologies/TURBO_0000605", 
+            "http://transformunify.org/ontologies/TURBO_0000604", "http://transformunify.org/ontologies/TURBO_0000606", 
+            "http://transformunify.org/ontologies/TURBO_0000614", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://transformunify.org/ontologies/TURBO_0000615", "http://transformunify.org/ontologies/TURBO_0003610", 
+            "http://transformunify.org/ontologies/TURBO_0003608", "http://transformunify.org/ontologies/TURBO_0003603",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://transformunify.org/ontologies/TURBO_0003610", "http://transformunify.org/ontologies/TURBO_0003610",
+            "http://transformunify.org/ontologies/TURBO_0003608", "http://transformunify.org/ontologies/TURBO_0003603",
+            "http://transformunify.org/ontologies/TURBO_0003608", "http://transformunify.org/ontologies/TURBO_0003603",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050", 
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050", 
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://purl.obolibrary.org/obo/IAO_0000219"
+
+        )
+        
+        helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")  
+        
+        result.size should be (93)
+    }
     
     /*test("expand homoSapiens with multiple identifiers - multiple datasets")
     {
@@ -486,32 +561,32 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           GRAPH pmbb:Shortcuts_participantShortcuts1 {
             pmbb:part1
             turbo:TURBO_0000607 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
-            a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
+            a turbo:shortcut_obo_NCBITaxon_9606 ;
             turbo:TURBO_0000606 "F" .
             pmbb:shortcutCrid1 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid1 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
+            pmbb:shortcutCrid1 a turbo:shortcut_turbo_TURBO_0000503 .
             pmbb:shortcutCrid1 turbo:TURBO_0003603 'dataset1' .
             pmbb:shortcutCrid1 turbo:TURBO_0003608 'jerry' .
             pmbb:shortcutCrid1 turbo:TURBO_0003610 <http://transformunify.org/ontologies/TURBO_0000402> .  
           }
           
           GRAPH pmbb:Shortcuts_participantShortcuts2 {
-            pmbb:part1 a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
+            pmbb:part1 a turbo:shortcut_obo_NCBITaxon_9606 ;
             turbo:TURBO_0000605 "1969-05-04"^^xsd:date ;
             turbo:TURBO_0000604 "04/May/1969" .
             pmbb:shortcutCrid2 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid2 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
+            pmbb:shortcutCrid2 a turbo:shortcut_turbo_TURBO_0000503 .
             pmbb:shortcutCrid2 turbo:TURBO_0003603 'dataset2' .
             pmbb:shortcutCrid2 turbo:TURBO_0003608 'kramer' .
             pmbb:shortcutCrid2 turbo:TURBO_0003610 <http://transformunify.org/ontologies/TURBO_0000403> .
           }
           
           GRAPH pmbb:Shortcuts_participantShortcuts3 {
-            pmbb:part1 a <http://haydensgraph.org/shortcut_obo_NCBITaxon_9606> ;
+            pmbb:part1 a turbo:shortcut_obo_NCBITaxon_9606 ;
             turbo:TURBO_0000614 <http://purl.obolibrary.org/obo/OMRSE_00000181> ;
             turbo:TURBO_0000615 'asian' .
             pmbb:shortcutCrid3 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid3 a <http://haydensgraph.org/shortcut_turbo_TURBO_0000503> .
+            pmbb:shortcutCrid3 a turbo:shortcut_turbo_TURBO_0000503 .
             pmbb:shortcutCrid3 turbo:TURBO_0003603 'dataset3' .
             pmbb:shortcutCrid3 turbo:TURBO_0003608 'elaine' .
             pmbb:shortcutCrid3 turbo:TURBO_0003610 <http://transformunify.org/ontologies/TURBO_0000410> .

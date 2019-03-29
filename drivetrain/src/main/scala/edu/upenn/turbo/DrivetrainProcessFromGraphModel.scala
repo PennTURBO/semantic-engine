@@ -103,13 +103,13 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          Select ?subject ?predicate ?object ?subjectType ?objectType ?graph ?required
          Where
          {
-            ?connection graph:inputTo <$process> .
-            # ?connection a graph:Connection .
-            <$process> graph:inputNamedGraph ?graph .
-            ?connection graph:subject ?subject .
-            ?connection graph:predicate ?predicate .
-            ?connection graph:object ?object .
-            ?connection graph:required ?required .
+            ?connection turbo:inputTo <$process> .
+            # ?connection a turbo:TurboGraphConnectionRecipe .
+            <$process> turbo:inputNamedGraph ?graph .
+            ?connection turbo:subject ?subject .
+            ?connection turbo:predicate ?predicate .
+            ?connection turbo:object ?object .
+            ?connection turbo:required ?required .
             
             Graph pmbb:ontology {
               Optional
@@ -136,12 +136,12 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          Select ?subject ?predicate ?object ?subjectType ?objectType ?graph
          Where
          {
-            ?connection graph:outputOf <$process> .
-            # ?connection a graph:Connection .
-            <$process> graph:outputNamedGraph ?graph .
-            ?connection graph:subject ?subject .
-            ?connection graph:predicate ?predicate .
-            ?connection graph:object ?object .
+            ?connection turbo:outputOf <$process> .
+            # ?connection a turbo:TurboGraphConnectionRecipe .
+            <$process> turbo:outputNamedGraph ?graph .
+            ?connection turbo:subject ?subject .
+            ?connection turbo:predicate ?predicate .
+            ?connection turbo:object ?object .
             
             Graph pmbb:ontology 
             {
@@ -170,32 +170,32 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
           Select distinct ?expandedEntity ?sparqlString ?shortcutEntity ?dependee ?baseExpansionType
           Where
           {
-              ?connection graph:outputOf <$process> .
-              # ?connection a graph:Connection .
+              ?connection turbo:outputOf <$process> .
+              # ?connection a turbo:TurboGraphConnectionRecipe .
               
               {
                   {
-                      ?connection graph:subject ?expandedEntity .
+                      ?connection turbo:subject ?expandedEntity .
                   }
                   Union
                   {
-                      ?connection graph:object ?expandedEntity .
+                      ?connection turbo:object ?expandedEntity .
                   }
               }
               
-              ?expansionRule a graph:ExpansionRule .
-              ?expansionRule graph:creates ?expandedEntity .
-              ?expansionRule graph:usesLogic ?logic .
-              ?expansionRule graph:basedOn ?baseExpansionType .
-              ?logic graph:usesSparql ?sparqlString .
+              ?expansionRule a turbo:TurboGraphExpansionRule .
+              ?expansionRule turbo:creates ?expandedEntity .
+              ?expansionRule turbo:usesLogic ?logic .
+              ?expansionRule turbo:basedOn ?baseExpansionType .
+              ?logic turbo:usesSparql ?sparqlString .
               
               Optional
               {
-                  ?expansionRule graph:hasShortcutSource ?shortcutEntity .
+                  ?expansionRule turbo:hasShortcutSource ?shortcutEntity .
               }
               Optional
               {
-                  ?expansionRule graph:dependsOn ?dependee .
+                  ?expansionRule turbo:dependsOn ?dependee .
               }
           }
           
