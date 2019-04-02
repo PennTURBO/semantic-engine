@@ -1,0 +1,1012 @@
+# baseURI: http://turbo/fakeprefix/
+# imports: http://transformunify.org/ontologies/
+# prefix: fakeprefix
+
+@prefix : <http://transformunify.org/ontologies/> .
+@prefix Thesaurus: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#> .
+@prefix dc11: <http://purl.org/dc/elements/1.1/> .
+@prefix fakeprefix: <http://turbo/fakeprefix/> .
+@prefix faldo: <http://biohackathon.org/resource/faldo#> .
+@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix gn: <http://www.geonames.org/ontology#> .
+@prefix graph: <http://haydensgraph.org/> .
+@prefix graphBuilder: <http://graphBuilder.org/> .
+@prefix ncbitaxon: <http://purl.obolibrary.org/obo/ncbitaxon#> .
+@prefix ns1: <http://example.com/resource/> .
+@prefix ns11: <http://www.geneontology.org/formats/oboInOwl#> .
+@prefix ns3: <http://www.ebi.ac.uk/efo/> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pmbb: <http://www.itmat.upenn.edu/biobank/> .
+@prefix protege: <http://protege.stanford.edu/plugins/owl/protege#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ro: <http://www.obofoundry.org/ro/ro.owl#> .
+@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix snomed: <http://purl.bioontology.org/ontology/SNOMEDCT/> .
+@prefix sys: <http://www.ontotext.com/owlim/system#> .
+@prefix terms: <http://purl.org/dc/terms/> .
+@prefix wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+graph:
+  owl:imports : ;
+.
+<http://transformunify.org/ontologies/1-1>
+  a :TurboGraphMultiplicityRule ;
+  rdfs:label "1-1 multiplicity rule" ;
+.
+<http://transformunify.org/ontologies/1-many>
+  a :TurboGraphMultiplicityRule ;
+  rdfs:label "1-many multiplicity rule" ;
+.
+:BindAs
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql "BIND (?original AS ?replacement)" ;
+.
+:BindIfBoundRandomUUID
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql """BIND(IF (BOUND(?dependent), uri(concat(\"http://www.itmat.upenn.edu/biobank/\", 
+                                            SHA256(struuid()), ?unbound) AS ?replacement)""" ;
+.
+:BindIfBoundSHALocalRandom
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql """BIND (IF (BOUND(?dependent), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                                        SHA256(CONCAT(\"replacement\", \"localUUID\", str(?mainExpansionTypeVariableName))))), ?unbound) AS ?replacement)""" ;
+.
+:BindIfBoundSHALocalRandomWithDependent
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql """BIND (IF (BOUND(?dependent), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                                        SHA256(CONCAT(\"replacement\", \"localUUID\", str(?mainExpansionTypeVariableName), str(?dependent))))), ?unbound) AS ?replacement)""" ;
+.
+:BiologicalSexExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates obo:PATO_0000047 ;
+  :dependsOn :shortcutHomoSapiensGenderIdentityStringLiteralValue ;
+  :usesLogic :BindIfBoundSHALocalRandom ;
+.
+:DatasetTitleExpansionRule
+  a :ExpansionRuleForLiteralValue ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :homoSapiensDatasetTitle ;
+  :hasShortcutSource :shortcutHomoSapiensDatasetTitleStringLiteralValue ;
+  :usesLogic :BindAs ;
+.
+:DatatypeConnectionRecipe
+  a owl:Class ;
+  rdfs:label "datatype connection recipe" ;
+  rdfs:subClassOf :TurboGraphConnectionRecipe ;
+.
+:DateOfBirthDatumDateExpansionRule
+  a :ExpansionRuleForLiteralValue ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :homoSapiensDateOfBirthDateLiteralValue ;
+  :hasShortcutSource :shortcutHomoSapiensDateOfBirthDateLiteralValue ;
+  :usesLogic :BindAs ;
+.
+:DateOfBirthDatumExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates ns3:EFO_0004950 ;
+  :dependsOn :shortcutHomoSapiensDateOfBirthStringLiteralValue ;
+  :usesLogic :BindIfBoundSHALocalRandom ;
+.
+:DateOfBirthDatumStringExpansionRule
+  a :ExpansionRuleForLiteralValue ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :homoSapiensDateOfBirthStringLiteralValue ;
+  :hasShortcutSource :shortcutHomoSapiensDateOfBirthStringLiteralValue ;
+  :usesLogic :BindAs ;
+.
+:DateOfBirthExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates obo:UBERON_0035946 ;
+  :dependsOn :shortcutHomoSapiensDateOfBirthStringLiteralValue ;
+  :usesLogic :BindIfBoundSHALocalRandom ;
+.
+:DiagnosisToIcdRegistry
+  a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :IcdRegistryOfVariousTypes ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate :TURBO_0000703 ;
+  :required false ;
+  :subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to icd registry connection" ;
+.
+:ExpansionRuleForIntermediateNode
+  a owl:Class ;
+  rdfs:label "TURBO graph expansion rule for intermediate node" ;
+  rdfs:subClassOf :TurboGraphExpansionRule ;
+.
+:ExpansionRuleForLiteralValue
+  a owl:Class ;
+  rdfs:label "TURBO graph expansion rule for literal value" ;
+  rdfs:subClassOf :TurboGraphExpansionRule ;
+.
+:GenderIdentityDatumExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :GenderIdentityDatumOfVariousTypes ;
+  :dependsOn :shortcutHomoSapiensGenderIdentityStringLiteralValue ;
+  :usesLogic :BindIfBoundSHALocalRandom ;
+.
+:GenderIdentityDatumOfVariousTypes
+  a owl:Class ;
+  rdfs:label "gender identity datum of various types" ;
+.
+:GenderIdentityDatumValueExpansionRule
+  a :ExpansionRuleForLiteralValue ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :homoSapiensGenderIdentityStringLiteralValue ;
+  :hasShortcutSource :shortcutHomoSapiensGenderIdentityStringLiteralValue ;
+  :usesLogic :BindAs ;
+.
+:GenderIdentityTypeExpansionRule
+  a :ExpansionRuleForLiteralValue ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :genderIdentityDatumType ;
+  :dependsOn :shortcutGenderIdentityDatumOfVariousTypes ;
+  :hasShortcutSource :shortcutGenderIdentityDatumOfVariousTypes ;
+  :usesLogic :GenderIdentityTypeRule ;
+.
+:GenderIdentityTypeRule
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql "BIND(IF(BOUND(?dependent), ?original, obo:OMRSE_00000133) AS ?replacement)" ;
+.
+:HomoSapiensDatasetExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates obo:IAO_0000100 ;
+  :dependsOn :shortcutHomoSapiensDatasetTitleStringLiteralValue ;
+  :usesLogic :BindIfBoundSHALocalRandom ;
+.
+:HomoSapiensExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates obo:NCBITaxon_9606 ;
+  :usesLogic :SHAGlobalRandom ;
+.
+:HomoSapiensIdentifierExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :TURBO_0000503 ;
+  :usesLogic :RandomUUID ;
+.
+:HomoSapiensRegistryExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :TURBO_0000505 ;
+  :usesLogic :RandomUUID ;
+.
+:HomoSapiensRegistryOfVariousTypes
+  a owl:Class ;
+  rdfs:label "homo sapiens registry of various types" ;
+.
+:HomoSapiensRegistryValueExpansionRule
+  a :ExpansionRuleForLiteralValue ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :HomoSapiensRegistryOfVariousTypes ;
+  :hasShortcutSource :shortcutHomoSapiensRegistryOfVariousTypes ;
+  :usesLogic :BindAs ;
+.
+:HomoSapiensSymbolExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :TURBO_0000504 ;
+  :usesLogic :RandomUUID ;
+.
+:HomoSapiensSymbolValueExpansionRule
+  a :ExpansionRuleForLiteralValue ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :homoSapiensSymbolStringLiteralValue ;
+  :hasShortcutSource :shortcutHomoSapiensSymbolStringLiteralValue ;
+  :usesLogic :BindAs ;
+.
+:IcdRegistryOfVariousTypes
+  a owl:Class ;
+  rdfs:label "some icd registry uri" ;
+.
+:IcdTermOfVariousTypes
+  a owl:Class ;
+  rdfs:label "some icd term" ;
+.
+:InstantiationProcessExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :TURBO_0000522 ;
+  :usesLogic :InstantiationStringToURI ;
+.
+:InstantiationStringToURI
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql "BIND(uri(instantiationPlaceholder) AS ?replacement)" ;
+.
+:ObjectConnectionRecipe
+  a owl:Class ;
+  rdfs:label "object connection recipe" ;
+  rdfs:subClassOf :TurboGraphConnectionRecipe ;
+.
+:RaceIdentificationProcessExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates obo:OMRSE_00000099 ;
+  :dependsOn :shortcutHomoSapiensRaceIdentityStringLiteralValue ;
+  :usesLogic :BindIfBoundSHALocalRandom ;
+.
+:RaceIdentityDatumExpansionRule
+  a :ExpansionRuleForIntermediateNode ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :RaceIdentityDatumOfVariousTypes ;
+  :dependsOn :shortcutHomoSapiensRaceIdentityStringLiteralValue ;
+  :usesLogic :BindIfBoundSHALocalRandom ;
+.
+:RaceIdentityDatumOfVariousTypes
+  a owl:Class ;
+  rdfs:label "race identity datum of various types" ;
+.
+:RaceIdentityDatumValueExpansionRule
+  a :ExpansionRuleForLiteralValue ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :homoSapiensRaceIdentityStringLiteralValue ;
+  :hasShortcutSource :shortcutHomoSapiensRaceIdentityStringLiteralValue ;
+  :usesLogic :BindAs ;
+.
+:RaceIdentityTypeExpansionRule
+  a :ExpansionRuleForLiteralValue ;
+  :basedOn :shortcut_obo_NCBITaxon_9606 ;
+  :creates :raceIdentityDatumType ;
+  :dependsOn :shortcutRaceIdentityDatumOfVariousTypes ;
+  :hasShortcutSource :shortcutRaceIdentityDatumOfVariousTypes ;
+  :usesLogic :BindAs ;
+.
+:RandomUUID
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(struuid()))) AS ?replacement)" ;
+.
+:SHAGlobalRandom
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                                SHA256(CONCAT(\"replacement\",\"globalUUID\", str(?mainExpansionTypeVariableName))))) AS ?replacement)""" ;
+.
+:SHAGlobalRandomWithDependent
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql """BIND(uri(CONCAT(\"http://www.itmat.upenn.edu/biobank/\",
+                                SHA256(CONCAT(\"replacement\", \"globalUUID\", str(?dependent))))) AS ?replacement)""" ;
+.
+:SHAGlobalRandomWithOriginal
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                                SHA256(CONCAT(\"replacement\",\"globalUUID\", str(?original))))) AS ?replacement)""" ;
+.
+:SHALocalRandom
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                                SHA256(CONCAT(\"replacement\",\"localUUID\", str(?mainExpansionTypeVariableName))))) AS ?replacement)""" ;
+.
+:SingletonSHAOfOriginal
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                                SHA256(CONCAT(\"replacement\",str(?original))))) AS ?replacement)""" ;
+.
+:SingletonSHAOfOriginalWithDependent
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql """BIND(IF(BOUND(?dependent), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                                SHA256(CONCAT(\"replacement\", str(?original))))), ?unbound) AS ?replacement)""" ;
+.
+:StringToURI
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql "BIND(uri(?original) AS ?replacement)" ;
+.
+:TurboGraphBooleanLiteralValue
+  a owl:Class ;
+  rdfs:label "turbo graph boolean literal value" ;
+  rdfs:subClassOf :TurboGraphLiteralValue ;
+.
+:TurboGraphConnectionRecipe
+  a owl:Class ;
+  rdfs:label "connection recipe" ;
+.
+:TurboGraphDateLiteralValue
+  a owl:Class ;
+  rdfs:label "Turbo Graph date literal value" ;
+  rdfs:subClassOf :TurboGraphLiteralValue ;
+.
+:TurboGraphExpansionRule
+  a owl:Class ;
+  rdfs:label "TURBO graph expansion rule" ;
+.
+:TurboGraphExpansionRuleLogic
+  a owl:Class ;
+  rdfs:label "TURBO graph expansion rule logic" ;
+.
+:TurboGraphIntegerLiteralValue
+  a owl:Class ;
+  rdfs:label "turbo graph integer literal value" ;
+  rdfs:subClassOf :TurboGraphLiteralValue ;
+.
+:TurboGraphLiteralValue
+  a owl:Class ;
+  rdfs:label "Turbo Graph Literal Value" ;
+.
+:TurboGraphMultiplicityRule
+  a owl:Class ;
+  rdfs:label "TURBO graph multiplicity rule" ;
+.
+:TurboGraphProcess
+  a owl:Class ;
+  rdfs:label "TURBO graph process" ;
+.
+:TurboGraphStringLiteralValue
+  a owl:Class ;
+  rdfs:label "TURBO graph string literal value" ;
+  rdfs:subClassOf :TurboGraphLiteralValue ;
+.
+:TurboNamedGraph
+  a owl:Class ;
+  rdfs:label "named graph in turbo repository" ;
+  rdfs:subClassOf owl:Thing ;
+.
+:URIToString
+  a :TurboGraphExpansionRuleLogic ;
+  :usesSparql "BIND(str(?original) AS ?replacement)" ;
+.
+:datasetToDateOfBirthDatum
+  a :ObjectConnectionRecipe ;
+  :object ns3:EFO_0004950 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :subject obo:IAO_0000100 ;
+.
+:datasetToDiagnosis
+  a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-many> ;
+  :object obo:OGMS_0000073 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :required true ;
+  :subject obo:IAO_0000100 ;
+  rdfs:label "dataset to diagnosis connection" ;
+.
+:datasetToGenderIdentityDatum
+  a :ObjectConnectionRecipe ;
+  :object :GenderIdentityDatumOfVariousTypes ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :subject obo:IAO_0000100 ;
+.
+:datasetToHealthcareEncounterRegistryDenoter
+  a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-many> ;
+  :object :TURBO_0000510 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :required true ;
+  :subject obo:IAO_0000100 ;
+  rdfs:label "dataset to healthcare registry denoter symbol" ;
+.
+:datasetToHealthcareEncounterSymbol
+  a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-many> ;
+  :object :TURBO_0000509 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :required true ;
+  :subject obo:IAO_0000100 ;
+  rdfs:label "dataset to healthcare encounter symbol" ;
+.
+:datasetToHomoSapiensRegistryDenoter
+  a :ObjectConnectionRecipe ;
+  :object :TURBO_0000505 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :subject obo:IAO_0000100 ;
+.
+:datasetToHomoSapiensSymbol
+  a :ObjectConnectionRecipe ;
+  :object :TURBO_0000504 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :subject obo:IAO_0000100 ;
+.
+:datasetToRaceIdentityDatum
+  a :ObjectConnectionRecipe ;
+  :object :RaceIdentityDatumOfVariousTypes ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :subject obo:IAO_0000100 ;
+.
+:dateOfBirthDatumToBirth
+  a :ObjectConnectionRecipe ;
+  :object obo:UBERON_0035946 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:IAO_0000136 ;
+  :subject ns3:EFO_0004950 ;
+.
+:dateOfBirthDatumToDataset
+  a :ObjectConnectionRecipe ;
+  :object obo:IAO_0000100 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :subject ns3:EFO_0004950 ;
+.
+:dateOfBirthDatumToDateLiteral
+  a :DatatypeConnectionRecipe ;
+  :object :homoSapiensDateOfBirthDateLiteralValue ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0006511 ;
+  :subject ns3:EFO_0004950 ;
+.
+:dateOfBirthDatumToStringLiteral
+  a :DatatypeConnectionRecipe ;
+  :object :homoSapiensDateOfBirthStringLiteralValue ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0006510 ;
+  :subject ns3:EFO_0004950 ;
+.
+:diagnosisCodingSequenceIntegerLiteralValue
+  a :TurboGraphIntegerLiteralValue ;
+  rdfs:label "diagnosis coding sequence integer literal value" ;
+.
+:diagnosisIcdSuffixStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
+  rdfs:label "diagnosis icd suffix literal string value" ;
+.
+:diagnosisRegistryStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
+  rdfs:label "diagnosis registry string value" ;
+.
+:diagnosisToDataset
+  a :ObjectConnectionRecipe ;
+  :multiplicity :many-1 ;
+  :object obo:IAO_0000100 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :required true ;
+  :subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to dataset connection" ;
+.
+:diagnosisToDiagnosisCodeSuffixLiteralValue
+  a :DatatypeConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :diagnosisIcdSuffixStringLiteralValue ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate :TURBO_0006512 ;
+  :required false ;
+  :subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to diagnosis code suffix literal value" ;
+.
+:diagnosisToDiagnosisCodingSequenceLiteralValue
+  a :DatatypeConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :diagnosisCodingSequenceIntegerLiteralValue ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate :TURBO_0010014 ;
+  :required false ;
+  :subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to diagnosis coding sequence literal value" ;
+.
+:diagnosisToDiagnosisRegistryStringLiteralValue
+  a :DatatypeConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :diagnosisRegistryStringLiteralValue ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate :TURBO_0006515 ;
+  :required true ;
+  :subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to diagnosis registry literal string value" ;
+.
+:diagnosisToIcdTerm
+  a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :IcdTermOfVariousTypes ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate :TURBO_0000306 ;
+  :required false ;
+  :subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to icd term connection" ;
+.
+:diagnosisToPrimaryDiagnosisBooleanLiteralValue
+  a :DatatypeConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :primaryDiagnosisBooleanLiteralValue ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate :TURBO_0010013 ;
+  :required false ;
+  :subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to primary diagnosis boolean value connection" ;
+.
+:genderIdentityDatumToDataset
+  a :ObjectConnectionRecipe ;
+  :object obo:IAO_0000100 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :subject :GenderIdentityDatumOfVariousTypes ;
+.
+:genderIdentityDatumToGenderIdentityDatumLiteralValue
+  a :DatatypeConnectionRecipe ;
+  :object :homoSapiensGenderIdentityStringLiteralValue ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0006510 ;
+  :subject :GenderIdentityDatumOfVariousTypes ;
+.
+:genderIdentityDatumToGenderIdentityDatumType
+  a :ObjectConnectionRecipe ;
+  :object :genderIdentityDatumType ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate rdf:type ;
+  :subject :GenderIdentityDatumOfVariousTypes ;
+.
+:genderIdentityDatumToHomoSapiens
+  a :ObjectConnectionRecipe ;
+  :object obo:NCBITaxon_9606 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:IAO_0000136 ;
+  :subject :GenderIdentityDatumOfVariousTypes ;
+.
+:healthcareEncounterExpansionProcess
+  a :TurboGraphProcess ;
+  a rdfs:Resource ;
+  :inputNamedGraph pmbb:Shortcuts_healthcareEncounterShortcuts ;
+  :outputNamedGraph pmbb:expanded ;
+  rdfs:label "healthcare encounter expansion process" ;
+.
+:healthcareEncounterIdToRegistryDenoter
+  a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :TURBO_0000510 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :required true ;
+  :subject :TURBO_0000508 ;
+  rdfs:label "healthcare encounter id to registry denoter connection" ;
+.
+:healthcareEncounterIdToSymbol
+  a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :TURBO_0000509 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :required true ;
+  :subject :TURBO_0000508 ;
+  rdfs:label "healthcare enc id to symbol connection" ;
+.
+:healthcareEncounterRegistryDenoterToDataset
+  a :ObjectConnectionRecipe ;
+  :multiplicity :many-1 ;
+  :object obo:IAO_0000100 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :required true ;
+  :subject :TURBO_0000510 ;
+  rdfs:label "healthcare enc registry denoter to dataset connection" ;
+.
+:healthcareEncounterRegistryDenoterToId
+  a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :TURBO_0000508 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :required true ;
+  :subject :TURBO_0000510 ;
+  rdfs:label "healthcare encounter registry denoter to id connection" ;
+.
+:healthcareEncounterRegistryDenoterToRegistry
+  a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :TURBO_0000440 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:IAO_0000219 ;
+  :required true ;
+  :subject :TURBO_0000510 ;
+  rdfs:label "healthcare encounter registry denoter to registry connection" ;
+.
+:healthcareEncounterSymbolLiteralValue
+  a :TurboGraphStringLiteralValue ;
+  rdfs:label "healthcare encounter symbol value" ;
+.
+:healthcareEncounterSymbolToDataset
+  a :ObjectConnectionRecipe ;
+  :multiplicity :many-1 ;
+  :object obo:IAO_0000100 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :required true ;
+  :subject :TURBO_0000509 ;
+  rdfs:label "healthcare enc symbol to dataset connection" ;
+.
+:healthcareEncounterSymbolToId
+  a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :TURBO_0000508 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :required true ;
+  :subject :TURBO_0000509 ;
+  rdfs:label "healthcare enc symbol to id connection" ;
+.
+:healthcareEncounterSymbolToSymbolValue
+  a :DatatypeConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :healthcareEncounterSymbolLiteralValue ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate :TURBO_0006510 ;
+  :required true ;
+  :subject :TURBO_0000509 ;
+  rdfs:label "healthcare enc symbol to symbol value connection" ;
+.
+:healthcareEncounterToDiagnosis
+  a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-many> ;
+  :object obo:OGMS_0000073 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:RO_0002234 ;
+  :required false ;
+  :subject obo:OGMS_0000097 ;
+  rdfs:label "healthcare encounter to diagnosis connection" ;
+.
+:homoSapiensDatasetTitle
+  a :TurboGraphStringLiteralValue ;
+.
+:homoSapiensDatasetToHomoSapiensDatasetTitle
+  a :DatatypeConnectionRecipe ;
+  :object :homoSapiensDatasetTitle ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate dc11:title ;
+  :subject obo:IAO_0000100 ;
+.
+:homoSapiensDateOfBirthDateLiteralValue
+  a :TurboGraphDateLiteralValue ;
+.
+:homoSapiensDateOfBirthStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
+.
+:homoSapiensExpansionProcess
+  a :TurboGraphProcess ;
+  :inputNamedGraph pmbb:Shortcuts_participantShortcuts ;
+  :outputNamedGraph pmbb:expanded ;
+  rdfs:label "homo sapiens expansion process" ;
+.
+:homoSapiensGenderIdentityStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
+.
+:homoSapiensIdToRegistryDenoter
+  a :ObjectConnectionRecipe ;
+  :object :TURBO_0000505 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :subject :TURBO_0000503 ;
+.
+:homoSapiensIdToSymbol
+  a :ObjectConnectionRecipe ;
+  :object :TURBO_0000504 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000051 ;
+  :subject :TURBO_0000503 ;
+.
+:homoSapiensIdentifierToHomoSapiens
+  a :ObjectConnectionRecipe ;
+  :inputTo :biobankEncounterLinkingProcess ;
+  :inputTo :healthcareEncounterLinkingProcess ;
+  :object obo:NCBITaxon_9606 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:IAO_0000219 ;
+  :subject :TURBO_0000503 ;
+.
+:homoSapiensRaceIdentityStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
+.
+:homoSapiensRegistryDenoterToDataset
+  a :ObjectConnectionRecipe ;
+  :object obo:IAO_0000100 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :subject :TURBO_0000505 ;
+.
+:homoSapiensRegistryDenoterToId
+  a :ObjectConnectionRecipe ;
+  :object :TURBO_0000503 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :subject :TURBO_0000505 ;
+.
+:homoSapiensRegistryDenoterToRegistry
+  a :ObjectConnectionRecipe ;
+  :object :HomoSapiensRegistryOfVariousTypes ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:IAO_0000219 ;
+  :subject :TURBO_0000505 ;
+.
+:homoSapiensSymbolStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
+.
+:homoSapiensSymbolToDataset
+  a :ObjectConnectionRecipe ;
+  :object obo:IAO_0000100 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :subject :TURBO_0000504 ;
+.
+:homoSapiensSymbolToSymbolValue
+  a :DatatypeConnectionRecipe ;
+  :object :homoSapiensSymbolStringLiteralValue ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0006510 ;
+  :subject :TURBO_0000504 ;
+.
+:homoSapiensToBiosex
+  a :ObjectConnectionRecipe ;
+  :dependentOn :genderIdentityDatumToHomoSapiens ;
+  :object obo:PATO_0000047 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:RO_0000086 ;
+  :subject obo:NCBITaxon_9606 ;
+.
+:homoSapiensToBirth
+  a :ObjectConnectionRecipe ;
+  :object obo:UBERON_0035946 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0000303 ;
+  :subject obo:NCBITaxon_9606 ;
+.
+:identifierToHealthcareEncounter
+  a :ObjectConnectionRecipe ;
+  :multiplicity :many-1 ;
+  :object obo:OGMS_0000097 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:IAO_0000219 ;
+  :required true ;
+  :subject :TURBO_0000508 ;
+  rdfs:label "Identifier to Healthcare Encounter Connection" ;
+.
+:inputNamedGraph
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphProcess ;
+  rdfs:label "input named graph for a turbo process" ;
+  rdfs:range :TurboNamedGraph ;
+.
+:inputTo
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphConnectionRecipe ;
+  rdfs:label "input to an expansion process" ;
+  rdfs:range :TurboGraphProcess ;
+.
+:instantiationToHealthcareEncounterDataset
+  a :ObjectConnectionRecipe ;
+  :object obo:IAO_0000100 ;
+  :outputOf :healthcareEncounterExpansionProcess ;
+  :predicate obo:OBI_0000293 ;
+  :subject :TURBO_0000522 ;
+.
+:instantiationToHomoSapiensDataset
+  a :ObjectConnectionRecipe ;
+  :object obo:IAO_0000100 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:OBI_0000293 ;
+  :subject :TURBO_0000522 ;
+.
+:many-1
+  a :TurboGraphMultiplicityRule ;
+  rdfs:label "many-1 multiplicity rule" ;
+.
+:many-many
+  a :TurboGraphMultiplicityRule ;
+  rdfs:label "many-many multiplicity rule" ;
+.
+:multiplicity
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphConnectionRecipe ;
+  rdfs:label "multiplicity definition for connection recipe" ;
+  rdfs:range :TurboGraphMultiplicityRule ;
+.
+:object
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphConnectionRecipe ;
+  rdfs:label "object of connection recipe" ;
+  rdfs:range rdfs:Resource ;
+.
+:outputNamedGraph
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphProcess ;
+  rdfs:label "output named graph for a turbo process" ;
+  rdfs:range :TurboNamedGraph ;
+.
+:outputOf
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphConnectionRecipe ;
+  rdfs:label "output of an expansion process" ;
+  rdfs:range :TurboGraphProcess ;
+.
+:predicate
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphConnectionRecipe ;
+  rdfs:label "predicate of connection recipe" ;
+  rdfs:range rdf:Property ;
+.
+:primaryDiagnosisBooleanLiteralValue
+  a :TurboGraphBooleanLiteralValue ;
+  rdfs:label "diagnosis primary t/f" ;
+.
+:raceIdentificationProcessToRaceIdentityDatum
+  a :ObjectConnectionRecipe ;
+  :object :RaceIdentityDatumOfVariousTypes ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:OBI_0000299 ;
+  :subject obo:OMRSE_00000099 ;
+.
+:raceIdentityDatumToDataset
+  a :ObjectConnectionRecipe ;
+  :object obo:IAO_0000100 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :subject :RaceIdentityDatumOfVariousTypes ;
+.
+:raceIdentityDatumToHomoSapiens
+  a :ObjectConnectionRecipe ;
+  :object obo:NCBITaxon_9606 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:IAO_0000136 ;
+  :subject :RaceIdentityDatumOfVariousTypes ;
+.
+:raceIdentityDatumToRaceIdentityDatumLiteralValue
+  a :DatatypeConnectionRecipe ;
+  :object :homoSapiensRaceIdentityStringLiteralValue ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0006512 ;
+  :subject :RaceIdentityDatumOfVariousTypes ;
+.
+:raceIdentityDatumToRaceIdentityDatumType
+  a :ObjectConnectionRecipe ;
+  :object :raceIdentityDatumType ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate rdf:type ;
+  :subject :RaceIdentityDatumOfVariousTypes ;
+.
+:required
+  a owl:DatatypeProperty ;
+  rdfs:domain :TurboGraphConnectionRecipe ;
+  rdfs:label "is connection recipe required in model?" ;
+  rdfs:range xsd:boolean ;
+.
+:shortcutHomoSapiensDatasetTitleStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
+.
+:shortcutHomoSapiensDateOfBirthDateLiteralValue
+  a :TurboGraphDateLiteralValue ;
+.
+:shortcutHomoSapiensDateOfBirthStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
+.
+:shortcutHomoSapiensGenderIdentityStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
+.
+:shortcutHomoSapiensIdToRegistry
+  a :ObjectConnectionRecipe ;
+  :inputTo :homoSapiensExpansionProcess ;
+  :object :shortcutHomoSapiensRegistryOfVariousTypes ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0003610 ;
+  :subject :shortcut_turbo_TURBO_0000503 ;
+.
+:shortcutHomoSapiensIdToSymbol
+  a :DatatypeConnectionRecipe ;
+  :inputTo :homoSapiensExpansionProcess ;
+  :object :shortcutHomoSapiensSymbolStringLiteralValue ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0003608 ;
+  :subject :shortcut_turbo_TURBO_0000503 ;
+.
+:shortcutHomoSapiensIdentifierToShortcutHomoSapiens
+  a :ObjectConnectionRecipe ;
+  :inputTo :homoSapiensExpansionProcess ;
+  :object :shortcut_obo_NCBITaxon_9606 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:IAO_0000219 ;
+  :subject :shortcut_turbo_TURBO_0000503 ;
+.
+:shortcutHomoSapiensRaceIdentityStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
+.
+:shortcutHomoSapiensSymbolStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
+.
+:shortcutHomoSapiensToDatasetTitle
+  a :DatatypeConnectionRecipe ;
+  :inputTo :homoSapiensExpansionProcess ;
+  :object :shortcutHomoSapiensDatasetTitleStringLiteralValue ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0003603 ;
+  :subject :shortcut_turbo_TURBO_0000503 ;
+.
+:shortcutHomoSapiensToDateOfBirthDate
+  a :DatatypeConnectionRecipe ;
+  :dependentOn :shortcutHomoSapiensToDateOfBirthString ;
+  :inputTo :homoSapiensExpansionProcess ;
+  :object :shortcutHomoSapiensDateOfBirthDateLiteralValue ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0000605 ;
+  :subject :shortcut_obo_NCBITaxon_9606 ;
+.
+:shortcutHomoSapiensToDateOfBirthString
+  a :DatatypeConnectionRecipe ;
+  :inputTo :homoSapiensExpansionProcess ;
+  :object :shortcutHomoSapiensDateOfBirthStringLiteralValue ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0000604 ;
+  :subject :shortcut_obo_NCBITaxon_9606 ;
+.
+:shortcutHomoSapiensToExpandedHomoSapiens
+  a :ObjectConnectionRecipe ;
+  :object obo:NCBITaxon_9606 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0010113 ;
+  :subject :shortcut_obo_NCBITaxon_9606 ;
+.
+:shortcutHomoSapiensToGenderIdentityType
+  a :ObjectConnectionRecipe ;
+  :dependentOn :shortcutHomoSapiensToGenderIdentityValue ;
+  :inputTo :homoSapiensExpansionProcess ;
+  :object :shortcutGenderIdentityDatumOfVariousTypes ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0000607 ;
+  :subject :shortcut_obo_NCBITaxon_9606 ;
+.
+:shortcutHomoSapiensToGenderIdentityValue
+  a :DatatypeConnectionRecipe ;
+  :inputTo :homoSapiensExpansionProcess ;
+  :object :shortcutHomoSapiensGenderIdentityStringLiteralValue ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0000606 ;
+  :subject :shortcut_obo_NCBITaxon_9606 ;
+.
+:shortcutHomoSapiensToRaceIdentityType
+  a :ObjectConnectionRecipe ;
+  :dependentOn :shortcutHomoSapiensToRaceIdentityValue ;
+  :inputTo :homoSapiensExpansionProcess ;
+  :object :shortcutRaceIdentityDatumOfVariousTypes ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0000614 ;
+  :subject :shortcut_obo_NCBITaxon_9606 ;
+.
+:shortcutHomoSapiensToRaceIdentityValue
+  a :DatatypeConnectionRecipe ;
+  :inputTo :homoSapiensExpansionProcess ;
+  :object :shortcutHomoSapiensRaceIdentityStringLiteralValue ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate :TURBO_0000615 ;
+  :subject :shortcut_obo_NCBITaxon_9606 ;
+.
+:subject
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphConnectionRecipe ;
+  rdfs:label "subject of connection recipe" ;
+  rdfs:range owl:Class ;
+.
+:symbolToHomoSapiensId
+  a :ObjectConnectionRecipe ;
+  :object :TURBO_0000503 ;
+  :outputOf :homoSapiensExpansionProcess ;
+  :predicate obo:BFO_0000050 ;
+  :subject :TURBO_0000504 ;
+.
+fakeprefix:
+  a owl:Ontology ;
+  owl:imports : ;
+  owl:versionInfo "Created with TopBraid Composer" ;
+.
+pmbb:Shortcuts_HomoSapiensShortcuts
+  a :TurboNamedGraph ;
+  a rdfs:Resource ;
+  rdfs:label "named graph for shortcut homo sapiens" ;
+.
+pmbb:Shortcuts_healthcareEncounterShortcuts
+  a :TurboNamedGraph ;
+  rdfs:label "named graph for shortcut healthcare encounters" ;
+.
+pmbb:expanded
+  a :TurboNamedGraph ;
+  rdfs:label "named graph for expanded triples" ;
+.
