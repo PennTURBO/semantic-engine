@@ -40,8 +40,9 @@ class ObjectOrientedExpander extends ProjectwideGlobals
     }*/
   def runAllExpansionProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String, instantiation: String = helper.genPmbbIRI())
   {
-      val query = DrivetrainProcessFromGraphModel.runProcess(gmCxn, "http://transformunify.org/ontologies/healthcareEncounterExpansionProcess", instantiation, globalUUID)
+      val query = DrivetrainProcessFromGraphModel.runProcess(gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess", instantiation, globalUUID)
+      //val query = DrivetrainProcessFromGraphModel.runProcess(gmCxn, "http://transformunify.org/ontologies/healthcareEncounterExpansionProcess", instantiation, globalUUID)
       println(query)
-      //update.updateSparql(cxn, sparqlPrefixes + query)
+      update.updateSparql(cxn, sparqlPrefixes + query)
   }
 }

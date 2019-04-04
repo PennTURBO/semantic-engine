@@ -11,7 +11,7 @@ import java.util.UUID
 
 class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
-    val clearDatabaseAfterRun: Boolean = false
+    val clearDatabaseAfterRun: Boolean = true
     val objectOrientedExpander = new ObjectOrientedExpander
     
     var conclusionationNamedGraph: IRI = null
@@ -32,8 +32,6 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     
     val minimumPartRequirements: String = """
       ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
-          
-          ?part turbo:TURBO_0006601 "http://www.itmat.upenn.edu/biobank/part1" .
           
           ?part a obo:NCBITaxon_9606 .
           
@@ -146,7 +144,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/RO_0000086", "http://transformunify.org/ontologies/TURBO_0000303",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://transformunify.org/ontologies/TURBO_0006510",
-            "http://transformunify.org/ontologies/TURBO_0006601", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -166,14 +164,13 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://transformunify.org/ontologies/TURBO_0000614", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://transformunify.org/ontologies/TURBO_0000615", "http://transformunify.org/ontologies/TURBO_0003610", 
             "http://transformunify.org/ontologies/TURBO_0003608", "http://transformunify.org/ontologies/TURBO_0003603",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://transformunify.org/ontologies/TURBO_0010113"
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (55)
+        result.size should be (54)
     }
     
     test("participant with minimum required for expansion")
@@ -203,7 +200,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.org/dc/elements/1.1/title",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://transformunify.org/ontologies/TURBO_0006601", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -211,14 +208,13 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0003603",
-            "http://transformunify.org/ontologies/TURBO_0003608", "http://transformunify.org/ontologies/TURBO_0003610",
-            "http://transformunify.org/ontologies/TURBO_0010113"
+            "http://transformunify.org/ontologies/TURBO_0003608", "http://transformunify.org/ontologies/TURBO_0003610"
             
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (27) 
+        result.size should be (26) 
     }
     
     test("participant without psc")
@@ -349,7 +345,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/RO_0000086", "http://transformunify.org/ontologies/TURBO_0000303",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://transformunify.org/ontologies/TURBO_0006601", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -363,14 +359,13 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://transformunify.org/ontologies/TURBO_0000604", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://transformunify.org/ontologies/TURBO_0000606", "http://transformunify.org/ontologies/TURBO_0003610",
-            "http://transformunify.org/ontologies/TURBO_0003608", "http://transformunify.org/ontologies/TURBO_0003603",
-            "http://transformunify.org/ontologies/TURBO_0010113"
+            "http://transformunify.org/ontologies/TURBO_0003608", "http://transformunify.org/ontologies/TURBO_0003603"
             
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (43)
+        result.size should be (42)
     }
     
     test("expand homoSapiens with multiple identifiers - single dataset")
@@ -417,8 +412,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
         		?dataset a obo:IAO_0000100 .
         		?dataset dc11:title "dataset1" .
-        		?homoSapiens turbo:TURBO_0006601 ?previousUriText .
-        		
+
         		?part turbo:TURBO_0000303 ?birth .
         		?birth a obo:UBERON_0035946 .
         		?part obo:RO_0000086 ?biosex .
@@ -505,7 +499,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/RO_0000086", "http://transformunify.org/ontologies/TURBO_0000303",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://transformunify.org/ontologies/TURBO_0006510",
-            "http://transformunify.org/ontologies/TURBO_0006601", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -544,14 +538,13 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050", 
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050", 
-            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/IAO_0000219",
-            "http://purl.obolibrary.org/obo/IAO_0000219"
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/IAO_0000219"
 
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")  
         
-        result.size should be (93)
+        result.size should be (92)
     }
     
     /*test("expand homoSapiens with multiple identifiers - multiple datasets")

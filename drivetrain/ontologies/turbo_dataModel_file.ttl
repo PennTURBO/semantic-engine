@@ -49,163 +49,44 @@ graph:
   rdfs:label "1-many multiplicity rule" ;
 .
 :BindAs
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql "BIND (?original AS ?replacement)" ;
 .
 :BindIfBoundRandomUUID
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql """BIND(IF (BOUND(?dependent), uri(concat(\"http://www.itmat.upenn.edu/biobank/\", 
                                             SHA256(struuid()), ?unbound) AS ?replacement)""" ;
 .
 :BindIfBoundSHALocalRandom
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql """BIND (IF (BOUND(?dependent), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
                                         SHA256(CONCAT(\"replacement\", \"localUUID\", str(?mainExpansionTypeVariableName))))), ?unbound) AS ?replacement)""" ;
 .
 :BindIfBoundSHALocalRandomWithDependent
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql """BIND (IF (BOUND(?dependent), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
                                         SHA256(CONCAT(\"replacement\", \"localUUID\", str(?mainExpansionTypeVariableName), str(?dependent))))), ?unbound) AS ?replacement)""" ;
-.
-:BiologicalSexExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates obo:PATO_0000047 ;
-  :dependsOn :shortcutHomoSapiensGenderIdentityStringLiteralValue ;
-  :usesLogic :BindIfBoundSHALocalRandom ;
-.
-:DatasetTitleExpansionRule
-  a :ExpansionRuleForLiteralValue ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :datasetTitle ;
-  :hasShortcutSource :shortcutHomoSapiensDatasetTitleStringLiteralValue ;
-  :usesLogic :BindAs ;
 .
 :DatatypeConnectionRecipe
   a owl:Class ;
   rdfs:label "datatype connection recipe" ;
   rdfs:subClassOf :TurboGraphConnectionRecipe ;
 .
-:DateOfBirthDatumDateExpansionRule
-  a :ExpansionRuleForLiteralValue ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :homoSapiensDateOfBirthDateLiteralValue ;
-  :hasShortcutSource :shortcutHomoSapiensDateOfBirthDateLiteralValue ;
-  :usesLogic :BindAs ;
-.
-:DateOfBirthDatumExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates ns3:EFO_0004950 ;
-  :dependsOn :shortcutHomoSapiensDateOfBirthStringLiteralValue ;
-  :usesLogic :BindIfBoundSHALocalRandom ;
-.
-:DateOfBirthDatumStringExpansionRule
-  a :ExpansionRuleForLiteralValue ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :homoSapiensDateOfBirthStringLiteralValue ;
-  :hasShortcutSource :shortcutHomoSapiensDateOfBirthStringLiteralValue ;
-  :usesLogic :BindAs ;
-.
-:DateOfBirthExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates obo:UBERON_0035946 ;
-  :dependsOn :shortcutHomoSapiensDateOfBirthStringLiteralValue ;
-  :usesLogic :BindIfBoundSHALocalRandom ;
-.
 :DrugTermOfVariousTypes
   a owl:Class ;
   rdfs:label "drug term of various types" ;
-.
-:ExpansionRuleForIntermediateNode
-  a owl:Class ;
-  rdfs:label "TURBO graph expansion rule for intermediate node" ;
-  rdfs:subClassOf :TurboGraphExpansionRule ;
-.
-:ExpansionRuleForLiteralValue
-  a owl:Class ;
-  rdfs:label "TURBO graph expansion rule for literal value" ;
-  rdfs:subClassOf :TurboGraphExpansionRule ;
-.
-:GenderIdentityDatumExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :GenderIdentityDatumOfVariousTypes ;
-  :dependsOn :shortcutHomoSapiensGenderIdentityStringLiteralValue ;
-  :usesLogic :BindIfBoundSHALocalRandom ;
 .
 :GenderIdentityDatumOfVariousTypes
   a owl:Class ;
   rdfs:label "gender identity datum of various types" ;
 .
-:GenderIdentityDatumValueExpansionRule
-  a :ExpansionRuleForLiteralValue ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :homoSapiensGenderIdentityStringLiteralValue ;
-  :hasShortcutSource :shortcutHomoSapiensGenderIdentityStringLiteralValue ;
-  :usesLogic :BindAs ;
-.
-:GenderIdentityTypeExpansionRule
-  a :ExpansionRuleForLiteralValue ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :genderIdentityDatumType ;
-  :dependsOn :shortcutGenderIdentityDatumOfVariousTypes ;
-  :hasShortcutSource :shortcutGenderIdentityDatumOfVariousTypes ;
-  :usesLogic :GenderIdentityTypeRule ;
-.
 :GenderIdentityTypeRule
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql "BIND(IF(BOUND(?dependent), ?original, obo:OMRSE_00000133) AS ?replacement)" ;
-.
-:HomoSapiensDatasetExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates obo:IAO_0000100 ;
-  :dependsOn :shortcutHomoSapiensDatasetTitleStringLiteralValue ;
-  :usesLogic :BindIfBoundSHALocalRandom ;
-.
-:HomoSapiensExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates obo:NCBITaxon_9606 ;
-  :usesLogic :SHAGlobalRandom ;
-.
-:HomoSapiensIdentifierExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :TURBO_0000503 ;
-  :usesLogic :RandomUUID ;
-.
-:HomoSapiensRegistryExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :TURBO_0000505 ;
-  :usesLogic :RandomUUID ;
 .
 :HomoSapiensRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "homo sapiens registry of various types" ;
-.
-:HomoSapiensRegistryValueExpansionRule
-  a :ExpansionRuleForLiteralValue ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :HomoSapiensRegistryOfVariousTypes ;
-  :hasShortcutSource :shortcutHomoSapiensRegistryOfVariousTypes ;
-  :usesLogic :BindAs ;
-.
-:HomoSapiensSymbolExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :TURBO_0000504 ;
-  :usesLogic :RandomUUID ;
-.
-:HomoSapiensSymbolValueExpansionRule
-  a :ExpansionRuleForLiteralValue ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :homoSapiensSymbolStringLiteralValue ;
-  :hasShortcutSource :shortcutHomoSapiensSymbolStringLiteralValue ;
-  :usesLogic :BindAs ;
 .
 :IcdRegistryOfVariousTypes
   a owl:Class ;
@@ -215,14 +96,8 @@ graph:
   a owl:Class ;
   rdfs:label "some icd term" ;
 .
-:InstantiationProcessExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :TURBO_0000522 ;
-  :usesLogic :InstantiationStringToURI ;
-.
 :InstantiationStringToURI
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql "BIND(uri(instantiationPlaceholder) AS ?replacement)" ;
 .
 :ObjectConnectionRecipe
@@ -230,60 +105,31 @@ graph:
   rdfs:label "object connection recipe" ;
   rdfs:subClassOf :TurboGraphConnectionRecipe ;
 .
-:RaceIdentificationProcessExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates obo:OMRSE_00000099 ;
-  :dependsOn :shortcutHomoSapiensRaceIdentityStringLiteralValue ;
-  :usesLogic :BindIfBoundSHALocalRandom ;
-.
-:RaceIdentityDatumExpansionRule
-  a :ExpansionRuleForIntermediateNode ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :RaceIdentityDatumOfVariousTypes ;
-  :dependsOn :shortcutHomoSapiensRaceIdentityStringLiteralValue ;
-  :usesLogic :BindIfBoundSHALocalRandom ;
-.
 :RaceIdentityDatumOfVariousTypes
   a owl:Class ;
   rdfs:label "race identity datum of various types" ;
 .
-:RaceIdentityDatumValueExpansionRule
-  a :ExpansionRuleForLiteralValue ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :homoSapiensRaceIdentityStringLiteralValue ;
-  :hasShortcutSource :shortcutHomoSapiensRaceIdentityStringLiteralValue ;
-  :usesLogic :BindAs ;
-.
-:RaceIdentityTypeExpansionRule
-  a :ExpansionRuleForLiteralValue ;
-  :basedOn :shortcut_obo_NCBITaxon_9606 ;
-  :creates :raceIdentityDatumType ;
-  :dependsOn :shortcutRaceIdentityDatumOfVariousTypes ;
-  :hasShortcutSource :shortcutRaceIdentityDatumOfVariousTypes ;
-  :usesLogic :BindAs ;
-.
 :RandomUUID
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(struuid()))) AS ?replacement)" ;
 .
 :SHAGlobalRandom
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
                                 SHA256(CONCAT(\"replacement\",\"globalUUID\", str(?mainExpansionTypeVariableName))))) AS ?replacement)""" ;
 .
 :SHAGlobalRandomWithDependent
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql """BIND(uri(CONCAT(\"http://www.itmat.upenn.edu/biobank/\",
                                 SHA256(CONCAT(\"replacement\", \"globalUUID\", str(?dependent))))) AS ?replacement)""" ;
 .
 :SHAGlobalRandomWithOriginal
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
                                 SHA256(CONCAT(\"replacement\",\"globalUUID\", str(?original))))) AS ?replacement)""" ;
 .
 :SHALocalRandom
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
                                 SHA256(CONCAT(\"replacement\",\"localUUID\", str(?mainExpansionTypeVariableName))))) AS ?replacement)""" ;
 .
@@ -300,17 +146,17 @@ graph:
   rdfs:label "some shortcut icd registry uri" ;
 .
 :SingletonSHAOfOriginal
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
                                 SHA256(CONCAT(\"replacement\",str(?original))))) AS ?replacement)""" ;
 .
 :SingletonSHAOfOriginalWithDependent
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql """BIND(IF(BOUND(?dependent), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
                                 SHA256(CONCAT(\"replacement\", str(?original))))), ?unbound) AS ?replacement)""" ;
 .
 :StringToURI
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql "BIND(uri(?original) AS ?replacement)" ;
 .
 :TurboGraphBooleanLiteralValue
@@ -332,13 +178,9 @@ graph:
   rdfs:label "turbo graph double literal value" ;
   rdfs:subClassOf :TurboGraphLiteralValue ;
 .
-:TurboGraphExpansionRule
+:TurboGraphExpansionProcess
   a owl:Class ;
-  rdfs:label "TURBO graph expansion rule" ;
-.
-:TurboGraphExpansionRuleLogic
-  a owl:Class ;
-  rdfs:label "TURBO graph expansion rule logic" ;
+  rdfs:subClassOf :TurboGraphProcess ;
 .
 :TurboGraphIntegerLiteralValue
   a owl:Class ;
@@ -362,14 +204,38 @@ graph:
   rdfs:label "TURBO graph string literal value" ;
   rdfs:subClassOf :TurboGraphLiteralValue ;
 .
+:TurboGraphVariableManipulation
+  a owl:Class ;
+  rdfs:label "TURBO graph expansion rule" ;
+.
+:TurboGraphVariableManipulationLogic
+  a owl:Class ;
+  rdfs:label "TURBO graph expansion rule logic" ;
+.
 :TurboNamedGraph
   a owl:Class ;
   rdfs:label "named graph in turbo repository" ;
   rdfs:subClassOf owl:Thing ;
 .
 :URIToString
-  a :TurboGraphExpansionRuleLogic ;
+  a :TurboGraphVariableManipulationLogic ;
   :usesSparql "BIND(str(?original) AS ?replacement)" ;
+.
+:VariableManipulationForIntermediateNode
+  a owl:Class ;
+  rdfs:label "TURBO graph expansion rule for intermediate node" ;
+  rdfs:subClassOf :TurboGraphVariableManipulation ;
+.
+:VariableManipulationForLiteralValue
+  a owl:Class ;
+  rdfs:label "TURBO graph expansion rule for literal value" ;
+  rdfs:subClassOf :TurboGraphVariableManipulation ;
+.
+:biologicalSexVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates obo:PATO_0000047 ;
+  :manipulationDependsOn :shortcutHomoSapiensGenderIdentityStringLiteralValue ;
+  :usesSparqlLogic :BindIfBoundSHALocalRandom ;
 .
 :bmiDoubleLiteralValue
   a :TurboGraphDoubleLiteralValue ;
@@ -395,8 +261,20 @@ graph:
   :subject ns3:EFO_0004340 ;
   rdfs:label "BMI to dataset connection" ;
 .
-:datasetTitle
+:bmiValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterBmiValue ;
+  :manipulationCreates :bmiDoubleLiteralValue ;
+  :usesSparqlLogic :BindAs ;
+.
+:datasetTitleStringLiteralValue
   a :TurboGraphStringLiteralValue ;
+.
+:datasetTitleVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutDatasetTitleStringLiteralValue ;
+  :manipulationCreates :datasetTitleStringLiteralValue ;
+  :usesSparqlLogic :BindAs ;
 .
 :datasetToBmi
   a :ObjectConnectionRecipe ;
@@ -410,17 +288,21 @@ graph:
 .
 :datasetToDatasetTitle
   a :DatatypeConnectionRecipe ;
-  :object :datasetTitle ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :datasetTitleStringLiteralValue ;
   :outputOf :healthcareEncounterExpansionProcess ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate dc11:title ;
+  :required true ;
   :subject obo:IAO_0000100 ;
 .
 :datasetToDateOfBirthDatum
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-many> ;
   :object ns3:EFO_0004950 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000051 ;
+  :required false ;
   :subject obo:IAO_0000100 ;
 .
 :datasetToDiagnosis
@@ -435,9 +317,11 @@ graph:
 .
 :datasetToGenderIdentityDatum
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-many> ;
   :object :GenderIdentityDatumOfVariousTypes ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000051 ;
+  :required false ;
   :subject obo:IAO_0000100 ;
 .
 :datasetToHealthcareEncounterDate
@@ -472,16 +356,20 @@ graph:
 .
 :datasetToHomoSapiensRegistryDenoter
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-many> ;
   :object :TURBO_0000505 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000051 ;
+  :required true ;
   :subject obo:IAO_0000100 ;
 .
 :datasetToHomoSapiensSymbol
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-many> ;
   :object :TURBO_0000504 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000051 ;
+  :required true ;
   :subject obo:IAO_0000100 ;
 .
 :datasetToLengthMeasurementDatum
@@ -516,42 +404,88 @@ graph:
 .
 :datasetToRaceIdentityDatum
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-many> ;
   :object :RaceIdentityDatumOfVariousTypes ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000051 ;
+  :required false ;
   :subject obo:IAO_0000100 ;
+.
+:dateOfBirthDatumDateVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHomoSapiensDateOfBirthDateLiteralValue ;
+  :manipulationCreates :homoSapiensDateOfBirthDateLiteralValue ;
+  :usesSparqlLogic :BindAs ;
+.
+:dateOfBirthDatumStringVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHomoSapiensDateOfBirthStringLiteralValue ;
+  :manipulationCreates :homoSapiensDateOfBirthStringLiteralValue ;
+  :usesSparqlLogic :BindAs ;
 .
 :dateOfBirthDatumToBirth
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object obo:UBERON_0035946 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:IAO_0000136 ;
+  :required true ;
   :subject ns3:EFO_0004950 ;
 .
 :dateOfBirthDatumToDataset
   a :ObjectConnectionRecipe ;
+  :multiplicity :many-1 ;
   :object obo:IAO_0000100 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000050 ;
+  :required false ;
   :subject ns3:EFO_0004950 ;
 .
 :dateOfBirthDatumToDateLiteral
   a :DatatypeConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :homoSapiensDateOfBirthDateLiteralValue ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0006511 ;
+  :required false ;
   :subject ns3:EFO_0004950 ;
 .
 :dateOfBirthDatumToStringLiteral
   a :DatatypeConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :homoSapiensDateOfBirthStringLiteralValue ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0006510 ;
+  :required true ;
   :subject ns3:EFO_0004950 ;
+.
+:dateOfBirthDatumVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates ns3:EFO_0004950 ;
+  :manipulationDependsOn :shortcutHomoSapiensDateOfBirthStringLiteralValue ;
+  :usesSparqlLogic :BindIfBoundSHALocalRandom ;
+.
+:dateOfBirthVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates obo:UBERON_0035946 ;
+  :manipulationDependsOn :shortcutHomoSapiensDateOfBirthStringLiteralValue ;
+  :usesSparqlLogic :BindIfBoundSHALocalRandom ;
+.
+:diagnosisCodeStringValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterDiagnosisCode ;
+  :manipulationCreates :diagnosisIcdSuffixStringLiteralValue ;
+  :usesSparqlLogic :BindAs ;
 .
 :diagnosisCodingSequenceIntegerLiteralValue
   a :TurboGraphIntegerLiteralValue ;
   rdfs:label "diagnosis coding sequence integer literal value" ;
+.
+:diagnosisCodingSequenceVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterDiagnosisSequence ;
+  :manipulationCreates :diagnosisCodingSequenceIntegerLiteralValue ;
+  :usesSparqlLogic :BindAs ;
 .
 :diagnosisIcdSuffixStringLiteralValue
   a :TurboGraphStringLiteralValue ;
@@ -560,6 +494,24 @@ graph:
 :diagnosisRegistryStringLiteralValue
   a :TurboGraphStringLiteralValue ;
   rdfs:label "diagnosis registry string value" ;
+.
+:diagnosisRegistryStringVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterDiagnosisCodeRegistryString ;
+  :manipulationCreates :diagnosisRegistryStringLiteralValue ;
+  :usesSparqlLogic :BindAs ;
+.
+:diagnosisRegistryUriVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :ShortcutIcdRegistryOfVariousTypes ;
+  :manipulationCreates :IcdRegistryOfVariousTypes ;
+  :usesSparqlLogic :BindAs ;
+.
+:diagnosisRegistryVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :ShortcutIcdRegistryOfVariousTypes ;
+  :manipulationCreates :IcdRegistryOfVariousTypes ;
+  :usesSparqlLogic :BindAs ;
 .
 :diagnosisToDataset
   a :ObjectConnectionRecipe ;
@@ -633,31 +585,63 @@ graph:
 .
 :genderIdentityDatumToDataset
   a :ObjectConnectionRecipe ;
+  :multiplicity :many-1 ;
   :object obo:IAO_0000100 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000050 ;
+  :required false ;
   :subject :GenderIdentityDatumOfVariousTypes ;
 .
 :genderIdentityDatumToGenderIdentityDatumLiteralValue
   a :DatatypeConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :homoSapiensGenderIdentityStringLiteralValue ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0006510 ;
+  :required true ;
   :subject :GenderIdentityDatumOfVariousTypes ;
 .
 :genderIdentityDatumToGenderIdentityDatumType
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :genderIdentityDatumType ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate rdf:type ;
+  :required true ;
   :subject :GenderIdentityDatumOfVariousTypes ;
 .
 :genderIdentityDatumToHomoSapiens
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object obo:NCBITaxon_9606 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:IAO_0000136 ;
+  :required false ;
   :subject :GenderIdentityDatumOfVariousTypes ;
+.
+:genderIdentityDatumValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHomoSapiensGenderIdentityStringLiteralValue ;
+  :manipulationCreates :homoSapiensGenderIdentityStringLiteralValue ;
+  :usesSparqlLogic :BindAs ;
+.
+:genderIdentityDatumVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates :GenderIdentityDatumOfVariousTypes ;
+  :manipulationDependsOn :shortcutHomoSapiensGenderIdentityStringLiteralValue ;
+  :usesSparqlLogic :BindIfBoundSHALocalRandom ;
+.
+:genderIdentityTypeVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutGenderIdentityDatumOfVariousTypes ;
+  :manipulationCreates :genderIdentityDatumType ;
+  :manipulationDependsOn :shortcutGenderIdentityDatumOfVariousTypes ;
+  :usesSparqlLogic :GenderIdentityTypeRule ;
+.
+:hasOriginalVariable
+  a owl:ObjectProperty ;
+  rdfs:domain :VariableManipulationForLiteralValue ;
+  rdfs:range rdfs:Resource ;
 .
 :healthcareEncounterDateLiteralValue
   a :TurboGraphDateLiteralValue ;
@@ -666,6 +650,12 @@ graph:
 :healthcareEncounterDateStringLiteralValue
   a :TurboGraphStringLiteralValue ;
   rdfs:label "healthcare encounter date string value" ;
+.
+:healthcareEncounterDateStringValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterDateStringValue ;
+  :manipulationCreates :healthcareEncounterDateStringLiteralValue ;
+  :usesSparqlLogic :BindAs ;
 .
 :healthcareEncounterDateToDataset
   a :ObjectConnectionRecipe ;
@@ -707,11 +697,35 @@ graph:
   :subject :TURBO_0000512 ;
   rdfs:label "healthcare encounter date to string literal value connection" ;
 .
+:healthcareEncounterDateValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterDateValue ;
+  :manipulationCreates :healthcareEncounterDateLiteralValue ;
+  :usesSparqlLogic :BindAs ;
+.
 :healthcareEncounterExpansionProcess
-  a :TurboGraphProcess ;
-  a rdfs:Resource ;
+  a :TurboGraphExpansionProcess ;
   :inputNamedGraph pmbb:Shortcuts_healthcareEncounterShortcuts ;
+  :manipulatesBaseEntity :shortcut_obo_OGMS_0000097 ;
   :outputNamedGraph pmbb:expanded ;
+  :usesVariableManipulationRule :bmiValueVariableManipulation ;
+  :usesVariableManipulationRule :datasetTitleVariableManipulation ;
+  :usesVariableManipulationRule :diagnosisCodeStringValueVariableManipulation ;
+  :usesVariableManipulationRule :diagnosisCodingSequenceVariableManipulation ;
+  :usesVariableManipulationRule :diagnosisRegistryStringVariableManipulation ;
+  :usesVariableManipulationRule :diagnosisRegistryUriVariableManipulation ;
+  :usesVariableManipulationRule :diagnosisRegistryVariableManipulation ;
+  :usesVariableManipulationRule :healthcareEncounterDateStringValueVariableManipulation ;
+  :usesVariableManipulationRule :healthcareEncounterDateValueVariableManipulation ;
+  :usesVariableManipulationRule :healthcareEncounterRegistryValueVariableManipulation ;
+  :usesVariableManipulationRule :healthcareEncounterSymbolValueVariableManipulation ;
+  :usesVariableManipulationRule :heightValueVariableManipulation ;
+  :usesVariableManipulationRule :instantiationProcessVariableManipulation ;
+  :usesVariableManipulationRule :mappedMedicationTermVariableManipulation ;
+  :usesVariableManipulationRule :medicationOrderNameValueVariableManipulation ;
+  :usesVariableManipulationRule :medicationSymbolValueVariableManipulation ;
+  :usesVariableManipulationRule :primaryDiagnosisBooleanVariableManipulation ;
+  :usesVariableManipulationRule :weightValueVariableManipulation ;
   rdfs:label "healthcare encounter expansion process" ;
 .
 :healthcareEncounterIdToRegistryDenoter
@@ -764,6 +778,12 @@ graph:
   :subject :TURBO_0000510 ;
   rdfs:label "healthcare encounter registry denoter to registry connection" ;
 .
+:healthcareEncounterRegistryValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :TURBO_0000440 ;
+  :manipulationCreates :TURBO_0000440 ;
+  :usesSparqlLogic :BindAs ;
+.
 :healthcareEncounterStartToHealthcareEncounter
   a :ObjectConnectionRecipe ;
   :multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -807,6 +827,12 @@ graph:
   :required true ;
   :subject :TURBO_0000509 ;
   rdfs:label "healthcare enc symbol to symbol value connection" ;
+.
+:healthcareEncounterSymbolValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterSymbolStringLiteralValue ;
+  :manipulationCreates :healthcareEncounterSymbolLiteralValue ;
+  :usesSparqlLogic :BindAs ;
 .
 :healthcareEncounterToBMI
   a :ObjectConnectionRecipe ;
@@ -857,6 +883,18 @@ graph:
   :subject obo:OGMS_0000097 ;
   rdfs:label "healthcare encounter to drug prescription connection" ;
 .
+:heightValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterHeightValue ;
+  :manipulationCreates :lengthMeasurementDoubleLiteralValue ;
+  :usesSparqlLogic :BindAs ;
+.
+:homoSapiensDatasetVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates obo:IAO_0000100 ;
+  :manipulationDependsOn :datasetTitleStringLiteralValue ;
+  :usesSparqlLogic :BindIfBoundSHALocalRandom ;
+.
 :homoSapiensDateOfBirthDateLiteralValue
   a :TurboGraphDateLiteralValue ;
 .
@@ -864,9 +902,31 @@ graph:
   a :TurboGraphStringLiteralValue ;
 .
 :homoSapiensExpansionProcess
-  a :TurboGraphProcess ;
+  a :TurboGraphExpansionProcess ;
   :inputNamedGraph pmbb:Shortcuts_participantShortcuts ;
+  :manipulatesBaseEntity :shortcut_obo_NCBITaxon_9606 ;
   :outputNamedGraph pmbb:expanded ;
+  :usesVariableManipulationRule :biologicalSexVariableManipulation ;
+  :usesVariableManipulationRule :datasetTitleVariableManipulation ;
+  :usesVariableManipulationRule :dateOfBirthDatumDateVariableManipulation ;
+  :usesVariableManipulationRule :dateOfBirthDatumStringVariableManipulation ;
+  :usesVariableManipulationRule :dateOfBirthDatumVariableManipulation ;
+  :usesVariableManipulationRule :dateOfBirthVariableManipulation ;
+  :usesVariableManipulationRule :genderIdentityDatumValueVariableManipulation ;
+  :usesVariableManipulationRule :genderIdentityDatumVariableManipulation ;
+  :usesVariableManipulationRule :genderIdentityTypeVariableManipulation ;
+  :usesVariableManipulationRule :homoSapiensDatasetVariableManipulation ;
+  :usesVariableManipulationRule :homoSapiensIdentifierVariableManipulation ;
+  :usesVariableManipulationRule :homoSapiensRegistryValueVariableManipulation ;
+  :usesVariableManipulationRule :homoSapiensRegistryVariableManipulation ;
+  :usesVariableManipulationRule :homoSapiensSymbolValueVariableManipulation ;
+  :usesVariableManipulationRule :homoSapiensSymbolVariableManipulation ;
+  :usesVariableManipulationRule :homoSapiensVariableManipulation ;
+  :usesVariableManipulationRule :instantiationProcessVariableManipulation ;
+  :usesVariableManipulationRule :raceIdentificationProcessVariableManipulation ;
+  :usesVariableManipulationRule :raceIdentityDatumValueVariableManipulation ;
+  :usesVariableManipulationRule :raceIdentityDatumVariableManipulation ;
+  :usesVariableManipulationRule :raceIdentityTypeVariableManipulation ;
   rdfs:label "homo sapiens expansion process" ;
 .
 :homoSapiensGenderIdentityStringLiteralValue
@@ -874,82 +934,134 @@ graph:
 .
 :homoSapiensIdToRegistryDenoter
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :TURBO_0000505 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000051 ;
+  :required true ;
   :subject :TURBO_0000503 ;
 .
 :homoSapiensIdToSymbol
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :TURBO_0000504 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000051 ;
+  :required true ;
   :subject :TURBO_0000503 ;
 .
 :homoSapiensIdentifierToHomoSapiens
   a :ObjectConnectionRecipe ;
   :inputTo :biobankEncounterLinkingProcess ;
   :inputTo :healthcareEncounterLinkingProcess ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object obo:NCBITaxon_9606 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:IAO_0000219 ;
+  :required true ;
   :subject :TURBO_0000503 ;
+.
+:homoSapiensIdentifierVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates :TURBO_0000503 ;
+  :usesSparqlLogic :RandomUUID ;
 .
 :homoSapiensRaceIdentityStringLiteralValue
   a :TurboGraphStringLiteralValue ;
 .
 :homoSapiensRegistryDenoterToDataset
   a :ObjectConnectionRecipe ;
+  :multiplicity :many-1 ;
   :object obo:IAO_0000100 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000050 ;
+  :required true ;
   :subject :TURBO_0000505 ;
 .
 :homoSapiensRegistryDenoterToId
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :TURBO_0000503 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000050 ;
+  :required true ;
   :subject :TURBO_0000505 ;
 .
 :homoSapiensRegistryDenoterToRegistry
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :HomoSapiensRegistryOfVariousTypes ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:IAO_0000219 ;
+  :required true ;
   :subject :TURBO_0000505 ;
+.
+:homoSapiensRegistryValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHomoSapiensRegistryOfVariousTypes ;
+  :manipulationCreates :HomoSapiensRegistryOfVariousTypes ;
+  :usesSparqlLogic :BindAs ;
+.
+:homoSapiensRegistryVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates :TURBO_0000505 ;
+  :usesSparqlLogic :RandomUUID ;
 .
 :homoSapiensSymbolStringLiteralValue
   a :TurboGraphStringLiteralValue ;
 .
 :homoSapiensSymbolToDataset
   a :ObjectConnectionRecipe ;
+  :multiplicity :many-1 ;
   :object obo:IAO_0000100 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000050 ;
+  :required true ;
   :subject :TURBO_0000504 ;
 .
 :homoSapiensSymbolToSymbolValue
   a :DatatypeConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :homoSapiensSymbolStringLiteralValue ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0006510 ;
+  :required true ;
   :subject :TURBO_0000504 ;
+.
+:homoSapiensSymbolValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHomoSapiensSymbolStringLiteralValue ;
+  :manipulationCreates :homoSapiensSymbolStringLiteralValue ;
+  :usesSparqlLogic :BindAs ;
+.
+:homoSapiensSymbolVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates :TURBO_0000504 ;
+  :usesSparqlLogic :RandomUUID ;
 .
 :homoSapiensToBiosex
   a :ObjectConnectionRecipe ;
   :dependentOn :genderIdentityDatumToHomoSapiens ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object obo:PATO_0000047 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:RO_0000086 ;
+  :required false ;
   :subject obo:NCBITaxon_9606 ;
 .
 :homoSapiensToBirth
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object obo:UBERON_0035946 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0000303 ;
+  :required false ;
   :subject obo:NCBITaxon_9606 ;
+.
+:homoSapiensVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates obo:NCBITaxon_9606 ;
+  :usesSparqlLogic :SHAGlobalRandom ;
 .
 :identifierToHealthcareEncounter
   a :ObjectConnectionRecipe ;
@@ -993,12 +1105,19 @@ graph:
   rdfs:label "input to an expansion process" ;
   rdfs:range :TurboGraphProcess ;
 .
+:instantiationProcessVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates :TURBO_0000522 ;
+  :usesSparqlLogic :InstantiationStringToURI ;
+.
 :instantiationToDataset
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-many> ;
   :object obo:IAO_0000100 ;
   :outputOf :healthcareEncounterExpansionProcess ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:OBI_0000293 ;
+  :required true ;
   :subject :TURBO_0000522 ;
 .
 :lengthMeasurementDatumToBodyHeight
@@ -1044,6 +1163,21 @@ graph:
   a :TurboGraphDoubleLiteralValue ;
   rdfs:label "length measurement double literal value" ;
 .
+:manipulatesBaseEntity
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphExpansionProcess ;
+  rdfs:range rdfs:Resource ;
+.
+:manipulationCreates
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphVariableManipulation ;
+  rdfs:range rdfs:Resource ;
+.
+:manipulationDependsOn
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphVariableManipulation ;
+  rdfs:range rdfs:Resource ;
+.
 :many-1
   a :TurboGraphMultiplicityRule ;
   rdfs:label "many-1 multiplicity rule" ;
@@ -1051,6 +1185,12 @@ graph:
 :many-many
   a :TurboGraphMultiplicityRule ;
   rdfs:label "many-many multiplicity rule" ;
+.
+:mappedMedicationTermVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :ShortcutDrugTermOfVariousTypes ;
+  :manipulationCreates :DrugTermOfVariousTypes ;
+  :usesSparqlLogic :BindAs ;
 .
 :massMeasurementDatumToBodyWeight
   a :ObjectConnectionRecipe ;
@@ -1100,6 +1240,12 @@ graph:
   a :TurboGraphStringLiteralValue ;
   rdfs:label "med order name string literal value" ;
 .
+:medicationOrderNameValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterMedicationOrderName ;
+  :manipulationCreates :medicationOrderNameStringLiteralValue ;
+  :usesSparqlLogic :BindAs ;
+.
 :medicationSymbolStringLiteralValue
   a :TurboGraphStringLiteralValue ;
   rdfs:label "medication identifier string literal value" ;
@@ -1123,6 +1269,12 @@ graph:
   :required true ;
   :subject :TURBO_0000562 ;
   rdfs:label "medication symbol to identifier connection" ;
+.
+:medicationSymbolValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterMedicationSymbolValue ;
+  :manipulationCreates :medicationSymbolStringLiteralValue ;
+  :usesSparqlLogic :BindAs ;
 .
 :multiplicity
   a owl:ObjectProperty ;
@@ -1187,46 +1339,90 @@ graph:
   a :TurboGraphBooleanLiteralValue ;
   rdfs:label "diagnosis primary t/f" ;
 .
+:primaryDiagnosisBooleanVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterPrimaryDiagnosis ;
+  :manipulationCreates :primaryDiagnosisBooleanLiteralValue ;
+  :usesSparqlLogic :BindAs ;
+.
 :raceIdentificationProcessToRaceIdentityDatum
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :RaceIdentityDatumOfVariousTypes ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:OBI_0000299 ;
+  :required true ;
   :subject obo:OMRSE_00000099 ;
+.
+:raceIdentificationProcessVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates obo:OMRSE_00000099 ;
+  :manipulationDependsOn :shortcutHomoSapiensRaceIdentityStringLiteralValue ;
+  :usesSparqlLogic :BindIfBoundSHALocalRandom ;
 .
 :raceIdentityDatumToDataset
   a :ObjectConnectionRecipe ;
+  :multiplicity :many-1 ;
   :object obo:IAO_0000100 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000050 ;
+  :required false ;
   :subject :RaceIdentityDatumOfVariousTypes ;
 .
 :raceIdentityDatumToHomoSapiens
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object obo:NCBITaxon_9606 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:IAO_0000136 ;
+  :required false ;
   :subject :RaceIdentityDatumOfVariousTypes ;
 .
 :raceIdentityDatumToRaceIdentityDatumLiteralValue
   a :DatatypeConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :homoSapiensRaceIdentityStringLiteralValue ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0006512 ;
+  :required true ;
   :subject :RaceIdentityDatumOfVariousTypes ;
 .
 :raceIdentityDatumToRaceIdentityDatumType
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :raceIdentityDatumType ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate rdf:type ;
+  :required true ;
   :subject :RaceIdentityDatumOfVariousTypes ;
+.
+:raceIdentityDatumValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHomoSapiensRaceIdentityStringLiteralValue ;
+  :manipulationCreates :homoSapiensRaceIdentityStringLiteralValue ;
+  :usesSparqlLogic :BindAs ;
+.
+:raceIdentityDatumVariableManipulation
+  a :VariableManipulationForIntermediateNode ;
+  :manipulationCreates :RaceIdentityDatumOfVariousTypes ;
+  :manipulationDependsOn :shortcutHomoSapiensRaceIdentityStringLiteralValue ;
+  :usesSparqlLogic :BindIfBoundSHALocalRandom ;
+.
+:raceIdentityTypeVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutRaceIdentityDatumOfVariousTypes ;
+  :manipulationCreates :raceIdentityDatumType ;
+  :manipulationDependsOn :shortcutRaceIdentityDatumOfVariousTypes ;
+  :usesSparqlLogic :BindAs ;
 .
 :required
   a owl:DatatypeProperty ;
   rdfs:domain :TurboGraphConnectionRecipe ;
   rdfs:label "is connection recipe required in model?" ;
   rdfs:range xsd:boolean ;
+.
+:shortcutDatasetTitleStringLiteralValue
+  a :TurboGraphStringLiteralValue ;
 .
 :shortcutDiagnosisToCodingSequence
   a :DatatypeConnectionRecipe ;
@@ -1286,9 +1482,6 @@ graph:
 :shortcutHealthcareEncounterBmiValue
   a :TurboGraphDoubleLiteralValue ;
 .
-:shortcutHealthcareEncounterDatasetTitleStringLiteralValue
-  a :TurboGraphStringLiteralValue ;
-.
 :shortcutHealthcareEncounterDateStringValue
   a :TurboGraphStringLiteralValue ;
 .
@@ -1337,7 +1530,7 @@ graph:
   a :DatatypeConnectionRecipe ;
   :inputTo :healthcareEncounterExpansionProcess ;
   :multiplicity <http://transformunify.org/ontologies/1-1> ;
-  :object :shortcutHealthcareEncounterDatasetTitleStringLiteralValue ;
+  :object :shortcutDatasetTitleStringLiteralValue ;
   :outputOf :healthcareEncounterExpansionProcess ;
   :predicate :TURBO_0000643 ;
   :required true ;
@@ -1446,9 +1639,6 @@ graph:
 :shortcutHealthcareEncounterWeightValue
   a :TurboGraphDoubleLiteralValue ;
 .
-:shortcutHomoSapiensDatasetTitleStringLiteralValue
-  a :TurboGraphStringLiteralValue ;
-.
 :shortcutHomoSapiensDateOfBirthDateLiteralValue
   a :TurboGraphDateLiteralValue ;
 .
@@ -1461,25 +1651,31 @@ graph:
 :shortcutHomoSapiensIdToRegistry
   a :ObjectConnectionRecipe ;
   :inputTo :homoSapiensExpansionProcess ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :shortcutHomoSapiensRegistryOfVariousTypes ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0003610 ;
+  :required true ;
   :subject :shortcut_turbo_TURBO_0000503 ;
 .
 :shortcutHomoSapiensIdToSymbol
   a :DatatypeConnectionRecipe ;
   :inputTo :homoSapiensExpansionProcess ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :shortcutHomoSapiensSymbolStringLiteralValue ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0003608 ;
+  :required true ;
   :subject :shortcut_turbo_TURBO_0000503 ;
 .
 :shortcutHomoSapiensIdentifierToShortcutHomoSapiens
   a :ObjectConnectionRecipe ;
   :inputTo :homoSapiensExpansionProcess ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :shortcut_obo_NCBITaxon_9606 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:IAO_0000219 ;
+  :required true ;
   :subject :shortcut_turbo_TURBO_0000503 ;
 .
 :shortcutHomoSapiensRaceIdentityStringLiteralValue
@@ -1491,67 +1687,83 @@ graph:
 :shortcutHomoSapiensToDatasetTitle
   a :DatatypeConnectionRecipe ;
   :inputTo :homoSapiensExpansionProcess ;
-  :object :shortcutHomoSapiensDatasetTitleStringLiteralValue ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
+  :object :datasetTitleStringLiteralValue ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0003603 ;
+  :required true ;
   :subject :shortcut_turbo_TURBO_0000503 ;
 .
 :shortcutHomoSapiensToDateOfBirthDate
   a :DatatypeConnectionRecipe ;
   :dependentOn :shortcutHomoSapiensToDateOfBirthString ;
   :inputTo :homoSapiensExpansionProcess ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :shortcutHomoSapiensDateOfBirthDateLiteralValue ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0000605 ;
+  :required false ;
   :subject :shortcut_obo_NCBITaxon_9606 ;
 .
 :shortcutHomoSapiensToDateOfBirthString
   a :DatatypeConnectionRecipe ;
   :inputTo :homoSapiensExpansionProcess ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :shortcutHomoSapiensDateOfBirthStringLiteralValue ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0000604 ;
+  :required false ;
   :subject :shortcut_obo_NCBITaxon_9606 ;
 .
 :shortcutHomoSapiensToExpandedHomoSapiens
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object obo:NCBITaxon_9606 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0010113 ;
+  :required true ;
   :subject :shortcut_obo_NCBITaxon_9606 ;
 .
 :shortcutHomoSapiensToGenderIdentityType
   a :ObjectConnectionRecipe ;
   :dependentOn :shortcutHomoSapiensToGenderIdentityValue ;
   :inputTo :homoSapiensExpansionProcess ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :shortcutGenderIdentityDatumOfVariousTypes ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0000607 ;
+  :required false ;
   :subject :shortcut_obo_NCBITaxon_9606 ;
 .
 :shortcutHomoSapiensToGenderIdentityValue
   a :DatatypeConnectionRecipe ;
   :inputTo :homoSapiensExpansionProcess ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :shortcutHomoSapiensGenderIdentityStringLiteralValue ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0000606 ;
+  :required false ;
   :subject :shortcut_obo_NCBITaxon_9606 ;
 .
 :shortcutHomoSapiensToRaceIdentityType
   a :ObjectConnectionRecipe ;
   :dependentOn :shortcutHomoSapiensToRaceIdentityValue ;
   :inputTo :homoSapiensExpansionProcess ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :shortcutRaceIdentityDatumOfVariousTypes ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0000614 ;
+  :required false ;
   :subject :shortcut_obo_NCBITaxon_9606 ;
 .
 :shortcutHomoSapiensToRaceIdentityValue
   a :DatatypeConnectionRecipe ;
   :inputTo :homoSapiensExpansionProcess ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :shortcutHomoSapiensRaceIdentityStringLiteralValue ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate :TURBO_0000615 ;
+  :required false ;
   :subject :shortcut_obo_NCBITaxon_9606 ;
 .
 :shortcutPrescriptionToDrugTerm
@@ -1607,10 +1819,33 @@ graph:
 .
 :symbolToHomoSapiensId
   a :ObjectConnectionRecipe ;
+  :multiplicity <http://transformunify.org/ontologies/1-1> ;
   :object :TURBO_0000503 ;
   :outputOf :homoSapiensExpansionProcess ;
   :predicate obo:BFO_0000050 ;
+  :required true ;
   :subject :TURBO_0000504 ;
+.
+:usesSparql
+  a owl:DatatypeProperty ;
+  rdfs:domain :TurboGraphVariableManipulationLogic ;
+  rdfs:range xsd:string ;
+.
+:usesSparqlLogic
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphVariableManipulation ;
+  rdfs:range :TurboGraphVariableManipulationLogic ;
+.
+:usesVariableManipulationRule
+  a owl:ObjectProperty ;
+  rdfs:domain :TurboGraphProcess ;
+  rdfs:range :TurboGraphVariableManipulation ;
+.
+:weightValueVariableManipulation
+  a :VariableManipulationForLiteralValue ;
+  :hasOriginalVariable :shortcutHealthcareEncounterWeightValue ;
+  :manipulationCreates :massMeasurementDoubleLiteralValue ;
+  :usesSparqlLogic :BindAs ;
 .
 fakeprefix:
   a owl:Ontology ;

@@ -167,40 +167,30 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     {
         val query = s"""
           
-          Select distinct ?expandedEntity ?sparqlString ?shortcutEntity ?dependee ?baseExpansionType
+          Select distinct ?expandedEntity ?sparqlString ?shortcutEntity ?dependee ?baseType
           Where
           {
-              ?connection turbo:outputOf <$process> .
-              # ?connection a turbo:TurboGraphConnectionRecipe .
+    		      values ?manipulationRuleType {turbo:VariableManipulationForIntermediateNode turbo:VariableManipulationForLiteralValue}
+              <$process> turbo:usesVariableManipulationRule ?variableManipulationRule .
+              <$process> turbo:manipulatesBaseEntity ?baseType .
               
-              {
-                  {
-                      ?connection turbo:subject ?expandedEntity .
-                  }
-                  Union
-                  {
-                      ?connection turbo:object ?expandedEntity .
-                  }
-              }
-              
-              ?expansionRule a turbo:TurboGraphExpansionRule .
-              ?expansionRule turbo:creates ?expandedEntity .
-              ?expansionRule turbo:usesLogic ?logic .
-              ?expansionRule turbo:basedOn ?baseExpansionType .
+              ?variableManipulationRule a ?manipulationRuleType .
+              ?variableManipulationRule turbo:manipulationCreates ?expandedEntity .
+              ?variableManipulationRule turbo:usesSparqlLogic ?logic .
               ?logic turbo:usesSparql ?sparqlString .
               
               Optional
               {
-                  ?expansionRule turbo:hasShortcutSource ?shortcutEntity .
+                  ?variableManipulationRule turbo:hasOriginalVariable ?shortcutEntity .
               }
               Optional
               {
-                  ?expansionRule turbo:dependsOn ?dependee .
+                  ?variableManipulationRule turbo:manipulationDependsOn ?dependee .
               }
           }
           
         """
         
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, Array("expandedEntity", "sparqlString", "shortcutEntity", "dependee", "baseExpansionType"))
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, Array("expandedEntity", "sparqlString", "shortcutEntity", "dependee", "baseType"))
     }
 }
