@@ -9,6 +9,7 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
+import scala.collection.mutable.HashSet
 import java.io.File
 import java.io.Reader
 import java.io.FileReader
@@ -32,6 +33,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory
 
 case class Input(searchList: Array[String])
 case class DrugResult(resultsList: Map[String, Array[String]])
+case class TwoDimensionalArrListResults(resultsList: Array[Array[String]])
 
 class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
@@ -57,45 +59,100 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
 
     /*test("convert string to icd9 or icd10")
     {
-        val br = io.Source.fromFile("icd_code_list.txt")
-        var finalList = new ArrayBuffer[String]
-        var eliminatedCount = 0
+        val br = io.Source.fromFile("anurag_icd_codes.csv")
+        var listToPost = new ArrayBuffer[String]
         var totalCount = 0
+        val pw = new PrintWriter(new File("anurag_intermediate_results.csv"))
         for (line <- br.getLines())
         {
             totalCount = totalCount + 1
-            /*try
+            val splitLine = line.split(",")
+            if (splitLine(0) == "ICD-9") listToPost += "http://purl.bioontology.org/ontology/ICD9CM/" + splitLine(1)
+            if (splitLine(0) == "ICD-10") listToPost += "http://purl.bioontology.org/ontology/ICD10CM/" + splitLine(1)
+            if (listToPost.size % 1000 == 0)
             {
-                Integer.parseInt(line.charAt(0).toString)
-                finalList += "<" + "http://purl.bioontology.org/ontology/ICD9CM/" + line + ">"
-            }
-            catch
-            {
-                case e: NumberFormatException =>
+                println("list to post size: " + listToPost.size)
+                val post = new HttpPost("http://localhost:8080/diagnoses/getDiseaseURIsFromICDCodes")
+                val stringToPost: String = write(Input(searchList = listToPost.toArray))
+                post.setEntity(new StringEntity(stringToPost))
+                val client = HttpClientBuilder.create().build()
+                val response = client.execute(post)
+                val responseData = response.getEntity
+                val responseString: String = EntityUtils.toString(responseData)
+                response.close()
+                client.close()
+                val res = parse(responseString).extract[TwoDimensionalArrListResults].resultsList
+                println("result size: " + res.size)
+                for (a <- res)
                 {
-                    if (line.charAt(0) != 'E' && line.charAt(0) != 'V')
-                    {
-                        finalList += "<" + "http://purl.bioontology.org/ontology/ICD10CM/" + line + ">"
-                    }*/
-                    if (line.charAt(0) == 'E' || line.charAt(0) == 'V')
-                    {
-                        println("adding code: " + line)
-                        finalList += "<" + "http://purl.bioontology.org/ontology/ICD10CM/" + line + ">"
-                        finalList += "<" + "http://purl.bioontology.org/ontology/ICD9CM/" + line + ">"
-                        //eliminatedCount = eliminatedCount + 1
-                    }
+                    pw.write(a(0) + "," + a(1) + "," + a(2) + "," + a(3) + "\n")
                 }
-            /*}
-        }*/
-
-        println("final results size: " + finalList.size)
-        println("eliminated: " + eliminatedCount)
-        println("total: " + totalCount)
-        println()
-        val pw = new PrintWriter(new File("formattedCodes.txt"))
-        for (a <- finalList) pw.println(a)
+                listToPost = new ArrayBuffer[String]
+            }
+        }
+        println("list to post size: " + listToPost.size)
+        val post = new HttpPost("http://localhost:8080/diagnoses/getDiseaseURIsFromICDCodes")
+        val stringToPost: String = write(Input(searchList = listToPost.toArray))
+        post.setEntity(new StringEntity(stringToPost))
+        val client = HttpClientBuilder.create().build()
+        val response = client.execute(post)
+        val responseData = response.getEntity
+        val responseString: String = EntityUtils.toString(responseData)
+        response.close()
+        client.close()
+        val res = parse(responseString).extract[TwoDimensionalArrListResults].resultsList
+        println("result size: " + res.size)
+        for (a <- res)
+        {
+            pw.write(a(0) + "," + a(1) + "," + a(2) + "," + a(3) + "\n")
+        }
+        
         br.close()
         pw.close()
+        println("totalcount: " + totalCount)
+    }*/
+    
+    /*test("next steps anurag")
+    {
+        val br = io.Source.fromFile("anurag_intermediate_results.csv")
+        val pw = new PrintWriter(new File(""))
+        var currentIcd = ""
+        var currentMondo = ""
+        var count = 0
+        var methodList: ArrayBuffer[String] = ArrayBuffer()
+        for (line <- br.getLines())
+        {
+            println("scanning line: " + line)
+            val lineSplit = line.split(",")
+            if (count == 0)
+            {
+                currentIcd = lineSplit(0)
+                currentMondo = lineSplit(1)
+            }
+            if (!(lineSplit(0) == currentIcd && lineSplit(1) == currentMondo))
+            {
+                var stringToWrite = currentIcd + "," + currentMondo + ","
+                for (a <- 2 to lineSplit.size - 2)
+                {
+                    stringToWrite += lineSplit(a)
+                }
+                stringToWrite += ","
+                for (a <- methodList)
+                {
+                    stringToWrite += a + ";"
+                }
+                pw.write(stringToWrite + "\n")
+                currentIcd = lineSplit(0)
+                currentMondo = lineSplit(1)
+                methodList = ArrayBuffer()
+                println("reset")
+            }
+            methodList += lineSplit(lineSplit.size - 1)
+            count = count + 1
+        }
+        println("final count: " + count)
+        pw.close()
+        br.close()
     }*/
 
     /*test("create mondo to icd mappings for graphdb repository")
@@ -121,22 +178,32 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
         cxn.add(builder.build)
     }*/
     
-    test("find hops away")
+    /*test("find hops away")
     {
         //val inputList = Array()
-        val buffsource = io.Source.fromFile("mondo_classes.csv")
-        var inputListBuff = new ArrayBuffer[String]
+        val buffsource = io.Source.fromFile("anurag_results_without_hops.csv")
+        var inputListBuff = new HashSet[String]
+      
+        var finalResMap = new HashMap[String, Integer]
+        
+        val buffsource2 = io.Source.fromFile("mondo_hops.csv")
+        for (line <- buffsource2.getLines())
+        {
+            val lineSplit = line.split(",")
+            if (lineSplit(1).toInt != -1) finalResMap += lineSplit(0) -> lineSplit(1).toInt
+        }
         for (line <- buffsource.getLines())
         {
-            inputListBuff += line
+            val lineSplit = line.split(",")
+            if (!finalResMap.contains(lineSplit(1))) inputListBuff += lineSplit(1)
         }
-        val inputList = inputListBuff.toArray
 
+        val inputList = inputListBuff.toArray
+        println("size of unmapped terms list: " + inputListBuff.size)
         println("starting request")
         val post = new HttpPost("http://localhost:8080/medications/findHopsAwayFromDrug")
-        val dedupedList = inputList.toSet.toArray
-        println("deduped size: " + dedupedList.size)
-        val stringToPost: String = write(Input(searchList = dedupedList))
+        println("deduped size: " + inputList.size)
+        val stringToPost: String = write(Input(searchList = inputList))
         post.setEntity(new StringEntity(stringToPost))
         val client = HttpClientBuilder.create().build()
         val response = client.execute(post)
@@ -149,7 +216,7 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
         // convert JSON to MedLookupResult using json4s methods
         val res = parse(responseString).extract[DrugResult]
         println("result size: " + res.resultsList.size)
-        var finalResMap = new HashMap[String, Integer]
+        
         for ((k,v) <- res.resultsList)
         {
             if (v.size != 0) finalResMap += k -> v(0).split(",").size
@@ -168,7 +235,7 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
             }
         }*/
 
-        val pw = new PrintWriter(new File("anurag_hops.csv"))
+        val pw = new PrintWriter(new File("mondo_hops_1.csv"))
         pw.write("MONDO,hops")
         pw.println()
 
@@ -177,60 +244,103 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
             pw.println(a+","+(finalResMap(a)-1))
         }
         pw.close()
-    }
+        buffsource.close()
+        buffsource2.close()
+    }*/
 
-    /*test("add labels to diagnoses")
+    /*test("remove non specific mappings")
     {
-        val buffsource = io.Source.fromFile("reports/drugs_to_roles.csv")
-        val pw = new PrintWriter(new File("reports/IBD_meds_with_roles.csv"))
-
-        var newMap = new HashMap[String, ArrayBuffer[String]]
-        var count = 0
+        val buffsource = io.Source.fromFile("mondo_hops.csv")
+        val pw = new PrintWriter(new File("anurag_final_report_1.csv"))
+        var mondoToHops = new HashMap[String, Integer]
+        
         for (line <- buffsource.getLines())
         {
-            count = count + 1
-            //println("processing line: " + count)
-            val lineArr = line.split(",")
-            if (lineArr(0) != "Drug")
-            {
-                if (newMap.contains(lineArr(0)))
-                {
-                    val int1 = Integer.parseInt(newMap(lineArr(0))(2))
-                    val int2 = Integer.parseInt(lineArr(lineArr.size-1))
-                    if (int1 < int2)
-                    {
-                        newMap.remove(lineArr(0))
-                        newMap += lineArr(0) -> ArrayBuffer(lineArr(lineArr.size-3),lineArr(lineArr.size-2),lineArr(lineArr.size-1))
-                    }
-                    else if (int1 == int2)
-                    {
-                        newMap(lineArr(0))(0) = newMap(lineArr(0))(0) + " | " + lineArr(lineArr.size-3)
-                        newMap(lineArr(0))(1) = newMap(lineArr(0))(1) + " | " + lineArr(lineArr.size-2)
-                    }
-                }
-                else newMap += lineArr(0) -> ArrayBuffer(lineArr(lineArr.size-3),lineArr(lineArr.size-2),lineArr(lineArr.size-1))
-            }
+            val lineSplit = line.split(",")
+            mondoToHops += lineSplit(0) -> Integer.parseInt(lineSplit(1))
         }
-
-        buffsource.close()
-
-        val buffsource2 = io.Source.fromFile("reports/ibd_meds_rxnorm.csv")
         
+        buffsource.close()
+        
+        var currentIcd = ""
+        var count = 0
+        var mondoMap: HashMap[String, String] = new HashMap[String, String]
+        var mondoArray: ArrayBuffer[String] = ArrayBuffer()
+        
+        val buffsource2 = io.Source.fromFile("anurag_results_without_hops.csv")
         for (line <- buffsource2.getLines())
         {
-            val lineArr = line.split(",")
-            if (lineArr(0) == "consenterUUID") pw.println(line)
-            else
+            //println("reading line: " + line)
+            val lineSplit = line.split(",")
+            if (count == 0)
             {
-                if (newMap.contains(lineArr(lineArr.size-1)))
-                {
-                    pw.println(line + "," + newMap(lineArr(lineArr.size-1))(0) + "," + newMap(lineArr(lineArr.size-1))(1))
-                }
-                else pw.println(line + "," + "NA" + "," + "NA")
+                currentIcd = lineSplit(0)
             }
+            
+            if (!(lineSplit(0) == currentIcd))
+            {
+                var mostSpecific = 0
+                var mondoClasses: ArrayBuffer[String] = ArrayBuffer()
+                for (a <- mondoArray)
+                {
+                    if (mondoToHops.contains(a))
+                    {
+                        if (mondoToHops(a) > mostSpecific)
+                        {
+                            mostSpecific = mondoToHops(a)
+                            mondoClasses = ArrayBuffer(a)
+                            //println("reset: " + println(mondoClasses.toArray.deep.mkString("\n")))
+                        }
+                        else if (mondoToHops(a) == mostSpecific)
+                        {
+                            mondoClasses += a
+                            //println("addition: " + println(mondoClasses.toArray.deep.mkString("\n")))
+                        }
+                    }
+                }
+                for (a <- mondoClasses)
+                {
+                    pw.write(mondoMap(a) + "," + mostSpecific + "\n")
+                    //println("writing: " + mondoMap(a) + "," + mostSpecific + "\n")
+                }
+                mondoMap = new HashMap[String, String]
+                mondoArray = ArrayBuffer()
+            }
+            
+            mondoMap += lineSplit(1) -> line
+            mondoArray += lineSplit(1)
+            
+            currentIcd = lineSplit(0)
+            
+            count = count + 1
         }
 
-        buffsource2.close()
         pw.close()
+        buffsource2.close()
     }*/
+    
+    test("fix labels")
+    {
+        val buffsource = io.Source.fromFile("anurag_final_report_1.csv")
+        val pw = new PrintWriter(new File("anurag_labels_fixed.csv"))
+        var hm = new HashMap[String, String]
+        for (line <- buffsource.getLines())
+        {
+            val linesplit = line.split(",")
+            if (hm.contains(linesplit(1))) pw.write(linesplit(0) + "," + linesplit(1) + "," + hm(linesplit(1)) + "," + linesplit(3) + "," + linesplit(4)+"\n")
+            else
+            {
+                println("looking up: " + linesplit(1))
+                val mondo = linesplit(1)
+                val sparql = s"""select ?label where {graph obo:mondo.owl { <$mondo> rdfs:label ?label }}"""
+                val res = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + sparql, "label")
+                val label = res(0).split("\\^")(0)
+                hm += mondo -> label
+                pw.write(linesplit(0) + "," + linesplit(1) + "," + label + "," + linesplit(3) + "," + linesplit(4)+"\n")
+            }
+        }
+        
+        buffsource.close()
+        pw.close()
+    }
 }   
