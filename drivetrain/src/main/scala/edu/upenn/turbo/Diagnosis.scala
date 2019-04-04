@@ -18,12 +18,14 @@ class Diagnosis extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object Diagnosis extends ExpandedGraphObjectSingletonFromDataset
+object Diagnosis extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): Diagnosis =
     {
         new Diagnosis(optional)
     }
+    
+    val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000073"
 
     val baseVariableName = "diagnosis"
     val encounterVariableName = HealthcareEncounter.baseVariableName
@@ -42,7 +44,7 @@ object Diagnosis extends ExpandedGraphObjectSingletonFromDataset
     val pattern = s"""
       
         ?$encounterVariableName obo:RO_0002234 ?$baseVariableName .
-        ?$baseVariableName a obo:OGMS_0000073 .
+        ?$baseVariableName a <$typeURI> .
     		?$baseVariableName turbo:TURBO_0000306 ?$icdTerm .
     		?$baseVariableName turbo:TURBO_0000703 ?$registryKey .
     		?$baseVariableName turbo:TURBO_0006515 ?$diagnosisCodeRegistryString .
@@ -56,8 +58,6 @@ object Diagnosis extends ExpandedGraphObjectSingletonFromDataset
       """
       
       val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-      
-      val typeURI = "http://purl.obolibrary.org/obo/OGMS_0000073"
       
       val variablesToSelect = Array(encounterVariableName, valuesKey, registryKey)
 }

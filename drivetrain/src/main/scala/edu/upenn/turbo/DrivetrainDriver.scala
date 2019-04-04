@@ -8,9 +8,12 @@ import org.eclipse.rdf4j.rio.RDFFormat
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
+import java.io.BufferedReader
+import java.io.FileReader
+
 object DrivetrainDriver extends ProjectwideGlobals {
-  val connect: ConnectToGraphDB = new ConnectToGraphDB
-  val sparqlChecks: DrivetrainSparqlChecks = new DrivetrainSparqlChecks
+  
+  /*val sparqlChecks: DrivetrainSparqlChecks = new DrivetrainSparqlChecks
   val expand: Expander = new Expander()
   val reftrack: ReferentTracker = new ReferentTracker()
   val join: EntityLinker = new EntityLinker()
@@ -19,11 +22,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
   val i2i2c2c: I2I2C2C = new I2I2C2C()
   val medmap: MedicationMapper = new MedicationMapper()
   val benchmark: DrivetrainAutomatedBenchmarking = new DrivetrainAutomatedBenchmarking()
-  val visualize: DrivetrainVisualizations = new DrivetrainVisualizations()
+  val visualize: DrivetrainVisualizations = new DrivetrainVisualizations()*/
   val ontLoad: OntologyLoader = new OntologyLoader()
   val reasoner: ReasoningManager = new ReasoningManager()
-  val simpleBenchmark: SimpleBenchmark = new SimpleBenchmark()
-  val graphOps: EncounterDateOperations = new EncounterDateOperations()
+  /*val simpleBenchmark: SimpleBenchmark = new SimpleBenchmark()
+  val graphOps: EncounterDateOperations = new EncounterDateOperations()*/
   val objectOrientedExpander = new ObjectOrientedExpander()
   
   //globally available Conclusionation Named Graph IRI
@@ -40,21 +43,24 @@ object DrivetrainDriver extends ProjectwideGlobals {
   {
       val globalUUID = UUID.randomUUID().toString().replaceAll("-", "")
       if (args.size == 0) logger.info("At least one command line argument required to run the drivetrain application.")
-      else if (args(0) == "benchmark") benchmark.runBenchmarking(args, globalUUID)
+      //else if (args(0) == "benchmark") benchmark.runBenchmarking(args, globalUUID)
       else
       {
           if (args(0) != "all") logger.info("Note that running Drivetrain with any command other than 'all' is supported for testing but should not be executed in production.")
-          var cxn: RepositoryConnection = null
-          var repoManager: RemoteRepositoryManager = null
-          var repository: Repository = null
           try
           {
-              val graphDBMaterials: TurboGraphConnection = connect.initializeGraph(true)
+              graphDBMaterials = ConnectToGraphDB.initializeGraph(true)
+              
               cxn = graphDBMaterials.getConnection()
               repoManager = graphDBMaterials.getRepoManager()
               repository = graphDBMaterials.getRepository() 
+              
+              gmCxn = graphDBMaterials.getGmConnection()
+              gmRepoManager = graphDBMaterials.getGmRepoManager()
+              gmRepository = graphDBMaterials.getGmRepository() 
+              
               if (cxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
-              else if (args(0) == "all")
+          /*else if (args(0) == "all")
               {
                   val thresholds: Option[Array[Double]] = checkConclusionatorArguments(args)
                   if (thresholds != None) 
@@ -109,26 +115,26 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "diagmap") runDiagnosisMapping(cxn)
               else if (args(0) == "medmap") runMedicationMapping(cxn)
               else if (args(0) == "i2i2c2c") runI2i2c2cMapping(cxn, args)
-              else if (args(0) == "reasoner") runInferenceWithAddedOntologies(cxn)
-              else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.NQUADS)
+              else if (args(0) == "reasoner") runInferenceWithAddedOntologies(cxn)*/
+              else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.RDFXML, args(2))
               else if (args(0) == "loadRepoFromUrl") ontLoad.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
               else if (args(0) == "loadTurboOntology") ontLoad.addOntologyFromUrl(cxn)
-              else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
+              /*else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
               else if (args(0) == "simpleBenchmark") simpleBenchmark.runSimpleBenchmark(cxn)
-              else if (args(0) == "validateShortcuts") logger.info("shortcuts valid: " + sparqlChecks.preExpansionChecks(cxn))
-              else if (args(0) == "newExpansion") buildQuery(cxn, globalUUID)
+              else if (args(0) == "validateShortcuts") logger.info("shortcuts valid: " + sparqlChecks.preExpansionChecks(cxn))*/
+              else if (args(0) == "newExpansion") buildQuery(cxn, gmCxn, globalUUID)
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
           {
-              connect.closeGraphConnection(cxn, repoManager, repository, false)
+              ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
           }
       }
   }
   
-  def checkConclusionatorArguments(args: Array[String]): Option[Array[Double]] =
+  /*def checkConclusionatorArguments(args: Array[String]): Option[Array[Double]] =
   {
       var thresholds: Option[Array[Double]] = None : Option[Array[Double]]
       thresholds = None
@@ -286,11 +292,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
               i2i2c2c.exportCSVsFromQueries(cxn)   
           }
       }
-  }
+  }*/
   
-  def buildQuery(cxn: RepositoryConnection, globalUUID: String)
+  def buildQuery(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String)
   {
-      objectOrientedExpander.runAllExpansionProcesses(cxn, globalUUID)
+      objectOrientedExpander.runAllExpansionProcesses(cxn, gmCxn, globalUUID)
 
   }
 }

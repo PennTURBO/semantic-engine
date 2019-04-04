@@ -18,12 +18,14 @@ class BiobankEncounterDate extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object BiobankEncounterDate extends ExpandedGraphObjectSingletonFromDataset
+object BiobankEncounterDate extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): BiobankEncounterDate =
     {
         new BiobankEncounterDate(optional)
     }
+    
+    val typeURI = "http://transformunify.org/ontologies/TURBO_0000532"
     
     val baseVariableName = "biobankEncounterDate"
     
@@ -34,8 +36,6 @@ object BiobankEncounterDate extends ExpandedGraphObjectSingletonFromDataset
     val dateOfBiobankEncounterDateValue = "biobankEncounterDateDateValue"
     
     val biobankEncounter = BiobankEncounter.baseVariableName
-    
-    val dataset = BiobankEncounter.dataset
 
     val pattern = s"""
               		
@@ -43,19 +43,15 @@ object BiobankEncounterDate extends ExpandedGraphObjectSingletonFromDataset
   		
   		?$encounterStart a turbo:TURBO_0000531 .
   		?$encounterStart obo:RO_0002223 ?$biobankEncounter .
-  		?$encounterDate a turbo:TURBO_0000532 .
+  		?$encounterDate a <$typeURI> .
   		?$encounterDate obo:IAO_0000136 ?$encounterStart .
   		
   		?$encounterDate turbo:TURBO_0006511 ?$dateOfBiobankEncounterDateValue .
       ?$encounterDate turbo:TURBO_0006512 ?$dateOfBiobankEncounterStringValue .
-      ?$encounterDate obo:BFO_0000050 ?$dataset .
-      ?$dataset obo:BFO_0000051 ?$encounterDate .
 
       """
 
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-    
-    val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
     val variablesToSelect = Array(dateOfBiobankEncounterStringValue, dateOfBiobankEncounterDateValue)
 }

@@ -18,12 +18,14 @@ class BiobankEncounterHeight extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object BiobankEncounterHeight extends ExpandedGraphObjectSingletonFromDataset
+object BiobankEncounterHeight extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): BiobankEncounterHeight =
     {
         new BiobankEncounterHeight(optional)
     }
+    
+    val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
     
     val baseVariableName = "BiobankEncounterHeightAssay"
     val encounterVariableName = BiobankEncounter.baseVariableName
@@ -32,9 +34,7 @@ object BiobankEncounterHeight extends ExpandedGraphObjectSingletonFromDataset
     
     val heightValue = valuesKey
     
-    val valueSpecification = "BiobankEncounterBmiValSpec"
-    
-    val dataset = BiobankEncounter.dataset
+    val valueSpecification = "BiobankEncounterHeightValSpec"
     
     val pattern = s"""
       
@@ -42,7 +42,7 @@ object BiobankEncounterHeight extends ExpandedGraphObjectSingletonFromDataset
              obo:IAO_0000039 obo:UO_0000015 ;
              obo:OBI_0002135 ?$valuesKey .
         		               
-  	    ?$baseVariableName a turbo:TURBO_0001511 ;
+  	    ?$baseVariableName a <$typeURI> ;
   	         obo:OBI_0000299 ?$datumKey .
 
       	?$datumKey a obo:IAO_0000408 ;
@@ -50,16 +50,10 @@ object BiobankEncounterHeight extends ExpandedGraphObjectSingletonFromDataset
       	     
       	?$encounterVariableName obo:BFO_0000051 ?$baseVariableName .
         ?$baseVariableName obo:BFO_0000050 ?$encounterVariableName .
-        
-        ?$dataset obo:BFO_0000051 ?$datumKey .
-        ?$datumKey obo:BFO_0000050 ?$dataset .
-        ?$dataset a obo:IAO_0000100 .
     		
       """
     
       val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-      
-      val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
       
       val variablesToSelect = Array(encounterVariableName, valuesKey)
 }

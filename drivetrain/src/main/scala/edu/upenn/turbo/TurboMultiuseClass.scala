@@ -940,4 +940,16 @@ class TurboMultiuseClass
             updater.updateSparql(cxn, sparqlPrefixes + consolidate)
         }
     }
+    
+    def getAllValuesOfType(cxn: RepositoryConnection, item: GraphObjectSingleton): ArrayBuffer[String] =
+    {
+        val baseVar = item.baseVariableName
+        val varType = item.typeURI
+        
+        val query = s"""
+          select ?$baseVar where {graph pmbb:postExpansionCheck {?$baseVar a <$varType> .}}
+          """
+          
+        updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, baseVar)
+    }
 }

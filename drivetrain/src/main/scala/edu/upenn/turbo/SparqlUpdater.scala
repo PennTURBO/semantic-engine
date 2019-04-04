@@ -38,6 +38,7 @@ import org.apache.http.util.EntityUtils
 class SparqlUpdater
 {
     val logger = LoggerFactory.getLogger(getClass)
+    val cxn = DrivetrainDriver.cxn
     
     /**
      * Overloaded method which is Drivetrain's main point of access to Graph DB for SPARQL queries. Used for when only one variable is requested
@@ -61,6 +62,15 @@ class SparqlUpdater
      * @return ArrayBuffer[ArrayBuffer[Value]] representing the results of the query 
      */
       def querySparqlAndUnpackTuple(cxn: RepositoryConnection, query: String, variable: Array[String]): ArrayBuffer[ArrayBuffer[Value]] =
+      {
+          val result: Option[TupleQueryResult] = querySparql(cxn, query)
+          val unpackedResult: ArrayBuffer[ArrayBuffer[Value]] = unpackTuple(result.get, variable)
+          //close tupleQueryResult to free resources
+          result.get.close()
+          unpackedResult
+      }
+      
+      def querySparqlAndUnpackTuple(query: String, variable: Array[String]): ArrayBuffer[ArrayBuffer[Value]] =
       {
           val result: Option[TupleQueryResult] = querySparql(cxn, query)
           val unpackedResult: ArrayBuffer[ArrayBuffer[Value]] = unpackTuple(result.get, variable)

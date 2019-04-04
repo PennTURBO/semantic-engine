@@ -14,43 +14,31 @@ class BiobankEncounter extends GraphObjectInstance
     val baseVariableName = BiobankEncounter.baseVariableName
     val typeURI = BiobankEncounter.typeURI
     val variablesToSelect = BiobankEncounter.variablesToSelect
-    override val optionalLinks = BiobankEncounter.optionalLinks
-    override val mandatoryLinks = BiobankEncounter.mandatoryLinks
     
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object BiobankEncounter extends ExpandedGraphObjectSingletonFromDataset
+object BiobankEncounter extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): BiobankEncounter =
     {
         new BiobankEncounter(optional)
     }
     
+    val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
+    
     val baseVariableName = "biobankEncounter"
     
     val shortcutName = "shortcutBiobankEncounterName"
-    
-    val dataset = "biobankEncounterDataset"
 
     val pattern = s"""
               		
-      ?$baseVariableName a turbo:TURBO_0000527 .
+      ?$baseVariableName a <$typeURI> .
   		?$baseVariableName turbo:TURBO_0006601 ?$shortcutName .
 
       """
-
-    override val optionalLinks = Map(
-        "BMI" -> BiobankEncounterBMI, "Height" -> BiobankEncounterHeight, "Weight" -> BiobankEncounterWeight, "Date" -> BiobankEncounterDate
-    )
-
-    override val mandatoryLinks = Map(
-        "Identifier" -> BiobankEncounterIdentifier
-    )
     
     val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-    
-    val typeURI = "http://transformunify.org/ontologies/TURBO_0000527"
     
     val variablesToSelect = Array(baseVariableName)
 }

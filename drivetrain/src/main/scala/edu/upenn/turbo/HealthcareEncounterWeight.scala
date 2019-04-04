@@ -18,12 +18,14 @@ class HealthcareEncounterWeight extends GraphObjectInstance
     var namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
 }
 
-object HealthcareEncounterWeight extends ExpandedGraphObjectSingletonFromDataset
+object HealthcareEncounterWeight extends ExpandedGraphObjectSingleton
 {
     def create(optional: Boolean): HealthcareEncounterWeight =
     {
         new HealthcareEncounterWeight(optional)
     }
+    
+    val typeURI = "http://purl.obolibrary.org/obo/OBI_0000445"
     
     val baseVariableName = "HealthcareEncounterWeightAssay"
     val encounterVariableName = HealthcareEncounter.baseVariableName
@@ -34,11 +36,9 @@ object HealthcareEncounterWeight extends ExpandedGraphObjectSingletonFromDataset
     
     val valueSpecification = "HealthcareEncounterWeightValSpec"
     
-    val dataset = HealthcareEncounter.dataset
-    
     val pattern = s"""
       
-        ?$baseVariableName a obo:OBI_0000445 ;
+        ?$baseVariableName a <$typeURI> ;
   	                 obo:OBI_0000299 ?$datumKey.
 
   	    ?$datumKey a obo:IAO_0000414 ;
@@ -50,16 +50,10 @@ object HealthcareEncounterWeight extends ExpandedGraphObjectSingletonFromDataset
   	                  
   	    ?$encounterVariableName obo:BFO_0000051 ?$baseVariableName .
         ?$baseVariableName obo:BFO_0000050 ?$encounterVariableName .
-        
-        ?$dataset obo:BFO_0000051 ?$datumKey.
-        ?$datumKey obo:BFO_0000050 ?$dataset .
-        ?$dataset a obo:IAO_0000100 .
     		
       """
       
       val namedGraph = "http://www.itmat.upenn.edu/biobank/postExpansionCheck"
-      
-      val typeURI = "http://transformunify.org/ontologies/TURBO_0001511"
       
       val variablesToSelect = Array(encounterVariableName, valuesKey)
 }
