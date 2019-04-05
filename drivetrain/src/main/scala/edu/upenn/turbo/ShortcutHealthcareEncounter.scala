@@ -201,7 +201,7 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingleton
         BIND(IF (?$diagRegKey = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat("http://purl.bioontology.org/ontology/ICD9CM/", ?$diagnosisCode)), ?unbound) AS ?icd9term)
         BIND(IF (?$diagRegKey = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat("http://purl.bioontology.org/ontology/ICD10CM/", ?$diagnosisCode)), ?unbound) AS ?icd10term)
         BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?$diagIcdTerm)
-        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?concatIcdTerm) as ?$diagIcdTerm)
+        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?$diagIcdTerm) as ?$diagIcdTerm)
       """
         
     val whereTypesForExpansion: Array[GraphObjectSingleton] = Array(this)

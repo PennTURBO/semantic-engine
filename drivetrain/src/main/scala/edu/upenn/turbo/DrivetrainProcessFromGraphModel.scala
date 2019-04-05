@@ -8,6 +8,7 @@ import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
 import org.eclipse.rdf4j.rio.RDFFormat
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashSet
+import scala.collection.mutable.HashMap
 import java.util.UUID
 
 object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
@@ -20,45 +21,55 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         val outputs = getOutputs(gmCxn, process)
         val binds = getBind(gmCxn, process)
         
-        createInsertClause(outputs) + createWhereClause(inputs) + createBindClause(binds, localUUID, globalUUID, instantiation)
+        val whereClause = createWhereClause(inputs)
+        val bindClause = createBindClause(binds, localUUID, globalUUID, instantiation)
+        val insertClause = createInsertClause(outputs, bindClause("variableList").asInstanceOf[ArrayBuffer[Value]])
+        
+        insertClause + whereClause+ bindClause("bindClause").asInstanceOf[String]
     }
     
-    def createBindClause(binds: ArrayBuffer[ArrayBuffer[Value]], localUUID: String, globalUUID: String, instantiation: String): String =
+    def createBindClause(binds: ArrayBuffer[ArrayBuffer[Value]], localUUID: String, globalUUID: String, instantiation: String): Map[String,Object] =
     {
         var bindClause = ""
+        var varList = new ArrayBuffer[Value]
         for (rule <- binds)
         {
-            var sparqlBind = rule(1).toString.replaceAll("replacement", rule(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_"))
+            var sparqlBind = rule(1).toString.replaceAll("replacement", convertTypeToVariable(rule(0)))
                                          .replaceAll("localUUID", localUUID)
                                          .replaceAll("globalUUID", globalUUID)
-                                         .replaceAll("mainExpansionTypeVariableName", rule(4).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_"))
+                                         .replaceAll("mainExpansionTypeVariableName", convertTypeToVariable(rule(4)))
                                          .replaceAll("instantiationPlaceholder", "\"" + instantiation + "\"")
-            if (sparqlBind.contains("dependent")) sparqlBind = sparqlBind.replaceAll("dependent",rule(3).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_"))
-            if (sparqlBind.contains("original")) sparqlBind = sparqlBind.replaceAll("original",rule(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_"))
+            if (sparqlBind.contains("dependent")) sparqlBind = sparqlBind.replaceAll("dependent",convertTypeToVariable(rule(3)))
+            if (sparqlBind.contains("original")) sparqlBind = sparqlBind.replaceAll("original",convertTypeToVariable(rule(2)))
             
             bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
+            varList += rule(0)
         }
-        bindClause + "}"
+        Map("bindClause" -> (bindClause + "}"), "variableList" -> varList)
     }
     
-    def createInsertClause(outputs: ArrayBuffer[ArrayBuffer[Value]]): String =
+    def createInsertClause(outputs: ArrayBuffer[ArrayBuffer[Value]], boundList: ArrayBuffer[Value]): String =
     {
         if (outputs.size == 0) throw new RuntimeException("Received a list of 0 outputs")
         var insertClause = "INSERT { Graph <" + outputs(0)(5) + ">{\n"
         var typeSet = new HashSet[Value]
         for (triple <- outputs)
         {
-            val subjectVariable = triple(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
-            val objectVariable = triple(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
-            insertClause += "?" + subjectVariable + " <" + triple(1).toString + "> ?" + objectVariable + " .\n"
+            var subjectVariable = ""
+            var objectVariable = ""
+            if (boundList.contains(triple(0))) subjectVariable = "?" + convertTypeToVariable(triple(0))
+            else subjectVariable = "<" + triple(0) + ">"
+            if (boundList.contains(triple(2))) objectVariable = "?" + convertTypeToVariable(triple(2))
+            else objectVariable = "<" + triple(2) + ">"
+            insertClause += subjectVariable + " <" + triple(1).toString + "> " + objectVariable + " .\n"
             if (triple(3) != null && !typeSet.contains(triple(0)))
             {
-                insertClause += "?" + subjectVariable + " a <" + triple(0) + "> .\n"
+                insertClause += subjectVariable + " a <" + triple(0) + "> .\n"
                 typeSet += triple(0)
             }
             if (triple(4) != null && !typeSet.contains(triple(2)))
             {
-                insertClause += "?" + objectVariable + " a <" + triple(2) + "> .\n"
+                insertClause += objectVariable + " a <" + triple(2) + "> .\n"
                 typeSet += triple(2)
             }
         }
@@ -70,37 +81,80 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     {
         if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
         var whereClause = "WHERE { GRAPH <" + inputs(0)(5) + "> {\n"
-        var typeSet = new HashSet[Value]
+        
+        var requiredTypeMap = new HashMap[String,Value]
+        var optionalTypeMap = new HashMap[String, Value]
+        
+        var optionalGroups = new HashMap[Value, ArrayBuffer[ArrayBuffer[Value]]]
         for (triple <- inputs)
         {
-            var required = true
-            if (triple(6).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
-            if (!required) whereClause += "OPTIONAL { "
-            val subjectVariable = triple(0).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
-            val objectVariable = triple(2).toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
-            whereClause += "?" + subjectVariable + " <" + triple(1).toString + "> ?" + objectVariable + " ."
-            if (!required) whereClause += "}"
-            whereClause += "\n"
-            if (triple(3) != null && !typeSet.contains(triple(0)))
+            if (triple(7) != null) 
             {
-                whereClause += "?" + subjectVariable + " a <" + triple(0) + "> .\n"
-                typeSet += triple(0)
+                if (!optionalGroups.contains(triple(7))) optionalGroups += triple(7) -> ArrayBuffer(triple)
+                else optionalGroups(triple(7)) += triple
+                if (triple(3) != null && !optionalTypeMap.contains(convertTypeToVariable(triple(0)))) optionalTypeMap += convertTypeToVariable(triple(0)) -> triple(0)
+                if (triple(4) != null && !optionalTypeMap.contains(convertTypeToVariable(triple(2)))) optionalTypeMap += convertTypeToVariable(triple(2)) -> triple(2)
             }
-            if (triple(4) != null && !typeSet.contains(triple(2)))
+            else
             {
-                whereClause += "?" + objectVariable + " a <" + triple(2) + "> .\n"
-                typeSet += triple(2)
+                whereClause += addTripleToWhereClause(triple)
+                if (triple(3) != null && !requiredTypeMap.contains(convertTypeToVariable(triple(0)))) requiredTypeMap += convertTypeToVariable(triple(0)) -> triple(0)
+                if (triple(4) != null && !requiredTypeMap.contains(convertTypeToVariable(triple(2)))) requiredTypeMap += convertTypeToVariable(triple(2)) -> triple(2)
             }
         }
+        for ((k,v) <- optionalGroups)
+        {
+            var localTypeSet = new HashSet[String]
+            whereClause += "OPTIONAL {\n"
+            for (triple <- v)
+            {
+                whereClause += addTripleToWhereClause(triple)
+                if (optionalTypeMap.contains(convertTypeToVariable(triple(0))) 
+                    && !requiredTypeMap.contains(convertTypeToVariable(triple(0))) 
+                    && !localTypeSet.contains(convertTypeToVariable(triple(0))))
+                {
+                    whereClause += "?" + convertTypeToVariable(triple(0)) + " a <" + triple(0) + "> .\n"
+                    localTypeSet += convertTypeToVariable(triple(0))
+                }
+                if (optionalTypeMap.contains(convertTypeToVariable(triple(2))) 
+                    && !requiredTypeMap.contains(convertTypeToVariable(triple(2))) 
+                    && !localTypeSet.contains(convertTypeToVariable(triple(2)))) 
+                {
+                    whereClause += "?" + convertTypeToVariable(triple(2)) + " a <" + triple(2) + "> .\n"
+                    localTypeSet += convertTypeToVariable(triple(2))
+                }
+            }
+            whereClause += "}\n"
+        }
         whereClause += "}\n"
+        for ((k,v) <- requiredTypeMap) whereClause += "?" + k + " a <" + v + "> .\n"
         whereClause
+    }
+    
+    def addTripleToWhereClause(triple: ArrayBuffer[Value]): String =
+    {
+        var whereClause = ""
+        var required = true
+        if (triple(6).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
+        if (!required) whereClause += "OPTIONAL { "
+        val subjectVariable = convertTypeToVariable(triple(0))
+        val objectVariable = convertTypeToVariable(triple(2))
+        whereClause += "?" + subjectVariable + " <" + triple(1).toString + "> ?" + objectVariable + " ."
+        if (!required) whereClause += "}"
+        whereClause += "\n"
+        whereClause
+    }
+    
+    def convertTypeToVariable(input: Value): String =
+    {
+       input.toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
     }
     
     def getInputs(cxn: RepositoryConnection, process: String): ArrayBuffer[ArrayBuffer[Value]] =
     {
        val query = s"""
          
-         Select ?subject ?predicate ?object ?subjectType ?objectType ?graph ?required
+         Select ?subject ?predicate ?object ?subjectType ?objectType ?graph ?required ?optionalGroup
          Where
          {
             ?connection turbo:inputTo <$process> .
@@ -110,6 +164,11 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             ?connection turbo:predicate ?predicate .
             ?connection turbo:object ?object .
             ?connection turbo:required ?required .
+            
+            Optional
+            {
+                ?connection obo:BFO_0000050 ?optionalGroup .
+            }
             
             Graph pmbb:ontology {
               Optional
@@ -126,7 +185,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          
          """
        
-       update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph", "required"))
+       update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph", "required", "optionalGroup"))
     }
     
     def getOutputs(cxn: RepositoryConnection, process: String): ArrayBuffer[ArrayBuffer[Value]] =
