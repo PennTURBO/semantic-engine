@@ -56,9 +56,9 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           <http://transformunify.org/ontologies/UPHS/4> a obo:NCBITaxon_9606 .
           pmbb:crid1 obo:IAO_0000219 <http://transformunify.org/ontologies/UPHS/4> ;
           a turbo:TURBO_0000503 ;
-          turbo:TURBO_0003603 "part_expand" ;
-          turbo:TURBO_0003608 "4" ;
-          turbo:TURBO_0003610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
+          turbo:TURBO_0010084 "part_expand" ;
+          turbo:TURBO_0010079 "4" ;
+          turbo:TURBO_0010082 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         
         update.updateSparql(cxn, sparqlPrefixes + query)
@@ -132,9 +132,9 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           <http://transformunify.org/ontologies/UPHS/4> a obo:NCBITaxon_9606 .
           pmbb:crid1 obo:IAO_0000219 <http://transformunify.org/ontologies/UPHS/4> ;
           a turbo:TURBO_0000503 ;
-          turbo:TURBO_0003603 "part_expand" ;
-          turbo:TURBO_0003608 "4" ;
-          turbo:TURBO_0003610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
+          turbo:TURBO_0010084 "part_expand" ;
+          turbo:TURBO_0010079 "4" ;
+          turbo:TURBO_0010082 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         
         update.updateSparql(cxn, sparqlPrefixes + query)
@@ -188,7 +188,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           turbo:TURBO_0000643 "enc_expand.csv" ;
           a obo:OGMS_0000097 ;
           turbo:TURBO_0000648 "20" ;
-          turbo:TURBO_0000650 "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
+          turbo:TURBO_0010110 "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
           turbo:TURBO_0010002 "http://transformunify.org/ontologies/UPHS"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
           turbo:TURBO_0010000 "4" ;
           turbo:ScHcEnc2UnexpandedHomoSapiens "http://transformunify.org/ontologies/UPHS/4" ;
@@ -202,9 +202,9 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           <http://transformunify.org/ontologies/UPHS/4> a obo:NCBITaxon_9606 .
           pmbb:crid1 obo:IAO_0000219 <http://transformunify.org/ontologies/UPHS/4> ;
           a turbo:TURBO_0000503 ;
-          turbo:TURBO_0003603 "part_expand" ;
-          turbo:TURBO_0003608 "4" ;
-          turbo:TURBO_0003610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
+          turbo:TURBO_0010084 "part_expand" ;
+          turbo:TURBO_0010079 "4" ;
+          turbo:TURBO_0010082 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         
         update.updateSparql(cxn, sparqlPrefixes + query)
@@ -269,7 +269,7 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           turbo:TURBO_0000643 "enc_expand.csv" ;
           a obo:OGMS_0000097 ;
           turbo:TURBO_0000648 "20" ;
-          turbo:TURBO_0000650 "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
+          turbo:TURBO_0010110 "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
           turbo:TURBO_0010002 "http://transformunify.org/ontologies/UPHS"^^<http://www.w3.org/2001/XMLSchema#anyURI> ;
           turbo:TURBO_0010000 "4" ;
           turbo:ScHcEnc2UnexpandedHomoSapiens "http://transformunify.org/ontologies/UPHS/4" .
@@ -278,9 +278,9 @@ class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Match
           <http://transformunify.org/ontologies/UPHS/4> a obo:NCBITaxon_9606 .
           pmbb:crid1 obo:IAO_0000219 <http://transformunify.org/ontologies/UPHS/4> ;
           a turbo:TURBO_0000503 ;
-          turbo:TURBO_0003603 "part_expand" ;
-          turbo:TURBO_0003608 "4" ;
-          turbo:TURBO_0003610 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
+          turbo:TURBO_0010084 "part_expand" ;
+          turbo:TURBO_0010079 "4" ;
+          turbo:TURBO_0010082 "http://transformunify.org/ontologies/UPHS"^^xsd:anyURI .
           }}"""
         
         update.updateSparql(cxn, sparqlPrefixes + query)

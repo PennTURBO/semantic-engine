@@ -93,13 +93,13 @@ ontologies:GenderIdentityTypeRule
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql "BIND(IF(BOUND(?dependent), ?original, obo:OMRSE_00000133) AS ?replacement)" ;
 .
-ontologies:HomoSapiensRegistryOfVariousTypes
-  a owl:Class ;
-  rdfs:label "homo sapiens registry of various types" ;
-.
 ontologies:HealthcareEncounterRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "healthcare encounter registry of various types" ;
+.
+ontologies:HomoSapiensRegistryOfVariousTypes
+  a owl:Class ;
+  rdfs:label "homo sapiens registry of various types" ;
 .
 ontologies:IcdRegistryOfVariousTypes
   a owl:Class ;
@@ -150,13 +150,13 @@ ontologies:ShortcutDrugTermOfVariousTypes
   a owl:Class ;
   rdfs:label "shortcut drug term of various types" ;
 .
-ontologies:ShortcutHomoSapiensRegistryOfVariousTypes
-  a owl:Class ;
-  rdfs:label "shortcut homo sapiens registry of various types" ;
-.
 ontologies:ShortcutHealthcareEncounterRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "shortcut healthcare encounter registry of various types" ;
+.
+ontologies:ShortcutHomoSapiensRegistryOfVariousTypes
+  a owl:Class ;
+  rdfs:label "shortcut homo sapiens registry of various types" ;
 .
 ontologies:ShortcutIcdRegistryOfVariousTypes
   a owl:Class ;
@@ -280,6 +280,15 @@ ontologies:bmiToDataset
   ontologies:required true ;
   ontologies:subject ns3:EFO_0004340 ;
   rdfs:label "BMI to dataset connection" ;
+.
+ontologies:bmiToHealthcareEncounterDate
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000512 ;
+  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:predicate obo:IAO_0000581 ;
+  ontologies:required false ;
+  ontologies:subject ns3:EFO_0004340 ;
 .
 ontologies:bmiValueVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
@@ -417,6 +426,16 @@ ontologies:datasetToMassMeasurementDatum
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
   rdfs:label "dataset to mass measurement connection" ;
+.
+ontologies:datasetToMedicationSybol
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object ontologies:TURBO_0000562 ;
+  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+  rdfs:label "dataset to medication symbol connection" ;
 .
 ontologies:datasetToPrescription
   a ontologies:ObjectConnectionRecipe ;
@@ -1348,6 +1367,16 @@ ontologies:medicationSymbolStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
   rdfs:label "medication identifier string literal value" ;
 .
+ontologies:medicationSymbolToDataset
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000562 ;
+  rdfs:label "medication symbol to dataset connection" ;
+.
 ontologies:medicationSymbolToMedicationSymbolStringLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -1424,6 +1453,7 @@ ontologies:prescriptionToDrug
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DrugTermOfVariousTypes ;
+  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate ontologies:TURBO_0000307 ;
   ontologies:required false ;
   ontologies:subject obo:PDRO_0000001 ;
@@ -1618,6 +1648,9 @@ ontologies:shortcutHealthcareEncounterDiagnosisSequence
 ontologies:shortcutHealthcareEncounterHomoSapiensSymbol
   a ontologies:TurboGraphStringLiteralValue ;
 .
+ontologies:shortcutHealthcareEncounterHomoSapiensUriStringValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
 ontologies:shortcutHealthcareEncounterMedicationOrderName
   a ontologies:TurboGraphStringLiteralValue ;
 .
@@ -1686,13 +1719,22 @@ ontologies:shortcutHealthcareEncounterToDiagnosis
   ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
   rdfs:label "shortcut healthcare encounter to diagnosis" ;
 .
+ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OGMS_0000097 ;
+  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:predicate ontologies:TURBO_0010113 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
+.
 ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry
   a ontologies:ObjectConnectionRecipe ;
   ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ShortcutHealthcareEncounterRegistryOfVariousTypes ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0000650 ;
+  ontologies:predicate ontologies:TURBO_0010110 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
   rdfs:label "shortcut healthcare encounter to registry connection" ;
@@ -1708,17 +1750,6 @@ ontologies:shortcutHealthcareEncounterToHeightValue
   ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
   rdfs:label "shortcut healthcare encounter to height value connection" ;
 .
-ontologies:shortcutHealthcareEncounterToShortcutHomoSapiens
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:shortcut_obo_NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0010002 ;
-  ontologies:required true ;
-  ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
-  rdfs:label "shortcut healthcare encounter to homo sapiens connection" ;
-.
 ontologies:shortcutHealthcareEncounterToPrescription
   a ontologies:ObjectConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutPrescriptionOptionalGroup ;
@@ -1730,6 +1761,17 @@ ontologies:shortcutHealthcareEncounterToPrescription
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
   rdfs:label "shortcut healthcare encounter to prescription connection" ;
+.
+ontologies:shortcutHealthcareEncounterToShortcutHomoSapiens
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:shortcutHealthcareEncounterHomoSapiensUriStringValue ;
+  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:predicate ontologies:TURBO_0010002 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
+  rdfs:label "shortcut healthcare encounter to homo sapiens connection" ;
 .
 ontologies:shortcutHealthcareEncounterToSymbolValue
   a ontologies:DatatypeConnectionRecipe ;
@@ -1771,7 +1813,7 @@ ontologies:shortcutHomoSapiensIdToRegistry
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensRegistryOfVariousTypes ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0003610 ;
+  ontologies:predicate ontologies:TURBO_0010082 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_turbo_TURBO_0000503 ;
 .
@@ -1781,7 +1823,7 @@ ontologies:shortcutHomoSapiensIdToSymbol
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensSymbolStringLiteralValue ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0003608 ;
+  ontologies:predicate ontologies:TURBO_0010079 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_turbo_TURBO_0000503 ;
 .
@@ -1807,7 +1849,7 @@ ontologies:shortcutHomoSapiensToDatasetTitle
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutDatasetTitleStringLiteralValue ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0003603 ;
+  ontologies:predicate ontologies:TURBO_0010084 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_turbo_TURBO_0000503 ;
 .
@@ -1818,7 +1860,7 @@ ontologies:shortcutHomoSapiensToDateOfBirthDate
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensDateOfBirthDateLiteralValue ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0000605 ;
+  ontologies:predicate ontologies:TURBO_0010086 ;
   ontologies:required false ;
   ontologies:subject ontologies:shortcut_obo_NCBITaxon_9606 ;
 .
@@ -1828,7 +1870,7 @@ ontologies:shortcutHomoSapiensToDateOfBirthString
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensDateOfBirthStringLiteralValue ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0000604 ;
+  ontologies:predicate ontologies:TURBO_0010085 ;
   ontologies:required false ;
   ontologies:subject ontologies:shortcut_obo_NCBITaxon_9606 ;
 .
@@ -1848,7 +1890,7 @@ ontologies:shortcutHomoSapiensToGenderIdentityType
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutGenderIdentityDatumOfVariousTypes ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0000607 ;
+  ontologies:predicate ontologies:TURBO_0010089 ;
   ontologies:required false ;
   ontologies:subject ontologies:shortcut_obo_NCBITaxon_9606 ;
 .
@@ -1858,7 +1900,7 @@ ontologies:shortcutHomoSapiensToGenderIdentityValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensGenderIdentityStringLiteralValue ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0000606 ;
+  ontologies:predicate ontologies:TURBO_0010098 ;
   ontologies:required false ;
   ontologies:subject ontologies:shortcut_obo_NCBITaxon_9606 ;
 .
@@ -1869,7 +1911,7 @@ ontologies:shortcutHomoSapiensToRaceIdentityType
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutRaceIdentityDatumOfVariousTypes ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0000614 ;
+  ontologies:predicate ontologies:TURBO_0010090 ;
   ontologies:required false ;
   ontologies:subject ontologies:shortcut_obo_NCBITaxon_9606 ;
 .
@@ -1879,7 +1921,7 @@ ontologies:shortcutHomoSapiensToRaceIdentityValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensRaceIdentityStringLiteralValue ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0000615 ;
+  ontologies:predicate ontologies:TURBO_0010100 ;
   ontologies:required false ;
   ontologies:subject ontologies:shortcut_obo_NCBITaxon_9606 ;
 .

@@ -76,7 +76,7 @@ object ShortcutHealthcareEncounter extends ShortcutGraphObjectSingleton
         ?$baseVariableName a <$typeURI> ;
           		turbo:TURBO_0000643  ?$datasetTitle ;
         			turbo:TURBO_0000648  ?$valuesKey ;
-          		turbo:TURBO_0000650 ?$registryKey .
+          		turbo:TURBO_0010110 ?$registryKey .
           		
           		optional 
           		{

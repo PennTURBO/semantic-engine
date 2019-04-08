@@ -62,33 +62,33 @@ object ShortcutHomoSapiens extends ShortcutGraphObjectSingleton
           ?$baseVariableName a <$typeURI> .
           ?$cridKey a turbo:TURBO_0000503 .
           ?$cridKey obo:IAO_0000219 ?$baseVariableName .
-          ?$cridKey turbo:TURBO_0003603 ?$datasetTitle .
-          ?$cridKey turbo:TURBO_0003610 ?$registryKey .
-          ?$cridKey turbo:TURBO_0003608 ?$valuesKey .
+          ?$cridKey turbo:TURBO_0010084 ?$datasetTitle .
+          ?$cridKey turbo:TURBO_0010082 ?$registryKey .
+          ?$cridKey turbo:TURBO_0010079 ?$valuesKey .
 
           OPTIONAL
           {
-            ?$baseVariableName  turbo:TURBO_0000604  ?$dateOfBirthString .
+            ?$baseVariableName  turbo:TURBO_0010085  ?$dateOfBirthString .
           }
           OPTIONAL
           {
-           ?$baseVariableName turbo:TURBO_0000605   ?$dateOfBirthDate .
+           ?$baseVariableName turbo:TURBO_0010086   ?$dateOfBirthDate .
           }
           OPTIONAL
           {
-            ?$baseVariableName  turbo:TURBO_0000606  ?$genderIdentityValue .
+            ?$baseVariableName  turbo:TURBO_0010098  ?$genderIdentityValue .
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000607   ?$genderIdentityType .
+            ?$baseVariableName turbo:TURBO_0010089   ?$genderIdentityType .
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000614 ?$raceIdentityType .
+            ?$baseVariableName turbo:TURBO_0010090 ?$raceIdentityType .
           }
           OPTIONAL
           {
-            ?$baseVariableName turbo:TURBO_0000615 ?$raceIdentityValue .
+            ?$baseVariableName turbo:TURBO_0010100 ?$raceIdentityValue .
           }
       """
     

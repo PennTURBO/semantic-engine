@@ -13,7 +13,9 @@ import java.util.UUID
 
 object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
 {
-    def runProcess(gmCxn: RepositoryConnection, process: String, instantiation: String, globalUUID: String): String =
+    var variableSet = new HashSet[Value]
+        
+    def runProcess(cxn: RepositoryConnection, gmCxn: RepositoryConnection, process: String, instantiation: String, globalUUID: String)
     {
         val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
         
@@ -23,12 +25,12 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         
         val whereClause = createWhereClause(inputs)
         val bindClause = createBindClause(binds, localUUID, globalUUID, instantiation)
-        val insertClause = createInsertClause(outputs, bindClause("variableList").asInstanceOf[ArrayBuffer[Value]])
+        val insertClause = createInsertClause(outputs)
         
-        insertClause + whereClause+ bindClause("bindClause").asInstanceOf[String]
+        update.updateSparql(cxn, sparqlPrefixes + insertClause + whereClause + bindClause)
     }
     
-    def createBindClause(binds: ArrayBuffer[ArrayBuffer[Value]], localUUID: String, globalUUID: String, instantiation: String): Map[String,Object] =
+    def createBindClause(binds: ArrayBuffer[ArrayBuffer[Value]], localUUID: String, globalUUID: String, instantiation: String): String =
     {
         var bindClause = ""
         var varList = new ArrayBuffer[Value]
@@ -43,12 +45,16 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             if (sparqlBind.contains("original")) sparqlBind = sparqlBind.replaceAll("original",convertTypeToVariable(rule(2)))
             
             bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
-            varList += rule(0)
+            variableSet += rule(0)
+            variableSet += rule(1)
+            variableSet += rule(2)
+            variableSet += rule(3)
+            variableSet += rule(4)
         }
-        Map("bindClause" -> (bindClause + "}"), "variableList" -> varList)
+        bindClause + "\n}"
     }
     
-    def createInsertClause(outputs: ArrayBuffer[ArrayBuffer[Value]], boundList: ArrayBuffer[Value]): String =
+    def createInsertClause(outputs: ArrayBuffer[ArrayBuffer[Value]]): String =
     {
         if (outputs.size == 0) throw new RuntimeException("Received a list of 0 outputs")
         var insertClause = "INSERT { Graph <" + outputs(0)(5) + ">{\n"
@@ -57,9 +63,9 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         {
             var subjectVariable = ""
             var objectVariable = ""
-            if (boundList.contains(triple(0))) subjectVariable = "?" + convertTypeToVariable(triple(0))
+            if (variableSet.contains(triple(0))) subjectVariable = "?" + convertTypeToVariable(triple(0))
             else subjectVariable = "<" + triple(0) + ">"
-            if (boundList.contains(triple(2))) objectVariable = "?" + convertTypeToVariable(triple(2))
+            if (variableSet.contains(triple(2))) objectVariable = "?" + convertTypeToVariable(triple(2))
             else objectVariable = "<" + triple(2) + ">"
             insertClause += subjectVariable + " <" + triple(1).toString + "> " + objectVariable + " .\n"
             if (triple(3) != null && !typeSet.contains(triple(0)))
@@ -88,6 +94,8 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         var optionalGroups = new HashMap[Value, ArrayBuffer[ArrayBuffer[Value]]]
         for (triple <- inputs)
         {
+            variableSet += triple(0)
+            variableSet += triple(2)
             if (triple(7) != null) 
             {
                 if (!optionalGroups.contains(triple(7))) optionalGroups += triple(7) -> ArrayBuffer(triple)
