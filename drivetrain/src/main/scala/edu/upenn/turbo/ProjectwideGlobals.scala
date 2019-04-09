@@ -33,6 +33,7 @@ trait ProjectwideGlobals
 			PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 			PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 			PREFIX  turbo: <http://transformunify.org/ontologies/>
+			PREFIX  ontologies: <http://transformunify.org/ontologies/>
 			PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>
 			PREFIX  nci:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
 			PREFIX graphBuilder: <http://graphBuilder.org/>
@@ -45,6 +46,7 @@ trait ProjectwideGlobals
 			PREFIX j.0: <http://example.com/resource/>
       PREFIX snomed: <http://purl.bioontology.org/ontology/SNOMEDCT/>
       PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
+      PREFIX ns3: <http://www.ebi.ac.uk/efo/>
 			"""
     
      //properties from file are global variables

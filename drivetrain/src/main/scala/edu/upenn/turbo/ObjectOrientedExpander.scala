@@ -12,7 +12,11 @@ class ObjectOrientedExpander extends ProjectwideGlobals
 {   
   def runAllExpansionProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String, instantiation: String = helper.genPmbbIRI())
   {
-      DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess", instantiation, globalUUID)
-      DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/healthcareEncounterExpansionProcess", instantiation, globalUUID)
+      DrivetrainProcessFromGraphModel.setInstantiation(instantiation)
+      DrivetrainProcessFromGraphModel.setGlobalUUID(globalUUID)
+    
+      DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
+      DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
+      DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
   }
 }

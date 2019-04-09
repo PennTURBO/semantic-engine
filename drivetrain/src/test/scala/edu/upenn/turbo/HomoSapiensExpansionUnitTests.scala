@@ -9,7 +9,7 @@ import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
-class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
     val clearDatabaseAfterRun: Boolean = false
     val objectOrientedExpander = new ObjectOrientedExpander
@@ -19,7 +19,8 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     var masterPlanspec: IRI = null
     var masterPlan: IRI = null
     
-    val randomUUID = UUID.randomUUID().toString.replaceAll("-", "")
+    DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+    DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
     
     val instantiationAndDataset: String = """
       ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
@@ -67,7 +68,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant with all fields")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
               turbo:TURBO_0010089 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
               turbo:TURBO_0010086 "1969-05-04"^^xsd:date ;
@@ -87,7 +88,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010084 "part_expand" .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess","http://www.itmat.upenn.edu/biobank/test_instantiation_1",randomUUID)
+        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         val extraFields: String = """
           ASK {GRAPH pmbb:expanded {
@@ -176,7 +177,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant with minimum required for expansion")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1> a turbo:shortcut_obo_NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
               a turbo:shortcut_turbo_TURBO_0000503 ;
@@ -185,7 +186,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010082 turbo:TURBO_0000410 .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess","http://www.itmat.upenn.edu/biobank/test_instantiation_1",randomUUID)
+        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (true)
@@ -220,7 +221,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant without psc")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
               a turbo:shortcut_obo_NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
@@ -229,7 +230,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010082 turbo:TURBO_0000410 .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess","http://www.itmat.upenn.edu/biobank/test_instantiation_1",randomUUID)
+        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -242,7 +243,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant without dataset")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
               a turbo:shortcut_obo_NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
@@ -251,7 +252,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010082 turbo:TURBO_0000410 .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess","http://www.itmat.upenn.edu/biobank/test_instantiation_1",randomUUID)
+        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -264,7 +265,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant without registry")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
               a turbo:shortcut_obo_NCBITaxon_9606 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
@@ -273,7 +274,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010084 "part_expand" .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess","http://www.itmat.upenn.edu/biobank/test_instantiation_1",randomUUID)
+        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -286,7 +287,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("participant with text but not xsd values")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
               # turbo:TURBO_0010089 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
               # turbo:TURBO_0010086 "1969-05-04"^^xsd:date ;
@@ -303,7 +304,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess","http://www.itmat.upenn.edu/biobank/test_instantiation_1",randomUUID)
+        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         val dateNoXsd: String = """
           ASK {GRAPH pmbb:expanded {
@@ -371,7 +372,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     test("expand homoSapiens with multiple identifiers - single dataset")
     {
         val insert: String = """
-          INSERT DATA {GRAPH pmbb:Shortcuts_participantShortcuts {
+          INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
             pmbb:part1
             turbo:TURBO_0010089 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
             turbo:TURBO_0010086 "1969-05-04"^^xsd:date ;
@@ -402,7 +403,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
 
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess","http://www.itmat.upenn.edu/biobank/test_instantiation_1",randomUUID)
+        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
     
         val output: String = """
           ASK {GRAPH pmbb:expanded {
@@ -551,7 +552,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     {
         val insert: String = """
           INSERT DATA {
-          GRAPH pmbb:Shortcuts_participantShortcuts1 {
+          GRAPH pmbb:Shortcuts_homoSapiensShortcuts1 {
             pmbb:part1
             turbo:TURBO_0010089 "http://purl.obolibrary.org/obo/OMRSE_00000138"^^xsd:anyURI ;
             a turbo:shortcut_obo_NCBITaxon_9606 ;
@@ -563,7 +564,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             pmbb:shortcutCrid1 turbo:TURBO_0010082 <http://transformunify.org/ontologies/TURBO_0000402> .  
           }
           
-          GRAPH pmbb:Shortcuts_participantShortcuts2 {
+          GRAPH pmbb:Shortcuts_homoSapiensShortcuts2 {
             pmbb:part1 a turbo:shortcut_obo_NCBITaxon_9606 ;
             turbo:TURBO_0010086 "1969-05-04"^^xsd:date ;
             turbo:TURBO_0010085 "04/May/1969" .
@@ -574,7 +575,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             pmbb:shortcutCrid2 turbo:TURBO_0010082 <http://transformunify.org/ontologies/TURBO_0000403> .
           }
           
-          GRAPH pmbb:Shortcuts_participantShortcuts3 {
+          GRAPH pmbb:Shortcuts_homoSapiensShortcuts3 {
             pmbb:part1 a turbo:shortcut_obo_NCBITaxon_9606 ;
             turbo:TURBO_0010090 <http://purl.obolibrary.org/obo/OMRSE_00000181> ;
             turbo:TURBO_0010100 'asian' .
@@ -587,7 +588,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           
           }"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess","http://www.itmat.upenn.edu/biobank/test_instantiation_1",randomUUID)
+        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
           val output: String = """
           ASK {GRAPH pmbb:expanded {
@@ -689,7 +690,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     {
         val insert: String = """
           INSERT DATA {
-          GRAPH pmbb:Shortcuts_participantShortcuts
+          GRAPH pmbb:Shortcuts_homoSapiensShortcuts
           {
               <http://www.itmat.upenn.edu/biobank/part1>
               turbo:TURBO_0000603 "dataset1" ;
@@ -829,7 +830,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     {
         val insert: String = """
           INSERT DATA {
-          GRAPH pmbb:Shortcuts_participantShortcuts1 
+          GRAPH pmbb:Shortcuts_homoSapiensShortcuts1 
           {
               <http://www.itmat.upenn.edu/biobank/part1>
               turbo:TURBO_0000603 "dataset1" ;
@@ -845,7 +846,7 @@ class ParticipantExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010090 'http://purl.obolibrary.org/obo/OMRSE_00000181'^^xsd:anyURI ;
               turbo:TURBO_0010100 'asian' .
           }
-          GRAPH pmbb:Shortcuts_participantShortcuts2
+          GRAPH pmbb:Shortcuts_homoSapiensShortcuts2
           {
               <http://www.itmat.upenn.edu/biobank/part1> a obo:NCBITaxon_9606 .
               

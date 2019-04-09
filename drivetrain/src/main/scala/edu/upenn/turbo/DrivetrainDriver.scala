@@ -119,6 +119,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.RDFXML, args(2))
               else if (args(0) == "loadRepoFromUrl") ontLoad.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
               else if (args(0) == "loadTurboOntology") ontLoad.addOntologyFromUrl(cxn)
+              else if (args(0) == "updateModel") updateModel(gmCxn)
               /*else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
@@ -132,6 +133,25 @@ object DrivetrainDriver extends ProjectwideGlobals {
               ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
           }
       }
+  }
+  
+  def updateModel(gmCxn: RepositoryConnection)
+  {
+      val graph = "http://www.itmat.upenn.edu/biobank/dataModel"
+      helper.clearNamedGraph(gmCxn, graph)
+      var query = s"INSERT DATA { Graph <$graph> {"
+      val br = io.Source.fromFile("ontologies//turbo_dataModel_file.ttl")
+      for (line <- br.getLines())
+      {
+          if (line.size > 0)
+          {
+              if (line.charAt(0) != '#' && line.charAt(0) != '@') query += line 
+          }
+      }
+      query += "}}"
+      //println(sparqlPrefixes + query)
+      update.updateSparql(gmCxn, sparqlPrefixes + query)
+      br.close()
   }
   
   /*def checkConclusionatorArguments(args: Array[String]): Option[Array[Double]] =

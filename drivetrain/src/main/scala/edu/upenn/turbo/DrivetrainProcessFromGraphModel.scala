@@ -13,9 +13,21 @@ import java.util.UUID
 
 object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
 {
+    var globalUUID: String = null
+    var instantiation: String = null
     var variableSet = new HashSet[Value]
+    var typeMap = new HashMap[String,Value]
+    
+    def setInstantiation(instantiation: String)
+    {
+        this.instantiation = instantiation
+    }
+    def setGlobalUUID(globalUUID: String)
+    {
+        this.globalUUID = globalUUID
+    }
         
-    def runProcess(cxn: RepositoryConnection, gmCxn: RepositoryConnection, process: String, instantiation: String, globalUUID: String)
+    def runProcess(cxn: RepositoryConnection, gmCxn: RepositoryConnection, process: String): String =
     {
         val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
         
@@ -24,13 +36,20 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         val binds = getBind(gmCxn, process)
         
         val whereClause = createWhereClause(inputs)
-        val bindClause = createBindClause(binds, localUUID, globalUUID, instantiation)
+        val bindClause = createBindClause(binds, localUUID)
         val insertClause = createInsertClause(outputs)
         
-        update.updateSparql(cxn, sparqlPrefixes + insertClause + whereClause + bindClause)
+        val query = sparqlPrefixes + insertClause + whereClause + bindClause
+        //println(query)
+        update.updateSparql(cxn, query)
+        
+        variableSet = new HashSet[Value]
+        typeMap = new HashMap[String,Value]
+        
+        query
     }
     
-    def createBindClause(binds: ArrayBuffer[ArrayBuffer[Value]], localUUID: String, globalUUID: String, instantiation: String): String =
+    def createBindClause(binds: ArrayBuffer[ArrayBuffer[Value]], localUUID: String): String =
     {
         var bindClause = ""
         var varList = new ArrayBuffer[Value]
@@ -43,6 +62,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
                                          .replaceAll("instantiationPlaceholder", "\"" + instantiation + "\"")
             if (sparqlBind.contains("dependent")) sparqlBind = sparqlBind.replaceAll("dependent",convertTypeToVariable(rule(3)))
             if (sparqlBind.contains("original")) sparqlBind = sparqlBind.replaceAll("original",convertTypeToVariable(rule(2)))
+            if (sparqlBind.contains("singletonType")) sparqlBind = sparqlBind.replaceAll("singletonType",rule(3).toString)
             
             bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
             variableSet += rule(0)
@@ -88,9 +108,6 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
         var whereClause = "WHERE { GRAPH <" + inputs(0)(5) + "> {\n"
         
-        var requiredTypeMap = new HashMap[String,Value]
-        var optionalTypeMap = new HashMap[String, Value]
-        
         var optionalGroups = new HashMap[Value, ArrayBuffer[ArrayBuffer[Value]]]
         for (triple <- inputs)
         {
@@ -100,42 +117,23 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             {
                 if (!optionalGroups.contains(triple(7))) optionalGroups += triple(7) -> ArrayBuffer(triple)
                 else optionalGroups(triple(7)) += triple
-                if (triple(3) != null && !optionalTypeMap.contains(convertTypeToVariable(triple(0)))) optionalTypeMap += convertTypeToVariable(triple(0)) -> triple(0)
-                if (triple(4) != null && !optionalTypeMap.contains(convertTypeToVariable(triple(2)))) optionalTypeMap += convertTypeToVariable(triple(2)) -> triple(2)
             }
             else
             {
                 whereClause += addTripleToWhereClause(triple)
-                if (triple(3) != null && !requiredTypeMap.contains(convertTypeToVariable(triple(0)))) requiredTypeMap += convertTypeToVariable(triple(0)) -> triple(0)
-                if (triple(4) != null && !requiredTypeMap.contains(convertTypeToVariable(triple(2)))) requiredTypeMap += convertTypeToVariable(triple(2)) -> triple(2)
             }
         }
         for ((k,v) <- optionalGroups)
         {
-            var localTypeSet = new HashSet[String]
             whereClause += "OPTIONAL {\n"
             for (triple <- v)
             {
                 whereClause += addTripleToWhereClause(triple)
-                if (optionalTypeMap.contains(convertTypeToVariable(triple(0))) 
-                    && !requiredTypeMap.contains(convertTypeToVariable(triple(0))) 
-                    && !localTypeSet.contains(convertTypeToVariable(triple(0))))
-                {
-                    whereClause += "?" + convertTypeToVariable(triple(0)) + " a <" + triple(0) + "> .\n"
-                    localTypeSet += convertTypeToVariable(triple(0))
-                }
-                if (optionalTypeMap.contains(convertTypeToVariable(triple(2))) 
-                    && !requiredTypeMap.contains(convertTypeToVariable(triple(2))) 
-                    && !localTypeSet.contains(convertTypeToVariable(triple(2)))) 
-                {
-                    whereClause += "?" + convertTypeToVariable(triple(2)) + " a <" + triple(2) + "> .\n"
-                    localTypeSet += convertTypeToVariable(triple(2))
-                }
+                
             }
             whereClause += "}\n"
         }
         whereClause += "}\n"
-        for ((k,v) <- requiredTypeMap) whereClause += "?" + k + " a <" + v + "> .\n"
         whereClause
     }
     
@@ -147,9 +145,18 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         if (!required) whereClause += "OPTIONAL { "
         val subjectVariable = convertTypeToVariable(triple(0))
         val objectVariable = convertTypeToVariable(triple(2))
-        whereClause += "?" + subjectVariable + " <" + triple(1).toString + "> ?" + objectVariable + " ."
+        whereClause += "?" + subjectVariable + " <" + triple(1).toString + "> ?" + objectVariable + " .\n"
+        if (triple(3) != null && !typeMap.contains(subjectVariable))
+        {
+            typeMap += subjectVariable -> triple(0)
+            whereClause += "?" + subjectVariable + " a <" + triple(0) + "> .\n"
+        }
+        if (triple(4) != null && !typeMap.contains(objectVariable))
+        {
+            typeMap += objectVariable -> triple(2)
+            whereClause += "?" + objectVariable + " a <" + triple(2) + "> .\n"
+        }
         if (!required) whereClause += "}"
-        whereClause += "\n"
         whereClause
     }
     
