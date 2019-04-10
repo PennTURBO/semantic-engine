@@ -14,9 +14,13 @@ class ObjectOrientedExpander extends ProjectwideGlobals
   {
       DrivetrainProcessFromGraphModel.setInstantiation(instantiation)
       DrivetrainProcessFromGraphModel.setGlobalUUID(globalUUID)
+      DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
+      DrivetrainProcessFromGraphModel.setConnection(cxn)
     
-      DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
-      DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
-      DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
+      /*DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/homoSapiensExpansionProcess")
+      DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
+      DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+      DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")*/
+      DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
   }
 }

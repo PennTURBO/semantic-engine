@@ -59,6 +59,9 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         repoManager = graphDBMaterials.getRepoManager()
         repository = graphDBMaterials.getRepository()
         helper.deleteAllTriplesInDatabase(cxn)
+        
+        DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
+        DrivetrainProcessFromGraphModel.setConnection(cxn)
     }
     after
     {
@@ -88,7 +91,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010084 "part_expand" .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
+        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         val extraFields: String = """
           ASK {GRAPH pmbb:expanded {
@@ -186,7 +189,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010082 turbo:TURBO_0000410 .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
+        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (true)
@@ -230,7 +233,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010082 turbo:TURBO_0000410 .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
+        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -252,7 +255,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010082 turbo:TURBO_0000410 .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
+        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -274,7 +277,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010084 "part_expand" .
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
+        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(cxn, sparqlPrefixes + minimumPartRequirements).get should be (false)
@@ -304,7 +307,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
+        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
         val dateNoXsd: String = """
           ASK {GRAPH pmbb:expanded {
@@ -403,7 +406,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
 
           }}"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
+        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/homoSapiensExpansionProcess")
     
         val output: String = """
           ASK {GRAPH pmbb:expanded {
@@ -588,7 +591,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           
           }"""
         update.updateSparql(cxn, sparqlPrefixes + insert)
-        DrivetrainProcessFromGraphModel.runProcess(cxn, gmCxn, "http://transformunify.org/ontologies/homoSapiensExpansionProcess")
+        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/homoSapiensExpansionProcess")
         
           val output: String = """
           ASK {GRAPH pmbb:expanded {

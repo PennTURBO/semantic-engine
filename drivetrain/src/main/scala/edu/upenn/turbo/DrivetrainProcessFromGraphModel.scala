@@ -26,21 +26,29 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     {
         this.globalUUID = globalUUID
     }
+    def setGraphModelConnection(gmCxn: RepositoryConnection)
+    {
+        this.gmCxn = gmCxn
+    }
+    def setConnection(cxn: RepositoryConnection)
+    {
+        this.cxn = cxn
+    }
         
-    def runProcess(cxn: RepositoryConnection, gmCxn: RepositoryConnection, process: String): String =
+    def runProcess(process: String): String =
     {
         val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
         
-        val inputs = getInputs(gmCxn, process)
-        val outputs = getOutputs(gmCxn, process)
-        val binds = getBind(gmCxn, process)
+        val inputs = getInputs(process)
+        val outputs = getOutputs(process)
+        val binds = getBind(process)
         
         val whereClause = createWhereClause(inputs)
         val bindClause = createBindClause(binds, localUUID)
         val insertClause = createInsertClause(outputs)
         
         val query = sparqlPrefixes + insertClause + whereClause + bindClause
-        //println(query)
+        println(query)
         update.updateSparql(cxn, query)
         
         variableSet = new HashSet[Value]
@@ -165,7 +173,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
        input.toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
     }
     
-    def getInputs(cxn: RepositoryConnection, process: String): ArrayBuffer[ArrayBuffer[Value]] =
+    def getInputs(process: String): ArrayBuffer[ArrayBuffer[Value]] =
     {
        val query = s"""
          
@@ -200,10 +208,10 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          
          """
        
-       update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph", "required", "optionalGroup"))
+       update.querySparqlAndUnpackTuple(gmCxn, sparqlPrefixes + query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph", "required", "optionalGroup"))
     }
     
-    def getOutputs(cxn: RepositoryConnection, process: String): ArrayBuffer[ArrayBuffer[Value]] =
+    def getOutputs(process: String): ArrayBuffer[ArrayBuffer[Value]] =
     {
        val query = s"""
          
@@ -234,10 +242,10 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          
          """
        
-       update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph"))
+       update.querySparqlAndUnpackTuple(gmCxn, sparqlPrefixes + query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph"))
     }
     
-    def getBind(cxn: RepositoryConnection, process: String): ArrayBuffer[ArrayBuffer[Value]] =
+    def getBind(process: String): ArrayBuffer[ArrayBuffer[Value]] =
     {
         val query = s"""
           
@@ -265,6 +273,6 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
           
         """
         
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, Array("expandedEntity", "sparqlString", "shortcutEntity", "dependee", "baseType"))
+        update.querySparqlAndUnpackTuple(gmCxn, sparqlPrefixes + query, Array("expandedEntity", "sparqlString", "shortcutEntity", "dependee", "baseType"))
     }
 }
