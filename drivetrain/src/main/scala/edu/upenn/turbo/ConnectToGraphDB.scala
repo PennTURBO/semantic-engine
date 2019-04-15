@@ -24,8 +24,6 @@ import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
 
 object ConnectToGraphDB extends ProjectwideGlobals
 {   
-    val ontLoad: OntologyLoader = new OntologyLoader
-    
     /**
      * Calls the initialize graph method, then loads the data files specified in the TURBO properties file if the loadFromProperties Boolean
      * in the TURBO properties file is set to true. Also loads ontology if importOntologies Boolean in the TURBO properties file is set to true.
@@ -99,7 +97,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
             }
             helper.loadDataFromFile(cxn, k, format.get, namedgraph)
         }
-        if (importOntologies == "true") ontLoad.addOntologyFromUrl(cxn, ontologyURL)
+        if (importOntologies == "true") OntologyLoader.addOntologyFromUrl(cxn, ontologyURL)
     }
     
     /**
@@ -116,7 +114,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
         //check to see if 
         else
         {
-            ontLoad.addOntologyFromUrl(cxn)
+            OntologyLoader.addOntologyFromUrl(cxn)
         } 
     }
     

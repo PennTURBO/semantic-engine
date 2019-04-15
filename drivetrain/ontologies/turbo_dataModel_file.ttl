@@ -73,6 +73,12 @@ ontologies:BindIfBoundSHALocalRandomWithDependent
   ontologies:usesSparql """BIND (IF (BOUND(?dependent), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
                                         SHA256(CONCAT(\"replacement\", \"localUUID\", str(?mainExpansionTypeVariableName), str(?dependent))))), ?unbound) AS ?replacement)""" ;
 .
+
+ontologies:SHALocalRandomWithDependent
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql """BIND(uri(CONCAT(\"http://www.itmat.upenn.edu/biobank/\",
+                                SHA256(CONCAT(\"replacement\", \"localUUID\", str(?dependent))))) AS ?replacement)""" ;
+.
 ontologies:BindIfBoundSingletonSHAOfBaseType
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """BIND(IF (BOUND(?dependent), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
@@ -178,9 +184,7 @@ ontologies:ShortcutIcdRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "some shortcut icd registry uri" ;
 .
-ontologies:Shortcuts_biobankEncounterShortcuts
-  a ontologies:TurboNamedGraph ;
-.
+
 ontologies:SingletonOfType
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
@@ -369,7 +373,7 @@ ontologies:biobankEncounterDateVariableManipulation
 .
 ontologies:biobankEncounterExpansionProcess
   a ontologies:TurboGraphExpansionProcess ;
-  ontologies:inputNamedGraph pmbb:Shortcuts_biobankEncounterShortcuts ;
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:shortcut_turbo_TURBO_0000527 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:usesVariableManipulationRule ontologies:biobankEncounterBMIVariableManipulation ;
@@ -843,7 +847,7 @@ ontologies:datasetVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates obo:IAO_0000100 ;
   ontologies:manipulationDependsOn ontologies:shortcutDatasetTitleStringLiteralValue ;
-  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandom ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
 .
 ontologies:dateOfBirthDatumDateVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
@@ -1176,7 +1180,7 @@ ontologies:healthcareEncounterDateVariableManipulation
 .
 ontologies:healthcareEncounterExpansionProcess
   a ontologies:TurboGraphExpansionProcess ;
-  ontologies:inputNamedGraph pmbb:Shortcuts_healthcareEncounterShortcuts ;
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:shortcut_obo_OGMS_0000097 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:usesVariableManipulationRule ontologies:bmiValueVariableManipulation ;
@@ -1250,7 +1254,7 @@ ontologies:healthcareEncounterIdToSymbol
 ontologies:healthcareEncounterIdentifierVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000508 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandom ;
 .
 ontologies:healthcareEncounterLinkingProcess
   a ontologies:TurboGraphEntityLinkingProcess ;
@@ -1311,7 +1315,7 @@ ontologies:healthcareEncounterRegistryValueVariableManipulation
 ontologies:healthcareEncounterRegistryVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000510 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandom ;
 .
 ontologies:healthcareEncounterStartToHealthcareEncounter
   a ontologies:ObjectConnectionRecipe ;
@@ -1372,7 +1376,7 @@ ontologies:healthcareEncounterSymbolValueVariableManipulation
 ontologies:healthcareEncounterSymbolVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000509 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandom ;
 .
 ontologies:healthcareEncounterToBMI
   a ontologies:ObjectConnectionRecipe ;
@@ -1489,7 +1493,7 @@ ontologies:homoSapiensDateOfBirthStringLiteralValue
 .
 ontologies:homoSapiensExpansionProcess
   a ontologies:TurboGraphExpansionProcess ;
-  ontologies:inputNamedGraph pmbb:Shortcuts_homoSapiensShortcuts ;
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:shortcut_obo_NCBITaxon_9606 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:usesVariableManipulationRule ontologies:biologicalSexVariableManipulation ;
@@ -1550,7 +1554,8 @@ ontologies:homoSapiensIdentifierToHomoSapiens
 ontologies:homoSapiensIdentifierVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000503 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:manipulationDependsOn ontologies:shortcut_turbo_TURBO_0000503 ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandomWithDependent ;
 .
 ontologies:homoSapiensRaceIdentityStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
@@ -1591,7 +1596,8 @@ ontologies:homoSapiensRegistryValueVariableManipulation
 ontologies:homoSapiensRegistryVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000505 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:manipulationDependsOn ontologies:shortcut_turbo_TURBO_0000503 ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandomWithDependent ;
 .
 ontologies:homoSapiensSymbolStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
@@ -1623,7 +1629,8 @@ ontologies:homoSapiensSymbolValueVariableManipulation
 ontologies:homoSapiensSymbolVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000504 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:manipulationDependsOn ontologies:shortcut_turbo_TURBO_0000503 ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandomWithDependent ;
 .
 ontologies:homoSapiensToAdipose
   a ontologies:ObjectConnectionRecipe ;
@@ -2757,14 +2764,9 @@ ontologies:weightVariableManipulation
   ontologies:manipulationDependsOn obo:IAO_0000414 ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSingletonSHAOfBaseType ;
 .
-pmbb:Shortcuts_healthcareEncounterShortcuts
+pmbb:Shortcuts_
   a ontologies:TurboNamedGraph ;
-  rdfs:label "named graph for shortcut healthcare encounters" ;
-.
-pmbb:Shortcuts_homoSapiensShortcuts
-  a ontologies:TurboNamedGraph ;
-  a rdfs:Resource ;
-  rdfs:label "named graph for shortcut homo sapiens" ;
+  rdfs:label "named graphs prefix for shortcut triples" ;
 .
 pmbb:expanded
   a ontologies:TurboNamedGraph ;

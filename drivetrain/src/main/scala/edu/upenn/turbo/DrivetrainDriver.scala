@@ -23,7 +23,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
   val medmap: MedicationMapper = new MedicationMapper()
   val benchmark: DrivetrainAutomatedBenchmarking = new DrivetrainAutomatedBenchmarking()
   val visualize: DrivetrainVisualizations = new DrivetrainVisualizations()*/
-  val ontLoad: OntologyLoader = new OntologyLoader()
   val reasoner: ReasoningManager = new ReasoningManager()
   /*val simpleBenchmark: SimpleBenchmark = new SimpleBenchmark()
   val graphOps: EncounterDateOperations = new EncounterDateOperations()*/
@@ -117,8 +116,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "i2i2c2c") runI2i2c2cMapping(cxn, args)
               else if (args(0) == "reasoner") runInferenceWithAddedOntologies(cxn)*/
               else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.RDFXML, args(2))
-              else if (args(0) == "loadRepoFromUrl") ontLoad.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
-              else if (args(0) == "loadTurboOntology") ontLoad.addOntologyFromUrl(cxn)
+              else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
+              else if (args(0) == "loadTurboOntology") OntologyLoader.addOntologyFromUrl(cxn)
               else if (args(0) == "updateModel") updateModel(gmCxn)
               /*else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)

@@ -491,6 +491,39 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           }}
           """
         
+        val oneConsenter = """
+          select (count (?homosapiens) as ?homosapienscount) where
+          {
+              ?homosapiens a obo:NCBITaxon_9606 .
+          }
+          """
+        
+        val threeIdentifiers = """
+          select (count (?crid) as ?cridcount) where
+          {
+              ?crid a turbo:TURBO_0000503 .
+          }
+          """
+        
+        val threeSymbols = """
+          select (count (?symbol) as ?symbolcount) where
+          {
+              ?symbol a turbo:TURBO_0000504 .
+          }
+          """
+        
+        val threeRegistries = """
+          select (count (?registry) as ?registrycount) where
+          {
+              ?registry a turbo:TURBO_0000505 .
+          }
+          """
+        
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + oneConsenter, "homosapienscount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + threeIdentifiers, "cridcount")(0).split("\"")(1) should be ("3")
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + threeSymbols, "symbolcount")(0).split("\"")(1) should be ("3")
+        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + threeRegistries, "registrycount")(0).split("\"")(1) should be ("3")
+        
         update.querySparqlBoolean(cxn, sparqlPrefixes + output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")

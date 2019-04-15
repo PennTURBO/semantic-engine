@@ -10,7 +10,7 @@ import java.util.UUID
 
 class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
-    val clearDatabaseAfterRun: Boolean = true
+    val clearDatabaseAfterRun: Boolean = false
     val objectOrientedExpander = new ObjectOrientedExpander
     
     var conclusionationNamedGraph: IRI = null
@@ -605,7 +605,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
          update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
     }
     
-    test("ensure medication info stays together with duplicate hc enc URI")
+    /*test("ensure medication info stays together with duplicate hc enc URI")
     {
         val insert: String = """
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
@@ -682,7 +682,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
          update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "prescriptCount")(0) should startWith ("\"2")
          update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "medCridCount")(0) should startWith ("\"2")
          update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
-    }
+    }*/
     
     /*test("expand hc encs over multiple named graphs")
     {
