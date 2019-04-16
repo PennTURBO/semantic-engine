@@ -12,12 +12,6 @@ import java.util.UUID
 class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
     val clearTestingRepositoryAfterRun: Boolean = false
-    val ooe = new ObjectOrientedExpander
-    
-    var conclusionationNamedGraph: IRI = null
-    var masterConclusionation: IRI = null
-    var masterPlanspec: IRI = null
-    var masterPlan: IRI = null
     
     DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
