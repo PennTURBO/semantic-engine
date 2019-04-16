@@ -149,7 +149,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
       query += "}}"
       //println(sparqlPrefixes + query)
-      update.updateSparql(gmCxn, sparqlPrefixes + query)
+      update.updateSparql(gmCxn, query)
       br.close()
   }
   

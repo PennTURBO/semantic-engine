@@ -15,7 +15,7 @@ class ObjectOrientedExpander extends ProjectwideGlobals
       DrivetrainProcessFromGraphModel.setInstantiation(instantiation)
       DrivetrainProcessFromGraphModel.setGlobalUUID(globalUUID)
       DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-      DrivetrainProcessFromGraphModel.setConnection(cxn)
+      DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(cxn)
       
       //load the TURBO ontology
       OntologyLoader.addOntologyFromUrl(cxn)

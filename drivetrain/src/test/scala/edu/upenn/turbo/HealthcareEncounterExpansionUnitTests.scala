@@ -10,7 +10,7 @@ import java.util.UUID
 
 class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
-    val clearDatabaseAfterRun: Boolean = false
+    val clearTestingRepositoryAfterRun: Boolean = false
     val objectOrientedExpander = new ObjectOrientedExpander
     
     var conclusionationNamedGraph: IRI = null
@@ -162,18 +162,18 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
     before
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
-        cxn = graphDBMaterials.getConnection()
+        testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        repoManager = graphDBMaterials.getRepoManager()
-        repository = graphDBMaterials.getRepository()
-        helper.deleteAllTriplesInDatabase(cxn)
+        testRepoManager = graphDBMaterials.getTestRepoManager()
+        testRepository = graphDBMaterials.getTestRepository()
+        helper.deleteAllTriplesInDatabase(testCxn)
         
         DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-        DrivetrainProcessFromGraphModel.setConnection(cxn)
+        DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
     }
     after
     {
-        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearDatabaseAfterRun)
+        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
     }
     
     test("hc encounter with all fields")
@@ -208,19 +208,19 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           turbo:TURBO_0005612 turbo:someDrug .
           }}
           """
-        update.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(testCxn, insert)
         DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
         
-        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareDiagnosis).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareMedications).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareHeightWeightAndBMI).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterDate).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
+        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -289,19 +289,19 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> .
           }}
           """
-        update.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(testCxn, insert)
         DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
         
-        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareHeightWeightAndBMI).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareMedications).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
+        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -333,19 +333,19 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           turbo:TURBO_0010110 "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
           }}
           """
-        update.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(testCxn, insert)
         DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
         
-        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareHeightWeightAndBMI).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareMedications).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (false)
+        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "s")
+        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
    
@@ -359,19 +359,19 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           turbo:TURBO_0000648 "20" .
           }}
           """
-        update.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(testCxn, insert)
         DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
         
-        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareHeightWeightAndBMI).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareMedications).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (false)
+        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "s")
+        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
     
@@ -385,19 +385,19 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           turbo:TURBO_0010110 "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
           }}
           """
-        update.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(testCxn, insert)
         DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
         
-        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareHeightWeightAndBMI).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareMedications).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (false)
+        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "s")
+        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
     
@@ -424,7 +424,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           
           }}
           """
-        update.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(testCxn, insert)
         DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
         
         val diagnosisNoXsd: String = """
@@ -472,18 +472,18 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
       		}}
       """
         
-        update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareHeightWeightAndBMI).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareMedicationsMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + diagnosisNoXsd).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + dateNoXsd).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareMedicationsMinimum).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
+        update.querySparqlBoolean(testCxn, diagnosisNoXsd).get should be (true)
+        update.querySparqlBoolean(testCxn, dateNoXsd).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, "p")
+        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -559,7 +559,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           turbo:TURBO_0004601 "177.8" . 
           }}"""
         
-        update.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(testCxn, insert)
         DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
         
         val checkDiag: String = """
@@ -598,14 +598,14 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
               }
           }
           """
-         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
-         update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
-         update.querySparqlBoolean(cxn, sparqlPrefixes + checkDiag).get should be (true)
-         update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "diagnosisCount")(0) should startWith ("\"2")
-         update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
+         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
+         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
+         update.querySparqlBoolean(testCxn, checkDiag).get should be (true)
+         update.querySparqlAndUnpackTuple(testCxn, countDiag, "diagnosisCount")(0) should startWith ("\"2")
+         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
     }
     
-    /*test("ensure medication info stays together with duplicate hc enc URI")
+    test("ensure medication info stays together with duplicate hc enc URI")
     {
         val insert: String = """
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
@@ -630,7 +630,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           turbo:TURBO_0005611 "medicinal purple kush" . 
           }}"""
         
-        update.updateSparql(cxn, sparqlPrefixes + insert)
+        update.updateSparql(testCxn, insert)
         DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
         
         val checkDiag: String = """
@@ -676,35 +676,37 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
               }
           }
           """
-         update.querySparqlBoolean(cxn, sparqlPrefixes + instantiationAndDataset).get should be (true)
-         update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
-         update.querySparqlBoolean(cxn, sparqlPrefixes + checkDiag).get should be (true)
-         update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "prescriptCount")(0) should startWith ("\"2")
-         update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countDiag, "medCridCount")(0) should startWith ("\"2")
-         update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
-    }*/
+         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
+         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
+         update.querySparqlBoolean(testCxn, checkDiag).get should be (true)
+         update.querySparqlAndUnpackTuple(testCxn, countDiag, "prescriptCount")(0) should startWith ("\"2")
+         update.querySparqlAndUnpackTuple(testCxn, countDiag, "medCridCount")(0) should startWith ("\"2")
+         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
+    }
     
-    /*test("expand hc encs over multiple named graphs")
+    test("expand hc encs over multiple named graphs")
     {
         val insert1: String = """
           INSERT DATA
           {
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts
               {
-                  pmbb:hcenc1 a obo:OGMS_0000097 ;
+                  pmbb:hcenc1 a turbo:shortcut_obo_OGMS_0000097 ;
                       turbo:TURBO_0000643 'identifierAndRegistry.csv' ;
                       turbo:TURBO_0000648 '20' ;
-                      turbo:TURBO_0010110 'http://transformunify.org/ontologies/TURBO_0000440'^^xsd:anyURI .
+                      turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> .
               }
               
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts1
               {
-                  pmbb:hcenc1 a obo:OGMS_0000097 ;
+                  pmbb:hcenc1 a turbo:shortcut_obo_OGMS_0000097 ;
                       turbo:TURBO_0000643 'diagnosis.csv' ;
+                      turbo:TURBO_0000648 '20' ;
+                      turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
                       obo:RO_0002234 pmbb:diagCridSC .
                   pmbb:diagCridSC a obo:OGMS_0000073 ;
                       turbo:TURBO_0004602 'ICD-9' ;
-                      turbo:TURBO_0004603 'http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890'^^xsd:anyURI ;
+                      turbo:TURBO_0004603 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
                       turbo:TURBO_0004601 '401.9' ;
                       turbo:TURBO_0010013 "true"^^xsd:Boolean ;
                       turbo:TURBO_0010014 "1"^^xsd:Integer .
@@ -712,18 +714,23 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
               
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts2
               {
-                  pmbb:hcenc1 a obo:OGMS_0000097 ;
+                  pmbb:hcenc1 a turbo:shortcut_obo_OGMS_0000097 ;
                       turbo:TURBO_0000643 'meds.csv' ;
-                      obo:RO_0002234 pmbb:prescription .
+                      obo:RO_0002234 pmbb:prescription ;
+                      turbo:TURBO_0000648 '20' ;
+                      turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> .
                       pmbb:prescription a obo:PDRO_0000001 ;
                       turbo:TURBO_0005611 "holistic soil from the ganges" ;
+                      turbo:TURBO_0005612 turbo:someDrug ;
                       turbo:TURBO_0005601 "3" .
               }
               
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts3
               {
-                  pmbb:hcenc1 a obo:OGMS_0000097 ;
+                  pmbb:hcenc1 a turbo:shortcut_obo_OGMS_0000097 ;
                       turbo:TURBO_0000643 'bmiAndHeightWeight.csv' ;
+                      turbo:TURBO_0000648 '20' ;
+                      turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
                       turbo:TURBO_0000646 '177.8'^^xsd:float ;
                       turbo:TURBO_0000647 '83.0082554658'^^xsd:float ;
                       turbo:TURBO_0000655 '26.2577659792'^^xsd:float .
@@ -731,16 +738,17 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
               
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts4
               {
-                  pmbb:hcenc1 a obo:OGMS_0000097 ;
+                  pmbb:hcenc1 a turbo:shortcut_obo_OGMS_0000097 ;
                       turbo:TURBO_0000643 'date.csv' ;
+                      turbo:TURBO_0000648 '20' ;
+                      turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
                       turbo:TURBO_0000644 '15/Jan/2017' ;
                       turbo:TURBO_0000645 '2017-01-15'^^xsd:date .
               }
           }
           """
-        update.updateSparql(cxn, sparqlPrefixes + insert1)
-        expand.expandHealthcareEncounterShortcuts(cxn, 
-            cxn.getValueFactory.createIRI("http://www.itmat.upenn.edu/biobank/test_instantiation_1"), healthcareEncounterShortcutGraphs, randomUUID)
+        update.updateSparql(testCxn, insert1)
+        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
         
         val datasetCheck1: String = """
           ASK
@@ -826,28 +834,30 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
                 pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
               
                 ?encounter a obo:OGMS_0000097 .
-                ?encounter obo:RO_0002234 ?BMI .
-            		?BMI a <http://www.ebi.ac.uk/efo/EFO_0004340> .
-            		?BMI obo:OBI_0001938 ?BMIvalspec .
-            		?BMIvalspec a obo:OBI_0001933 .
+                ?encounter obo:OBI_0000299 ?BMI .
+                ?encounter obo:OBI_0000299 ?heightDatum .
+                ?encounter obo:OBI_0000299 ?weightDatum .
+                
+            		?BMI a <http://www.ebi.ac.uk/efo/EFO_0004340> ;
+            		    turbo:TURBO_0010094 "26.2577659792"^^xsd:float .
             		
-            		?heightValSpec rdf:type obo:OBI_0001931 .
-          	    ?heightAssay rdf:type turbo:TURBO_0001511 ;
-          	                 obo:BFO_0000050 ?encounter ;
-          	                 obo:OBI_0000299 ?heightDatum .
-          	    ?heightDatum rdf:type obo:IAO_0000408 ;
-          	                 obo:OBI_0001938 ?heightValSpec .
-          	    ?weightAssay rdf:type obo:OBI_0000445 ;
-          	                 obo:BFO_0000050 ?encounter ;
-          	                 obo:OBI_0000299 ?weightDatum .
-          	    ?weightDatum rdf:type obo:IAO_0000414 ;
-          	                 obo:OBI_0001938 ?weightValSpec .
-          	    ?weightValSpec rdf:type obo:OBI_0001931 .
-            	                   
+        	      ?heightDatum rdf:type obo:IAO_0000408 ;
+        	                 obo:IAO_0000039 obo:UO_0000015 ;
+        	                 obo:IAO_0000142 <http://purl.obolibrary.org/obo/LNC/8302-2> ;
+        	                 turbo:TURBO_0010094 "177.8"^^xsd:float ;
+        	                 obo:BFO_0000050 ?dataset .
+        	    
+        	      ?weightDatum rdf:type obo:IAO_0000414 ;
+        	                 obo:BFO_0000050 ?dataset ;
+        	                 obo:IAO_0000039 obo:UO_0000009 ;
+        	                 turbo:TURBO_0010094 "83.0082554658"^^xsd:float ;
+        	                 obo:IAO_0000142 <http://purl.obolibrary.org/obo/LNC/29463-7> .
+          	   
           	    ?BMI obo:BFO_0000050 ?dataset .   
           	    ?weightDatum obo:BFO_0000050 ?dataset .
           	    ?heightDatum obo:BFO_0000050 ?dataset .            
           	    ?dataset obo:BFO_0000051 ?BMI .
+          	    
           		  ?dataset obo:BFO_0000051 ?weightDatum .
           		  ?dataset obo:BFO_0000051 ?heightDatum .
               }
@@ -891,18 +901,18 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           }
           """
         
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + thereShouldOnlyBeOneEncounter, "enc").size should be (1)
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + thereShouldBeFiveDatasets, "dataset").size should be (5)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareDiagnosis).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareMedications).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareHeightWeightAndBMI).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareEncounterDate).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + healthcareSymbolAndRegistry).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + datasetCheck1).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + datasetCheck2).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + datasetCheck3).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + datasetCheck4).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + datasetCheck5).get should be (true)
-    }*/
+        update.querySparqlAndUnpackTuple(testCxn, thereShouldOnlyBeOneEncounter, "enc").size should be (1)
+        update.querySparqlAndUnpackTuple(testCxn, thereShouldBeFiveDatasets, "dataset").size should be (5)
+        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(testCxn, datasetCheck1).get should be (true)
+        update.querySparqlBoolean(testCxn, datasetCheck2).get should be (true)
+        update.querySparqlBoolean(testCxn, datasetCheck3).get should be (true)
+        update.querySparqlBoolean(testCxn, datasetCheck4).get should be (true)
+        update.querySparqlBoolean(testCxn, datasetCheck5).get should be (true)
+    }
 }

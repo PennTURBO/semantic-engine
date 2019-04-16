@@ -11,7 +11,7 @@ import java.util.UUID
 
 class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
-    val clearDatabaseAfterRun: Boolean = false
+    val clearTestingRepositoryAfterRun: Boolean = false
     val ooe = new ObjectOrientedExpander
     
     var conclusionationNamedGraph: IRI = null
@@ -25,18 +25,18 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
     before
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
-        cxn = graphDBMaterials.getConnection()
+        testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        repoManager = graphDBMaterials.getRepoManager()
-        repository = graphDBMaterials.getRepository()
-        helper.deleteAllTriplesInDatabase(cxn)
+        testRepoManager = graphDBMaterials.getTestRepoManager()
+        testRepository = graphDBMaterials.getTestRepository()
+        helper.deleteAllTriplesInDatabase(testCxn)
         
         DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-        DrivetrainProcessFromGraphModel.setConnection(cxn)
+        DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
     }
     after
     {
-        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearDatabaseAfterRun)
+        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
     }
       
     test ("healthcare encounter entity linking - all fields")
@@ -201,7 +201,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               }
             }
         """
-      update.updateSparql(cxn, sparqlPrefixes + insert)
+      update.updateSparql(testCxn, insert)
       DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
       
         val check: String = """
@@ -247,7 +247,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
           }}
           """
         
-        update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
+        update.querySparqlBoolean(testCxn, check).get should be (true)
     }
     
     test("healthcare encounter entity linking - minimum fields")
@@ -316,7 +316,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               }
             }
         """
-      update.updateSparql(cxn, sparqlPrefixes + insert)
+      update.updateSparql(testCxn, insert)
       DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
         
         val check: String = """
@@ -357,14 +357,14 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               ?s a ?notexists . }
           """
         
-        update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + noHeightWeightAdiposeBmiOrDate).get should be (false)
+        update.querySparqlBoolean(testCxn, check).get should be (true)
+        update.querySparqlBoolean(testCxn, noHeightWeightAdiposeBmiOrDate).get should be (false)
     }
 }
     
     class BiobankEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
     {
-        val clearDatabaseAfterRun: Boolean = false
+        val clearTestingRepositoryAfterRun: Boolean = false
         val ooe = new ObjectOrientedExpander
         
         var conclusionationNamedGraph: IRI = null
@@ -378,18 +378,18 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
         before
         {
             graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
-            cxn = graphDBMaterials.getConnection()
+            testCxn = graphDBMaterials.getTestConnection()
             gmCxn = graphDBMaterials.getGmConnection()
-            repoManager = graphDBMaterials.getRepoManager()
-            repository = graphDBMaterials.getRepository()
-            helper.deleteAllTriplesInDatabase(cxn)
+            testRepoManager = graphDBMaterials.getTestRepoManager()
+            testRepository = graphDBMaterials.getTestRepository()
+            helper.deleteAllTriplesInDatabase(testCxn)
             
             DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-            DrivetrainProcessFromGraphModel.setConnection(cxn)
+            DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
         }
         after
         {
-            ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearDatabaseAfterRun)
+            ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
         }
     
         test("biobank encounter entity linking - all fields")
@@ -518,7 +518,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                     }
                   }
               """
-            update.updateSparql(cxn, sparqlPrefixes + insert)
+            update.updateSparql(testCxn, insert)
             DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
             
              val check: String = """
@@ -564,7 +564,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               }}
               """
             
-        update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
+        update.querySparqlBoolean(testCxn, check).get should be (true)
       }
     
       test("biobank encounter entity linking - minimum fields")
@@ -659,7 +659,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                   }
                 }
             """
-          update.updateSparql(cxn, sparqlPrefixes + insert)
+          update.updateSparql(testCxn, insert)
           DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
           
           val check: String = """
@@ -699,14 +699,14 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 ?s a ?heightOrWeight . }
             """
           
-          update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
-          update.querySparqlBoolean(cxn, sparqlPrefixes + noHeightWeightAdiposeBmiOrDate).get should be (false)
+          update.querySparqlBoolean(testCxn, check).get should be (true)
+          update.querySparqlBoolean(testCxn, noHeightWeightAdiposeBmiOrDate).get should be (false)
       }
 }
     
   class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
   {
-      val clearDatabaseAfterRun: Boolean = false
+      val clearTestingRepositoryAfterRun: Boolean = false
       val ooe = new ObjectOrientedExpander
       
       var conclusionationNamedGraph: IRI = null
@@ -720,18 +720,18 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
       before
       {
           graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
-          cxn = graphDBMaterials.getConnection()
+          testCxn = graphDBMaterials.getTestConnection()
           gmCxn = graphDBMaterials.getGmConnection()
-          repoManager = graphDBMaterials.getRepoManager()
-          repository = graphDBMaterials.getRepository()
-          helper.deleteAllTriplesInDatabase(cxn)
+          testRepoManager = graphDBMaterials.getTestRepoManager()
+          testRepository = graphDBMaterials.getTestRepository()
+          helper.deleteAllTriplesInDatabase(testCxn)
           
           DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-          DrivetrainProcessFromGraphModel.setConnection(cxn)
+          DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
       }
       after
       {
-          ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearDatabaseAfterRun)
+          ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
       }
   
       test("biobank encounter and healthcare encounter link to homo sapiens - all fields")
@@ -956,7 +956,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                   }
                 }
             """
-          update.updateSparql(cxn, sparqlPrefixes + insert)
+          update.updateSparql(testCxn, insert)
           DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
           DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
           
@@ -1003,7 +1003,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             }}
             """
           
-      update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
+      update.querySparqlBoolean(testCxn, check).get should be (true)
           
           val check2: String = """
               ASK
@@ -1048,7 +1048,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               }}
               """
             
-        update.querySparqlBoolean(cxn, sparqlPrefixes + check2).get should be (true)
+        update.querySparqlBoolean(testCxn, check2).get should be (true)
           
         val twoLinks = """
         select (count (?encounter) as ?encountercount) where
@@ -1092,11 +1092,11 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               ?weight a obo:PATO_0000128 .
           }
           """
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + onlyOneAdipose, "adiposecount")(0).split("\"")(1) should be ("1")
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + onlyOneRole, "rolecount")(0).split("\"")(1) should be ("1")
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + onlyOneHeight, "heightcount")(0).split("\"")(1) should be ("1")
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + onlyOneWeight, "weightcount")(0).split("\"")(1) should be ("1")
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + twoLinks, "encountercount")(0).split("\"")(1) should be ("2")
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneAdipose, "adiposecount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneRole, "rolecount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneHeight, "heightcount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneWeight, "weightcount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, twoLinks, "encountercount")(0).split("\"")(1) should be ("2")
         
     }
   

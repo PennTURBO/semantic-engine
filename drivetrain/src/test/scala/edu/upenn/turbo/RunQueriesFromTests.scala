@@ -43,7 +43,7 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
     var cxn: RepositoryConnection = null
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
-    val clearDatabaseAfterRun: Boolean = false
+    val clearTestingRepositoryAfterRun: Boolean = false
     
     before
     {
@@ -54,7 +54,7 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
     }
     after
     {
-        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearTestingRepositoryAfterRun)
     }
 
     /*test("convert string to icd9 or icd10")

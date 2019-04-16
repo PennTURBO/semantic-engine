@@ -30,7 +30,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     {
         this.gmCxn = gmCxn
     }
-    def setConnection(cxn: RepositoryConnection)
+    def setOutputRepositoryConnection(cxn: RepositoryConnection)
     {
         this.cxn = cxn
     }
@@ -42,6 +42,9 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         val inputs = getInputs(process)
         val outputs = getOutputs(process)
         val binds = getBind(process)
+        
+        if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
+        if (outputs.size == 0) throw new RuntimeException("Received a list of 0 outputs")
         
         val inputNamedGraph = inputs(0)(5).toString
         val outputNamedGraph = outputs(0)(5).toString
@@ -59,7 +62,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             val bindClause = createBindClause(binds, localUUID)
             val insertClause = createInsertClause(outputs, outputNamedGraph)
             
-            val query = sparqlPrefixes + insertClause + whereClause + bindClause
+            val query = insertClause + whereClause + bindClause
             println(query)
             update.updateSparql(cxn, query)
         }
@@ -95,7 +98,6 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     
     def createInsertClause(outputs: ArrayBuffer[ArrayBuffer[Value]], namedGraph: String): String =
     {
-        if (outputs.size == 0) throw new RuntimeException("Received a list of 0 outputs")
         var insertClause = "INSERT { Graph <" + namedGraph + ">{\n"
         var typeSet = new HashSet[Value]
         for (triple <- outputs)
@@ -124,7 +126,6 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     
     def createWhereClause(inputs: ArrayBuffer[ArrayBuffer[Value]], namedGraph: String): String =
     {
-        if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
         var whereClause = "WHERE { GRAPH <" + namedGraph + "> {\n"
         
         var optionalGroups = new HashMap[Value, ArrayBuffer[ArrayBuffer[Value]]]
@@ -219,7 +220,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          
          """
        
-       update.querySparqlAndUnpackTuple(gmCxn, sparqlPrefixes + query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph", "required", "optionalGroup"))
+       update.querySparqlAndUnpackTuple(gmCxn, query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph", "required", "optionalGroup"))
     }
     
     def getOutputs(process: String): ArrayBuffer[ArrayBuffer[Value]] =
@@ -253,7 +254,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          
          """
        
-       update.querySparqlAndUnpackTuple(gmCxn, sparqlPrefixes + query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph"))
+       update.querySparqlAndUnpackTuple(gmCxn, query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph"))
     }
     
     def getBind(process: String): ArrayBuffer[ArrayBuffer[Value]] =
@@ -284,6 +285,6 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
           
         """
         
-        update.querySparqlAndUnpackTuple(gmCxn, sparqlPrefixes + query, Array("expandedEntity", "sparqlString", "shortcutEntity", "dependee", "baseType"))
+        update.querySparqlAndUnpackTuple(gmCxn, query, Array("expandedEntity", "sparqlString", "shortcutEntity", "dependee", "baseType"))
     }
 }

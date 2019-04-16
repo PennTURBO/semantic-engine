@@ -1,4 +1,4 @@
-package edu.upenn.turbo
+/*package edu.upenn.turbo
 
 import org.eclipse.rdf4j.repository.RepositoryConnection
 import scala.collection.mutable.ArrayBuffer
@@ -42,4 +42,4 @@ trait SparqlBatch extends ProjectwideGlobals
         //println("query: " + query)
         update.updateSparql(cxn, query)
     }
-}
+}*/

@@ -59,14 +59,20 @@ object ConnectToGraphDB extends ProjectwideGlobals
             val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
             repoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
             repoManager.initialize()
-            val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile("namespace"))
+            val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile("productionNamespace"))
             val cxn: RepositoryConnection = repository.getConnection()
             
             val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
             gmRepoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
             gmRepoManager.initialize()
-            val gmRepository: Repository = gmRepoManager.getRepository("Haydens_graph_model")
+            val gmRepository: Repository = gmRepoManager.getRepository(helper.retrievePropertyFromFile("modelNamespace"))
             val gmCxn: RepositoryConnection = gmRepository.getConnection()
+            
+            val testRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
+            testRepoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
+            testRepoManager.initialize()
+            val testRepository: Repository = testRepoManager.getRepository(helper.retrievePropertyFromFile("testingNamespace"))
+            val testCxn: RepositoryConnection = testRepository.getConnection()
             
             graphConnect.setConnection(cxn)
             graphConnect.setRepoManager(repoManager)
@@ -75,6 +81,10 @@ object ConnectToGraphDB extends ProjectwideGlobals
             graphConnect.setGmConnection(gmCxn)
             graphConnect.setGmRepoManager(gmRepoManager)
             graphConnect.setGmRepository(gmRepository)
+            
+            graphConnect.setTestConnection(testCxn)
+            graphConnect.setTestRepoManager(testRepoManager)
+            graphConnect.setTestRepository(testRepository)
         }
         graphConnect
     }
@@ -181,13 +191,17 @@ object ConnectToGraphDB extends ProjectwideGlobals
         val gmRepoManager = graphCxn.getGmRepoManager()
         val gmRepository = graphCxn.getGmRepository()
         
+        val testCxn = graphCxn.getTestConnection()
+        val testRepoManager = graphCxn.getTestRepoManager()
+        val testRepository = graphCxn.getTestRepository()
+        
         if (deleteAllTriples)
         {
-             if (!cxn.isActive()) cxn.begin()
+             if (!testCxn.isActive()) testCxn.begin()
              val deleteAll: String = "DELETE {?s ?p ?o} WHERE {?s ?p ?o .} "
-             val tupleDelete = cxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
+             val tupleDelete = testCxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
              tupleDelete.execute()
-             cxn.commit()
+             testCxn.commit()
         }
         
         cxn.close()
@@ -197,6 +211,10 @@ object ConnectToGraphDB extends ProjectwideGlobals
         gmCxn.close()
         gmRepository.shutDown()
         gmRepoManager.shutDown()
+        
+        testCxn.close()
+        testRepository.shutDown()
+        testRepoManager.shutDown()
     }
     
     /**
@@ -232,7 +250,9 @@ object ConnectToGraphDB extends ProjectwideGlobals
         input.close()
         var optToReturn: Option[String] = None : Option[String]
         val proceed: Boolean = true
-        var requiredProperties: ArrayBuffer[String] = ArrayBuffer("serviceURL","password","username","namespace","importOntologies","errorLogFile","ontologyURL")
+        var requiredProperties: ArrayBuffer[String] = ArrayBuffer("serviceURL",
+            "password","username","productionNamespace","importOntologies","errorLogFile",
+            "ontologyURL", "modelNamespace", "testingNamespace")
         if (requiredInputFileProps) 
         {
             requiredProperties += "inputFiles"
