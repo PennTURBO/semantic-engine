@@ -59,19 +59,19 @@ object ConnectToGraphDB extends ProjectwideGlobals
             val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
             repoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
             repoManager.initialize()
-            val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile("productionNamespace"))
+            val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile("productionRepository"))
             val cxn: RepositoryConnection = repository.getConnection()
             
             val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
             gmRepoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
             gmRepoManager.initialize()
-            val gmRepository: Repository = gmRepoManager.getRepository(helper.retrievePropertyFromFile("modelNamespace"))
+            val gmRepository: Repository = gmRepoManager.getRepository(helper.retrievePropertyFromFile("modelRepository"))
             val gmCxn: RepositoryConnection = gmRepository.getConnection()
             
             val testRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
             testRepoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
             testRepoManager.initialize()
-            val testRepository: Repository = testRepoManager.getRepository(helper.retrievePropertyFromFile("testingNamespace"))
+            val testRepository: Repository = testRepoManager.getRepository(helper.retrievePropertyFromFile("testingRepository"))
             val testCxn: RepositoryConnection = testRepository.getConnection()
             
             graphConnect.setConnection(cxn)
@@ -251,8 +251,8 @@ object ConnectToGraphDB extends ProjectwideGlobals
         var optToReturn: Option[String] = None : Option[String]
         val proceed: Boolean = true
         var requiredProperties: ArrayBuffer[String] = ArrayBuffer("serviceURL",
-            "password","username","productionNamespace","importOntologies","errorLogFile",
-            "ontologyURL", "modelNamespace", "testingNamespace")
+            "password","username","productionRepository","importOntologies","errorLogFile",
+            "ontologyURL", "modelRepository", "testingRepository")
         if (requiredInputFileProps) 
         {
             requiredProperties += "inputFiles"

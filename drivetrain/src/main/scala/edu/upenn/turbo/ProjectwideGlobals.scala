@@ -32,7 +32,7 @@ trait ProjectwideGlobals
      //properties from file are global variables
      val serviceURL = helper.retrievePropertyFromFile("serviceURL")
      val ontologyURL = helper.retrievePropertyFromFile("ontologyURL")
-     val productionNamespace = helper.retrievePropertyFromFile("namespace")
+     val productionRepository = helper.retrievePropertyFromFile("productionRepository")
      val inputFiles = helper.retrievePropertyFromFile("inputFiles")
      val inputFilesNamedGraphs = helper.retrievePropertyFromFile("inputFilesNamedGraphs")
      val inputFilesFormat = helper.retrievePropertyFromFile("inputFilesFormat")
@@ -46,6 +46,6 @@ trait ProjectwideGlobals
      val medMappingRepo = helper.retrievePropertyFromFile("medMappingRepo")
      val loadLOFdata = helper.retrievePropertyFromFile("loadLOFData")
      val entityLinkingNamedGraph = helper.retrievePropertyFromFile("entityLinkingNamedGraph")
-     val testingNamespace = helper.retrievePropertyFromFile("testingNamespace")
-     val modelNamespace = helper.retrievePropertyFromFile("modelNamespace")
+     val testingRepository = helper.retrievePropertyFromFile("testingRepository")
+     val modelRepository = helper.retrievePropertyFromFile("modelRepository")
 }
