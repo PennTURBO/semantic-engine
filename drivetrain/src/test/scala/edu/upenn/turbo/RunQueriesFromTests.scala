@@ -1,4 +1,4 @@
-package edu.upenn.turbo
+/*package edu.upenn.turbo
 
 import org.eclipse.rdf4j.model.Value
 import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
@@ -9,9 +9,11 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
+import scala.collection.mutable.HashSet
 import java.io.File
 import java.io.Reader
 import java.io.FileReader
+import java.io.BufferedReader
 
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -26,8 +28,12 @@ import org.json4s._
 import org.json4s.jackson.Serialization
 import org.json4s.jackson.Serialization.write
 
+import org.eclipse.rdf4j.model.util.ModelBuilder
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory
+
 case class Input(searchList: Array[String])
 case class DrugResult(resultsList: Map[String, Array[String]])
+case class TwoDimensionalArrListResults(resultsList: Array[Array[String]])
 
 class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
@@ -37,7 +43,7 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
     var cxn: RepositoryConnection = null
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
-    val clearDatabaseAfterRun: Boolean = false
+    val clearTestingRepositoryAfterRun: Boolean = false
     
     before
     {
@@ -48,238 +54,155 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
     }
     after
     {
-        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
+        connect.closeGraphConnection(cxn, repoManager, repository, clearTestingRepositoryAfterRun)
     }
-    
-    /*test("query API with drug roles")
+
+    /*test("convert string to icd9 or icd10")
     {
-        val inputList = Array(
-        "http://purl.obolibrary.org/obo/CHEBI_36047",					
-        "http://purl.obolibrary.org/obo/CHEBI_35441",					
-        "http://purl.obolibrary.org/obo/CHEBI_50249",					
-        "http://purl.obolibrary.org/obo/CHEBI_37890",					
-        "http://purl.obolibrary.org/obo/CHEBI_48279",					
-        "http://purl.obolibrary.org/obo/CHEBI_49159",					
-        "http://purl.obolibrary.org/obo/CHEBI_36044",					
-        "http://purl.obolibrary.org/obo/CHEBI_35474",					
-        "http://purl.obolibrary.org/obo/CHEBI_35488",					
-        "http://purl.obolibrary.org/obo/CHEBI_35623",					
-        "http://purl.obolibrary.org/obo/CHEBI_35717",					
-        "http://purl.obolibrary.org/obo/CHEBI_35475",					
-        "http://purl.obolibrary.org/obo/CHEBI_49167",					
-        "http://purl.obolibrary.org/obo/CHEBI_35471",					
-        "http://purl.obolibrary.org/obo/CHEBI_35476",					
-        "http://purl.obolibrary.org/obo/CHEBI_37956",					
-        "http://purl.obolibrary.org/obo/CHEBI_48561",					
-        "http://purl.obolibrary.org/obo/CHEBI_48876",					
-        "http://purl.obolibrary.org/obo/CHEBI_35472",					
-        "http://purl.obolibrary.org/obo/CHEBI_35941",					
-        "http://purl.obolibrary.org/obo/CHEBI_50514",					
-        "http://purl.obolibrary.org/obo/CHEBI_51373",					
-        "http://purl.obolibrary.org/obo/CHEBI_35470",					
-        "http://purl.obolibrary.org/obo/CHEBI_50267",					
-        "http://purl.obolibrary.org/obo/CHEBI_35620",					
-        "http://purl.obolibrary.org/obo/CHEBI_35674",					
-        "http://purl.obolibrary.org/obo/CHEBI_38877",					
-        "http://purl.obolibrary.org/obo/CHEBI_88188",					
-        "http://purl.obolibrary.org/obo/CHEBI_35480",					
-        "http://purl.obolibrary.org/obo/CHEBI_35610",					
-        "http://purl.obolibrary.org/obo/CHEBI_64915",					
-        "http://purl.obolibrary.org/obo/CHEBI_50919",					
-        "http://purl.obolibrary.org/obo/CHEBI_55324",					
-        "http://purl.obolibrary.org/obo/CHEBI_50646",					
-        "http://purl.obolibrary.org/obo/CHEBI_51039",					
-        "http://purl.obolibrary.org/obo/CHEBI_33231",					
-        "http://purl.obolibrary.org/obo/CHEBI_47868",					
-        "http://purl.obolibrary.org/obo/CHEBI_48425",					
-        "http://purl.obolibrary.org/obo/CHEBI_59683",					
-        "http://purl.obolibrary.org/obo/CHEBI_35482",					
-        "http://purl.obolibrary.org/obo/CHEBI_38867",					
-        "http://purl.obolibrary.org/obo/CHEBI_55322",					
-        "http://purl.obolibrary.org/obo/CHEBI_35469",					
-        "http://purl.obolibrary.org/obo/CHEBI_35640",					
-        "http://purl.obolibrary.org/obo/CHEBI_50503",					
-        "http://purl.obolibrary.org/obo/CHEBI_50176",					
-        "http://purl.obolibrary.org/obo/CHEBI_86327",					
-        "http://purl.obolibrary.org/obo/CHEBI_76595",					
-        "http://purl.obolibrary.org/obo/CHEBI_90749",					
-        "http://purl.obolibrary.org/obo/CHEBI_50177",					
-        "http://purl.obolibrary.org/obo/CHEBI_35530",					
-        "http://purl.obolibrary.org/obo/CHEBI_61016",					
-        "http://purl.obolibrary.org/obo/CHEBI_62868",					
-        "http://purl.obolibrary.org/obo/CHEBI_35443",					
-        "http://purl.obolibrary.org/obo/CHEBI_35444",					
-        "http://purl.obolibrary.org/obo/CHEBI_49201",					
-        "http://purl.obolibrary.org/obo/CHEBI_77307",					
-        "http://purl.obolibrary.org/obo/CHEBI_50748",					
-        "http://purl.obolibrary.org/obo/CHEBI_50137",					
-        "http://purl.obolibrary.org/obo/CHEBI_90755",					
-        "http://purl.obolibrary.org/obo/CHEBI_35522",					
-        "http://purl.obolibrary.org/obo/CHEBI_35523",					
-        "http://purl.obolibrary.org/obo/CHEBI_35481",					
-        "http://purl.obolibrary.org/obo/CHEBI_49110",					
-        "http://purl.obolibrary.org/obo/CHEBI_35457",					
-        "http://purl.obolibrary.org/obo/CHEBI_50266",					
-        "http://purl.obolibrary.org/obo/CHEBI_66987",					
-        "http://purl.obolibrary.org/obo/CHEBI_55323",					
-        "http://purl.obolibrary.org/obo/CHEBI_48878",					
-        "http://purl.obolibrary.org/obo/CHEBI_51371",					
-        "http://purl.obolibrary.org/obo/CHEBI_35554",					
-        "http://purl.obolibrary.org/obo/CHEBI_48675",					
-        "http://purl.obolibrary.org/obo/CHEBI_50427",					
-        "http://purl.obolibrary.org/obo/CHEBI_35524",					
-        "http://purl.obolibrary.org/obo/CHEBI_66993",					
-        "http://purl.obolibrary.org/obo/CHEBI_38325",					
-        "http://purl.obolibrary.org/obo/CHEBI_35493",					
-        "http://purl.obolibrary.org/obo/CHEBI_49023",					
-        "http://purl.obolibrary.org/obo/CHEBI_67198",					
-        "http://purl.obolibrary.org/obo/CHEBI_50733",					
-        "http://purl.obolibrary.org/obo/CHEBI_77715",					
-        "http://purl.obolibrary.org/obo/CHEBI_51177",					
-        "http://purl.obolibrary.org/obo/CHEBI_53784",					
-        "http://purl.obolibrary.org/obo/CHEBI_64571",					
-        "http://purl.obolibrary.org/obo/CHEBI_38068",					
-        "http://purl.obolibrary.org/obo/CHEBI_73336",					
-        "http://purl.obolibrary.org/obo/CHEBI_48407",					
-        "http://purl.obolibrary.org/obo/CHEBI_48560",					
-        "http://purl.obolibrary.org/obo/CHEBI_66956",					
-        "http://purl.obolibrary.org/obo/CHEBI_48218",					
-        "http://purl.obolibrary.org/obo/CHEBI_35679",					
-        "http://purl.obolibrary.org/obo/CHEBI_50247",					
-        "http://purl.obolibrary.org/obo/CHEBI_75769",					
-        "http://purl.obolibrary.org/obo/CHEBI_23888",					
-        "http://purl.obolibrary.org/obo/CHEBI_35526",					
-        "http://purl.obolibrary.org/obo/CHEBI_65259",					
-        "http://purl.obolibrary.org/obo/CHEBI_38070",					
-        "http://purl.obolibrary.org/obo/CHEBI_66980",					
-        "http://purl.obolibrary.org/obo/CHEBI_50248",					
-        "http://purl.obolibrary.org/obo/CHEBI_136860",					
-        "http://purl.obolibrary.org/obo/CHEBI_50370",					
-        "http://purl.obolibrary.org/obo/CHEBI_50513",					
-        "http://purl.obolibrary.org/obo/CHEBI_60606",					
-        "http://purl.obolibrary.org/obo/CHEBI_50847",					
-        "http://purl.obolibrary.org/obo/CHEBI_35705",					
-        "http://purl.obolibrary.org/obo/CHEBI_63726",					
-        "http://purl.obolibrary.org/obo/CHEBI_49323",					
-        "http://purl.obolibrary.org/obo/CHEBI_70709",					
-        "http://purl.obolibrary.org/obo/CHEBI_38869",					
-        "http://purl.obolibrary.org/obo/CHEBI_38870",					
-        "http://purl.obolibrary.org/obo/CHEBI_36043",					
-        "http://purl.obolibrary.org/obo/CHEBI_132992",					
-        "http://purl.obolibrary.org/obo/CHEBI_50857",					
-        "http://purl.obolibrary.org/obo/CHEBI_50846",					
-        "http://purl.obolibrary.org/obo/CHEBI_50855",					
-        "http://purl.obolibrary.org/obo/CHEBI_38147",					
-        "http://purl.obolibrary.org/obo/CHEBI_35569",					
-        "http://purl.obolibrary.org/obo/CHEBI_47958",					
-        "http://purl.obolibrary.org/obo/CHEBI_50268",					
-        "http://purl.obolibrary.org/obo/CHEBI_37930",					
-        "http://purl.obolibrary.org/obo/CHEBI_51065",					
-        "http://purl.obolibrary.org/obo/CHEBI_35942",					
-        "http://purl.obolibrary.org/obo/CHEBI_35498",					
-        "http://purl.obolibrary.org/obo/CHEBI_37962",					
-        "http://purl.obolibrary.org/obo/CHEBI_50949",					
-        "http://purl.obolibrary.org/obo/CHEBI_35820",					
-        "http://purl.obolibrary.org/obo/CHEBI_74783",					
-        "http://purl.obolibrary.org/obo/CHEBI_38323",					
-        "http://purl.obolibrary.org/obo/CHEBI_37955",					
-        "http://purl.obolibrary.org/obo/CHEBI_35337",					
-        "http://purl.obolibrary.org/obo/CHEBI_39456",					
-        "http://purl.obolibrary.org/obo/CHEBI_66981",					
-        "http://purl.obolibrary.org/obo/CHEBI_51068",					
-        "http://purl.obolibrary.org/obo/CHEBI_74530",					
-        "http://purl.obolibrary.org/obo/CHEBI_36333",					
-        "http://purl.obolibrary.org/obo/CHEBI_35816",					
-        "http://purl.obolibrary.org/obo/CHEBI_48422",					
-        "http://purl.obolibrary.org/obo/CHEBI_70868",					
-        "http://purl.obolibrary.org/obo/CHEBI_65190",					
-        "http://purl.obolibrary.org/obo/CHEBI_77035",					
-        "http://purl.obolibrary.org/obo/CHEBI_37886",					
-        "http://purl.obolibrary.org/obo/CHEBI_48873",					
-        "http://purl.obolibrary.org/obo/CHEBI_66991",					
-        "http://purl.obolibrary.org/obo/CHEBI_35842",					
-        "http://purl.obolibrary.org/obo/CHEBI_35841",					
-        "http://purl.obolibrary.org/obo/CHEBI_50507",					
-        "http://purl.obolibrary.org/obo/CHEBI_35497",					
-        "http://purl.obolibrary.org/obo/CHEBI_65191",					
-        "http://purl.obolibrary.org/obo/CHEBI_77034",					
-        "http://purl.obolibrary.org/obo/CHEBI_37887",					
-        "http://purl.obolibrary.org/obo/CHEBI_59229",					
-        "http://purl.obolibrary.org/obo/CHEBI_59010",					
-        "http://purl.obolibrary.org/obo/CHEBI_48676",					
-        "http://purl.obolibrary.org/obo/CHEBI_59680",					
-        "http://purl.obolibrary.org/obo/CHEBI_50844",					
-        "http://purl.obolibrary.org/obo/CHEBI_49326",					
-        "http://purl.obolibrary.org/obo/CHEBI_50739",					
-        "http://purl.obolibrary.org/obo/CHEBI_50792",					
-        "http://purl.obolibrary.org/obo/CHEBI_50837",					
-        "http://purl.obolibrary.org/obo/CHEBI_65265",					
-        "http://purl.obolibrary.org/obo/CHEBI_49020",					
-        "http://purl.obolibrary.org/obo/CHEBI_77567",					
-        "http://purl.obolibrary.org/obo/CHEBI_64054",					
-        "http://purl.obolibrary.org/obo/CHEBI_73296",					
-        "http://purl.obolibrary.org/obo/CHEBI_59282",					
-        "http://purl.obolibrary.org/obo/CHEBI_59283",					
-        "http://purl.obolibrary.org/obo/CHEBI_51060",					
-        "http://purl.obolibrary.org/obo/CHEBI_50691",					
-        "http://purl.obolibrary.org/obo/CHEBI_36335",					
-        "http://purl.obolibrary.org/obo/CHEBI_48278",					
-        "http://purl.obolibrary.org/obo/CHEBI_48539",					
-        "http://purl.obolibrary.org/obo/CHEBI_35477",					
-        "http://purl.obolibrary.org/obo/CHEBI_64370",					
-        "http://purl.obolibrary.org/obo/CHEBI_36063",					
-        "http://purl.obolibrary.org/obo/CHEBI_64933",					
-        "http://purl.obolibrary.org/obo/CHEBI_38956",					
-        "http://purl.obolibrary.org/obo/CHEBI_71173",					
-        "http://purl.obolibrary.org/obo/CHEBI_36710",					
-        "http://purl.obolibrary.org/obo/CHEBI_37961",					
-        "http://purl.obolibrary.org/obo/CHEBI_35821",					
-        "http://purl.obolibrary.org/obo/CHEBI_50751",					
-        "http://purl.obolibrary.org/obo/CHEBI_25540",					
-        "http://purl.obolibrary.org/obo/CHEBI_51374",					
-        "http://purl.obolibrary.org/obo/CHEBI_35473",					
-        "http://purl.obolibrary.org/obo/CHEBI_35845",					
-        "http://purl.obolibrary.org/obo/CHEBI_76988",					
-        "http://purl.obolibrary.org/obo/CHEBI_35846",					
-        "http://purl.obolibrary.org/obo/CHEBI_59727",					
-        "http://purl.obolibrary.org/obo/CHEBI_51372",					
-        "http://purl.obolibrary.org/obo/CHEBI_59844",					
-        "http://purl.obolibrary.org/obo/CHEBI_77608",					
-        "http://purl.obolibrary.org/obo/CHEBI_48525",					
-        "http://purl.obolibrary.org/obo/CHEBI_50864",					
-        "http://purl.obolibrary.org/obo/CHEBI_52425",					
-        "http://purl.obolibrary.org/obo/CHEBI_50671",					
-        "http://purl.obolibrary.org/obo/CHEBI_35442",					
-        "http://purl.obolibrary.org/obo/CHEBI_50685",					
-        "http://purl.obolibrary.org/obo/CHEBI_49324",					
-        "http://purl.obolibrary.org/obo/CHEBI_90757",					
-        "http://purl.obolibrary.org/obo/CHEBI_35678",					
-        "http://purl.obolibrary.org/obo/CHEBI_51451",					
-        "http://purl.obolibrary.org/obo/CHEBI_52726",					
-        "http://purl.obolibrary.org/obo/CHEBI_63533",					
-        "http://purl.obolibrary.org/obo/CHEBI_59886",					
-        "http://purl.obolibrary.org/obo/CHEBI_61026",					
-        "http://purl.obolibrary.org/obo/CHEBI_71031",					
-        "http://purl.obolibrary.org/obo/CHEBI_50779",					
-        "http://purl.obolibrary.org/obo/CHEBI_38324",					
-        "http://purl.obolibrary.org/obo/CHEBI_50141",					
-        "http://purl.obolibrary.org/obo/CHEBI_137431",					
-        "http://purl.obolibrary.org/obo/CHEBI_91016",					
-        "http://purl.obolibrary.org/obo/CHEBI_71027",					
-        "http://purl.obolibrary.org/obo/CHEBI_50926",					
-        "http://purl.obolibrary.org/obo/CHEBI_38941",					
-        "http://purl.obolibrary.org/obo/CHEBI_50827",					
-        "http://purl.obolibrary.org/obo/CHEBI_36053",					
-        "http://purl.obolibrary.org/obo/CHEBI_90753",					
-        "http://purl.obolibrary.org/obo/CHEBI_74529",					
-        "http://purl.obolibrary.org/obo/CHEBI_35818",					
-        "http://purl.obolibrary.org/obo/CHEBI_85384",					
-        "http://purl.obolibrary.org/obo/CHEBI_50433",					
-        "http://purl.obolibrary.org/obo/CHEBI_35499"							
-        )
+        val br = io.Source.fromFile("anurag_icd_codes.csv")
+        var listToPost = new ArrayBuffer[String]
+        var totalCount = 0
+        val pw = new PrintWriter(new File("anurag_intermediate_results.csv"))
+        for (line <- br.getLines())
+        {
+            totalCount = totalCount + 1
+            val splitLine = line.split(",")
+            if (splitLine(0) == "ICD-9") listToPost += "http://purl.bioontology.org/ontology/ICD9CM/" + splitLine(1)
+            if (splitLine(0) == "ICD-10") listToPost += "http://purl.bioontology.org/ontology/ICD10CM/" + splitLine(1)
+            if (listToPost.size % 1000 == 0)
+            {
+                println("list to post size: " + listToPost.size)
+                val post = new HttpPost("http://localhost:8080/diagnoses/getDiseaseURIsFromICDCodes")
+                val stringToPost: String = write(Input(searchList = listToPost.toArray))
+                post.setEntity(new StringEntity(stringToPost))
+                val client = HttpClientBuilder.create().build()
+                val response = client.execute(post)
+                val responseData = response.getEntity
+                val responseString: String = EntityUtils.toString(responseData)
+                response.close()
+                client.close()
+                val res = parse(responseString).extract[TwoDimensionalArrListResults].resultsList
+                println("result size: " + res.size)
+                for (a <- res)
+                {
+                    pw.write(a(0) + "," + a(1) + "," + a(2) + "," + a(3) + "\n")
+                }
+                listToPost = new ArrayBuffer[String]
+            }
+        }
+        println("list to post size: " + listToPost.size)
+        val post = new HttpPost("http://localhost:8080/diagnoses/getDiseaseURIsFromICDCodes")
+        val stringToPost: String = write(Input(searchList = listToPost.toArray))
+        post.setEntity(new StringEntity(stringToPost))
+        val client = HttpClientBuilder.create().build()
+        val response = client.execute(post)
+        val responseData = response.getEntity
+        val responseString: String = EntityUtils.toString(responseData)
+        response.close()
+        client.close()
+        val res = parse(responseString).extract[TwoDimensionalArrListResults].resultsList
+        println("result size: " + res.size)
+        for (a <- res)
+        {
+            pw.write(a(0) + "," + a(1) + "," + a(2) + "," + a(3) + "\n")
+        }
         
+        br.close()
+        pw.close()
+        println("totalcount: " + totalCount)
+    }*/
+    
+    /*test("next steps anurag")
+    {
+        val br = io.Source.fromFile("anurag_intermediate_results.csv")
+        val pw = new PrintWriter(new File(""))
+        var currentIcd = ""
+        var currentMondo = ""
+        var count = 0
+        var methodList: ArrayBuffer[String] = ArrayBuffer()
+        for (line <- br.getLines())
+        {
+            println("scanning line: " + line)
+            val lineSplit = line.split(",")
+            if (count == 0)
+            {
+                currentIcd = lineSplit(0)
+                currentMondo = lineSplit(1)
+            }
+            if (!(lineSplit(0) == currentIcd && lineSplit(1) == currentMondo))
+            {
+                var stringToWrite = currentIcd + "," + currentMondo + ","
+                for (a <- 2 to lineSplit.size - 2)
+                {
+                    stringToWrite += lineSplit(a)
+                }
+                stringToWrite += ","
+                for (a <- methodList)
+                {
+                    stringToWrite += a + ";"
+                }
+                pw.write(stringToWrite + "\n")
+                currentIcd = lineSplit(0)
+                currentMondo = lineSplit(1)
+                methodList = ArrayBuffer()
+                println("reset")
+            }
+            methodList += lineSplit(lineSplit.size - 1)
+            count = count + 1
+        }
+        println("final count: " + count)
+        pw.close()
+        br.close()
+    }*/
+
+    /*test("create mondo to icd mappings for graphdb repository")
+    {
+        val br = io.Source.fromFile("mondoToIcdMappings.csv")
+        var builder = new ModelBuilder()
+        override val namedGraph = "http://graphBuilder.org/mondoToIcdMappingsFullSemantics"
+        val factory = SimpleValueFactory.getInstance()
+        var count = 0
+        for (line <- br.getLines())
+        {
+            count = count + 1
+            val lineArr = line.split(",")
+            builder.namedGraph(namedGraph).subject(lineArr(0)).add("http://graphBuilder.org/mapsTo", 
+                factory.createIRI(lineArr(1)))
+            if (count % 5000 == 0)
+            {
+                cxn.add(builder.build)
+                println("count: " + count)
+                builder = new ModelBuilder()
+            }
+        }
+        cxn.add(builder.build)
+    }*/
+    
+    /*test("find hops away")
+    {
+        //val inputList = Array()
+        val buffsource = io.Source.fromFile("anurag_results_without_hops.csv")
+        var inputListBuff = new HashSet[String]
+      
+        var finalResMap = new HashMap[String, Integer]
+        
+        val buffsource2 = io.Source.fromFile("mondo_hops.csv")
+        for (line <- buffsource2.getLines())
+        {
+            val lineSplit = line.split(",")
+            if (lineSplit(1).toInt != -1) finalResMap += lineSplit(0) -> lineSplit(1).toInt
+        }
+        for (line <- buffsource.getLines())
+        {
+            val lineSplit = line.split(",")
+            if (!finalResMap.contains(lineSplit(1))) inputListBuff += lineSplit(1)
+        }
+
+        val inputList = inputListBuff.toArray
+        println("size of unmapped terms list: " + inputListBuff.size)
         println("starting request")
         val post = new HttpPost("http://localhost:8080/medications/findHopsAwayFromDrug")
+        println("deduped size: " + inputList.size)
         val stringToPost: String = write(Input(searchList = inputList))
         post.setEntity(new StringEntity(stringToPost))
         val client = HttpClientBuilder.create().build()
@@ -293,30 +216,15 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
         // convert JSON to MedLookupResult using json4s methods
         val res = parse(responseString).extract[DrugResult]
         println("result size: " + res.resultsList.size)
-        var finalResMap = new HashMap[String, HashMap[String, Integer]]
+        
         for ((k,v) <- res.resultsList)
         {
-            var tempMap = new HashMap[String, Integer]
-            for (a <- v)
+            if (v.size != 0) finalResMap += k -> v(0).split(",").size
+            else 
             {
-                val pathList = a.split(",")
-                for ((b, count) <- pathList.zipWithIndex)
-                {
-                    val newURI = b.replaceAll("\\[","").replaceAll("\\]","").replaceAll(" ","")
-                    if (tempMap.contains(newURI))
-                    {
-                        if (tempMap(newURI) > pathList.size - count - 1)
-                        {
-                            tempMap(newURI) = pathList.size - count - 1
-                        }
-                    }
-                    else
-                    {
-                        tempMap += newURI -> (pathList.size - count - 1)
-                    }
-                }
+                finalResMap += k -> 0
+                println("result has no connection to top level class: " + k)
             }
-            finalResMap += k -> tempMap
         }
         /*for ((k,v) <- finalResMap)
         {
@@ -327,66 +235,112 @@ class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers
             }
         }*/
 
-        val pw = new PrintWriter(new File("drugReport2.csv"))
-        pw.write("Drug,Drug label,Role,Role label,Hops from Drug class")
+        val pw = new PrintWriter(new File("mondo_hops_1.csv"))
+        pw.write("MONDO,hops")
         pw.println()
 
-        val buffsource = io.Source.fromFile("drug_report.csv")
-        for (line <- buffsource.getLines())
+        for (a <- inputList)
         {
-            val lineArr = line.split(",")
-            var firstPart = ""
-            //val roleLabel: String = getRoleLabel(cxn, lineArr(lineArr.size-2))
-            for (a <- 0 to lineArr.size-3) firstPart += lineArr(a) + ","
-            for ((k,v) <- finalResMap(lineArr(lineArr.size-2)))
-            {
-                pw.write(firstPart+k+", ,"+v.toString)
-                pw.println()
-            }
+            pw.println(a+","+(finalResMap(a)-1))
         }
         pw.close()
         buffsource.close()
+        buffsource2.close()
     }*/
 
-    test("add labels to roles")
+    /*test("remove non specific mappings")
     {
-        val buffsource = io.Source.fromFile("drugReport2.csv")
-        val pw = new PrintWriter(new File("drugReport3.csv"))
-
-        pw.write("Drug,Drug label,Role,Role label,Hops from Drug class")
-        pw.println()
-
-        var newMap = new HashMap[String, String]
-
+        val buffsource = io.Source.fromFile("mondo_hops.csv")
+        val pw = new PrintWriter(new File("anurag_final_report_1.csv"))
+        var mondoToHops = new HashMap[String, Integer]
+        
         for (line <- buffsource.getLines())
         {
-            //println("processing line: " + line)
-            val lineArr = line.split(",")
-            if (lineArr(0) != "Drug")
+            val lineSplit = line.split(",")
+            mondoToHops += lineSplit(0) -> Integer.parseInt(lineSplit(1))
+        }
+        
+        buffsource.close()
+        
+        var currentIcd = ""
+        var count = 0
+        var mondoMap: HashMap[String, String] = new HashMap[String, String]
+        var mondoArray: ArrayBuffer[String] = ArrayBuffer()
+        
+        val buffsource2 = io.Source.fromFile("anurag_results_without_hops.csv")
+        for (line <- buffsource2.getLines())
+        {
+            //println("reading line: " + line)
+            val lineSplit = line.split(",")
+            if (count == 0)
             {
-                var labelForUri = ""
-                val uriToLookup = lineArr(lineArr.size - 3)
-                if (newMap.contains(uriToLookup)) labelForUri = newMap(uriToLookup)
-                else
+                currentIcd = lineSplit(0)
+            }
+            
+            if (!(lineSplit(0) == currentIcd))
+            {
+                var mostSpecific = 0
+                var mondoClasses: ArrayBuffer[String] = ArrayBuffer()
+                for (a <- mondoArray)
                 {
-                    val query: String = """
-                    select ?label where
+                    if (mondoToHops.contains(a))
                     {
-                        <"""+uriToLookup+"""> rdfs:label ?label .
+                        if (mondoToHops(a) > mostSpecific)
+                        {
+                            mostSpecific = mondoToHops(a)
+                            mondoClasses = ArrayBuffer(a)
+                            //println("reset: " + println(mondoClasses.toArray.deep.mkString("\n")))
+                        }
+                        else if (mondoToHops(a) == mostSpecific)
+                        {
+                            mondoClasses += a
+                            //println("addition: " + println(mondoClasses.toArray.deep.mkString("\n")))
+                        }
                     }
-                    """
-                    labelForUri = update.querySparqlAndUnpackTuple(cxn, query, "label")(0).replaceAll("\"","").split("\\^")(0)
-                    newMap += uriToLookup -> labelForUri
-                    //println("found label: " + labelForUri)
                 }
-                var firstPart = ""
-                for (a <- 0 to lineArr.size-4) firstPart += lineArr(a) + ","
-                pw.write(firstPart+uriToLookup+","+labelForUri+","+lineArr(lineArr.size-1))
-                pw.println()
+                for (a <- mondoClasses)
+                {
+                    pw.write(mondoMap(a) + "," + mostSpecific + "\n")
+                    //println("writing: " + mondoMap(a) + "," + mostSpecific + "\n")
+                }
+                mondoMap = new HashMap[String, String]
+                mondoArray = ArrayBuffer()
+            }
+            
+            mondoMap += lineSplit(1) -> line
+            mondoArray += lineSplit(1)
+            
+            currentIcd = lineSplit(0)
+            
+            count = count + 1
+        }
 
-                if (labelForUri == "") println("found a missing label: " + uriToLookup)
+        pw.close()
+        buffsource2.close()
+    }*/
+    
+    test("fix labels")
+    {
+        val buffsource = io.Source.fromFile("anurag_final_report_1.csv")
+        val pw = new PrintWriter(new File("anurag_labels_fixed.csv"))
+        var hm = new HashMap[String, String]
+        for (line <- buffsource.getLines())
+        {
+            val linesplit = line.split(",")
+            if (hm.contains(linesplit(1))) pw.write(linesplit(0) + "," + linesplit(1) + "," + hm(linesplit(1)) + "," + linesplit(3) + "," + linesplit(4)+"\n")
+            else
+            {
+                println("looking up: " + linesplit(1))
+                val mondo = linesplit(1)
+                val sparql = s"""select ?label where {graph obo:mondo.owl { <$mondo> rdfs:label ?label }}"""
+                val res = update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + sparql, "label")
+                val label = res(0).split("\\^")(0)
+                hm += mondo -> label
+                pw.write(linesplit(0) + "," + linesplit(1) + "," + label + "," + linesplit(3) + "," + linesplit(4)+"\n")
             }
         }
         
+        buffsource.close()
+        pw.close()
     }
-}   
+}   */

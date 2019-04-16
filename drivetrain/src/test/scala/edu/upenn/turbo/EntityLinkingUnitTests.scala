@@ -7,1085 +7,1099 @@ import org.eclipse.rdf4j.model.IRI
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
+import java.util.UUID
 
-class EntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
-    val connect: ConnectToGraphDB = new ConnectToGraphDB()
-    var cxn: RepositoryConnection = null
-    var repoManager: RemoteRepositoryManager = null
-    var repository: Repository = null
-    val clearDatabaseAfterRun: Boolean = true
-    val entLink = new EntityLinker
+    val clearTestingRepositoryAfterRun: Boolean = false
+    val ooe = new ObjectOrientedExpander
     
     var conclusionationNamedGraph: IRI = null
     var masterConclusionation: IRI = null
     var masterPlanspec: IRI = null
     var masterPlan: IRI = null
     
+    DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+    DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
+    
     before
     {
-        val graphDBMaterials: TurboGraphConnection = connect.initializeGraphLoadData(false)
-        cxn = graphDBMaterials.getConnection()
-        repoManager = graphDBMaterials.getRepoManager()
-        repository = graphDBMaterials.getRepository()
-        helper.deleteAllTriplesInDatabase(cxn)
+        graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
+        testCxn = graphDBMaterials.getTestConnection()
+        gmCxn = graphDBMaterials.getGmConnection()
+        testRepoManager = graphDBMaterials.getTestRepoManager()
+        testRepository = graphDBMaterials.getTestRepository()
+        helper.deleteAllTriplesInDatabase(testCxn)
         
-        val insert: String = """
-            INSERT DATA {GRAPH pmbb:expanded {
-            
-            #consenter with ID 1 and registry turbo:reg1
-            
-            turbo:part1 a turbo:TURBO_0000502 .
-            turbo:part1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-            turbo:partCrid obo:IAO_0000219 turbo:part1 .
-            turbo:partCrid a turbo:TURBO_0000503 .
-            turbo:partCrid obo:BFO_0000051 turbo:partSymb .
-            turbo:partCrid obo:BFO_0000051 turbo:partRegDen .
-            turbo:partSymb turbo:TURBO_0006510 '1' .
-            turbo:partSymb a turbo:TURBO_0000504 .
-            turbo:partRegDen a turbo:TURBO_0000505 .
-            turbo:partRegDen obo:IAO_0000219 turbo:reg1 .
-            turbo:reg1 a turbo:TURBO_0000506 .
-            turbo:biosex1 a obo:PATO_0000047 .
-            turbo:part1 obo:RO_0000086 turbo:biosex1 .
-            turbo:biosex1 a obo:UBERON_0035946 .
-            turbo:part1 turbo:TURBO_0000303 turbo:birth1 .
-            turbo:adipose1 a obo:UBERON_0001013 .
-    	      turbo:part1 obo:BFO_0000051 turbo:adipose1 .
-            turbo:part1 obo:RO_0000086 turbo:height1 .
-        		turbo:height1 a obo:PATO_0000119 .
-        		turbo:part1 obo:RO_0000086 turbo:weight1 .
-        		turbo:weight1 a obo:PATO_0000128 .
-        		turbo:part1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:biosex1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:birth1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:adipose1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:partCrid turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:partSymb turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:partRegDen turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:height1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:weight1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		
-        		# hc encounter with id '1' and registry turbo:hcreg1
-        		
-        		turbo:hcenc1 a obo:OGMS_0000097 .
-            turbo:hcCrid1 obo:IAO_0000219 turbo:hcenc1 .
-            turbo:hcCrid1 a turbo:TURBO_0000508 .
-            turbo:hcCrid1 obo:BFO_0000051 turbo:hcSymb1 .
-            turbo:hcCrid1 obo:BFO_0000051 turbo:hcRegDen1 .
-            turbo:hcSymb1 turbo:TURBO_0006510 '1' .
-            turbo:hcSymb1 a turbo:TURBO_0000509 .
-            turbo:hcRegDen1 a turbo:TURBO_0000510 .
-            turbo:hcRegDen1 obo:IAO_0000219 turbo:hcreg1 .
-            turbo:hcreg1 a turbo:TURBO_0000513 .
-            turbo:inst1 a turbo:TURBO_0000522 .
-            turbo:inst1 obo:OBI_0000293 turbo:dataset1 .
-            turbo:dataset1 a obo:IAO_0000100 .
-            turbo:dataset1 obo:BFO_0000051 turbo:hcenc1ID .
-            turbo:encdate1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:ProcStartTimeMeas .
-        		turbo:encdate1 turbo:TURBO_0006511 '12/12/1994'^^xsd:date .
-        		turbo:encdate1 obo:IAO_0000136 turbo:encstart1 .
-        		turbo:encstart1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000511 .
-        		turbo:encstart1 obo:RO_0002223 turbo:hcenc1 .
-        		turbo:mass1 obo:BFO_0000050 turbo:hcenc1 ;
-            		          rdf:type obo:OBI_0000445 ;
-            		          obo:OBI_0000299 turbo:massdatum1 .
-            turbo:massdatum1 a obo:IAO_0000414.
-            turbo:length1 obo:BFO_0000050 turbo:hcenc1 ;
-            		          rdf:type turbo:TURBO_0001511 ;
-            		          obo:OBI_0000299 turbo:lengthdatum1 .
-            turbo:lengthdatum1 a obo:IAO_0000408 .
-            turbo:hcenc1 obo:OBI_0000299 turbo:BMI1 .
-            turbo:BMI1 a <http://www.ebi.ac.uk/efo/EFO_0004340> .
-    		
-    		    # hc encounter with id 2 and registry turbo:hcreg1
-    		    
-    		    turbo:hcenc2 a obo:OGMS_0000097 .
-            turbo:hcCrid2 obo:IAO_0000219 turbo:hcenc2 .
-            turbo:hcCrid2 a turbo:TURBO_0000508 .
-            turbo:hcCrid2 obo:BFO_0000051 turbo:hcSymb2 .
-            turbo:hcCrid2 obo:BFO_0000051 turbo:hcRegDen2 .
-            turbo:hcSymb2 turbo:TURBO_0006510 '2' .
-            turbo:hcSymb2 a turbo:TURBO_0000509 .
-            turbo:hcRegDen2 a turbo:TURBO_0000510 .
-            turbo:hcRegDen2 obo:IAO_0000219 turbo:hcreg1 .
-            turbo:hcreg2 a turbo:TURBO_0000513 .
-            turbo:inst2 a turbo:TURBO_0000522 .
-            turbo:inst2 obo:OBI_0000293 turbo:dataset2 .
-            turbo:dataset2 a obo:IAO_0000100 .
-            turbo:dataset2 obo:BFO_0000051 turbo:hcenc2ID .
-            turbo:encdate2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:ProcStartTimeMeas .
-        		turbo:encdate2 turbo:TURBO_0006511 '12/12/1994'^^xsd:date .
-        		turbo:encdate2 obo:IAO_0000136 turbo:encstart2 .
-        		turbo:encstart2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000511 .
-        		turbo:encstart2 obo:RO_0002223 turbo:hcenc2 .
-        		turbo:mass2 obo:BFO_0000050 turbo:hcenc2 ;
-            		          rdf:type obo:OBI_0000445 ;
-            		          obo:OBI_0000299 turbo:massdatum2 .
-            turbo:massdatum2 a obo:IAO_0000414.
-            turbo:length2 obo:BFO_0000050 turbo:hcenc2 ;
-            		          rdf:type turbo:TURBO_0001511 ;
-            		          obo:OBI_0000299 turbo:lengthdatum2 .
-            turbo:lengthdatum2 a obo:IAO_0000408 .
-            turbo:hcenc2 obo:OBI_0000299 turbo:BMI2 .
-            turbo:BMI2 a <http://www.ebi.ac.uk/efo/EFO_0004340> .
-    		
-    		    # biobank encounter with id '3' and registry turbo:bbreg1
-    		    
-    		    turbo:bbenc3 a turbo:TURBO_0000527 .
-            turbo:bbCrid1 obo:IAO_0000219 turbo:bbenc3 .
-            turbo:bbCrid1 a turbo:TURBO_0000533 .
-            turbo:bbCrid1 obo:BFO_0000051 turbo:bbSymb1 .
-            turbo:bbCrid1 obo:BFO_0000051 turbo:bbRegDen1 .
-            turbo:bbSymb1 turbo:TURBO_0006510 '3' .
-            turbo:bbSymb1 a turbo:TURBO_0000534 .
-            turbo:bbRegDen1 a turbo:TURBO_0000535 .
-            turbo:bbRegDen1 obo:IAO_0000219 turbo:bbreg1 .
-            turbo:bbreg1 a turbo:TURBO_0000543 .
-            turbo:inst3 a turbo:TURBO_0000522 .
-            turbo:inst3 obo:OBI_0000293 turbo:dataset3 .
-            turbo:dataset3 a obo:IAO_0000100 .
-            turbo:dataset3 obo:BFO_0000051 turbo:bbencid3 .
-            turbo:encdate3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:ProcStartTimeMeas .
-        		turbo:encdate3 turbo:TURBO_0006511 '12/12/1994'^^xsd:date .
-        		turbo:encdate3 obo:IAO_0000136 turbo:encstart3 .
-        		turbo:encstart3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000531 .
-        		turbo:encstart3 obo:RO_0002223 turbo:bbenc3 .
-        		turbo:mass3 obo:BFO_0000050 turbo:bbenc3 ;
-            		          rdf:type obo:OBI_0000445 ;
-            		          obo:OBI_0000299 turbo:massdatum3 .
-            turbo:massdatum3 a obo:IAO_0000414.
-            turbo:length3 obo:BFO_0000050 turbo:bbenc3 ;
-            		          rdf:type turbo:TURBO_0001511 ;
-            		          obo:OBI_0000299 turbo:lengthdatum3 .
-            turbo:lengthdatum3 a obo:IAO_0000408 .
-            turbo:bbenc3 obo:OBI_0000299 turbo:BMI3 .
-            turbo:BMI3 a <http://www.ebi.ac.uk/efo/EFO_0004340> .
-    		
-    		    # biobank encounter with id 4 and registry turbo:bbreg2 
-    		     
-    		    turbo:bbenc4 a turbo:TURBO_0000527 .
-            turbo:bbCrid2 obo:IAO_0000219 turbo:bbenc4 .
-            turbo:bbCrid2 a turbo:TURBO_0000533 .
-            turbo:bbCrid2 obo:BFO_0000051 turbo:bbSymb2 .
-            turbo:bbCrid2 obo:BFO_0000051 turbo:bbRegDen2 .
-            turbo:bbSymb2 turbo:TURBO_0006510 '4' .
-            turbo:bbSymb2 a turbo:TURBO_0000534 .
-            turbo:bbRegDen2 a turbo:TURBO_0000535 .
-            turbo:bbRegDen2 obo:IAO_0000219 turbo:bbreg2 .
-            turbo:bbreg2 a turbo:TURBO_0000543 .
-            turbo:inst4 a turbo:TURBO_0000522 .
-            turbo:inst4 obo:OBI_0000293 turbo:dataset4 .
-            turbo:dataset4 a obo:IAO_0000100 .
-            turbo:dataset4 obo:BFO_0000051 turbo:bbencid4 .
-            turbo:encdate4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:ProcStartTimeMeas .
-        		turbo:encdate4 turbo:TURBO_0006511 '12/12/1994'^^xsd:date .
-        		turbo:encdate4 obo:IAO_0000136 turbo:encstart3 .
-        		turbo:encstart4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000531 .
-        		turbo:encstart4 obo:RO_0002223 turbo:bbenc3 .
-        		turbo:mass4 obo:BFO_0000050 turbo:bbenc4 ;
-            		          rdf:type obo:OBI_0000445 ;
-            		          obo:OBI_0000299 turbo:massdatum4 .
-            turbo:massdatum4 a obo:IAO_0000414.
-            turbo:length4 obo:BFO_0000050 turbo:bbenc4 ;
-            		          rdf:type turbo:TURBO_0001511 ;
-            		          obo:OBI_0000299 turbo:lengthdatum4 .
-            turbo:lengthdatum4 a obo:IAO_0000408 .
-            turbo:bbenc4 obo:OBI_0000299 turbo:BMI4 .
-            turbo:BMI4 a <http://www.ebi.ac.uk/efo/EFO_0004340> .
-    		
-        		turbo:hcenc1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:hcenc2 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:bbenc3 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:bbenc4 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:hcCrid1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:hcCrid2 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:bbCrid1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:bbCrid2 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:hcSymb1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:hcSymb2 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:bbSymb1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:bbSymb2 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:hcRegDen1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:hcRegDen2 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:bbRegDen1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:bbRegDen2 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:encdate1 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:encdate2 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:encdate3 turbo:TURBO_0006500 'true'^^xsd:boolean .
-        		turbo:encdate4 turbo:TURBO_0006500 'true'^^xsd:boolean .
-    		}}"""
-        
-            update.updateSparql(cxn, sparqlPrefixes + insert)
+        DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
+        DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
     }
     after
     {
-        connect.closeGraphConnection(cxn, repoManager, repository, clearDatabaseAfterRun)
+        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
     }
-    
-    test("join 2 hc encs to 1 participant")
+      
+    test ("healthcare encounter entity linking - all fields")
     {
-        val insert: String = """
-        INSERT DATA {GRAPH pmbb:entityLinkData {
-            turbo:joinHcEncCrid1 a turbo:TURBO_0000508 .
-            turbo:joinHcEncCrid1 obo:BFO_0000051 turbo:joinHcEncSymb1 .
-            turbo:joinHcEncCrid1 obo:BFO_0000051 turbo:joinHcEncRegDen1 .
-            turbo:joinHcEncSymb1 a turbo:TURBO_0000509 .
-            turbo:joinHcEncSymb1 turbo:TURBO_0006510 '1' .
-            turbo:joinHcEncRegDen1 a turbo:TURBO_0000510 .
-            turbo:joinHcEncRegDen1 obo:IAO_0000219 turbo:hcreg1 .
-            
-            turbo:joinHcEncCrid2 a turbo:TURBO_0000508 .
-            turbo:joinHcEncCrid2 obo:BFO_0000051 turbo:joinHcEncSymb2 .
-            turbo:joinHcEncCrid2 obo:BFO_0000051 turbo:joinHcEncRegDen2 .
-            turbo:joinHcEncSymb2 a turbo:TURBO_0000509 .
-            turbo:joinHcEncSymb2 turbo:TURBO_0006510 '2' .
-            turbo:joinHcEncRegDen2 a turbo:TURBO_0000510 .
-            turbo:joinHcEncRegDen2 obo:IAO_0000219 turbo:hcreg1 .
-            
-            turbo:hcreg1 a turbo:TURBO_0000513 .
-            
-            turbo:joinPartCrid1 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartSymb1 .
-            turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartRegDen1 .
-            turbo:joinPartSymb1 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb1 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen1 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen1 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:joinPartCrid2 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartSymb2 .
-            turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartRegDen2 .
-            turbo:joinPartSymb2 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb2 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen2 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen2 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:reg1 a turbo:TURBO_0000506 .
-            
-            turbo:joinPartCrid1 turbo:TURBO_0000302 turbo:joinHcEncCrid1 .
-            turbo:joinPartCrid2 turbo:TURBO_0000302 turbo:joinHcEncCrid2 .
-          }}
-          """
-        update.updateSparql(cxn, sparqlPrefixes + insert)
-        
-        entLink.joinParticipantsAndHealthcareEncounters(cxn, entLink.getConsenterInfo(cxn))
-        
-        val ask1: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:hcenc1 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole a obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:hcenc1 .
-        		turbo:hcCrid1 turbo:TURBO_0000302 turbo:partCrid .
-        	}}
-          """
-        val ask2: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-            turbo:massdatum1 obo:IAO_0000136 turbo:part1 .
-        		turbo:lengthdatum1 obo:IAO_0000136 turbo:part1 .
-        		turbo:massdatum1 obo:IAO_0000221 turbo:weight1 .
-        		turbo:lengthdatum1 obo:IAO_0000221 turbo:height1 .
-        		turbo:mass1 obo:OBI_0000293 turbo:part1 .
-        		turbo:mass1 obo:OBI_0000293 turbo:part1 .
-          }}
-          """
-        val ask3: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:hcenc2 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:hcenc2 .
-        		turbo:hcCrid2 turbo:TURBO_0000302 turbo:partCrid .
-        	}}
-          """
-        val ask4: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-            turbo:massdatum2 obo:IAO_0000136 turbo:part1 .
-        		turbo:lengthdatum2 obo:IAO_0000136 turbo:part1 .
-        		turbo:massdatum2 obo:IAO_0000221 turbo:weight1 .
-        		turbo:lengthdatum2 obo:IAO_0000221 turbo:height1 .
-        		turbo:mass2 obo:OBI_0000293 turbo:part1 .
-        		turbo:mass2 obo:OBI_0000293 turbo:part1 .
-          }}
-          """
-        
-        val ask5: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-                turbo:newPSC1 ?p ?o .
-          }}
-          """
-        val ask6: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-                turbo:newPSC2 ?p ?o .
-          }}
-          """
-        val ask7: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-                turbo:newEncID1 ?p ?o .
-          }}
-          """
-        val ask8: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-                turbo:newEncID2 ?p ?o .
-          }}
-          """
-        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
-        bool1 should be (true)
-        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
-        bool2 should be (true)
-        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
-        bool3 should be (true)
-        val bool4: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get
-        bool4 should be (true)
-        val bool5: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask5).get
-        bool5 should be (false)
-        val bool6: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask6).get
-        bool6 should be (false)
-        val bool7: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask7).get
-        bool7 should be (false)
-        val bool8: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask8).get
-        bool8 should be (false)
-    }
-    
-    test("join 2 bb encs to 1 participant")
-    {
-        val insert: String = """
-        INSERT DATA {GRAPH pmbb:entityLinkData {
-          
-          turbo:joinBbCrid1 a turbo:TURBO_0000533 .
-          turbo:joinBbCrid1 obo:BFO_0000051 turbo:joinBbSymb1 .
-          turbo:joinBbCrid1 obo:BFO_0000051 turbo:joinBbRegDen1 .
-          turbo:joinBbSymb1 turbo:TURBO_0006510 '3' .
-          turbo:joinBbSymb1 a turbo:TURBO_0000534 .
-          turbo:joinBbRegDen1 a turbo:TURBO_0000535 .
-          turbo:joinBbRegDen1 obo:IAO_0000219 turbo:bbreg1 .
-          turbo:bbreg1 a turbo:TURBO_0000543 .
-          
-          turbo:joinBbCrid2 a turbo:TURBO_0000533 .
-          turbo:joinBbCrid2 obo:BFO_0000051 turbo:joinBbSymb2 .
-          turbo:joinBbCrid2 obo:BFO_0000051 turbo:joinBbRegDen2 .
-          turbo:joinBbSymb2 turbo:TURBO_0006510 '4' .
-          turbo:joinBbSymb2 a turbo:TURBO_0000534 .
-          turbo:joinBbRegDen2 a turbo:TURBO_0000535 .
-          turbo:joinBbRegDen2 obo:IAO_0000219 turbo:bbreg2 .
-          turbo:bbreg2 a turbo:TURBO_0000543 .
-          
-          turbo:joinPartCrid1 a turbo:TURBO_0000503 .
-          turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartSymb1 .
-          turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartRegDen1 .
-          turbo:joinPartSymb1 a turbo:TURBO_0000504 .
-          turbo:joinPartSymb1 turbo:TURBO_0006510 '1' .
-          turbo:joinPartRegDen1 a turbo:TURBO_0000505 .
-          turbo:joinPartRegDen1 obo:IAO_0000219 turbo:reg1 .
-          
-          turbo:joinPartCrid2 a turbo:TURBO_0000503 .
-          turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartSymb2 .
-          turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartRegDen2 .
-          turbo:joinPartSymb2 a turbo:TURBO_0000504 .
-          turbo:joinPartSymb2 turbo:TURBO_0006510 '1' .
-          turbo:joinPartRegDen2 a turbo:TURBO_0000505 .
-          turbo:joinPartRegDen2 obo:IAO_0000219 turbo:reg1 .
-          
-          turbo:reg1 a turbo:TURBO_0000506 .
-          
-          turbo:joinPartCrid1 turbo:TURBO_0000302 turbo:joinBbCrid1 .
-          turbo:joinPartCrid2 turbo:TURBO_0000302 turbo:joinBbCrid2 .
-          }}
-          """
-        update.updateSparql(cxn, sparqlPrefixes + insert)
-        
-        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
-        
-        val ask1: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:bbenc3 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:bbenc3 .
-        		turbo:bbCrid1 turbo:TURBO_0000302 turbo:partCrid .
-        	}}
-          """
-        val ask2: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-            turbo:massdatum3 obo:IAO_0000136 turbo:part1 .
-        		turbo:lengthdatum3 obo:IAO_0000136 turbo:part1 .
-        		turbo:massdatum3 obo:IAO_0000221 turbo:weight1 .
-        		turbo:lengthdatum3 obo:IAO_0000221 turbo:height1 .
-        		turbo:mass3 obo:OBI_0000293 turbo:part1 .
-        		turbo:mass3 obo:OBI_0000293 turbo:part1 .
-          }}
-          """
-        val ask3: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:bbenc4 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:bbenc4 .
-        		turbo:bbCrid2 turbo:TURBO_0000302 turbo:partCrid .
-        	}}
-          """
-        val ask4: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-            turbo:massdatum4 obo:IAO_0000136 turbo:part1 .
-        		turbo:lengthdatum4 obo:IAO_0000136 turbo:part1 .
-        		turbo:massdatum4 obo:IAO_0000221 turbo:weight1 .
-        		turbo:lengthdatum4 obo:IAO_0000221 turbo:height1 .
-        		turbo:mass4 obo:OBI_0000293 turbo:part1 .
-        		turbo:mass4 obo:OBI_0000293 turbo:part1 .
-          }}
-          """
-        
-        val ask5: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-                turbo:newPSC1 ?p ?o .
-          }}
-          """
-        val ask6: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-                turbo:newPSC2 ?p ?o .
-          }}
-          """
-        val ask7: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-                turbo:newEncID1 ?p ?o .
-          }}
-          """
-        val ask8: String = """
-          ASK {GRAPH pmbb:expanded 
-          {
-                turbo:newEncID2 ?p ?o .
-          }}
-          """
-        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
-        bool1 should be (true)
-        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
-        bool2 should be (true)
-        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
-        bool3 should be (true)
-        val bool4: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get
-        bool4 should be (true)
-        val bool5: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask5).get
-        bool5 should be (false)
-        val bool6: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask6).get
-        bool6 should be (false)
-        val bool7: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask7).get
-        bool7 should be (false)
-        val bool8: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask8).get
-        bool8 should be (false)
-    }
-    
-    test("connect 4 bmis to 1 adipose")
-    {
-        val insert: String = """
-          INSERT DATA {GRAPH pmbb:expanded {
-          
-              turbo:part1 obo:RO_0000087 turbo:puirole1 .
-              turbo:puirole1 a obo:OBI_0000097 .
-              turbo:puirole1 obo:BFO_0000054 turbo:hcenc1 .
-              
-              turbo:part1 obo:RO_0000087 turbo:puirole2 .
-              turbo:puirole2 a obo:OBI_0000097 .
-              turbo:puirole2 obo:BFO_0000054 turbo:hcenc2 .
-              
-              turbo:part1 obo:RO_0000087 turbo:puirole3 .
-              turbo:puirole3 a obo:OBI_0000097 .
-              turbo:puirole3 obo:BFO_0000054 turbo:bbenc3 .
-              
-              turbo:part1 obo:RO_0000087 turbo:puirole4 .
-              turbo:puirole4 a obo:OBI_0000097 .
-              turbo:puirole4 obo:BFO_0000054 turbo:bbenc4 .
-              
-          }}
-          """
-        
-        update.updateSparql(cxn, sparqlPrefixes + insert)
-        
-        entLink.connectBMIToAdipose(cxn)
-        
-        val ask1: String = """
-          ASK {GRAPH pmbb:expanded {
-              turbo:BMI1 obo:IAO_0000136 turbo:adipose1 .
-          }}
-          """
-        
-        val ask2: String = """
-          ASK {GRAPH pmbb:expanded {
-              turbo:BMI2 obo:IAO_0000136 turbo:adipose1 .
-          }}
-          """
-        
-        val ask3: String = """
-          ASK {GRAPH pmbb:expanded {
-              turbo:BMI3 obo:IAO_0000136 turbo:adipose1 .
-          }}
-          """
-        
-        val ask4: String = """
-          ASK {GRAPH pmbb:expanded {
-              turbo:BMI4 obo:IAO_0000136 turbo:adipose1 .
-          }}
-          """
-        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
-        bool1 should be (true)
-        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
-        bool2 should be (true)
-        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
-        bool3 should be (true)
-        val bool4: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask4).get
-        bool4 should be (true)  
-    }
-    
-    test("an additional hc enc with different registry")
-    {    
-        val insert: String = """
-        INSERT DATA {
-        GRAPH pmbb:entityLinkData {
-            turbo:joinHcEncCrid1 a turbo:TURBO_0000508 .
-            turbo:joinHcEncCrid1 obo:BFO_0000051 turbo:joinHcEncSymb1 .
-            turbo:joinHcEncCrid1 obo:BFO_0000051 turbo:joinHcEncRegDen1 .
-            turbo:joinHcEncSymb1 a turbo:TURBO_0000509 .
-            turbo:joinHcEncSymb1 turbo:TURBO_0006510 '1' .
-            turbo:joinHcEncRegDen1 a turbo:TURBO_0000510 .
-            turbo:joinHcEncRegDen1 obo:IAO_0000219 turbo:hcreg1 .
-            
-            turbo:joinHcEncCrid2 a turbo:TURBO_0000508 .
-            turbo:joinHcEncCrid2 obo:BFO_0000051 turbo:joinHcEncSymb2 .
-            turbo:joinHcEncCrid2 obo:BFO_0000051 turbo:joinHcEncRegDen2 .
-            turbo:joinHcEncSymb2 a turbo:TURBO_0000509 .
-            turbo:joinHcEncSymb2 turbo:TURBO_0006510 '2' .
-            turbo:joinHcEncRegDen2 a turbo:TURBO_0000510 .
-            turbo:joinHcEncRegDen2 obo:IAO_0000219 turbo:hcreg1 .
-            
-            turbo:joinHcEncCrid3 a turbo:TURBO_0000508 .
-            turbo:joinHcEncCrid3 obo:BFO_0000051 turbo:joinHcEncSymb3 .
-            turbo:joinHcEncCrid3 obo:BFO_0000051 turbo:joinHcEncRegDen3 .
-            turbo:joinHcEncSymb3 a turbo:TURBO_0000509 .
-            turbo:joinHcEncSymb3 turbo:TURBO_0006510 '3' .
-            turbo:joinHcEncRegDen3 a turbo:TURBO_0000510 .
-            turbo:joinHcEncRegDen3 obo:IAO_0000219 turbo:hcreg1 .
-            
-            turbo:hcreg1 a turbo:TURBO_0000513 .
-            
-            turbo:joinPartCrid1 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartSymb1 .
-            turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartRegDen1 .
-            turbo:joinPartSymb1 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb1 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen1 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen1 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:joinPartCrid2 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartSymb2 .
-            turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartRegDen2 .
-            turbo:joinPartSymb2 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb2 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen2 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen2 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:joinPartCrid3 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid3 obo:BFO_0000051 turbo:joinPartSymb3 .
-            turbo:joinPartCrid3 obo:BFO_0000051 turbo:joinPartRegDen3 .
-            turbo:joinPartSymb3 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb3 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen3 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen3 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:reg1 a turbo:TURBO_0000506 .
-            
-            turbo:joinPartCrid1 turbo:TURBO_0000302 turbo:joinHcEncCrid1 .
-            turbo:joinPartCrid2 turbo:TURBO_0000302 turbo:joinHcEncCrid2 .
-            turbo:joinPartCrid3 turbo:TURBO_0000302 turbo:joinHcEncCrid3 .
-          }
-          Graph pmbb:expanded
-          {
-              turbo:hcenc3 a obo:OGMS_0000097 .
-              turbo:hcCrid3 obo:IAO_0000219 turbo:hcenc3 .
-              turbo:hcCrid3 a turbo:TURBO_0000508 .
-              turbo:hcCrid3 obo:BFO_0000051 turbo:hcSymb3 .
-              turbo:hcCrid3 obo:BFO_0000051 turbo:hcRegDen3 .
-              turbo:hcSymb3 turbo:TURBO_0006510 '3' .
-              turbo:hcSymb3 a turbo:TURBO_0000509 .
-              turbo:hcRegDen3 a turbo:TURBO_0000510 .
-              turbo:hcRegDen3 obo:IAO_0000219 turbo:hcreg3 .
-              turbo:hcreg3 a turbo:TURBO_0000513 .
-              turbo:hcenc3 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:hcCrid3 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:hcSymb3 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:hcRegDen3 turbo:TURBO_0006500 'true'^^xsd:boolean .
-          }
-          }"""
-        
-        update.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.joinParticipantsAndHealthcareEncounters(cxn, entLink.getConsenterInfo(cxn))
-        
-        val ask1: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:hcenc2 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:hcenc2 .
-        	}}
-          """
-        
-        val ask2: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:hcenc1 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:hcenc1 .
-        	}}
-          """
-        
-        val ask3: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:hcenc3 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:hcenc3 .
-        	}}
-          """
-        
-        val count: String = """
-          SELECT * where
-          {
-              graph pmbb:expanded
-              {
-                  ?cons a turbo:TURBO_0000502 .
-                  ?cons obo:RO_0000056 ?enc .
-                  ?enc a obo:OGMS_0000097 .
+      // these triples were generated from the output of the first healthcare encounter expansion test and the first homo sapiens expansion unit test on 4/9/19
+      val insert = """
+            INSERT DATA
+            {
+            Graph pmbb:expanded {
+                # healthcare encounter triples start here
+                <http://transformunify.org/ontologies/diagnosis1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_OGMS_0000073> .
+                <http://transformunify.org/ontologies/prescription1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_PDRO_0000001> .
+                <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_OGMS_0000097> .
+                <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_NCBITaxon_9606> .
+                <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000508> .
+                <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+                <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/efo/EFO_0004340> .
+                <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
+                <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+                <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000512> .
+                <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000510> .
+                <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000509> .
+                <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000408> .
+                <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000414> .
+                <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/PDRO_0000001> .
+                <http://www.itmat.upenn.edu/biobank/1df62fd1b3118238280eeecbb1218cec0c3e7447322384f35386e47f9cb66cdd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000511> .
+                <http://www.itmat.upenn.edu/biobank/fa576d3b9d946db990f08d9367e1247ba691d0fdf4b10068d84427b524fd6aae> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000561> .
+                <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000562> .
+                <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.org/dc/elements/1.1/title> "enc_expand.csv" .
+                <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> .
+                <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> .
+                <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/fa576d3b9d946db990f08d9367e1247ba691d0fdf4b10068d84427b524fd6aae> .
+                <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> .
+                <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> .
+                <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> .
+                <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> .
+                <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> .
+                <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> .
+                <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> .
+                <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> .
+                <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> .
+                <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> .
+                <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> .
+                <http://www.itmat.upenn.edu/biobank/fa576d3b9d946db990f08d9367e1247ba691d0fdf4b10068d84427b524fd6aae> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> .
+                <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000015> .
+                <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000009> .
+                <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/1df62fd1b3118238280eeecbb1218cec0c3e7447322384f35386e47f9cb66cdd> .
+                <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://purl.obolibrary.org/obo/IAO_0000142> <http://purl.obolibrary.org/obo/LNC/8302-2> .
+                <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://purl.obolibrary.org/obo/IAO_0000142> <http://purl.obolibrary.org/obo/LNC/29463-7> .
+                <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> .
+                <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> <http://purl.obolibrary.org/obo/IAO_0000219> <http://transformunify.org/ontologies/TURBO_0000440> .
+                <http://www.itmat.upenn.edu/biobank/fa576d3b9d946db990f08d9367e1247ba691d0fdf4b10068d84427b524fd6aae> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> .
+                <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> <http://purl.obolibrary.org/obo/IAO_0000581> <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> .
+                <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> .
+                <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> .
+                <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> .
+                <http://www.itmat.upenn.edu/biobank/1df62fd1b3118238280eeecbb1218cec0c3e7447322384f35386e47f9cb66cdd> <http://purl.obolibrary.org/obo/RO_0002223> <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/RO_0002234> <http://transformunify.org/ontologies/diagnosis1> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/RO_0002234> <http://transformunify.org/ontologies/prescription1> .
+                <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/RO_0002234> <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> .
+                <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/RO_0002234> <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000643> "enc_expand.csv" .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000644> "15/Jan/2017" .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000645> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000646> "177.8"^^<http://www.w3.org/2001/XMLSchema#float> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000647> "83.0082554658"^^<http://www.w3.org/2001/XMLSchema#float> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000648> "20" .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000655> "26.2577659792"^^<http://www.w3.org/2001/XMLSchema#float> .
+                <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0004601> "401.9" .
+                <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-9" .
+                <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0004603> <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
+                <http://transformunify.org/ontologies/prescription1> <http://transformunify.org/ontologies/TURBO_0005601> "3" .
+                <http://transformunify.org/ontologies/prescription1> <http://transformunify.org/ontologies/TURBO_0005611> "holistic soil from the ganges" .
+                <http://transformunify.org/ontologies/prescription1> <http://transformunify.org/ontologies/TURBO_0005612> <http://transformunify.org/ontologies/someDrug> .
+                <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> <http://transformunify.org/ontologies/TURBO_0006510> "20" .
+                <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> <http://transformunify.org/ontologies/TURBO_0006510> "3" .
+                <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://transformunify.org/ontologies/TURBO_0006511> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
+                <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0006512> "401.9" .
+                <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://transformunify.org/ontologies/TURBO_0006512> "15/Jan/2017" .
+                <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0006512> "holistic soil from the ganges" .
+                <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0000703> <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
+                <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0000306> <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
+                <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0000307> <http://transformunify.org/ontologies/someDrug> .
+                <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0006515> "ICD-9" .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010002> <http://www.itmat.upenn.edu/biobank/part1> .
+                <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0010013> "true"^^<http://www.w3.org/2001/XMLSchema#Boolean> .
+                <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0010013> "true"^^<http://www.w3.org/2001/XMLSchema#Boolean> .
+                <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0010014> "1"^^<http://www.w3.org/2001/XMLSchema#Integer> .
+                <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0010014> "1"^^<http://www.w3.org/2001/XMLSchema#Integer> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010110> <http://transformunify.org/ontologies/TURBO_0000440> .
+                <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> <http://transformunify.org/ontologies/TURBO_0010094> "26.2577659792"^^<http://www.w3.org/2001/XMLSchema#float> .
+                <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://transformunify.org/ontologies/TURBO_0010094> "177.8"^^<http://www.w3.org/2001/XMLSchema#float> .
+                <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://transformunify.org/ontologies/TURBO_0010094> "83.0082554658"^^<http://www.w3.org/2001/XMLSchema#float> .
+                
+                # homo sapiens triples start here
+                <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
+                <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_NCBITaxon_9606> .
+                <http://www.itmat.upenn.edu/biobank/crid1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_turbo_TURBO_0000503> .
+                <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000503> .
+                <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000504> .
+                <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000505> .
+                <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000138> .
+                <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+                <http://www.itmat.upenn.edu/biobank/3bc5df8b984bcd68c5f97235bccb0cdd2a3327746032538ff45acf0d9816bac6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/PATO_0000047> .
+                <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
+                <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000181> .
+                <http://www.itmat.upenn.edu/biobank/574d5db4ff45a0ae90e4b258da5bbdea7c5c1f25c8bb3ed5ff6c781e22c85f61> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000099> .
+                <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/efo/EFO_0004950> .
+                <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/UBERON_0035946> .
+                <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.org/dc/elements/1.1/title> "part_expand" .
+                <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> .
+                <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> .
+                <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> .
+                <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> .
+                <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> .
+                <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> .
+                <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> .
+                <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> .
+                <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> .
+                <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> .
+                <http://www.itmat.upenn.edu/biobank/crid1> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/part1> .
+                <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/IAO_0000219> <http://transformunify.org/ontologies/TURBO_0000410> .
+                <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                <http://www.itmat.upenn.edu/biobank/574d5db4ff45a0ae90e4b258da5bbdea7c5c1f25c8bb3ed5ff6c781e22c85f61> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> .
+                <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://purl.obolibrary.org/obo/RO_0000086> <http://www.itmat.upenn.edu/biobank/3bc5df8b984bcd68c5f97235bccb0cdd2a3327746032538ff45acf0d9816bac6> .
+                <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://transformunify.org/ontologies/TURBO_0000303> <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> .
+                <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://transformunify.org/ontologies/TURBO_0006510> "4" .
+                <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://transformunify.org/ontologies/TURBO_0006510> "F" .
+                <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://transformunify.org/ontologies/TURBO_0006510> "04/May/1969" .
+                <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://transformunify.org/ontologies/TURBO_0006511> "1969-05-04"^^<http://www.w3.org/2001/XMLSchema#date> .
+                <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://transformunify.org/ontologies/TURBO_0006512> "asian" .
+                <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010082> <http://transformunify.org/ontologies/TURBO_0000410> .
+                <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010089> <http://purl.obolibrary.org/obo/OMRSE_00000138> .
+                <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010090> <http://purl.obolibrary.org/obo/OMRSE_00000181> .
+                <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010079> "4" .
+                <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010084> "part_expand" .
+                <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010085> "04/May/1969" .
+                <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010086> "1969-05-04"^^<http://www.w3.org/2001/XMLSchema#date> .
+                <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010098> "F" .
+                <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010100> "asian" .
               }
-          }
+            }
+        """
+      update.updateSparql(testCxn, insert)
+      DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
+      
+        val check: String = """
+          ASK
+          {
+          graph pmbb:expanded {
+              ?homoSapiens obo:RO_0000056 ?healthcareEncounter .
+              ?homoSapiens obo:RO_0000087 ?puirole .
+          		?puirole a obo:OBI_0000097 .
+          		?puirole obo:BFO_0000054 ?healthcareEncounter .
+          		?healthcareEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
+          		?homoSapiensCrid turbo:TURBO_0000302 ?healthcareEncounterCrid .
+          		?weightDatum obo:IAO_0000136 ?homoSapiens.
+          		?heightDatum obo:IAO_0000136 ?homoSapiens.
+          		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
+          		?heightDatum obo:IAO_0000221 ?homoSapiensHeight .
+          		
+          		?homoSapiens a obo:NCBITaxon_9606 .
+          		?homoSapiens obo:RO_0000086 ?homoSapiensWeight .
+          		?homoSapiensWeight a obo:PATO_0000128 .
+          		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
+          		?homoSapiensHeight a obo:PATO_0000119 .
+          		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
+          		?homoSapiensCrid a turbo:TURBO_0000503 .
+          		
+          		?healthcareEncounter a obo:OGMS_0000097 .
+          		?healthcareEncounterCrid obo:IAO_0000219 ?healthcareEncounter .
+          		?healthcareEncounterCrid a turbo:TURBO_0000508 .
+
+          		?heightDatum a obo:IAO_0000408 .
+          		?weightDatum a obo:IAO_0000414 .
+          		
+          		?homoSapiens obo:BFO_0000051 ?adipose .
+              ?adipose obo:BFO_0000050 ?homoSapiens .
+              ?adipose a obo:UBERON_0001013 .
+              ?BMI obo:IAO_0000136 ?adipose .
+              ?BMI a efo:EFO_0004340 .
+              ?BMI obo:IAO_0000581 ?encounterDate .
+              ?encounterStart a turbo:TURBO_0000511 .
+          		?encounterStart obo:RO_0002223 ?healthcareEncounter .          
+          		?encounterDate a turbo:TURBO_0000512 .
+          		?encounterDate obo:IAO_0000136 ?encounterStart .
+          }}
           """
         
-        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
-        bool1 should be (true)
-        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
-        bool2 should be (true)
-        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
-        bool3 should be (false)
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
+        update.querySparqlBoolean(testCxn, check).get should be (true)
     }
     
-    test("an additional hc enc with same reg diff symbol value")
-    {    
-        val insert: String = """
-        INSERT DATA {
-        GRAPH pmbb:entityLinkData {
-            turbo:joinHcEncCrid1 a turbo:TURBO_0000508 .
-            turbo:joinHcEncCrid1 obo:BFO_0000051 turbo:joinHcEncSymb1 .
-            turbo:joinHcEncCrid1 obo:BFO_0000051 turbo:joinHcEncRegDen1 .
-            turbo:joinHcEncSymb1 a turbo:TURBO_0000509 .
-            turbo:joinHcEncSymb1 turbo:TURBO_0006510 '1' .
-            turbo:joinHcEncRegDen1 a turbo:TURBO_0000510 .
-            turbo:joinHcEncRegDen1 obo:IAO_0000219 turbo:hcreg1 .
-            
-            turbo:joinHcEncCrid2 a turbo:TURBO_0000508 .
-            turbo:joinHcEncCrid2 obo:BFO_0000051 turbo:joinHcEncSymb2 .
-            turbo:joinHcEncCrid2 obo:BFO_0000051 turbo:joinHcEncRegDen2 .
-            turbo:joinHcEncSymb2 a turbo:TURBO_0000509 .
-            turbo:joinHcEncSymb2 turbo:TURBO_0006510 '2' .
-            turbo:joinHcEncRegDen2 a turbo:TURBO_0000510 .
-            turbo:joinHcEncRegDen2 obo:IAO_0000219 turbo:hcreg1 .
-            
-            turbo:joinHcEncCrid3 a turbo:TURBO_0000508 .
-            turbo:joinHcEncCrid3 obo:BFO_0000051 turbo:joinHcEncSymb3 .
-            turbo:joinHcEncCrid3 obo:BFO_0000051 turbo:joinHcEncRegDen3 .
-            turbo:joinHcEncSymb3 a turbo:TURBO_0000509 .
-            turbo:joinHcEncSymb3 turbo:TURBO_0006510 '3' .
-            turbo:joinHcEncRegDen3 a turbo:TURBO_0000510 .
-            turbo:joinHcEncRegDen3 obo:IAO_0000219 turbo:hcreg1 .
-            
-            turbo:hcreg1 a turbo:TURBO_0000513 .
-            
-            turbo:joinPartCrid1 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartSymb1 .
-            turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartRegDen1 .
-            turbo:joinPartSymb1 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb1 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen1 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen1 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:joinPartCrid2 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartSymb2 .
-            turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartRegDen2 .
-            turbo:joinPartSymb2 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb2 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen2 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen2 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:joinPartCrid3 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid3 obo:BFO_0000051 turbo:joinPartSymb3 .
-            turbo:joinPartCrid3 obo:BFO_0000051 turbo:joinPartRegDen3 .
-            turbo:joinPartSymb3 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb3 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen3 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen3 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:reg1 a turbo:TURBO_0000506 .
-            
-            turbo:joinPartCrid1 turbo:TURBO_0000302 turbo:joinHcEncCrid1 .
-            turbo:joinPartCrid2 turbo:TURBO_0000302 turbo:joinHcEncCrid2 .
-            turbo:joinPartCrid3 turbo:TURBO_0000302 turbo:joinHcEncCrid3 .
-          }
-          Graph pmbb:expanded
-          {
-              turbo:hcenc3 a obo:OGMS_0000097 .
-              turbo:hcCrid3 obo:IAO_0000219 turbo:hcenc3 .
-              turbo:hcCrid3 a turbo:TURBO_0000508 .
-              turbo:hcCrid3 obo:BFO_0000051 turbo:hcSymb3 .
-              turbo:hcCrid3 obo:BFO_0000051 turbo:hcRegDen3 .
-              turbo:hcSymb3 turbo:TURBO_0006510 '4' .
-              turbo:hcSymb3 a turbo:TURBO_0000509 .
-              turbo:hcRegDen3 a turbo:TURBO_0000510 .
-              turbo:hcRegDen3 obo:IAO_0000219 turbo:hcreg1 .
-              turbo:hcreg1 a turbo:TURBO_0000513 .
-              turbo:hcenc3 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:hcCrid3 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:hcSymb3 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:hcRegDen3 turbo:TURBO_0006500 'true'^^xsd:boolean .
-          }
-          }"""
-        
-        update.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.joinParticipantsAndHealthcareEncounters(cxn, entLink.getConsenterInfo(cxn))
-        
-        val ask1: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:hcenc2 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:hcenc2 .
-        	}}
-          """
-        
-        val ask2: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:hcenc1 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:hcenc1 .
-        	}}
-          """
-        
-        val ask3: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:hcenc3 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:hcenc3 .
-        	}}
-          """
-        
-        val count: String = """
-          SELECT * where
-          {
-              graph pmbb:expanded
-              {
-                  ?cons a turbo:TURBO_0000502 .
-                  ?cons obo:RO_0000056 ?enc .
-                  ?enc a obo:OGMS_0000097 .
-              }
-          }
-          """
-        
-        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
-        bool1 should be (true)
-        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
-        bool2 should be (true)
-        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
-        bool3 should be (false)
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
-    }
-    
-    test("an additional bb enc with different registry")
+    test("healthcare encounter entity linking - minimum fields")
     {
-        val insert: String = """
-        INSERT DATA {
-        GRAPH pmbb:entityLinkData {
-            turbo:joinBbEncCrid1 a turbo:TURBO_0000533 .
-            turbo:joinBbEncCrid1 obo:BFO_0000051 turbo:joinBbEncSymb1 .
-            turbo:joinBbEncCrid1 obo:BFO_0000051 turbo:joinBbEncRegDen1 .
-            turbo:joinBbEncSymb1 a turbo:TURBO_0000534 .
-            turbo:joinBbEncSymb1 turbo:TURBO_0006510 '3' .
-            turbo:joinBbEncRegDen1 a turbo:TURBO_0000535 .
-            turbo:joinBbEncRegDen1 obo:IAO_0000219 turbo:bbreg1 .
-            
-            turbo:joinBbEncCrid2 a turbo:TURBO_0000533 .
-            turbo:joinBbEncCrid2 obo:BFO_0000051 turbo:joinBbEncSymb2 .
-            turbo:joinBbEncCrid2 obo:BFO_0000051 turbo:joinBbEncRegDen2 .
-            turbo:joinBbEncSymb2 a turbo:TURBO_0000534 .
-            turbo:joinBbEncSymb2 turbo:TURBO_0006510 '4' .
-            turbo:joinBbEncRegDen2 a turbo:TURBO_0000535 .
-            turbo:joinBbEncRegDen2 obo:IAO_0000219 turbo:bbreg2 .
-            
-            turbo:joinBbEncCrid3 a turbo:TURBO_0000533 .
-            turbo:joinBbEncCrid3 obo:BFO_0000051 turbo:joinBbEncSymb3 .
-            turbo:joinBbEncCrid3 obo:BFO_0000051 turbo:joinBbEncRegDen3 .
-            turbo:joinBbEncSymb3 a turbo:TURBO_0000534 .
-            turbo:joinBbEncSymb3 turbo:TURBO_0006510 '5' .
-            turbo:joinBbEncRegDen3 a turbo:TURBO_0000535 .
-            turbo:joinBbEncRegDen3 obo:IAO_0000219 turbo:bbreg1 .
-            
-            turbo:bbreg1 a turbo:TURBO_0000543 .
-            turbo:bbreg2 a turbo:TURBO_0000543 .
-            
-            turbo:joinPartCrid1 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartSymb1 .
-            turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartRegDen1 .
-            turbo:joinPartSymb1 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb1 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen1 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen1 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:joinPartCrid2 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartSymb2 .
-            turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartRegDen2 .
-            turbo:joinPartSymb2 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb2 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen2 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen2 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:joinPartCrid3 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid3 obo:BFO_0000051 turbo:joinPartSymb3 .
-            turbo:joinPartCrid3 obo:BFO_0000051 turbo:joinPartRegDen3 .
-            turbo:joinPartSymb3 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb3 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen3 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen3 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:reg1 a turbo:TURBO_0000506 .
-            
-            turbo:joinPartCrid1 turbo:TURBO_0000302 turbo:joinBbEncCrid1 .
-            turbo:joinPartCrid2 turbo:TURBO_0000302 turbo:joinBbEncCrid2 .
-            turbo:joinPartCrid3 turbo:TURBO_0000302 turbo:joinBbEncCrid3 .
-          }
-          Graph pmbb:expanded
-          {
-              turbo:bbenc5 a turbo:TURBO_0000527 .
-              turbo:bbCrid5 obo:IAO_0000219 turbo:bbenc5 .
-              turbo:bbCrid5 a turbo:TURBO_0000533 .
-              turbo:bbCrid5 obo:BFO_0000051 turbo:bbSymb5 .
-              turbo:bbCrid5 obo:BFO_0000051 turbo:bbRegDen5 .
-              turbo:bbSymb5 turbo:TURBO_0006510 '5' .
-              turbo:bbSymb5 a turbo:TURBO_0000534 .
-              turbo:bbRegDen5 a turbo:TURBO_0000535 .
-              turbo:bbRegDen5 obo:IAO_0000219 turbo:bbreg2 .
-              turbo:bbreg5 a turbo:TURBO_0000513 .
-              turbo:bbenc5 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:bbCrid5 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:bbSymb5 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:bbRegDen5 turbo:TURBO_0006500 'true'^^xsd:boolean .
-          }
-          }"""
-        
-        update.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
-        
-        val ask1: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:bbenc3 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole a obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:bbenc3 .
-        	}}
-          """
-        
-        val ask2: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:bbenc4 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole a obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:bbenc4 .
-        	}}
-          """
-        
-        val ask3: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:bbenc5 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole a obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:bbenc5 .
-        	}}
-          """
-        
-        val count: String = """
-          SELECT * where
-          {
-              graph pmbb:expanded
-              {
-                  ?cons a turbo:TURBO_0000502 .
-                  ?cons obo:RO_0000056 ?enc .
-                  ?enc a turbo:TURBO_0000527 .
+              // these triples were generated from the output of the second healthcare encounter expansion test and the second homo sapiens expansion unit test on 4/9/19
+      val insert = """
+            INSERT DATA
+            {
+            Graph pmbb:expanded {
+                # healthcare encounter triples start here
+                <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_OGMS_0000097> .
+                <http://www.itmat.upenn.edu/biobank/5ec200820a87fb752fb7d5830e38c94de552a7a4bb733e167c3d17672834d912> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000508> .
+                <http://www.itmat.upenn.edu/biobank/20b777012bab4374cbb3649f419024ae0c672e888b4346f19c11fac58611b1af> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+                <http://www.itmat.upenn.edu/biobank/7e49f5dcf3dd16503b016b3be01d547c224fe311b6dc48d1bd8d87adb35c5c4b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
+                <http://www.itmat.upenn.edu/biobank/a72b1bc74f01bfbab16ff1337637dcafa142942f8d5d5467f70d86829da00ca4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000510> .
+                <http://www.itmat.upenn.edu/biobank/adee56d0206c36f67682eaff401093c5cf1f91259f9339fd273b902a0393ac11> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000509> .
+                <http://www.itmat.upenn.edu/biobank/7e49f5dcf3dd16503b016b3be01d547c224fe311b6dc48d1bd8d87adb35c5c4b> <http://purl.org/dc/elements/1.1/title> "enc_expand.csv" .
+                <http://www.itmat.upenn.edu/biobank/a72b1bc74f01bfbab16ff1337637dcafa142942f8d5d5467f70d86829da00ca4> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/5ec200820a87fb752fb7d5830e38c94de552a7a4bb733e167c3d17672834d912> .
+                <http://www.itmat.upenn.edu/biobank/a72b1bc74f01bfbab16ff1337637dcafa142942f8d5d5467f70d86829da00ca4> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/7e49f5dcf3dd16503b016b3be01d547c224fe311b6dc48d1bd8d87adb35c5c4b> .
+                <http://www.itmat.upenn.edu/biobank/adee56d0206c36f67682eaff401093c5cf1f91259f9339fd273b902a0393ac11> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/5ec200820a87fb752fb7d5830e38c94de552a7a4bb733e167c3d17672834d912> .
+                <http://www.itmat.upenn.edu/biobank/adee56d0206c36f67682eaff401093c5cf1f91259f9339fd273b902a0393ac11> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/7e49f5dcf3dd16503b016b3be01d547c224fe311b6dc48d1bd8d87adb35c5c4b> .
+                <http://www.itmat.upenn.edu/biobank/5ec200820a87fb752fb7d5830e38c94de552a7a4bb733e167c3d17672834d912> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/a72b1bc74f01bfbab16ff1337637dcafa142942f8d5d5467f70d86829da00ca4> .
+                <http://www.itmat.upenn.edu/biobank/5ec200820a87fb752fb7d5830e38c94de552a7a4bb733e167c3d17672834d912> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/adee56d0206c36f67682eaff401093c5cf1f91259f9339fd273b902a0393ac11> .
+                <http://www.itmat.upenn.edu/biobank/7e49f5dcf3dd16503b016b3be01d547c224fe311b6dc48d1bd8d87adb35c5c4b> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/a72b1bc74f01bfbab16ff1337637dcafa142942f8d5d5467f70d86829da00ca4> .
+                <http://www.itmat.upenn.edu/biobank/7e49f5dcf3dd16503b016b3be01d547c224fe311b6dc48d1bd8d87adb35c5c4b> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/adee56d0206c36f67682eaff401093c5cf1f91259f9339fd273b902a0393ac11> .
+                <http://www.itmat.upenn.edu/biobank/5ec200820a87fb752fb7d5830e38c94de552a7a4bb733e167c3d17672834d912> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/20b777012bab4374cbb3649f419024ae0c672e888b4346f19c11fac58611b1af> .
+                <http://www.itmat.upenn.edu/biobank/a72b1bc74f01bfbab16ff1337637dcafa142942f8d5d5467f70d86829da00ca4> <http://purl.obolibrary.org/obo/IAO_0000219> <http://transformunify.org/ontologies/TURBO_0000440> .
+                <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/7e49f5dcf3dd16503b016b3be01d547c224fe311b6dc48d1bd8d87adb35c5c4b> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000643> "enc_expand.csv" .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000648> "20" .
+                <http://www.itmat.upenn.edu/biobank/adee56d0206c36f67682eaff401093c5cf1f91259f9339fd273b902a0393ac11> <http://transformunify.org/ontologies/TURBO_0006510> "20" .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/20b777012bab4374cbb3649f419024ae0c672e888b4346f19c11fac58611b1af> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010110> <http://transformunify.org/ontologies/TURBO_0000440> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> turbo:TURBO_0010002 <http://www.itmat.upenn.edu/biobank/part1> .
+
+                
+                # homo sapiens triples start here
+                <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
+                <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_NCBITaxon_9606> .
+                <http://www.itmat.upenn.edu/biobank/crid1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_turbo_TURBO_0000503> .
+                <http://www.itmat.upenn.edu/biobank/c23be6c01fdd2f8733635beef06207397ffe895b57663b4005610e0b42428625> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000503> .
+                <http://www.itmat.upenn.edu/biobank/d991df175ba7e344e1590ccc389439f68beca50d4da128241865eba371813568> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000504> .
+                <http://www.itmat.upenn.edu/biobank/259d0feee9e4784e50007726fbf2049eea067363b2feac34a9458b57f0aa5842> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000505> .
+                <http://www.itmat.upenn.edu/biobank/52ae0822b37763ef4964e36a337909f88cd334b34c3cebfc4c45d39ecf5851e5> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+                <http://www.itmat.upenn.edu/biobank/9d4616b210e7928cc9656994e7411bc99b6a880eff944c6ceb1f3d87ca40b59a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
+                <http://www.itmat.upenn.edu/biobank/9d4616b210e7928cc9656994e7411bc99b6a880eff944c6ceb1f3d87ca40b59a> <http://purl.org/dc/elements/1.1/title> "part_expand" .
+                <http://www.itmat.upenn.edu/biobank/d991df175ba7e344e1590ccc389439f68beca50d4da128241865eba371813568> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/c23be6c01fdd2f8733635beef06207397ffe895b57663b4005610e0b42428625> .
+                <http://www.itmat.upenn.edu/biobank/d991df175ba7e344e1590ccc389439f68beca50d4da128241865eba371813568> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/9d4616b210e7928cc9656994e7411bc99b6a880eff944c6ceb1f3d87ca40b59a> .
+                <http://www.itmat.upenn.edu/biobank/259d0feee9e4784e50007726fbf2049eea067363b2feac34a9458b57f0aa5842> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/c23be6c01fdd2f8733635beef06207397ffe895b57663b4005610e0b42428625> .
+                <http://www.itmat.upenn.edu/biobank/259d0feee9e4784e50007726fbf2049eea067363b2feac34a9458b57f0aa5842> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/9d4616b210e7928cc9656994e7411bc99b6a880eff944c6ceb1f3d87ca40b59a> .
+                <http://www.itmat.upenn.edu/biobank/c23be6c01fdd2f8733635beef06207397ffe895b57663b4005610e0b42428625> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/d991df175ba7e344e1590ccc389439f68beca50d4da128241865eba371813568> .
+                <http://www.itmat.upenn.edu/biobank/c23be6c01fdd2f8733635beef06207397ffe895b57663b4005610e0b42428625> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/259d0feee9e4784e50007726fbf2049eea067363b2feac34a9458b57f0aa5842> .
+                <http://www.itmat.upenn.edu/biobank/9d4616b210e7928cc9656994e7411bc99b6a880eff944c6ceb1f3d87ca40b59a> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/d991df175ba7e344e1590ccc389439f68beca50d4da128241865eba371813568> .
+                <http://www.itmat.upenn.edu/biobank/9d4616b210e7928cc9656994e7411bc99b6a880eff944c6ceb1f3d87ca40b59a> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/259d0feee9e4784e50007726fbf2049eea067363b2feac34a9458b57f0aa5842> .
+                <http://www.itmat.upenn.edu/biobank/crid1> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/part1> .
+                <http://www.itmat.upenn.edu/biobank/c23be6c01fdd2f8733635beef06207397ffe895b57663b4005610e0b42428625> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/52ae0822b37763ef4964e36a337909f88cd334b34c3cebfc4c45d39ecf5851e5> .
+                <http://www.itmat.upenn.edu/biobank/259d0feee9e4784e50007726fbf2049eea067363b2feac34a9458b57f0aa5842> <http://purl.obolibrary.org/obo/IAO_0000219> <http://transformunify.org/ontologies/TURBO_0000410> .
+                <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/9d4616b210e7928cc9656994e7411bc99b6a880eff944c6ceb1f3d87ca40b59a> .
+                <http://www.itmat.upenn.edu/biobank/d991df175ba7e344e1590ccc389439f68beca50d4da128241865eba371813568> <http://transformunify.org/ontologies/TURBO_0006510> "4" .
+                <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/52ae0822b37763ef4964e36a337909f88cd334b34c3cebfc4c45d39ecf5851e5> .
+                <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010082> <http://transformunify.org/ontologies/TURBO_0000410> .
+                <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010079> "4" .
+                <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010084> "part_expand" .
+
               }
-          }
-          """
+            }
+        """
+      update.updateSparql(testCxn, insert)
+      DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
         
-        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
-        bool1 should be (true)
-        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
-        bool2 should be (true)
-        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
-        bool3 should be (false)
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
-    }
-    
-    test("an additional bb enc with sam reg diff symbol value")
-    {
-         val insert: String = """
-        INSERT DATA {
-        GRAPH pmbb:entityLinkData {
-            turbo:joinBbEncCrid1 a turbo:TURBO_0000533 .
-            turbo:joinBbEncCrid1 obo:BFO_0000051 turbo:joinBbEncSymb1 .
-            turbo:joinBbEncCrid1 obo:BFO_0000051 turbo:joinBbEncRegDen1 .
-            turbo:joinBbEncSymb1 a turbo:TURBO_0000534 .
-            turbo:joinBbEncSymb1 turbo:TURBO_0006510 '3' .
-            turbo:joinBbEncRegDen1 a turbo:TURBO_0000535 .
-            turbo:joinBbEncRegDen1 obo:IAO_0000219 turbo:bbreg1 .
-            
-            turbo:joinBbEncCrid2 a turbo:TURBO_0000533 .
-            turbo:joinBbEncCrid2 obo:BFO_0000051 turbo:joinBbEncSymb2 .
-            turbo:joinBbEncCrid2 obo:BFO_0000051 turbo:joinBbEncRegDen2 .
-            turbo:joinBbEncSymb2 a turbo:TURBO_0000534 .
-            turbo:joinBbEncSymb2 turbo:TURBO_0006510 '4' .
-            turbo:joinBbEncRegDen2 a turbo:TURBO_0000535 .
-            turbo:joinBbEncRegDen2 obo:IAO_0000219 turbo:bbreg2 .
-            
-            turbo:joinBbEncCrid3 a turbo:TURBO_0000533 .
-            turbo:joinBbEncCrid3 obo:BFO_0000051 turbo:joinBbEncSymb3 .
-            turbo:joinBbEncCrid3 obo:BFO_0000051 turbo:joinBbEncRegDen3 .
-            turbo:joinBbEncSymb3 a turbo:TURBO_0000534 .
-            turbo:joinBbEncSymb3 turbo:TURBO_0006510 '5' .
-            turbo:joinBbEncRegDen3 a turbo:TURBO_0000535 .
-            turbo:joinBbEncRegDen3 obo:IAO_0000219 turbo:bbreg1 .
-            
-            turbo:bbreg1 a turbo:TURBO_0000543 .
-            turbo:bbreg2 a turbo:TURBO_0000543 .
-            
-            turbo:joinPartCrid1 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartSymb1 .
-            turbo:joinPartCrid1 obo:BFO_0000051 turbo:joinPartRegDen1 .
-            turbo:joinPartSymb1 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb1 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen1 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen1 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:joinPartCrid2 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartSymb2 .
-            turbo:joinPartCrid2 obo:BFO_0000051 turbo:joinPartRegDen2 .
-            turbo:joinPartSymb2 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb2 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen2 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen2 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:joinPartCrid3 a turbo:TURBO_0000503 .
-            turbo:joinPartCrid3 obo:BFO_0000051 turbo:joinPartSymb3 .
-            turbo:joinPartCrid3 obo:BFO_0000051 turbo:joinPartRegDen3 .
-            turbo:joinPartSymb3 a turbo:TURBO_0000504 .
-            turbo:joinPartSymb3 turbo:TURBO_0006510 '1' .
-            turbo:joinPartRegDen3 a turbo:TURBO_0000505 .
-            turbo:joinPartRegDen3 obo:IAO_0000219 turbo:reg1 .
-            
-            turbo:reg1 a turbo:TURBO_0000506 .
-            
-            turbo:joinPartCrid1 turbo:TURBO_0000302 turbo:joinBbEncCrid1 .
-            turbo:joinPartCrid2 turbo:TURBO_0000302 turbo:joinBbEncCrid2 .
-            turbo:joinPartCrid3 turbo:TURBO_0000302 turbo:joinBbEncCrid3 .
-          }
-          Graph pmbb:expanded
+        val check: String = """
+          ASK
           {
-              turbo:bbenc5 a turbo:TURBO_0000527 .
-              turbo:bbCrid5 obo:IAO_0000219 turbo:bbenc5 .
-              turbo:bbCrid5 a turbo:TURBO_0000533 .
-              turbo:bbCrid5 obo:BFO_0000051 turbo:bbSymb5 .
-              turbo:bbCrid5 obo:BFO_0000051 turbo:bbRegDen5 .
-              turbo:bbSymb5 turbo:TURBO_0006510 '6' .
-              turbo:bbSymb5 a turbo:TURBO_0000534 .
-              turbo:bbRegDen5 a turbo:TURBO_0000535 .
-              turbo:bbRegDen5 obo:IAO_0000219 turbo:bbreg1 .
-              turbo:bbreg5 a turbo:TURBO_0000513 .
-              turbo:bbenc5 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:bbCrid5 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:bbSymb5 turbo:TURBO_0006500 'true'^^xsd:boolean .
-              turbo:bbRegDen5 turbo:TURBO_0006500 'true'^^xsd:boolean .
-          }
-          }"""
-        
-        update.updateSparql(cxn, sparqlPrefixes + insert)
-        entLink.joinParticipantsAndBiobankEncounters(cxn, entLink.getConsenterInfo(cxn))
-        
-        val ask1: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:bbenc3 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole a obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:bbenc3 .
-        	}}
-          """
-        
-        val ask2: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:bbenc4 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole a obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:bbenc4 .
-        	}}
-          """
-        
-        val ask3: String = """
-          ASK {GRAPH pmbb:expanded
-        	{
-        		turbo:part1 obo:RO_0000056 turbo:bbenc5 .
-        		turbo:part1 obo:RO_0000087 ?puirole .
-        		?puirole a obo:OBI_0000097 .
-        		?puirole obo:BFO_0000054 turbo:bbenc5 .
-        	}}
-          """
-        
-        val count: String = """
-          SELECT * where
-          {
-              graph pmbb:expanded
-              {
-                  ?cons a turbo:TURBO_0000502 .
-                  ?cons obo:RO_0000056 ?enc .
-                  ?enc a turbo:TURBO_0000527 .
-              }
+              ?homoSapiens obo:RO_0000056 ?healthcareEncounter .
+              ?homoSapiens obo:RO_0000087 ?puirole .
+          		?puirole a obo:OBI_0000097 .
+          		?puirole obo:BFO_0000054 ?healthcareEncounter .
+          		?healthcareEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
+          		?homoSapiensCrid turbo:TURBO_0000302 ?healthcareEncounterCrid .
+          		
+          		?homoSapiens a obo:NCBITaxon_9606 .
+          		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
+          		?homoSapiensCrid a turbo:TURBO_0000503 .
+          		
+          		?healthcareEncounter a obo:OGMS_0000097 .
+          		?healthcareEncounterCrid obo:IAO_0000219 ?healthcareEncounter .
+          		?healthcareEncounterCrid a turbo:TURBO_0000508 .
+          		
           }
           """
         
-        val bool1: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask1).get
-        bool1 should be (true)
-        val bool2: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask2).get
-        bool2 should be (true)
-        val bool3: Boolean = update.querySparqlBoolean(cxn, sparqlPrefixes + ask3).get
-        bool3 should be (false)
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + count, ArrayBuffer("cons", "enc")).size should be (2)
+        val noHeightWeightAdiposeBmiOrDate: String = """
+              ASK {
+              values ?notexists {
+                obo:PATO_0000119 
+                obo:PATO_0000128 
+                obo:OBI_0000445 
+                turbo:TURBO_0001511 
+                obo:IAO_0000408 
+                obo:IAO_0000414
+                obo:UBERON_0001013
+                efo:EFO_0004340
+                turbo:TURBO_0000511
+                turbo:TURBO_0000512
+                }
+              ?s a ?notexists . }
+          """
+        
+        update.querySparqlBoolean(testCxn, check).get should be (true)
+        update.querySparqlBoolean(testCxn, noHeightWeightAdiposeBmiOrDate).get should be (false)
     }
 }
+    
+    class BiobankEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+    {
+        val clearTestingRepositoryAfterRun: Boolean = false
+        val ooe = new ObjectOrientedExpander
+        
+        var conclusionationNamedGraph: IRI = null
+        var masterConclusionation: IRI = null
+        var masterPlanspec: IRI = null
+        var masterPlan: IRI = null
+        
+        DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+        DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
+        
+        before
+        {
+            graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
+            testCxn = graphDBMaterials.getTestConnection()
+            gmCxn = graphDBMaterials.getGmConnection()
+            testRepoManager = graphDBMaterials.getTestRepoManager()
+            testRepository = graphDBMaterials.getTestRepository()
+            helper.deleteAllTriplesInDatabase(testCxn)
+            
+            DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
+            DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
+        }
+        after
+        {
+            ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+        }
+    
+        test("biobank encounter entity linking - all fields")
+        {
+            // these triples were generated from the output of the first biobank encounter expansion test and the first homo sapiens expansion unit test on 4/10/19
+            val insert = """
+                  INSERT DATA
+                  {
+                  Graph pmbb:expanded {
+                      # biobank encounter triples start here
+                      <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_turbo_TURBO_0000527> .
+                      <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_NCBITaxon_9606> .
+                      <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/efo/EFO_0004340> .
+                      <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
+                      <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000408> .
+                      <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000414> .
+                      <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000533> .
+                      <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000527> .
+                      <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000535> .
+                      <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000534> .
+                      <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000532> .
+                      <http://www.itmat.upenn.edu/biobank/f64fc6176f93fc774d1eeb60c7fc6670ced53ea7637dc2fe6a3c1d4e2c73fc4d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000531> .
+                      <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.org/dc/elements/1.1/title> "enc_expand.csv" .
+                      <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                      <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                      <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                      <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                      <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> .
+                      <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                      <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> .
+                      <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                      <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> .
+                      <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> .
+                      <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> .
+                      <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> .
+                      <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> .
+                      <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> .
+                      <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> .
+                      <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> .
+                      <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000015> .
+                      <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000009> .
+                      <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/f64fc6176f93fc774d1eeb60c7fc6670ced53ea7637dc2fe6a3c1d4e2c73fc4d> .
+                      <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://purl.obolibrary.org/obo/IAO_0000142> <http://purl.obolibrary.org/obo/LNC/8302-2> .
+                      <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://purl.obolibrary.org/obo/IAO_0000142> <http://purl.obolibrary.org/obo/LNC/29463-7> .
+                      <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> .
+                      <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> <http://purl.obolibrary.org/obo/IAO_0000219> <http://transformunify.org/hcEncReg/biobank> .
+                      <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://purl.obolibrary.org/obo/IAO_0000581> <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> .
+                      <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                      <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> .
+                      <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> .
+                      <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> .
+                      <http://www.itmat.upenn.edu/biobank/f64fc6176f93fc774d1eeb60c7fc6670ced53ea7637dc2fe6a3c1d4e2c73fc4d> <http://purl.obolibrary.org/obo/RO_0002223> <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000623> "enc_expand.csv" .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000624> "15/Jan/2017" .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000625> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000626> "180.34"^^<http://www.w3.org/2001/XMLSchema#float> .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000627> "61.2244897959"^^<http://www.w3.org/2001/XMLSchema#float> .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000628> "B" .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000630> <http://transformunify.org/hcEncReg/biobank> .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000635> "18.8252626423"^^<http://www.w3.org/2001/XMLSchema#float> .
+                      <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> <http://transformunify.org/ontologies/TURBO_0006510> "B" .
+                      <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://transformunify.org/ontologies/TURBO_0006511> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
+                      <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://transformunify.org/ontologies/TURBO_0006512> "15/Jan/2017" .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0010012> <http://www.itmat.upenn.edu/biobank/part1> .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> .
+                      <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://transformunify.org/ontologies/TURBO_0010094> "18.8252626423"^^<http://www.w3.org/2001/XMLSchema#float> .
+                      <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://transformunify.org/ontologies/TURBO_0010094> "180.34"^^<http://www.w3.org/2001/XMLSchema#float> .
+                      <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://transformunify.org/ontologies/TURBO_0010094> "61.2244897959"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+                      # homo sapiens triples start here
+                      <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
+                      <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_NCBITaxon_9606> .
+                      <http://www.itmat.upenn.edu/biobank/crid1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_turbo_TURBO_0000503> .
+                      <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000503> .
+                      <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000504> .
+                      <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000505> .
+                      <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000138> .
+                      <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+                      <http://www.itmat.upenn.edu/biobank/3bc5df8b984bcd68c5f97235bccb0cdd2a3327746032538ff45acf0d9816bac6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/PATO_0000047> .
+                      <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
+                      <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000181> .
+                      <http://www.itmat.upenn.edu/biobank/574d5db4ff45a0ae90e4b258da5bbdea7c5c1f25c8bb3ed5ff6c781e22c85f61> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000099> .
+                      <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/efo/EFO_0004950> .
+                      <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/UBERON_0035946> .
+                      <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.org/dc/elements/1.1/title> "part_expand" .
+                      <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> .
+                      <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                      <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> .
+                      <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                      <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                      <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                      <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                      <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> .
+                      <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> .
+                      <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> .
+                      <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> .
+                      <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> .
+                      <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> .
+                      <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> .
+                      <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                      <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                      <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> .
+                      <http://www.itmat.upenn.edu/biobank/crid1> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/part1> .
+                      <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                      <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/IAO_0000219> <http://transformunify.org/ontologies/TURBO_0000410> .
+                      <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                      <http://www.itmat.upenn.edu/biobank/574d5db4ff45a0ae90e4b258da5bbdea7c5c1f25c8bb3ed5ff6c781e22c85f61> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> .
+                      <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://purl.obolibrary.org/obo/RO_0000086> <http://www.itmat.upenn.edu/biobank/3bc5df8b984bcd68c5f97235bccb0cdd2a3327746032538ff45acf0d9816bac6> .
+                      <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://transformunify.org/ontologies/TURBO_0000303> <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> .
+                      <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://transformunify.org/ontologies/TURBO_0006510> "4" .
+                      <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://transformunify.org/ontologies/TURBO_0006510> "F" .
+                      <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://transformunify.org/ontologies/TURBO_0006510> "04/May/1969" .
+                      <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://transformunify.org/ontologies/TURBO_0006511> "1969-05-04"^^<http://www.w3.org/2001/XMLSchema#date> .
+                      <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://transformunify.org/ontologies/TURBO_0006512> "asian" .
+                      <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                      <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010082> <http://transformunify.org/ontologies/TURBO_0000410> .
+                      <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010089> <http://purl.obolibrary.org/obo/OMRSE_00000138> .
+                      <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010090> <http://purl.obolibrary.org/obo/OMRSE_00000181> .
+                      <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010079> "4" .
+                      <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010084> "part_expand" .
+                      <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010085> "04/May/1969" .
+                      <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010086> "1969-05-04"^^<http://www.w3.org/2001/XMLSchema#date> .
+                      <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010098> "F" .
+                      <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010100> "asian" .
+                    }
+                  }
+              """
+            update.updateSparql(testCxn, insert)
+            DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
+            
+             val check: String = """
+              ASK
+              {
+              graph pmbb:expanded {
+                  ?homoSapiens obo:RO_0000056 ?biobankEncounter .
+                  ?homoSapiens obo:RO_0000087 ?puirole .
+              		?puirole a obo:OBI_0000097 .
+              		?puirole obo:BFO_0000054 ?biobankEncounter .
+              		?biobankEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
+              		?homoSapiensCrid turbo:TURBO_0000302 ?biobankEncounterCrid .
+              		?weightDatum obo:IAO_0000136 ?homoSapiens.
+              		?heightDatum obo:IAO_0000136 ?homoSapiens.
+              		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
+              		?heightDatum obo:IAO_0000221 ?homoSapiensHeight .
+              		
+              		?homoSapiens a obo:NCBITaxon_9606 .
+              		?homoSapiens obo:RO_0000086 ?homoSapiensWeight .
+              		?homoSapiensWeight a obo:PATO_0000128 .
+              		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
+              		?homoSapiensHeight a obo:PATO_0000119 .
+              		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
+              		?homoSapiensCrid a turbo:TURBO_0000503 .
+              		
+              		?biobankEncounter a turbo:TURBO_0000527 .
+              		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
+              		?biobankEncounterCrid a turbo:TURBO_0000533 .
+    
+              		?heightDatum a obo:IAO_0000408 .
+              		?weightDatum a obo:IAO_0000414 .
+              		
+              		?homoSapiens obo:BFO_0000051 ?adipose .
+                  ?adipose obo:BFO_0000050 ?homoSapiens .
+                  ?adipose a obo:UBERON_0001013 .
+                  ?BMI obo:IAO_0000136 ?adipose .
+                  ?BMI a efo:EFO_0004340 .
+                  ?BMI obo:IAO_0000581 ?encounterDate .
+                  ?encounterStart a turbo:TURBO_0000531 .
+              		?encounterStart obo:RO_0002223 ?biobankEncounter .          
+              		?encounterDate a turbo:TURBO_0000532 .
+              		?encounterDate obo:IAO_0000136 ?encounterStart .
+              }}
+              """
+            
+        update.querySparqlBoolean(testCxn, check).get should be (true)
+      }
+    
+      test("biobank encounter entity linking - minimum fields")
+      {
+          // these triples were generated from the output of the second biobank encounter expansion test and the first homo sapiens expansion unit test on 4/10/19
+          val insert = """
+                INSERT DATA
+                {
+                Graph pmbb:expanded {
+                    # biobank encounter triples start here
+                    <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_turbo_TURBO_0000527> .
+                    <http://www.itmat.upenn.edu/biobank/2d2d5cd55e04c15781d74140e8d18f6f9e5abb631e77242d89f375be29f86b0a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
+                    <http://www.itmat.upenn.edu/biobank/511b3c30755c79b4db82e6f63aa0184e1905245721d6572eab8b12f1c6fe2c08> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000533> .
+                    <http://www.itmat.upenn.edu/biobank/b380eb5afb263581879f61fb67a0dd7cb58cd77a8c4101363c37ac6bb6beeaf7> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000527> .
+                    <http://www.itmat.upenn.edu/biobank/cd2e354931b110e1be0be3c2f0d471b61aa14247e16124b04267a9ff0ae22906> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000535> .
+                    <http://www.itmat.upenn.edu/biobank/14cf4a0334ab31bcdc77147fe7ec611fc2ce0a8c8b4e90a0835c12109130f2c0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000534> .
+                    <http://www.itmat.upenn.edu/biobank/2d2d5cd55e04c15781d74140e8d18f6f9e5abb631e77242d89f375be29f86b0a> <http://purl.org/dc/elements/1.1/title> "enc_expand.csv" .
+                    <http://www.itmat.upenn.edu/biobank/cd2e354931b110e1be0be3c2f0d471b61aa14247e16124b04267a9ff0ae22906> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/2d2d5cd55e04c15781d74140e8d18f6f9e5abb631e77242d89f375be29f86b0a> .
+                    <http://www.itmat.upenn.edu/biobank/cd2e354931b110e1be0be3c2f0d471b61aa14247e16124b04267a9ff0ae22906> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/511b3c30755c79b4db82e6f63aa0184e1905245721d6572eab8b12f1c6fe2c08> .
+                    <http://www.itmat.upenn.edu/biobank/14cf4a0334ab31bcdc77147fe7ec611fc2ce0a8c8b4e90a0835c12109130f2c0> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/2d2d5cd55e04c15781d74140e8d18f6f9e5abb631e77242d89f375be29f86b0a> .
+                    <http://www.itmat.upenn.edu/biobank/14cf4a0334ab31bcdc77147fe7ec611fc2ce0a8c8b4e90a0835c12109130f2c0> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/511b3c30755c79b4db82e6f63aa0184e1905245721d6572eab8b12f1c6fe2c08> .
+                    <http://www.itmat.upenn.edu/biobank/2d2d5cd55e04c15781d74140e8d18f6f9e5abb631e77242d89f375be29f86b0a> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/cd2e354931b110e1be0be3c2f0d471b61aa14247e16124b04267a9ff0ae22906> .
+                    <http://www.itmat.upenn.edu/biobank/2d2d5cd55e04c15781d74140e8d18f6f9e5abb631e77242d89f375be29f86b0a> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/14cf4a0334ab31bcdc77147fe7ec611fc2ce0a8c8b4e90a0835c12109130f2c0> .
+                    <http://www.itmat.upenn.edu/biobank/511b3c30755c79b4db82e6f63aa0184e1905245721d6572eab8b12f1c6fe2c08> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/cd2e354931b110e1be0be3c2f0d471b61aa14247e16124b04267a9ff0ae22906> .
+                    <http://www.itmat.upenn.edu/biobank/511b3c30755c79b4db82e6f63aa0184e1905245721d6572eab8b12f1c6fe2c08> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/14cf4a0334ab31bcdc77147fe7ec611fc2ce0a8c8b4e90a0835c12109130f2c0> .
+                    <http://www.itmat.upenn.edu/biobank/511b3c30755c79b4db82e6f63aa0184e1905245721d6572eab8b12f1c6fe2c08> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/b380eb5afb263581879f61fb67a0dd7cb58cd77a8c4101363c37ac6bb6beeaf7> .
+                    <http://www.itmat.upenn.edu/biobank/cd2e354931b110e1be0be3c2f0d471b61aa14247e16124b04267a9ff0ae22906> <http://purl.obolibrary.org/obo/IAO_0000219> <http://transformunify.org/hcEncReg/biobank> .
+                    <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/2d2d5cd55e04c15781d74140e8d18f6f9e5abb631e77242d89f375be29f86b0a> .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000623> "enc_expand.csv" .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000628> "B" .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000630> <http://transformunify.org/hcEncReg/biobank> .
+                    <http://www.itmat.upenn.edu/biobank/14cf4a0334ab31bcdc77147fe7ec611fc2ce0a8c8b4e90a0835c12109130f2c0> <http://transformunify.org/ontologies/TURBO_0006510> "B" .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/b380eb5afb263581879f61fb67a0dd7cb58cd77a8c4101363c37ac6bb6beeaf7> .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> turbo:TURBO_0010012 pmbb:part1 .
+
+                    # homo sapiens triples start here
+                    <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_NCBITaxon_9606> .
+                    <http://www.itmat.upenn.edu/biobank/crid1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_turbo_TURBO_0000503> .
+                    <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000503> .
+                    <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000504> .
+                    <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000505> .
+                    <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000138> .
+                    <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+                    <http://www.itmat.upenn.edu/biobank/3bc5df8b984bcd68c5f97235bccb0cdd2a3327746032538ff45acf0d9816bac6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/PATO_0000047> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
+                    <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000181> .
+                    <http://www.itmat.upenn.edu/biobank/574d5db4ff45a0ae90e4b258da5bbdea7c5c1f25c8bb3ed5ff6c781e22c85f61> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000099> .
+                    <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/efo/EFO_0004950> .
+                    <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/UBERON_0035946> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.org/dc/elements/1.1/title> "part_expand" .
+                    <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> .
+                    <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> .
+                    <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> .
+                    <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> .
+                    <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                    <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                    <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> .
+                    <http://www.itmat.upenn.edu/biobank/crid1> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/part1> .
+                    <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                    <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/IAO_0000219> <http://transformunify.org/ontologies/TURBO_0000410> .
+                    <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/574d5db4ff45a0ae90e4b258da5bbdea7c5c1f25c8bb3ed5ff6c781e22c85f61> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> .
+                    <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://purl.obolibrary.org/obo/RO_0000086> <http://www.itmat.upenn.edu/biobank/3bc5df8b984bcd68c5f97235bccb0cdd2a3327746032538ff45acf0d9816bac6> .
+                    <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://transformunify.org/ontologies/TURBO_0000303> <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> .
+                    <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://transformunify.org/ontologies/TURBO_0006510> "4" .
+                    <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://transformunify.org/ontologies/TURBO_0006510> "F" .
+                    <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://transformunify.org/ontologies/TURBO_0006510> "04/May/1969" .
+                    <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://transformunify.org/ontologies/TURBO_0006511> "1969-05-04"^^<http://www.w3.org/2001/XMLSchema#date> .
+                    <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://transformunify.org/ontologies/TURBO_0006512> "asian" .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                    <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010082> <http://transformunify.org/ontologies/TURBO_0000410> .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010089> <http://purl.obolibrary.org/obo/OMRSE_00000138> .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010090> <http://purl.obolibrary.org/obo/OMRSE_00000181> .
+                    <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010079> "4" .
+                    <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010084> "part_expand" .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010085> "04/May/1969" .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010086> "1969-05-04"^^<http://www.w3.org/2001/XMLSchema#date> .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010098> "F" .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010100> "asian" .
+                  }
+                }
+            """
+          update.updateSparql(testCxn, insert)
+          DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
+          
+          val check: String = """
+            ASK
+            {
+                ?homoSapiens obo:RO_0000056 ?biobankEncounter .
+                ?homoSapiens obo:RO_0000087 ?puirole .
+            		?puirole a obo:OBI_0000097 .
+            		?puirole obo:BFO_0000054 ?biobankEncounter .
+            		?biobankEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
+            		?homoSapiensCrid turbo:TURBO_0000302 ?biobankEncounterCrid .
+            		
+            		?homoSapiens a obo:NCBITaxon_9606 .
+            		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
+            		?homoSapiensCrid a turbo:TURBO_0000503 .
+            		
+            		?biobankEncounter a turbo:TURBO_0000527 .
+            		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
+            		?biobankEncounterCrid a turbo:TURBO_0000533 .
+            }
+            """
+          
+          val noHeightWeightAdiposeBmiOrDate: String = """
+                ASK {
+                values ?heightOrWeight {
+                  obo:PATO_0000119 
+                  obo:PATO_0000128 
+                  obo:OBI_0000445 
+                  turbo:TURBO_0001511 
+                  obo:IAO_0000408 
+                  obo:IAO_0000414
+                  obo:UBERON_0001013
+                  efo:EFO_0004340
+                  turbo:TURBO_0000531
+                  turbo:TURBO_0000532
+                  }
+                ?s a ?heightOrWeight . }
+            """
+          
+          update.querySparqlBoolean(testCxn, check).get should be (true)
+          update.querySparqlBoolean(testCxn, noHeightWeightAdiposeBmiOrDate).get should be (false)
+      }
+}
+    
+  class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+  {
+      val clearTestingRepositoryAfterRun: Boolean = false
+      val ooe = new ObjectOrientedExpander
+      
+      var conclusionationNamedGraph: IRI = null
+      var masterConclusionation: IRI = null
+      var masterPlanspec: IRI = null
+      var masterPlan: IRI = null
+      
+      DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+      DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
+      
+      before
+      {
+          graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
+          testCxn = graphDBMaterials.getTestConnection()
+          gmCxn = graphDBMaterials.getGmConnection()
+          testRepoManager = graphDBMaterials.getTestRepoManager()
+          testRepository = graphDBMaterials.getTestRepository()
+          helper.deleteAllTriplesInDatabase(testCxn)
+          
+          DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
+          DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
+      }
+      after
+      {
+          ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+      }
+  
+      test("biobank encounter and healthcare encounter link to homo sapiens - all fields")
+      {
+          val insert = """
+                INSERT DATA
+                {
+                Graph pmbb:expanded {
+                    # healthcare encounter triples start here
+                    <http://transformunify.org/ontologies/diagnosis1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_OGMS_0000073> .
+                    <http://transformunify.org/ontologies/prescription1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_PDRO_0000001> .
+                    <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_OGMS_0000097> .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_NCBITaxon_9606> .
+                    <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000508> .
+                    <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000097> .
+                    <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/efo/EFO_0004340> .
+                    <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
+                    <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OGMS_0000073> .
+                    <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000512> .
+                    <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000510> .
+                    <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000509> .
+                    <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000408> .
+                    <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000414> .
+                    <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/PDRO_0000001> .
+                    <http://www.itmat.upenn.edu/biobank/1df62fd1b3118238280eeecbb1218cec0c3e7447322384f35386e47f9cb66cdd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000511> .
+                    <http://www.itmat.upenn.edu/biobank/fa576d3b9d946db990f08d9367e1247ba691d0fdf4b10068d84427b524fd6aae> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000561> .
+                    <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000562> .
+                    <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.org/dc/elements/1.1/title> "enc_expand.csv" .
+                    <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                    <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                    <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                    <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> .
+                    <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                    <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> .
+                    <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                    <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                    <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                    <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                    <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                    <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/fa576d3b9d946db990f08d9367e1247ba691d0fdf4b10068d84427b524fd6aae> .
+                    <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> .
+                    <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> .
+                    <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> .
+                    <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> .
+                    <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> .
+                    <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> .
+                    <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> .
+                    <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> .
+                    <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> .
+                    <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> .
+                    <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> .
+                    <http://www.itmat.upenn.edu/biobank/fa576d3b9d946db990f08d9367e1247ba691d0fdf4b10068d84427b524fd6aae> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> .
+                    <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000015> .
+                    <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000009> .
+                    <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/1df62fd1b3118238280eeecbb1218cec0c3e7447322384f35386e47f9cb66cdd> .
+                    <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://purl.obolibrary.org/obo/IAO_0000142> <http://purl.obolibrary.org/obo/LNC/8302-2> .
+                    <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://purl.obolibrary.org/obo/IAO_0000142> <http://purl.obolibrary.org/obo/LNC/29463-7> .
+                    <http://www.itmat.upenn.edu/biobank/f7ac10d8b83634c03102e5f8c2ef2bb8f1a3cf119eab301ba11c93590c697e87> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> .
+                    <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> <http://purl.obolibrary.org/obo/IAO_0000219> <http://transformunify.org/ontologies/TURBO_0000440> .
+                    <http://www.itmat.upenn.edu/biobank/fa576d3b9d946db990f08d9367e1247ba691d0fdf4b10068d84427b524fd6aae> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> .
+                    <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> <http://purl.obolibrary.org/obo/IAO_0000581> <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> .
+                    <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+                    <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> .
+                    <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> .
+                    <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> .
+                    <http://www.itmat.upenn.edu/biobank/1df62fd1b3118238280eeecbb1218cec0c3e7447322384f35386e47f9cb66cdd> <http://purl.obolibrary.org/obo/RO_0002223> <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/RO_0002234> <http://transformunify.org/ontologies/diagnosis1> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/RO_0002234> <http://transformunify.org/ontologies/prescription1> .
+                    <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/RO_0002234> <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> .
+                    <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/RO_0002234> <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000643> "enc_expand.csv" .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000644> "15/Jan/2017" .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000645> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000646> "177.8"^^<http://www.w3.org/2001/XMLSchema#float> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000647> "83.0082554658"^^<http://www.w3.org/2001/XMLSchema#float> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000648> "20" .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000655> "26.2577659792"^^<http://www.w3.org/2001/XMLSchema#float> .
+                    <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0004601> "401.9" .
+                    <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0004602> "ICD-9" .
+                    <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0004603> <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
+                    <http://transformunify.org/ontologies/prescription1> <http://transformunify.org/ontologies/TURBO_0005601> "3" .
+                    <http://transformunify.org/ontologies/prescription1> <http://transformunify.org/ontologies/TURBO_0005611> "holistic soil from the ganges" .
+                    <http://transformunify.org/ontologies/prescription1> <http://transformunify.org/ontologies/TURBO_0005612> <http://transformunify.org/ontologies/someDrug> .
+                    <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> <http://transformunify.org/ontologies/TURBO_0006510> "20" .
+                    <http://www.itmat.upenn.edu/biobank/44d4598fe897f4cbd1cfea023223300218415b47cb016f0ebb548c20e9911de4> <http://transformunify.org/ontologies/TURBO_0006510> "3" .
+                    <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://transformunify.org/ontologies/TURBO_0006511> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
+                    <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0006512> "401.9" .
+                    <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://transformunify.org/ontologies/TURBO_0006512> "15/Jan/2017" .
+                    <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0006512> "holistic soil from the ganges" .
+                    <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0000703> <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
+                    <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0000306> <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
+                    <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0000307> <http://transformunify.org/ontologies/someDrug> .
+                    <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0006515> "ICD-9" .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010002> <http://www.itmat.upenn.edu/biobank/part1> .
+                    <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0010013> "true"^^<http://www.w3.org/2001/XMLSchema#Boolean> .
+                    <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0010013> "true"^^<http://www.w3.org/2001/XMLSchema#Boolean> .
+                    <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0010014> "1"^^<http://www.w3.org/2001/XMLSchema#Integer> .
+                    <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0010014> "1"^^<http://www.w3.org/2001/XMLSchema#Integer> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010110> <http://transformunify.org/ontologies/TURBO_0000440> .
+                    <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> <http://transformunify.org/ontologies/TURBO_0010094> "26.2577659792"^^<http://www.w3.org/2001/XMLSchema#float> .
+                    <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://transformunify.org/ontologies/TURBO_0010094> "177.8"^^<http://www.w3.org/2001/XMLSchema#float> .
+                    <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://transformunify.org/ontologies/TURBO_0010094> "83.0082554658"^^<http://www.w3.org/2001/XMLSchema#float> .
+                    
+                    # biobank encounter triples start here
+                    <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_turbo_TURBO_0000527> .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_NCBITaxon_9606> .
+                    <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/efo/EFO_0004340> .
+                    <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
+                    <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000408> .
+                    <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000414> .
+                    <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000533> .
+                    <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000527> .
+                    <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000535> .
+                    <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000534> .
+                    <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000532> .
+                    <http://www.itmat.upenn.edu/biobank/f64fc6176f93fc774d1eeb60c7fc6670ced53ea7637dc2fe6a3c1d4e2c73fc4d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000531> .
+                    <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.org/dc/elements/1.1/title> "enc_expand.csv" .
+                    <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                    <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                    <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                    <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                    <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> .
+                    <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                    <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> .
+                    <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                    <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> .
+                    <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> .
+                    <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> .
+                    <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> .
+                    <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> .
+                    <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> .
+                    <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> .
+                    <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> .
+                    <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000015> .
+                    <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000009> .
+                    <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/f64fc6176f93fc774d1eeb60c7fc6670ced53ea7637dc2fe6a3c1d4e2c73fc4d> .
+                    <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://purl.obolibrary.org/obo/IAO_0000142> <http://purl.obolibrary.org/obo/LNC/8302-2> .
+                    <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://purl.obolibrary.org/obo/IAO_0000142> <http://purl.obolibrary.org/obo/LNC/29463-7> .
+                    <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> .
+                    <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> <http://purl.obolibrary.org/obo/IAO_0000219> <http://transformunify.org/hcEncReg/biobank> .
+                    <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://purl.obolibrary.org/obo/IAO_0000581> <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> .
+                    <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> .
+                    <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> .
+                    <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> .
+                    <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> .
+                    <http://www.itmat.upenn.edu/biobank/f64fc6176f93fc774d1eeb60c7fc6670ced53ea7637dc2fe6a3c1d4e2c73fc4d> <http://purl.obolibrary.org/obo/RO_0002223> <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000623> "enc_expand.csv" .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000624> "15/Jan/2017" .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000625> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000626> "180.34"^^<http://www.w3.org/2001/XMLSchema#float> .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000627> "61.2244897959"^^<http://www.w3.org/2001/XMLSchema#float> .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000628> "B" .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000630> <http://transformunify.org/hcEncReg/biobank> .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000635> "18.8252626423"^^<http://www.w3.org/2001/XMLSchema#float> .
+                    <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> <http://transformunify.org/ontologies/TURBO_0006510> "B" .
+                    <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://transformunify.org/ontologies/TURBO_0006511> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
+                    <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://transformunify.org/ontologies/TURBO_0006512> "15/Jan/2017" .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0010012> <http://www.itmat.upenn.edu/biobank/part1> .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> .
+                    <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://transformunify.org/ontologies/TURBO_0010094> "18.8252626423"^^<http://www.w3.org/2001/XMLSchema#float> .
+                    <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://transformunify.org/ontologies/TURBO_0010094> "180.34"^^<http://www.w3.org/2001/XMLSchema#float> .
+                    <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://transformunify.org/ontologies/TURBO_0010094> "61.2244897959"^^<http://www.w3.org/2001/XMLSchema#float> .
+
+                    # homo sapiens triples start here
+                    <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_NCBITaxon_9606> .
+                    <http://www.itmat.upenn.edu/biobank/crid1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_turbo_TURBO_0000503> .
+                    <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000503> .
+                    <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000504> .
+                    <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000505> .
+                    <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000138> .
+                    <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+                    <http://www.itmat.upenn.edu/biobank/3bc5df8b984bcd68c5f97235bccb0cdd2a3327746032538ff45acf0d9816bac6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/PATO_0000047> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
+                    <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000181> .
+                    <http://www.itmat.upenn.edu/biobank/574d5db4ff45a0ae90e4b258da5bbdea7c5c1f25c8bb3ed5ff6c781e22c85f61> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000099> .
+                    <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/efo/EFO_0004950> .
+                    <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/UBERON_0035946> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.org/dc/elements/1.1/title> "part_expand" .
+                    <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> .
+                    <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> .
+                    <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> .
+                    <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> .
+                    <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> <http://purl.obolibrary.org/obo/BFO_0000051> <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> .
+                    <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                    <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                    <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://purl.obolibrary.org/obo/IAO_0000136> <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> .
+                    <http://www.itmat.upenn.edu/biobank/crid1> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/part1> .
+                    <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                    <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://purl.obolibrary.org/obo/IAO_0000219> <http://transformunify.org/ontologies/TURBO_0000410> .
+                    <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/a6e75672d6cf70e372db48f538ec07a5e56d943a3c98b8f5da4b4c9d146808b0> .
+                    <http://www.itmat.upenn.edu/biobank/574d5db4ff45a0ae90e4b258da5bbdea7c5c1f25c8bb3ed5ff6c781e22c85f61> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> .
+                    <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://purl.obolibrary.org/obo/RO_0000086> <http://www.itmat.upenn.edu/biobank/3bc5df8b984bcd68c5f97235bccb0cdd2a3327746032538ff45acf0d9816bac6> .
+                    <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> <http://transformunify.org/ontologies/TURBO_0000303> <http://www.itmat.upenn.edu/biobank/d8f6fe431ccb98b259f34f0608c2ff5f5755e149531a5cac6959de05f8e8829c> .
+                    <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://transformunify.org/ontologies/TURBO_0006510> "4" .
+                    <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://transformunify.org/ontologies/TURBO_0006510> "F" .
+                    <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://transformunify.org/ontologies/TURBO_0006510> "04/May/1969" .
+                    <http://www.itmat.upenn.edu/biobank/9bf2513f5f84359779c474b09b2ec3e983b7a0ba4e3449a26ad18d55a4c4255b> <http://transformunify.org/ontologies/TURBO_0006511> "1969-05-04"^^<http://www.w3.org/2001/XMLSchema#date> .
+                    <http://www.itmat.upenn.edu/biobank/d23422d82901be7aecf9252d8121b4b96958d4edad381af1f98662be616c9d7b> <http://transformunify.org/ontologies/TURBO_0006512> "asian" .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/2c1e667e85a0404bccb6d90feac4e23503413ffaa64813361dff86ead3573af9> .
+                    <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010082> <http://transformunify.org/ontologies/TURBO_0000410> .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010089> <http://purl.obolibrary.org/obo/OMRSE_00000138> .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010090> <http://purl.obolibrary.org/obo/OMRSE_00000181> .
+                    <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010079> "4" .
+                    <http://www.itmat.upenn.edu/biobank/crid1> <http://transformunify.org/ontologies/TURBO_0010084> "part_expand" .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010085> "04/May/1969" .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010086> "1969-05-04"^^<http://www.w3.org/2001/XMLSchema#date> .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010098> "F" .
+                    <http://www.itmat.upenn.edu/biobank/part1> <http://transformunify.org/ontologies/TURBO_0010100> "asian" .
+                  }
+                }
+            """
+          update.updateSparql(testCxn, insert)
+          DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
+          DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
+          
+           val check: String = """
+            ASK
+            {
+            graph pmbb:expanded {
+                ?homoSapiens obo:RO_0000056 ?biobankEncounter .
+                ?homoSapiens obo:RO_0000087 ?puirole .
+            		?puirole a obo:OBI_0000097 .
+            		?puirole obo:BFO_0000054 ?biobankEncounter .
+            		?biobankEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
+            		?homoSapiensCrid turbo:TURBO_0000302 ?biobankEncounterCrid .
+            		?weightDatum obo:IAO_0000136 ?homoSapiens.
+            		?heightDatum obo:IAO_0000136 ?homoSapiens.
+            		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
+            		?heightDatum obo:IAO_0000221 ?homoSapiensHeight .
+            		
+            		?homoSapiens a obo:NCBITaxon_9606 .
+            		?homoSapiens obo:RO_0000086 ?homoSapiensWeight .
+            		?homoSapiensWeight a obo:PATO_0000128 .
+            		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
+            		?homoSapiensHeight a obo:PATO_0000119 .
+            		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
+            		?homoSapiensCrid a turbo:TURBO_0000503 .
+            		
+            		?biobankEncounter a turbo:TURBO_0000527 .
+            		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
+            		?biobankEncounterCrid a turbo:TURBO_0000533 .
+  
+            		?heightDatum a obo:IAO_0000408 .
+            		?weightDatum a obo:IAO_0000414 .
+            		
+            		?homoSapiens obo:BFO_0000051 ?adipose .
+                ?adipose obo:BFO_0000050 ?homoSapiens .
+                ?adipose a obo:UBERON_0001013 .
+                ?BMI obo:IAO_0000136 ?adipose .
+                ?BMI a efo:EFO_0004340 .
+                ?BMI obo:IAO_0000581 ?encounterDate .
+                ?encounterStart a turbo:TURBO_0000531 .
+            		?encounterStart obo:RO_0002223 ?biobankEncounter .          
+            		?encounterDate a turbo:TURBO_0000532 .
+            		?encounterDate obo:IAO_0000136 ?encounterStart .
+            }}
+            """
+          
+      update.querySparqlBoolean(testCxn, check).get should be (true)
+          
+          val check2: String = """
+              ASK
+              {
+              graph pmbb:expanded {
+                  ?homoSapiens obo:RO_0000056 ?biobankEncounter .
+                  ?homoSapiens obo:RO_0000087 ?puirole .
+              		?puirole a obo:OBI_0000097 .
+              		?puirole obo:BFO_0000054 ?biobankEncounter .
+              		?biobankEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
+              		?homoSapiensCrid turbo:TURBO_0000302 ?biobankEncounterCrid .
+              		?weightDatum obo:IAO_0000136 ?homoSapiens.
+              		?heightDatum obo:IAO_0000136 ?homoSapiens.
+              		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
+              		?heightDatum obo:IAO_0000221 ?homoSapiensHeight .
+              		
+              		?homoSapiens a obo:NCBITaxon_9606 .
+              		?homoSapiens obo:RO_0000086 ?homoSapiensWeight .
+              		?homoSapiensWeight a obo:PATO_0000128 .
+              		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
+              		?homoSapiensHeight a obo:PATO_0000119 .
+              		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
+              		?homoSapiensCrid a turbo:TURBO_0000503 .
+              		
+              		?biobankEncounter a turbo:TURBO_0000527 .
+              		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
+              		?biobankEncounterCrid a turbo:TURBO_0000533 .
+    
+              		?heightDatum a obo:IAO_0000408 .
+              		?weightDatum a obo:IAO_0000414 .
+              		
+              		?homoSapiens obo:BFO_0000051 ?adipose .
+                  ?adipose obo:BFO_0000050 ?homoSapiens .
+                  ?adipose a obo:UBERON_0001013 .
+                  ?BMI obo:IAO_0000136 ?adipose .
+                  ?BMI a efo:EFO_0004340 .
+                  ?BMI obo:IAO_0000581 ?encounterDate .
+                  ?encounterStart a turbo:TURBO_0000531 .
+              		?encounterStart obo:RO_0002223 ?biobankEncounter .          
+              		?encounterDate a turbo:TURBO_0000532 .
+              		?encounterDate obo:IAO_0000136 ?encounterStart .
+              }}
+              """
+            
+        update.querySparqlBoolean(testCxn, check2).get should be (true)
+          
+        val twoLinks = """
+        select (count (?encounter) as ?encountercount) where
+        {
+            ?homosapiens obo:RO_0000056 ?encounter .
+        }
+        """
+          
+        val onlyOneAdipose = """
+          select (count (?adipose) as ?adiposecount) where
+          {
+              ?homosapiens a obo:NCBITaxon_9606 .
+              ?homosapiens obo:BFO_0000051 ?adipose .
+              ?adipose a obo:UBERON_0001013 .
+          }
+          """
+        
+        val onlyOneRole = """
+          select (count (?role) as ?rolecount) where
+          {
+              ?homosapiens a obo:NCBITaxon_9606 .
+              ?homosapiens obo:RO_0000087 ?role .
+              ?role a obo:OBI_0000097 .
+          }
+          """
+        
+        val onlyOneHeight = """
+          select (count (?height) as ?heightcount) where
+          {
+              ?homosapiens a obo:NCBITaxon_9606 .
+              ?homosapiens obo:RO_0000086 ?height .
+              ?height a obo:PATO_0000119 .
+          }
+          """
+        
+        val onlyOneWeight = """
+          select (count (?weight) as ?weightcount) where
+          {
+              ?homosapiens a obo:NCBITaxon_9606 .
+              ?homosapiens obo:RO_0000086 ?weight .
+              ?weight a obo:PATO_0000128 .
+          }
+          """
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneAdipose, "adiposecount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneRole, "rolecount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneHeight, "heightcount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneWeight, "weightcount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, twoLinks, "encountercount")(0).split("\"")(1) should be ("2")
+        
+    }
+  
+    
+}
+    
