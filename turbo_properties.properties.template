@@ -1,30 +1,11 @@
-serviceURL = http://your_GraphDB_instance:7200
-namespace = your_repo
+serviceURL = http://turbo-prd-db01.pmacs.upenn.edu:7200/
 username = your_username
 password = your_password
 
-inputFiles = ..//data//demo_data//enc2hc.ttl,\
-..//data//demo_data//enc2hc_diag.ttl,\
-..//data//demo_data//enc2hc_med.ttl,\
-..//data//demo_data//enc1bb.ttl,\
-..//data//demo_data//join1hc.ttl,\
-..//data//demo_data//join2bb.ttl,\
-..//data//demo_data//part1.ttl,\
-..//data//demo_data//part2.ttl
+productionNamespace = Haydens_graph_model
+testingNamespace = Hayden_drivetrain
+modelNamespace = Haydens_graph_model
 
-inputLOFFiles = ..//data//demo_data//lof.ttl
-
-#Currently supported formats: TURTLE, RDFXML. Capital letters must be used.
-inputFilesFormat = TURTLE
 importOntologies = true
 ontologyURL = https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl
 errorLogFile = turbo_errorlog.txt
-
-# choose whether all entities should have rdfs:label
-applyLabels = true
-
-# the api key from bioportal to load icd9/icd10 ontologies
-bioportalAPIKey = your_key_here
-
-# the repository holding the med mapping info
-medMappingRepo = your_medmap_repo
