@@ -10,7 +10,7 @@ import java.util.UUID
 
 class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
-    val clearTestingRepositoryAfterRun: Boolean = true
+    val clearTestingRepositoryAfterRun: Boolean = false
 
     DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
@@ -55,18 +55,16 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             		  turbo:TURBO_0010094 "18.8252626423"^^xsd:float .
             		?dataset a obo:IAO_0000100 .
             		
-          	    ?heightDatum rdf:type obo:IAO_0000408 ;
+          	    ?heightDatum rdf:type obo:OBI_0001931 ;
           	                 obo:IAO_0000039 obo:UO_0000015 ;
-          	                 obo:IAO_0000142 <http://purl.obolibrary.org/obo/LNC/8302-2> ;
           	                 turbo:TURBO_0010094 "180.34"^^xsd:float  ;
           	                 obo:BFO_0000050 ?dataset .
           	               
           	    
-          	    ?weightDatum rdf:type obo:IAO_0000414 ;
+          	    ?weightDatum rdf:type obo:OBI_0001929 ;
           	                 obo:BFO_0000050 ?dataset ;
           	                 obo:IAO_0000039 obo:UO_0000009 ;
-          	                 turbo:TURBO_0010094 "61.2244897959"^^xsd:float ;
-          	                 obo:IAO_0000142 <http://purl.obolibrary.org/obo/LNC/29463-7> .
+          	                 turbo:TURBO_0010094 "61.2244897959"^^xsd:float .
           	                   
           	    ?dataset obo:BFO_0000051 ?BMI .
           		  ?dataset obo:BFO_0000051 ?weightDatum .
@@ -145,7 +143,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
              "http://purl.obolibrary.org/obo/OBI_0000299", "http://transformunify.org/ontologies/TURBO_0000624",
-            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/IAO_0000142",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/IAO_0000581",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -153,7 +151,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/RO_0002223",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006512",
             "http://transformunify.org/ontologies/TURBO_0006511", "http://purl.obolibrary.org/obo/IAO_0000136",
-            "http://purl.obolibrary.org/obo/IAO_0000039", "http://purl.obolibrary.org/obo/IAO_0000142",
+            "http://purl.obolibrary.org/obo/IAO_0000039",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
@@ -164,13 +162,12 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             "http://transformunify.org/ontologies/TURBO_0000628", "http://transformunify.org/ontologies/TURBO_0000623",
             "http://transformunify.org/ontologies/TURBO_0000627", "http://transformunify.org/ontologies/TURBO_0000626",
             "http://transformunify.org/ontologies/TURBO_0000625", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://transformunify.org/ontologies/TURBO_0000630", "http://transformunify.org/ontologies/TURBO_0010012",
-            "http://purl.obolibrary.org/obo/IAO_0000581"
+            "http://transformunify.org/ontologies/TURBO_0000630", "http://transformunify.org/ontologies/TURBO_0010012"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (59)
+        result.size should be (57)
     }
     
     test("bb encounter with minimum required for expansion")
@@ -336,10 +333,10 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
-             "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/IAO_0000142",
+             "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/IAO_0000581",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/IAO_0000142",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://transformunify.org/ontologies/TURBO_0000635",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0006510",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
@@ -356,12 +353,12 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0000623",
             "http://transformunify.org/ontologies/TURBO_0000624", "http://transformunify.org/ontologies/TURBO_0000626",
             "http://transformunify.org/ontologies/TURBO_0000627", "http://transformunify.org/ontologies/TURBO_0000628",
-            "http://transformunify.org/ontologies/TURBO_0000630", "http://transformunify.org/ontologies/TURBO_0000635",
-            "http://purl.obolibrary.org/obo/IAO_0000581"
+            "http://transformunify.org/ontologies/TURBO_0000630"
+            
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (55)
+        result.size should be (53)
     }
 }

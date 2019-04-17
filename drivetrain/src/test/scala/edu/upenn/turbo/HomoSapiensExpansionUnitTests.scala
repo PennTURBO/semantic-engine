@@ -115,8 +115,6 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientRegDen a turbo:TURBO_0000505 .
         		# ?patientRegDen turbo:TURBO_0006510 'inpatient' .
         		
-        		?rip a obo:OMRSE_00000099 .
-        		?rip obo:OBI_0000299 ?rid .
         		?rid obo:IAO_0000136 ?part .
         		?rid turbo:TURBO_0006512 "asian"^^xsd:string .
         		?rid a obo:OMRSE_00000181 .
@@ -155,20 +153,19 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
-            "http://transformunify.org/ontologies/TURBO_0006511", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://transformunify.org/ontologies/TURBO_0006511", "http://transformunify.org/ontologies/TURBO_0010084",
             "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0006512",
             "http://transformunify.org/ontologies/TURBO_0010089", "http://transformunify.org/ontologies/TURBO_0010086", 
             "http://transformunify.org/ontologies/TURBO_0010085", "http://transformunify.org/ontologies/TURBO_0010098", 
             "http://transformunify.org/ontologies/TURBO_0010090", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://transformunify.org/ontologies/TURBO_0010100", "http://transformunify.org/ontologies/TURBO_0010082", 
-            "http://transformunify.org/ontologies/TURBO_0010079", "http://transformunify.org/ontologies/TURBO_0010084",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            "http://transformunify.org/ontologies/TURBO_0010079"
 
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (53)
+        result.size should be (51)
     }
     
     test("participant with minimum required for expansion")
@@ -428,9 +425,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?dob obo:IAO_0000136 ?birth .
         		?dob obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?dob .
-        		
-        		?rip a obo:OMRSE_00000099 .
-        		?rip obo:OBI_0000299 ?rid .
+
         		?rid obo:IAO_0000136 ?part .
         		?rid turbo:TURBO_0006512 "asian"^^xsd:string .
         		?rid a obo:OMRSE_00000181 .
@@ -542,7 +537,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
-            "http://transformunify.org/ontologies/TURBO_0006511", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://transformunify.org/ontologies/TURBO_0006511", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0006512",
             "http://transformunify.org/ontologies/TURBO_0010089", "http://transformunify.org/ontologies/TURBO_0010086", 
             "http://transformunify.org/ontologies/TURBO_0010085", "http://transformunify.org/ontologies/TURBO_0010098", 
@@ -557,7 +552,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://transformunify.org/ontologies/TURBO_0010079", "http://transformunify.org/ontologies/TURBO_0010084",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
@@ -567,14 +562,14 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050", 
-            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050", 
             "http://purl.obolibrary.org/obo/BFO_0000051"
+            
 
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")  
         
-        result.size should be (89)
+        result.size should be (87)
     }
     
     test("expand homoSapiens with multiple identifiers - multiple datasets")
@@ -652,8 +647,6 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?dob obo:BFO_0000050 ?dataset2 .
         		?dataset2 obo:BFO_0000051 ?dob .
         		
-        		?rip a obo:OMRSE_00000099 .
-        		?rip obo:OBI_0000299 ?rid .
         		?rid obo:IAO_0000136 ?part .
         		?rid turbo:TURBO_0006512 "asian"^^xsd:string .
         		?rid a obo:OMRSE_00000181 .
@@ -711,6 +704,6 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         update.querySparqlBoolean(testCxn, output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
-        result.size should be (95)
+        result.size should be (93)
     }
 }

@@ -261,7 +261,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     {
         val query = s"""
           
-          Select distinct ?expandedEntity ?sparqlString ?shortcutEntity ?dependee ?baseType
+          Select distinct ?expandedEntity ?sparqlString ?shortcutEntity ?dependee ?baseType ?vmrHash
           Where
           {
     		      values ?manipulationRuleType {turbo:VariableManipulationForIntermediateNode turbo:VariableManipulationForLiteralValue}
@@ -281,10 +281,11 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
               {
                   ?variableManipulationRule turbo:manipulationDependsOn ?dependee .
               }
+              BIND(SHA256(str(?variableManipulationRule)) as ?vmrHash)
           }
           
         """
         
-        update.querySparqlAndUnpackTuple(gmCxn, query, Array("expandedEntity", "sparqlString", "shortcutEntity", "dependee", "baseType"))
+        update.querySparqlAndUnpackTuple(gmCxn, query, Array("expandedEntity", "sparqlString", "shortcutEntity", "dependee", "baseType", "vmrHash"))
     }
 }
