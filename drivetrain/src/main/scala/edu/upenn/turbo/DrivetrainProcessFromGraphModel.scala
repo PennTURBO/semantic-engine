@@ -59,6 +59,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     
     def createBindClause(binds: ArrayBuffer[ArrayBuffer[Value]], localUUID: String): String =
     {
+        // example input and output of a single line
         var bindClause = ""
         var varList = new ArrayBuffer[Value]
         for (rule <- binds)
