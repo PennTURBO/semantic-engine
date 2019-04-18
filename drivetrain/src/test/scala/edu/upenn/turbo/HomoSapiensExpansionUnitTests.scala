@@ -35,7 +35,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           ?partCrid obo:BFO_0000051 ?partSymbol .
           ?partCrid obo:BFO_0000051 ?partRegDen .
           ?partSymbol a turbo:TURBO_0000504 .
-          ?partSymbol turbo:TURBO_0006510 "4" .
+          ?partSymbol turbo:TURBO_0010094 "4" .
           ?partRegDen a turbo:TURBO_0000505 .
           ?partRegDen obo:IAO_0000219 turbo:TURBO_0000410 .
           
@@ -93,7 +93,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?dataset a obo:IAO_0000100 .
         		?part rdf:type obo:NCBITaxon_9606 .
 
-        		?gid turbo:TURBO_0006510 "F" .
+        		?gid turbo:TURBO_0010094 "F" .
         		?gid obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?gid .
         		?gid rdf:type obo:OMRSE_00000138 .
@@ -102,8 +102,8 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?part turbo:TURBO_0000303 ?birth .
         		?birth rdf:type obo:UBERON_0035946 .
         		?dob rdf:type <http://www.ebi.ac.uk/efo/EFO_0004950> .
-        		?dob turbo:TURBO_0006510 "04/May/1969" .
-        		?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
+        		?dob turbo:TURBO_0010095 "04/May/1969" .
+        		?dob turbo:TURBO_0010096 "1969-05-04"^^xsd:date .
         		?dob obo:IAO_0000136 ?birth .
         		?dob obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?dob .
@@ -113,10 +113,10 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientCrid obo:BFO_0000051 ?patientRegDen .
         		?patientRegDen obo:BFO_0000050 ?patientCrid .
         		?patientRegDen a turbo:TURBO_0000505 .
-        		# ?patientRegDen turbo:TURBO_0006510 'inpatient' .
+        		# ?patientRegDen turbo:TURBO_0010094 'inpatient' .
         		
         		?rid obo:IAO_0000136 ?part .
-        		?rid turbo:TURBO_0006512 "asian"^^xsd:string .
+        		?rid turbo:TURBO_0010094 "asian"^^xsd:string .
         		?rid a obo:OMRSE_00000181 .
         		
         		?part obo:RO_0000086 ?biosex .
@@ -139,7 +139,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/RO_0000086", "http://transformunify.org/ontologies/TURBO_0000303",
-            "http://purl.obolibrary.org/obo/BFO_0000051", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
@@ -151,10 +151,10 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
-            "http://transformunify.org/ontologies/TURBO_0006511", "http://transformunify.org/ontologies/TURBO_0010084",
-            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0006512",
+            "http://transformunify.org/ontologies/TURBO_0010096", "http://transformunify.org/ontologies/TURBO_0010084",
+            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0010095",
             "http://transformunify.org/ontologies/TURBO_0010089", "http://transformunify.org/ontologies/TURBO_0010086", 
             "http://transformunify.org/ontologies/TURBO_0010085", "http://transformunify.org/ontologies/TURBO_0010098", 
             "http://transformunify.org/ontologies/TURBO_0010090", "http://purl.obolibrary.org/obo/IAO_0000219",
@@ -198,7 +198,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://transformunify.org/ontologies/TURBO_0010082",
@@ -307,11 +307,11 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?birth rdf:type obo:UBERON_0035946 .
         		?dob rdf:type <http://www.ebi.ac.uk/efo/EFO_0004950> .
         		?dob obo:IAO_0000136 ?birth .
-        		?dob turbo:TURBO_0006510 "04/May/1969" .
+        		?dob turbo:TURBO_0010095 "04/May/1969" .
         		?dob obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?dob .
         		?dataset a obo:IAO_0000100 .
-        		# ?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
+        		# ?dob turbo:TURBO_0010096 "1969-05-04"^^xsd:date .
           }}
           """
         
@@ -343,14 +343,14 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://transformunify.org/ontologies/TURBO_0010095", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://transformunify.org/ontologies/TURBO_0010085", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://transformunify.org/ontologies/TURBO_0010098", "http://transformunify.org/ontologies/TURBO_0010082",
@@ -413,21 +413,21 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?part obo:RO_0000086 ?biosex .
         		?biosex a obo:PATO_0000047 .
 
-        		?gid turbo:TURBO_0006510 "F" .
+        		?gid turbo:TURBO_0010094 "F" .
         		?gid obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?gid .
         		?gid a obo:OMRSE_00000138 .
         		?gid obo:IAO_0000136 ?part .
         		
         		?dob a <http://www.ebi.ac.uk/efo/EFO_0004950> .
-        		?dob turbo:TURBO_0006510 "04/May/1969" .
-        		?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
+        		?dob turbo:TURBO_0010095 "04/May/1969" .
+        		?dob turbo:TURBO_0010096 "1969-05-04"^^xsd:date .
         		?dob obo:IAO_0000136 ?birth .
         		?dob obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?dob .
 
         		?rid obo:IAO_0000136 ?part .
-        		?rid turbo:TURBO_0006512 "asian"^^xsd:string .
+        		?rid turbo:TURBO_0010094 "asian"^^xsd:string .
         		?rid a obo:OMRSE_00000181 .
         		?rid obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?rid .
@@ -441,7 +441,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientCrid1 obo:BFO_0000051 ?partSymbol1 .
         		?partSymbol1 obo:BFO_0000050 ?patientCrid1 .
             ?partSymbol1 a turbo:TURBO_0000504 .
-            ?partSymbol1 turbo:TURBO_0006510 "jerry"^^xsd:string .
+            ?partSymbol1 turbo:TURBO_0010094 "jerry"^^xsd:string .
             ?patientRegDen1 obo:BFO_0000050 ?dataset .
             ?dataset obo:BFO_0000051 ?patientRegDen1 .
             ?partSymb1 obo:BFO_0000050 ?dataset .
@@ -456,7 +456,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientCrid2 obo:BFO_0000051 ?partSymbol2 .
         		?partSymbol2 obo:BFO_0000050 ?patientCrid2 .
             ?partSymbol2 a turbo:TURBO_0000504 .
-            ?partSymbol2 turbo:TURBO_0006510 "kramer"^^xsd:string .
+            ?partSymbol2 turbo:TURBO_0010094 "kramer"^^xsd:string .
             ?patientRegDen2 obo:BFO_0000050 ?dataset .
             ?dataset obo:BFO_0000051 ?patientRegDen2 .
             ?partSymb2 obo:BFO_0000050 ?dataset .
@@ -471,7 +471,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientCrid3 obo:BFO_0000051 ?partSymbol3 .
         		?partSymbol3 obo:BFO_0000050 ?patientCrid3 .
             ?partSymbol3 a turbo:TURBO_0000504 .
-            ?partSymbol3 turbo:TURBO_0006510 "elaine"^^xsd:string .
+            ?partSymbol3 turbo:TURBO_0010094 "elaine"^^xsd:string .
             ?patientRegDen3 obo:BFO_0000050 ?dataset .
             ?dataset obo:BFO_0000051 ?patientRegDen3 .
             ?partSymb3 obo:BFO_0000050 ?dataset .
@@ -524,7 +524,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/RO_0000086", "http://transformunify.org/ontologies/TURBO_0000303",
-            "http://purl.obolibrary.org/obo/BFO_0000051", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
@@ -535,10 +535,10 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
-            "http://transformunify.org/ontologies/TURBO_0006511", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0006512",
+            "http://transformunify.org/ontologies/TURBO_0010096", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0010095",
             "http://transformunify.org/ontologies/TURBO_0010089", "http://transformunify.org/ontologies/TURBO_0010086", 
             "http://transformunify.org/ontologies/TURBO_0010085", "http://transformunify.org/ontologies/TURBO_0010098", 
             "http://transformunify.org/ontologies/TURBO_0010090", "http://purl.obolibrary.org/obo/IAO_0000219",
@@ -560,7 +560,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050", 
             "http://purl.obolibrary.org/obo/BFO_0000051"
             
@@ -634,21 +634,21 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?part obo:RO_0000086 ?biosex .
         		?biosex a obo:PATO_0000047 .
 
-        		?gid turbo:TURBO_0006510 "F" .
+        		?gid turbo:TURBO_0010094 "F" .
         		?gid obo:BFO_0000050 ?dataset1 .
         		?dataset1 obo:BFO_0000051 ?gid .
         		?gid a obo:OMRSE_00000138 .
         		?gid obo:IAO_0000136 ?part .
         		
         		?dob a <http://www.ebi.ac.uk/efo/EFO_0004950> .
-        		?dob turbo:TURBO_0006510 "04/May/1969" .
-        		?dob turbo:TURBO_0006511 "1969-05-04"^^xsd:date .
+        		?dob turbo:TURBO_0010095 "04/May/1969" .
+        		?dob turbo:TURBO_0010096 "1969-05-04"^^xsd:date .
         		?dob obo:IAO_0000136 ?birth .
         		?dob obo:BFO_0000050 ?dataset2 .
         		?dataset2 obo:BFO_0000051 ?dob .
         		
         		?rid obo:IAO_0000136 ?part .
-        		?rid turbo:TURBO_0006512 "asian"^^xsd:string .
+        		?rid turbo:TURBO_0010094 "asian"^^xsd:string .
         		?rid a obo:OMRSE_00000181 .
         		?rid obo:BFO_0000050 ?dataset3 .
         		?dataset3 obo:BFO_0000051 ?rid .
@@ -662,7 +662,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientCrid1 obo:BFO_0000051 ?partSymbol1 .
         		?partSymbol1 obo:BFO_0000050 ?patientCrid1 .
             ?partSymbol1 a turbo:TURBO_0000504 .
-            ?partSymbol1 turbo:TURBO_0006510 "jerry"^^xsd:string .
+            ?partSymbol1 turbo:TURBO_0010094 "jerry"^^xsd:string .
             ?patientRegDen1 obo:BFO_0000050 ?dataset1 .
             ?dataset1 obo:BFO_0000051 ?patientRegDen1 .
             ?partSymb1 obo:BFO_0000050 ?dataset1 .
@@ -677,7 +677,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientCrid2 obo:BFO_0000051 ?partSymbol2 .
         		?partSymbol2 obo:BFO_0000050 ?patientCrid2 .
             ?partSymbol2 a turbo:TURBO_0000504 .
-            ?partSymbol2 turbo:TURBO_0006510 "kramer"^^xsd:string .
+            ?partSymbol2 turbo:TURBO_0010094 "kramer"^^xsd:string .
             ?patientRegDen2 obo:BFO_0000050 ?dataset2 .
             ?dataset2 obo:BFO_0000051 ?patientRegDen2 .
             ?partSymb2 obo:BFO_0000050 ?dataset2 .
@@ -692,7 +692,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         		?patientCrid3 obo:BFO_0000051 ?partSymbol3 .
         		?partSymbol3 obo:BFO_0000050 ?patientCrid3 .
             ?partSymbol3 a turbo:TURBO_0000504 .
-            ?partSymbol3 turbo:TURBO_0006510 "elaine"^^xsd:string .
+            ?partSymbol3 turbo:TURBO_0010094 "elaine"^^xsd:string .
             ?patientRegDen3 obo:BFO_0000050 ?dataset3 .
             ?dataset3 obo:BFO_0000051 ?patientRegDen3 .
             ?partSymb3 obo:BFO_0000050 ?dataset3 .

@@ -81,7 +81,7 @@ class CancerSumStageExpansionTests extends FunSuiteLike with BeforeAndAfter with
             
             <http://www.itmat.upenn.edu/biobank/crid_sym1> a turbo:TURBO_0000504;
               obo:BFO_0000050 <http://www.itmat.upenn.edu/biobank/IAO_0000100_1>, <http://www.itmat.upenn.edu/biobank/consenter_crid1>;
-              turbo:TURBO_0006510 "7db6ef12" .
+              turbo:TURBO_0010094 "7db6ef12" .
             
             <http://www.itmat.upenn.edu/biobank/regden1> a turbo:TURBO_0000505;
               obo:BFO_0000050 <http://www.itmat.upenn.edu/biobank/IAO_0000100_1>, <http://www.itmat.upenn.edu/biobank/consenter_crid1>;
@@ -116,7 +116,7 @@ class CancerSumStageExpansionTests extends FunSuiteLike with BeforeAndAfter with
             <http://www.itmat.upenn.edu/biobank/TURBO_0010039_1> a turbo:TURBO_0010039;
               obo:BFO_0000050 <http://www.itmat.upenn.edu/biobank/IAO_0000100_1>;
               obo:IAO_0000136 <http://www.itmat.upenn.edu/biobank/af2e789-529b-41bf-93d2-57beefeff91e>;
-              turbo:TURBO_0006510 "IIIb" . }}
+              turbo:TURBO_0010094 "IIIb" . }}
       """
 
     update.updateSparql(testCxn, insertCheatStmt)
@@ -146,7 +146,7 @@ class CancerSumStageExpansionTests extends FunSuiteLike with BeforeAndAfter with
               ?patientCridSym obo:BFO_0000050 ?dataSet .
               ?patientCridSym obo:BFO_0000050 ?patientCrid .
               ?patientCridSym rdf:type turbo:TURBO_0000504 .
-              ?patientCridSym turbo:TURBO_0006510 "7db6ef12" .
+              ?patientCridSym turbo:TURBO_0010094 "7db6ef12" .
               ?patientRegDen obo:BFO_0000050 ?dataSet .
               ?patientRegDen obo:BFO_0000050 ?patientCrid .
               ?patientRegDen obo:IAO_0000219 ?hupMrnRegistry .
@@ -171,7 +171,7 @@ class CancerSumStageExpansionTests extends FunSuiteLike with BeforeAndAfter with
               ?sumStageDrawerHcpRole rdf:type obo:OMRSE_00000012 .
               ?sumStageTextEnt obo:BFO_0000050 ?dataSet .
               ?sumStageTextEnt obo:IAO_0000136 ?disCourseProc .
-              ?sumStageTextEnt  turbo:TURBO_0006510	"IIIb" .
+              ?sumStageTextEnt  turbo:TURBO_0010094	"IIIb" .
               ?sumStageTextEnt rdf:type turbo:TURBO_0010039 .
           }
       }

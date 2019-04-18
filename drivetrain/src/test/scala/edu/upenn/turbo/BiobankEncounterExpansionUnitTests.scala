@@ -33,9 +33,9 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
         		?encsymb a turbo:TURBO_0000534 . 
         		?encsymb obo:BFO_0000050 ?dataset .
         		?dataset obo:BFO_0000051 ?encsymb .
-        		?encsymb turbo:TURBO_0006510 'B' .
+        		?encsymb turbo:TURBO_0010094 'B' .
         		?encregden a turbo:TURBO_0000535 .
-        		# ?encregden turbo:TURBO_0006510 'biobank' .
+        		# ?encregden turbo:TURBO_0010094 'biobank' .
         		?encregden obo:IAO_0000219 <http://transformunify.org/hcEncReg/biobank> .
         		?dataset <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:IAO_0000100 .
        }}
@@ -46,8 +46,8 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
         	ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
           
                 ?encounter obo:OBI_0000299 ?BMI .
-                ?encounter obo:OBI_0000299 ?heightDatum .
-                ?encounter obo:OBI_0000299 ?weightDatum .
+                ?encounter turbo:TURBO_0010139 ?heightDatum .
+                ?encounter turbo:TURBO_0010139 ?weightDatum .
                 
                 ?encounter a turbo:TURBO_0000527 .
             		?BMI a <http://www.ebi.ac.uk/efo/EFO_0004340> .
@@ -55,7 +55,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             		  turbo:TURBO_0010094 "18.8252626423"^^xsd:float .
             		?dataset a obo:IAO_0000100 .
             		
-          	    ?heightDatum rdf:type obo:OBI_0001931 ;
+          	    ?heightDatum rdf:type turbo:TURBO_0010138 ;
           	                 obo:IAO_0000039 obo:UO_0000015 ;
           	                 turbo:TURBO_0010094 "180.34"^^xsd:float  ;
           	                 obo:BFO_0000050 ?dataset .
@@ -76,8 +76,8 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
             ?encDate obo:BFO_0000050 ?dataset .
         		?encDate <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000532 .
-        		?encDate turbo:TURBO_0006512 "15/Jan/2017" .
-        		?encDate turbo:TURBO_0006511 "2017-01-15"^^xsd:date .
+        		?encDate turbo:TURBO_0010095 "15/Jan/2017" .
+        		?encDate turbo:TURBO_0010096 "2017-01-15"^^xsd:date .
         		?encDate obo:IAO_0000136 ?encStart .
         		?encStart <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000531 .
         		?encStart obo:RO_0002223 ?encounter .
@@ -146,15 +146,15 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/IAO_0000581",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/RO_0002223",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006512",
-            "http://transformunify.org/ontologies/TURBO_0006511", "http://purl.obolibrary.org/obo/IAO_0000136",
-            "http://purl.obolibrary.org/obo/IAO_0000039",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010095",
+            "http://transformunify.org/ontologies/TURBO_0010096", "http://purl.obolibrary.org/obo/IAO_0000136",
+            "http://purl.obolibrary.org/obo/IAO_0000039", "http://transformunify.org/ontologies/TURBO_0010012",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010139",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010139",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/IAO_0000039", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0010094",
@@ -162,7 +162,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             "http://transformunify.org/ontologies/TURBO_0000628", "http://transformunify.org/ontologies/TURBO_0000623",
             "http://transformunify.org/ontologies/TURBO_0000627", "http://transformunify.org/ontologies/TURBO_0000626",
             "http://transformunify.org/ontologies/TURBO_0000625", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://transformunify.org/ontologies/TURBO_0000630", "http://transformunify.org/ontologies/TURBO_0010012"
+            "http://transformunify.org/ontologies/TURBO_0000630"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
@@ -201,7 +201,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
              "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050","http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://transformunify.org/ontologies/TURBO_0000628", "http://transformunify.org/ontologies/TURBO_0000623",
             "http://transformunify.org/ontologies/TURBO_0000630", "http://transformunify.org/ontologies/TURBO_0010113"
@@ -309,8 +309,8 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
         		?encounter a turbo:TURBO_0000527 .
         		?dataset a obo:IAO_0000100 .
         		?encDate a turbo:TURBO_0000532 .
-        		?encDate turbo:TURBO_0006512 "15/Jan/2017" .
-        		# ?encDate turbo:TURBO_0006511 "2017-01-15"^^xsd:date .
+        		?encDate turbo:TURBO_0010095 "15/Jan/2017" .
+        		# ?encDate turbo:TURBO_0010096 "2017-01-15"^^xsd:date .
         		?encDate obo:IAO_0000136 ?encStart .
         		?encStart <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000531 .
         		?encStart obo:RO_0002223 ?Encounter1 .
@@ -333,19 +333,19 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
-             "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/IAO_0000581",
+            "http://transformunify.org/ontologies/TURBO_0010139", "http://purl.obolibrary.org/obo/IAO_0000581",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://transformunify.org/ontologies/TURBO_0000635",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/RO_0002223",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006512",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010095",
             "http://purl.obolibrary.org/obo/IAO_0000136", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000039", "http://transformunify.org/ontologies/TURBO_0010113",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010139",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",

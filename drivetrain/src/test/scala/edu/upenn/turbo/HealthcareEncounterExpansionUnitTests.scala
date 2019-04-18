@@ -15,15 +15,6 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
     DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
     
-    val healthcareEncounterShortcutGraphs: String = 
-    """
-        <http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts> 
-        <http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts1> 
-        <http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts2>
-        <http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts3>
-        <http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts4>
-    """
-    
     val instantiationAndDataset: String = """
       ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
             pmbb:test_instantiation_1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000522 .
@@ -58,7 +49,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
       		?encounterCrid obo:BFO_0000051 ?encregden .
       		?encsymb a turbo:TURBO_0000509 .
       		?encregden a turbo:TURBO_0000510 .
-      		?encsymb turbo:TURBO_0006510 '20' .
+      		?encsymb turbo:TURBO_0010094 '20' .
       		?encregden obo:IAO_0000219 turbo:TURBO_0000440 .
       		?encSymb obo:BFO_0000050 ?dataset .
       		?dataset obo:BFO_0000051 ?encSymb .
@@ -75,7 +66,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
                 ?encounter a obo:OGMS_0000097 .
             		?encounter obo:OBI_0000299 ?diagnosis .
             		?diagnosis a obo:OGMS_0000073 .
-            		?diagnosis turbo:TURBO_0006512 "401.9" .
+            		?diagnosis turbo:TURBO_0010094 "401.9" .
             		?diagnosis turbo:TURBO_0000703 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
             		?diagnosis turbo:TURBO_0006515 "ICD-9" .
             		?diagnosis turbo:TURBO_0000306 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
@@ -93,12 +84,12 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           ?encounter a obo:OGMS_0000097 .
           ?encounter obo:OBI_0000299 ?drugPrescript .
       		?drugPrescript a obo:PDRO_0000001 .
-      		?drugPrescript turbo:TURBO_0006512 "holistic soil from the ganges" .
+      		?drugPrescript turbo:TURBO_0010094 "holistic soil from the ganges" .
       		?medCrid obo:IAO_0000219 ?drugPrescript .
       		?medCrid a turbo:TURBO_0000561 .
       		?medCrid obo:BFO_0000051 ?medCridSymbol .
       		?medCridSymbol a turbo:TURBO_0000562 .
-      		?medCridSymbol turbo:TURBO_0006510 "3" .
+      		?medCridSymbol turbo:TURBO_0010094 "3" .
       		?drugPrescript turbo:TURBO_0000307 turbo:someDrug .
       		
       		?drugPrescript obo:BFO_0000050 ?dataset .
@@ -112,8 +103,8 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
           
                 ?encounter obo:OBI_0000299 ?BMI .
-                ?encounter obo:OBI_0000299 ?heightDatum .
-                ?encounter obo:OBI_0000299 ?weightDatum .
+                ?encounter turbo:TURBO_0010139 ?heightDatum .
+                ?encounter turbo:TURBO_0010139 ?weightDatum .
                 
                 ?encounter a obo:OGMS_0000097 .
             		?BMI a <http://www.ebi.ac.uk/efo/EFO_0004340> .
@@ -121,7 +112,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
             		  turbo:TURBO_0010094 "26.2577659792"^^xsd:float .
             		?dataset a obo:IAO_0000100 .
             		
-          	    ?heightDatum rdf:type obo:OBI_0001931 ;
+          	    ?heightDatum rdf:type turbo:TURBO_0010138 ;
           	                 obo:IAO_0000039 obo:UO_0000015 ;
           	                 turbo:TURBO_0010094 "177.8"^^xsd:float ;
           	                 obo:BFO_0000050 ?dataset .
@@ -140,8 +131,8 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
     val healthcareEncounterDate: String = """
           ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
             ?encDate <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000512 .
-        		?encDate turbo:TURBO_0006512 "15/Jan/2017" .
-        		?encDate turbo:TURBO_0006511 "2017-01-15"^^xsd:date .
+        		?encDate turbo:TURBO_0010095 "15/Jan/2017" .
+        		?encDate turbo:TURBO_0010096 "2017-01-15"^^xsd:date .
         		?encDate obo:IAO_0000136 ?encStart .
         		?dataset obo:BFO_0000051 ?encDate .
         		?encDate obo:BFO_0000050 ?dataset .
@@ -217,7 +208,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010014",
-            "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/OBI_0000299", 
+            "http://transformunify.org/ontologies/TURBO_0010139", "http://purl.obolibrary.org/obo/OBI_0000299", 
             "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -229,24 +220,24 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
             "http://purl.org/dc/elements/1.1/title", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0000306",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://transformunify.org/ontologies/TURBO_0000703",
             "http://purl.obolibrary.org/obo/RO_0002223", "http://transformunify.org/ontologies/TURBO_0006515",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006512",
-            "http://transformunify.org/ontologies/TURBO_0006511", "http://purl.obolibrary.org/obo/IAO_0000136",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
+            "http://transformunify.org/ontologies/TURBO_0010096", "http://purl.obolibrary.org/obo/IAO_0000136",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://transformunify.org/ontologies/TURBO_0006512", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://transformunify.org/ontologies/TURBO_0010094","http://transformunify.org/ontologies/TURBO_0010094",
             "http://transformunify.org/ontologies/TURBO_0010094", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000039", 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
-            "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/IAO_0000039", 
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006512",
+            "http://transformunify.org/ontologies/TURBO_0010139", "http://purl.obolibrary.org/obo/IAO_0000039", 
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010095",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://transformunify.org/ontologies/TURBO_0010013", "http://transformunify.org/ontologies/TURBO_0000655",
             "http://transformunify.org/ontologies/TURBO_0000644", "http://transformunify.org/ontologies/TURBO_0000648",
@@ -302,7 +293,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
             "http://purl.org/dc/elements/1.1/title", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://transformunify.org/ontologies/TURBO_0010113", "http://transformunify.org/ontologies/TURBO_0000643",
@@ -433,8 +424,8 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         val dateNoXsd: String = """
           ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
                 ?encDate <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000512 .
-        		?encDate turbo:TURBO_0006512 "15/Jan/2017" .
-        		# ?encDate turbo:TURBO_0006511 "2017-01-15"^^xsd:date .
+        		?encDate turbo:TURBO_0010095 "15/Jan/2017" .
+        		# ?encDate turbo:TURBO_0010096 "2017-01-15"^^xsd:date .
         		?encDate obo:IAO_0000136 ?encStart .
         		?dataset obo:BFO_0000051 ?encDate .
         		?encStart <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000511 .
@@ -454,7 +445,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
       		?medCrid a turbo:TURBO_0000561 .
       		?medCrid obo:BFO_0000051 ?medCridSymbol .
       		?medCridSymbol a turbo:TURBO_0000562 .
-      		?medCridSymbol turbo:TURBO_0006510 "3" .
+      		?medCridSymbol turbo:TURBO_0010094 "3" .
       		
       		?drugPrescript obo:BFO_0000050 ?dataset .
       		?dataset obo:BFO_0000051 ?drugPrescript .
@@ -479,7 +470,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/OBI_0000299", 
+            "http://transformunify.org/ontologies/TURBO_0010139", "http://purl.obolibrary.org/obo/OBI_0000299", 
             "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -494,20 +485,20 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/RO_0002223",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010095",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000219",
-            "http://transformunify.org/ontologies/TURBO_0006512", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0004602",
             "http://purl.obolibrary.org/obo/IAO_0000581", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000039", "http://transformunify.org/ontologies/TURBO_0010113",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
-             "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://transformunify.org/ontologies/TURBO_0010139", "http://purl.obolibrary.org/obo/OBI_0000299",
             "http://purl.obolibrary.org/obo/IAO_0000039", "http://transformunify.org/ontologies/TURBO_0006515",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0000655",
             "http://transformunify.org/ontologies/TURBO_0000643", "http://transformunify.org/ontologies/TURBO_0000644",
@@ -564,12 +555,12 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
                   
                   ?diagnosis1 turbo:TURBO_0006515 "ICD-9" .
                   ?diagnosis1 turbo:TURBO_0000703 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
-                  ?diagnosis1 turbo:TURBO_0006512 "401.9" .
+                  ?diagnosis1 turbo:TURBO_0010094 "401.9" .
                   ?diagnosis1 turbo:TURBO_0000306 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
                   
                   ?diagnosis2 turbo:TURBO_0006515 "ICD-10" .
                   ?diagnosis2 turbo:TURBO_0000703 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892> .
-                  ?diagnosis2 turbo:TURBO_0006512 "177.8" .
+                  ?diagnosis2 turbo:TURBO_0010094 "177.8" .
                   ?diagnosis2 turbo:TURBO_0000306 <http://purl.bioontology.org/ontology/ICD10CM/177.8> .
                   
                   Filter (?diagnosis1 != ?diagnosis2) 
@@ -631,22 +622,22 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:OBI_0000299 ?prescription1 .
                   ?prescription1 a obo:PDRO_0000001 .
-                  ?prescription1 turbo:TURBO_0006512 "holistic soil from the ganges" .
+                  ?prescription1 turbo:TURBO_0010094 "holistic soil from the ganges" .
                   ?medCrid1 obo:IAO_0000219 ?prescription1 .
                   ?medCrid1 a turbo:TURBO_0000561 .
                   ?enc obo:OBI_0000299 ?prescription2 .
                   ?prescription2 a obo:PDRO_0000001 .
-                  ?prescription2 turbo:TURBO_0006512 "medicinal purple kush" .
+                  ?prescription2 turbo:TURBO_0010094 "medicinal purple kush" .
                   ?medCrid2 obo:IAO_0000219 ?prescription2 .
                   ?medCrid2 a turbo:TURBO_0000561 .
                   
                   ?medCrid1 obo:BFO_0000051 ?medCridSymbol1 .
                   ?medCridSymbol1 a turbo:TURBO_0000562 .
-                  ?medCridSymbol1 turbo:TURBO_0006510 "3" .
+                  ?medCridSymbol1 turbo:TURBO_0010094 "3" .
                   
                   ?medCrid2 obo:BFO_0000051 ?medCridSymbol2 .
                   ?medCridSymbol2 a turbo:TURBO_0000562 .
-                  ?medCridSymbol2 turbo:TURBO_0006510 "4" .
+                  ?medCridSymbol2 turbo:TURBO_0010094 "4" .
                   
                   Filter (?medCrid1 != ?medCrid2) 
                   Filter (?prescription1 != ?prescription2) 
@@ -778,7 +769,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
                   ?encounter a obo:OGMS_0000097 .
               		?encounter obo:OBI_0000299 ?diagnosis .
               		?diagnosis a obo:OGMS_0000073 .
-              		?diagnosis turbo:TURBO_0006512 "401.9" .
+              		?diagnosis turbo:TURBO_0010094 "401.9" .
             		  ?diagnosis turbo:TURBO_0000703 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
             		  ?diagnosis turbo:TURBO_0006515 "ICD-9" .
             		  ?diagnosis turbo:TURBO_0000306 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
@@ -825,13 +816,13 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
               
                 ?encounter a obo:OGMS_0000097 .
                 ?encounter obo:OBI_0000299 ?BMI .
-                ?encounter obo:OBI_0000299 ?heightDatum .
-                ?encounter obo:OBI_0000299 ?weightDatum .
+                ?encounter turbo:TURBO_0010139 ?heightDatum .
+                ?encounter turbo:TURBO_0010139 ?weightDatum .
                 
             		?BMI a <http://www.ebi.ac.uk/efo/EFO_0004340> ;
             		    turbo:TURBO_0010094 "26.2577659792"^^xsd:float .
             		
-        	      ?heightDatum rdf:type obo:OBI_0001931 ;
+        	      ?heightDatum rdf:type turbo:TURBO_0010138 ;
         	                 obo:IAO_0000039 obo:UO_0000015 ;
         	                 turbo:TURBO_0010094 "177.8"^^xsd:float ;
         	                 obo:BFO_0000050 ?dataset .
