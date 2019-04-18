@@ -24,8 +24,6 @@ import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
 
 object ConnectToGraphDB extends ProjectwideGlobals
 {   
-    val ontLoad: OntologyLoader = new OntologyLoader
-    
     /**
      * Calls the initialize graph method, then loads the data files specified in the TURBO properties file if the loadFromProperties Boolean
      * in the TURBO properties file is set to true. Also loads ontology if importOntologies Boolean in the TURBO properties file is set to true.
@@ -61,14 +59,20 @@ object ConnectToGraphDB extends ProjectwideGlobals
             val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
             repoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
             repoManager.initialize()
-            val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile("namespace"))
+            val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile("productionRepository"))
             val cxn: RepositoryConnection = repository.getConnection()
             
             val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
             gmRepoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
             gmRepoManager.initialize()
-            val gmRepository: Repository = gmRepoManager.getRepository("Haydens_graph_model")
+            val gmRepository: Repository = gmRepoManager.getRepository(helper.retrievePropertyFromFile("modelRepository"))
             val gmCxn: RepositoryConnection = gmRepository.getConnection()
+            
+            val testRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
+            testRepoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
+            testRepoManager.initialize()
+            val testRepository: Repository = testRepoManager.getRepository(helper.retrievePropertyFromFile("testingRepository"))
+            val testCxn: RepositoryConnection = testRepository.getConnection()
             
             graphConnect.setConnection(cxn)
             graphConnect.setRepoManager(repoManager)
@@ -77,6 +81,10 @@ object ConnectToGraphDB extends ProjectwideGlobals
             graphConnect.setGmConnection(gmCxn)
             graphConnect.setGmRepoManager(gmRepoManager)
             graphConnect.setGmRepository(gmRepository)
+            
+            graphConnect.setTestConnection(testCxn)
+            graphConnect.setTestRepoManager(testRepoManager)
+            graphConnect.setTestRepository(testRepository)
         }
         graphConnect
     }
@@ -99,7 +107,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
             }
             helper.loadDataFromFile(cxn, k, format.get, namedgraph)
         }
-        if (importOntologies == "true") ontLoad.addOntologyFromUrl(cxn, ontologyURL)
+        if (importOntologies == "true") OntologyLoader.addOntologyFromUrl(cxn, ontologyURL)
     }
     
     /**
@@ -116,7 +124,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
         //check to see if 
         else
         {
-            ontLoad.addOntologyFromUrl(cxn)
+            OntologyLoader.addOntologyFromUrl(cxn)
         } 
     }
     
@@ -183,13 +191,17 @@ object ConnectToGraphDB extends ProjectwideGlobals
         val gmRepoManager = graphCxn.getGmRepoManager()
         val gmRepository = graphCxn.getGmRepository()
         
+        val testCxn = graphCxn.getTestConnection()
+        val testRepoManager = graphCxn.getTestRepoManager()
+        val testRepository = graphCxn.getTestRepository()
+        
         if (deleteAllTriples)
         {
-             if (!cxn.isActive()) cxn.begin()
+             if (!testCxn.isActive()) testCxn.begin()
              val deleteAll: String = "DELETE {?s ?p ?o} WHERE {?s ?p ?o .} "
-             val tupleDelete = cxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
+             val tupleDelete = testCxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
              tupleDelete.execute()
-             cxn.commit()
+             testCxn.commit()
         }
         
         cxn.close()
@@ -199,6 +211,10 @@ object ConnectToGraphDB extends ProjectwideGlobals
         gmCxn.close()
         gmRepository.shutDown()
         gmRepoManager.shutDown()
+        
+        testCxn.close()
+        testRepository.shutDown()
+        testRepoManager.shutDown()
     }
     
     /**
@@ -234,12 +250,9 @@ object ConnectToGraphDB extends ProjectwideGlobals
         input.close()
         var optToReturn: Option[String] = None : Option[String]
         val proceed: Boolean = true
-        var requiredProperties: ArrayBuffer[String] = ArrayBuffer("serviceURL","password","username","namespace","importOntologies","errorLogFile","ontologyURL")
-        if (requiredInputFileProps) 
-        {
-            requiredProperties += "inputFiles"
-            requiredProperties += "inputFilesFormat"
-        }
+        var requiredProperties: ArrayBuffer[String] = ArrayBuffer("serviceURL",
+            "password","username","productionRepository","importOntologies","errorLogFile",
+            "ontologyURL", "modelRepository", "testingRepository")
         var a = 0
         while (optToReturn == None && a < requiredProperties.size)
         {

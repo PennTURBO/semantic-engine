@@ -159,6 +159,11 @@ ontologies:SHALocalRandom
   ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
                                 SHA256(CONCAT(\"replacement\",\"localUUID\", str(?mainExpansionTypeVariableName))))) AS ?replacement)""" ;
 .
+ontologies:SHALocalRandomWithDependent
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql """BIND(uri(CONCAT(\"http://www.itmat.upenn.edu/biobank/\",
+                                SHA256(CONCAT(\"replacement\", \"localUUID\", str(?dependent))))) AS ?replacement)""" ;
+.
 ontologies:ShortcutBiobankEncounterRegistryOfVariousTypes
   a owl:Class ;
 .
@@ -177,9 +182,6 @@ ontologies:ShortcutHomoSapiensRegistryOfVariousTypes
 ontologies:ShortcutIcdRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "some shortcut icd registry uri" ;
-.
-ontologies:Shortcuts_biobankEncounterShortcuts
-  a ontologies:TurboNamedGraph ;
 .
 ontologies:SingletonOfType
   a ontologies:TurboGraphVariableManipulationLogic ;
@@ -283,8 +285,8 @@ ontologies:adiposeToHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required false ;
   ontologies:subject obo:UBERON_0001013 ;
@@ -369,7 +371,7 @@ ontologies:biobankEncounterDateVariableManipulation
 .
 ontologies:biobankEncounterExpansionProcess
   a ontologies:TurboGraphExpansionProcess ;
-  ontologies:inputNamedGraph pmbb:Shortcuts_biobankEncounterShortcuts ;
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:shortcut_turbo_TURBO_0000527 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:usesVariableManipulationRule ontologies:biobankEncounterBMIVariableManipulation ;
@@ -377,6 +379,7 @@ ontologies:biobankEncounterExpansionProcess
   ontologies:usesVariableManipulationRule ontologies:biobankEncounterDateValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:biobankEncounterDateVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:biobankEncounterHeightVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterHomoSapiensConnectionVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:biobankEncounterIdentifierVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:biobankEncounterRegistryValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:biobankEncounterRegistryVariableManipulation ;
@@ -390,10 +393,9 @@ ontologies:biobankEncounterExpansionProcess
   ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:heightValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:lengthMeasurementValueSpecificationVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:massMeasurementValueSpecificationVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:weightValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterHomoSapiensConnectionVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:lengthDatumVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:massDatumVariableManipulation ;
 .
 ontologies:biobankEncounterHeightVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
@@ -401,12 +403,18 @@ ontologies:biobankEncounterHeightVariableManipulation
   ontologies:manipulationDependsOn ontologies:shortcutHeightValue ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundRandomUUID ;
 .
+ontologies:biobankEncounterHomoSapiensConnectionVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:shortcutBiobankEncounterHomoSapiensUriStringValue ;
+  ontologies:manipulationCreates ontologies:shortcut_obo_NCBITaxon_9606 ;
+  ontologies:usesSparqlLogic ontologies:StringToURI ;
+.
 ontologies:biobankEncounterIdToBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
+  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000527 ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000533 ;
@@ -435,6 +443,16 @@ ontologies:biobankEncounterIdentifierVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000533 ;
   ontologies:usesSparqlLogic ontologies:RandomUUID ;
+.
+ontologies:biobankEncounterLinkingProcess
+  a ontologies:TurboGraphEntityLinkingProcess ;
+  ontologies:inputNamedGraph pmbb:expanded ;
+  ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
+  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:usesVariableManipulationRule ontologies:adiposeVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:participantUnderInvestigationRoleVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
 .
 ontologies:biobankEncounterRegistryDenoterToDataset
   a ontologies:ObjectConnectionRecipe ;
@@ -539,30 +557,30 @@ ontologies:biobankEncounterSymbolVariableManipulation
 .
 ontologies:biobankEncounterToBMI
   a ontologies:ObjectConnectionRecipe ;
+  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ns3:EFO_0004340 ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000527 ;
 .
-ontologies:biobankEncounterToLengthMeasurementDatum
+ontologies:biobankEncounterToLengthMeasurementValueSpecification
   a ontologies:ObjectConnectionRecipe ;
   ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:IAO_0000408 ;
+  ontologies:object obo:OBI_0001931 ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000527 ;
   rdfs:label "object connection to length measurement datum" ;
 .
-ontologies:biobankEncounterToMassMeasurementDatum
+ontologies:biobankEncounterToMassMeasurementValueSpecification
   a ontologies:ObjectConnectionRecipe ;
   ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:IAO_0000414 ;
+  ontologies:object obo:OBI_0001929 ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
@@ -593,9 +611,18 @@ ontologies:bmiToAdipose
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:UBERON_0001013 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required false ;
+  ontologies:subject ns3:EFO_0004340 ;
+.
+ontologies:bmiToBiobankEncounterDate
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000532 ;
+  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:predicate obo:IAO_0000581 ;
   ontologies:required false ;
   ontologies:subject ns3:EFO_0004340 ;
 .
@@ -603,8 +630,8 @@ ontologies:bmiToBmiDoubleLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:bmiDoubleLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject ns3:EFO_0004340 ;
@@ -626,15 +653,6 @@ ontologies:bmiToHealthcareEncounterDate
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000512 ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:predicate obo:IAO_0000581 ;
-  ontologies:required false ;
-  ontologies:subject ns3:EFO_0004340 ;
-.
-ontologies:bmiToBiobankEncounterDate
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000532 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
   ontologies:predicate obo:IAO_0000581 ;
   ontologies:required false ;
   ontologies:subject ns3:EFO_0004340 ;
@@ -788,10 +806,10 @@ ontologies:datasetToHomoSapiensSymbol
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
 .
-ontologies:datasetToLengthMeasurementDatum
+ontologies:datasetToLengthMeasurementValueSpecification
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object obo:IAO_0000408 ;
+  ontologies:object obo:OBI_0001931 ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -799,10 +817,10 @@ ontologies:datasetToLengthMeasurementDatum
   ontologies:subject obo:IAO_0000100 ;
   rdfs:label "dataset to length measurement connection" ;
 .
-ontologies:datasetToMassMeasurementDatum
+ontologies:datasetToMassMeasurementValueSpecification
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object obo:IAO_0000414 ;
+  ontologies:object obo:OBI_0001929 ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -843,7 +861,7 @@ ontologies:datasetVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates obo:IAO_0000100 ;
   ontologies:manipulationDependsOn ontologies:shortcutDatasetTitleStringLiteralValue ;
-  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandom ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
 .
 ontologies:dateOfBirthDatumDateVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
@@ -1090,24 +1108,6 @@ ontologies:hasOriginalVariable
   rdfs:domain ontologies:VariableManipulationForLiteralValue ;
   rdfs:range rdfs:Resource ;
 .
-ontologies:healthcareEncounterCridToHomoSapiensCrid
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000503 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
-  ontologies:predicate ontologies:TURBO_0000302 ;
-  ontologies:required false ;
-  ontologies:subject ontologies:TURBO_0000508 ;
-.
-ontologies:biobankEncounterCridToHomoSapiensCrid
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000503 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:predicate ontologies:TURBO_0000302 ;
-  ontologies:required false ;
-  ontologies:subject ontologies:TURBO_0000533 ;
-.
 ontologies:healthcareEncounterDateLiteralValue
   a ontologies:TurboGraphDateLiteralValue ;
   rdfs:label "healthcare encounter date value" ;
@@ -1176,7 +1176,7 @@ ontologies:healthcareEncounterDateVariableManipulation
 .
 ontologies:healthcareEncounterExpansionProcess
   a ontologies:TurboGraphExpansionProcess ;
-  ontologies:inputNamedGraph pmbb:Shortcuts_healthcareEncounterShortcuts ;
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:shortcut_obo_OGMS_0000097 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:usesVariableManipulationRule ontologies:bmiValueVariableManipulation ;
@@ -1203,9 +1203,9 @@ ontologies:healthcareEncounterExpansionProcess
   ontologies:usesVariableManipulationRule ontologies:healthcareEncounterVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:heightValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:lengthDatumVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:lengthMeasurementValueSpecificationVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:mappedMedicationTermVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:massDatumVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:massMeasurementValueSpecificationVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:medicationCridVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:medicationOrderNameValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:medicationSymbolValueVariableManipulation ;
@@ -1218,12 +1218,6 @@ ontologies:healthcareEncounterExpansionProcess
 ontologies:healthcareEncounterHomoSapiensConnectionVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
   ontologies:hasOriginalVariable ontologies:shortcutHealthcareEncounterHomoSapiensUriStringValue ;
-  ontologies:manipulationCreates ontologies:shortcut_obo_NCBITaxon_9606 ;
-  ontologies:usesSparqlLogic ontologies:StringToURI ;
-.
-ontologies:biobankEncounterHomoSapiensConnectionVariableManipulation
-  a ontologies:VariableManipulationForLiteralValue ;
-  ontologies:hasOriginalVariable ontologies:shortcutBiobankEncounterHomoSapiensUriStringValue ;
   ontologies:manipulationCreates ontologies:shortcut_obo_NCBITaxon_9606 ;
   ontologies:usesSparqlLogic ontologies:StringToURI ;
 .
@@ -1250,19 +1244,9 @@ ontologies:healthcareEncounterIdToSymbol
 ontologies:healthcareEncounterIdentifierVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000508 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandom ;
 .
 ontologies:healthcareEncounterLinkingProcess
-  a ontologies:TurboGraphEntityLinkingProcess ;
-  ontologies:inputNamedGraph pmbb:expanded ;
-  ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
-  ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:usesVariableManipulationRule ontologies:adiposeVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:participantUnderInvestigationRoleVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
-.
-ontologies:biobankEncounterLinkingProcess
   a ontologies:TurboGraphEntityLinkingProcess ;
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
@@ -1311,7 +1295,7 @@ ontologies:healthcareEncounterRegistryValueVariableManipulation
 ontologies:healthcareEncounterRegistryVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000510 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandom ;
 .
 ontologies:healthcareEncounterStartToHealthcareEncounter
   a ontologies:ObjectConnectionRecipe ;
@@ -1372,7 +1356,7 @@ ontologies:healthcareEncounterSymbolValueVariableManipulation
 ontologies:healthcareEncounterSymbolVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000509 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandom ;
 .
 ontologies:healthcareEncounterToBMI
   a ontologies:ObjectConnectionRecipe ;
@@ -1390,27 +1374,27 @@ ontologies:healthcareEncounterToDiagnosis
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OGMS_0000073 ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:predicate obo:RO_0002234 ;
+  ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
   rdfs:label "healthcare encounter to diagnosis connection" ;
 .
-ontologies:healthcareEncounterToLengthMeasurementDatum
+ontologies:healthcareEncounterToLengthMeasurementValueSpecification
   a ontologies:ObjectConnectionRecipe ;
   ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:IAO_0000408 ;
+  ontologies:object obo:OBI_0001931 ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
   rdfs:label "object connection to length measurement datum" ;
 .
-ontologies:healthcareEncounterToMassMeasurementDatum
+ontologies:healthcareEncounterToMassValueSpecification
   a ontologies:ObjectConnectionRecipe ;
   ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:IAO_0000414 ;
+  ontologies:object obo:OBI_0001929 ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
@@ -1421,7 +1405,7 @@ ontologies:healthcareEncounterToPrescription
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:PDRO_0000001 ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:predicate obo:RO_0002234 ;
+  ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
   rdfs:label "healthcare encounter to drug prescription connection" ;
@@ -1430,26 +1414,6 @@ ontologies:healthcareEncounterVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates obo:OGMS_0000097 ;
   ontologies:usesSparqlLogic ontologies:SHAGlobalRandom ;
-.
-ontologies:heightDatumToHomoSapiens
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required false ;
-  ontologies:subject obo:IAO_0000408 ;
-.
-ontologies:heightDatumToHomoSapiensHeight
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:PATO_0000119 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:predicate obo:IAO_0000221 ;
-  ontologies:required false ;
-  ontologies:subject obo:IAO_0000408 ;
 .
 ontologies:heightValueVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
@@ -1460,26 +1424,8 @@ ontologies:heightValueVariableManipulation
 ontologies:heightVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates obo:PATO_0000119 ;
-  ontologies:manipulationDependsOn obo:IAO_0000408 ;
+  ontologies:manipulationDependsOn obo:OBI_0001931 ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSingletonSHAOfBaseType ;
-.
-ontologies:homoSapiensCridToHealthcareEncounterCrid
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000508 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
-  ontologies:predicate ontologies:TURBO_0000302 ;
-  ontologies:required false ;
-  ontologies:subject ontologies:TURBO_0000503 ;
-.
-ontologies:homoSapiensCridToBiobankEncounterCrid
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000533 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:predicate ontologies:TURBO_0000302 ;
-  ontologies:required false ;
-  ontologies:subject ontologies:TURBO_0000503 ;
 .
 ontologies:homoSapiensDateOfBirthDateLiteralValue
   a ontologies:TurboGraphDateLiteralValue ;
@@ -1489,7 +1435,7 @@ ontologies:homoSapiensDateOfBirthStringLiteralValue
 .
 ontologies:homoSapiensExpansionProcess
   a ontologies:TurboGraphExpansionProcess ;
-  ontologies:inputNamedGraph pmbb:Shortcuts_homoSapiensShortcuts ;
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:shortcut_obo_NCBITaxon_9606 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:usesVariableManipulationRule ontologies:biologicalSexVariableManipulation ;
@@ -1550,7 +1496,8 @@ ontologies:homoSapiensIdentifierToHomoSapiens
 ontologies:homoSapiensIdentifierVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000503 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:manipulationDependsOn ontologies:shortcut_turbo_TURBO_0000503 ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandomWithDependent ;
 .
 ontologies:homoSapiensRaceIdentityStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
@@ -1591,7 +1538,8 @@ ontologies:homoSapiensRegistryValueVariableManipulation
 ontologies:homoSapiensRegistryVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000505 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:manipulationDependsOn ontologies:shortcut_turbo_TURBO_0000503 ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandomWithDependent ;
 .
 ontologies:homoSapiensSymbolStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
@@ -1623,15 +1571,25 @@ ontologies:homoSapiensSymbolValueVariableManipulation
 ontologies:homoSapiensSymbolVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000504 ;
-  ontologies:usesSparqlLogic ontologies:RandomUUID ;
+  ontologies:manipulationDependsOn ontologies:shortcut_turbo_TURBO_0000503 ;
+  ontologies:usesSparqlLogic ontologies:SHALocalRandomWithDependent ;
 .
 ontologies:homoSapiensToAdipose
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UBERON_0001013 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+.
+ontologies:homoSapiensToBiobankEncounter
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object ontologies:TURBO_0000527 ;
+  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:predicate obo:RO_0000056 ;
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
@@ -1663,21 +1621,12 @@ ontologies:homoSapiensToHealthcareEncounter
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
-ontologies:homoSapiensToBiobankEncounter
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:predicate obo:RO_0000056 ;
-  ontologies:required false ;
-  ontologies:subject obo:NCBITaxon_9606 ;
-.
 ontologies:homoSapiensToHeight
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:PATO_0000119 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:predicate obo:RO_0000086 ;
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -1686,8 +1635,8 @@ ontologies:homoSapiensToInvestigationRole
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OBI_0000097 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:predicate obo:RO_0000087 ;
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -1696,8 +1645,8 @@ ontologies:homoSapiensToWeight
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:PATO_0000128 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:predicate obo:RO_0000086 ;
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -1766,15 +1715,6 @@ ontologies:instantiationToDataset
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000522 ;
 .
-ontologies:investigationRoleToHealthcareEncounter
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object obo:OGMS_0000097 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
-  ontologies:predicate obo:BFO_0000054 ;
-  ontologies:required false ;
-  ontologies:subject obo:OBI_0000097 ;
-.
 ontologies:investigationRoleToBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
@@ -1784,24 +1724,20 @@ ontologies:investigationRoleToBiobankEncounter
   ontologies:required false ;
   ontologies:subject obo:OBI_0000097 ;
 .
-ontologies:lengthDatumVariableManipulation
-  a ontologies:VariableManipulationForIntermediateNode ;
-  ontologies:manipulationCreates obo:IAO_0000408 ;
-  ontologies:manipulationDependsOn ontologies:shortcutHeightValue ;
-  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
+ontologies:investigationRoleToHealthcareEncounter
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object obo:OGMS_0000097 ;
+  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:predicate obo:BFO_0000054 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0000097 ;
 .
-ontologies:lengthMeasurementDatumToBodyHeight
-  a "ll" ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object <http://purl.obolibrary.org/obo/LNC/8302-2> ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required true ;
-  ontologies:subject obo:IAO_0000408 ;
-  rdfs:label "length measurement datum to body height connection" ;
+ontologies:lengthMeasurementDoubleLiteralValue
+  a ontologies:TurboGraphDoubleLiteralValue ;
+  rdfs:label "length measurement double literal value" ;
 .
-ontologies:lengthMeasurementDatumToCentimeter
+ontologies:lengthMeasurementValueSpecificationToCentimeter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000015 ;
@@ -1809,9 +1745,9 @@ ontologies:lengthMeasurementDatumToCentimeter
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate obo:IAO_0000039 ;
   ontologies:required true ;
-  ontologies:subject obo:IAO_0000408 ;
+  ontologies:subject obo:OBI_0001931 ;
 .
-ontologies:lengthMeasurementDatumToDataset
+ontologies:lengthMeasurementValueSpecificationToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
@@ -1819,23 +1755,45 @@ ontologies:lengthMeasurementDatumToDataset
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
-  ontologies:subject obo:IAO_0000408 ;
+  ontologies:subject obo:OBI_0001931 ;
   rdfs:label "length measurement connection to dataset" ;
 .
-ontologies:lengthMeasurementDatumToLengthMeasurementLiteralValue
+ontologies:lengthMeasurementValueSpecificationToHomoSapiens
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0001931 ;
+.
+ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:PATO_0000119 ;
+  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:predicate obo:IAO_0000221 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0001931 ;
+.
+ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:lengthMeasurementDoubleLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
-  ontologies:subject obo:IAO_0000408 ;
+  ontologies:subject obo:OBI_0001931 ;
   rdfs:label "length measurement datum to length measurement literal value connection" ;
 .
-ontologies:lengthMeasurementDoubleLiteralValue
-  a ontologies:TurboGraphDoubleLiteralValue ;
-  rdfs:label "length measurement double literal value" ;
+ontologies:lengthMeasurementValueSpecificationVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:OBI_0001931 ;
+  ontologies:manipulationDependsOn ontologies:shortcutHeightValue ;
+  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
 .
 ontologies:manipulatesBaseEntity
   a owl:ObjectProperty ;
@@ -1866,44 +1824,11 @@ ontologies:mappedMedicationTermVariableManipulation
   ontologies:manipulationCreates ontologies:DrugTermOfVariousTypes ;
   ontologies:usesSparqlLogic ontologies:BindAs ;
 .
-ontologies:massDatumToHomoSapiens
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required false ;
-  ontologies:subject obo:IAO_0000414 ;
+ontologies:massMeasurementDoubleLiteralValue
+  a ontologies:TurboGraphDoubleLiteralValue ;
+  rdfs:label "mass measurement datum double literal value" ;
 .
-ontologies:massDatumToHomoSapiensWeight
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:PATO_0000128 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:predicate obo:IAO_0000221 ;
-  ontologies:required false ;
-  ontologies:subject obo:IAO_0000414 ;
-.
-ontologies:massDatumVariableManipulation
-  a ontologies:VariableManipulationForIntermediateNode ;
-  ontologies:manipulationCreates obo:IAO_0000414 ;
-  ontologies:manipulationDependsOn ontologies:shortcutWeightValue ;
-  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
-.
-ontologies:massMeasurementDatumToBodyWeight
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object <http://purl.obolibrary.org/obo/LNC/29463-7> ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required true ;
-  ontologies:subject obo:IAO_0000414 ;
-  rdfs:label "mass measurement datum to body weight" ;
-.
-ontologies:massMeasurementDatumToDataset
+ontologies:massMeasurementValueSpecificationToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
@@ -1911,10 +1836,30 @@ ontologies:massMeasurementDatumToDataset
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
-  ontologies:subject obo:IAO_0000414 ;
+  ontologies:subject obo:OBI_0001929 ;
   rdfs:label "mass measurement connection to dataset" ;
 .
-ontologies:massMeasurementDatumToKilogram
+ontologies:massMeasurementValueSpecificationToHomoSapiens
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0001929 ;
+.
+ontologies:massMeasurementValueSpecificationToHomoSapiensWeight
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:PATO_0000128 ;
+  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:predicate obo:IAO_0000221 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0001929 ;
+.
+ontologies:massMeasurementValueSpecificationToKilogram
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000009 ;
@@ -1922,23 +1867,25 @@ ontologies:massMeasurementDatumToKilogram
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate obo:IAO_0000039 ;
   ontologies:required true ;
-  ontologies:subject obo:IAO_0000414 ;
+  ontologies:subject obo:OBI_0001929 ;
   rdfs:label "mass measurement datum to kilogram" ;
 .
-ontologies:massMeasurementDatumToMassMeasurementLiteralValue
+ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:massMeasurementDoubleLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
-  ontologies:subject obo:IAO_0000414 ;
+  ontologies:subject obo:OBI_0001929 ;
   rdfs:label "mass measurement datum to mass measurement double literal value connection" ;
 .
-ontologies:massMeasurementDoubleLiteralValue
-  a ontologies:TurboGraphDoubleLiteralValue ;
-  rdfs:label "mass measurement datum double literal value" ;
+ontologies:massMeasurementValueSpecificationVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:OBI_0001929 ;
+  ontologies:manipulationDependsOn ontologies:shortcutWeightValue ;
+  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
 .
 ontologies:medicationCridVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
@@ -2091,11 +2038,9 @@ ontologies:raceIdentificationProcessToRaceIdentityDatum
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required true ;
-  ontologies:subject obo:OMRSE_00000099 ;
 .
 ontologies:raceIdentificationProcessVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
-  ontologies:manipulationCreates obo:OMRSE_00000099 ;
   ontologies:manipulationDependsOn ontologies:shortcutHomoSapiensRaceIdentityStringLiteralValue ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandom ;
 .
@@ -2227,7 +2172,6 @@ ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000527 ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
   ontologies:predicate ontologies:TURBO_0010113 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_turbo_TURBO_0000527 ;
@@ -2249,6 +2193,16 @@ ontologies:shortcutBiobankEncounterToRegistry
   ontologies:object ontologies:ShortcutBiobankEncounterRegistryOfVariousTypes ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
   ontologies:predicate ontologies:TURBO_0000630 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:shortcut_turbo_TURBO_0000527 ;
+.
+ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:shortcut_obo_NCBITaxon_9606 ;
+  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:predicate ontologies:TURBO_0010012 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_turbo_TURBO_0000527 ;
 .
@@ -2425,7 +2379,7 @@ ontologies:shortcutHealthcareEncounterToDiagnosis
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:shortcut_obo_OGMS_0000073 ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:predicate obo:RO_0002234 ;
+  ontologies:predicate obo:OBI_0000299 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
   rdfs:label "shortcut healthcare encounter to diagnosis" ;
@@ -2469,7 +2423,7 @@ ontologies:shortcutHealthcareEncounterToPrescription
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:shortcut_obo_PDRO_0000001 ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:predicate obo:RO_0002234 ;
+  ontologies:predicate obo:OBI_0000299 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
   rdfs:label "shortcut healthcare encounter to prescription connection" ;
@@ -2493,16 +2447,6 @@ ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI
   ontologies:predicate ontologies:TURBO_0010002 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
-.
-ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:shortcut_obo_NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0010012 ;
-  ontologies:required true ;
-  ontologies:subject ontologies:shortcut_turbo_TURBO_0000527 ;
 .
 ontologies:shortcutHealthcareEncounterToSymbolValue
   a ontologies:DatatypeConnectionRecipe ;
@@ -2607,8 +2551,8 @@ ontologies:shortcutHomoSapiensToDateOfBirthString
 .
 ontologies:shortcutHomoSapiensToExpandedHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
   ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
@@ -2754,17 +2698,12 @@ ontologies:weightValueVariableManipulation
 ontologies:weightVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates obo:PATO_0000128 ;
-  ontologies:manipulationDependsOn obo:IAO_0000414 ;
+  ontologies:manipulationDependsOn obo:OBI_0001929 ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSingletonSHAOfBaseType ;
 .
-pmbb:Shortcuts_healthcareEncounterShortcuts
+pmbb:Shortcuts_
   a ontologies:TurboNamedGraph ;
-  rdfs:label "named graph for shortcut healthcare encounters" ;
-.
-pmbb:Shortcuts_homoSapiensShortcuts
-  a ontologies:TurboNamedGraph ;
-  a rdfs:Resource ;
-  rdfs:label "named graph for shortcut homo sapiens" ;
+  rdfs:label "named graphs prefix for shortcut triples" ;
 .
 pmbb:expanded
   a ontologies:TurboNamedGraph ;

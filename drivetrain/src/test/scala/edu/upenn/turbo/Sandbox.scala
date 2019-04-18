@@ -16,7 +16,7 @@ import scala.collection.mutable.HashMap
 
 class Sandbox extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
-    val clearDatabaseAfterRun: Boolean = false
+    val clearTestingRepositoryAfterRun: Boolean = false
     val objectOrientedExpander = new ObjectOrientedExpander
     
     before
@@ -28,7 +28,7 @@ class Sandbox extends FunSuiteLike with BeforeAndAfter with Matchers with Projec
     }
     after
     {
-        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearDatabaseAfterRun)
+        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
     }
     
     test(""){

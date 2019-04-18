@@ -47,8 +47,8 @@ class ReasoningManager extends ProjectwideGlobals
             logger.info("Attempting to change reasoning level to " + newLevel)
             val addRuleset: String = """ INSERT DATA {_:b sys:addRuleset """"+newLevel+"""" } """
             val setDefaultRuleset: String = """ INSERT DATA {_:b sys:defaultRuleset """"+newLevel+"""" } """    
-            update.updateSparql(cxn, sparqlPrefixes + addRuleset)
-            update.updateSparql(cxn, sparqlPrefixes + setDefaultRuleset)
+            update.updateSparql(cxn, addRuleset)
+            update.updateSparql(cxn, setDefaultRuleset)
         }
     }
     
@@ -56,7 +56,7 @@ class ReasoningManager extends ProjectwideGlobals
     {
         logger.info("Reinferring...(this may take several hours)")
         val reinferRepo: String = """ INSERT DATA {[] <http://www.ontotext.com/owlim/system#reinfer> []} """
-        update.updateSparql(cxn, sparqlPrefixes + reinferRepo)
+        update.updateSparql(cxn, reinferRepo)
         logger.info("Reinferring complete")
     }
 }

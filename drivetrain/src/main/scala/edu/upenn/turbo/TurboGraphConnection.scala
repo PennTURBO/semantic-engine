@@ -14,6 +14,10 @@ class TurboGraphConnection
     var gmCxn: RepositoryConnection = null
     var gmRepo: Repository = null
     var gmRepoManager: RemoteRepositoryManager = null
+    
+    var testCxn: RepositoryConnection = null
+    var testRepo: Repository = null
+    var testRepoManager: RemoteRepositoryManager = null
 
     def setConnection(cxn: RepositoryConnection)
     {
@@ -56,4 +60,25 @@ class TurboGraphConnection
     }
     
     def getGmRepoManager(): RemoteRepositoryManager = gmRepoManager
+    
+    def setTestConnection(testCxn: RepositoryConnection)
+    {
+        this.testCxn = testCxn
+    }
+    
+    def getTestConnection(): RepositoryConnection = testCxn
+    
+    def setTestRepository(testRepo: Repository)
+    {
+        this.testRepo = testRepo
+    }
+    
+    def getTestRepository(): Repository = testRepo
+    
+    def setTestRepoManager(testRepoManager: RemoteRepositoryManager)
+    {
+        this.testRepoManager = testRepoManager
+    }
+    
+    def getTestRepoManager(): RemoteRepositoryManager = testRepoManager
 }

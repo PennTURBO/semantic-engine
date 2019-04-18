@@ -34,7 +34,7 @@ import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.client.methods.HttpGet
 import java.net.SocketException
 
-class OntologyLoader extends ProjectwideGlobals
+object OntologyLoader extends ProjectwideGlobals
 {   
     def addGeneOntologies(cxn: RepositoryConnection)
     {

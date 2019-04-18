@@ -11,13 +11,7 @@ import java.util.UUID
 
 class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
-    val clearDatabaseAfterRun: Boolean = false
-    val ooe = new ObjectOrientedExpander
-    
-    var conclusionationNamedGraph: IRI = null
-    var masterConclusionation: IRI = null
-    var masterPlanspec: IRI = null
-    var masterPlan: IRI = null
+    val clearTestingRepositoryAfterRun: Boolean = false
     
     DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
@@ -25,18 +19,18 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
     before
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
-        cxn = graphDBMaterials.getConnection()
+        testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        repoManager = graphDBMaterials.getRepoManager()
-        repository = graphDBMaterials.getRepository()
-        helper.deleteAllTriplesInDatabase(cxn)
+        testRepoManager = graphDBMaterials.getTestRepoManager()
+        testRepository = graphDBMaterials.getTestRepository()
+        helper.deleteAllTriplesInDatabase(testCxn)
         
         DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-        DrivetrainProcessFromGraphModel.setConnection(cxn)
+        DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
     }
     after
     {
-        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearDatabaseAfterRun)
+        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
     }
       
     test ("healthcare encounter entity linking - all fields")
@@ -60,8 +54,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000512> .
                 <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000510> .
                 <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000509> .
-                <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000408> .
-                <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000414> .
+                <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001931> .
+                <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001929> .
                 <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/PDRO_0000001> .
                 <http://www.itmat.upenn.edu/biobank/1df62fd1b3118238280eeecbb1218cec0c3e7447322384f35386e47f9cb66cdd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000511> .
                 <http://www.itmat.upenn.edu/biobank/fa576d3b9d946db990f08d9367e1247ba691d0fdf4b10068d84427b524fd6aae> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000561> .
@@ -105,10 +99,10 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> .
                 <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> .
                 <http://www.itmat.upenn.edu/biobank/1df62fd1b3118238280eeecbb1218cec0c3e7447322384f35386e47f9cb66cdd> <http://purl.obolibrary.org/obo/RO_0002223> <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> .
-                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/RO_0002234> <http://transformunify.org/ontologies/diagnosis1> .
-                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/RO_0002234> <http://transformunify.org/ontologies/prescription1> .
-                <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/RO_0002234> <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> .
-                <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/RO_0002234> <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/OBI_0000299> <http://transformunify.org/ontologies/diagnosis1> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/OBI_0000299> <http://transformunify.org/ontologies/prescription1> .
+                <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> .
+                <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> .
                 <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000643> "enc_expand.csv" .
                 <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000644> "15/Jan/2017" .
                 <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000645> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
@@ -201,7 +195,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               }
             }
         """
-      update.updateSparql(cxn, sparqlPrefixes + insert)
+      update.updateSparql(testCxn, insert)
       DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
       
         val check: String = """
@@ -212,8 +206,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               ?homoSapiens obo:RO_0000087 ?puirole .
           		?puirole a obo:OBI_0000097 .
           		?puirole obo:BFO_0000054 ?healthcareEncounter .
-          		?healthcareEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
-          		?homoSapiensCrid turbo:TURBO_0000302 ?healthcareEncounterCrid .
+          		
           		?weightDatum obo:IAO_0000136 ?homoSapiens.
           		?heightDatum obo:IAO_0000136 ?homoSapiens.
           		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
@@ -231,8 +224,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
           		?healthcareEncounterCrid obo:IAO_0000219 ?healthcareEncounter .
           		?healthcareEncounterCrid a turbo:TURBO_0000508 .
 
-          		?heightDatum a obo:IAO_0000408 .
-          		?weightDatum a obo:IAO_0000414 .
+          		?heightDatum a obo:OBI_0001931 .
+          		?weightDatum a obo:OBI_0001929 .
           		
           		?homoSapiens obo:BFO_0000051 ?adipose .
               ?adipose obo:BFO_0000050 ?homoSapiens .
@@ -247,7 +240,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
           }}
           """
         
-        update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
+        update.querySparqlBoolean(testCxn, check).get should be (true)
     }
     
     test("healthcare encounter entity linking - minimum fields")
@@ -316,7 +309,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               }
             }
         """
-      update.updateSparql(cxn, sparqlPrefixes + insert)
+      update.updateSparql(testCxn, insert)
       DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
         
         val check: String = """
@@ -326,8 +319,6 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               ?homoSapiens obo:RO_0000087 ?puirole .
           		?puirole a obo:OBI_0000097 .
           		?puirole obo:BFO_0000054 ?healthcareEncounter .
-          		?healthcareEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
-          		?homoSapiensCrid turbo:TURBO_0000302 ?healthcareEncounterCrid .
           		
           		?homoSapiens a obo:NCBITaxon_9606 .
           		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
@@ -347,8 +338,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 obo:PATO_0000128 
                 obo:OBI_0000445 
                 turbo:TURBO_0001511 
-                obo:IAO_0000408 
-                obo:IAO_0000414
+                obo:OBI_0001931 
+                obo:OBI_0001929
                 obo:UBERON_0001013
                 efo:EFO_0004340
                 turbo:TURBO_0000511
@@ -357,14 +348,14 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               ?s a ?notexists . }
           """
         
-        update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
-        update.querySparqlBoolean(cxn, sparqlPrefixes + noHeightWeightAdiposeBmiOrDate).get should be (false)
+        update.querySparqlBoolean(testCxn, check).get should be (true)
+        update.querySparqlBoolean(testCxn, noHeightWeightAdiposeBmiOrDate).get should be (false)
     }
 }
     
     class BiobankEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
     {
-        val clearDatabaseAfterRun: Boolean = false
+        val clearTestingRepositoryAfterRun: Boolean = false
         val ooe = new ObjectOrientedExpander
         
         var conclusionationNamedGraph: IRI = null
@@ -378,18 +369,18 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
         before
         {
             graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
-            cxn = graphDBMaterials.getConnection()
+            testCxn = graphDBMaterials.getTestConnection()
             gmCxn = graphDBMaterials.getGmConnection()
-            repoManager = graphDBMaterials.getRepoManager()
-            repository = graphDBMaterials.getRepository()
-            helper.deleteAllTriplesInDatabase(cxn)
+            testRepoManager = graphDBMaterials.getTestRepoManager()
+            testRepository = graphDBMaterials.getTestRepository()
+            helper.deleteAllTriplesInDatabase(testCxn)
             
             DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-            DrivetrainProcessFromGraphModel.setConnection(cxn)
+            DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
         }
         after
         {
-            ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearDatabaseAfterRun)
+            ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
         }
     
         test("biobank encounter entity linking - all fields")
@@ -405,8 +396,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                       <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_NCBITaxon_9606> .
                       <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/efo/EFO_0004340> .
                       <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
-                      <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000408> .
-                      <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000414> .
+                      <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001931> .
+                      <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001929> .
                       <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000533> .
                       <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000527> .
                       <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000535> .
@@ -518,7 +509,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                     }
                   }
               """
-            update.updateSparql(cxn, sparqlPrefixes + insert)
+            update.updateSparql(testCxn, insert)
             DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
             
              val check: String = """
@@ -529,8 +520,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                   ?homoSapiens obo:RO_0000087 ?puirole .
               		?puirole a obo:OBI_0000097 .
               		?puirole obo:BFO_0000054 ?biobankEncounter .
-              		?biobankEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
-              		?homoSapiensCrid turbo:TURBO_0000302 ?biobankEncounterCrid .
+
               		?weightDatum obo:IAO_0000136 ?homoSapiens.
               		?heightDatum obo:IAO_0000136 ?homoSapiens.
               		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
@@ -548,8 +538,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
               		?biobankEncounterCrid a turbo:TURBO_0000533 .
     
-              		?heightDatum a obo:IAO_0000408 .
-              		?weightDatum a obo:IAO_0000414 .
+              		?heightDatum a obo:OBI_0001931 .
+              		?weightDatum a obo:OBI_0001929 .
               		
               		?homoSapiens obo:BFO_0000051 ?adipose .
                   ?adipose obo:BFO_0000050 ?homoSapiens .
@@ -564,7 +554,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               }}
               """
             
-        update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
+        update.querySparqlBoolean(testCxn, check).get should be (true)
       }
     
       test("biobank encounter entity linking - minimum fields")
@@ -659,7 +649,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                   }
                 }
             """
-          update.updateSparql(cxn, sparqlPrefixes + insert)
+          update.updateSparql(testCxn, insert)
           DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
           
           val check: String = """
@@ -669,8 +659,6 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 ?homoSapiens obo:RO_0000087 ?puirole .
             		?puirole a obo:OBI_0000097 .
             		?puirole obo:BFO_0000054 ?biobankEncounter .
-            		?biobankEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
-            		?homoSapiensCrid turbo:TURBO_0000302 ?biobankEncounterCrid .
             		
             		?homoSapiens a obo:NCBITaxon_9606 .
             		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
@@ -689,8 +677,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                   obo:PATO_0000128 
                   obo:OBI_0000445 
                   turbo:TURBO_0001511 
-                  obo:IAO_0000408 
-                  obo:IAO_0000414
+                  obo:OBI_0001931 
+                  obo:OBI_0001929
                   obo:UBERON_0001013
                   efo:EFO_0004340
                   turbo:TURBO_0000531
@@ -699,14 +687,14 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 ?s a ?heightOrWeight . }
             """
           
-          update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
-          update.querySparqlBoolean(cxn, sparqlPrefixes + noHeightWeightAdiposeBmiOrDate).get should be (false)
+          update.querySparqlBoolean(testCxn, check).get should be (true)
+          update.querySparqlBoolean(testCxn, noHeightWeightAdiposeBmiOrDate).get should be (false)
       }
 }
     
   class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
   {
-      val clearDatabaseAfterRun: Boolean = false
+      val clearTestingRepositoryAfterRun: Boolean = false
       val ooe = new ObjectOrientedExpander
       
       var conclusionationNamedGraph: IRI = null
@@ -720,18 +708,18 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
       before
       {
           graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
-          cxn = graphDBMaterials.getConnection()
+          testCxn = graphDBMaterials.getTestConnection()
           gmCxn = graphDBMaterials.getGmConnection()
-          repoManager = graphDBMaterials.getRepoManager()
-          repository = graphDBMaterials.getRepository()
-          helper.deleteAllTriplesInDatabase(cxn)
+          testRepoManager = graphDBMaterials.getTestRepoManager()
+          testRepository = graphDBMaterials.getTestRepository()
+          helper.deleteAllTriplesInDatabase(testCxn)
           
           DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-          DrivetrainProcessFromGraphModel.setConnection(cxn)
+          DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
       }
       after
       {
-          ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearDatabaseAfterRun)
+          ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
       }
   
       test("biobank encounter and healthcare encounter link to homo sapiens - all fields")
@@ -754,8 +742,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                     <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000512> .
                     <http://www.itmat.upenn.edu/biobank/de72182e4f83bb1f02d8a2c4234272bb358ab845286f73201e42a352a9789ade> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000510> .
                     <http://www.itmat.upenn.edu/biobank/fce7085bf1b83fb3b93f899b51d4be1345680b0711cc16b8a3ea58a74033bf44> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000509> .
-                    <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000408> .
-                    <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000414> .
+                    <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001931> .
+                    <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001929> .
                     <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/PDRO_0000001> .
                     <http://www.itmat.upenn.edu/biobank/1df62fd1b3118238280eeecbb1218cec0c3e7447322384f35386e47f9cb66cdd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000511> .
                     <http://www.itmat.upenn.edu/biobank/fa576d3b9d946db990f08d9367e1247ba691d0fdf4b10068d84427b524fd6aae> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000561> .
@@ -799,10 +787,10 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                     <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> .
                     <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> .
                     <http://www.itmat.upenn.edu/biobank/1df62fd1b3118238280eeecbb1218cec0c3e7447322384f35386e47f9cb66cdd> <http://purl.obolibrary.org/obo/RO_0002223> <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> .
-                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/RO_0002234> <http://transformunify.org/ontologies/diagnosis1> .
-                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/RO_0002234> <http://transformunify.org/ontologies/prescription1> .
-                    <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/RO_0002234> <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> .
-                    <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/RO_0002234> <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/OBI_0000299> <http://transformunify.org/ontologies/diagnosis1> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://purl.obolibrary.org/obo/OBI_0000299> <http://transformunify.org/ontologies/prescription1> .
+                    <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> .
+                    <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> <http://purl.obolibrary.org/obo/OBI_0000299> <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> .
                     <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000643> "enc_expand.csv" .
                     <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000644> "15/Jan/2017" .
                     <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0000645> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
@@ -843,8 +831,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                     <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/shortcut_obo_NCBITaxon_9606> .
                     <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/efo/EFO_0004340> .
                     <http://www.itmat.upenn.edu/biobank/cfd4123bfad19f8f967214441051484b9804ec84f5348068eb78dc60ecd75cfc> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
-                    <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000408> .
-                    <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000414> .
+                    <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001931> .
+                    <http://www.itmat.upenn.edu/biobank/b5f78aa8544ab0b5f4bbac314e410f5054aecf5bb9d5c181aeb27793c1f43689> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0001929> .
                     <http://www.itmat.upenn.edu/biobank/a4210c3066e67816960c5f94dafad5828306cb88cbafedc9b16530e198b33855> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000533> .
                     <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000527> .
                     <http://www.itmat.upenn.edu/biobank/4c5ff0452d5b18eabfa0ab9be5755ab67acbf41a56e101797cf8a4336fa2d3bd> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000535> .
@@ -956,7 +944,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                   }
                 }
             """
-          update.updateSparql(cxn, sparqlPrefixes + insert)
+          update.updateSparql(testCxn, insert)
           DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
           DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
           
@@ -968,8 +956,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 ?homoSapiens obo:RO_0000087 ?puirole .
             		?puirole a obo:OBI_0000097 .
             		?puirole obo:BFO_0000054 ?biobankEncounter .
-            		?biobankEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
-            		?homoSapiensCrid turbo:TURBO_0000302 ?biobankEncounterCrid .
+
             		?weightDatum obo:IAO_0000136 ?homoSapiens.
             		?heightDatum obo:IAO_0000136 ?homoSapiens.
             		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
@@ -987,8 +974,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
             		?biobankEncounterCrid a turbo:TURBO_0000533 .
   
-            		?heightDatum a obo:IAO_0000408 .
-            		?weightDatum a obo:IAO_0000414 .
+            		?heightDatum a obo:OBI_0001931 .
+            		?weightDatum a obo:OBI_0001929 .
             		
             		?homoSapiens obo:BFO_0000051 ?adipose .
                 ?adipose obo:BFO_0000050 ?homoSapiens .
@@ -1003,7 +990,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             }}
             """
           
-      update.querySparqlBoolean(cxn, sparqlPrefixes + check).get should be (true)
+      update.querySparqlBoolean(testCxn, check).get should be (true)
           
           val check2: String = """
               ASK
@@ -1013,8 +1000,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                   ?homoSapiens obo:RO_0000087 ?puirole .
               		?puirole a obo:OBI_0000097 .
               		?puirole obo:BFO_0000054 ?biobankEncounter .
-              		?biobankEncounterCrid turbo:TURBO_0000302 ?homoSapiensCrid .
-              		?homoSapiensCrid turbo:TURBO_0000302 ?biobankEncounterCrid .
+
               		?weightDatum obo:IAO_0000136 ?homoSapiens.
               		?heightDatum obo:IAO_0000136 ?homoSapiens.
               		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
@@ -1032,8 +1018,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
               		?biobankEncounterCrid a turbo:TURBO_0000533 .
     
-              		?heightDatum a obo:IAO_0000408 .
-              		?weightDatum a obo:IAO_0000414 .
+              		?heightDatum a obo:OBI_0001931 .
+              		?weightDatum a obo:OBI_0001929 .
               		
               		?homoSapiens obo:BFO_0000051 ?adipose .
                   ?adipose obo:BFO_0000050 ?homoSapiens .
@@ -1048,7 +1034,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               }}
               """
             
-        update.querySparqlBoolean(cxn, sparqlPrefixes + check2).get should be (true)
+        update.querySparqlBoolean(testCxn, check2).get should be (true)
           
         val twoLinks = """
         select (count (?encounter) as ?encountercount) where
@@ -1092,11 +1078,11 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               ?weight a obo:PATO_0000128 .
           }
           """
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + onlyOneAdipose, "adiposecount")(0).split("\"")(1) should be ("1")
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + onlyOneRole, "rolecount")(0).split("\"")(1) should be ("1")
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + onlyOneHeight, "heightcount")(0).split("\"")(1) should be ("1")
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + onlyOneWeight, "weightcount")(0).split("\"")(1) should be ("1")
-        update.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + twoLinks, "encountercount")(0).split("\"")(1) should be ("2")
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneAdipose, "adiposecount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneRole, "rolecount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneHeight, "heightcount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, onlyOneWeight, "weightcount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(testCxn, twoLinks, "encountercount")(0).split("\"")(1) should be ("2")
         
     }
   

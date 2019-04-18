@@ -226,7 +226,7 @@ class TurboMultiuseClass
             """
                ADD <"""+fromGraph+"""> TO <"""+toGraph+""">
             """
-        updater.updateSparql(cxn, sparqlPrefixes + moveTriples)
+        updater.updateSparql(cxn, moveTriples)
     }
     
     /**
@@ -385,7 +385,7 @@ class TurboMultiuseClass
         }
         """
             
-      updater.updateSparql(cxn, sparqlPrefixes + insert)
+      updater.updateSparql(cxn, insert)
   }
   
   /**
@@ -410,7 +410,7 @@ class TurboMultiuseClass
           }
           """
         
-        val inverseList: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getInversePreds, ArrayBuffer("p", "inverse"))
+        val inverseList: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, getInversePreds, ArrayBuffer("p", "inverse"))
         
         var inverseMap: HashMap[Value, Value] = new HashMap[Value, Value]
         var inversePredString: String = ""
@@ -437,7 +437,7 @@ class TurboMultiuseClass
           }
           """
               
-        val triplesList: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getAllTriples, ArrayBuffer("s", "p", "o"))
+        val triplesList: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, getAllTriples, ArrayBuffer("s", "p", "o"))
         
         logger.info("Applying inverses to " + triplesList.size + " triples...")
         
@@ -500,7 +500,7 @@ class TurboMultiuseClass
                }
            }
            """       
-          val result: ArrayBuffer[String] = updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + getNodesToBeReftracked, "node")
+          val result: ArrayBuffer[String] = updater.querySparqlAndUnpackTuple(cxn, getNodesToBeReftracked, "node")
           var values: String = ""
           val resultSize = result.size
           logger.info("number of nodes to retire: " + resultSize)
@@ -555,8 +555,8 @@ class TurboMultiuseClass
               BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/",md5(CONCAT("retired node", str(?originalNode),""""+randomUUID+"""")))) AS ?newRetiredNode)
             }
           """
-        updater.updateSparql(cxn, sparqlPrefixes + completeReftrackProcess)
-        //updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + completeReftrackProcess, ArrayBuffer("originalNode", "reftrackedNode", "demotionType", "predicateForDelete1", 
+        updater.updateSparql(cxn, completeReftrackProcess)
+        //updater.querySparqlAndUnpackTuple(cxn, completeReftrackProcess, ArrayBuffer("originalNode", "reftrackedNode", "demotionType", "predicateForDelete1", 
             //"objectForDelete", "predicateForCopy1", "objectForCopy", "subjectForCopy", "predicateForCopy2", "originalNodeString", "newRetiredNode"))
         //logger.info("received result")
     }
@@ -586,7 +586,7 @@ class TurboMultiuseClass
                }
            }
            """
-         updater.updateSparql(cxn, sparqlPrefixes + fixNodesThatAreNotObjects)
+         updater.updateSparql(cxn, fixNodesThatAreNotObjects)
     }
     
     /**
@@ -606,7 +606,7 @@ class TurboMultiuseClass
                graphBuilder:tempSubj graphBuilder:tempPred ?node .
            }
            """
-         updater.updateSparql(cxn, sparqlPrefixes + removeTemporaryPredicates)
+         updater.updateSparql(cxn, removeTemporaryPredicates)
          
          val removeGraphBuilder: String = """
            delete 
@@ -620,7 +620,7 @@ class TurboMultiuseClass
                ?s graphBuilder:placeholderDemotionType ?type .
            }
            """
-         updater.updateSparql(cxn, sparqlPrefixes + removeGraphBuilder)
+         updater.updateSparql(cxn, removeGraphBuilder)
     }
     
     /**
@@ -671,7 +671,7 @@ class TurboMultiuseClass
           }
           """
         
-        updater.updateSparql(cxn, sparqlPrefixes + addLabelsToEverything)
+        updater.updateSparql(cxn, addLabelsToEverything)
     }
     
     /**
@@ -726,7 +726,7 @@ class TurboMultiuseClass
           }
           """
         
-        updater.updateSparql(cxn, sparqlPrefixes + update)
+        updater.updateSparql(cxn, update)
     }
     
     /**
@@ -879,7 +879,7 @@ class TurboMultiuseClass
               ?s ?p ?o .
           }
           """
-         updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "tripcount")(0).split("\"")(1).toInt
+         updater.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1).toInt
     }
     
     def getDatasetNames(cxn: RepositoryConnection): ArrayBuffer[String] = 
@@ -891,7 +891,7 @@ class TurboMultiuseClass
               ?ds dc11:title ?dsTitle .
           }
           """
-        updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, "dsTitle")
+        updater.querySparqlAndUnpackTuple(cxn, query, "dsTitle")
     }
     
     def consolidateLOFShortcutGraphs(cxn: RepositoryConnection)
@@ -904,7 +904,7 @@ class TurboMultiuseClass
               ?lof turbo:TURBO_0007603 ?o .   
           }
           """
-        val count = updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + countquery, "lofcount")(0).toString.split("\"")(1).toInt
+        val count = updater.querySparqlAndUnpackTuple(cxn, countquery, "lofcount")(0).toString.split("\"")(1).toInt
         //if count < 700,000 safe to consolidate
         if (count < 700000)
         {
@@ -937,19 +937,7 @@ class TurboMultiuseClass
               }
               
             """
-            updater.updateSparql(cxn, sparqlPrefixes + consolidate)
+            updater.updateSparql(cxn, consolidate)
         }
-    }
-    
-    def getAllValuesOfType(cxn: RepositoryConnection, item: GraphObjectSingleton): ArrayBuffer[String] =
-    {
-        val baseVar = item.baseVariableName
-        val varType = item.typeURI
-        
-        val query = s"""
-          select ?$baseVar where {graph pmbb:postExpansionCheck {?$baseVar a <$varType> .}}
-          """
-          
-        updater.querySparqlAndUnpackTuple(cxn, sparqlPrefixes + query, baseVar)
     }
 }
