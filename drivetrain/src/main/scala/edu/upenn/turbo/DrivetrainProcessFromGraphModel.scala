@@ -18,6 +18,21 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     var variableSet = new HashSet[Value]
     var typeMap = new HashMap[String,Value]
     
+    //define the SPARQL variables used in the retrieval methods
+    val subject = "subject"
+    val predicate = "predicate"
+    val objectVar = "object"
+    val subjectType = "subjectType"
+    val objectType = "objectType"
+    val graph = "graph"
+    val requiredBool = "required"
+    val optionalGroup = "optionalGroup"
+    val expandedEntity = "expandedEntity"
+    val sparqlString = "sparqlString"
+    val dependee = "dependee"
+    val baseType = "baseType"
+    val shortcutEntity = "shortcutEntity"
+    
     def setInstantiation(instantiation: String)
     {
         this.instantiation = instantiation
@@ -46,8 +61,8 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
         if (outputs.size == 0) throw new RuntimeException("Received a list of 0 outputs")
         
-        val inputNamedGraph = inputs(0)(5).toString
-        val outputNamedGraph = outputs(0)(5).toString
+        val inputNamedGraph = inputs(0)(graph).toString
+        val outputNamedGraph = outputs(0)(graph).toString
         var inputNamedGraphsList = new ArrayBuffer[String]
         
         if (inputNamedGraph.charAt(inputNamedGraph.size-1) == '_') 
@@ -71,33 +86,32 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         typeMap = new HashMap[String,Value]
     }
     
-    def createBindClause(binds: ArrayBuffer[ArrayBuffer[Value]], localUUID: String): String =
+    def createBindClause(binds: ArrayBuffer[HashMap[String, Value]], localUUID: String): String =
     {
         // example input and output of a single line
         var bindClause = ""
         var varList = new ArrayBuffer[Value]
         for (rule <- binds)
         {
-            var sparqlBind = rule(1).toString.replaceAll("replacement", convertTypeToVariable(rule(0)))
+            var sparqlBind = rule(sparqlString).toString.replaceAll("replacement", convertTypeToVariable(rule(expandedEntity)))
                                          .replaceAll("localUUID", localUUID)
                                          .replaceAll("globalUUID", globalUUID)
-                                         .replaceAll("mainExpansionTypeVariableName", convertTypeToVariable(rule(4)))
+                                         .replaceAll("mainExpansionTypeVariableName", convertTypeToVariable(rule(baseType)))
                                          .replaceAll("instantiationPlaceholder", "\"" + instantiation + "\"")
-            if (sparqlBind.contains("dependent")) sparqlBind = sparqlBind.replaceAll("dependent",convertTypeToVariable(rule(3)))
-            if (sparqlBind.contains("original")) sparqlBind = sparqlBind.replaceAll("original",convertTypeToVariable(rule(2)))
-            if (sparqlBind.contains("singletonType")) sparqlBind = sparqlBind.replaceAll("singletonType",rule(3).toString)
+            if (sparqlBind.contains("dependent")) sparqlBind = sparqlBind.replaceAll("dependent",convertTypeToVariable(rule(dependee)))
+            if (sparqlBind.contains("original")) sparqlBind = sparqlBind.replaceAll("original",convertTypeToVariable(rule(shortcutEntity)))
+            if (sparqlBind.contains("singletonType")) sparqlBind = sparqlBind.replaceAll("singletonType",rule(dependee).toString)
             
             bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
-            variableSet += rule(0)
-            variableSet += rule(1)
-            variableSet += rule(2)
-            variableSet += rule(3)
-            variableSet += rule(4)
+            variableSet += rule(expandedEntity)
+            variableSet += rule(shortcutEntity)
+            variableSet += rule(dependee)
+            variableSet += rule(baseType)
         }
         bindClause + "\n}"
     }
     
-    def createInsertClause(outputs: ArrayBuffer[ArrayBuffer[Value]], namedGraph: String): String =
+    def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]], namedGraph: String): String =
     {
         var insertClause = "INSERT { Graph <" + namedGraph + ">{\n"
         var typeSet = new HashSet[Value]
@@ -105,39 +119,39 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         {
             var subjectVariable = ""
             var objectVariable = ""
-            if (variableSet.contains(triple(0))) subjectVariable = "?" + convertTypeToVariable(triple(0))
-            else subjectVariable = "<" + triple(0) + ">"
-            if (variableSet.contains(triple(2))) objectVariable = "?" + convertTypeToVariable(triple(2))
-            else objectVariable = "<" + triple(2) + ">"
-            insertClause += subjectVariable + " <" + triple(1).toString + "> " + objectVariable + " .\n"
-            if (triple(3) != null && !typeSet.contains(triple(0)))
+            if (variableSet.contains(triple(subject))) subjectVariable = "?" + convertTypeToVariable(triple(subject))
+            else subjectVariable = "<" + triple(subject) + ">"
+            if (variableSet.contains(triple(objectVar))) objectVariable = "?" + convertTypeToVariable(triple(objectVar))
+            else objectVariable = "<" + triple(objectVar) + ">"
+            insertClause += subjectVariable + " <" + triple(predicate).toString + "> " + objectVariable + " .\n"
+            if (triple(subjectType) != null && !typeSet.contains(triple(subject)))
             {
-                insertClause += subjectVariable + " a <" + triple(0) + "> .\n"
-                typeSet += triple(0)
+                insertClause += subjectVariable + " a <" + triple(subject) + "> .\n"
+                typeSet += triple(subject)
             }
-            if (triple(4) != null && !typeSet.contains(triple(2)))
+            if (triple(objectType) != null && !typeSet.contains(triple(objectVar)))
             {
-                insertClause += objectVariable + " a <" + triple(2) + "> .\n"
-                typeSet += triple(2)
+                insertClause += objectVariable + " a <" + triple(objectVar) + "> .\n"
+                typeSet += triple(objectVar)
             }
         }
         insertClause += "}}\n"
         insertClause
     }
     
-    def createWhereClause(inputs: ArrayBuffer[ArrayBuffer[Value]], namedGraph: String): String =
+    def createWhereClause(inputs: ArrayBuffer[HashMap[String, Value]], namedGraph: String): String =
     {
         var whereClause = "WHERE { GRAPH <" + namedGraph + "> {\n"
         
-        var optionalGroups = new HashMap[Value, ArrayBuffer[ArrayBuffer[Value]]]
+        var optionalGroups = new HashMap[Value, ArrayBuffer[HashMap[String, Value]]]
         for (triple <- inputs)
         {
-            variableSet += triple(0)
-            variableSet += triple(2)
-            if (triple(7) != null) 
+            variableSet += triple(subject)
+            variableSet += triple(objectVar)
+            if (triple(optionalGroup) != null) 
             {
-                if (!optionalGroups.contains(triple(7))) optionalGroups += triple(7) -> ArrayBuffer(triple)
-                else optionalGroups(triple(7)) += triple
+                if (!optionalGroups.contains(triple(optionalGroup))) optionalGroups += triple(optionalGroup) -> ArrayBuffer(triple)
+                else optionalGroups(triple(optionalGroup)) += triple
             }
             else
             {
@@ -158,24 +172,24 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         whereClause
     }
     
-    def addTripleToWhereClause(triple: ArrayBuffer[Value]): String =
+    def addTripleToWhereClause(triple: HashMap[String, Value]): String =
     {
         var whereClause = ""
         var required = true
-        if (triple(6).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
+        if (triple(requiredBool).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
         if (!required) whereClause += "OPTIONAL { "
-        val subjectVariable = convertTypeToVariable(triple(0))
-        val objectVariable = convertTypeToVariable(triple(2))
-        whereClause += "?" + subjectVariable + " <" + triple(1).toString + "> ?" + objectVariable + " .\n"
-        if (triple(3) != null && !typeMap.contains(subjectVariable))
+        val subjectVariable = convertTypeToVariable(triple(subject))
+        val objectVariable = convertTypeToVariable(triple(objectVar))
+        whereClause += "?" + subjectVariable + " <" + triple(predicate).toString + "> ?" + objectVariable + " .\n"
+        if (triple(subjectType) != null && !typeMap.contains(subjectVariable))
         {
-            typeMap += subjectVariable -> triple(0)
-            whereClause += "?" + subjectVariable + " a <" + triple(0) + "> .\n"
+            typeMap += subjectVariable -> triple(subject)
+            whereClause += "?" + subjectVariable + " a <" + triple(subject) + "> .\n"
         }
-        if (triple(4) != null && !typeMap.contains(objectVariable))
+        if (triple(objectType) != null && !typeMap.contains(objectVariable))
         {
-            typeMap += objectVariable -> triple(2)
-            whereClause += "?" + objectVariable + " a <" + triple(2) + "> .\n"
+            typeMap += objectVariable -> triple(objectVar)
+            whereClause += "?" + objectVariable + " a <" + triple(objectVar) + "> .\n"
         }
         if (!required) whereClause += "}"
         whereClause
@@ -186,107 +200,106 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
        input.toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
     }
     
-    def getInputs(process: String): ArrayBuffer[ArrayBuffer[Value]] =
+    def getInputs(process: String): ArrayBuffer[HashMap[String, Value]] =
     {
        val query = s"""
          
-         Select ?subject ?predicate ?object ?subjectType ?objectType ?graph ?required ?optionalGroup
+         Select ?$subject ?$predicate ?$objectVar ?$subjectType ?$objectType ?$graph ?$requiredBool ?$optionalGroup
          Where
          {
             ?connection turbo:inputTo <$process> .
             # ?connection a turbo:TurboGraphConnectionRecipe .
-            <$process> turbo:inputNamedGraph ?graph .
-            ?connection turbo:subject ?subject .
-            ?connection turbo:predicate ?predicate .
-            ?connection turbo:object ?object .
-            ?connection turbo:required ?required .
+            <$process> turbo:inputNamedGraph ?$graph .
+            ?connection turbo:subject ?$subject .
+            ?connection turbo:predicate ?$predicate .
+            ?connection turbo:object ?$objectVar .
+            ?connection turbo:required ?$requiredBool .
             
             Optional
             {
-                ?connection obo:BFO_0000050 ?optionalGroup .
+                ?connection obo:BFO_0000050 ?$optionalGroup .
             }
             
             Graph pmbb:ontology {
               Optional
               {
-                  ?subject a owl:Class .
-                  BIND (true AS ?subjectType)
+                  ?$subject a owl:Class .
+                  BIND (true AS ?$subjectType)
               }
               Optional
               {
-                  ?object a owl:Class .
-                  BIND (true AS ?objectType)
+                  ?$objectVar a owl:Class .
+                  BIND (true AS ?$objectType)
               }
          }}
          
          """
        
-       update.querySparqlAndUnpackTuple(gmCxn, query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph", "required", "optionalGroup"))
+       update.querySparqlAndUnpackToListOfMap(cxn, query)
     }
     
-    def getOutputs(process: String): ArrayBuffer[ArrayBuffer[Value]] =
+    def getOutputs(process: String): ArrayBuffer[HashMap[String, Value]] =
     {
        val query = s"""
          
-         Select ?subject ?predicate ?object ?subjectType ?objectType ?graph
+         Select ?$subject ?$predicate ?$objectVar ?$subjectType ?$objectType ?$graph
          Where
          {
             ?connection turbo:outputOf <$process> .
             # ?connection a turbo:TurboGraphConnectionRecipe .
-            <$process> turbo:outputNamedGraph ?graph .
-            ?connection turbo:subject ?subject .
-            ?connection turbo:predicate ?predicate .
-            ?connection turbo:object ?object .
+            <$process> turbo:outputNamedGraph ?$graph .
+            ?connection turbo:subject ?$subject .
+            ?connection turbo:predicate ?$predicate .
+            ?connection turbo:object ?$objectVar .
             
             Graph pmbb:ontology 
             {
               Optional
               {
-                  ?subject a owl:Class .
-                  BIND (true AS ?subjectType)
+                  ?$subject a owl:Class .
+                  BIND (true AS ?$subjectType)
               }
               Optional
               {
-                  ?object a owl:Class .
-                  BIND (true AS ?objectType)
+                  ?$objectVar a owl:Class .
+                  BIND (true AS ?$objectType)
               }
             }
          }
          
          """
        
-       update.querySparqlAndUnpackTuple(gmCxn, query, Array("subject", "predicate", "object", "subjectType", "objectType", "graph"))
+       update.querySparqlAndUnpackToListOfMap(cxn, query)
     }
     
-    def getBind(process: String): ArrayBuffer[ArrayBuffer[Value]] =
+    def getBind(process: String): ArrayBuffer[HashMap[String, Value]] =
     {
         val query = s"""
           
-          Select distinct ?expandedEntity ?sparqlString ?shortcutEntity ?dependee ?baseType ?vmrHash
+          Select distinct ?$expandedEntity ?$sparqlString ?$shortcutEntity ?$dependee ?$baseType
           Where
           {
     		      values ?manipulationRuleType {turbo:VariableManipulationForIntermediateNode turbo:VariableManipulationForLiteralValue}
               <$process> turbo:usesVariableManipulationRule ?variableManipulationRule .
-              <$process> turbo:manipulatesBaseEntity ?baseType .
+              <$process> turbo:manipulatesBaseEntity ?$baseType .
               
               ?variableManipulationRule a ?manipulationRuleType .
-              ?variableManipulationRule turbo:manipulationCreates ?expandedEntity .
+              ?variableManipulationRule turbo:manipulationCreates ?$expandedEntity .
               ?variableManipulationRule turbo:usesSparqlLogic ?logic .
-              ?logic turbo:usesSparql ?sparqlString .
+              ?logic turbo:usesSparql ?$sparqlString .
               
               Optional
               {
-                  ?variableManipulationRule turbo:hasOriginalVariable ?shortcutEntity .
+                  ?variableManipulationRule turbo:hasOriginalVariable ?$shortcutEntity .
               }
               Optional
               {
-                  ?variableManipulationRule turbo:manipulationDependsOn ?dependee .
+                  ?variableManipulationRule turbo:manipulationDependsOn ?$dependee .
               }
-              BIND(SHA256(str(?variableManipulationRule)) as ?vmrHash)
           }
           
         """
         
-        update.querySparqlAndUnpackTuple(gmCxn, query, Array("expandedEntity", "sparqlString", "shortcutEntity", "dependee", "baseType", "vmrHash"))
+        update.querySparqlAndUnpackToListOfMap(cxn, query)
     }
 }

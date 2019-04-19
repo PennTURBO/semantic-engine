@@ -127,6 +127,15 @@ class SparqlUpdater
           unpackedResult
       }
       
+      def querySparqlAndUnpackToListOfMap(cxn: RepositoryConnection, query: String): ArrayBuffer[HashMap[String, Value]] =
+      {
+          val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
+          val unpackedResult: ArrayBuffer[HashMap[String, Value]] = unpackTupleToListOfMaps(result.get)
+          //close tupleQueryResult to free resources
+          result.get.close()
+          unpackedResult
+      }
+      
       /**
        * QuerySparql() is a generic SPARQL query method which uses the RepositoryConnection object
        * to connect with a Graph database. It can accept any String that uses proper SPARQL syntax.
@@ -257,6 +266,27 @@ class SparqlUpdater
             }
         }
         //Return map of lists of Value objects
+        resultList
+    }
+    
+    def unpackTupleToListOfMaps(resultTuple: TupleQueryResult): ArrayBuffer[HashMap[String, Value]] =
+    {
+        //Create empty list of maps to be populated and returned
+        var resultList: ArrayBuffer[HashMap[String, Value]] = new ArrayBuffer[HashMap[String, Value]]
+        //For each result, add it to the list. Note that this method does not convert to Strings but leaves results as Values
+        while (resultTuple.hasNext())
+        {
+            val oneResult: HashMap[String, Value] = new HashMap[String, Value]
+            val bindingset: BindingSet = resultTuple.next()
+            for (a <- bindingset.getBindingNames().toArray)
+            {
+                val variableName = a.toString
+                val result: Value = bindingset.getValue(variableName)
+                oneResult += variableName -> result
+            }
+            resultList += oneResult
+        }
+        //Return list of maps of Value objects
         resultList
     }
     
