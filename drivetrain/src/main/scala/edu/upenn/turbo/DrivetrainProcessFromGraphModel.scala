@@ -93,14 +93,14 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         var varList = new ArrayBuffer[Value]
         for (rule <- binds)
         {
-            var sparqlBind = rule(sparqlString).toString.replaceAll("replacement", convertTypeToVariable(rule(expandedEntity)))
-                                         .replaceAll("localUUID", localUUID)
-                                         .replaceAll("globalUUID", globalUUID)
-                                         .replaceAll("mainExpansionTypeVariableName", convertTypeToVariable(rule(baseType)))
-                                         .replaceAll("instantiationPlaceholder", "\"" + instantiation + "\"")
-            if (sparqlBind.contains("dependent")) sparqlBind = sparqlBind.replaceAll("dependent",convertTypeToVariable(rule(dependee)))
-            if (sparqlBind.contains("original")) sparqlBind = sparqlBind.replaceAll("original",convertTypeToVariable(rule(shortcutEntity)))
-            if (sparqlBind.contains("singletonType")) sparqlBind = sparqlBind.replaceAll("singletonType",rule(dependee).toString)
+            var sparqlBind = rule(sparqlString).toString.replaceAll("\\$\\{replacement\\}", convertTypeToVariable(rule(expandedEntity)))
+                                         .replaceAll("\\$\\{localUUID\\}", localUUID)
+                                         .replaceAll("\\$\\{globalUUID\\}", globalUUID)
+                                         .replaceAll("\\$\\{mainExpansionTypeVariableName\\}", convertTypeToVariable(rule(baseType)))
+                                         .replaceAll("\\$\\{instantiationPlaceholder\\}", "\"" + instantiation + "\"")
+            if (sparqlBind.contains("${dependent}")) sparqlBind = sparqlBind.replaceAll("\\$\\{dependent\\}",convertTypeToVariable(rule(dependee)))
+            if (sparqlBind.contains("${original}")) sparqlBind = sparqlBind.replaceAll("\\$\\{original\\}",convertTypeToVariable(rule(shortcutEntity)))
+            if (sparqlBind.contains("${singletonType}")) sparqlBind = sparqlBind.replaceAll("\\$\\{singletonType\\}",rule(dependee).toString)
             
             bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
             variableSet += rule(expandedEntity)
@@ -234,8 +234,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          }}
          
          """
-       
-       update.querySparqlAndUnpackToListOfMap(cxn, query)
+       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
     
     def getOutputs(process: String): ArrayBuffer[HashMap[String, Value]] =
@@ -269,7 +268,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
          
          """
        
-       update.querySparqlAndUnpackToListOfMap(cxn, query)
+       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
     
     def getBind(process: String): ArrayBuffer[HashMap[String, Value]] =
@@ -300,6 +299,6 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
           
         """
         
-        update.querySparqlAndUnpackToListOfMap(cxn, query)
+        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
 }
