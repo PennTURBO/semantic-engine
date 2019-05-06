@@ -281,22 +281,6 @@ ontologies:VariableManipulationForLiteralValue
   rdfs:label "TURBO graph expansion rule for literal value" ;
   rdfs:subClassOf ontologies:TurboGraphVariableManipulation ;
 .
-ontologies:adiposeToHomoSapiens
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required false ;
-  ontologies:subject obo:UBERON_0001013 ;
-.
-ontologies:adiposeVariableManipulation
-  a ontologies:VariableManipulationForIntermediateNode ;
-  ontologies:manipulationCreates obo:UBERON_0001013 ;
-  ontologies:manipulationDependsOn ns3:EFO_0004340 ;
-  ontologies:usesSparqlLogic ontologies:BindIfBoundSingletonSHAOfBaseType ;
-.
 ontologies:biobankEncounterBMIVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ns3:EFO_0004340 ;
@@ -449,7 +433,6 @@ ontologies:biobankEncounterLinkingProcess
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
   ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:usesVariableManipulationRule ontologies:adiposeVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:participantUnderInvestigationRoleVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
@@ -607,10 +590,10 @@ ontologies:bmiDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
   rdfs:label "bmi double literal value" ;
 .
-ontologies:bmiToAdipose
+ontologies:bmiToHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:UBERON_0001013 ;
+  ontologies:object obo:NCBITaxon_9606 ;
   ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
   ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:predicate obo:IAO_0000136 ;
@@ -1027,7 +1010,7 @@ ontologies:diagnosisToIcdTerm
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:IcdTermOfVariousTypes ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0000306 ;
+  ontologies:predicate obo:IAO_0000142 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000073 ;
   rdfs:label "diagnosis to icd term connection" ;
@@ -1251,7 +1234,6 @@ ontologies:healthcareEncounterLinkingProcess
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
   ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:usesVariableManipulationRule ontologies:adiposeVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:patientRoleVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
@@ -1573,16 +1555,6 @@ ontologies:homoSapiensSymbolVariableManipulation
   ontologies:manipulationCreates ontologies:TURBO_0000504 ;
   ontologies:manipulationDependsOn ontologies:shortcut_turbo_TURBO_0000503 ;
   ontologies:usesSparqlLogic ontologies:SHALocalRandomWithDependent ;
-.
-ontologies:homoSapiensToAdipose
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:UBERON_0001013 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required false ;
-  ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;

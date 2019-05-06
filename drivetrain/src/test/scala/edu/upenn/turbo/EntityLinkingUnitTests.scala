@@ -121,7 +121,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://transformunify.org/ontologies/TURBO_0010095> "15/Jan/2017" .
                 <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0010095> "holistic soil from the ganges" .
                 <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0000703> <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
-                <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0000306> <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
+                <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> obo:IAO_0000142 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
                 <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0000307> <http://transformunify.org/ontologies/someDrug> .
                 <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0006515> "ICD-9" .
                 <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010002> <http://www.itmat.upenn.edu/biobank/part1> .
@@ -225,10 +225,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
           		?heightDatum a turbo:TURBO_0010138 .
           		?weightDatum a obo:OBI_0001929 .
           		
-          		?homoSapiens obo:BFO_0000051 ?adipose .
-              ?adipose obo:BFO_0000050 ?homoSapiens .
-              ?adipose a obo:UBERON_0001013 .
-              ?BMI obo:IAO_0000136 ?adipose .
+              ?BMI obo:IAO_0000136 ?homoSapiens .
               ?BMI a efo:EFO_0004340 .
               ?BMI obo:IAO_0000581 ?encounterDate .
               ?encounterStart a turbo:TURBO_0000511 .
@@ -329,7 +326,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
           }
           """
         
-        val noHeightWeightAdiposeBmiOrDate: String = """
+        val noHeightWeightBmiOrDate: String = """
               ASK {
               values ?notexists {
                 obo:PATO_0000119 
@@ -338,7 +335,6 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 turbo:TURBO_0001511 
                 turbo:TURBO_0010138 
                 obo:OBI_0001929
-                obo:UBERON_0001013
                 efo:EFO_0004340
                 turbo:TURBO_0000511
                 turbo:TURBO_0000512
@@ -347,7 +343,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
           """
         
         update.querySparqlBoolean(testCxn, check).get should be (true)
-        update.querySparqlBoolean(testCxn, noHeightWeightAdiposeBmiOrDate).get should be (false)
+        update.querySparqlBoolean(testCxn, noHeightWeightBmiOrDate).get should be (false)
     }
 }
     
@@ -537,10 +533,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               		?heightDatum a turbo:TURBO_0010138 .
               		?weightDatum a obo:OBI_0001929 .
               		
-              		?homoSapiens obo:BFO_0000051 ?adipose .
-                  ?adipose obo:BFO_0000050 ?homoSapiens .
-                  ?adipose a obo:UBERON_0001013 .
-                  ?BMI obo:IAO_0000136 ?adipose .
+                  ?BMI obo:IAO_0000136 ?homoSapiens .
                   ?BMI a efo:EFO_0004340 .
                   ?BMI obo:IAO_0000581 ?encounterDate .
                   ?encounterStart a turbo:TURBO_0000531 .
@@ -666,7 +659,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             }
             """
           
-          val noHeightWeightAdiposeBmiOrDate: String = """
+          val noHeightWeightBmiOrDate: String = """
                 ASK {
                 values ?heightOrWeight {
                   obo:PATO_0000119 
@@ -675,7 +668,6 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                   turbo:TURBO_0001511 
                   turbo:TURBO_0010138 
                   obo:OBI_0001929
-                  obo:UBERON_0001013
                   efo:EFO_0004340
                   turbo:TURBO_0000531
                   turbo:TURBO_0000532
@@ -684,7 +676,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             """
           
           update.querySparqlBoolean(testCxn, check).get should be (true)
-          update.querySparqlBoolean(testCxn, noHeightWeightAdiposeBmiOrDate).get should be (false)
+          update.querySparqlBoolean(testCxn, noHeightWeightBmiOrDate).get should be (false)
       }
 }
     
@@ -805,7 +797,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                     <http://www.itmat.upenn.edu/biobank/60071a3d5e5376521c3a2d29284177073ffa909f0b1e52a3b7cf8103ad46c9de> <http://transformunify.org/ontologies/TURBO_0010095> "15/Jan/2017" .
                     <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0010095> "holistic soil from the ganges" .
                     <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0000703> <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
-                    <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0000306> <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
+                    <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> obo:IAO_0000142 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
                     <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0000307> <http://transformunify.org/ontologies/someDrug> .
                     <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0006515> "ICD-9" .
                     <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010002> <http://www.itmat.upenn.edu/biobank/part1> .
@@ -969,10 +961,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             		?heightDatum a turbo:TURBO_0010138 .
             		?weightDatum a obo:OBI_0001929 .
             		
-            		?homoSapiens obo:BFO_0000051 ?adipose .
-                ?adipose obo:BFO_0000050 ?homoSapiens .
-                ?adipose a obo:UBERON_0001013 .
-                ?BMI obo:IAO_0000136 ?adipose .
+                ?BMI obo:IAO_0000136 ?homoSapiens .
                 ?BMI a efo:EFO_0004340 .
                 ?BMI obo:IAO_0000581 ?encounterDate .
                 ?encounterStart a turbo:TURBO_0000531 .
@@ -1013,10 +1002,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               		?heightDatum a turbo:TURBO_0010138 .
               		?weightDatum a obo:OBI_0001929 .
               		
-              		?homoSapiens obo:BFO_0000051 ?adipose .
-                  ?adipose obo:BFO_0000050 ?homoSapiens .
-                  ?adipose a obo:UBERON_0001013 .
-                  ?BMI obo:IAO_0000136 ?adipose .
+                  ?BMI obo:IAO_0000136 ?homoSapiens .
                   ?BMI a efo:EFO_0004340 .
                   ?BMI obo:IAO_0000581 ?encounterDate .
                   ?encounterStart a turbo:TURBO_0000511 .
@@ -1034,15 +1020,6 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             ?homosapiens obo:RO_0000056 ?encounter .
         }
         """
-          
-        val onlyOneAdipose = """
-          select (count (?adipose) as ?adiposecount) where
-          {
-              ?homosapiens a obo:NCBITaxon_9606 .
-              ?homosapiens obo:BFO_0000051 ?adipose .
-              ?adipose a obo:UBERON_0001013 .
-          }
-          """
         
         val onlyOnePUIRole = """
           select (count (?role) as ?rolecount) where
@@ -1079,7 +1056,6 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
               ?weight a obo:PATO_0000128 .
           }
           """
-        update.querySparqlAndUnpackTuple(testCxn, onlyOneAdipose, "adiposecount")(0).split("\"")(1) should be ("1")
         update.querySparqlAndUnpackTuple(testCxn, onlyOnePUIRole, "rolecount")(0).split("\"")(1) should be ("1")
         update.querySparqlAndUnpackTuple(testCxn, onlyOnePatientRole, "rolecount")(0).split("\"")(1) should be ("1")
         update.querySparqlAndUnpackTuple(testCxn, onlyOneHeight, "heightcount")(0).split("\"")(1) should be ("1")

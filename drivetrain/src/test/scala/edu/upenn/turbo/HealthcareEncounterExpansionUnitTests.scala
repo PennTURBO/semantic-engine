@@ -69,7 +69,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
             		?diagnosis turbo:TURBO_0010094 "401.9" .
             		?diagnosis turbo:TURBO_0000703 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
             		?diagnosis turbo:TURBO_0006515 "ICD-9" .
-            		?diagnosis turbo:TURBO_0000306 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
+            		?diagnosis obo:IAO_0000142 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
             		?diagnosis obo:BFO_0000050 ?dataset .
             		?dataset obo:BFO_0000051 ?diagnosis .
             		
@@ -221,7 +221,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0000306",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/IAO_0000142",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://transformunify.org/ontologies/TURBO_0000703",
             "http://purl.obolibrary.org/obo/RO_0002223", "http://transformunify.org/ontologies/TURBO_0006515",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
@@ -556,12 +556,12 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
                   ?diagnosis1 turbo:TURBO_0006515 "ICD-9" .
                   ?diagnosis1 turbo:TURBO_0000703 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
                   ?diagnosis1 turbo:TURBO_0010094 "401.9" .
-                  ?diagnosis1 turbo:TURBO_0000306 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
+                  ?diagnosis1 obo:IAO_0000142 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
                   
                   ?diagnosis2 turbo:TURBO_0006515 "ICD-10" .
                   ?diagnosis2 turbo:TURBO_0000703 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892> .
                   ?diagnosis2 turbo:TURBO_0010094 "177.8" .
-                  ?diagnosis2 turbo:TURBO_0000306 <http://purl.bioontology.org/ontology/ICD10CM/177.8> .
+                  ?diagnosis2 obo:IAO_0000142 <http://purl.bioontology.org/ontology/ICD10CM/177.8> .
                   
                   Filter (?diagnosis1 != ?diagnosis2) 
               }
@@ -772,7 +772,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
               		?diagnosis turbo:TURBO_0010094 "401.9" .
             		  ?diagnosis turbo:TURBO_0000703 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
             		  ?diagnosis turbo:TURBO_0006515 "ICD-9" .
-            		  ?diagnosis turbo:TURBO_0000306 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
+            		  ?diagnosis obo:IAO_0000142 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
               		
               		?dataset obo:BFO_0000051 ?diagnosis .
               		?diagnosis obo:BFO_0000050 ?dataset .
