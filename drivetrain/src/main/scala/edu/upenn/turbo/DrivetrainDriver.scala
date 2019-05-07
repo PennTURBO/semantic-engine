@@ -26,7 +26,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   val reasoner: ReasoningManager = new ReasoningManager()
   /*val simpleBenchmark: SimpleBenchmark = new SimpleBenchmark()
   val graphOps: EncounterDateOperations = new EncounterDateOperations()*/
-  val objectOrientedExpander = new ObjectOrientedExpander()
+  val objectOrientedExpander = new RunDrivetrainProcessFromGraphModel()
   
   //globally available Conclusionation Named Graph IRI
   var concNamedGraph: Option[IRI] = None : Option[IRI]
@@ -124,7 +124,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "validateRepository") validateDataInRepository(cxn)
               else if (args(0) == "simpleBenchmark") simpleBenchmark.runSimpleBenchmark(cxn)
               else if (args(0) == "validateShortcuts") logger.info("shortcuts valid: " + sparqlChecks.preExpansionChecks(cxn))*/
-              else if (args(0) == "newExpansion") buildQuery(cxn, gmCxn, globalUUID)
+              else if (args(0) == "all") runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
               else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
           }
           finally 
@@ -313,9 +313,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
   }*/
   
-  def buildQuery(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String)
+  def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String)
   {
-      objectOrientedExpander.runAllExpansionProcesses(cxn, gmCxn, globalUUID)
-
+      objectOrientedExpander.runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
   }
 }

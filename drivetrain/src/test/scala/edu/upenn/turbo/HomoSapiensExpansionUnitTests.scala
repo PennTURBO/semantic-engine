@@ -168,7 +168,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         result.size should be (51)
     }
     
-    test("participant with minimum required for expansion")
+    /*test("participant with minimum required for expansion")
     {
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
@@ -705,5 +705,5 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         result.size should be (93)
-    }
+    }*/
 }

@@ -350,7 +350,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
     class BiobankEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
     {
         val clearTestingRepositoryAfterRun: Boolean = false
-        val ooe = new ObjectOrientedExpander
+        val dtProcess = new RunDrivetrainProcessFromGraphModel
         
         var conclusionationNamedGraph: IRI = null
         var masterConclusionation: IRI = null
@@ -683,7 +683,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
   class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
   {
       val clearTestingRepositoryAfterRun: Boolean = false
-      val ooe = new ObjectOrientedExpander
+      val dtProcess = new RunDrivetrainProcessFromGraphModel
       
       var conclusionationNamedGraph: IRI = null
       var masterConclusionation: IRI = null

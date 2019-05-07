@@ -16,6 +16,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     var globalUUID: String = null
     var instantiation: String = null
     var variableSet = new HashSet[Value]
+    var inputSet = new HashSet[Value]
     var typeMap = new HashMap[String,Value]
     
     //define the SPARQL variables used in the retrieval methods
@@ -32,6 +33,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     val dependee = "dependee"
     val baseType = "baseType"
     val shortcutEntity = "shortcutEntity"
+    val connectionRecipeType = "connectionRecipeType"
     
     def setInstantiation(instantiation: String)
     {
@@ -52,6 +54,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         
     def runProcess(process: String)
     {
+        logger.info("Starting process: " + process)
         val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
         
         val inputs = getInputs(process)
@@ -75,7 +78,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         {
             val whereClause = createWhereClause(inputs, a)
             val bindClause = createBindClause(binds, localUUID)
-            val insertClause = createInsertClause(outputs, outputNamedGraph)
+            val insertClause = createInsertClause(outputs, outputNamedGraph, a, process)
             
             val query = insertClause + whereClause + bindClause
             println(query)
@@ -111,30 +114,44 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         bindClause + "\n}"
     }
     
-    def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]], namedGraph: String): String =
+    def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]], outputNamedGraph: String, inputNamedGraph: String, process: String): String =
     {
-        var insertClause = "INSERT { Graph <" + namedGraph + ">{\n"
+        var insertClause = "INSERT { Graph <" + outputNamedGraph + ">{\n"
+        //create process node
+        insertClause += s"<$process> a turbo:TurboGraphProcess .\n"
+        insertClause += s"<$process> turbo:addedTriplesTo <$outputNamedGraph> .\n"
+        insertClause += s"<$process> turbo:sourcedInputFrom <$inputNamedGraph> .\n"
         var typeSet = new HashSet[Value]
         for (triple <- outputs)
         {
-            var subjectVariable = ""
-            var objectVariable = ""
-            if (variableSet.contains(triple(subject))) subjectVariable = "?" + convertTypeToVariable(triple(subject))
-            else subjectVariable = "<" + triple(subject) + ">"
-            if (variableSet.contains(triple(objectVar))) objectVariable = "?" + convertTypeToVariable(triple(objectVar))
-            else objectVariable = "<" + triple(objectVar) + ">"
-            insertClause += subjectVariable + " <" + triple(predicate).toString + "> " + objectVariable + " .\n"
+            var formattedSubjectVariable = ""
+            var formattedObjectVariable = ""
+            if (variableSet.contains(triple(subject)) || inputSet.contains(triple(subject))) formattedSubjectVariable = "?" + convertTypeToVariable(triple(subject))
+            else formattedSubjectVariable = "<" + triple(subject) + ">"
+            if (variableSet.contains(triple(objectVar)) || inputSet.contains(triple(objectVar))) formattedObjectVariable = "?" + convertTypeToVariable(triple(objectVar))
+            else formattedObjectVariable = "<" + triple(objectVar) + ">"
+            insertClause += formattedSubjectVariable + " <" + triple(predicate).toString + "> " + formattedObjectVariable + " .\n"
             if (triple(subjectType) != null && !typeSet.contains(triple(subject)))
             {
-                insertClause += subjectVariable + " a <" + triple(subject) + "> .\n"
+                insertClause += formattedSubjectVariable + " a <" + triple(subject) + "> .\n"
                 typeSet += triple(subject)
             }
             if (triple(objectType) != null && !typeSet.contains(triple(objectVar)))
             {
-                insertClause += objectVariable + " a <" + triple(objectVar) + "> .\n"
+                insertClause += formattedObjectVariable + " a <" + triple(objectVar) + "> .\n"
                 typeSet += triple(objectVar)
             }
+            if (triple(connectionRecipeType).toString() == "http://transformunify.org/ontologies/ObjectConnectionRecipe")
+            {
+                insertClause += s"<$process> obo:OBI_0000299 $formattedSubjectVariable .\n"
+                if (!(triple(predicate).toString == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"))
+                {
+                    insertClause += s"<$process> obo:OBI_0000299 $formattedObjectVariable .\n"
+                } 
+            }
         }
+        for (input <- inputSet) insertClause += s"<$process> obo:OBI_0000293 ?" + convertTypeToVariable(input) + " .\n"
+        
         insertClause += "}}\n"
         insertClause
     }
@@ -146,8 +163,8 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         var optionalGroups = new HashMap[Value, ArrayBuffer[HashMap[String, Value]]]
         for (triple <- inputs)
         {
-            variableSet += triple(subject)
-            variableSet += triple(objectVar)
+            inputSet += triple(subject)
+            inputSet += triple(objectVar)
             if (triple(optionalGroup) != null) 
             {
                 if (!optionalGroups.contains(triple(optionalGroup))) optionalGroups += triple(optionalGroup) -> ArrayBuffer(triple)
@@ -241,11 +258,12 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     {
        val query = s"""
          
-         Select ?$subject ?$predicate ?$objectVar ?$subjectType ?$objectType ?$graph
+         Select ?$subject ?$predicate ?$objectVar ?$subjectType ?$objectType ?$graph ?$connectionRecipeType
          Where
          {
+            Values ?$connectionRecipeType {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
             ?connection turbo:outputOf <$process> .
-            # ?connection a turbo:TurboGraphConnectionRecipe .
+            ?connection a ?$connectionRecipeType .
             <$process> turbo:outputNamedGraph ?$graph .
             ?connection turbo:subject ?$subject .
             ?connection turbo:predicate ?$predicate .
