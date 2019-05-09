@@ -75,6 +75,42 @@ ontologies:BindIfBoundSingletonSHAOfBaseType
 ontologies:BiobankEncounterRegistryOfVariousTypes
   a owl:Class ;
 .
+ontologies:DNAExtractionProcessToDNAExtract
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001051 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0000257 ;
+.
+ontologies:DNAExtractionProcessToSpecimen
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001479 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:OBI_0000293 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001051 ;
+.
+ontologies:DNAToDNAExtract
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001051 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:OBI_0000643 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001868 ;
+.
+ontologies:DNAToHomoSapiens
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:OGG_0000000014 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0001868 ;
+.
 ontologies:DatatypeConnectionRecipe
   a owl:Class ;
   rdfs:label "datatype connection recipe" ;
@@ -99,6 +135,10 @@ ontologies:GenderIdentityDatumOfVariousTypes
 ontologies:GenderIdentityTypeRule
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql "BIND(IF(BOUND(?${dependent}), ?${original}, obo:OMRSE_00000133) AS ?${replacement})" ;
+.
+ontologies:GeneSymbolUriOfVariousTypes
+  a owl:Class ;
+  rdfs:subClassOf owl:Thing ;
 .
 ontologies:HealthcareEncounterRegistryOfVariousTypes
   a owl:Class ;
@@ -165,6 +205,10 @@ ontologies:ShortcutDrugTermOfVariousTypes
   a owl:Class ;
   rdfs:label "shortcut drug term of various types" ;
 .
+ontologies:ShortcutGeneSymbolUriOfVariousTypes
+  a owl:Class ;
+  rdfs:subClassOf owl:Thing ;
+.
 ontologies:ShortcutHealthcareEncounterRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "shortcut healthcare encounter registry of various types" ;
@@ -176,6 +220,10 @@ ontologies:ShortcutHomoSapiensRegistryOfVariousTypes
 ontologies:ShortcutIcdRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "some shortcut icd registry uri" ;
+.
+ontologies:ShortcutZygosityUriOfVariousTypes
+  a owl:Class ;
+  rdfs:subClassOf owl:Thing ;
 .
 ontologies:SingletonOfType
   a ontologies:TurboGraphVariableManipulationLogic ;
@@ -279,6 +327,104 @@ ontologies:VariableManipulationForLiteralValue
   a owl:Class ;
   rdfs:label "TURBO graph expansion rule for literal value" ;
   rdfs:subClassOf ontologies:TurboGraphVariableManipulation ;
+.
+ontologies:ZygosityUriOfVariousTypes
+  a owl:Class ;
+  rdfs:subClassOf owl:Thing ;
+.
+ontologies:alleleCridRegDenToDataset
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000567 ;
+.
+ontologies:alleleCridSymbolToDataset
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000568 ;
+.
+ontologies:alleleGeneSymbolFirstPartStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:alleleGeneSymbolSecondPartStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:alleleGeneSymbolStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:alleleGenoIdStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:alleleToDNA
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:OBI_0001868 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToDataset
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToGeneSymbolFirstPart
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:alleleGeneSymbolFirstPartStringLiteralValue ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate ontologies:TURBO_0010016 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToGeneSymbolSecondPart
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:object ontologies:alleleGeneSymbolSecondPartStringLiteralValue ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate ontologies:TURBO_0010015 ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToGeneSymbolUri
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:GeneSymbolUriOfVariousTypes ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToZygosityIntegerValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:alleleZygosityIntegerLiteralValue ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate ontologies:TURBO_0010095 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToZygosityUri
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:ZygosityUriOfVariousTypes ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:OBI_0001938 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleZygosityIntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
 .
 ontologies:biobankEncounterBMIVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
@@ -433,6 +579,7 @@ ontologies:biobankEncounterLinkingProcess
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
   ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:precedes ontologies:lossOfFunctionExpansionProcess ;
   ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:participantUnderInvestigationRoleVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
@@ -548,6 +695,15 @@ ontologies:biobankEncounterToBMI
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000527 ;
 .
+ontologies:biobankEncounterToCollectionProcess
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0600005 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0000527 ;
+.
 ontologies:biobankEncounterToLengthMeasurementValueSpecification
   a ontologies:ObjectConnectionRecipe ;
   ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
@@ -652,6 +808,33 @@ ontologies:bmiVariableManipulation
   ontologies:manipulationDependsOn ontologies:shortcutBmiValue ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
 .
+ontologies:collectionProcessToBiobankEncounter
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:TURBO_0000527 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0600005 ;
+.
+ontologies:collectionProcessToHomoSapiens
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:OBI_0000293 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0600005 ;
+.
+ontologies:collectionProcessToSpecimen
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001479 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0600005 ;
+.
 ontologies:datasetTitleStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
 .
@@ -660,6 +843,33 @@ ontologies:datasetTitleVariableManipulation
   ontologies:hasOriginalVariable ontologies:shortcutDatasetTitleStringLiteralValue ;
   ontologies:manipulationCreates ontologies:datasetTitleStringLiteralValue ;
   ontologies:usesSparqlLogic ontologies:BindAs ;
+.
+ontologies:datasetToAllele
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:OBI_0001352 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:datasetToAlleleCridRegDen
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:TURBO_0000567 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:datasetToAlleleCridSymbol
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:TURBO_0000568 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToBiobankEncounterDate
   a ontologies:ObjectConnectionRecipe ;
@@ -1031,6 +1241,42 @@ ontologies:diagnosisVariableManipulation
   ontologies:manipulationDependsOn ontologies:shortcut_obo_OGMS_0000073 ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
 .
+ontologies:exomeSequenceProcessToDNAExtract
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001051 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:OBI_0000293 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0002118 ;
+.
+ontologies:exomeSequenceProcessToSequenceData
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001573 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0002118 ;
+.
+ontologies:formProcessToAllele
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001352 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0200000 ;
+.
+ontologies:formProcessToSequenceData
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001573 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:OBI_0000293 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0200000 ;
+.
 ontologies:genderIdentityDatumToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
@@ -1085,6 +1331,69 @@ ontologies:genderIdentityTypeVariableManipulation
   ontologies:manipulationCreates ontologies:genderIdentityDatumType ;
   ontologies:manipulationDependsOn ontologies:shortcutGenderIdentityDatumOfVariousTypes ;
   ontologies:usesSparqlLogic ontologies:GenderIdentityTypeRule ;
+.
+ontologies:genomeCridRegistryDenoterToGenomeCrid
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000566 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000567 ;
+.
+ontologies:genomeCridSymbolToGenomeCrid
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000566 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000568 ;
+.
+ontologies:genomeCridSymbolToSymbolValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:alleleGenoIdStringLiteralValue ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000568 ;
+.
+ontologies:genomeCridToGenomeCridRegistryDenoter
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000567 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000566 ;
+.
+ontologies:genomeCridToGenomeCridSymbol
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000568 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000566 ;
+.
+ontologies:genomeCridToSpecimen
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001479 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000566 ;
+.
+ontologies:genomeRegistryDenoterToRegistryUri
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000567 ;
+  ontologies:object ontologies:TURBO_0000451 ;
 .
 ontologies:hasOriginalVariable
   a owl:ObjectProperty ;
@@ -1561,11 +1870,12 @@ ontologies:homoSapiensSymbolVariableManipulation
 .
 ontologies:homoSapiensToBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000527 ;
   ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
   ontologies:predicate obo:RO_0000056 ;
-  ontologies:required false ;
+  ontologies:required true ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToBiosex
@@ -1593,7 +1903,7 @@ ontologies:homoSapiensToHealthcareEncounter
   ontologies:object obo:OGMS_0000097 ;
   ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
   ontologies:predicate obo:RO_0000056 ;
-  ontologies:required false ;
+  ontologies:required true ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToHeight
@@ -1768,6 +2078,12 @@ ontologies:lengthMeasurementValueSpecificationVariableManipulation
   ontologies:manipulationCreates ontologies:TURBO_0010138 ;
   ontologies:manipulationDependsOn ontologies:shortcutHeightValue ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
+.
+ontologies:lossOfFunctionExpansionProcess
+  a ontologies:TurboGraphExpansionProcess ;
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
+  ontologies:manipulatesBaseEntity ontologies:TURBO_0010144 ;
+  ontologies:outputNamedGraph pmbb:expanded ;
 .
 ontologies:manipulatesBaseEntity
   a owl:ObjectProperty ;
@@ -2097,6 +2413,111 @@ ontologies:required
   rdfs:label "is connection recipe required in model?" ;
   rdfs:range xsd:boolean ;
 .
+ontologies:shortcutAlleleGeneSymbolFirstPartStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:shortcutAlleleGeneSymbolSecondPartStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:shortcutAlleleGeneSymbolStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:shortcutAlleleGenoIdStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:shortcutAlleleToDatasetTitle
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:shortcutDatasetTitleStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0007608 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010144 ;
+.
+ontologies:shortcutAlleleToGeneSymbol
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:shortcutAlleleGeneSymbolStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0007605 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010144 ;
+.
+ontologies:shortcutAlleleToGeneSymbolFirstPart
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:shortcutAlleleGeneSymbolFirstPartStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010015 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010144 ;
+.
+ontologies:shortcutAlleleToGeneSymbolSecondPart
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:shortcutAlleleGeneSymbolSecondPartStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010016 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010144 ;
+.
+ontologies:shortcutAlleleToGeneSymbolUri
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:ShortcutGeneSymbolUriOfVariousTypes ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010144 ;
+.
+ontologies:shortcutAlleleToGenoId
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0007602 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010144 ;
+.
+ontologies:shortcutAlleleToShortcutAlleleRegistryUri
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000451 ;
+  ontologies:predicate ontologies:TURBO_0010145 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010144 ;
+.
+ontologies:shortcutAlleleToShortcutEncounterUri
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:shortcut_turbo_TURBO_0000527 ;
+  ontologies:predicate ontologies:TURBO_0010142 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010144 ;
+.
+ontologies:shortcutAlleleToZygosityIntegerValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:shortcutAlleleZygosityIntegerLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010095 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010144 ;
+.
+ontologies:shortcutAlleleToZygosityValueUri
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:ShortcutZygosityUriOfVariousTypes ;
+  ontologies:predicate obo:OBI_0001938 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010144 ;
+.
+ontologies:shortcutAlleleZygosityIntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
 ontologies:shortcutBiobankEncounterDateLiteralValue
   a ontologies:TurboGraphDateLiteralValue ;
 .
@@ -2115,15 +2536,6 @@ ontologies:shortcutBiobankEncounterToBmiValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutBmiValue ;
   ontologies:predicate ontologies:TURBO_0000635 ;
-  ontologies:required false ;
-  ontologies:subject ontologies:shortcut_turbo_TURBO_0000527 ;
-.
-ontologies:shortcutBiobankEncounterToConsenterURI
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:shortcutBiobankEncounterHomoSapiensUriStringValue ;
-  ontologies:predicate ontologies:TURBO_0010012 ;
   ontologies:required false ;
   ontologies:subject ontologies:shortcut_turbo_TURBO_0000527 ;
 .
@@ -2157,9 +2569,10 @@ ontologies:shortcutBiobankEncounterToDateStringValue
 ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000527 ;
+  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
   ontologies:predicate ontologies:TURBO_0010113 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_turbo_TURBO_0000527 ;
@@ -2187,8 +2600,18 @@ ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI
   ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:shortcut_obo_NCBITaxon_9606 ;
+  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
   ontologies:predicate ontologies:TURBO_0010012 ;
   ontologies:required true ;
+  ontologies:subject ontologies:shortcut_turbo_TURBO_0000527 ;
+.
+ontologies:shortcutBiobankEncounterToShortcutHomoSapiensUriString
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:shortcutBiobankEncounterHomoSapiensUriStringValue ;
+  ontologies:predicate ontologies:TURBO_0010012 ;
+  ontologies:required false ;
   ontologies:subject ontologies:shortcut_turbo_TURBO_0000527 ;
 .
 ontologies:shortcutBiobankEncounterToSymbolValue
@@ -2360,9 +2783,9 @@ ontologies:shortcutHealthcareEncounterToDiagnosis
 ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OGMS_0000097 ;
+  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate ontologies:TURBO_0010113 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
@@ -2413,6 +2836,7 @@ ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI
   ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:shortcut_obo_NCBITaxon_9606 ;
+  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:predicate ontologies:TURBO_0010002 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_obo_OGMS_0000097 ;
@@ -2514,9 +2938,9 @@ ontologies:shortcutHomoSapiensToExpandedHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
   ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
   ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
   ontologies:predicate ontologies:TURBO_0010113 ;
   ontologies:required true ;
   ontologies:subject ontologies:shortcut_obo_NCBITaxon_9606 ;

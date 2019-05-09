@@ -7,6 +7,7 @@ import org.eclipse.rdf4j.model.IRI
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import java.util.UUID
+import scala.collection.mutable.ArrayBuffer
 
 class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
 {
@@ -44,24 +45,28 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:part1 obo:RO_0000056 pmbb:bbenc1 .
                   pmbb:bbenc1 a turbo:TURBO_0000527 .
                   pmbb:shortcutBbEnc1 a turbo:shortcut_turbo_TURBO_0000527 .
-                  pmbb:shortcutBbEnc1 turbo:TURBO_0010113 ?bbenc1 .
+                  pmbb:shortcutBbEnc1 turbo:TURBO_0010113 pmbb:bbenc1 .
               }
               graph pmbb:Shortcuts_LofShortcuts
               {
-                  pmbb:allele1 a turbo:shortcut_obo_OBI_0001352 .
+                  pmbb:allele1 a turbo:TURBO_0010144 .
                   pmbb:allele1 turbo:TURBO_0007605 "ERLEC1(ENSG00000068912)"^^xsd:String .
                   pmbb:allele1 turbo:TURBO_0007602 "UPENN_UPENN10000047_someDigits"^^xsd:String .
                   pmbb:allele1 turbo:TURBO_0007607 turbo:TURBO_0000590 .
-                  pmbb:allele1 turbo:TURBO_0010095 "2"^^xsd:String .
+                  pmbb:allele1 turbo:TURBO_0010095 "2"^^xsd:int .
                   pmbb:allele1 turbo:TURBO_0010142 "http://www.itmat.upenn.edu/biobank/shortcutBbEnc1"^^xsd:anyURI .
                   pmbb:allele1 turbo:TURBO_0007608 "lof_data_from_tests"^^xsd:String .
+                  pmbb:allele1 obo:IAO_0000142 <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000068912> .
+                  pmbb:allele1 turbo:TURBO_0007609 turbo:TURBO_0000451 .
+                  pmbb:allele1 turbo:TURBO_0010015 "ERLEC1"^^xsd:String .
+                  pmbb:allele1 turbo:TURBO_0010016 "ENSG00000068912"^^xsd:String .
               }
           }
           
           """
         
-        // expand here (process doesn't exists yet)
-        // DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/lossOfFunctionExpansionProcess")
+        update.updateSparql(testCxn, insert)
+        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/lossOfFunctionExpansionProcess")
         
         val output: String = """
           
@@ -75,14 +80,15 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   ?dataset obo:BFO_0000051 ?allele .
                   ?genomeCridSymb obo:BFO_0000050 ?dataset .
                   ?dataset obo:BFO_0000051 ?genomeCridSymb .
+                  ?dataset obo:BFO_0000051 ?genomeRegDen .
+                  ?genomeRegDen obo:BFO_0000050 ?dataset .
                   ?dataset a obo:IAO_0000100 .
-                  ?dataset dc:title "lof_data_from_tests"^^xsd:String .
+                  ?dataset dc11:title "lof_data_from_tests"^^xsd:String .
                   
                   ?allele obo:IAO_0000142 <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000068912> .
                   ?allele turbo:TURBO_0010016 "ERLEC1"^^xsd:String .
                   ?allele turbo:TURBO_0010015 "ENSG00000068912"^^xsd:String .
                   ?allele obo:OBI_0001938 turbo:TURBO_0000590 .
-                  turbo:TURBO_0000590 a turbo:TURBO_0000571 .
                   ?allele turbo:TURBO_0010095 "2"^^xsd:String .
                   
                   ?formProcess a obo:OBI_0200000 .
@@ -115,8 +121,13 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   ?genomeCrid obo:IAO_0000219 ?specimen .
                   ?genomeCrid obo:BFO_0000051 ?genomeCridSymb .
                   ?genomeCridSymb obo:BFO_0000050 ?genomeCrid .
-                  ?genomeCridSymb turbo:TURBO_0006510 "UPENN_UPENN10000047_someDigits"^^xsd:String . .
+                  ?genomeCridSymb turbo:TURBO_0010094 "UPENN_UPENN10000047_someDigits"^^xsd:String .
                   ?genomeCridSymb a turbo:TURBO_0000568 .
+                  
+                  ?genomeRegDen obo:BFO_0000050 ?genomeCrid .
+                  ?genomeRegDen a turbo:TURBO_0000567 .
+                  ?genomeRegDen obo:IAO_0000219 ?genomeRegURI .
+                  ?genomeCrid obo:BFO_0000051 ?genomeRegDen .
               
               }
           }
@@ -124,5 +135,55 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
           """
         
         update.querySparqlBoolean(testCxn, output).get should be (true)
+        
+        val countTrips: String = 
+        """
+        Select * Where
+        {
+            Graph pmbb:expanded
+            {
+                ?s ?p ?o .
+            }
+        }
+        """
+        
+        val tripsResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countTrips, "p")
+        
+        val checkPredicates = Array (
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
+            "http://purl.org/dc/elements/1.1/title", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0001938",
+            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0000305",
+            "http://transformunify.org/ontologies/TURBO_0006512", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://purl.obolibrary.org/obo/OBI_0000293", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/OBI_0000293",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000643",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
+            "http://purl.obolibrary.org/obo/OBI_0000299", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/OGG_0000000014", "http://purl.obolibrary.org/obo/OBI_0000293",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://transformunify.org/ontologies/TURBO_0006500", "http://purl.obolibrary.org/obo/RO_0000056",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006500"
+        )
+        
+        helper.checkStringArraysForEquivalency(checkPredicates, tripsResult.toArray)("equivalent").asInstanceOf[String] should be ("true")
+        
+        tripsResult.size should be (60)
     }
 }

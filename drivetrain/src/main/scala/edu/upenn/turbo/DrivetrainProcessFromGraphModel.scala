@@ -10,6 +10,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.HashMap
 import java.util.UUID
+import java.util.Calendar
 
 object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
 {
@@ -65,6 +66,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         if (outputs.size == 0) throw new RuntimeException("Received a list of 0 outputs")
         
         val inputNamedGraph = inputs(0)(graph).toString
+        
         val outputNamedGraph = outputs(0)(graph).toString
         var inputNamedGraphsList = new ArrayBuffer[String]
         
@@ -73,7 +75,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph)
         }
         else inputNamedGraphsList = ArrayBuffer(inputNamedGraph)
-        
+        logger.info("input named graphs size: " + inputNamedGraphsList.size)
         for (a <- inputNamedGraphsList)
         {
             val whereClause = createWhereClause(inputs, a)
@@ -83,6 +85,13 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             val query = insertClause + whereClause + bindClause
             println(query)
             update.updateSparql(cxn, query)
+            //add sparql statement to process as rdfs:comment
+            val insertComment = s"""
+              INSERT DATA { Graph pmbb:processes { 
+                  <$process> rdfs:comment "$query" .
+              }} .
+              """
+            update.updateSparql(cxn, insertComment)
         }
         
         variableSet = new HashSet[Value]
@@ -116,11 +125,10 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     
     def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]], outputNamedGraph: String, inputNamedGraph: String, process: String): String =
     {
-        var insertClause = "INSERT { Graph <" + outputNamedGraph + ">{\n"
-        //create process node
-        insertClause += s"<$process> a turbo:TurboGraphProcess .\n"
-        insertClause += s"<$process> turbo:addedTriplesTo <$outputNamedGraph> .\n"
-        insertClause += s"<$process> turbo:sourcedInputFrom <$inputNamedGraph> .\n"
+        val currDate = Calendar.getInstance().getTime()
+        var insertClause = "INSERT { Graph <" + outputNamedGraph + "> { \n"
+        var inputProcessSet = new HashSet[String]
+        var outputProcessSet = new HashSet[String]
         var typeSet = new HashSet[Value]
         for (triple <- outputs)
         {
@@ -143,15 +151,22 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             }
             if (triple(connectionRecipeType).toString() == "http://transformunify.org/ontologies/ObjectConnectionRecipe")
             {
-                insertClause += s"<$process> obo:OBI_0000299 $formattedSubjectVariable .\n"
+                outputProcessSet += formattedSubjectVariable
                 if (!(triple(predicate).toString == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"))
                 {
-                    insertClause += s"<$process> obo:OBI_0000299 $formattedObjectVariable .\n"
+                    outputProcessSet += formattedObjectVariable
                 } 
             }
         }
-        for (input <- inputSet) insertClause += s"<$process> obo:OBI_0000293 ?" + convertTypeToVariable(input) + " .\n"
-        
+        for (input <- inputSet) inputProcessSet += "?" + convertTypeToVariable(input)
+        insertClause += "}\n"
+        insertClause += "Graph pmbb:processes {\n"
+        insertClause += s"<$process> a turbo:TurboGraphProcess .\n"
+        insertClause += s"<$process> turbo:addedTriplesTo <$outputNamedGraph> .\n"
+        insertClause += s"<$process> turbo:sourcedInputFrom <$inputNamedGraph> .\n"
+        insertClause += "<" + process + "> turbo:hasDate \"" + currDate + "\" .\n"
+        for (a <- inputProcessSet) insertClause += s"<$process> obo:OBI_0000293 $a .\n"
+        for (a <- outputProcessSet) insertClause += s"<$process> obo:OBI_0000299 $a .\n"
         insertClause += "}}\n"
         insertClause
     }
@@ -214,7 +229,8 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     
     def convertTypeToVariable(input: Value): String =
     {
-       input.toString.replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
+       val splitTypeToVar = input.toString.split("\\/")
+       splitTypeToVar(splitTypeToVar.size - 1).replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
     }
     
     def getInputs(process: String): ArrayBuffer[HashMap[String, Value]] =
