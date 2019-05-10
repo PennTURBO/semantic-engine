@@ -18,6 +18,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     var instantiation: String = null
     var variableSet = new HashSet[Value]
     var inputSet = new HashSet[Value]
+    var inputProcessSet = new HashSet[String]
     var typeMap = new HashMap[String,Value]
     
     //define the SPARQL variables used in the retrieval methods
@@ -55,6 +56,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         
     def runProcess(process: String)
     {
+        val currDate = Calendar.getInstance().getTime()
         logger.info("Starting process: " + process)
         val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
         
@@ -69,10 +71,11 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         
         val outputNamedGraph = outputs(0)(graph).toString
         var inputNamedGraphsList = new ArrayBuffer[String]
+        var processQuery = ""
         
         if (inputNamedGraph.charAt(inputNamedGraph.size-1) == '_') 
         {
-            inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph)
+            inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph, inputs(0)(baseType).toString)
         }
         else inputNamedGraphsList = ArrayBuffer(inputNamedGraph)
         logger.info("input named graphs size: " + inputNamedGraphsList.size)
@@ -82,18 +85,23 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             val bindClause = createBindClause(binds, localUUID)
             val insertClause = createInsertClause(outputs, outputNamedGraph, a, process)
             
-            val query = insertClause + whereClause + bindClause
-            println(query)
-            update.updateSparql(cxn, query)
+            processQuery = insertClause + whereClause + bindClause
+            //println(query)
+            update.updateSparql(cxn, processQuery)
             //add sparql statement to process as rdfs:comment
-            val insertComment = s"""
-              INSERT DATA { Graph pmbb:processes { 
-                  <$process> rdfs:comment "$query" .
-              }} .
-              """
-            update.updateSparql(cxn, insertComment)
+            
         }
-        
+        val insertComment = s"""
+              INSERT DATA { Graph pmbb:processes { 
+                  <$process> rdfs:comment '''$processQuery''' .
+                  <$process> a turbo:TurboGraphProcess .
+                  <$process> turbo:addedTriplesTo <$outputNamedGraph> .
+                  <$process> turbo:sourcedInputFrom <$inputNamedGraph> .
+                  <$process> turbo:hasDate "$currDate" .
+              }}
+              """
+        update.updateSparql(cxn, insertComment)
+     
         variableSet = new HashSet[Value]
         typeMap = new HashMap[String,Value]
     }
@@ -125,9 +133,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     
     def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]], outputNamedGraph: String, inputNamedGraph: String, process: String): String =
     {
-        val currDate = Calendar.getInstance().getTime()
         var insertClause = "INSERT { Graph <" + outputNamedGraph + "> { \n"
-        var inputProcessSet = new HashSet[String]
         var outputProcessSet = new HashSet[String]
         var typeSet = new HashSet[Value]
         for (triple <- outputs)
@@ -158,13 +164,8 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
                 } 
             }
         }
-        for (input <- inputSet) inputProcessSet += "?" + convertTypeToVariable(input)
         insertClause += "}\n"
         insertClause += "Graph pmbb:processes {\n"
-        insertClause += s"<$process> a turbo:TurboGraphProcess .\n"
-        insertClause += s"<$process> turbo:addedTriplesTo <$outputNamedGraph> .\n"
-        insertClause += s"<$process> turbo:sourcedInputFrom <$inputNamedGraph> .\n"
-        insertClause += "<" + process + "> turbo:hasDate \"" + currDate + "\" .\n"
         for (a <- inputProcessSet) insertClause += s"<$process> obo:OBI_0000293 $a .\n"
         for (a <- outputProcessSet) insertClause += s"<$process> obo:OBI_0000299 $a .\n"
         insertClause += "}}\n"
@@ -180,6 +181,11 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         {
             inputSet += triple(subject)
             inputSet += triple(objectVar)
+            if (triple(connectionRecipeType).toString() == "http://transformunify.org/ontologies/ObjectConnectionRecipe")
+            {
+                if (triple(subjectType) != null) inputProcessSet += "?" + convertTypeToVariable(triple(subject))
+                if (triple(objectType) != null) inputProcessSet += "?" + convertTypeToVariable(triple(objectVar))
+            }
             if (triple(optionalGroup) != null) 
             {
                 if (!optionalGroups.contains(triple(optionalGroup))) optionalGroups += triple(optionalGroup) -> ArrayBuffer(triple)
@@ -237,12 +243,15 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     {
        val query = s"""
          
-         Select ?$subject ?$predicate ?$objectVar ?$subjectType ?$objectType ?$graph ?$requiredBool ?$optionalGroup
+         Select ?$subject ?$predicate ?$objectVar ?$subjectType 
+         ?$objectType ?$graph ?$requiredBool ?$optionalGroup ?$connectionRecipeType ?$baseType
          Where
          {
+            Values ?$connectionRecipeType {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
             ?connection turbo:inputTo <$process> .
-            # ?connection a turbo:TurboGraphConnectionRecipe .
+            ?connection a ?$connectionRecipeType .
             <$process> turbo:inputNamedGraph ?$graph .
+            <$process> turbo:manipulatesBaseEntity ?$baseType .
             ?connection turbo:subject ?$subject .
             ?connection turbo:predicate ?$predicate .
             ?connection turbo:object ?$objectVar .
@@ -274,13 +283,14 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     {
        val query = s"""
          
-         Select ?$subject ?$predicate ?$objectVar ?$subjectType ?$objectType ?$graph ?$connectionRecipeType
+         Select ?$subject ?$predicate ?$objectVar ?$subjectType ?$objectType ?$graph ?$connectionRecipeType ?$baseType
          Where
          {
             Values ?$connectionRecipeType {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
             ?connection turbo:outputOf <$process> .
             ?connection a ?$connectionRecipeType .
             <$process> turbo:outputNamedGraph ?$graph .
+            <$process> turbo:manipulatesBaseEntity ?$baseType .
             ?connection turbo:subject ?$subject .
             ?connection turbo:predicate ?$predicate .
             ?connection turbo:object ?$objectVar .

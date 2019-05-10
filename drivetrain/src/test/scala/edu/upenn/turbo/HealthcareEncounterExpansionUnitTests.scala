@@ -207,7 +207,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010014",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://transformunify.org/ontologies/TURBO_0010139", "http://purl.obolibrary.org/obo/OBI_0000299", 
             "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051", 
@@ -239,25 +239,15 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
             "http://transformunify.org/ontologies/TURBO_0010139", "http://purl.obolibrary.org/obo/IAO_0000039", 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010095",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://transformunify.org/ontologies/TURBO_0010013", "http://transformunify.org/ontologies/TURBO_0000655",
-            "http://transformunify.org/ontologies/TURBO_0000644", "http://transformunify.org/ontologies/TURBO_0000648",
-            "http://transformunify.org/ontologies/TURBO_0000647", "http://transformunify.org/ontologies/TURBO_0000646",
-            "http://transformunify.org/ontologies/TURBO_0000645", "http://transformunify.org/ontologies/TURBO_0010110",
-            "http://transformunify.org/ontologies/TURBO_0000643", "http://transformunify.org/ontologies/TURBO_0010002",
-            "http://transformunify.org/ontologies/TURBO_0004603", "http://transformunify.org/ontologies/TURBO_0004602",
-            "http://transformunify.org/ontologies/TURBO_0004601", "http://transformunify.org/ontologies/TURBO_0010013",
-            "http://transformunify.org/ontologies/TURBO_0010014", "http://transformunify.org/ontologies/TURBO_0005601",
-            "http://transformunify.org/ontologies/TURBO_0005611", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/OBI_0000299",
-            "http://transformunify.org/ontologies/TURBO_0000307", "http://transformunify.org/ontologies/TURBO_0005612",
-            "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000581",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            "http://transformunify.org/ontologies/TURBO_0010002", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010013",
+            "http://transformunify.org/ontologies/TURBO_0000307", "http://transformunify.org/ontologies/TURBO_0010014",
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000581"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (93)
+        result.size should be (73)
     }
     
     test("hc encounter with minimum required for expansion")
@@ -296,13 +286,12 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://transformunify.org/ontologies/TURBO_0010113", "http://transformunify.org/ontologies/TURBO_0000643",
-            "http://transformunify.org/ontologies/TURBO_0000648", "http://transformunify.org/ontologies/TURBO_0010110"
+            "http://transformunify.org/ontologies/TURBO_0010113"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (24)
+        result.size should be (21)
     }
     
     test("hc encounter without ID")
@@ -493,24 +482,18 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://transformunify.org/ontologies/TURBO_0010094", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0004602",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/IAO_0000581", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000039", "http://transformunify.org/ontologies/TURBO_0010113",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
-            "http://transformunify.org/ontologies/TURBO_0010139", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://purl.obolibrary.org/obo/OBI_0000299", "http://transformunify.org/ontologies/TURBO_0010094",
+            "http://transformunify.org/ontologies/TURBO_0010139", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/IAO_0000039", "http://transformunify.org/ontologies/TURBO_0006515",
-            "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0000655",
-            "http://transformunify.org/ontologies/TURBO_0000643", "http://transformunify.org/ontologies/TURBO_0000644",
-            "http://transformunify.org/ontologies/TURBO_0000648", "http://transformunify.org/ontologies/TURBO_0000647",
-            "http://transformunify.org/ontologies/TURBO_0000646", "http://transformunify.org/ontologies/TURBO_0010110",
-            "http://transformunify.org/ontologies/TURBO_0005601", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094"
+            "http://purl.obolibrary.org/obo/BFO_0000050"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (76)
+        result.size should be (63)
     }
     
     test("ensure diagnosis info stays together with duplicate hc enc URI")

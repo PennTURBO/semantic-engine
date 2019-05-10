@@ -750,14 +750,17 @@ class TurboMultiuseClass
      * 
      * @return a list representation of all shortcut named graphs for expansion
      */
-    def generateNamedGraphsListFromPrefix(cxn: RepositoryConnection, graphsPrefix: String = "http://www.itmat.upenn.edu/biobank/Shortcuts"): ArrayBuffer[String] =
+    def generateNamedGraphsListFromPrefix(cxn: RepositoryConnection, 
+        graphsPrefix: String, baseType: String = null): ArrayBuffer[String] =
     {
-        val getGraphs: String = """
+        var triplesClause = "?s ?p ?o ."
+        if (baseType != null) triplesClause = s"?s a <$baseType> ."
+        val getGraphs: String = s"""
         select distinct ?g where 
         {
             graph ?g
             {
-                ?s ?p ?o .
+                $triplesClause
             }
             filter (strStarts(str(?g), """"+graphsPrefix+""""))
         }"""
