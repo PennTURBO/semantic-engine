@@ -709,6 +709,10 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
                       turbo:TURBO_0000644 '15/Jan/2017' ;
                       turbo:TURBO_0000645 '2017-01-15'^^xsd:date .
               }
+              Graph pmbb:Shortcuts_heressomeotherstuff
+              {
+                  pmbb:person a obo:NCBITaxon_9606 .
+              }
           }
           """
         update.updateSparql(testCxn, insert1)

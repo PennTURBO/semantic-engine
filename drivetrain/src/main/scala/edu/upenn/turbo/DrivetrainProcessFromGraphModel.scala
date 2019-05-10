@@ -96,7 +96,6 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
                   <$process> rdfs:comment '''$processQuery''' .
                   <$process> a turbo:TurboGraphProcess .
                   <$process> turbo:addedTriplesTo <$outputNamedGraph> .
-                  <$process> turbo:sourcedInputFrom <$inputNamedGraph> .
                   <$process> turbo:hasDate "$currDate" .
               }}
               """
@@ -166,6 +165,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         }
         insertClause += "}\n"
         insertClause += "Graph pmbb:processes {\n"
+        insertClause += s"<$process> turbo:sourcedInputFrom <$inputNamedGraph> ."
         for (a <- inputProcessSet) insertClause += s"<$process> obo:OBI_0000293 $a .\n"
         for (a <- outputProcessSet) insertClause += s"<$process> obo:OBI_0000299 $a .\n"
         insertClause += "}}\n"
