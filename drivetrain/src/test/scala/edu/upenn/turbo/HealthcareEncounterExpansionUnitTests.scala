@@ -171,13 +171,13 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           turbo:TURBO_0000647 "83.0082554658"^^xsd:float ;
           turbo:TURBO_0000646 "177.8"^^xsd:float ;
           turbo:TURBO_0000645 "2017-01-15"^^xsd:date ;
-          a turbo:shortcut_obo_OGMS_0000097 ;
+          a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 turbo:TURBO_0000440 ;
           turbo:TURBO_0000643 "enc_expand.csv" ;
           turbo:TURBO_0010002 "http://www.itmat.upenn.edu/biobank/part1"^^xsd:anyURI ;
           
           obo:OBI_0000299 turbo:diagnosis1 .
-          turbo:diagnosis1 a turbo:shortcut_obo_OGMS_0000073 ;
+          turbo:diagnosis1 a turbo:TURBO_0010160 ;
           turbo:TURBO_0004603 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
           turbo:TURBO_0004602 "ICD-9" ;
           turbo:TURBO_0004601 "401.9" ;
@@ -185,7 +185,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           turbo:TURBO_0010014 "1"^^xsd:Integer .
           
           pmbb:hcenc1 obo:OBI_0000299 turbo:prescription1 .
-          turbo:prescription1 a turbo:shortcut_obo_PDRO_0000001 ;
+          turbo:prescription1 a turbo:TURBO_0010159 ;
           turbo:TURBO_0005601 "3" ;
           turbo:TURBO_0005611 "holistic soil from the ganges" ;
           turbo:TURBO_0005612 turbo:someDrug .
@@ -256,7 +256,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
-          a turbo:shortcut_obo_OGMS_0000097 ;
+          a turbo:TURBO_0010158 ;
           turbo:TURBO_0000648 "20" ;
           turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> .
           }}
@@ -300,7 +300,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
-          a turbo:shortcut_obo_OGMS_0000097 ;
+          a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
           }}
           """
@@ -326,7 +326,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
-          a turbo:shortcut_obo_OGMS_0000097 ;
+          a turbo:TURBO_0010158 ;
           turbo:TURBO_0000648 "20" .
           }}
           """
@@ -352,7 +352,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000648 "20" ;
-          a turbo:shortcut_obo_OGMS_0000097 ;
+          a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 "http://transformunify.org/ontologies/TURBO_0000440"^^<http://www.w3.org/2001/XMLSchema#anyURI> .
           }}
           """
@@ -384,13 +384,13 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           turbo:TURBO_0000647 "83.0082554658"^^xsd:float ;
           turbo:TURBO_0000646 "177.8"^^xsd:float ;
           turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
-          a turbo:shortcut_obo_OGMS_0000097 ;
+          a turbo:TURBO_0010158 ;
           obo:OBI_0000299 turbo:diagnosis1 .
-          turbo:diagnosis1 a turbo:shortcut_obo_OGMS_0000073 ;
+          turbo:diagnosis1 a turbo:TURBO_0010160 ;
               turbo:TURBO_0004602 "ICD-9" .
               
           pmbb:hcenc1 obo:OBI_0000299 turbo:prescription1 .
-          turbo:prescription1 a turbo:shortcut_obo_PDRO_0000001 ;
+          turbo:prescription1 a turbo:TURBO_0010159 ;
           turbo:TURBO_0005601 "3" .
           
           }}
@@ -503,10 +503,10 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
           turbo:TURBO_0000648 "20" ;
-          a turbo:shortcut_obo_OGMS_0000097 ;
+          a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
           obo:OBI_0000299 turbo:diagnosis1 .
-          turbo:diagnosis1 a turbo:shortcut_obo_OGMS_0000073 ;
+          turbo:diagnosis1 a turbo:TURBO_0010160 ;
           turbo:TURBO_0004603 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
           turbo:TURBO_0004602 "ICD-9" ;
           turbo:TURBO_0004601 "401.9" .
@@ -514,10 +514,10 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
           turbo:TURBO_0000648 "20" ;
-          a turbo:shortcut_obo_OGMS_0000097 ;
+          a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
           obo:OBI_0000299 turbo:diagnosis2 .
-          turbo:diagnosis2 a turbo:shortcut_obo_OGMS_0000073 ;
+          turbo:diagnosis2 a turbo:TURBO_0010160 ;
           turbo:TURBO_0004603 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892> ;
           turbo:TURBO_0004602 "ICD-10" ;
           turbo:TURBO_0004601 "177.8" . 
@@ -576,20 +576,20 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
           turbo:TURBO_0000648 "20" ;
-          a turbo:shortcut_obo_OGMS_0000097 ;
+          a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 turbo:TURBO_0000440 ;
           obo:OBI_0000299 turbo:prescription1 .
-          turbo:prescription1 a turbo:shortcut_obo_PDRO_0000001 ;
+          turbo:prescription1 a turbo:TURBO_0010159 ;
           turbo:TURBO_0005601 "3" ;
           turbo:TURBO_0005611 "holistic soil from the ganges" .
           
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
           turbo:TURBO_0000648 "20" ;
-          a turbo:shortcut_obo_OGMS_0000097 ;
+          a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 turbo:TURBO_0000440 ;
           obo:OBI_0000299 turbo:prescription2 .
-          turbo:prescription2 a turbo:shortcut_obo_PDRO_0000001 ;
+          turbo:prescription2 a turbo:TURBO_0010159 ;
           turbo:TURBO_0005601 "4" ;
           turbo:TURBO_0005611 "medicinal purple kush" . 
           }}"""
@@ -655,7 +655,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           {
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts
               {
-                  pmbb:hcenc1 a turbo:shortcut_obo_OGMS_0000097 ;
+                  pmbb:hcenc1 a turbo:TURBO_0010158 ;
                       turbo:TURBO_0000643 'identifierAndRegistry.csv' ;
                       turbo:TURBO_0000648 '20' ;
                       turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> .
@@ -663,7 +663,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
               
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts1
               {
-                  pmbb:hcenc1 a turbo:shortcut_obo_OGMS_0000097 ;
+                  pmbb:hcenc1 a turbo:TURBO_0010158 ;
                       turbo:TURBO_0000643 'diagnosis.csv' ;
                       turbo:TURBO_0000648 '20' ;
                       turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
@@ -678,7 +678,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
               
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts2
               {
-                  pmbb:hcenc1 a turbo:shortcut_obo_OGMS_0000097 ;
+                  pmbb:hcenc1 a turbo:TURBO_0010158 ;
                       turbo:TURBO_0000643 'meds.csv' ;
                       obo:OBI_0000299 pmbb:prescription ;
                       turbo:TURBO_0000648 '20' ;
@@ -691,7 +691,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
               
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts3
               {
-                  pmbb:hcenc1 a turbo:shortcut_obo_OGMS_0000097 ;
+                  pmbb:hcenc1 a turbo:TURBO_0010158 ;
                       turbo:TURBO_0000643 'bmiAndHeightWeight.csv' ;
                       turbo:TURBO_0000648 '20' ;
                       turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
@@ -702,7 +702,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
               
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts4
               {
-                  pmbb:hcenc1 a turbo:shortcut_obo_OGMS_0000097 ;
+                  pmbb:hcenc1 a turbo:TURBO_0010158 ;
                       turbo:TURBO_0000643 'date.csv' ;
                       turbo:TURBO_0000648 '20' ;
                       turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;

@@ -107,7 +107,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         inputSet = new HashSet[Value]
         
         val endTime = System.nanoTime()
-        logger.info("Completed process " + process + " in " + (endTime - startTime)/1000000000.0)
+        logger.info("Completed process " + process + " in " + (endTime - startTime)/1000000000.0 + " seconds")
     }
     
     def createBindClause(binds: ArrayBuffer[HashMap[String, Value]], localUUID: String): String =
@@ -172,7 +172,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         insertClause += "Graph pmbb:processes {\n"
         insertClause += s"<$process> turbo:sourcedInputFrom <$inputNamedGraph> ."
         for (a <- inputProcessSet) insertClause += s"<$process> obo:OBI_0000293 $a .\n"
-        for (a <- outputProcessSet) insertClause += s"<$process> obo:OBI_0000299 $a .\n"
+        for (a <- outputProcessSet) insertClause += s"<$process> turbo:createdTripleAbout $a .\n"
         insertClause += "}}\n"
         insertClause
     }

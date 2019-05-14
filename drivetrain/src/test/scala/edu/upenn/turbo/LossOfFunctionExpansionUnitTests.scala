@@ -44,7 +44,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:part1 a obo:NCBITaxon_9606 .
                   pmbb:part1 obo:RO_0000056 pmbb:bbenc1 .
                   pmbb:bbenc1 a turbo:TURBO_0000527 .
-                  pmbb:shortcutBbEnc1 a turbo:shortcut_turbo_TURBO_0000527 .
+                  pmbb:shortcutBbEnc1 a turbo:TURBO_0010169 .
                   pmbb:shortcutBbEnc1 turbo:TURBO_0010113 pmbb:bbenc1 .
               }
               graph pmbb:Shortcuts_LofShortcuts
@@ -61,7 +61,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele1 turbo:TURBO_0010015 "ERLEC1"^^xsd:String .
                   pmbb:allele1 turbo:TURBO_0010016 "ENSG00000068912"^^xsd:String .
                   
-                  pmbb:shortcutBbEnc1 a turbo:shortcut_turbo_TURBO_0000527 .
+                  pmbb:shortcutBbEnc1 a turbo:TURBO_0010169 .
               }
           }
           

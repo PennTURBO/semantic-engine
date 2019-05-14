@@ -111,7 +111,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           pmbb:bbenc1
           turbo:TURBO_0000635 "18.8252626423"^^xsd:float ;
           turbo:TURBO_0000624 "15/Jan/2017" ;
-          a turbo:shortcut_turbo_TURBO_0000527 ;
+          a turbo:TURBO_0010169 ;
           turbo:TURBO_0000628 "B" ;
           turbo:TURBO_0000623 "enc_expand.csv" ;
           turbo:TURBO_0000627 "61.2244897959"^^xsd:float ;
@@ -171,7 +171,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
         val insert: String = """
           INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
           pmbb:bbenc1
-          a turbo:shortcut_turbo_TURBO_0000527 ;
+          a turbo:TURBO_0010169 ;
           turbo:TURBO_0000628 "B" ;
           turbo:TURBO_0000623 "enc_expand.csv" ;
           turbo:TURBO_0000630 <http://transformunify.org/hcEncReg/biobank> .
@@ -213,7 +213,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
           pmbb:bbenc1
           turbo:TURBO_0000623 "enc_expand.csv" ;
-          a turbo:shortcut_turbo_TURBO_0000527 ;
+          a turbo:TURBO_0010169 ;
           turbo:TURBO_0000628 "B" .
           }}
           """
@@ -236,7 +236,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
           pmbb:bbenc1
           turbo:TURBO_0000623 "enc_expand.csv" ;
-          a turbo:shortcut_turbo_TURBO_0000527 ;
+          a turbo:TURBO_0010169 ;
           turbo:TURBO_0000630 <http://transformunify.org/hcEncReg/biobank> ;
           turbo:TURBO_0000629 "biobank" .
           }}
@@ -260,7 +260,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
           pmbb:bbenc1
           turbo:TURBO_0000628 "B" ;
-          a turbo:shortcut_turbo_TURBO_0000527 ;
+          a turbo:TURBO_0010169 ;
           turbo:TURBO_0000630 <http://transformunify.org/hcEncReg/biobank> ;
           turbo:TURBO_0000629 "biobank" .
           }}
@@ -285,7 +285,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           pmbb:bbenc1
           turbo:TURBO_0000635 "18.8252626423"^^xsd:float ;
           turbo:TURBO_0000624 "15/Jan/2017" ;
-          a turbo:shortcut_turbo_TURBO_0000527 ;
+          a turbo:TURBO_0010169 ;
           turbo:TURBO_0000628 "B" ;
           turbo:TURBO_0000623 "enc_expand.csv" ;
           turbo:TURBO_0000627 "61.2244897959"^^xsd:float ;

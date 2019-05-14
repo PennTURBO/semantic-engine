@@ -69,7 +69,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               <http://www.itmat.upenn.edu/biobank/part1>
               turbo:TURBO_0010089 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
               turbo:TURBO_0010086 "1969-05-04"^^xsd:date ;
-              a turbo:shortcut_obo_NCBITaxon_9606 ;
+              a turbo:TURBO_0010161 ;
               turbo:TURBO_0010085 "04/May/1969" ;
               turbo:TURBO_0010098 "F" ;
               turbo:TURBO_0000609 'inpatient' ;
@@ -79,7 +79,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               turbo:TURBO_0010100 'asian' .
               
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a turbo:shortcut_turbo_TURBO_0000503 ;
+              a turbo:TURBO_0010168 ;
               turbo:TURBO_0010082 turbo:TURBO_0000410 ;
               turbo:TURBO_0010079 "4" ;
               turbo:TURBO_0010084 "part_expand" .
@@ -166,9 +166,9 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
     {
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
-              <http://www.itmat.upenn.edu/biobank/part1> a turbo:shortcut_obo_NCBITaxon_9606 .
+              <http://www.itmat.upenn.edu/biobank/part1> a turbo:TURBO_0010161 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a turbo:shortcut_turbo_TURBO_0000503 ;
+              a turbo:TURBO_0010168 ;
               turbo:TURBO_0010084 "part_expand" ;
               turbo:TURBO_0010079 "4" ;
               turbo:TURBO_0010082 turbo:TURBO_0000410 .
@@ -208,9 +208,9 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a turbo:shortcut_obo_NCBITaxon_9606 .
+              a turbo:TURBO_0010161 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a turbo:shortcut_turbo_TURBO_0000503 ;
+              a turbo:TURBO_0010168 ;
               turbo:TURBO_0010084 "part_expand" ;
               turbo:TURBO_0010082 turbo:TURBO_0000410 .
           }}"""
@@ -230,9 +230,9 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a turbo:shortcut_obo_NCBITaxon_9606 .
+              a turbo:TURBO_0010161 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a turbo:shortcut_turbo_TURBO_0000503 ;
+              a turbo:TURBO_0010168 ;
               turbo:TURBO_0010079 "4" ;
               turbo:TURBO_0010082 turbo:TURBO_0000410 .
           }}"""
@@ -252,9 +252,9 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              a turbo:shortcut_obo_NCBITaxon_9606 .
+              a turbo:TURBO_0010161 .
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a turbo:shortcut_turbo_TURBO_0000503 ;
+              a turbo:TURBO_0010168 ;
               turbo:TURBO_0010079 "4" ;
               turbo:TURBO_0010084 "part_expand" .
           }}"""
@@ -276,12 +276,12 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
               <http://www.itmat.upenn.edu/biobank/part1>
               # turbo:TURBO_0010089 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
               # turbo:TURBO_0010086 "1969-05-04"^^xsd:date ;
-              a turbo:shortcut_obo_NCBITaxon_9606 ;
+              a turbo:TURBO_0010161 ;
               turbo:TURBO_0010085 "04/May/1969" ;
               turbo:TURBO_0010098 "F" .
              
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
-              a turbo:shortcut_turbo_TURBO_0000503 ;
+              a turbo:TURBO_0010168 ;
               turbo:TURBO_0000609 "inpatient" ;
               turbo:TURBO_0010082 turbo:TURBO_0000410 ;
               turbo:TURBO_0010084 "part_expand" ;
@@ -357,7 +357,7 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             pmbb:part1
             turbo:TURBO_0010089 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
             turbo:TURBO_0010086 "1969-05-04"^^xsd:date ;
-            a turbo:shortcut_obo_NCBITaxon_9606 ;
+            a turbo:TURBO_0010161 ;
             turbo:TURBO_0010085 "04/May/1969" ;
             turbo:TURBO_0010098 "F" ;
             turbo:TURBO_0010090 <http://purl.obolibrary.org/obo/OMRSE_00000181> ;
@@ -366,9 +366,9 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
             pmbb:shortcutCrid1 obo:IAO_0000219 pmbb:part1 .
             pmbb:shortcutCrid2 obo:IAO_0000219 pmbb:part1 .
             pmbb:shortcutCrid3 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid1 a turbo:shortcut_turbo_TURBO_0000503 .
-            pmbb:shortcutCrid2 a turbo:shortcut_turbo_TURBO_0000503 .
-            pmbb:shortcutCrid3 a turbo:shortcut_turbo_TURBO_0000503 .
+            pmbb:shortcutCrid1 a turbo:TURBO_0010168 .
+            pmbb:shortcutCrid2 a turbo:TURBO_0010168 .
+            pmbb:shortcutCrid3 a turbo:TURBO_0010168 .
             
             pmbb:shortcutCrid1 turbo:TURBO_0010084 'dataset1' .
             pmbb:shortcutCrid2 turbo:TURBO_0010084 'dataset1' .
@@ -557,32 +557,32 @@ class HomoSapiensExpansionUnitTests extends FunSuiteLike with BeforeAndAfter wit
           GRAPH pmbb:Shortcuts_homoSapiensShortcuts1 {
             pmbb:part1
             turbo:TURBO_0010089 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
-            a turbo:shortcut_obo_NCBITaxon_9606 ;
+            a turbo:TURBO_0010161 ;
             turbo:TURBO_0010098 "F" .
             pmbb:shortcutCrid1 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid1 a turbo:shortcut_turbo_TURBO_0000503 .
+            pmbb:shortcutCrid1 a turbo:TURBO_0010168 .
             pmbb:shortcutCrid1 turbo:TURBO_0010084 'dataset1' .
             pmbb:shortcutCrid1 turbo:TURBO_0010079 'jerry' .
             pmbb:shortcutCrid1 turbo:TURBO_0010082 <http://transformunify.org/ontologies/TURBO_0000402> .  
           }
           
           GRAPH pmbb:Shortcuts_homoSapiensShortcuts2 {
-            pmbb:part1 a turbo:shortcut_obo_NCBITaxon_9606 ;
+            pmbb:part1 a turbo:TURBO_0010161 ;
             turbo:TURBO_0010086 "1969-05-04"^^xsd:date ;
             turbo:TURBO_0010085 "04/May/1969" .
             pmbb:shortcutCrid2 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid2 a turbo:shortcut_turbo_TURBO_0000503 .
+            pmbb:shortcutCrid2 a turbo:TURBO_0010168 .
             pmbb:shortcutCrid2 turbo:TURBO_0010084 'dataset2' .
             pmbb:shortcutCrid2 turbo:TURBO_0010079 'kramer' .
             pmbb:shortcutCrid2 turbo:TURBO_0010082 <http://transformunify.org/ontologies/TURBO_0000403> .
           }
           
           GRAPH pmbb:Shortcuts_homoSapiensShortcuts3 {
-            pmbb:part1 a turbo:shortcut_obo_NCBITaxon_9606 ;
+            pmbb:part1 a turbo:TURBO_0010161 ;
             turbo:TURBO_0010090 <http://purl.obolibrary.org/obo/OMRSE_00000181> ;
             turbo:TURBO_0010100 'asian' .
             pmbb:shortcutCrid3 obo:IAO_0000219 pmbb:part1 .
-            pmbb:shortcutCrid3 a turbo:shortcut_turbo_TURBO_0000503 .
+            pmbb:shortcutCrid3 a turbo:TURBO_0010168 .
             pmbb:shortcutCrid3 turbo:TURBO_0010084 'dataset3' .
             pmbb:shortcutCrid3 turbo:TURBO_0010079 'elaine' .
             pmbb:shortcutCrid3 turbo:TURBO_0010082 <http://transformunify.org/ontologies/TURBO_0000410> .
