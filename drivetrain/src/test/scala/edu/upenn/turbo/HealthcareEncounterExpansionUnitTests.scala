@@ -250,7 +250,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         result.size should be (73)
     }
     
-    test("hc encounter with minimum required for expansion")
+    /*test("hc encounter with minimum required for expansion")
     {
         val insert: String = """
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
@@ -880,5 +880,5 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
         update.querySparqlBoolean(testCxn, datasetCheck3).get should be (true)
         update.querySparqlBoolean(testCxn, datasetCheck4).get should be (true)
         update.querySparqlBoolean(testCxn, datasetCheck5).get should be (true)
-    }
+    }*/
 }

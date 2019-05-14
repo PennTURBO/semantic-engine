@@ -103,14 +103,15 @@ object OntologyLoader extends ProjectwideGlobals
         logger.info("Adding ontology " + ontology)
         try
         {
+
             val f = cxn.getValueFactory
             val OntoUrl = new URL(ontology)
             val OntoGraphName = f.createIRI(formatting.head._1)
         
             val OntoBase = "http://transformunify.org/ontologies/"
          
-            cxn.begin()
             //logger.info("At add step...")
+            helper.clearNamedGraph(cxn, OntoGraphName.toString)
             cxn.add(OntoUrl, OntoBase, formatting.head._2, OntoGraphName)
             //logger.info("Finished try block.")
         }
@@ -128,7 +129,6 @@ object OntologyLoader extends ProjectwideGlobals
             }
         }
         //logger.info("Committing transaction...")
-        cxn.commit()
         //logger.info("Committing complete.")
     }
     

@@ -54,12 +54,14 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   pmbb:allele1 turbo:TURBO_0007602 "UPENN_UPENN10000047_someDigits"^^xsd:String .
                   pmbb:allele1 turbo:TURBO_0007607 turbo:TURBO_0000590 .
                   pmbb:allele1 turbo:TURBO_0010095 "2"^^xsd:int .
-                  pmbb:allele1 turbo:TURBO_0010142 "http://www.itmat.upenn.edu/biobank/shortcutBbEnc1"^^xsd:anyURI .
+                  pmbb:allele1 turbo:TURBO_0010142 pmbb:shortcutBbEnc1 .
                   pmbb:allele1 turbo:TURBO_0007608 "lof_data_from_tests"^^xsd:String .
                   pmbb:allele1 obo:IAO_0000142 <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000068912> .
                   pmbb:allele1 turbo:TURBO_0007609 turbo:TURBO_0000451 .
                   pmbb:allele1 turbo:TURBO_0010015 "ERLEC1"^^xsd:String .
                   pmbb:allele1 turbo:TURBO_0010016 "ENSG00000068912"^^xsd:String .
+                  
+                  pmbb:shortcutBbEnc1 a turbo:shortcut_turbo_TURBO_0000527 .
               }
           }
           
@@ -84,12 +86,14 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
                   ?genomeRegDen obo:BFO_0000050 ?dataset .
                   ?dataset a obo:IAO_0000100 .
                   ?dataset dc11:title "lof_data_from_tests"^^xsd:String .
+                  ?instantiation a turbo:TURBO_0000522 .
+                  ?instantiation obo:OBI_0000293 ?dataset .
                   
                   ?allele obo:IAO_0000142 <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000068912> .
                   ?allele turbo:TURBO_0010016 "ERLEC1"^^xsd:String .
                   ?allele turbo:TURBO_0010015 "ENSG00000068912"^^xsd:String .
                   ?allele obo:OBI_0001938 turbo:TURBO_0000590 .
-                  ?allele turbo:TURBO_0010095 "2"^^xsd:String .
+                  ?allele turbo:TURBO_0010095 "2"^^xsd:int .
                   
                   ?formProcess a obo:OBI_0200000 .
                   ?formProcess obo:OBI_0000299 ?allele .
@@ -152,13 +156,13 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
             "http://purl.org/dc/elements/1.1/title", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/IAO_0000142",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0010016",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0001938",
-            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0000305",
-            "http://transformunify.org/ontologies/TURBO_0006512", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0010094",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010095",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
-            "http://purl.obolibrary.org/obo/OBI_0000293", "http://transformunify.org/ontologies/TURBO_0006510",
+            "http://purl.obolibrary.org/obo/OBI_0000293", "http://transformunify.org/ontologies/TURBO_0010113",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -173,17 +177,14 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
             "http://purl.obolibrary.org/obo/OGG_0000000014", "http://purl.obolibrary.org/obo/OBI_0000293",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://transformunify.org/ontologies/TURBO_0006510", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010113",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000219",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://transformunify.org/ontologies/TURBO_0006500", "http://purl.obolibrary.org/obo/RO_0000056",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0006500"
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/RO_0000056",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010015"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, tripsResult.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        tripsResult.size should be (60)
+        tripsResult.size should be (54)
     }
 }

@@ -91,7 +91,7 @@ ontologies:DNAExtractionProcessToSpecimen
   ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
   ontologies:predicate obo:OBI_0000293 ;
   ontologies:required true ;
-  ontologies:subject obo:OBI_0001051 ;
+  ontologies:subject obo:OBI_0000257 ;
 .
 ontologies:DNAToDNAExtract
   a ontologies:ObjectConnectionRecipe ;
@@ -139,6 +139,9 @@ ontologies:GenderIdentityTypeRule
 ontologies:GeneSymbolUriOfVariousTypes
   a owl:Class ;
   rdfs:subClassOf owl:Thing ;
+.
+ontologies:GenomeRegistryOfVariousTypes
+  a owl:Class ;
 .
 ontologies:HealthcareEncounterRegistryOfVariousTypes
   a owl:Class ;
@@ -208,6 +211,9 @@ ontologies:ShortcutDrugTermOfVariousTypes
 ontologies:ShortcutGeneSymbolUriOfVariousTypes
   a owl:Class ;
   rdfs:subClassOf owl:Thing ;
+.
+ontologies:ShortcutGenomeRegistryOfVariousTypes
+  a owl:Class ;
 .
 ontologies:ShortcutHealthcareEncounterRegistryOfVariousTypes
   a owl:Class ;
@@ -353,8 +359,20 @@ ontologies:alleleCridSymbolToDataset
 ontologies:alleleGeneSymbolFirstPartStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
 .
+ontologies:alleleGeneSymbolFirstPartVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:shortcutAlleleGeneSymbolFirstPartStringLiteralValue ;
+  ontologies:manipulationCreates ontologies:alleleGeneSymbolFirstPartStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:BindAs ;
+.
 ontologies:alleleGeneSymbolSecondPartStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:alleleGeneSymbolSecondPartVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:shortcutAlleleGeneSymbolSecondPartStringLiteralValue ;
+  ontologies:manipulationCreates ontologies:alleleGeneSymbolSecondPartStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:BindAs ;
 .
 ontologies:alleleGeneSymbolStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
@@ -423,8 +441,19 @@ ontologies:alleleToZygosityUri
   ontologies:required true ;
   ontologies:subject obo:OBI_0001352 ;
 .
+ontologies:alleleVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:OBI_0001352 ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandom ;
+.
 ontologies:alleleZygosityIntegerLiteralValue
   a ontologies:TurboGraphIntegerLiteralValue ;
+.
+ontologies:alleleZygosityIntegerValueVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:shortcutAlleleZygosityIntegerLiteralValue ;
+  ontologies:manipulationCreates ontologies:alleleZygosityIntegerLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:BindAs ;
 .
 ontologies:biobankEncounterBMIVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
@@ -835,6 +864,12 @@ ontologies:collectionProcessToSpecimen
   ontologies:required true ;
   ontologies:subject obo:OBI_0600005 ;
 .
+ontologies:collectionProcessVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:OBI_0600005 ;
+  ontologies:manipulationDependsOn ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
+.
 ontologies:datasetTitleStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
 .
@@ -919,6 +954,7 @@ ontologies:datasetToDatasetTitle
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
   ontologies:predicate dc11:title ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -1241,6 +1277,24 @@ ontologies:diagnosisVariableManipulation
   ontologies:manipulationDependsOn ontologies:shortcut_obo_OGMS_0000073 ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
 .
+ontologies:dnaExtractVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:OBI_0001051 ;
+  ontologies:manipulationDependsOn ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
+.
+ontologies:dnaExtractionProcessVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:OBI_0000257 ;
+  ontologies:manipulationDependsOn ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
+.
+ontologies:dnaVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:OBI_0001868 ;
+  ontologies:manipulationDependsOn obo:NCBITaxon_9606 ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
+.
 ontologies:exomeSequenceProcessToDNAExtract
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -1259,6 +1313,12 @@ ontologies:exomeSequenceProcessToSequenceData
   ontologies:required true ;
   ontologies:subject obo:OBI_0002118 ;
 .
+ontologies:exomeSequenceProcessVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:OBI_0002118 ;
+  ontologies:manipulationDependsOn ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
+.
 ontologies:formProcessToAllele
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -1276,6 +1336,12 @@ ontologies:formProcessToSequenceData
   ontologies:predicate obo:OBI_0000293 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0200000 ;
+.
+ontologies:formProcessVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:OBI_0200000 ;
+  ontologies:manipulationDependsOn ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
 .
 ontologies:genderIdentityDatumToDataset
   a ontologies:ObjectConnectionRecipe ;
@@ -1332,6 +1398,18 @@ ontologies:genderIdentityTypeVariableManipulation
   ontologies:manipulationDependsOn ontologies:shortcutGenderIdentityDatumOfVariousTypes ;
   ontologies:usesSparqlLogic ontologies:GenderIdentityTypeRule ;
 .
+ontologies:geneSymbolUriValueVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:ShortcutGeneSymbolUriOfVariousTypes ;
+  ontologies:manipulationCreates ontologies:GeneSymbolUriOfVariousTypes ;
+  ontologies:usesSparqlLogic ontologies:BindAs ;
+.
+ontologies:genoIdLiteralVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:manipulationCreates ontologies:alleleGenoIdStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:BindAs ;
+.
 ontologies:genomeCridRegistryDenoterToGenomeCrid
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -1358,6 +1436,12 @@ ontologies:genomeCridSymbolToSymbolValue
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000568 ;
+.
+ontologies:genomeCridSymbolVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates ontologies:TURBO_0000568 ;
+  ontologies:manipulationDependsOn ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
 .
 ontologies:genomeCridToGenomeCridRegistryDenoter
   a ontologies:ObjectConnectionRecipe ;
@@ -1386,14 +1470,32 @@ ontologies:genomeCridToSpecimen
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000566 ;
 .
+ontologies:genomeCridVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates ontologies:TURBO_0000566 ;
+  ontologies:manipulationDependsOn ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
+.
 ontologies:genomeRegistryDenoterToRegistryUri
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:GenomeRegistryOfVariousTypes ;
   ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000567 ;
-  ontologies:object ontologies:TURBO_0000451 ;
+.
+ontologies:genomeRegistryDenoterVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates ontologies:TURBO_0000567 ;
+  ontologies:manipulationDependsOn ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
+.
+ontologies:genomeRegistryValueVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:ShortcutGenomeRegistryOfVariousTypes ;
+  ontologies:manipulationCreates ontologies:GenomeRegistryOfVariousTypes ;
+  ontologies:usesSparqlLogic ontologies:BindAs ;
 .
 ontologies:hasOriginalVariable
   a owl:ObjectProperty ;
@@ -2004,6 +2106,7 @@ ontologies:instantiationToDataset
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
   ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
   ontologies:predicate obo:OBI_0000293 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000522 ;
@@ -2084,6 +2187,28 @@ ontologies:lossOfFunctionExpansionProcess
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:TURBO_0010144 ;
   ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:usesVariableManipulationRule ontologies:alleleGeneSymbolFirstPartVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:alleleGeneSymbolSecondPartVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:alleleVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:alleleZygosityIntegerValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:collectionProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:dnaExtractVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:dnaExtractionProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:dnaVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:exomeSequenceProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:formProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:geneSymbolUriValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genoIdLiteralVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genomeCridSymbolVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genomeCridVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genomeRegistryDenoterVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genomeRegistryValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:sequenceDataVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:specimenVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:zygosityValueUriVariableManipulation ;
 .
 ontologies:manipulatesBaseEntity
   a owl:ObjectProperty ;
@@ -2413,6 +2538,12 @@ ontologies:required
   rdfs:label "is connection recipe required in model?" ;
   rdfs:range xsd:boolean ;
 .
+ontologies:sequenceDataVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:OBI_0001573 ;
+  ontologies:manipulationDependsOn ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
+.
 ontologies:shortcutAlleleGeneSymbolFirstPartStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
 .
@@ -2431,6 +2562,15 @@ ontologies:shortcutAlleleToDatasetTitle
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutDatasetTitleStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0007608 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010144 ;
+.
+ontologies:shortcutAlleleToExpandedAllele
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001352 ;
+  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:predicate ontologies:TURBO_0010113 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010144 ;
 .
@@ -2483,16 +2623,16 @@ ontologies:shortcutAlleleToShortcutAlleleRegistryUri
   a ontologies:ObjectConnectionRecipe ;
   ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000451 ;
-  ontologies:predicate ontologies:TURBO_0010145 ;
+  ontologies:object ontologies:ShortcutGenomeRegistryOfVariousTypes ;
+  ontologies:predicate ontologies:TURBO_0007609 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010144 ;
 .
-ontologies:shortcutAlleleToShortcutEncounterUri
+ontologies:shortcutAlleleToShortcutBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcut_turbo_TURBO_0000527 ;
+  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
   ontologies:predicate ontologies:TURBO_0010142 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010144 ;
@@ -2511,7 +2651,7 @@ ontologies:shortcutAlleleToZygosityValueUri
   ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ShortcutZygosityUriOfVariousTypes ;
-  ontologies:predicate obo:OBI_0001938 ;
+  ontologies:predicate ontologies:TURBO_0007607 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010144 ;
 .
@@ -2631,6 +2771,9 @@ ontologies:shortcutBiobankEncounterToWeightLiteralValue
   ontologies:predicate ontologies:TURBO_0000627 ;
   ontologies:required false ;
   ontologies:subject ontologies:shortcut_turbo_TURBO_0000527 ;
+.
+ontologies:shortcutBiobankEncounterUriStringValue
+  a ontologies:TurboGraphStringLiteralValue ;
 .
 ontologies:shortcutBmiValue
   a ontologies:TurboGraphDoubleLiteralValue ;
@@ -3037,6 +3180,12 @@ ontologies:shortcut_obo_PDRO_0000001
 ontologies:shortcut_turbo_TURBO_0000527
   a owl:Class ;
 .
+ontologies:specimenVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:OBI_0001479 ;
+  ontologies:manipulationDependsOn ontologies:shortcutAlleleGenoIdStringLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:SHAGlobalRandomWithDependent ;
+.
 ontologies:subject
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
@@ -3078,6 +3227,12 @@ ontologies:weightVariableManipulation
   ontologies:manipulationCreates obo:PATO_0000128 ;
   ontologies:manipulationDependsOn obo:OBI_0001929 ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSingletonSHAOfBaseType ;
+.
+ontologies:zygosityValueUriVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:ShortcutZygosityUriOfVariousTypes ;
+  ontologies:manipulationCreates ontologies:ZygosityUriOfVariousTypes ;
+  ontologies:usesSparqlLogic ontologies:BindAs ;
 .
 pmbb:Shortcuts_
   a ontologies:TurboNamedGraph ;

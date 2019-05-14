@@ -118,6 +118,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.NQUADS)
               else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
               else if (args(0) == "loadTurboOntology") OntologyLoader.addOntologyFromUrl(cxn)
+              else if (args(0) == "updateModelOntology") OntologyLoader.addOntologyFromUrl(gmCxn)
               else if (args(0) == "updateModel") updateModel(gmCxn)
               /*else if (args(0) == "visualize") visualize.createDrivetrainVisualizations(cxn)
               else if (args(0) == "clearInferred") helper.removeInferredStatements(cxn)

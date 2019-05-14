@@ -36,6 +36,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     val baseType = "baseType"
     val shortcutEntity = "shortcutEntity"
     val connectionRecipeType = "connectionRecipeType"
+    val graphOfCreatingProcess = "graphOfCreatingProcess"
     
     def setInstantiation(instantiation: String)
     {
@@ -56,6 +57,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         
     def runProcess(process: String)
     {
+        val startTime = System.nanoTime()
         val currDate = Calendar.getInstance().getTime()
         logger.info("Starting process: " + process)
         val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
@@ -86,10 +88,8 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             val insertClause = createInsertClause(outputs, outputNamedGraph, a, process)
             
             processQuery = insertClause + whereClause + bindClause
-            //println(query)
+            //println(processQuery)
             update.updateSparql(cxn, processQuery)
-            //add sparql statement to process as rdfs:comment
-            
         }
         val insertComment = s"""
               INSERT DATA { Graph pmbb:processes { 
@@ -103,6 +103,11 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
      
         variableSet = new HashSet[Value]
         typeMap = new HashMap[String,Value]
+        inputProcessSet = new HashSet[String]
+        inputSet = new HashSet[Value]
+        
+        val endTime = System.nanoTime()
+        logger.info("Completed process " + process + " in " + (endTime - startTime)/1000000000.0)
     }
     
     def createBindClause(binds: ArrayBuffer[HashMap[String, Value]], localUUID: String): String =
@@ -174,26 +179,24 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     
     def createWhereClause(inputs: ArrayBuffer[HashMap[String, Value]], namedGraph: String): String =
     {
+        var otherGraphsMap = new HashMap[Value, ArrayBuffer[HashMap[String, Value]]]
         var whereClause = "WHERE { GRAPH <" + namedGraph + "> {\n"
-        
         var optionalGroups = new HashMap[Value, ArrayBuffer[HashMap[String, Value]]]
         for (triple <- inputs)
         {
-            inputSet += triple(subject)
-            inputSet += triple(objectVar)
-            if (triple(connectionRecipeType).toString() == "http://transformunify.org/ontologies/ObjectConnectionRecipe")
+            if (triple(graphOfCreatingProcess) != null)
             {
-                if (triple(subjectType) != null) inputProcessSet += "?" + convertTypeToVariable(triple(subject))
-                if (triple(objectType) != null) inputProcessSet += "?" + convertTypeToVariable(triple(objectVar))
-            }
-            if (triple(optionalGroup) != null) 
-            {
-                if (!optionalGroups.contains(triple(optionalGroup))) optionalGroups += triple(optionalGroup) -> ArrayBuffer(triple)
-                else optionalGroups(triple(optionalGroup)) += triple
+                if (otherGraphsMap.contains(triple(graphOfCreatingProcess))) otherGraphsMap(triple(graphOfCreatingProcess)) += triple
+                else otherGraphsMap += triple(graphOfCreatingProcess) -> ArrayBuffer(triple)
             }
             else
             {
-                whereClause += addTripleToWhereClause(triple)
+                val mapRes = whereClauseOperations(triple, optionalGroups)
+                whereClause += mapRes("whereClause").asInstanceOf[String]
+                for ((k,v) <- mapRes("optionalGroups").asInstanceOf[HashMap[Value, ArrayBuffer[HashMap[String, Value]]]])
+                {
+                    optionalGroups += k -> v
+                }
             }
         }
         for ((k,v) <- optionalGroups)
@@ -207,7 +210,50 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             whereClause += "}\n"
         }
         whereClause += "}\n"
+        for ((graph,triplesList) <- otherGraphsMap)
+        {
+            whereClause += "GRAPH <" + graph + "> {\n"
+            for (triple <- triplesList)
+            {
+                val mapRes = whereClauseOperations(triple, optionalGroups)
+                whereClause += mapRes("whereClause").asInstanceOf[String]
+                for ((k,v) <- mapRes("optionalGroups").asInstanceOf[HashMap[Value, ArrayBuffer[HashMap[String, Value]]]])
+                {
+                    optionalGroups += k -> v
+                }
+            }
+            whereClause += "}\n"
+        }
         whereClause
+    }
+        
+    // this is disgusting and needs to be refactored badly
+    def whereClauseOperations(triple: HashMap[String, Value], optionalGroups: HashMap[Value, ArrayBuffer[HashMap[String, Value]]]): Map[String, Object] =
+    {
+        var whereClause = ""
+        inputSet += triple(subject)
+        inputSet += triple(objectVar)
+        if (triple(connectionRecipeType).toString() == "http://transformunify.org/ontologies/ObjectConnectionRecipe")
+        {
+            if (triple(subjectType) != null)
+            {
+              inputProcessSet += "?" + convertTypeToVariable(triple(subject))
+            }
+            if (triple(objectType) != null)
+            {
+              inputProcessSet += "?" + convertTypeToVariable(triple(objectVar))
+            }
+        }
+        if (triple(optionalGroup) != null) 
+        {
+            if (!optionalGroups.contains(triple(optionalGroup))) optionalGroups += triple(optionalGroup) -> ArrayBuffer(triple)
+            else optionalGroups(triple(optionalGroup)) += triple
+        }
+        else
+        {
+            whereClause += addTripleToWhereClause(triple)
+        }
+        Map("whereClause" -> whereClause, "optionalGroups" -> optionalGroups)
     }
     
     def addTripleToWhereClause(triple: HashMap[String, Value]): String =
@@ -243,8 +289,12 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     {
        val query = s"""
          
-         Select ?$subject ?$predicate ?$objectVar ?$subjectType 
-         ?$objectType ?$graph ?$requiredBool ?$optionalGroup ?$connectionRecipeType ?$baseType
+         Select 
+         
+         ?$subject ?$predicate ?$objectVar ?$subjectType 
+         ?$objectType ?$graph ?$requiredBool ?$optionalGroup 
+         ?$connectionRecipeType ?$baseType ?$graphOfCreatingProcess
+         
          Where
          {
             Values ?$connectionRecipeType {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
@@ -260,6 +310,11 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
             Optional
             {
                 ?connection obo:BFO_0000050 ?$optionalGroup .
+            }
+            Optional
+            {
+                ?connection turbo:outputOf ?creatingProcess .
+                ?creatingProcess turbo:outputNamedGraph ?$graphOfCreatingProcess .
             }
             
             Graph pmbb:ontology {
