@@ -13,8 +13,8 @@ class CancerSumStageExpansionTests extends FunSuiteLike with BeforeAndAfter with
 
   val clearTestingRepositoryAfterRun: Boolean = true
   
-  DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-  DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
+  RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+  RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
 
   before
   {
@@ -25,8 +25,8 @@ class CancerSumStageExpansionTests extends FunSuiteLike with BeforeAndAfter with
       testRepository = graphDBMaterials.getTestRepository()
       helper.deleteAllTriplesInDatabase(testCxn)
       
-      DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-      DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
+      RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+      RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
   }
   after
   {

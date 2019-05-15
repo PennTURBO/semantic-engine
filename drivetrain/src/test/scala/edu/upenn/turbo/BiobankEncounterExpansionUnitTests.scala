@@ -12,8 +12,8 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
 {
     val clearTestingRepositoryAfterRun: Boolean = false
 
-    DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-    DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
+    RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+    RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
     
     val instantiationAndDataset: String = """
       ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
@@ -95,8 +95,8 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
         testRepository = graphDBMaterials.getTestRepository()
         helper.deleteAllTriplesInDatabase(testCxn)
         
-        DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-        DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
     }
     after
     {
@@ -123,7 +123,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
@@ -178,7 +178,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
@@ -218,7 +218,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
@@ -242,7 +242,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
@@ -266,7 +266,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
             
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
@@ -296,7 +296,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
         
         val dateNoXsd: String = """
           ask {

@@ -48,4 +48,29 @@ trait ProjectwideGlobals
      val entityLinkingNamedGraph = helper.retrievePropertyFromFile("entityLinkingNamedGraph")
      val testingRepository = helper.retrievePropertyFromFile("testingRepository")
      val modelRepository = helper.retrievePropertyFromFile("modelRepository")
+     
+     val replacementString = "{replaceMe}"
+     
+     //define the SPARQL variables used in the retrieval methods
+      val subject = "subject"
+      val predicate = "predicate"
+      val objectVar = "object"
+      val subjectType = "subjectType"
+      val objectType = "objectType"
+      val graph = "graph"
+      val requiredBool = "required"
+      val optionalGroup = "optionalGroup"
+      val expandedEntity = "expandedEntity"
+      val sparqlString = "sparqlString"
+      val dependee = "dependee"
+      val baseType = "baseType"
+      val shortcutEntity = "shortcutEntity"
+      val connectionRecipeType = "connectionRecipeType"
+      val graphOfCreatingProcess = "graphOfCreatingProcess"
+      
+      val processVar = "process"
+      val date = "date"
+      val outputNamedGraph = "outputNamedGraph"
+      val metaQuery = "query"
+      val noGroup = "noGroup"
 }

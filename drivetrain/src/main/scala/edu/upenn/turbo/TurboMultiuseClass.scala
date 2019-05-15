@@ -943,4 +943,15 @@ class TurboMultiuseClass
             updater.updateSparql(cxn, consolidate)
         }
     }
+    
+    def convertTypeToSparqlVariable(input: Value): String =
+    {
+       convertTypeToSparqlVariable(input.toString)
+    }
+    
+    def convertTypeToSparqlVariable(input: String): String =
+    {
+       val splitTypeToVar = input.split("\\/")
+       "?" + splitTypeToVar(splitTypeToVar.size - 1).replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
+    }
 }

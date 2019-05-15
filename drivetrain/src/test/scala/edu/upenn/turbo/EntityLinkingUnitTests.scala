@@ -13,8 +13,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
 {
     val clearTestingRepositoryAfterRun: Boolean = false
     
-    DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-    DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
+    RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+    RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
     
     before
     {
@@ -25,8 +25,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
         testRepository = graphDBMaterials.getTestRepository()
         helper.deleteAllTriplesInDatabase(testCxn)
         
-        DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-        DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
     }
     after
     {
@@ -194,7 +194,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             }
         """
       update.updateSparql(testCxn, insert)
-      DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
+      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
       
         val check: String = """
           ASK
@@ -305,7 +305,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             }
         """
       update.updateSparql(testCxn, insert)
-      DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
+      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
         
         val check: String = """
           ASK
@@ -350,15 +350,14 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
     class BiobankEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
     {
         val clearTestingRepositoryAfterRun: Boolean = false
-        val dtProcess = new RunDrivetrainProcessFromGraphModel
         
         var conclusionationNamedGraph: IRI = null
         var masterConclusionation: IRI = null
         var masterPlanspec: IRI = null
         var masterPlan: IRI = null
         
-        DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-        DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
+        RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+        RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         before
         {
@@ -369,8 +368,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             testRepository = graphDBMaterials.getTestRepository()
             helper.deleteAllTriplesInDatabase(testCxn)
             
-            DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-            DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
+            RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+            RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
         }
         after
         {
@@ -502,7 +501,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                   }
               """
             update.updateSparql(testCxn, insert)
-            DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
             
              val check: String = """
               ASK
@@ -639,7 +638,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 }
             """
           update.updateSparql(testCxn, insert)
-          DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
+          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
           
           val check: String = """
             ASK
@@ -683,15 +682,14 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
   class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
   {
       val clearTestingRepositoryAfterRun: Boolean = false
-      val dtProcess = new RunDrivetrainProcessFromGraphModel
       
       var conclusionationNamedGraph: IRI = null
       var masterConclusionation: IRI = null
       var masterPlanspec: IRI = null
       var masterPlan: IRI = null
       
-      DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-      DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
+      RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+      RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
       
       before
       {
@@ -702,8 +700,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
           testRepository = graphDBMaterials.getTestRepository()
           helper.deleteAllTriplesInDatabase(testCxn)
           
-          DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-          DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
+          RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+          RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
       }
       after
       {
@@ -929,8 +927,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 }
             """
           update.updateSparql(testCxn, insert)
-          DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
-          DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
+          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
+          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
           
            val check: String = """
             ASK

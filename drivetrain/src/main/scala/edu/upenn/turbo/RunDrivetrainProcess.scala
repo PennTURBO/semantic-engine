@@ -12,7 +12,7 @@ import scala.collection.mutable.HashMap
 import java.util.UUID
 import java.util.Calendar
 
-object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
+object RunDrivetrainProcess extends ProjectwideGlobals
 {
     var globalUUID: String = null
     var instantiation: String = null
@@ -20,23 +20,6 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
     var inputSet = new HashSet[Value]
     var inputProcessSet = new HashSet[String]
     var typeMap = new HashMap[String,Value]
-    
-    //define the SPARQL variables used in the retrieval methods
-    val subject = "subject"
-    val predicate = "predicate"
-    val objectVar = "object"
-    val subjectType = "subjectType"
-    val objectType = "objectType"
-    val graph = "graph"
-    val requiredBool = "required"
-    val optionalGroup = "optionalGroup"
-    val expandedEntity = "expandedEntity"
-    val sparqlString = "sparqlString"
-    val dependee = "dependee"
-    val baseType = "baseType"
-    val shortcutEntity = "shortcutEntity"
-    val connectionRecipeType = "connectionRecipeType"
-    val graphOfCreatingProcess = "graphOfCreatingProcess"
     
     def setInstantiation(instantiation: String)
     {
@@ -62,6 +45,9 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         logger.info("Starting process: " + process)
         val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
         
+        // retrieve connections (inputs, outputs) and expansion rules (binds) from model graph
+        // the inputs become the "where" block of the SPARQL query
+        // the outputs become the "insert" block
         val inputs = getInputs(process)
         val outputs = getOutputs(process)
         val binds = getBind(process)
@@ -70,72 +56,48 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         if (outputs.size == 0) throw new RuntimeException("Received a list of 0 outputs")
         
         val inputNamedGraph = inputs(0)(graph).toString
-        
         val outputNamedGraph = outputs(0)(graph).toString
-        var inputNamedGraphsList = new ArrayBuffer[String]
-        var processQuery = ""
         
-        if (inputNamedGraph.charAt(inputNamedGraph.size-1) == '_') 
-        {
-            inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph, inputs(0)(baseType).toString)
-        }
-        else inputNamedGraphsList = ArrayBuffer(inputNamedGraph)
+        // process base type is an ontology class which is manipulated in some way by the process
+        val processBaseType = inputs(0)(baseType).toString
+        // get list of all named graphs which match pattern specified in inputNamedGraph and include processBaseType
+        var inputNamedGraphsList = getInputNamedGraphsList(inputNamedGraph, processBaseType)
         logger.info("input named graphs size: " + inputNamedGraphsList.size)
-        for (a <- inputNamedGraphsList)
+        
+        // for each input named graph, create and run query
+        for (graph <- inputNamedGraphsList)
         {
-            val whereClause = createWhereClause(inputs, a)
-            val bindClause = createBindClause(binds, localUUID)
-            val insertClause = createInsertClause(outputs, outputNamedGraph, a, process)
+            // create primary query
+            val primaryQuery = new PatternMatchQuery()
+            primaryQuery.setProcess(process: String)
+            primaryQuery.setInputGraph(graph: String)
+            primaryQuery.setOutputGraph(graph: String)
             
-            processQuery = insertClause + whereClause + bindClause
-            //println(processQuery)
-            update.updateSparql(cxn, processQuery)
+            primaryQuery.createBindClause(binds, localUUID)
+            primaryQuery.createWhereClause(inputs)
+            primaryQuery.createInsertClause(outputs)
+            
+            logger.info(primaryQuery.getQuery())
+            primaryQuery.runQuery(cxn)
+            
+            // create metadata about process
+            val metaDataQuery = new DataQuery()
+            metaDataQuery.setOutputGraph("http://www.itmat.upenn.edu/biobank/processes")
+            val metaInfo: HashMap[String, String] = HashMap(metaQuery -> primaryQuery.getQuery(), 
+                                                            date -> currDate.toString(), 
+                                                            process -> process, 
+                                                            outputNamedGraph -> outputNamedGraph)
+                                                            
+            val metaDataTriples = createMetaDataTriples(metaInfo)
+            metaDataQuery.createInsertDataClause(metaDataTriples)
+            metaDataQuery.runQuery(cxn)
         }
-        val insertComment = s"""
-              INSERT DATA { Graph pmbb:processes { 
-                  <$process> rdfs:comment '''$processQuery''' .
-                  <$process> a turbo:TurboGraphProcess .
-                  <$process> turbo:addedTriplesTo <$outputNamedGraph> .
-                  <$process> turbo:hasDate "$currDate" .
-              }}
-              """
-        update.updateSparql(cxn, insertComment)
-     
-        variableSet = new HashSet[Value]
-        typeMap = new HashMap[String,Value]
-        inputProcessSet = new HashSet[String]
-        inputSet = new HashSet[Value]
         
         val endTime = System.nanoTime()
         logger.info("Completed process " + process + " in " + (endTime - startTime)/1000000000.0 + " seconds")
     }
     
-    def createBindClause(binds: ArrayBuffer[HashMap[String, Value]], localUUID: String): String =
-    {
-        // example input and output of a single line
-        var bindClause = ""
-        var varList = new ArrayBuffer[Value]
-        for (rule <- binds)
-        {
-            var sparqlBind = rule(sparqlString).toString.replaceAll("\\$\\{replacement\\}", convertTypeToVariable(rule(expandedEntity)))
-                                         .replaceAll("\\$\\{localUUID\\}", localUUID)
-                                         .replaceAll("\\$\\{globalUUID\\}", globalUUID)
-                                         .replaceAll("\\$\\{mainExpansionTypeVariableName\\}", convertTypeToVariable(rule(baseType)))
-                                         .replaceAll("\\$\\{instantiationPlaceholder\\}", "\"" + instantiation + "\"")
-            if (sparqlBind.contains("${dependent}")) sparqlBind = sparqlBind.replaceAll("\\$\\{dependent\\}",convertTypeToVariable(rule(dependee)))
-            if (sparqlBind.contains("${original}")) sparqlBind = sparqlBind.replaceAll("\\$\\{original\\}",convertTypeToVariable(rule(shortcutEntity)))
-            if (sparqlBind.contains("${singletonType}")) sparqlBind = sparqlBind.replaceAll("\\$\\{singletonType\\}",rule(dependee).toString)
-            
-            bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
-            variableSet += rule(expandedEntity)
-            variableSet += rule(shortcutEntity)
-            variableSet += rule(dependee)
-            variableSet += rule(baseType)
-        }
-        bindClause + "\n}"
-    }
-    
-    def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]], outputNamedGraph: String, inputNamedGraph: String, process: String): String =
+    /*def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]], outputNamedGraph: String, inputNamedGraph: String, process: String): String =
     {
         var insertClause = "INSERT { Graph <" + outputNamedGraph + "> { \n"
         var outputProcessSet = new HashSet[String]
@@ -175,115 +137,7 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         for (a <- outputProcessSet) insertClause += s"<$process> turbo:createdTripleAbout $a .\n"
         insertClause += "}}\n"
         insertClause
-    }
-    
-    def createWhereClause(inputs: ArrayBuffer[HashMap[String, Value]], namedGraph: String): String =
-    {
-        var otherGraphsMap = new HashMap[Value, ArrayBuffer[HashMap[String, Value]]]
-        var whereClause = "WHERE { GRAPH <" + namedGraph + "> {\n"
-        var optionalGroups = new HashMap[Value, ArrayBuffer[HashMap[String, Value]]]
-        for (triple <- inputs)
-        {
-            if (triple(graphOfCreatingProcess) != null)
-            {
-                if (otherGraphsMap.contains(triple(graphOfCreatingProcess))) otherGraphsMap(triple(graphOfCreatingProcess)) += triple
-                else otherGraphsMap += triple(graphOfCreatingProcess) -> ArrayBuffer(triple)
-            }
-            else
-            {
-                val mapRes = whereClauseOperations(triple, optionalGroups)
-                whereClause += mapRes("whereClause").asInstanceOf[String]
-                for ((k,v) <- mapRes("optionalGroups").asInstanceOf[HashMap[Value, ArrayBuffer[HashMap[String, Value]]]])
-                {
-                    optionalGroups += k -> v
-                }
-            }
-        }
-        for ((k,v) <- optionalGroups)
-        {
-            whereClause += "OPTIONAL {\n"
-            for (triple <- v)
-            {
-                whereClause += addTripleToWhereClause(triple)
-                
-            }
-            whereClause += "}\n"
-        }
-        whereClause += "}\n"
-        for ((graph,triplesList) <- otherGraphsMap)
-        {
-            whereClause += "GRAPH <" + graph + "> {\n"
-            for (triple <- triplesList)
-            {
-                val mapRes = whereClauseOperations(triple, optionalGroups)
-                whereClause += mapRes("whereClause").asInstanceOf[String]
-                for ((k,v) <- mapRes("optionalGroups").asInstanceOf[HashMap[Value, ArrayBuffer[HashMap[String, Value]]]])
-                {
-                    optionalGroups += k -> v
-                }
-            }
-            whereClause += "}\n"
-        }
-        whereClause
-    }
-        
-    // this is disgusting and needs to be refactored badly
-    def whereClauseOperations(triple: HashMap[String, Value], optionalGroups: HashMap[Value, ArrayBuffer[HashMap[String, Value]]]): Map[String, Object] =
-    {
-        var whereClause = ""
-        inputSet += triple(subject)
-        inputSet += triple(objectVar)
-        if (triple(connectionRecipeType).toString() == "http://transformunify.org/ontologies/ObjectConnectionRecipe")
-        {
-            if (triple(subjectType) != null)
-            {
-              inputProcessSet += "?" + convertTypeToVariable(triple(subject))
-            }
-            if (triple(objectType) != null)
-            {
-              inputProcessSet += "?" + convertTypeToVariable(triple(objectVar))
-            }
-        }
-        if (triple(optionalGroup) != null) 
-        {
-            if (!optionalGroups.contains(triple(optionalGroup))) optionalGroups += triple(optionalGroup) -> ArrayBuffer(triple)
-            else optionalGroups(triple(optionalGroup)) += triple
-        }
-        else
-        {
-            whereClause += addTripleToWhereClause(triple)
-        }
-        Map("whereClause" -> whereClause, "optionalGroups" -> optionalGroups)
-    }
-    
-    def addTripleToWhereClause(triple: HashMap[String, Value]): String =
-    {
-        var whereClause = ""
-        var required = true
-        if (triple(requiredBool).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
-        if (!required) whereClause += "OPTIONAL { "
-        val subjectVariable = convertTypeToVariable(triple(subject))
-        val objectVariable = convertTypeToVariable(triple(objectVar))
-        whereClause += "?" + subjectVariable + " <" + triple(predicate).toString + "> ?" + objectVariable + " .\n"
-        if (triple(subjectType) != null && !typeMap.contains(subjectVariable))
-        {
-            typeMap += subjectVariable -> triple(subject)
-            whereClause += "?" + subjectVariable + " a <" + triple(subject) + "> .\n"
-        }
-        if (triple(objectType) != null && !typeMap.contains(objectVariable))
-        {
-            typeMap += objectVariable -> triple(objectVar)
-            whereClause += "?" + objectVariable + " a <" + triple(objectVar) + "> .\n"
-        }
-        if (!required) whereClause += "}"
-        whereClause
-    }
-    
-    def convertTypeToVariable(input: Value): String =
-    {
-       val splitTypeToVar = input.toString.split("\\/")
-       splitTypeToVar(splitTypeToVar.size - 1).replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
-    }
+    }*/
     
     def getInputs(process: String): ArrayBuffer[HashMap[String, Value]] =
     {
@@ -399,5 +253,103 @@ object DrivetrainProcessFromGraphModel extends ProjectwideGlobals
         """
         
         update.querySparqlAndUnpackToListOfMap(gmCxn, query)
+    }
+    
+    /**
+     * Sets instantiation and globalUUID variables, and retrieves list of all processes in the order that they should be run. Then runs each process.
+     */
+    def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String, instantiation: String = helper.genPmbbIRI())
+    {
+        setInstantiation(instantiation)
+        setGlobalUUID(globalUUID)
+        setGraphModelConnection(gmCxn)
+        setOutputRepositoryConnection(cxn)
+        
+        //load the TURBO ontology
+        OntologyLoader.addOntologyFromUrl(cxn)
+      
+        // get list of all processes in order
+        val orderedProcessList: ArrayBuffer[String] = getAllProcessesInOrder(gmCxn)
+        
+        logger.info("Drivetrain will now run the following processes in this order:")
+        for (a <- orderedProcessList) logger.info(a)
+        
+        // run each process
+        for (process <- orderedProcessList) runProcess(process)
+    }
+
+    /**
+     * Searches the model graph and returns all processes in the order that they should be run
+     * 
+     * @return ArrayBuffer[String] where each string represents a process and the index represents where each should be run in a sequence
+     */
+    def getAllProcessesInOrder(gmCxn: RepositoryConnection): ArrayBuffer[String] =
+    {
+        val getFirstProcess: String = """
+          select ?firstProcess where
+          {
+              ?firstProcess a turbo:TurboGraphProcess .
+              Minus
+              {
+                  ?something turbo:precedes ?firstProcess .
+              }
+          }
+        """
+        
+        val getProcesses: String = """
+          select ?precedingProcess ?succeedingProcess where
+          {
+              ?precedingProcess a turbo:TurboGraphProcess .
+              ?succeedingProcess a turbo:TurboGraphProcess .
+              ?precedingProcess turbo:precedes ?succeedingProcess .
+          }
+        """
+        
+        val firstProcessRes = update.querySparqlAndUnpackTuple(gmCxn, getFirstProcess, "firstProcess")
+        if (firstProcessRes.size > 1) throw new RuntimeException ("Multiple starting processes discovered in graph model")
+        val res = update.querySparqlAndUnpackTuple(gmCxn, getProcesses, Array("precedingProcess", "succeedingProcess"))
+        var currProcess: String = firstProcessRes(0)
+        var processesInOrder: ArrayBuffer[String] = new ArrayBuffer[String]
+        var processMap: HashMap[String, String] = new HashMap[String, String]
+        
+        for (a <- res) processMap += a(0).toString -> a(1).toString
+        
+        while (currProcess != null)
+        {
+            processesInOrder += currProcess
+            if (processMap.contains(currProcess)) currProcess = processMap(currProcess)
+            else currProcess = null
+        }
+        processesInOrder
+    }
+    
+    /*
+     * Get all named graphs in the target repository which contain the base type assigned to the process and match the input named graph provided from the process
+     * 
+     * @return ArrayBuffer[String] of all input named graphs to run generated query over
+     */
+    def getInputNamedGraphsList(inputNamedGraph: String, processBaseType: String): ArrayBuffer[String] =
+    {
+        // In the model graph, an input named graph ending in '_' indicates a wildcard
+        if (inputNamedGraph.charAt(inputNamedGraph.size-1) == '_') 
+        {
+            helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph, processBaseType)
+        }
+        else ArrayBuffer(inputNamedGraph)
+    }
+    
+    def createMetaDataTriples(metaInfo: HashMap[String, String]): ArrayBuffer[Triple] =
+    {
+        val processVal = metaInfo(processVar)
+        val currDate = metaInfo(date)
+        val queryVal = metaInfo(metaQuery)
+        val outputNamedGraphVal = metaInfo(outputNamedGraph)
+        
+        ArrayBuffer(
+             new Triple(processVal, "rdfs:comment", queryVal),
+             new Triple(processVal, "turbo:hasDate", currDate),
+             new Triple(processVal, "rdf:type", "turbo:TurboGraphProcess"),
+             new Triple(processVal, "turbo:addedTriplesTo", outputNamedGraphVal)
+        )
     }
 }

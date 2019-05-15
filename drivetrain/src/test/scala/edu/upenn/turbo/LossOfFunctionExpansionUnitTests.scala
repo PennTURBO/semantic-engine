@@ -13,8 +13,8 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
 {
     val clearTestingRepositoryAfterRun: Boolean = false
 
-    DrivetrainProcessFromGraphModel.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-    DrivetrainProcessFromGraphModel.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
+    RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+    RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
     
     before
     {
@@ -25,8 +25,8 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
         testRepository = graphDBMaterials.getTestRepository()
         helper.deleteAllTriplesInDatabase(testCxn)
         
-        DrivetrainProcessFromGraphModel.setGraphModelConnection(gmCxn)
-        DrivetrainProcessFromGraphModel.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
     }
     after
     {
@@ -68,7 +68,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
           """
         
         update.updateSparql(testCxn, insert)
-        DrivetrainProcessFromGraphModel.runProcess("http://transformunify.org/ontologies/lossOfFunctionExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/lossOfFunctionExpansionProcess")
         
         val output: String = """
           
