@@ -49,7 +49,7 @@ trait ProjectwideGlobals
      val testingRepository = helper.retrievePropertyFromFile("testingRepository")
      val modelRepository = helper.retrievePropertyFromFile("modelRepository")
      
-     val replacementString = "{replaceMe}"
+     val replacementString = "[replaceMe]"
      
      //define the SPARQL variables used in the retrieval methods
       val subject = "subject"
@@ -57,7 +57,7 @@ trait ProjectwideGlobals
       val objectVar = "object"
       val subjectType = "subjectType"
       val objectType = "objectType"
-      val graph = "graph"
+      val graphFromSparql = "graph"
       val requiredBool = "required"
       val optionalGroup = "optionalGroup"
       val expandedEntity = "expandedEntity"
@@ -68,9 +68,17 @@ trait ProjectwideGlobals
       val connectionRecipeType = "connectionRecipeType"
       val graphOfCreatingProcess = "graphOfCreatingProcess"
       
+      val requiredInputKeysList = ArrayBuffer(subject, predicate, objectVar, subjectType, objectType, graphFromSparql, requiredBool,
+                                              optionalGroup, connectionRecipeType, baseType, graphOfCreatingProcess)
+                                              
+      val requiredOutputKeysList = ArrayBuffer(subject, predicate, objectVar, subjectType, objectType, graphFromSparql, connectionRecipeType,
+                                              baseType)
+      
       val processVar = "process"
       val date = "date"
-      val outputNamedGraph = "outputNamedGraph"
+      val outputNamedGraphVal = "outputNamedGraph"
       val metaQuery = "query"
+      
       val noGroup = "noGroup"
+      val defaultGraph = "defaultGraph"
 }

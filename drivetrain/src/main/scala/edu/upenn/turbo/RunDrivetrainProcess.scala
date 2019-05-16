@@ -55,8 +55,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
         if (outputs.size == 0) throw new RuntimeException("Received a list of 0 outputs")
         
-        val inputNamedGraph = inputs(0)(graph).toString
-        val outputNamedGraph = outputs(0)(graph).toString
+        val inputNamedGraph = inputs(0)(graphFromSparql).toString
+        val outputNamedGraph = outputs(0)(graphFromSparql).toString
         
         // process base type is an ontology class which is manipulated in some way by the process
         val processBaseType = inputs(0)(baseType).toString
@@ -69,9 +69,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         {
             // create primary query
             val primaryQuery = new PatternMatchQuery()
-            primaryQuery.setProcess(process: String)
-            primaryQuery.setInputGraph(graph: String)
-            primaryQuery.setOutputGraph(graph: String)
+            primaryQuery.setProcess(process)
+            primaryQuery.setInputGraph(graph)
             
             primaryQuery.createBindClause(binds, localUUID)
             primaryQuery.createWhereClause(inputs)
@@ -84,12 +83,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             val metaDataQuery = new DataQuery()
             metaDataQuery.setOutputGraph("http://www.itmat.upenn.edu/biobank/processes")
             val metaInfo: HashMap[String, String] = HashMap(metaQuery -> primaryQuery.getQuery(), 
-                                                            date -> currDate.toString(), 
-                                                            process -> process, 
-                                                            outputNamedGraph -> outputNamedGraph)
+                                                            date -> currDate.toString, 
+                                                            processVar -> process, 
+                                                            outputNamedGraphVal -> outputNamedGraph
+                                                            )
                                                             
             val metaDataTriples = createMetaDataTriples(metaInfo)
             metaDataQuery.createInsertDataClause(metaDataTriples)
+            logger.info(metaDataQuery.getQuery())
             metaDataQuery.runQuery(cxn)
         }
         
@@ -141,20 +142,19 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     
     def getInputs(process: String): ArrayBuffer[HashMap[String, Value]] =
     {
+       var variablesToSelect = ""
+       for (key <- requiredInputKeysList) variablesToSelect += "?" + key + " "
+       
        val query = s"""
          
-         Select 
-         
-         ?$subject ?$predicate ?$objectVar ?$subjectType 
-         ?$objectType ?$graph ?$requiredBool ?$optionalGroup 
-         ?$connectionRecipeType ?$baseType ?$graphOfCreatingProcess
+         Select $variablesToSelect
          
          Where
          {
             Values ?$connectionRecipeType {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
             ?connection turbo:inputTo <$process> .
             ?connection a ?$connectionRecipeType .
-            <$process> turbo:inputNamedGraph ?$graph .
+            <$process> turbo:inputNamedGraph ?$graphFromSparql .
             <$process> turbo:manipulatesBaseEntity ?$baseType .
             ?connection turbo:subject ?$subject .
             ?connection turbo:predicate ?$predicate .
@@ -190,15 +190,18 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     
     def getOutputs(process: String): ArrayBuffer[HashMap[String, Value]] =
     {
+       var variablesToSelect = ""
+       for (key <- requiredOutputKeysList) variablesToSelect += "?" + key + " "
+       
        val query = s"""
          
-         Select ?$subject ?$predicate ?$objectVar ?$subjectType ?$objectType ?$graph ?$connectionRecipeType ?$baseType
+         Select $variablesToSelect
          Where
          {
             Values ?$connectionRecipeType {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
             ?connection turbo:outputOf <$process> .
             ?connection a ?$connectionRecipeType .
-            <$process> turbo:outputNamedGraph ?$graph .
+            <$process> turbo:outputNamedGraph ?$graphFromSparql .
             <$process> turbo:manipulatesBaseEntity ?$baseType .
             ?connection turbo:subject ?$subject .
             ?connection turbo:predicate ?$predicate .
@@ -220,7 +223,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          }
          
          """
-       
        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
     
@@ -343,13 +345,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val processVal = metaInfo(processVar)
         val currDate = metaInfo(date)
         val queryVal = metaInfo(metaQuery)
-        val outputNamedGraphVal = metaInfo(outputNamedGraph)
+        val outputNamedGraph = metaInfo(outputNamedGraphVal)
         
-        ArrayBuffer(
+        var metaTriples = ArrayBuffer(
              new Triple(processVal, "rdfs:comment", queryVal),
              new Triple(processVal, "turbo:hasDate", currDate),
              new Triple(processVal, "rdf:type", "turbo:TurboGraphProcess"),
-             new Triple(processVal, "turbo:addedTriplesTo", outputNamedGraphVal)
+             new Triple(processVal, "turbo:addedTriplesTo", outputNamedGraph)
         )
+        metaTriples
     }
 }

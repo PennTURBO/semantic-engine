@@ -17,11 +17,13 @@ abstract class Query extends ProjectwideGlobals
         update.updateSparql(cxn, query)
     }
     
-    def setOutputGraph(graph: String)
+    def setOutputGraph(outputGraph: String)
     {
-        assert (graph.contains(':'))
+        assert (outputGraph.contains(':'))
         this.outputGraph = outputGraph
     }
+    
+    def getQuery(): String = query
 }
 
 class PatternMatchQuery extends Query
@@ -32,16 +34,27 @@ class PatternMatchQuery extends Query
     
     var inputGraph: String = null
     var process: String = null
+    var whereClauseTriplesGroup: TriplesGroup = new TriplesGroup()
+    var insertClauseTriplesGroup: TriplesGroup = new TriplesGroup()
+    
+    var varsForProcessInput = new ArrayBuffer[String]
     
     /* Contains set of of variables used in bind and where clauses, so the insert clause knows that these have already been defined. Any URI present in the 
      in the insert clause will not be converted to a variable unless it is included in this list. */
     var usedVariables: HashSet[String] = new HashSet[String]
     
-    def getQuery(): String = query
-    
-    def setInputGraph(graph: String)
+    override def runQuery(cxn: RepositoryConnection)
     {
-        assert (graph.contains(':'))
+        query = getQuery()
+        assert (query != "" && query != null)
+        update.updateSparql(cxn, query)
+    }
+    
+    override def getQuery(): String = insertClause + "\n" + whereClause + "\n" + bindClause + "\n}"
+    
+    def setInputGraph(inputGraph: String)
+    {
+        assert (inputGraph.contains(':'))
         this.inputGraph = inputGraph
     }
     
@@ -51,40 +64,66 @@ class PatternMatchQuery extends Query
         this.process = process
     }
     
+    def getWhereClauseTriplesGroup(): TriplesGroup = whereClauseTriplesGroup
+    
+    def getInsertClauseTriplesGroup(): TriplesGroup = insertClauseTriplesGroup
+    
     def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]])
     {
         assert (insertClause == "")
-        val insertClauseTriplesGroup: TriplesGroup = new TriplesGroup()
         if (bindClause == "" || bindClause == null || whereClause == null || whereClause.size == 0) 
         {
             throw new RuntimeException("Insert clause cannot be built before bind clause and insert clause are built.")
         }
+        var innerClause = ""
+        for (row <- outputs) insertClauseTriplesGroup.addTripleFromModelGraphOutputRowResult(row, process, varsForProcessInput)
+        for ((graph, triplesList) <- insertClauseTriplesGroup.outputTriplesMap) 
         {
-            for (row <- outputs) insertClauseTriplesGroup.addTripleFromModelGraphRowResult(row, false)
-            
+            var graphString = s"GRAPH <$graph> {\n $replacementString \n}\n"
+            var triplesString = ""
+            for (triple <- triplesList)
+            {
+               triplesString += triple.makeTripleWithVariablesIfPreexisting(usedVariables)
+            }
+            innerClause += graphString.replace(replacementString, triplesString)
         }
+        insertClause += s"INSERT { \n $innerClause \n}"
     }
     
     def createWhereClause(inputs: ArrayBuffer[HashMap[String, Value]])
     {
         assert (whereClause == "")
+        assert (inputGraph != null)
         var innerClause: String = ""
         
-        val whereClauseTriplesGroup: TriplesGroup = new TriplesGroup()
-        for (row <- inputs) whereClauseTriplesGroup.addTripleFromModelGraphRowResult(row)
-        for ((graph, optionalGroupList) <- whereClauseTriplesGroup.groupMap)
+        for (row <- inputs) 
         {
-            var graphString = s"GRAPH $graph { \n $replacementString \n}\n"
+            whereClauseTriplesGroup.addTripleFromModelGraphInputRowResult(row)
+            usedVariables += row(objectVar).toString
+            usedVariables += row(subject).toString
+        }
+        for ((graph, optionalGroupList) <- whereClauseTriplesGroup.inputGroupMap)
+        {
+            var graphForQuery = graph
+            if (graph == defaultGraph) graphForQuery = inputGraph
+            var graphString = s"GRAPH <$graphForQuery> { \n $replacementString \n}\n"
             var triplesString = ""
             for ((groupName, triples) <- optionalGroupList.groupList)
             {
                 if (groupName != noGroup) triplesString += "OPTIONAL {\n"
-                for (triple <- triples) triplesString += triple.makeTripleWithVariables()
+                for (triple <- triples)
+                {
+                    if (triple.getPredicate == "rdf:type" || triple.getPredicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
+                    {
+                        varsForProcessInput += triple.getSubject()
+                    }
+                    triplesString += triple.makeTripleWithVariables()
+                }
                 if (groupName != noGroup) triplesString += "}\n"
             }
-            innerClause += graphString.replaceAll(replacementString, triplesString)
+            innerClause += graphString.replace(replacementString, triplesString)
         }
-        whereClause += s"WHERE { \n $innerClause }"
+        whereClause += s"WHERE { \n $innerClause "
     }
     
     def createBindClause(binds: ArrayBuffer[HashMap[String, Value]], localUUID: String)
@@ -109,10 +148,10 @@ class PatternMatchQuery extends Query
             bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
             
             // add all variables used in bind clause to list of used variables
-            usedVariables += rule(expandedEntity).toString
-            usedVariables += rule(shortcutEntity).toString
-            usedVariables += rule(dependee).toString
-            usedVariables += rule(baseType).toString
+            if (rule(expandedEntity) != null) usedVariables += rule(expandedEntity).toString
+            if (rule(shortcutEntity) != null) usedVariables += rule(shortcutEntity).toString
+            if (rule(dependee) != null) usedVariables += rule(dependee).toString
+            if (rule(baseType) != null) usedVariables += rule(baseType).toString
         }
     }
 }
@@ -122,7 +161,7 @@ class DataQuery extends Query
     def createInsertDataClause(triples: ArrayBuffer[Triple])
     {
         assert (outputGraph != null)
-        query += s"INSERT DATA {\n Graph $outputGraph {\n"
+        query += s"INSERT DATA {\n GRAPH <$outputGraph> {\n"
         for (triple <- triples) query += triple.makeTriple()
         query += "}}"
     }

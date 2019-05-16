@@ -6,36 +6,95 @@ import org.eclipse.rdf4j.model.Value
 
 class TriplesGroup extends ProjectwideGlobals
 {
-    var namedGraph: String = null
-    var groupMap: HashMap[String, TriplesGroupList] = new HashMap[String, TriplesGroupList]
+    var inputGroupMap: HashMap[String, TriplesGroupList] = new HashMap[String, TriplesGroupList]
+    var outputTriplesMap: HashMap[String, ArrayBuffer[Triple]] = new HashMap[String, ArrayBuffer[Triple]]
 
-    def addTripleFromModelGraphRowResult(rowResult: HashMap[String, Value], useOptionals: Boolean = true)
+    def addTripleFromModelGraphOutputRowResult(rowResult: HashMap[String, Value], process: String, varsForProcessInput: ArrayBuffer[String])
     {
-        val graphForThisRow = rowResult(graph).toString
+        for (key <- requiredOutputKeysList) assert (rowResult.contains(key))
+        assert (!rowResult.contains(optionalGroup))
         
-        var subjectTypeTriple: Triple = null
-        var objectTypeTriple: Triple = null
+        val processGraph = "http://www.itmat.upenn.edu/biobank/processes"
+        var objectIsLiteral = false
+        if (rowResult(connectionRecipeType).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") objectIsLiteral = true
         
-        if (rowResult(subjectType) != null) subjectTypeTriple = new Triple(rowResult(subject).toString, "rdf:type", rowResult(subject).toString, true)
-        if (rowResult(objectType) != null) objectTypeTriple = new Triple(rowResult(objectVar).toString, "rdf:type", rowResult(objectVar).toString, true)
+        val outputGraphForThisTriple = rowResult(graphFromSparql).toString
+        
+        val tripleForThisRow = new Triple(rowResult(subject).toString, rowResult(predicate).toString, rowResult(objectVar).toString)
+        addTripleToOutputList(tripleForThisRow, outputGraphForThisTriple)
+        val processSubjectTriple = new Triple(process, "turbo:createdTriplesAbout", rowResult(subject).toString)
+        addTripleToOutputList(processSubjectTriple, processGraph)
+        if (!objectIsLiteral && rowResult(predicate).toString != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" && rowResult(predicate).toString != "rdf:type")
+        {
+            val processObjectTriple = new Triple(process, "turbo:createdTriplesAbout", rowResult(objectVar).toString)
+            addTripleToOutputList(processObjectTriple, processGraph)
+        }
+        
+        if (rowResult(subjectType) != null)
+        {
+            val subjectTypeTriple = new Triple(rowResult(subject).toString, "rdf:type", rowResult(subject).toString, true)
+            addTripleToOutputList(subjectTypeTriple, outputGraphForThisTriple)
+        }
+        if (rowResult(objectType) != null)
+        {
+            val objectTypeTriple = new Triple(rowResult(objectVar).toString, "rdf:type", rowResult(objectVar).toString, true)
+            addTripleToOutputList(objectTypeTriple, outputGraphForThisTriple)
+        }
+        
+        for (uri <- varsForProcessInput)
+        {
+            val processInputTriple = new Triple(process, "obo:OBI_0000293", uri)
+            addTripleToOutputList(processInputTriple, processGraph)
+        }
+    }
+    
+    def addTripleToOutputList(triple: Triple, graph: String)
+    {
+        var tripleExists = false
+        if (!outputTriplesMap.contains(graph)) outputTriplesMap += graph -> ArrayBuffer(triple)
+        else
+        {
+            for (thisTriple <- outputTriplesMap(graph)) 
+            {
+                if (thisTriple.getSubject == triple.getSubject
+                    && thisTriple.getPredicate == triple.getPredicate
+                    && thisTriple.getObject == triple.getObject) tripleExists = true
+            }
+            if (!tripleExists) outputTriplesMap(graph) += triple 
+        }
+    }
+    
+    def addTripleFromModelGraphInputRowResult(rowResult: HashMap[String, Value])
+    {
+        for (key <- requiredInputKeysList) assert (rowResult.contains(key))
+        
+        var graphForThisRow = defaultGraph
+        if (rowResult(graphOfCreatingProcess) != null) graphForThisRow = rowResult(graphOfCreatingProcess).toString
         
         var optionalGroupForThisRow: String = noGroup
         if (rowResult(optionalGroup) != null) optionalGroupForThisRow = rowResult(optionalGroup).toString
         
         var required: Boolean = true
-        val requiredForThisRow = rowResult(requiredBool)
-        if (requiredForThisRow.toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>" && useOptionals) required = false
+        if (rowResult(requiredBool).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
         val tripleForThisRow = new Triple(rowResult(subject).toString, rowResult(predicate).toString, rowResult(objectVar).toString, required)
-        if (groupMap.contains(graphForThisRow))
+        if (inputGroupMap.contains(graphForThisRow))
         {
-            groupMap(graphForThisRow).addTripleToGroupList(optionalGroupForThisRow, tripleForThisRow)
+            inputGroupMap(graphForThisRow).addTripleToGroupList(optionalGroupForThisRow, tripleForThisRow)
         }
         else 
         {
-            groupMap += graphForThisRow -> new TriplesGroupList(optionalGroupForThisRow, ArrayBuffer(tripleForThisRow))
+            inputGroupMap += graphForThisRow -> new TriplesGroupList(optionalGroupForThisRow, ArrayBuffer(tripleForThisRow))
         }
-        if (subjectTypeTriple != null) groupMap(graphForThisRow).groupList(optionalGroupForThisRow) += subjectTypeTriple
-        if (objectTypeTriple != null) groupMap(graphForThisRow).groupList(optionalGroupForThisRow) += objectTypeTriple
+        if (rowResult(subjectType) != null) 
+        {
+            val subjectTypeTriple = new Triple(rowResult(subject).toString, "rdf:type", rowResult(subject).toString, true)
+            inputGroupMap(graphForThisRow).addTripleToGroupList(optionalGroupForThisRow, subjectTypeTriple)
+        }
+        if (rowResult(objectType) != null) 
+        {
+            val objectTypeTriple = new Triple(rowResult(objectVar).toString, "rdf:type", rowResult(objectVar).toString, true)
+            inputGroupMap(graphForThisRow).addTripleToGroupList(optionalGroupForThisRow, objectTypeTriple)
+        }
     }
 }
 

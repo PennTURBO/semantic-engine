@@ -50,27 +50,27 @@ ontologies:
 .
 ontologies:BindAs
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND (?${original} AS ?${replacement})" ;
+  ontologies:usesSparql "BIND (${original} AS ${replacement})" ;
 .
 ontologies:BindIfBoundRandomUUID
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(IF (BOUND(?${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\", 
-                                            SHA256(struuid()))), ?unbound) AS ?${replacement})""" ;
+  ontologies:usesSparql """BIND(IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\", 
+                                            SHA256(struuid()))), ?unbound) AS ${replacement})""" ;
 .
 ontologies:BindIfBoundSHALocalRandom
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND (IF (BOUND(?${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                        SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(?${mainExpansionTypeVariableName}))))), ?unbound) AS ?${replacement})""" ;
+  ontologies:usesSparql """BIND (IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                                        SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${mainExpansionTypeVariableName}))))), ?unbound) AS ${replacement})""" ;
 .
 ontologies:BindIfBoundSHALocalRandomWithDependent
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND (IF (BOUND(?${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                        SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(?${mainExpansionTypeVariableName}), str(?${dependent}))))), ?unbound) AS ?${replacement})""" ;
+  ontologies:usesSparql """BIND (IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                                        SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${mainExpansionTypeVariableName}), str(${dependent}))))), ?unbound) AS ${replacement})""" ;
 .
 ontologies:BindIfBoundSingletonSHAOfBaseType
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(IF (BOUND(?${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",str(?${mainExpansionTypeVariableName}))))),?unbound) AS ?${replacement})""" ;
+  ontologies:usesSparql """BIND(IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                                SHA256(CONCAT(\"${replacement}\",str(${mainExpansionTypeVariableName}))))),?unbound) AS ${replacement})""" ;
 .
 ontologies:BiobankEncounterRegistryOfVariousTypes
   a owl:Class ;
@@ -119,10 +119,10 @@ ontologies:DatatypeConnectionRecipe
 ontologies:DiagnosisRegistryRule
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """
-        BIND(IF (?${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", ?${original})), ?unbound) AS ?icd9term)
-        BIND(IF (?${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat(\"http://purl.bioontology.org/ontology/ICD10CM/\", ?${original})), ?unbound) AS ?icd10term)
-        BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?${replacement})
-        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?${replacement}) as ?${replacement})""" ;
+        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", ${original})), ?unbound) AS ?icd9term)
+        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat(\"http://purl.bioontology.org/ontology/ICD10CM/\", ${original})), ?unbound) AS ?icd10term)
+        BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ${replacement})
+        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,${replacement}) as ${replacement})""" ;
 .
 ontologies:DrugTermOfVariousTypes
   a owl:Class ;
@@ -134,7 +134,7 @@ ontologies:GenderIdentityDatumOfVariousTypes
 .
 ontologies:GenderIdentityTypeRule
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(IF(BOUND(?${dependent}), ?${original}, obo:OMRSE_00000133) AS ?${replacement})" ;
+  ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${original}, obo:OMRSE_00000133) AS ${replacement})" ;
 .
 ontologies:GeneSymbolUriOfVariousTypes
   a owl:Class ;
@@ -161,7 +161,7 @@ ontologies:IcdTermOfVariousTypes
 .
 ontologies:InstantiationStringToURI
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(uri(${instantiationPlaceholder}) AS ?${replacement})" ;
+  ontologies:usesSparql "BIND(uri(${instantiationPlaceholder}) AS ${replacement})" ;
 .
 ontologies:ObjectConnectionRecipe
   a owl:Class ;
@@ -174,32 +174,32 @@ ontologies:RaceIdentityDatumOfVariousTypes
 .
 ontologies:RandomUUID
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(struuid()))) AS ?${replacement})" ;
+  ontologies:usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(struuid()))) AS ${replacement})" ;
 .
 ontologies:SHAGlobalRandom
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",\"${globalUUID}\", str(?${mainExpansionTypeVariableName}))))) AS ?${replacement})""" ;
+                                SHA256(CONCAT(\"${replacement}\",\"${globalUUID}\", str(${mainExpansionTypeVariableName}))))) AS ${replacement})""" ;
 .
 ontologies:SHAGlobalRandomWithDependent
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """BIND(uri(CONCAT(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\", \"${globalUUID}\", str(?${dependent}))))) AS ?${replacement})""" ;
+                                SHA256(CONCAT(\"${replacement}\", \"${globalUUID}\", str(${dependent}))))) AS ${replacement})""" ;
 .
 ontologies:SHAGlobalRandomWithOriginal
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",\"${globalUUID}\", str(?${original}))))) AS ?${replacement})""" ;
+                                SHA256(CONCAT(\"${replacement}\",\"${globalUUID}\", str(${original}))))) AS ${replacement})""" ;
 .
 ontologies:SHALocalRandom
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",\"${localUUID}\", str(?${mainExpansionTypeVariableName}))))) AS ?${replacement})""" ;
+                                SHA256(CONCAT(\"${replacement}\",\"${localUUID}\", str(${mainExpansionTypeVariableName}))))) AS ${replacement})""" ;
 .
 ontologies:SHALocalRandomWithDependent
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """BIND(uri(CONCAT(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(?${dependent}))))) AS ?${replacement})""" ;
+                                SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${dependent}))))) AS ${replacement})""" ;
 .
 ontologies:ShortcutBiobankEncounterRegistryOfVariousTypes
   a owl:Class ;
@@ -234,26 +234,26 @@ ontologies:ShortcutZygosityUriOfVariousTypes
 ontologies:SingletonOfType
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(str(<${singletonType}>)))) AS ?${replacement})""" ;
+                                SHA256(str(<${singletonType}>)))) AS ${replacement})""" ;
 .
 ontologies:SingletonSHAOfBaseType
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",str(?${mainExpansionTypeVariableName}))))) AS ?${replacement})""" ;
+                                SHA256(CONCAT(\"${replacement}\",str(${mainExpansionTypeVariableName}))))) AS ${replacement})""" ;
 .
 ontologies:SingletonSHAOfOriginal
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",str(?${original}))))) AS ?${replacement})""" ;
+                                SHA256(CONCAT(\"${replacement}\",str(${original}))))) AS ${replacement})""" ;
 .
 ontologies:SingletonSHAOfOriginalWithDependent
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(IF(BOUND(?${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\", str(?${original}))))), ?unbound) AS ?${replacement})""" ;
+  ontologies:usesSparql """BIND(IF(BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                                SHA256(CONCAT(\"${replacement}\", str(${original}))))), ?unbound) AS ${replacement})""" ;
 .
 ontologies:StringToURI
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(uri(?${original}) AS ?${replacement})" ;
+  ontologies:usesSparql "BIND(uri(${original}) AS ${replacement})" ;
 .
 ontologies:TurboGraphBooleanLiteralValue
   a owl:Class ;
@@ -322,7 +322,7 @@ ontologies:TurboNamedGraph
 .
 ontologies:URIToString
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(str(?${original}) AS ?${replacement})" ;
+  ontologies:usesSparql "BIND(str(${original}) AS ${replacement})" ;
 .
 ontologies:VariableManipulationForIntermediateNode
   a owl:Class ;

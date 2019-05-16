@@ -1,6 +1,7 @@
 package edu.upenn.turbo
 
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.HashSet
 
 class Triple extends ProjectwideGlobals
 {
@@ -8,7 +9,7 @@ class Triple extends ProjectwideGlobals
     var triplePredicate: String = null
     var tripleObject: String = null
     
-    var required: Boolean = false
+    var required: Boolean = true
     
     def this(subject: String, predicate: String, objectVar: String, required: Boolean = true)
     {
@@ -22,7 +23,11 @@ class Triple extends ProjectwideGlobals
     def setSubject(subject: String)
     {
         validateURI(subject)
-        if (subject.contains('/')) this.tripleSubject = "<" + subject + ">"
+        if (subject.contains('/'))
+        {
+            if (subject.charAt(0) != '<') this.tripleSubject = "<" + subject + ">"
+            else this.tripleSubject = subject
+        }
         else this.tripleSubject = subject
     }
     
@@ -39,14 +44,22 @@ class Triple extends ProjectwideGlobals
     
     def setObject(objectVar: String)
     {
-        if (!objectVar.contains(':') || objectVar.contains(' ')) this.tripleObject = "\"" + objectVar + "\""
-        else if (objectVar.contains('/')) this.tripleObject = "<" + objectVar + ">"
+        if (!objectVar.contains(':') || objectVar.contains(' ')) 
+        {
+            if (objectVar.contains("\n")) this.tripleObject = s"'''$objectVar'''"
+            else this.tripleObject = "\"" + objectVar + "\""
+        }
+        else if (objectVar.contains('/')) 
+        {
+            if (objectVar.charAt(0) != '<') this.tripleObject = "<" + objectVar + ">"
+            else this.tripleObject = objectVar
+        }
         else this.tripleObject = objectVar
     }
     
     def getObject: String = tripleObject
     
-    def setRequired(optional: Boolean)
+    def setRequired(required: Boolean)
     {
         this.required = required
     }
@@ -55,7 +68,7 @@ class Triple extends ProjectwideGlobals
     
     def makeTriple(): String = 
     {
-        val innerString = "$getSubject $getPredicate $getObject .\n"
+        val innerString = s"$getSubject $getPredicate $getObject .\n"
         if (!required)
         {
             s"OPTIONAL {\n $innerString }\n"
@@ -66,24 +79,37 @@ class Triple extends ProjectwideGlobals
     def makeTripleWithVariables(): String = 
     {
         var objectAsVar = ""
-        if (triplePredicate == "a" 
-            || triplePredicate == "rdf:type" 
+        if (triplePredicate == "rdf:type" 
             || triplePredicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") objectAsVar = tripleObject
         else objectAsVar = helper.convertTypeToSparqlVariable(getObject)
         val subjectAsVar = helper.convertTypeToSparqlVariable(getSubject)
-        val innerString = "$subjectAsVar $getPredicate $objectAsVar .\n"
+        val innerString = s"$subjectAsVar $getPredicate $objectAsVar .\n"
         if (!required)
         {
             s"OPTIONAL {\n $innerString }\n"
         }
         else innerString
     }
+    
+    def makeTripleWithVariablesIfPreexisting(preexistingSet: HashSet[String]): String = 
+    {
+        var subjectForString = ""
+        if (preexistingSet.contains(tripleSubject.replaceAll("\\<","").replaceAll("\\>",""))) subjectForString = helper.convertTypeToSparqlVariable(getSubject)
+        else subjectForString = tripleSubject
+        var objectForString = ""
+        if (!preexistingSet.contains(tripleObject.replaceAll("\\<","").replaceAll("\\>","")) ||
+            triplePredicate == "rdf:type" 
+            || triplePredicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") objectForString = tripleObject
+        else objectForString = helper.convertTypeToSparqlVariable(getObject)
+
+        s"$subjectForString $getPredicate $objectForString .\n"
+    }
   
     def validateURI(uri: String)
     {
-        val requiredCharacters: ArrayBuffer[CharSequence] = ArrayBuffer("\\:")
-        val illegalCharacters: ArrayBuffer[CharSequence] = ArrayBuffer("\\<", "\\>", "\"")
-        for (char <- requiredCharacters) assert(tripleSubject.contains(char))
-        for (char <- illegalCharacters) assert(!tripleSubject.contains(char))
+        val requiredCharacters: ArrayBuffer[Char] = ArrayBuffer(':')
+        val illegalCharacters: ArrayBuffer[Char] = ArrayBuffer('<', '>', '"')
+        for (char <- requiredCharacters) assert(uri.contains(char))
+        for (char <- illegalCharacters) assert(!uri.contains(char))
     }
 }
