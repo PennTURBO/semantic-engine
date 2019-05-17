@@ -83,7 +83,7 @@ class PatternMatchQuery extends Query
             var triplesString = ""
             for (triple <- triplesList)
             {
-               triplesString += triple.makeTripleWithVariablesIfPreexisting(usedVariables)
+               triplesString += triple.makeTripleWithVariablesIfPreexisting(usedVariables, true)
             }
             innerClause += graphString.replace(replacementString, triplesString)
         }
@@ -117,7 +117,7 @@ class PatternMatchQuery extends Query
                     {
                         varsForProcessInput += triple.getSubject()
                     }
-                    triplesString += triple.makeTripleWithVariables()
+                    triplesString += triple.makeTripleWithVariables(true)
                 }
                 if (groupName != noGroup) triplesString += "}\n"
             }

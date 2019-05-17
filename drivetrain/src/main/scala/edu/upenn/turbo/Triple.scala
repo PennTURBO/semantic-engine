@@ -9,15 +9,20 @@ class Triple extends ProjectwideGlobals
     var triplePredicate: String = null
     var tripleObject: String = null
     
+    var subjectHasType: Boolean = false
+    var objectHasType: Boolean = false
+    
     var required: Boolean = true
     
-    def this(subject: String, predicate: String, objectVar: String, required: Boolean = true)
+    def this(subject: String, predicate: String, objectVar: String, subjectHasType: Boolean, objectHasType: Boolean, required: Boolean = true)
     {
         this
         setSubject(subject)
         setPredicate(predicate)
         setObject(objectVar)
         setRequired(required)
+        setSubjectHasType(subjectHasType)
+        setObjectHasType(objectHasType)
     }
     
     def setSubject(subject: String)
@@ -66,6 +71,16 @@ class Triple extends ProjectwideGlobals
     
     def getRequired(): Boolean = required
     
+    def setSubjectHasType(subjectHasType: Boolean)
+    {
+        this.subjectHasType = subjectHasType
+    }
+    
+    def setObjectHasType(objectHasType: Boolean)
+    {
+        this.objectHasType = objectHasType
+    }
+    
     def makeTriple(): String = 
     {
         val innerString = s"$getSubject $getPredicate $getObject .\n"
@@ -76,14 +91,19 @@ class Triple extends ProjectwideGlobals
         else innerString
     }
     
-    def makeTripleWithVariables(): String = 
+    def makeTripleWithVariables(withTypes: Boolean): String = 
     {
         var objectAsVar = ""
         if (triplePredicate == "rdf:type" 
             || triplePredicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") objectAsVar = tripleObject
         else objectAsVar = helper.convertTypeToSparqlVariable(getObject)
         val subjectAsVar = helper.convertTypeToSparqlVariable(getSubject)
-        val innerString = s"$subjectAsVar $getPredicate $objectAsVar .\n"
+        var innerString = s"$subjectAsVar $getPredicate $objectAsVar .\n"
+        if (withTypes)
+        {
+            if (subjectHasType) innerString += s"$subjectAsVar rdf:type $tripleSubject .\n"
+            if (objectHasType) innerString += s"$objectAsVar rdf:type $tripleObject .\n"
+        }
         if (!required)
         {
             s"OPTIONAL {\n $innerString }\n"
@@ -91,18 +111,29 @@ class Triple extends ProjectwideGlobals
         else innerString
     }
     
-    def makeTripleWithVariablesIfPreexisting(preexistingSet: HashSet[String]): String = 
+    def makeTripleWithVariablesIfPreexisting(preexistingSet: HashSet[String], withTypes: Boolean): String = 
     {
+        var subjectTypeClause = ""
+        var objectTypeClause = ""
         var subjectForString = ""
-        if (preexistingSet.contains(tripleSubject.replaceAll("\\<","").replaceAll("\\>",""))) subjectForString = helper.convertTypeToSparqlVariable(getSubject)
+        if (preexistingSet.contains(tripleSubject.replaceAll("\\<","").replaceAll("\\>","")))
+        {
+            subjectForString = helper.convertTypeToSparqlVariable(getSubject)
+            if (withTypes && subjectHasType) subjectTypeClause += s"$subjectForString rdf:type $tripleSubject .\n"
+        }
         else subjectForString = tripleSubject
+        
         var objectForString = ""
         if (!preexistingSet.contains(tripleObject.replaceAll("\\<","").replaceAll("\\>","")) ||
             triplePredicate == "rdf:type" 
             || triplePredicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") objectForString = tripleObject
-        else objectForString = helper.convertTypeToSparqlVariable(getObject)
+        else 
+        {
+            objectForString = helper.convertTypeToSparqlVariable(getObject)
+            if (withTypes && objectHasType) objectTypeClause += s"$objectForString rdf:type $tripleObject .\n"
+        }
 
-        s"$subjectForString $getPredicate $objectForString .\n"
+        s"$subjectForString $getPredicate $objectForString .\n" + subjectTypeClause + objectTypeClause
     }
   
     def validateURI(uri: String)

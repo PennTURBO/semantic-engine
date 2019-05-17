@@ -119,7 +119,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           turbo:TURBO_0000625 "2017-01-15"^^xsd:date ;
           turbo:TURBO_0000629 "biobank" ;
           turbo:TURBO_0000630 <http://transformunify.org/hcEncReg/biobank> ;
-          turbo:TURBO_0010012 "http://www.itmat.upenn.edu/biobank/part1"^^xsd:anyURI .
+          turbo:TURBO_0010133 "http://www.itmat.upenn.edu/biobank/part1"^^xsd:anyURI .
           }}
           """
         update.updateSparql(testCxn, insert)
@@ -142,7 +142,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
-             "http://purl.obolibrary.org/obo/OBI_0000299", "http://transformunify.org/ontologies/TURBO_0010012",
+             "http://purl.obolibrary.org/obo/OBI_0000299", "http://transformunify.org/ontologies/TURBO_0010133",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/IAO_0000581",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",

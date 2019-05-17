@@ -124,7 +124,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> obo:IAO_0000142 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
                 <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0000307> <http://transformunify.org/ontologies/someDrug> .
                 <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0006515> "ICD-9" .
-                <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010002> <http://www.itmat.upenn.edu/biobank/part1> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> turbo:TURBO_0010131 <http://www.itmat.upenn.edu/biobank/part1> .
                 <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0010013> "true"^^<http://www.w3.org/2001/XMLSchema#Boolean> .
                 <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0010013> "true"^^<http://www.w3.org/2001/XMLSchema#Boolean> .
                 <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0010014> "1"^^<http://www.w3.org/2001/XMLSchema#Integer> .
@@ -270,7 +270,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 <http://www.itmat.upenn.edu/biobank/adee56d0206c36f67682eaff401093c5cf1f91259f9339fd273b902a0393ac11> <http://transformunify.org/ontologies/TURBO_0010094> "20" .
                 <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/20b777012bab4374cbb3649f419024ae0c672e888b4346f19c11fac58611b1af> .
                 <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010110> <http://transformunify.org/ontologies/TURBO_0000440> .
-                <http://www.itmat.upenn.edu/biobank/hcenc1> turbo:TURBO_0010002 <http://www.itmat.upenn.edu/biobank/part1> .
+                <http://www.itmat.upenn.edu/biobank/hcenc1> turbo:TURBO_0010131 <http://www.itmat.upenn.edu/biobank/part1> .
 
                 
                 # homo sapiens triples start here
@@ -310,19 +310,21 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
         val check: String = """
           ASK
           {
-              ?homoSapiens obo:RO_0000056 ?healthcareEncounter .
-              ?homoSapiens obo:RO_0000087 ?puirole .
-          		?puirole a obo:OBI_0000093 .
-          		?puirole obo:BFO_0000054 ?healthcareEncounter .
-          		
-          		?homoSapiens a obo:NCBITaxon_9606 .
-          		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
-          		?homoSapiensCrid a turbo:TURBO_0000503 .
-          		
-          		?healthcareEncounter a obo:OGMS_0000097 .
-          		?healthcareEncounterCrid obo:IAO_0000219 ?healthcareEncounter .
-          		?healthcareEncounterCrid a turbo:TURBO_0000508 .
-          		
+              Graph pmbb:expanded
+              {
+                  ?homoSapiens obo:RO_0000056 ?healthcareEncounter .
+                  ?homoSapiens obo:RO_0000087 ?puirole .
+              		?puirole a obo:OBI_0000093 .
+              		?puirole obo:BFO_0000054 ?healthcareEncounter .
+              		
+              		?homoSapiens a obo:NCBITaxon_9606 .
+              		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
+              		?homoSapiensCrid a turbo:TURBO_0000503 .
+              		
+              		?healthcareEncounter a obo:OGMS_0000097 .
+              		?healthcareEncounterCrid obo:IAO_0000219 ?healthcareEncounter .
+              		?healthcareEncounterCrid a turbo:TURBO_0000508 .
+              }
           }
           """
         
@@ -436,7 +438,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                       <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> <http://transformunify.org/ontologies/TURBO_0010094> "B" .
                       <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://transformunify.org/ontologies/TURBO_0010096> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
                       <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://transformunify.org/ontologies/TURBO_0010095> "15/Jan/2017" .
-                      <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0010012> <http://www.itmat.upenn.edu/biobank/part1> .
+                      <http://www.itmat.upenn.edu/biobank/bbenc1> turbo:TURBO_0010133 <http://www.itmat.upenn.edu/biobank/part1> .
                       <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> .
                       <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://transformunify.org/ontologies/TURBO_0010094> "18.8252626423"^^<http://www.w3.org/2001/XMLSchema#float> .
                       <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://transformunify.org/ontologies/TURBO_0010094> "180.34"^^<http://www.w3.org/2001/XMLSchema#float> .
@@ -577,7 +579,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                     <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0000630> <http://transformunify.org/hcEncReg/biobank> .
                     <http://www.itmat.upenn.edu/biobank/14cf4a0334ab31bcdc77147fe7ec611fc2ce0a8c8b4e90a0835c12109130f2c0> <http://transformunify.org/ontologies/TURBO_0010094> "B" .
                     <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/b380eb5afb263581879f61fb67a0dd7cb58cd77a8c4101363c37ac6bb6beeaf7> .
-                    <http://www.itmat.upenn.edu/biobank/bbenc1> turbo:TURBO_0010012 pmbb:part1 .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> turbo:TURBO_0010133 pmbb:part1 .
 
                     # homo sapiens triples start here
                     <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
@@ -643,18 +645,21 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
           val check: String = """
             ASK
             {
-                ?homoSapiens obo:RO_0000056 ?biobankEncounter .
-                ?homoSapiens obo:RO_0000087 ?puirole .
-            		?puirole a obo:OBI_0000097 .
-            		?puirole obo:BFO_0000054 ?biobankEncounter .
-            		
-            		?homoSapiens a obo:NCBITaxon_9606 .
-            		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
-            		?homoSapiensCrid a turbo:TURBO_0000503 .
-            		
-            		?biobankEncounter a turbo:TURBO_0000527 .
-            		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
-            		?biobankEncounterCrid a turbo:TURBO_0000533 .
+                graph pmbb:expanded
+                {
+                    ?homoSapiens obo:RO_0000056 ?biobankEncounter .
+                    ?homoSapiens obo:RO_0000087 ?puirole .
+                		?puirole a obo:OBI_0000097 .
+                		?puirole obo:BFO_0000054 ?biobankEncounter .
+                		
+                		?homoSapiens a obo:NCBITaxon_9606 .
+                		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
+                		?homoSapiensCrid a turbo:TURBO_0000503 .
+                		
+                		?biobankEncounter a turbo:TURBO_0000527 .
+                		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
+                		?biobankEncounterCrid a turbo:TURBO_0000533 .
+                }
             }
             """
           
@@ -798,7 +803,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                     <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> obo:IAO_0000142 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
                     <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0000307> <http://transformunify.org/ontologies/someDrug> .
                     <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0006515> "ICD-9" .
-                    <http://www.itmat.upenn.edu/biobank/hcenc1> <http://transformunify.org/ontologies/TURBO_0010002> <http://www.itmat.upenn.edu/biobank/part1> .
+                    <http://www.itmat.upenn.edu/biobank/hcenc1> turbo:TURBO_0010131 <http://www.itmat.upenn.edu/biobank/part1> .
                     <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0010013> "true"^^<http://www.w3.org/2001/XMLSchema#Boolean> .
                     <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0010013> "true"^^<http://www.w3.org/2001/XMLSchema#Boolean> .
                     <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0010014> "1"^^<http://www.w3.org/2001/XMLSchema#Integer> .
@@ -862,7 +867,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                     <http://www.itmat.upenn.edu/biobank/d9277f89b6cbcd4fa9056e42a8477ea78899545ca1264945d1bd6760d42864ae> <http://transformunify.org/ontologies/TURBO_0010094> "B" .
                     <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://transformunify.org/ontologies/TURBO_0010096> "2017-01-15"^^<http://www.w3.org/2001/XMLSchema#date> .
                     <http://www.itmat.upenn.edu/biobank/35e97d81befe28a5861af55cd8f3009f2c3672cb2f7e73bd1a5e92e50216a96a> <http://transformunify.org/ontologies/TURBO_0010095> "15/Jan/2017" .
-                    <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0010012> <http://www.itmat.upenn.edu/biobank/part1> .
+                    <http://www.itmat.upenn.edu/biobank/bbenc1> turbo:TURBO_0010133 <http://www.itmat.upenn.edu/biobank/part1> .
                     <http://www.itmat.upenn.edu/biobank/bbenc1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/93ee0d77147c0a3c5b05d81f60ab0158c5bdc8d0df0d1202d5570fb9d07e702b> .
                     <http://www.itmat.upenn.edu/biobank/763cd05b4e2c1d595683d68f0c0900a346a50ef9df4a07e44d16329ec54fdbbc> <http://transformunify.org/ontologies/TURBO_0010094> "18.8252626423"^^<http://www.w3.org/2001/XMLSchema#float> .
                     <http://www.itmat.upenn.edu/biobank/32e6a74ee52a6512f307522c854a7f4271f354ad0b6c68d651a5a629c1ed6adf> <http://transformunify.org/ontologies/TURBO_0010094> "180.34"^^<http://www.w3.org/2001/XMLSchema#float> .

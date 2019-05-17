@@ -2741,7 +2741,7 @@ ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:TURBO_0010161 ;
   ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0010012 ;
+  ontologies:predicate ontologies:TURBO_0010133 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010169 ;
 .
@@ -2750,7 +2750,7 @@ ontologies:shortcutBiobankEncounterToShortcutHomoSapiensUriString
   ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutBiobankEncounterHomoSapiensUriStringValue ;
-  ontologies:predicate ontologies:TURBO_0010012 ;
+  ontologies:predicate ontologies:TURBO_0010133 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010169 ;
 .
@@ -2969,7 +2969,7 @@ ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensStringValue
   ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHealthcareEncounterHomoSapiensUriStringValue ;
-  ontologies:predicate ontologies:TURBO_0010002 ;
+  ontologies:predicate ontologies:TURBO_0010131 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010158 ;
   rdfs:label "shortcut healthcare encounter to homo sapiens connection" ;
@@ -2980,7 +2980,7 @@ ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:TURBO_0010161 ;
   ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:predicate ontologies:TURBO_0010002 ;
+  ontologies:predicate ontologies:TURBO_0010131 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .

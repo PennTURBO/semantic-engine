@@ -174,7 +174,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 turbo:TURBO_0000440 ;
           turbo:TURBO_0000643 "enc_expand.csv" ;
-          turbo:TURBO_0010002 "http://www.itmat.upenn.edu/biobank/part1"^^xsd:anyURI ;
+          turbo:TURBO_0010131 "http://www.itmat.upenn.edu/biobank/part1"^^xsd:anyURI ;
           
           obo:OBI_0000299 turbo:diagnosis1 .
           turbo:diagnosis1 a turbo:TURBO_0010160 ;
@@ -239,7 +239,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
             "http://transformunify.org/ontologies/TURBO_0010139", "http://purl.obolibrary.org/obo/IAO_0000039", 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010095",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://transformunify.org/ontologies/TURBO_0010002", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://transformunify.org/ontologies/TURBO_0010131", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010013",
             "http://transformunify.org/ontologies/TURBO_0000307", "http://transformunify.org/ontologies/TURBO_0010014",
             "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000581"
@@ -668,7 +668,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
                       turbo:TURBO_0000648 '20' ;
                       turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
                       obo:OBI_0000299 pmbb:diagCridSC .
-                  pmbb:diagCridSC a obo:OGMS_0000073 ;
+                  pmbb:diagCridSC a turbo:TURBO_0010160 ;
                       turbo:TURBO_0004602 'ICD-9' ;
                       turbo:TURBO_0004603 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
                       turbo:TURBO_0004601 '401.9' ;
@@ -683,7 +683,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
                       obo:OBI_0000299 pmbb:prescription ;
                       turbo:TURBO_0000648 '20' ;
                       turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> .
-                      pmbb:prescription a obo:PDRO_0000001 ;
+                      pmbb:prescription a turbo:TURBO_0010159 ;
                       turbo:TURBO_0005611 "holistic soil from the ganges" ;
                       turbo:TURBO_0005612 turbo:someDrug ;
                       turbo:TURBO_0005601 "3" .

@@ -348,10 +348,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val outputNamedGraph = metaInfo(outputNamedGraphVal)
         
         var metaTriples = ArrayBuffer(
-             new Triple(processVal, "rdfs:comment", queryVal),
-             new Triple(processVal, "turbo:hasDate", currDate),
-             new Triple(processVal, "rdf:type", "turbo:TurboGraphProcess"),
-             new Triple(processVal, "turbo:addedTriplesTo", outputNamedGraph)
+             new Triple(processVal, "rdfs:comment", queryVal, false, false),
+             new Triple(processVal, "turbo:hasDate", currDate, false, false),
+             new Triple(processVal, "rdf:type", "turbo:TurboGraphProcess", false, false),
+             new Triple(processVal, "turbo:addedTriplesTo", outputNamedGraph, false, false)
         )
         metaTriples
     }
