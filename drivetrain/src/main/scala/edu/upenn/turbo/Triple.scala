@@ -8,13 +8,14 @@ class Triple extends ProjectwideGlobals
     var tripleSubject: String = null
     var triplePredicate: String = null
     var tripleObject: String = null
+    var namedGraph: String = null
     
     var subjectHasType: Boolean = false
     var objectHasType: Boolean = false
     
     var required: Boolean = true
     
-    def this(subject: String, predicate: String, objectVar: String, subjectHasType: Boolean, objectHasType: Boolean, required: Boolean = true)
+    def this(subject: String, predicate: String, objectVar: String, subjectHasType: Boolean, objectHasType: Boolean, namedGraph: String, required: Boolean = true)
     {
         this
         setSubject(subject)
@@ -23,6 +24,7 @@ class Triple extends ProjectwideGlobals
         setRequired(required)
         setSubjectHasType(subjectHasType)
         setObjectHasType(objectHasType)
+        setNamedGraph(namedGraph)
     }
     
     def setSubject(subject: String)
@@ -81,8 +83,14 @@ class Triple extends ProjectwideGlobals
         this.objectHasType = objectHasType
     }
     
+    def setNamedGraph(namedGraph: String)
+    {
+        this.namedGraph = namedGraph
+    }
+    
     def makeTriple(): String = 
     {
+        assert (namedGraph != null && namedGraph != "")
         val innerString = s"$getSubject $getPredicate $getObject .\n"
         if (!required)
         {
@@ -93,6 +101,7 @@ class Triple extends ProjectwideGlobals
     
     def makeTripleWithVariables(withTypes: Boolean): String = 
     {
+        assert (namedGraph != null && namedGraph != "")
         var objectAsVar = ""
         if (triplePredicate == "rdf:type" 
             || triplePredicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") objectAsVar = tripleObject
@@ -113,6 +122,7 @@ class Triple extends ProjectwideGlobals
     
     def makeTripleWithVariablesIfPreexisting(preexistingSet: HashSet[String], withTypes: Boolean): String = 
     {
+        assert (namedGraph != null && namedGraph != "")
         var subjectTypeClause = ""
         var objectTypeClause = ""
         var subjectForString = ""

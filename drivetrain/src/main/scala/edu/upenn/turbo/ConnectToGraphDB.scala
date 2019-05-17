@@ -252,7 +252,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
         val proceed: Boolean = true
         var requiredProperties: ArrayBuffer[String] = ArrayBuffer("serviceURL",
             "password","username","productionRepository","importOntologies","errorLogFile",
-            "ontologyURL", "modelRepository", "testingRepository")
+            "ontologyURL", "modelRepository", "testingRepository", "processNamedGraph")
         var a = 0
         while (optToReturn == None && a < requiredProperties.size)
         {

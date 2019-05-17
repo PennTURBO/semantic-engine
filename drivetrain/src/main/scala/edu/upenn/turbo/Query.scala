@@ -34,8 +34,8 @@ class PatternMatchQuery extends Query
     
     var inputGraph: String = null
     var process: String = null
-    var whereClauseTriplesGroup: TriplesGroup = new TriplesGroup()
-    var insertClauseTriplesGroup: TriplesGroup = new TriplesGroup()
+    var whereClauseTriplesGroup: WhereClauseTriplesGroup = new WhereClauseTriplesGroup()
+    var insertClauseTriplesGroup: InsertClauseTriplesGroup = new InsertClauseTriplesGroup()
     
     var varsForProcessInput = new ArrayBuffer[String]
     
@@ -64,10 +64,6 @@ class PatternMatchQuery extends Query
         this.process = process
     }
     
-    def getWhereClauseTriplesGroup(): TriplesGroup = whereClauseTriplesGroup
-    
-    def getInsertClauseTriplesGroup(): TriplesGroup = insertClauseTriplesGroup
-    
     def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]])
     {
         assert (insertClause == "")
@@ -75,18 +71,10 @@ class PatternMatchQuery extends Query
         {
             throw new RuntimeException("Insert clause cannot be built before bind clause and insert clause are built.")
         }
-        var innerClause = ""
-        for (row <- outputs) insertClauseTriplesGroup.addTripleFromModelGraphOutputRowResult(row, process, varsForProcessInput)
-        for ((graph, triplesList) <- insertClauseTriplesGroup.outputTriplesMap) 
-        {
-            var graphString = s"GRAPH <$graph> {\n $replacementString \n}\n"
-            var triplesString = ""
-            for (triple <- triplesList)
-            {
-               triplesString += triple.makeTripleWithVariablesIfPreexisting(usedVariables, true)
-            }
-            innerClause += graphString.replace(replacementString, triplesString)
-        }
+
+        insertClauseTriplesGroup.addTripleFromRowResult(outputs, process, varsForProcessInput)
+        val innerClause = insertClauseTriplesGroup.clause
+        assert (innerClause != "" && innerClause != null)
         insertClause += s"INSERT { \n $innerClause \n}"
     }
     
@@ -94,35 +82,16 @@ class PatternMatchQuery extends Query
     {
         assert (whereClause == "")
         assert (inputGraph != null)
-        var innerClause: String = ""
         
+        whereClauseTriplesGroup.addTripleFromRowResult(inputs)
         for (row <- inputs) 
         {
-            whereClauseTriplesGroup.addTripleFromModelGraphInputRowResult(row)
             usedVariables += row(objectVar).toString
             usedVariables += row(subject).toString
         }
-        for ((graph, optionalGroupList) <- whereClauseTriplesGroup.inputGroupMap)
-        {
-            var graphForQuery = graph
-            if (graph == defaultGraph) graphForQuery = inputGraph
-            var graphString = s"GRAPH <$graphForQuery> { \n $replacementString \n}\n"
-            var triplesString = ""
-            for ((groupName, triples) <- optionalGroupList.groupList)
-            {
-                if (groupName != noGroup) triplesString += "OPTIONAL {\n"
-                for (triple <- triples)
-                {
-                    if (triple.getPredicate == "rdf:type" || triple.getPredicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type")
-                    {
-                        varsForProcessInput += triple.getSubject()
-                    }
-                    triplesString += triple.makeTripleWithVariables(true)
-                }
-                if (groupName != noGroup) triplesString += "}\n"
-            }
-            innerClause += graphString.replace(replacementString, triplesString)
-        }
+        
+        val innerClause = whereClauseTriplesGroup.clause
+        assert (innerClause != "" && innerClause != null)
         whereClause += s"WHERE { \n $innerClause "
     }
     

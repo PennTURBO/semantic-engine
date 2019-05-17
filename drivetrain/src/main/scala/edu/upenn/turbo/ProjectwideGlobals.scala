@@ -37,17 +37,9 @@ trait ProjectwideGlobals
      val inputFilesNamedGraphs = helper.retrievePropertyFromFile("inputFilesNamedGraphs")
      val inputFilesFormat = helper.retrievePropertyFromFile("inputFilesFormat")
      val importOntologies = helper.retrievePropertyFromFile("importOntologies")
-     val errorLogFile = helper.retrievePropertyFromFile("errorLogFile")
-     val applyLabels = helper.retrievePropertyFromFile("applyLabels")
-     val inputLOFFiles = helper.retrievePropertyFromFile("inputLOFFiles")
-     val loadDiseaseOntologies = helper.retrievePropertyFromFile("loadDiseaseOntologies")
-     val loadDrugOntologies = helper.retrievePropertyFromFile("loadDrugOntologies")
-     val bioportalAPIkey = helper.retrievePropertyFromFile("bioportalAPIKey")
-     val medMappingRepo = helper.retrievePropertyFromFile("medMappingRepo")
-     val loadLOFdata = helper.retrievePropertyFromFile("loadLOFData")
-     val entityLinkingNamedGraph = helper.retrievePropertyFromFile("entityLinkingNamedGraph")
      val testingRepository = helper.retrievePropertyFromFile("testingRepository")
      val modelRepository = helper.retrievePropertyFromFile("modelRepository")
+     val processNamedGraph = helper.retrievePropertyFromFile("processNamedGraph")
      
      val replacementString = "[replaceMe]"
      
@@ -78,7 +70,4 @@ trait ProjectwideGlobals
       val date = "date"
       val outputNamedGraphVal = "outputNamedGraph"
       val metaQuery = "query"
-      
-      val noGroup = "noGroup"
-      val defaultGraph = "defaultGraph"
 }

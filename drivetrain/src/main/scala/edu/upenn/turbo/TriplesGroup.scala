@@ -4,66 +4,22 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.ArrayBuffer
 import org.eclipse.rdf4j.model.Value
 
-class TriplesGroup extends ProjectwideGlobals
+abstract class TriplesGroup extends ProjectwideGlobals
 {
-    var inputGroupMap: HashMap[String, TriplesGroupList] = new HashMap[String, TriplesGroupList]
-    var outputTriplesMap: HashMap[String, ArrayBuffer[Triple]] = new HashMap[String, ArrayBuffer[Triple]]
+    var clause: String = ""
+}
 
-    def addTripleFromModelGraphOutputRowResult(rowResult: HashMap[String, Value], process: String, varsForProcessInput: ArrayBuffer[String])
+class WhereClauseTriplesGroup extends TriplesGroup with ProjectwideGlobals
+{
+    def addTripleFromRowResult(inputs: ArrayBuffer[HashMap[String, Value]])
     {
-        for (key <- requiredOutputKeysList) assert (rowResult.contains(key))
-        assert (!rowResult.contains(optionalGroup))
-        
-        var subjectAType = false
-        var objectAType = false
-        
-        if (rowResult(subjectType) != null) subjectAType = true
-        if (rowResult(objectType) != null) objectAType = true
-        
-        val processGraph = "http://www.itmat.upenn.edu/biobank/processes"
-        var objectIsLiteral = false
-        if (rowResult(connectionRecipeType).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") objectIsLiteral = true
-        
-        val outputGraphForThisTriple = rowResult(graphFromSparql).toString
-        
-        val tripleForThisRow = new Triple(rowResult(subject).toString, rowResult(predicate).toString, rowResult(objectVar).toString, subjectAType, objectAType)
-        addTripleToOutputList(tripleForThisRow, outputGraphForThisTriple)
-        val processSubjectTriple = new Triple(process, "turbo:createdTriplesAbout", rowResult(subject).toString, false, false)
-        addTripleToOutputList(processSubjectTriple, processGraph)
-        if (!objectIsLiteral && rowResult(predicate).toString != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" && rowResult(predicate).toString != "rdf:type")
+        for (rowResult <- inputs)
         {
-            val processObjectTriple = new Triple(process, "turbo:createdTriplesAbout", rowResult(objectVar).toString, false, false)
-            addTripleToOutputList(processObjectTriple, processGraph)
+            for (key <- requiredInputKeysList) assert (rowResult.contains(key))
         }
         
-        for (uri <- varsForProcessInput)
-        {
-            val processInputTriple = new Triple(process, "obo:OBI_0000293", uri, false, false)
-            addTripleToOutputList(processInputTriple, processGraph)
-        }
-    }
-    
-    def addTripleToOutputList(triple: Triple, graph: String)
-    {
-        var tripleExists = false
-        if (!outputTriplesMap.contains(graph)) outputTriplesMap += graph -> ArrayBuffer(triple)
-        else
-        {
-            for (thisTriple <- outputTriplesMap(graph)) 
-            {
-                if (thisTriple.getSubject == triple.getSubject
-                    && thisTriple.getPredicate == triple.getPredicate
-                    && thisTriple.getObject == triple.getObject) tripleExists = true
-            }
-            if (!tripleExists) outputTriplesMap(graph) += triple 
-        }
-    }
-    
-    def addTripleFromModelGraphInputRowResult(rowResult: HashMap[String, Value])
-    {
-        for (key <- requiredInputKeysList) assert (rowResult.contains(key))
         
-        var graphForThisRow = defaultGraph
+
         if (rowResult(graphOfCreatingProcess) != null) graphForThisRow = rowResult(graphOfCreatingProcess).toString
         
         var optionalGroupForThisRow: String = noGroup
@@ -89,29 +45,43 @@ class TriplesGroup extends ProjectwideGlobals
     }
 }
 
-class TriplesGroupList
+class InsertClauseTriplesGroup extends TriplesGroup with ProjectwideGlobals
 {
-    def this(optionalGroup: String, triplesList: ArrayBuffer[Triple])
+    def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, Value]], process: String, varsForProcessInput: ArrayBuffer[String])
     {
-        this
-        groupList += optionalGroup -> triplesList
-    }
-    
-    def addTripleToGroupList(optionalGroup: String, newTriple: Triple)
-    {
-        if (!groupList.contains(optionalGroup)) groupList += optionalGroup -> ArrayBuffer(newTriple)
-        else
+        var triplesList = new ArrayBuffer[Triple]
+        for (rowResult <- outputs)
         {
-            var tripleExists = false
-            for (thisTriple <- groupList(optionalGroup)) 
+            for (key <- requiredOutputKeysList) assert (rowResult.contains(key))
+            assert (!rowResult.contains(optionalGroup))
+            
+            val processGraph = helper.retrievePropertyFromFile("processNamedGraph")
+            
+            var subjectAType = false
+            var objectAType = false
+            if (rowResult(subjectType) != null) subjectAType = true
+            if (rowResult(objectType) != null) objectAType = true
+            
+            var objectIsLiteral = false
+            if (rowResult(connectionRecipeType).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") objectIsLiteral = true
+            
+            val graph = rowResult(graphFromSparql).toString
+            triplesList += new Triple(rowResult(subject).toString, rowResult(predicate).toString, 
+                                              rowResult(objectVar).toString, subjectAType, objectAType, graph)
+            
+            triplesList += new Triple(process, "turbo:createdTriplesAbout", rowResult(subject).toString, false, false, processGraph)
+            if (!objectIsLiteral && rowResult(predicate).toString != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" && rowResult(predicate).toString != "rdf:type")
             {
-                if (thisTriple.getSubject == newTriple.getSubject
-                    && thisTriple.getPredicate == newTriple.getPredicate
-                    && thisTriple.getObject == newTriple.getObject) tripleExists = true
+                triplesList += new Triple(process, "turbo:createdTriplesAbout", rowResult(objectVar).toString, false, false, processGraph)
             }
-            if (!tripleExists) groupList(optionalGroup) += newTriple
+            for (uri <- varsForProcessInput) triplesList += new Triple(process, "obo:OBI_0000293", uri, false, false, processGraph)
         }
+        
+        buildInsertClauseFromTriplesList(triplesList)
     }
     
-    var groupList: HashMap[String, ArrayBuffer[Triple]] = new HashMap[String, ArrayBuffer[Triple]]
+    def buildInsertClauseFromTriplesList(triplesList: ArrayBuffer[Triple])
+    {
+        
+    }
 }
