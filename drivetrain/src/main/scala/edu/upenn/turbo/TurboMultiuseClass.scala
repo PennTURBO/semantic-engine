@@ -955,4 +955,17 @@ class TurboMultiuseClass
        "?" + splitTypeToVar(splitTypeToVar.size - 1).replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
              .replaceAll("\\>","").replaceAll("\\<","")
     }
+    
+    def validateURI(uri: String)
+    {
+        val requiredCharacters: ArrayBuffer[Char] = ArrayBuffer(':')
+        val illegalCharacters: ArrayBuffer[Char] = ArrayBuffer('<', '>', '"')
+        for (char <- requiredCharacters) assert(uri.contains(char))
+        for (char <- illegalCharacters) assert(!uri.contains(char))
+    }
+    
+    def validateVariable(variable: String)
+    {
+        
+    }
 }

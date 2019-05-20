@@ -65,12 +65,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         logger.info("input named graphs size: " + inputNamedGraphsList.size)
         
         // for each input named graph, create and run query
+        var primaryQuery: PatternMatchQuery = null
         for (graph <- inputNamedGraphsList)
         {
             // create primary query
-            val primaryQuery = new PatternMatchQuery()
+            primaryQuery = new PatternMatchQuery()
             primaryQuery.setProcess(process)
             primaryQuery.setInputGraph(graph)
+            primaryQuery.setOutputGraph(outputNamedGraph)
             
             primaryQuery.createBindClause(binds, localUUID)
             primaryQuery.createWhereClause(inputs)
@@ -78,24 +80,25 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             
             logger.info(primaryQuery.getQuery())
             primaryQuery.runQuery(cxn)
-            
-            // create metadata about process
-            val metaDataQuery = new DataQuery()
-            metaDataQuery.setOutputGraph("http://www.itmat.upenn.edu/biobank/processes")
-            val metaInfo: HashMap[String, String] = HashMap(metaQuery -> primaryQuery.getQuery(), 
-                                                            date -> currDate.toString, 
-                                                            processVar -> process, 
-                                                            outputNamedGraphVal -> outputNamedGraph
-                                                            )
-                                                            
-            val metaDataTriples = createMetaDataTriples(metaInfo)
-            metaDataQuery.createInsertDataClause(metaDataTriples)
-            logger.info(metaDataQuery.getQuery())
-            metaDataQuery.runQuery(cxn)
         }
         
         val endTime = System.nanoTime()
-        logger.info("Completed process " + process + " in " + (endTime - startTime)/1000000000.0 + " seconds")
+        val runtime: String = ((endTime - startTime)/1000000000.0).toString
+        logger.info("Completed process " + process + " in " + runtime + " seconds")
+        
+        // create metadata about process
+        val metaDataQuery = new DataQuery()
+        val metaInfo: HashMap[String, String] = HashMap(metaQuery -> primaryQuery.getQuery(), 
+                                                        date -> currDate.toString, 
+                                                        processVar -> process, 
+                                                        outputNamedGraphVal -> outputNamedGraph,
+                                                        processRuntime -> runtime
+                                                        )
+                                                        
+        val metaDataTriples = createMetaDataTriples(metaInfo)
+        metaDataQuery.createInsertDataClause(metaDataTriples)
+        logger.info(metaDataQuery.getQuery())
+        metaDataQuery.runQuery(cxn)
     }
     
     /*def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]], outputNamedGraph: String, inputNamedGraph: String, process: String): String =
@@ -156,14 +159,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             ?connection a ?$connectionRecipeType .
             <$process> turbo:inputNamedGraph ?$graphFromSparql .
             <$process> turbo:manipulatesBaseEntity ?$baseType .
-            ?connection turbo:subject ?$subject .
-            ?connection turbo:predicate ?$predicate .
-            ?connection turbo:object ?$objectVar .
+            ?connection turbo:subject ?$sparqlSubject .
+            ?connection turbo:predicate ?$sparqlPredicate .
+            ?connection turbo:object ?$sparqlObject .
             ?connection turbo:required ?$requiredBool .
             
             Optional
             {
-                ?connection obo:BFO_0000050 ?$optionalGroup .
+                ?connection obo:BFO_0000050 ?$sparqlOptionalGroup .
             }
             Optional
             {
@@ -174,12 +177,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             Graph pmbb:ontology {
               Optional
               {
-                  ?$subject a owl:Class .
+                  ?$sparqlSubject a owl:Class .
                   BIND (true AS ?$subjectType)
               }
               Optional
               {
-                  ?$objectVar a owl:Class .
+                  ?$sparqlObject a owl:Class .
                   BIND (true AS ?$objectType)
               }
          }}
@@ -203,20 +206,20 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             ?connection a ?$connectionRecipeType .
             <$process> turbo:outputNamedGraph ?$graphFromSparql .
             <$process> turbo:manipulatesBaseEntity ?$baseType .
-            ?connection turbo:subject ?$subject .
-            ?connection turbo:predicate ?$predicate .
-            ?connection turbo:object ?$objectVar .
+            ?connection turbo:subject ?$sparqlSubject .
+            ?connection turbo:predicate ?$sparqlPredicate .
+            ?connection turbo:object ?$sparqlObject .
             
             Graph pmbb:ontology 
             {
               Optional
               {
-                  ?$subject a owl:Class .
+                  ?$sparqlSubject a owl:Class .
                   BIND (true AS ?$subjectType)
               }
               Optional
               {
-                  ?$objectVar a owl:Class .
+                  ?$sparqlObject a owl:Class .
                   BIND (true AS ?$objectType)
               }
             }
@@ -346,12 +349,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val currDate = metaInfo(date)
         val queryVal = metaInfo(metaQuery)
         val outputNamedGraph = metaInfo(outputNamedGraphVal)
-        
+        val runtime = metaInfo(processRuntime)
+        helper.validateURI(processNamedGraph)
         var metaTriples = ArrayBuffer(
-             new Triple(processVal, "rdfs:comment", queryVal, false, false),
-             new Triple(processVal, "turbo:hasDate", currDate, false, false),
-             new Triple(processVal, "rdf:type", "turbo:TurboGraphProcess", false, false),
-             new Triple(processVal, "turbo:addedTriplesTo", outputNamedGraph, false, false)
+             new Triple(processVal, "rdfs:comment", queryVal, false, false, processNamedGraph),
+             new Triple(processVal, "turbo:hasDate", currDate, false, false, processNamedGraph),
+             new Triple(processVal, "rdf:type", "turbo:TurboGraphProcess", false, false, processNamedGraph),
+             new Triple(processVal, "turbo:addedTriplesTo", outputNamedGraph, false, false, processNamedGraph),
+             new Triple(processVal, "turbo:completionTimeInSeconds", runtime, false, false, processNamedGraph)
         )
         metaTriples
     }

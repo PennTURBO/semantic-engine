@@ -9,18 +9,12 @@ import org.eclipse.rdf4j.model.Value
 abstract class Query extends ProjectwideGlobals
 {
     var query: String = ""
-    var outputGraph: String = null
+    var defaultOutputGraph: String = null
     
     def runQuery(cxn: RepositoryConnection)
     {
         assert (query != "" && query != null)
         update.updateSparql(cxn, query)
-    }
-    
-    def setOutputGraph(outputGraph: String)
-    {
-        assert (outputGraph.contains(':'))
-        this.outputGraph = outputGraph
     }
     
     def getQuery(): String = query
@@ -32,7 +26,8 @@ class PatternMatchQuery extends Query
     var whereClause: String = ""
     var insertClause: String = ""
     
-    var inputGraph: String = null
+    var defaultInputGraph: String = null
+    
     var process: String = null
     var whereClauseTriplesGroup: WhereClauseTriplesGroup = new WhereClauseTriplesGroup()
     var insertClauseTriplesGroup: InsertClauseTriplesGroup = new InsertClauseTriplesGroup()
@@ -54,8 +49,14 @@ class PatternMatchQuery extends Query
     
     def setInputGraph(inputGraph: String)
     {
-        assert (inputGraph.contains(':'))
-        this.inputGraph = inputGraph
+        helper.validateURI(inputGraph)
+        this.defaultInputGraph = inputGraph
+    }
+    
+    def setOutputGraph(outputGraph: String)
+    {
+        helper.validateURI(outputGraph)
+        this.defaultOutputGraph = outputGraph
     }
     
     def setProcess(process: String)
@@ -71,8 +72,9 @@ class PatternMatchQuery extends Query
         {
             throw new RuntimeException("Insert clause cannot be built before bind clause and insert clause are built.")
         }
-
-        insertClauseTriplesGroup.addTripleFromRowResult(outputs, process, varsForProcessInput)
+        insertClauseTriplesGroup.addTripleFromRowResult(outputs, process, varsForProcessInput, usedVariables)
+        assert (insertClauseTriplesGroup.clause != null && insertClauseTriplesGroup.clause != "")
+        assert (insertClauseTriplesGroup.clause.contains("GRAPH"))
         val innerClause = insertClauseTriplesGroup.clause
         assert (innerClause != "" && innerClause != null)
         insertClause += s"INSERT { \n $innerClause \n}"
@@ -81,15 +83,16 @@ class PatternMatchQuery extends Query
     def createWhereClause(inputs: ArrayBuffer[HashMap[String, Value]])
     {
         assert (whereClause == "")
-        assert (inputGraph != null)
+        assert (defaultInputGraph != null && defaultInputGraph != "")
         
-        whereClauseTriplesGroup.addTripleFromRowResult(inputs)
+        varsForProcessInput = whereClauseTriplesGroup.addTripleFromRowResult(inputs, defaultInputGraph)
         for (row <- inputs) 
         {
-            usedVariables += row(objectVar).toString
-            usedVariables += row(subject).toString
+            usedVariables += row(sparqlObject).toString
+            usedVariables += row(sparqlSubject).toString
         }
-        
+        assert (whereClauseTriplesGroup.clause != null && whereClauseTriplesGroup.clause != "")
+        assert (whereClauseTriplesGroup.clause.contains("GRAPH"))
         val innerClause = whereClauseTriplesGroup.clause
         assert (innerClause != "" && innerClause != null)
         whereClause += s"WHERE { \n $innerClause "
@@ -127,11 +130,15 @@ class PatternMatchQuery extends Query
 
 class DataQuery extends Query
 {
+    val dataInsertTriplesGroup = new InsertDataClauseTriplesGroup()
     def createInsertDataClause(triples: ArrayBuffer[Triple])
     {
-        assert (outputGraph != null)
-        query += s"INSERT DATA {\n GRAPH <$outputGraph> {\n"
-        for (triple <- triples) query += triple.makeTriple()
-        query += "}}"
+        
+        query += s"INSERT DATA {\n"
+        dataInsertTriplesGroup.buildInsertDataClauseFromTriplesList(triples)
+        assert (dataInsertTriplesGroup.clause != null && dataInsertTriplesGroup.clause != "")
+        assert (dataInsertTriplesGroup.clause.contains("GRAPH"))
+        query += dataInsertTriplesGroup.clause
+        query += "}"
     }
 }

@@ -39,19 +39,19 @@ trait ProjectwideGlobals
      val importOntologies = helper.retrievePropertyFromFile("importOntologies")
      val testingRepository = helper.retrievePropertyFromFile("testingRepository")
      val modelRepository = helper.retrievePropertyFromFile("modelRepository")
-     val processNamedGraph = helper.retrievePropertyFromFile("processNamedGraph")
+     val processNamedGraph = helper.retrievePropertyFromFile("processNamedGraph").replace("\"","")
      
      val replacementString = "[replaceMe]"
      
      //define the SPARQL variables used in the retrieval methods
-      val subject = "subject"
-      val predicate = "predicate"
-      val objectVar = "object"
+      val sparqlSubject = "subject"
+      val sparqlPredicate = "predicate"
+      val sparqlObject = "object"
       val subjectType = "subjectType"
       val objectType = "objectType"
       val graphFromSparql = "graph"
       val requiredBool = "required"
-      val optionalGroup = "optionalGroup"
+      val sparqlOptionalGroup = "optionalGroup"
       val expandedEntity = "expandedEntity"
       val sparqlString = "sparqlString"
       val dependee = "dependee"
@@ -60,14 +60,15 @@ trait ProjectwideGlobals
       val connectionRecipeType = "connectionRecipeType"
       val graphOfCreatingProcess = "graphOfCreatingProcess"
       
-      val requiredInputKeysList = ArrayBuffer(subject, predicate, objectVar, subjectType, objectType, graphFromSparql, requiredBool,
-                                              optionalGroup, connectionRecipeType, baseType, graphOfCreatingProcess)
+      val requiredInputKeysList = ArrayBuffer(sparqlSubject, sparqlPredicate, sparqlObject, subjectType, objectType, graphFromSparql, requiredBool,
+                                              sparqlOptionalGroup, connectionRecipeType, baseType, graphOfCreatingProcess)
                                               
-      val requiredOutputKeysList = ArrayBuffer(subject, predicate, objectVar, subjectType, objectType, graphFromSparql, connectionRecipeType,
+      val requiredOutputKeysList = ArrayBuffer(sparqlSubject, sparqlPredicate, sparqlObject, subjectType, objectType, graphFromSparql, connectionRecipeType,
                                               baseType)
       
       val processVar = "process"
       val date = "date"
       val outputNamedGraphVal = "outputNamedGraph"
       val metaQuery = "query"
+      val processRuntime = "processRuntime"
 }
