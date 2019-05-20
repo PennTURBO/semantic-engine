@@ -2,32 +2,19 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashSet
-import scala.collection.mutable.HashMap
 
 class Triple extends ProjectwideGlobals
 {
     var tripleSubject: String = null
     var triplePredicate: String = null
     var tripleObject: String = null
-    var namedGraph: String = null
     
-    var subjectHasType: Boolean = false
-    var objectHasType: Boolean = false
-    
-    var required: Boolean = true
-    
-    var optionalGroup: String = null
-    
-    def this(subject: String, predicate: String, objectVar: String, subjectHasType: Boolean, objectHasType: Boolean, namedGraph: String, required: Boolean = true)
+    def this(subject: String, predicate: String, objectVar: String)
     {
         this
         setSubject(subject)
         setPredicate(predicate)
         setObject(objectVar)
-        this.required = required
-        this.subjectHasType = subjectHasType
-        this.objectHasType = objectHasType
-        this.namedGraph = namedGraph
     }
     
     def setSubject(subject: String)
@@ -72,64 +59,42 @@ class Triple extends ProjectwideGlobals
         else this.tripleObject = objectVar
     }
     
-    def setOptionalGroup(optionalGroup: String)
-    {
-        this.optionalGroup = optionalGroup
-    }
-    
     def makeTriple(): String = 
     {
-        assert (namedGraph != null && namedGraph != "")
-        val innerString = s"$tripleSubject $triplePredicate $tripleObject .\n"
-        if (!required)
-        {
-            s"OPTIONAL {\n $innerString }\n"
-        }
-        else innerString
+        s"$tripleSubject $triplePredicate $tripleObject .\n"
     }
     
-    def makeTripleWithVariables(withTypes: Boolean): HashMap[String, ArrayBuffer[String]] = 
+    def makeTripleWithVariables(withTypes: Boolean): String = 
     {
-        assert (namedGraph != null && namedGraph != "")
         val objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
         val subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
-        val tripleString = s"$subjectAsVar $triplePredicate $objectAsVar .\n"
-        var res = HashMap(tripleString -> new ArrayBuffer[String]())
-        if (withTypes)
-        {
-            if (subjectHasType) res(tripleString) += s"$subjectAsVar rdf:type $tripleSubject .\n"
-            if (objectHasType) res(tripleString) += s"$objectAsVar rdf:type $tripleObject .\n"
-        }
-        res
+        s"$subjectAsVar $triplePredicate $objectAsVar .\n"
     }
     
-    def makeTripleWithVariablesIfPreexisting(preexistingSet: HashSet[String], withTypes: Boolean): HashMap[String, ArrayBuffer[String]] = 
+    def makeTripleWithVariablesIfPreexisting(preexistingSet: HashSet[String]): String = 
     {
-        assert (namedGraph != null && namedGraph != "")
-        var subjectTypeClause = ""
-        var objectTypeClause = ""
         var subjectForString = ""
-        var res = new HashMap[String, ArrayBuffer[String]]
-        var subjectTypeTriple: String = null
         if (preexistingSet.contains(tripleSubject.replaceAll("\\<","").replaceAll("\\>","")))
         {
             subjectForString = helper.convertTypeToSparqlVariable(tripleSubject)
-            if (withTypes && subjectHasType) subjectTypeTriple = s"$subjectForString rdf:type $tripleSubject .\n"
         }
         else subjectForString = tripleSubject
         
         var objectForString = ""
-        var objectTypeTriple: String = null
         if (!preexistingSet.contains(tripleObject.replaceAll("\\<","").replaceAll("\\>",""))) objectForString = tripleObject
         else 
         {
             objectForString = helper.convertTypeToSparqlVariable(tripleObject)
-            if (withTypes && objectHasType) objectTypeTriple = s"$objectForString rdf:type $tripleObject .\n"
         }
-        val tripleString = s"$subjectForString $triplePredicate $objectForString .\n"
-        res += tripleString -> new ArrayBuffer[String]()
-        if (subjectTypeTriple != null) res(tripleString) += subjectTypeTriple
-        if (objectTypeTriple != null) res(tripleString) += objectTypeTriple
-        res
+
+        s"$subjectForString $triplePredicate $objectForString .\n"
+    }
+    
+    def isSameAs(triple: Triple): Boolean =
+    {
+        if (triple.tripleSubject == this.tripleSubject 
+            && triple.triplePredicate == this.triplePredicate
+            && triple.tripleObject == this.tripleObject) true
+        else false
     }
 }

@@ -1,191 +1,107 @@
 package edu.upenn.turbo
 
-import scala.collection.mutable.HashMap
-import scala.collection.mutable.HashSet
 import scala.collection.mutable.ArrayBuffer
-import org.eclipse.rdf4j.model.Value
+import scala.collection.mutable.HashMap
 
-abstract class TriplesGroup extends ProjectwideGlobals
+class TriplesGroupBuilder extends ProjectwideGlobals
 {
-    var clause: String = ""
-}
-
-class WhereClauseTriplesGroup extends TriplesGroup with ProjectwideGlobals
-{
-    def addTripleFromRowResult(inputs: ArrayBuffer[HashMap[String, Value]], defaultInputGraph: String): ArrayBuffer[String] =
+    val requiredGroup = new RequiredGroup()
+    val optionalGroups = new ArrayBuffer[OptionalGroup]
+    
+    def addRequiredTripleToRequiredGroup(triple: Triple, graph: String)
     {
-        var varsForProcessInput = new ArrayBuffer[String]
-        var triplesList = new HashMap[String, ArrayBuffer[Triple]]
-        for (rowResult <- inputs)
+        var okToAdd: Boolean = true
+        for (reqTriple <- requiredGroup.requiredInGroup(graph))
         {
-            for (key <- requiredInputKeysList) assert (rowResult.contains(key))
-            
-            var graphForThisRow: String = defaultInputGraph
-            var optionalGroupForThisRow: String = null
-            var subjectAType = false
-            var objectAType = false
-            var required: Boolean = true
-            
-            if (rowResult(graphOfCreatingProcess) != null) graphForThisRow = rowResult(graphOfCreatingProcess).toString
-            if (rowResult(sparqlOptionalGroup) != null) optionalGroupForThisRow = rowResult(sparqlOptionalGroup).toString
-            if (rowResult(subjectType) != null) 
-            {
-                subjectAType = true
-                varsForProcessInput += helper.convertTypeToSparqlVariable(rowResult(sparqlSubject))
-            }
-            if (rowResult(objectType) != null) 
-            {
-                objectAType = true
-                varsForProcessInput += helper.convertTypeToSparqlVariable(rowResult(sparqlObject))
-            }
-            if (rowResult(requiredBool).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
-            
-            val tripleForThisRow = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString, 
-                                                  subjectAType, objectAType, graphForThisRow, required)
-            tripleForThisRow.setOptionalGroup(optionalGroupForThisRow)
-            
-            if (triplesList.contains(graphForThisRow)) triplesList(graphForThisRow) += tripleForThisRow
-            else triplesList += graphForThisRow -> ArrayBuffer(tripleForThisRow)
+            if (triple.isSameAs(reqTriple)) okToAdd = false
         }
-        buildWhereClauseFromTriplesList(triplesList)
-        varsForProcessInput
+        if (okToAdd)
+        {
+            if (requiredGroup.requiredInGroup.contains(graph)) requiredGroup.requiredInGroup(graph) += triple
+            else requiredGroup.requiredInGroup += graph -> ArrayBuffer(triple)
+        }
     }
     
-    def buildWhereClauseFromTriplesList(triplesMap: HashMap[String, ArrayBuffer[Triple]])
+    def addOptionalTripleToRequiredGroup(triple: Triple, graph: String)
     {
-        var triplesToWrite = new HashMap[String, HashSet[String]]
-        
-        for ((graph, triplesList) <- triplesMap)
+        var okToAdd: Boolean = true
+        for (optTriple <- requiredGroup.optionalInGroup(graph))
         {
-            var requiredStatements = new HashSet[String]
-            var optionalGroups = new HashMap[String, ArrayBuffer[String]]
-            var optionalStatements = new HashSet[ArrayBuffer[String]]
-            
-            for (triple <- triplesList)
-            {
-                val triplesAsStrings = triple.makeTripleWithVariables(true)
-                for ((tripleString, typeList) <- triplesAsStrings) 
-                {
-                    if (triple.required && triple.optionalGroup == null)
-                    {
-                        requiredStatements += tripleString
-                        for (typeTriple <- typeList) requiredStatements += typeTriple
-                    }
-                    else if (triple.optionalGroup != null) 
-                    {
-                        var tripleToAdd = tripleString
-                        if (!triple.required) tripleToAdd = tripleString
-                        if (optionalGroups.contains(triple.optionalGroup)) optionalGroups(triple.optionalGroup) += tripleString
-                        else optionalGroups += triple.optionalGroup -> ArrayBuffer(tripleString)
-                    }
-                    else 
-                    {
-                        for (typeTriple <- typeList) optionalStatements += tripleString
-                        optionalStatements += tripleString
-                    }
-                }
-            }
-            
-            clause += s"GRAPH <$graph> {\n"
-            for (statement <- requiredStatements) clause += statement
-            for (statement <- optionalStatements)
-            {
-                if (!requiredStatements.contains(statement)) clause += s"OPTIONAL { \n $statement } \n"
-            }
-            for ((group, list) <- optionalGroups)
-            {
-                clause += "OPTIONAL {\n"
-                for (statement <- list)
-                {
-                    if (!requiredStatements.contains(statement)) clause += statement
-                }
-                clause += "}\n"
-            }
-            clause += "}\n"
+            if (triple.isSameAs(optTriple)) okToAdd = false
         }
-    }
-}
-
-class InsertClauseTriplesGroup extends TriplesGroup with ProjectwideGlobals
-{
-    var usedVariables: HashSet[String] = null
-    def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, Value]], process: String, varsForProcessInput: ArrayBuffer[String], usedVariables: HashSet[String])
-    {
-        this.usedVariables = usedVariables
-        var triplesList = new ArrayBuffer[Triple]
-        for (rowResult <- outputs)
+        if (okToAdd)
         {
-            for (key <- requiredOutputKeysList) assert (rowResult.contains(key))
-            assert (!rowResult.contains(sparqlOptionalGroup))
-            
-            helper.validateURI(processNamedGraph)
-            
-            var subjectAType = false
-            var objectAType = false
-            if (rowResult(subjectType) != null) subjectAType = true
-            if (rowResult(objectType) != null) objectAType = true
-            
-            var objectIsLiteral = false
-            if (rowResult(connectionRecipeType).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") objectIsLiteral = true
-            
-            val graph = rowResult(graphFromSparql).toString
-            triplesList += new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, 
-                                              rowResult(sparqlObject).toString, subjectAType, objectAType, graph)
-            
-            triplesList += new Triple(process, "turbo:createdTriplesAbout", rowResult(sparqlSubject).toString, false, false, processNamedGraph)
-            if (!objectIsLiteral && rowResult(sparqlPredicate).toString != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" && rowResult(sparqlPredicate).toString != "rdf:type")
-            {
-                triplesList += new Triple(process, "turbo:createdTriplesAbout", rowResult(sparqlObject).toString, false, false, processNamedGraph)
-            }
-            for (uri <- varsForProcessInput) triplesList += new Triple(process, "obo:OBI_0000293", uri, false, false, processNamedGraph)
+            if (requiredGroup.optionalInGroup.contains(graph)) requiredGroup.optionalInGroup(graph) += triple
+            else requiredGroup.optionalInGroup += graph -> ArrayBuffer(triple)
         }
-        
-        buildInsertClauseFromTriplesList(triplesList)
     }
     
-    def buildInsertClauseFromTriplesList(triplesList: ArrayBuffer[Triple])
+    def addRequiredTripleToOptionalGroup(optionalGroup: OptionalGroup, triple: Triple, graph: String)
     {
-        assert (usedVariables != null)
-        assert (usedVariables.size != 0)
-        var triplesToWrite = new HashMap[String, HashSet[String]]
-        for (triple <- triplesList)
+        var okToAdd: Boolean = true
+        for (reqTriple <- optionalGroup.requiredInGroup(graph))
         {
-            val triplesAsStrings = triple.makeTripleWithVariablesIfPreexisting(usedVariables, true)
-            for ((tripleString, typeTriples) <- triplesAsStrings) 
+            if (triple.isSameAs(reqTriple)) okToAdd = false
+        }
+        if (okToAdd)
+        {
+            if (optionalGroup.requiredInGroup.contains(graph)) optionalGroup.requiredInGroup(graph) += triple
+            else optionalGroup.requiredInGroup += graph -> ArrayBuffer(triple)
+        }
+    }
+    
+    def addOptionalTripleToOptionalGroup(optionalGroup: OptionalGroup, triple: Triple, graph: String)
+    {
+        var okToAdd: Boolean = true
+        for (optTriple <- optionalGroup.optionalInGroup(graph))
+        {
+            if (triple.isSameAs(optTriple)) okToAdd = false
+        }
+        if (okToAdd)
+        {
+            if (optionalGroup.optionalInGroup.contains(graph)) optionalGroup.optionalInGroup(graph) += triple
+            else optionalGroup.optionalInGroup += graph -> ArrayBuffer(triple)
+        }
+    }
+    
+    def addToOptionalGroup(triple: Triple, graph: String, groupName: String, required: Boolean)
+    {
+        var groupToAdd: OptionalGroup = null
+        for (group <- optionalGroups)
+        {
+            if (group.groupName == groupName)
             {
-                if (triplesToWrite.contains(triple.namedGraph))
-                {
-                    triplesToWrite(triple.namedGraph) += tripleString
-                    for (typeTriple <- typeTriples) triplesToWrite(triple.namedGraph) += typeTriple
-                }
-                else triplesToWrite += triple.namedGraph -> HashSet(tripleString)
+                groupToAdd = group
             }
         }
-        for ((graph,tripleSet) <- triplesToWrite)
+        if (groupToAdd == null)
         {
-            clause += s"GRAPH <$graph> {\n"
-            for (triple <- tripleSet) clause += triple
-            clause += "}\n"
+           groupToAdd = new OptionalGroup()
+           optionalGroups += groupToAdd
         }
+        
+        if (required) addRequiredTripleToOptionalGroup(groupToAdd, triple, graph)
+        else addOptionalTripleToOptionalGroup(groupToAdd, triple, graph)
+    }
+    
+    def buildClauseFromTriplesGroup(): String =
+    {
+        ""
     }
 }
 
-class InsertDataClauseTriplesGroup extends TriplesGroup with ProjectwideGlobals
+class TriplesGroup extends ProjectwideGlobals
 {
-    def buildInsertDataClauseFromTriplesList(triplesList: ArrayBuffer[Triple])
-    {
-        var triplesToWrite = new HashMap[String, HashSet[String]]
-        for (triple <- triplesList)
-        {
-            val tripleString = triple.makeTriple()
-            if (triplesToWrite.contains(triple.namedGraph)) triplesToWrite(triple.namedGraph) += tripleString
-            else triplesToWrite += triple.namedGraph -> HashSet(tripleString)
-        }
-        for ((graph,tripleSet) <- triplesToWrite)
-        {
-            clause += s"GRAPH <$graph> {\n"
-            for (triple <- tripleSet) clause += triple
-            clause += "}\n"
-        }
-    }
+    var requiredInGroup: HashMap[String, ArrayBuffer[Triple]] = new HashMap[String, ArrayBuffer[Triple]]
+    var optionalInGroup: HashMap[String, ArrayBuffer[Triple]] = new HashMap[String, ArrayBuffer[Triple]]
+}
+
+class RequiredGroup extends TriplesGroup
+{
+    
+}
+
+class OptionalGroup extends TriplesGroup
+{
+    var groupName: String = null
 }

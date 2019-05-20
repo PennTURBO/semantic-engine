@@ -76,7 +76,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             
             primaryQuery.createBindClause(binds, localUUID)
             primaryQuery.createWhereClause(inputs)
-            primaryQuery.createInsertClause(outputs)
+            //primaryQuery.createInsertClause(outputs)
             
             logger.info(primaryQuery.getQuery())
             primaryQuery.runQuery(cxn)
@@ -87,7 +87,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         logger.info("Completed process " + process + " in " + runtime + " seconds")
         
         // create metadata about process
-        val metaDataQuery = new DataQuery()
+        /*val metaDataQuery = new DataQuery()
         val metaInfo: HashMap[String, String] = HashMap(metaQuery -> primaryQuery.getQuery(), 
                                                         date -> currDate.toString, 
                                                         processVar -> process, 
@@ -98,7 +98,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val metaDataTriples = createMetaDataTriples(metaInfo)
         metaDataQuery.createInsertDataClause(metaDataTriples)
         logger.info(metaDataQuery.getQuery())
-        metaDataQuery.runQuery(cxn)
+        metaDataQuery.runQuery(cxn)*/
     }
     
     /*def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]], outputNamedGraph: String, inputNamedGraph: String, process: String): String =
@@ -343,7 +343,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         else ArrayBuffer(inputNamedGraph)
     }
     
-    def createMetaDataTriples(metaInfo: HashMap[String, String]): ArrayBuffer[Triple] =
+    /*def createMetaDataTriples(metaInfo: HashMap[String, String]): ArrayBuffer[Triple] =
     {
         val processVal = metaInfo(processVar)
         val currDate = metaInfo(date)
@@ -359,5 +359,5 @@ object RunDrivetrainProcess extends ProjectwideGlobals
              new Triple(processVal, "turbo:completionTimeInSeconds", runtime, false, false, processNamedGraph)
         )
         metaTriples
-    }
+    }*/
 }

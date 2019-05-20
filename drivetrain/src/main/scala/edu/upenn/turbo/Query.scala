@@ -29,8 +29,8 @@ class PatternMatchQuery extends Query
     var defaultInputGraph: String = null
     
     var process: String = null
-    var whereClauseTriplesGroup: WhereClauseTriplesGroup = new WhereClauseTriplesGroup()
-    var insertClauseTriplesGroup: InsertClauseTriplesGroup = new InsertClauseTriplesGroup()
+    var whereClauseTriplesGroup: WhereClauseBuilder = new WhereClauseBuilder()
+    //var insertClauseTriplesGroup: InsertClauseTriplesGroup = new InsertClauseTriplesGroup()
     
     var varsForProcessInput = new ArrayBuffer[String]
     
@@ -65,7 +65,7 @@ class PatternMatchQuery extends Query
         this.process = process
     }
     
-    def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]])
+    /*def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]])
     {
         assert (insertClause == "")
         if (bindClause == "" || bindClause == null || whereClause == null || whereClause.size == 0) 
@@ -78,7 +78,7 @@ class PatternMatchQuery extends Query
         val innerClause = insertClauseTriplesGroup.clause
         assert (innerClause != "" && innerClause != null)
         insertClause += s"INSERT { \n $innerClause \n}"
-    }
+    }*/
     
     def createWhereClause(inputs: ArrayBuffer[HashMap[String, Value]])
     {
@@ -128,7 +128,7 @@ class PatternMatchQuery extends Query
     }
 }
 
-class DataQuery extends Query
+/*class DataQuery extends Query
 {
     val dataInsertTriplesGroup = new InsertDataClauseTriplesGroup()
     def createInsertDataClause(triples: ArrayBuffer[Triple])
@@ -141,4 +141,4 @@ class DataQuery extends Query
         query += dataInsertTriplesGroup.clause
         query += "}"
     }
-}
+}*/
