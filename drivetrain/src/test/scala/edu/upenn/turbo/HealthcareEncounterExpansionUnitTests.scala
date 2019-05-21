@@ -256,7 +256,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
-          a turbo:TURBO_0010158 ;
+          a turbo:TURBO_0010158 ;te
           turbo:TURBO_0000648 "20" ;
           turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> .
           }}

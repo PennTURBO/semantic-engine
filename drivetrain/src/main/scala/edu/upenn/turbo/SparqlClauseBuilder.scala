@@ -12,9 +12,9 @@ abstract class SparqlClauseBuilder extends ProjectwideGlobals
 
 class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
-    def addTripleFromRowResult(inputs: ArrayBuffer[HashMap[String, Value]], defaultInputGraph: String): ArrayBuffer[String] =
+    def addTripleFromRowResult(inputs: ArrayBuffer[HashMap[String, Value]], defaultInputGraph: String): HashSet[String] =
     {
-        var varsForProcessInput = new ArrayBuffer[String]
+        var varsForProcessInput = new HashSet[String]
         val triplesGroup = new TriplesGroupBuilder()
         for (rowResult <- inputs)
         {
@@ -33,102 +33,82 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (rowResult(subjectType) != null) 
             {
                 subjectAType = true
-                varsForProcessInput += helper.convertTypeToSparqlVariable(rowResult(sparqlSubject))
+                varsForProcessInput += rowResult(sparqlSubject).toString
             }
             if (rowResult(objectType) != null) 
             {
                 objectAType = true
-                varsForProcessInput += helper.convertTypeToSparqlVariable(rowResult(sparqlObject))
+                varsForProcessInput += rowResult(sparqlObject).toString
             }
             if (required && optionalGroupForThisRow == null)
             {
-                val newTriple = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString)
+                val newTriple = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString,
+                                                     subjectAType, objectAType)
                 triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graphForThisRow)
             }
             else if (optionalGroupForThisRow != null)
             {
-                val newTriple = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString)
+                val newTriple = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString,
+                                          subjectAType, objectAType)
                 triplesGroup.addToOptionalGroup(newTriple, graphForThisRow, optionalGroupForThisRow, required)
             }
             else
             {
-                val newTriple = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString)
+                val newTriple = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString,
+                                          subjectAType, objectAType)
                 triplesGroup.addOptionalTripleToRequiredGroup(newTriple, graphForThisRow)
             }
         }
-        clause = triplesGroup.buildClauseFromTriplesGroup()
+        clause = triplesGroup.buildWhereClauseFromTriplesGroup()
         varsForProcessInput
     }
 }
 
-/*class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
+class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
-    var usedVariables: HashSet[String] = null
-    def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, Value]], process: String, varsForProcessInput: ArrayBuffer[String], usedVariables: HashSet[String])
+    def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, Value]], process: String, varsForProcessInput: HashSet[String], usedVariables: HashSet[String])
     {
-        this.usedVariables = usedVariables
-        var triplesList = new ArrayBuffer[Triple]
+        val triplesGroup = new TriplesGroupBuilder()
         for (rowResult <- outputs)
         {
             for (key <- requiredOutputKeysList) assert (rowResult.contains(key))
             assert (!rowResult.contains(sparqlOptionalGroup))
-            
             helper.validateURI(processNamedGraph)
             
             var subjectAType = false
             var objectAType = false
             if (rowResult(subjectType) != null) subjectAType = true
             if (rowResult(objectType) != null) objectAType = true
-            
             var objectIsLiteral = false
             if (rowResult(connectionRecipeType).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") objectIsLiteral = true
-            
             val graph = rowResult(graphFromSparql).toString
-            triplesList += new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString)
-            triplesList += new Triple(process, "turbo:createdTriplesAbout", rowResult(sparqlSubject).toString)
-            if (!objectIsLiteral && rowResult(sparqlPredicate).toString != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" && rowResult(sparqlPredicate).toString != "rdf:type")
+            
+            val newTriple = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString, 
+                                      subjectAType, objectAType)
+            triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
+            val subjectProcessTriple = new Triple(process, "turbo:createdTriplesAbout", rowResult(sparqlSubject).toString, false, false)
+            triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
+            if (!objectIsLiteral && newTriple.triplePredicate != "rdf:type")
             {
-                triplesList += new Triple(process, "turbo:createdTriplesAbout", rowResult(sparqlObject).toString)
+                val objectProcessTriple = new Triple(process, "turbo:createdTriplesAbout", rowResult(sparqlObject).toString, false, false)
+                triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
             }
-            for (uri <- varsForProcessInput) triplesList += new Triple(process, "obo:OBI_0000293", uri)
         }
-        
-        buildInsertClauseFromTriplesList(triplesList)
-    }
-    
-    def buildInsertClauseFromTriplesList(triplesList: ArrayBuffer[Triple])
-    {
-        assert (usedVariables != null)
-        assert (usedVariables.size != 0)
-        var triplesToWrite = new HashMap[String, HashSet[String]]
-        for (triple <- triplesList)
+        for (uri <- varsForProcessInput)
         {
-            val triplesAsStrings = triple.makeTripleWithVariablesIfPreexisting(usedVariables)
-
+            val processInputTriple = new Triple(process, "obo:OBI_0000293", uri, false, false)
+            triplesGroup.addRequiredTripleToRequiredGroup(processInputTriple, processNamedGraph)
         }
-        for ((graph,tripleSet) <- triplesToWrite)
-        {
-            clause += s"GRAPH <$graph> {\n"
-            for (triple <- tripleSet) clause += triple
-            clause += "}\n"
-        }
+        clause = triplesGroup.buildInsertClauseFromTriplesGroup(usedVariables)
     }
 }
 
 class InsertDataClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
-    def buildInsertDataClauseFromTriplesList(triplesList: ArrayBuffer[Triple])
+    def buildInsertDataClauseFromTriplesList(triplesList: ArrayBuffer[Triple], graph: String)
     {
-        var triplesToWrite = new HashMap[String, HashSet[String]]
-        for (triple <- triplesList)
-        {
-            val tripleString = triple.makeTriple()
-        }
-        for ((graph,tripleSet) <- triplesToWrite)
-        {
-            clause += s"GRAPH <$graph> {\n"
-            for (triple <- tripleSet) clause += triple
-            clause += "}\n"
-        }
+        val triplesGroup = new TriplesGroupBuilder()
+        for (triple <- triplesList) triplesGroup.addRequiredTripleToRequiredGroup(triple, graph)
+        clause = triplesGroup.buildInsertDataClauseFromTriplesGroup()
     }
-}*/
+}

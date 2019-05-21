@@ -9,12 +9,17 @@ class Triple extends ProjectwideGlobals
     var triplePredicate: String = null
     var tripleObject: String = null
     
-    def this(subject: String, predicate: String, objectVar: String)
+    var subjectAType: Boolean = false
+    var objectAType: Boolean = false
+    
+    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean, objectAType: Boolean)
     {
         this
         setSubject(subject)
         setPredicate(predicate)
         setObject(objectVar)
+        this.subjectAType = subjectAType
+        this.objectAType = objectAType
     }
     
     def setSubject(subject: String)
@@ -64,7 +69,7 @@ class Triple extends ProjectwideGlobals
         s"$tripleSubject $triplePredicate $tripleObject .\n"
     }
     
-    def makeTripleWithVariables(withTypes: Boolean): String = 
+    def makeTripleWithVariables(): String = 
     {
         val objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
         val subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
@@ -88,6 +93,18 @@ class Triple extends ProjectwideGlobals
         }
 
         s"$subjectForString $triplePredicate $objectForString .\n"
+    }
+    
+    def makeSubjectTypeTriple(): String =
+    {
+        val subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
+        s"$subjectAsVar rdf:type $tripleSubject .\n"
+    }
+    
+    def makeObjectTypeTriple(): String =
+    {
+        val objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
+        s"$objectAsVar rdf:type $tripleObject .\n"
     }
     
     def isSameAs(triple: Triple): Boolean =

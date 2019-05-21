@@ -29,10 +29,10 @@ class PatternMatchQuery extends Query
     var defaultInputGraph: String = null
     
     var process: String = null
-    var whereClauseTriplesGroup: WhereClauseBuilder = new WhereClauseBuilder()
-    //var insertClauseTriplesGroup: InsertClauseTriplesGroup = new InsertClauseTriplesGroup()
+    var whereClauseBuilder: WhereClauseBuilder = new WhereClauseBuilder()
+    var insertClauseBuilder: InsertClauseBuilder = new InsertClauseBuilder()
     
-    var varsForProcessInput = new ArrayBuffer[String]
+    var varsForProcessInput = new HashSet[String]
     
     /* Contains set of of variables used in bind and where clauses, so the insert clause knows that these have already been defined. Any URI present in the 
      in the insert clause will not be converted to a variable unless it is included in this list. */
@@ -65,35 +65,35 @@ class PatternMatchQuery extends Query
         this.process = process
     }
     
-    /*def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]])
+    def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]])
     {
         assert (insertClause == "")
         if (bindClause == "" || bindClause == null || whereClause == null || whereClause.size == 0) 
         {
             throw new RuntimeException("Insert clause cannot be built before bind clause and insert clause are built.")
         }
-        insertClauseTriplesGroup.addTripleFromRowResult(outputs, process, varsForProcessInput, usedVariables)
-        assert (insertClauseTriplesGroup.clause != null && insertClauseTriplesGroup.clause != "")
-        assert (insertClauseTriplesGroup.clause.contains("GRAPH"))
-        val innerClause = insertClauseTriplesGroup.clause
+        insertClauseBuilder.addTripleFromRowResult(outputs, process, varsForProcessInput, usedVariables)
+        assert (insertClauseBuilder.clause != null && insertClauseBuilder.clause != "")
+        assert (insertClauseBuilder.clause.contains("GRAPH"))
+        val innerClause = insertClauseBuilder.clause
         assert (innerClause != "" && innerClause != null)
         insertClause += s"INSERT { \n $innerClause \n}"
-    }*/
+    }
     
     def createWhereClause(inputs: ArrayBuffer[HashMap[String, Value]])
     {
         assert (whereClause == "")
         assert (defaultInputGraph != null && defaultInputGraph != "")
         
-        varsForProcessInput = whereClauseTriplesGroup.addTripleFromRowResult(inputs, defaultInputGraph)
+        varsForProcessInput = whereClauseBuilder.addTripleFromRowResult(inputs, defaultInputGraph)
         for (row <- inputs) 
         {
             usedVariables += row(sparqlObject).toString
             usedVariables += row(sparqlSubject).toString
         }
-        assert (whereClauseTriplesGroup.clause != null && whereClauseTriplesGroup.clause != "")
-        assert (whereClauseTriplesGroup.clause.contains("GRAPH"))
-        val innerClause = whereClauseTriplesGroup.clause
+        assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "")
+        assert (whereClauseBuilder.clause.contains("GRAPH"))
+        val innerClause = whereClauseBuilder.clause
         assert (innerClause != "" && innerClause != null)
         whereClause += s"WHERE { \n $innerClause "
     }
@@ -128,17 +128,17 @@ class PatternMatchQuery extends Query
     }
 }
 
-/*class DataQuery extends Query
+class DataQuery extends Query
 {
-    val dataInsertTriplesGroup = new InsertDataClauseTriplesGroup()
-    def createInsertDataClause(triples: ArrayBuffer[Triple])
+    val dataInsertTriplesGroup = new InsertDataClauseBuilder()
+    def createInsertDataClause(triples: ArrayBuffer[Triple], graph: String)
     {
         
         query += s"INSERT DATA {\n"
-        dataInsertTriplesGroup.buildInsertDataClauseFromTriplesList(triples)
+        dataInsertTriplesGroup.buildInsertDataClauseFromTriplesList(triples, graph)
         assert (dataInsertTriplesGroup.clause != null && dataInsertTriplesGroup.clause != "")
         assert (dataInsertTriplesGroup.clause.contains("GRAPH"))
         query += dataInsertTriplesGroup.clause
         query += "}"
     }
-}*/
+}

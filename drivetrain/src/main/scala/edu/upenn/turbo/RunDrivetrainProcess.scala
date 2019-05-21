@@ -76,7 +76,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             
             primaryQuery.createBindClause(binds, localUUID)
             primaryQuery.createWhereClause(inputs)
-            //primaryQuery.createInsertClause(outputs)
+            primaryQuery.createInsertClause(outputs)
             
             logger.info(primaryQuery.getQuery())
             primaryQuery.runQuery(cxn)
@@ -87,7 +87,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         logger.info("Completed process " + process + " in " + runtime + " seconds")
         
         // create metadata about process
-        /*val metaDataQuery = new DataQuery()
+        val metaDataQuery = new DataQuery()
         val metaInfo: HashMap[String, String] = HashMap(metaQuery -> primaryQuery.getQuery(), 
                                                         date -> currDate.toString, 
                                                         processVar -> process, 
@@ -96,52 +96,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                                                         )
                                                         
         val metaDataTriples = createMetaDataTriples(metaInfo)
-        metaDataQuery.createInsertDataClause(metaDataTriples)
+        metaDataQuery.createInsertDataClause(metaDataTriples, processNamedGraph)
         logger.info(metaDataQuery.getQuery())
-        metaDataQuery.runQuery(cxn)*/
+        metaDataQuery.runQuery(cxn)
     }
-    
-    /*def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]], outputNamedGraph: String, inputNamedGraph: String, process: String): String =
-    {
-        var insertClause = "INSERT { Graph <" + outputNamedGraph + "> { \n"
-        var outputProcessSet = new HashSet[String]
-        var typeSet = new HashSet[Value]
-        for (triple <- outputs)
-        {
-            var formattedSubjectVariable = ""
-            var formattedObjectVariable = ""
-            if (variableSet.contains(triple(subject)) || inputSet.contains(triple(subject))) formattedSubjectVariable = "?" + convertTypeToVariable(triple(subject))
-            else formattedSubjectVariable = "<" + triple(subject) + ">"
-            if (variableSet.contains(triple(objectVar)) || inputSet.contains(triple(objectVar))) formattedObjectVariable = "?" + convertTypeToVariable(triple(objectVar))
-            else formattedObjectVariable = "<" + triple(objectVar) + ">"
-            insertClause += formattedSubjectVariable + " <" + triple(predicate).toString + "> " + formattedObjectVariable + " .\n"
-            if (triple(subjectType) != null && !typeSet.contains(triple(subject)))
-            {
-                insertClause += formattedSubjectVariable + " a <" + triple(subject) + "> .\n"
-                typeSet += triple(subject)
-            }
-            if (triple(objectType) != null && !typeSet.contains(triple(objectVar)))
-            {
-                insertClause += formattedObjectVariable + " a <" + triple(objectVar) + "> .\n"
-                typeSet += triple(objectVar)
-            }
-            if (triple(connectionRecipeType).toString() == "http://transformunify.org/ontologies/ObjectConnectionRecipe")
-            {
-                outputProcessSet += formattedSubjectVariable
-                if (!(triple(predicate).toString == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"))
-                {
-                    outputProcessSet += formattedObjectVariable
-                } 
-            }
-        }
-        insertClause += "}\n"
-        insertClause += "Graph pmbb:processes {\n"
-        insertClause += s"<$process> turbo:sourcedInputFrom <$inputNamedGraph> ."
-        for (a <- inputProcessSet) insertClause += s"<$process> obo:OBI_0000293 $a .\n"
-        for (a <- outputProcessSet) insertClause += s"<$process> turbo:createdTripleAbout $a .\n"
-        insertClause += "}}\n"
-        insertClause
-    }*/
     
     def getInputs(process: String): ArrayBuffer[HashMap[String, Value]] =
     {
@@ -343,7 +301,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         else ArrayBuffer(inputNamedGraph)
     }
     
-    /*def createMetaDataTriples(metaInfo: HashMap[String, String]): ArrayBuffer[Triple] =
+    def createMetaDataTriples(metaInfo: HashMap[String, String]): ArrayBuffer[Triple] =
     {
         val processVal = metaInfo(processVar)
         val currDate = metaInfo(date)
@@ -352,12 +310,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val runtime = metaInfo(processRuntime)
         helper.validateURI(processNamedGraph)
         var metaTriples = ArrayBuffer(
-             new Triple(processVal, "rdfs:comment", queryVal, false, false, processNamedGraph),
-             new Triple(processVal, "turbo:hasDate", currDate, false, false, processNamedGraph),
-             new Triple(processVal, "rdf:type", "turbo:TurboGraphProcess", false, false, processNamedGraph),
-             new Triple(processVal, "turbo:addedTriplesTo", outputNamedGraph, false, false, processNamedGraph),
-             new Triple(processVal, "turbo:completionTimeInSeconds", runtime, false, false, processNamedGraph)
+             new Triple(processVal, "rdfs:comment", queryVal, false, false),
+             new Triple(processVal, "turbo:hasDate", currDate, false, false),
+             new Triple(processVal, "rdf:type", "turbo:TurboGraphProcess", false, false),
+             new Triple(processVal, "turbo:addedTriplesTo", outputNamedGraph, false, false),
+             new Triple(processVal, "turbo:completionTimeInSeconds", runtime, false, false)
         )
         metaTriples
-    }*/
+    }
 }
