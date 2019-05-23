@@ -35,7 +35,7 @@ case class Input(searchList: Array[String])
 case class DrugResult(resultsList: Map[String, Array[String]])
 case class TwoDimensionalArrListResults(resultsList: Array[Array[String]])
 
-class RunQueriesFromTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+class RunQueriesFromTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
 {
     implicit val formats = DefaultFormats
     

@@ -12,13 +12,13 @@ abstract class SparqlClauseBuilder extends ProjectwideGlobals
 
 class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
-    def addTripleFromRowResult(inputs: ArrayBuffer[HashMap[String, Value]], defaultInputGraph: String): HashSet[String] =
+    def addTripleFromRowResult(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], defaultInputGraph: String): HashSet[String] =
     {
         var varsForProcessInput = new HashSet[String]
         val triplesGroup = new TriplesGroupBuilder()
         for (rowResult <- inputs)
         {
-            for (key <- requiredInputKeysList) assert (rowResult.contains(key))
+            for (key <- requiredInputKeysList) assert (rowResult.contains(key.toString))
             
             var graphForThisRow: String = defaultInputGraph
             var optionalGroupForThisRow: String = null
@@ -26,35 +26,35 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             var objectAType = false
             
             var required = true
-            if (rowResult(requiredBool).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
+            if (rowResult(REQUIRED.toString).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
             
-            if (rowResult(graphOfCreatingProcess) != null) graphForThisRow = rowResult(graphOfCreatingProcess).toString
-            if (rowResult(sparqlOptionalGroup) != null) optionalGroupForThisRow = rowResult(sparqlOptionalGroup).toString
-            if (rowResult(subjectType) != null) 
+            if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
+            if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
+            if (rowResult(SUBJECTTYPE.toString) != null) 
             {
                 subjectAType = true
-                varsForProcessInput += rowResult(sparqlSubject).toString
+                varsForProcessInput += rowResult(SUBJECT.toString).toString
             }
-            if (rowResult(objectType) != null) 
+            if (rowResult(OBJECTTYPE.toString) != null) 
             {
                 objectAType = true
-                varsForProcessInput += rowResult(sparqlObject).toString
+                varsForProcessInput += rowResult(OBJECT.toString).toString
             }
             if (required && optionalGroupForThisRow == null)
             {
-                val newTriple = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString,
+                val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
                                                      subjectAType, objectAType)
                 triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graphForThisRow)
             }
             else if (optionalGroupForThisRow != null)
             {
-                val newTriple = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString,
+                val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
                                           subjectAType, objectAType)
                 triplesGroup.addToOptionalGroup(newTriple, graphForThisRow, optionalGroupForThisRow, required)
             }
             else
             {
-                val newTriple = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString,
+                val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
                                           subjectAType, objectAType)
                 triplesGroup.addOptionalTripleToRequiredGroup(newTriple, graphForThisRow)
             }
@@ -66,31 +66,31 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 
 class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
-    def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, Value]], process: String, varsForProcessInput: HashSet[String], usedVariables: HashSet[String])
+    def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], process: String, varsForProcessInput: HashSet[String], usedVariables: HashSet[String])
     {
         val triplesGroup = new TriplesGroupBuilder()
         for (rowResult <- outputs)
         {
-            for (key <- requiredOutputKeysList) assert (rowResult.contains(key))
-            assert (!rowResult.contains(sparqlOptionalGroup))
+            for (key <- requiredOutputKeysList) assert (rowResult.contains(key.toString))
+            assert (!rowResult.contains(OPTIONALGROUP.toString))
             helper.validateURI(processNamedGraph)
             
             var subjectAType = false
             var objectAType = false
-            if (rowResult(subjectType) != null) subjectAType = true
-            if (rowResult(objectType) != null) objectAType = true
+            if (rowResult(SUBJECTTYPE.toString) != null) subjectAType = true
+            if (rowResult(OBJECTTYPE.toString) != null) objectAType = true
             var objectIsLiteral = false
-            if (rowResult(connectionRecipeType).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") objectIsLiteral = true
-            val graph = rowResult(graphFromSparql).toString
+            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") objectIsLiteral = true
+            val graph = rowResult(GRAPH.toString).toString
             
-            val newTriple = new Triple(rowResult(sparqlSubject).toString, rowResult(sparqlPredicate).toString, rowResult(sparqlObject).toString, 
+            val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
                                       subjectAType, objectAType)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
-            val subjectProcessTriple = new Triple(process, "turbo:createdTriplesAbout", rowResult(sparqlSubject).toString, false, false)
+            val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false)
             triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
             if (!objectIsLiteral && newTriple.triplePredicate != "rdf:type")
             {
-                val objectProcessTriple = new Triple(process, "turbo:createdTriplesAbout", rowResult(sparqlObject).toString, false, false)
+                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false)
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
             }
         }

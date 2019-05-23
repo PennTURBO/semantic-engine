@@ -79,7 +79,7 @@ ontologies:DNAExtractionProcessToDNAExtract
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001051 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0000257 ;
@@ -88,7 +88,7 @@ ontologies:DNAExtractionProcessToSpecimen
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001479 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000293 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0000257 ;
@@ -97,7 +97,7 @@ ontologies:DNAToDNAExtract
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001051 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000643 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0001868 ;
@@ -106,7 +106,7 @@ ontologies:DNAToHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OGG_0000000014 ;
   ontologies:required false ;
   ontologies:subject obo:OBI_0001868 ;
@@ -342,7 +342,7 @@ ontologies:alleleCridRegDenToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000567 ;
@@ -351,7 +351,7 @@ ontologies:alleleCridSymbolToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000568 ;
@@ -384,7 +384,7 @@ ontologies:alleleToDNA
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:OBI_0001868 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0001352 ;
@@ -393,7 +393,7 @@ ontologies:alleleToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0001352 ;
@@ -402,7 +402,7 @@ ontologies:alleleToGeneSymbolFirstPart
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:alleleGeneSymbolFirstPartStringLiteralValue ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate ontologies:TURBO_0010016 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0001352 ;
@@ -410,7 +410,7 @@ ontologies:alleleToGeneSymbolFirstPart
 ontologies:alleleToGeneSymbolSecondPart
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:object ontologies:alleleGeneSymbolSecondPartStringLiteralValue ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate ontologies:TURBO_0010015 ;
   ontologies:subject obo:OBI_0001352 ;
 .
@@ -418,7 +418,7 @@ ontologies:alleleToGeneSymbolUri
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:GeneSymbolUriOfVariousTypes ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:IAO_0000142 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0001352 ;
@@ -427,7 +427,7 @@ ontologies:alleleToZygosityIntegerValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:alleleZygosityIntegerLiteralValue ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate ontologies:TURBO_0010095 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0001352 ;
@@ -436,7 +436,7 @@ ontologies:alleleToZygosityUri
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ZygosityUriOfVariousTypes ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0001938 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0001352 ;
@@ -479,7 +479,7 @@ ontologies:biobankEncounterDateToBiobankEncounterStart
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000531 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000532 ;
@@ -489,7 +489,7 @@ ontologies:biobankEncounterDateToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000532 ;
@@ -499,7 +499,7 @@ ontologies:biobankEncounterDateToDateLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:biobankEncounterDateLiteralValue ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate ontologies:TURBO_0010096 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000532 ;
@@ -509,7 +509,7 @@ ontologies:biobankEncounterDateToStringLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:biobankEncounterDateStringLiteralValue ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate ontologies:TURBO_0010095 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000532 ;
@@ -527,12 +527,12 @@ ontologies:biobankEncounterDateVariableManipulation
   ontologies:manipulationDependsOn ontologies:shortcutBiobankEncounterDateStringLiteralValue ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundRandomUUID ;
 .
-ontologies:biobankEncounterExpansionProcess
+ontologies:TURBO_0010177
   a ontologies:TurboGraphExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:TURBO_0010169 ;
   ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:precedes ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:precedes ontologies:TURBO_0010183 ;
   ontologies:usesVariableManipulationRule ontologies:biobankEncounterBMIVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:biobankEncounterDateStringValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:biobankEncounterDateValueVariableManipulation ;
@@ -570,10 +570,10 @@ ontologies:biobankEncounterHomoSapiensConnectionVariableManipulation
 .
 ontologies:biobankEncounterIdToBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010182 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000533 ;
@@ -582,7 +582,7 @@ ontologies:biobankEncounterIdToRegistryDenoter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000535 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000533 ;
@@ -592,7 +592,7 @@ ontologies:biobankEncounterIdToSymbol
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000534 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000533 ;
@@ -603,12 +603,12 @@ ontologies:biobankEncounterIdentifierVariableManipulation
   ontologies:manipulationCreates ontologies:TURBO_0000533 ;
   ontologies:usesSparqlLogic ontologies:RandomUUID ;
 .
-ontologies:biobankEncounterLinkingProcess
+ontologies:TURBO_0010182
   a ontologies:TurboGraphEntityLinkingProcess ;
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
   ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:precedes ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:precedes ontologies:TURBO_0010180 ;
   ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:participantUnderInvestigationRoleVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
@@ -617,7 +617,7 @@ ontologies:biobankEncounterRegistryDenoterToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000535 ;
@@ -627,7 +627,7 @@ ontologies:biobankEncounterRegistryDenoterToId
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000533 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000535 ;
@@ -637,7 +637,7 @@ ontologies:biobankEncounterRegistryDenoterToRegistry
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:BiobankEncounterRegistryOfVariousTypes ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000535 ;
@@ -658,7 +658,7 @@ ontologies:biobankEncounterStartToBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:RO_0002223 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000531 ;
@@ -677,7 +677,7 @@ ontologies:biobankEncounterSymbolToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000534 ;
@@ -687,7 +687,7 @@ ontologies:biobankEncounterSymbolToId
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000533 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000534 ;
@@ -697,7 +697,7 @@ ontologies:biobankEncounterSymbolToSymbolValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:biobankEncounterSymbolStringLiteralValue ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000534 ;
@@ -716,10 +716,10 @@ ontologies:biobankEncounterSymbolVariableManipulation
 .
 ontologies:biobankEncounterToBMI
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010182 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ns3:EFO_0004340 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000527 ;
@@ -728,17 +728,17 @@ ontologies:biobankEncounterToCollectionProcess
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0600005 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000527 ;
 .
 ontologies:biobankEncounterToLengthMeasurementValueSpecification
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010182 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010138 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate ontologies:TURBO_0010139 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000527 ;
@@ -746,10 +746,10 @@ ontologies:biobankEncounterToLengthMeasurementValueSpecification
 .
 ontologies:biobankEncounterToMassMeasurementValueSpecification
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010182 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001929 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate ontologies:TURBO_0010139 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000527 ;
@@ -779,7 +779,7 @@ ontologies:bmiToBiobankEncounterDate
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000532 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:IAO_0000581 ;
   ontologies:required false ;
   ontologies:subject ns3:EFO_0004340 ;
@@ -788,8 +788,8 @@ ontologies:bmiToBmiDoubleLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:bmiDoubleLiteralValue ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject ns3:EFO_0004340 ;
@@ -799,8 +799,8 @@ ontologies:bmiToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ns3:EFO_0004340 ;
@@ -810,7 +810,7 @@ ontologies:bmiToHealthcareEncounterDate
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000512 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:IAO_0000581 ;
   ontologies:required false ;
   ontologies:subject ns3:EFO_0004340 ;
@@ -819,8 +819,8 @@ ontologies:bmiToHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010182 ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required false ;
   ontologies:subject ns3:EFO_0004340 ;
@@ -841,7 +841,7 @@ ontologies:collectionProcessToBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required false ;
   ontologies:subject obo:OBI_0600005 ;
@@ -850,7 +850,7 @@ ontologies:collectionProcessToHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000293 ;
   ontologies:required false ;
   ontologies:subject obo:OBI_0600005 ;
@@ -859,7 +859,7 @@ ontologies:collectionProcessToSpecimen
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001479 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0600005 ;
@@ -883,7 +883,7 @@ ontologies:datasetToAllele
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:OBI_0001352 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -892,7 +892,7 @@ ontologies:datasetToAlleleCridRegDen
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:TURBO_0000567 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -901,7 +901,7 @@ ontologies:datasetToAlleleCridSymbol
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:TURBO_0000568 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -910,7 +910,7 @@ ontologies:datasetToBiobankEncounterDate
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000532 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -920,7 +920,7 @@ ontologies:datasetToBiobankEncounterRegistryDenoter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000535 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -930,7 +930,7 @@ ontologies:datasetToBiobankEncounterSymbol
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000534 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -940,8 +940,8 @@ ontologies:datasetToBmi
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ns3:EFO_0004340 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -951,10 +951,10 @@ ontologies:datasetToDatasetTitle
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:datasetTitleStringLiteralValue ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate dc11:title ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -963,7 +963,7 @@ ontologies:datasetToDateOfBirthDatum
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ns3:EFO_0004950 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required false ;
   ontologies:subject obo:IAO_0000100 ;
@@ -972,7 +972,7 @@ ontologies:datasetToDiagnosis
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OGMS_0000073 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -982,7 +982,7 @@ ontologies:datasetToGenderIdentityDatum
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:GenderIdentityDatumOfVariousTypes ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required false ;
   ontologies:subject obo:IAO_0000100 ;
@@ -991,7 +991,7 @@ ontologies:datasetToHealthcareEncounterDate
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000512 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -1001,7 +1001,7 @@ ontologies:datasetToHealthcareEncounterRegistryDenoter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000510 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -1011,7 +1011,7 @@ ontologies:datasetToHealthcareEncounterSymbol
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000509 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -1021,7 +1021,7 @@ ontologies:datasetToHomoSapiensRegistryDenoter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000505 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -1030,7 +1030,7 @@ ontologies:datasetToHomoSapiensSymbol
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000504 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -1039,8 +1039,8 @@ ontologies:datasetToLengthMeasurementValueSpecification
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0010138 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -1050,8 +1050,8 @@ ontologies:datasetToMassMeasurementValueSpecification
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OBI_0001929 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -1061,7 +1061,7 @@ ontologies:datasetToMedicationSybol
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000562 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -1071,7 +1071,7 @@ ontologies:datasetToPrescription
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:PDRO_0000001 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000100 ;
@@ -1081,7 +1081,7 @@ ontologies:datasetToRaceIdentityDatum
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:RaceIdentityDatumOfVariousTypes ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required false ;
   ontologies:subject obo:IAO_0000100 ;
@@ -1108,7 +1108,7 @@ ontologies:dateOfBirthDatumToBirth
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UBERON_0035946 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required true ;
   ontologies:subject ns3:EFO_0004950 ;
@@ -1117,7 +1117,7 @@ ontologies:dateOfBirthDatumToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required false ;
   ontologies:subject ns3:EFO_0004950 ;
@@ -1126,7 +1126,7 @@ ontologies:dateOfBirthDatumToDateLiteral
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate ontologies:TURBO_0010096 ;
   ontologies:required false ;
   ontologies:subject ns3:EFO_0004950 ;
@@ -1135,7 +1135,7 @@ ontologies:dateOfBirthDatumToStringLiteral
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensDateOfBirthStringLiteralValue ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate ontologies:TURBO_0010095 ;
   ontologies:required true ;
   ontologies:subject ns3:EFO_0004950 ;
@@ -1205,7 +1205,7 @@ ontologies:diagnosisToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject obo:OGMS_0000073 ;
@@ -1215,7 +1215,7 @@ ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisIcdSuffixStringLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000073 ;
@@ -1225,7 +1225,7 @@ ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisCodingSequenceIntegerLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010014 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000073 ;
@@ -1235,7 +1235,7 @@ ontologies:diagnosisToDiagnosisRegistryStringLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisRegistryStringLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0006515 ;
   ontologies:required true ;
   ontologies:subject obo:OGMS_0000073 ;
@@ -1245,7 +1245,7 @@ ontologies:diagnosisToIcdRegistry
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:IcdRegistryOfVariousTypes ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0000703 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000073 ;
@@ -1255,7 +1255,7 @@ ontologies:diagnosisToIcdTerm
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:IcdTermOfVariousTypes ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:IAO_0000142 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000073 ;
@@ -1265,7 +1265,7 @@ ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:primaryDiagnosisBooleanLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010013 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000073 ;
@@ -1299,7 +1299,7 @@ ontologies:exomeSequenceProcessToDNAExtract
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001051 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000293 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0002118 ;
@@ -1308,7 +1308,7 @@ ontologies:exomeSequenceProcessToSequenceData
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001573 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0002118 ;
@@ -1323,7 +1323,7 @@ ontologies:formProcessToAllele
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001352 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0200000 ;
@@ -1332,7 +1332,7 @@ ontologies:formProcessToSequenceData
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001573 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000293 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0200000 ;
@@ -1347,7 +1347,7 @@ ontologies:genderIdentityDatumToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required false ;
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
@@ -1356,7 +1356,7 @@ ontologies:genderIdentityDatumToGenderIdentityDatumLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensGenderIdentityStringLiteralValue ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
@@ -1365,7 +1365,7 @@ ontologies:genderIdentityDatumToGenderIdentityDatumType
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:genderIdentityDatumType ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate rdf:type ;
   ontologies:required true ;
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
@@ -1374,7 +1374,7 @@ ontologies:genderIdentityDatumToHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required false ;
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
@@ -1414,7 +1414,7 @@ ontologies:genomeCridRegistryDenoterToGenomeCrid
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000566 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000567 ;
@@ -1423,7 +1423,7 @@ ontologies:genomeCridSymbolToGenomeCrid
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000566 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000568 ;
@@ -1432,7 +1432,7 @@ ontologies:genomeCridSymbolToSymbolValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:alleleGenoIdStringLiteralValue ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000568 ;
@@ -1447,7 +1447,7 @@ ontologies:genomeCridToGenomeCridRegistryDenoter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000567 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000566 ;
@@ -1456,7 +1456,7 @@ ontologies:genomeCridToGenomeCridSymbol
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000568 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000566 ;
@@ -1465,7 +1465,7 @@ ontologies:genomeCridToSpecimen
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001479 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000566 ;
@@ -1480,7 +1480,7 @@ ontologies:genomeRegistryDenoterToRegistryUri
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:GenomeRegistryOfVariousTypes ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000567 ;
@@ -1520,7 +1520,7 @@ ontologies:healthcareEncounterDateToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000512 ;
@@ -1530,7 +1530,7 @@ ontologies:healthcareEncounterDateToDateLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:healthcareEncounterDateLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010096 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000512 ;
@@ -1540,7 +1540,7 @@ ontologies:healthcareEncounterDateToHealthcareEncounterStart
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000511 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000512 ;
@@ -1550,7 +1550,7 @@ ontologies:healthcareEncounterDateToStringLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:healthcareEncounterDateStringLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010095 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000512 ;
@@ -1568,12 +1568,12 @@ ontologies:healthcareEncounterDateVariableManipulation
   ontologies:manipulationDependsOn ontologies:shortcutHealthcareEncounterDateStringValue ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
 .
-ontologies:healthcareEncounterExpansionProcess
+ontologies:TURBO_0010179
   a ontologies:TurboGraphExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:TURBO_0010158 ;
   ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:precedes ontologies:biobankEncounterExpansionProcess ;
+  ontologies:precedes ontologies:TURBO_0010177 ;
   ontologies:usesVariableManipulationRule ontologies:bmiValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:bmiVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
@@ -1620,7 +1620,7 @@ ontologies:healthcareEncounterIdToRegistryDenoter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000510 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000508 ;
@@ -1630,7 +1630,7 @@ ontologies:healthcareEncounterIdToSymbol
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000509 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000508 ;
@@ -1641,12 +1641,12 @@ ontologies:healthcareEncounterIdentifierVariableManipulation
   ontologies:manipulationCreates ontologies:TURBO_0000508 ;
   ontologies:usesSparqlLogic ontologies:SHALocalRandom ;
 .
-ontologies:healthcareEncounterLinkingProcess
+ontologies:TURBO_0010183
   a ontologies:TurboGraphEntityLinkingProcess ;
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
   ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:precedes ontologies:biobankEncounterLinkingProcess ;
+  ontologies:precedes ontologies:TURBO_0010182 ;
   ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:patientRoleVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
@@ -1655,7 +1655,7 @@ ontologies:healthcareEncounterRegistryDenoterToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000510 ;
@@ -1665,7 +1665,7 @@ ontologies:healthcareEncounterRegistryDenoterToId
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000508 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000510 ;
@@ -1675,7 +1675,7 @@ ontologies:healthcareEncounterRegistryDenoterToRegistry
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:HealthcareEncounterRegistryOfVariousTypes ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000510 ;
@@ -1696,7 +1696,7 @@ ontologies:healthcareEncounterStartToHealthcareEncounter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OGMS_0000097 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:RO_0002223 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000511 ;
@@ -1716,7 +1716,7 @@ ontologies:healthcareEncounterSymbolToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000509 ;
@@ -1726,7 +1726,7 @@ ontologies:healthcareEncounterSymbolToId
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000508 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000509 ;
@@ -1736,7 +1736,7 @@ ontologies:healthcareEncounterSymbolToSymbolValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:healthcareEncounterSymbolLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000509 ;
@@ -1755,10 +1755,10 @@ ontologies:healthcareEncounterSymbolVariableManipulation
 .
 ontologies:healthcareEncounterToBMI
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010183 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ns3:EFO_0004340 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
@@ -1768,7 +1768,7 @@ ontologies:healthcareEncounterToDiagnosis
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OGMS_0000073 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
@@ -1776,10 +1776,10 @@ ontologies:healthcareEncounterToDiagnosis
 .
 ontologies:healthcareEncounterToLengthMeasurementValueSpecification
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010183 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010138 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010139 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
@@ -1787,10 +1787,10 @@ ontologies:healthcareEncounterToLengthMeasurementValueSpecification
 .
 ontologies:healthcareEncounterToMassValueSpecification
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010183 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001929 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010139 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
@@ -1799,7 +1799,7 @@ ontologies:healthcareEncounterToPrescription
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:PDRO_0000001 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
@@ -1828,12 +1828,12 @@ ontologies:homoSapiensDateOfBirthDateLiteralValue
 ontologies:homoSapiensDateOfBirthStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
 .
-ontologies:homoSapiensExpansionProcess
+ontologies:TURBO_0010176
   a ontologies:TurboGraphExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:TURBO_0010161 ;
   ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:precedes ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:precedes ontologies:TURBO_0010179 ;
   ontologies:usesVariableManipulationRule ontologies:biologicalSexVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
@@ -1864,7 +1864,7 @@ ontologies:homoSapiensIdToRegistryDenoter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000505 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000503 ;
@@ -1873,18 +1873,18 @@ ontologies:homoSapiensIdToSymbol
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000504 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000503 ;
 .
 ontologies:homoSapiensIdentifierToHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
-  ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010182 ;
+  ontologies:inputTo ontologies:TURBO_0010183 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000503 ;
@@ -1902,7 +1902,7 @@ ontologies:homoSapiensRegistryDenoterToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000505 ;
@@ -1911,7 +1911,7 @@ ontologies:homoSapiensRegistryDenoterToId
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000503 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000505 ;
@@ -1920,7 +1920,7 @@ ontologies:homoSapiensRegistryDenoterToRegistry
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:HomoSapiensRegistryOfVariousTypes ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000505 ;
@@ -1944,7 +1944,7 @@ ontologies:homoSapiensSymbolToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000504 ;
@@ -1953,7 +1953,7 @@ ontologies:homoSapiensSymbolToSymbolValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensSymbolStringLiteralValue ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000504 ;
@@ -1972,10 +1972,10 @@ ontologies:homoSapiensSymbolVariableManipulation
 .
 ontologies:homoSapiensToBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010182 ;
   ontologies:predicate obo:RO_0000056 ;
   ontologies:required true ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -1985,7 +1985,7 @@ ontologies:homoSapiensToBiosex
   ontologies:dependentOn ontologies:genderIdentityDatumToHomoSapiens ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:PATO_0000047 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:RO_0000086 ;
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -1994,7 +1994,7 @@ ontologies:homoSapiensToBirth
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UBERON_0035946 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate ontologies:TURBO_0000303 ;
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -2003,7 +2003,7 @@ ontologies:homoSapiensToHealthcareEncounter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OGMS_0000097 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:RO_0000056 ;
   ontologies:required true ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -2012,8 +2012,8 @@ ontologies:homoSapiensToHeight
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:PATO_0000119 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010182 ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:RO_0000086 ;
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -2022,7 +2022,7 @@ ontologies:homoSapiensToInvestigationRole
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OBI_0000097 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010182 ;
   ontologies:predicate obo:RO_0000087 ;
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -2031,7 +2031,7 @@ ontologies:homoSapiensToPatientRole
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OBI_0000093 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:RO_0000087 ;
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -2040,8 +2040,8 @@ ontologies:homoSapiensToWeight
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:PATO_0000128 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010182 ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:RO_0000086 ;
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -2053,10 +2053,10 @@ ontologies:homoSapiensVariableManipulation
 .
 ontologies:identifierToHealthcareEncounter
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010183 ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:OGMS_0000097 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000508 ;
@@ -2066,7 +2066,7 @@ ontologies:identifierToMedicationSymbol
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000562 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000561 ;
@@ -2076,7 +2076,7 @@ ontologies:identifierToPrescription
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:PDRO_0000001 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000561 ;
@@ -2103,10 +2103,10 @@ ontologies:instantiationToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000293 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000522 ;
@@ -2115,7 +2115,7 @@ ontologies:investigationRoleToBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010182 ;
   ontologies:predicate obo:BFO_0000054 ;
   ontologies:required false ;
   ontologies:subject obo:OBI_0000097 ;
@@ -2128,8 +2128,8 @@ ontologies:lengthMeasurementValueSpecificationToCentimeter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000015 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:IAO_0000039 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010138 ;
@@ -2138,8 +2138,8 @@ ontologies:lengthMeasurementValueSpecificationToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010138 ;
@@ -2149,8 +2149,8 @@ ontologies:lengthMeasurementValueSpecificationToHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010182 ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010138 ;
@@ -2159,8 +2159,8 @@ ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:PATO_0000119 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010182 ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:IAO_0000221 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010138 ;
@@ -2169,8 +2169,8 @@ ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:lengthMeasurementDoubleLiteralValue ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010138 ;
@@ -2182,7 +2182,7 @@ ontologies:lengthMeasurementValueSpecificationVariableManipulation
   ontologies:manipulationDependsOn ontologies:shortcutHeightValue ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
 .
-ontologies:lossOfFunctionExpansionProcess
+ontologies:TURBO_0010180
   a ontologies:TurboGraphExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:TURBO_0010144 ;
@@ -2247,8 +2247,8 @@ ontologies:massMeasurementValueSpecificationToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0001929 ;
@@ -2258,8 +2258,8 @@ ontologies:massMeasurementValueSpecificationToHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010182 ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required false ;
   ontologies:subject obo:OBI_0001929 ;
@@ -2268,8 +2268,8 @@ ontologies:massMeasurementValueSpecificationToHomoSapiensWeight
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:PATO_0000128 ;
-  ontologies:outputOf ontologies:biobankEncounterLinkingProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010182 ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:IAO_0000221 ;
   ontologies:required false ;
   ontologies:subject obo:OBI_0001929 ;
@@ -2278,8 +2278,8 @@ ontologies:massMeasurementValueSpecificationToKilogram
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000009 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:IAO_0000039 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0001929 ;
@@ -2289,8 +2289,8 @@ ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:massMeasurementDoubleLiteralValue ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject obo:OBI_0001929 ;
@@ -2326,7 +2326,7 @@ ontologies:medicationSymbolToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000562 ;
@@ -2336,7 +2336,7 @@ ontologies:medicationSymbolToMedicationSymbolStringLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:medicationSymbolStringLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000562 ;
@@ -2346,7 +2346,7 @@ ontologies:medicationSymbolToidentifier
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000561 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000562 ;
@@ -2397,7 +2397,7 @@ ontologies:patientRoleToHealthcareEncounter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OGMS_0000097 ;
-  ontologies:outputOf ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:BFO_0000054 ;
   ontologies:required false ;
   ontologies:subject obo:OBI_0000093 ;
@@ -2422,7 +2422,7 @@ ontologies:prescriptionToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject obo:PDRO_0000001 ;
@@ -2432,7 +2432,7 @@ ontologies:prescriptionToDrug
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DrugTermOfVariousTypes ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0000307 ;
   ontologies:required false ;
   ontologies:subject obo:PDRO_0000001 ;
@@ -2442,7 +2442,7 @@ ontologies:prescriptionToMedicationOrderNameStringLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:medicationOrderNameStringLiteralValue ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required false ;
   ontologies:subject obo:PDRO_0000001 ;
@@ -2468,7 +2468,7 @@ ontologies:raceIdentificationProcessToRaceIdentityDatum
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:RaceIdentityDatumOfVariousTypes ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required true ;
 .
@@ -2481,7 +2481,7 @@ ontologies:raceIdentityDatumToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required false ;
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
@@ -2490,7 +2490,7 @@ ontologies:raceIdentityDatumToHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required false ;
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
@@ -2499,7 +2499,7 @@ ontologies:raceIdentityDatumToRaceIdentityDatumLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensRaceIdentityStringLiteralValue ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
@@ -2508,7 +2508,7 @@ ontologies:raceIdentityDatumToRaceIdentityDatumType
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:raceIdentityDatumType ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate rdf:type ;
   ontologies:required true ;
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
@@ -2558,7 +2558,7 @@ ontologies:shortcutAlleleGenoIdStringLiteralValue
 .
 ontologies:shortcutAlleleToDatasetTitle
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutDatasetTitleStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0007608 ;
@@ -2569,14 +2569,14 @@ ontologies:shortcutAlleleToExpandedAllele
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001352 ;
-  ontologies:outputOf ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate ontologies:TURBO_0010113 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToGeneSymbol
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutAlleleGeneSymbolStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0007605 ;
@@ -2585,7 +2585,7 @@ ontologies:shortcutAlleleToGeneSymbol
 .
 ontologies:shortcutAlleleToGeneSymbolFirstPart
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutAlleleGeneSymbolFirstPartStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010015 ;
@@ -2594,7 +2594,7 @@ ontologies:shortcutAlleleToGeneSymbolFirstPart
 .
 ontologies:shortcutAlleleToGeneSymbolSecondPart
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutAlleleGeneSymbolSecondPartStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010016 ;
@@ -2603,7 +2603,7 @@ ontologies:shortcutAlleleToGeneSymbolSecondPart
 .
 ontologies:shortcutAlleleToGeneSymbolUri
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ShortcutGeneSymbolUriOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
@@ -2612,7 +2612,7 @@ ontologies:shortcutAlleleToGeneSymbolUri
 .
 ontologies:shortcutAlleleToGenoId
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutAlleleGenoIdStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0007602 ;
@@ -2621,7 +2621,7 @@ ontologies:shortcutAlleleToGenoId
 .
 ontologies:shortcutAlleleToShortcutAlleleRegistryUri
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ShortcutGenomeRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0007609 ;
@@ -2632,14 +2632,14 @@ ontologies:shortcutAlleleToShortcutBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010169 ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:predicate ontologies:TURBO_0010142 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToZygosityIntegerValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutAlleleZygosityIntegerLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010095 ;
@@ -2648,7 +2648,7 @@ ontologies:shortcutAlleleToZygosityIntegerValue
 .
 ontologies:shortcutAlleleToZygosityValueUri
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ShortcutZygosityUriOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0007607 ;
@@ -2672,7 +2672,7 @@ ontologies:shortcutBiobankEncounterSymbolStringLiteralValue
 .
 ontologies:shortcutBiobankEncounterToBmiValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010177 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutBmiValue ;
   ontologies:predicate ontologies:TURBO_0000635 ;
@@ -2681,7 +2681,7 @@ ontologies:shortcutBiobankEncounterToBmiValue
 .
 ontologies:shortcutBiobankEncounterToDatasetTitle
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010177 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutDatasetTitleStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0000623 ;
@@ -2690,7 +2690,7 @@ ontologies:shortcutBiobankEncounterToDatasetTitle
 .
 ontologies:shortcutBiobankEncounterToDateLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010177 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutBiobankEncounterDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0000625 ;
@@ -2699,7 +2699,7 @@ ontologies:shortcutBiobankEncounterToDateLiteralValue
 .
 ontologies:shortcutBiobankEncounterToDateStringValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010177 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutBiobankEncounterDateStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0000624 ;
@@ -2708,18 +2708,18 @@ ontologies:shortcutBiobankEncounterToDateStringValue
 .
 ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
-  ontologies:inputTo ontologies:lossOfFunctionExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010182 ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate ontologies:TURBO_0010113 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToHeightLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010177 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHeightValue ;
   ontologies:predicate ontologies:TURBO_0000626 ;
@@ -2728,7 +2728,7 @@ ontologies:shortcutBiobankEncounterToHeightLiteralValue
 .
 ontologies:shortcutBiobankEncounterToRegistry
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010177 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ShortcutBiobankEncounterRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0000630 ;
@@ -2737,17 +2737,17 @@ ontologies:shortcutBiobankEncounterToRegistry
 .
 ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010182 ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:TURBO_0010161 ;
-  ontologies:outputOf ontologies:biobankEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:predicate ontologies:TURBO_0010133 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToShortcutHomoSapiensUriString
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010177 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutBiobankEncounterHomoSapiensUriStringValue ;
   ontologies:predicate ontologies:TURBO_0010133 ;
@@ -2756,7 +2756,7 @@ ontologies:shortcutBiobankEncounterToShortcutHomoSapiensUriString
 .
 ontologies:shortcutBiobankEncounterToSymbolValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010177 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutBiobankEncounterSymbolStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0000628 ;
@@ -2765,7 +2765,7 @@ ontologies:shortcutBiobankEncounterToSymbolValue
 .
 ontologies:shortcutBiobankEncounterToWeightLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010177 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutWeightValue ;
   ontologies:predicate ontologies:TURBO_0000627 ;
@@ -2787,7 +2787,7 @@ ontologies:shortcutDiagnosisOptionalGroup
 ontologies:shortcutDiagnosisToCodingSequence
   a ontologies:DatatypeConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutDiagnosisOptionalGroup ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHealthcareEncounterDiagnosisSequence ;
   ontologies:predicate ontologies:TURBO_0010014 ;
@@ -2798,7 +2798,7 @@ ontologies:shortcutDiagnosisToCodingSequence
 ontologies:shortcutDiagnosisToDiagnosisCode
   a ontologies:DatatypeConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutDiagnosisOptionalGroup ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHealthcareEncounterDiagnosisCode ;
   ontologies:predicate ontologies:TURBO_0004601 ;
@@ -2809,7 +2809,7 @@ ontologies:shortcutDiagnosisToDiagnosisCode
 ontologies:shortcutDiagnosisToPrimaryDiagnosisBooleanValue
   a ontologies:DatatypeConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutDiagnosisOptionalGroup ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHealthcareEncounterPrimaryDiagnosis ;
   ontologies:predicate ontologies:TURBO_0010013 ;
@@ -2820,7 +2820,7 @@ ontologies:shortcutDiagnosisToPrimaryDiagnosisBooleanValue
 ontologies:shortcutDiagnosisToRegistry
   a ontologies:ObjectConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutDiagnosisOptionalGroup ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ShortcutIcdRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0004603 ;
@@ -2831,7 +2831,7 @@ ontologies:shortcutDiagnosisToRegistry
 ontologies:shortcutDiagnosisToRegistryString
   a ontologies:DatatypeConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutDiagnosisOptionalGroup ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHealthcareEncounterDiagnosisCodeRegistryString ;
   ontologies:predicate ontologies:TURBO_0004602 ;
@@ -2874,7 +2874,7 @@ ontologies:shortcutHealthcareEncounterSymbolStringLiteralValue
 .
 ontologies:shortcutHealthcareEncounterToBmiValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutBmiValue ;
   ontologies:predicate ontologies:TURBO_0000655 ;
@@ -2884,7 +2884,7 @@ ontologies:shortcutHealthcareEncounterToBmiValue
 .
 ontologies:shortcutHealthcareEncounterToDatasetTitle
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutDatasetTitleStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0000643 ;
@@ -2894,7 +2894,7 @@ ontologies:shortcutHealthcareEncounterToDatasetTitle
 .
 ontologies:shortcutHealthcareEncounterToDateStringValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHealthcareEncounterDateStringValue ;
   ontologies:predicate ontologies:TURBO_0000644 ;
@@ -2904,7 +2904,7 @@ ontologies:shortcutHealthcareEncounterToDateStringValue
 .
 ontologies:shortcutHealthcareEncounterToDateValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHealthcareEncounterDateValue ;
   ontologies:predicate ontologies:TURBO_0000645 ;
@@ -2915,7 +2915,7 @@ ontologies:shortcutHealthcareEncounterToDateValue
 ontologies:shortcutHealthcareEncounterToDiagnosis
   a ontologies:ObjectConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutDiagnosisOptionalGroup ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0010160 ;
   ontologies:predicate obo:OBI_0000299 ;
@@ -2925,17 +2925,17 @@ ontologies:shortcutHealthcareEncounterToDiagnosis
 .
 ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010183 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OGMS_0000097 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010113 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ShortcutHealthcareEncounterRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010110 ;
@@ -2945,7 +2945,7 @@ ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry
 .
 ontologies:shortcutHealthcareEncounterToHeightValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHeightValue ;
   ontologies:predicate ontologies:TURBO_0000646 ;
@@ -2956,7 +2956,7 @@ ontologies:shortcutHealthcareEncounterToHeightValue
 ontologies:shortcutHealthcareEncounterToPrescription
   a ontologies:ObjectConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutPrescriptionOptionalGroup ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0010159 ;
   ontologies:predicate obo:OBI_0000299 ;
@@ -2966,7 +2966,7 @@ ontologies:shortcutHealthcareEncounterToPrescription
 .
 ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensStringValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHealthcareEncounterHomoSapiensUriStringValue ;
   ontologies:predicate ontologies:TURBO_0010131 ;
@@ -2976,17 +2976,17 @@ ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensStringValue
 .
 ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010183 ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:TURBO_0010161 ;
-  ontologies:outputOf ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010131 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToSymbolValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHealthcareEncounterSymbolStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0000648 ;
@@ -2996,7 +2996,7 @@ ontologies:shortcutHealthcareEncounterToSymbolValue
 .
 ontologies:shortcutHealthcareEncounterToWeightValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutWeightValue ;
   ontologies:predicate ontologies:TURBO_0000647 ;
@@ -3018,7 +3018,7 @@ ontologies:shortcutHomoSapiensGenderIdentityStringLiteralValue
 .
 ontologies:shortcutHomoSapiensIdToRegistry
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:homoSapiensExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010082 ;
@@ -3027,7 +3027,7 @@ ontologies:shortcutHomoSapiensIdToRegistry
 .
 ontologies:shortcutHomoSapiensIdToSymbol
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:homoSapiensExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensSymbolStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010079 ;
@@ -3036,7 +3036,7 @@ ontologies:shortcutHomoSapiensIdToSymbol
 .
 ontologies:shortcutHomoSapiensIdentifierToShortcutHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:homoSapiensExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010161 ;
   ontologies:predicate obo:IAO_0000219 ;
@@ -3051,7 +3051,7 @@ ontologies:shortcutHomoSapiensSymbolStringLiteralValue
 .
 ontologies:shortcutHomoSapiensToDatasetTitle
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:homoSapiensExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutDatasetTitleStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010084 ;
@@ -3061,7 +3061,7 @@ ontologies:shortcutHomoSapiensToDatasetTitle
 ontologies:shortcutHomoSapiensToDateOfBirthDate
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:dependentOn ontologies:shortcutHomoSapiensToDateOfBirthString ;
-  ontologies:inputTo ontologies:homoSapiensExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensDateOfBirthDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010086 ;
@@ -3070,7 +3070,7 @@ ontologies:shortcutHomoSapiensToDateOfBirthDate
 .
 ontologies:shortcutHomoSapiensToDateOfBirthString
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:homoSapiensExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensDateOfBirthStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010085 ;
@@ -3079,11 +3079,11 @@ ontologies:shortcutHomoSapiensToDateOfBirthString
 .
 ontologies:shortcutHomoSapiensToExpandedHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:biobankEncounterLinkingProcess ;
-  ontologies:inputTo ontologies:healthcareEncounterLinkingProcess ;
+  ontologies:inputTo ontologies:TURBO_0010182 ;
+  ontologies:inputTo ontologies:TURBO_0010183 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate ontologies:TURBO_0010113 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010161 ;
@@ -3091,7 +3091,7 @@ ontologies:shortcutHomoSapiensToExpandedHomoSapiens
 ontologies:shortcutHomoSapiensToGenderIdentityType
   a ontologies:ObjectConnectionRecipe ;
   ontologies:dependentOn ontologies:shortcutHomoSapiensToGenderIdentityValue ;
-  ontologies:inputTo ontologies:homoSapiensExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutGenderIdentityDatumOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010089 ;
@@ -3100,7 +3100,7 @@ ontologies:shortcutHomoSapiensToGenderIdentityType
 .
 ontologies:shortcutHomoSapiensToGenderIdentityValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:homoSapiensExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensGenderIdentityStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010098 ;
@@ -3110,7 +3110,7 @@ ontologies:shortcutHomoSapiensToGenderIdentityValue
 ontologies:shortcutHomoSapiensToRaceIdentityType
   a ontologies:ObjectConnectionRecipe ;
   ontologies:dependentOn ontologies:shortcutHomoSapiensToRaceIdentityValue ;
-  ontologies:inputTo ontologies:homoSapiensExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutRaceIdentityDatumOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010090 ;
@@ -3119,7 +3119,7 @@ ontologies:shortcutHomoSapiensToRaceIdentityType
 .
 ontologies:shortcutHomoSapiensToRaceIdentityValue
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:inputTo ontologies:homoSapiensExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHomoSapiensRaceIdentityStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010100 ;
@@ -3132,7 +3132,7 @@ ontologies:shortcutPrescriptionOptionalGroup
 ontologies:shortcutPrescriptionToDrugTerm
   a ontologies:ObjectConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutPrescriptionOptionalGroup ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ShortcutDrugTermOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0005612 ;
@@ -3143,7 +3143,7 @@ ontologies:shortcutPrescriptionToDrugTerm
 ontologies:shortcutPrescriptionToMedicationOrderName
   a ontologies:DatatypeConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutPrescriptionOptionalGroup ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHealthcareEncounterMedicationOrderName ;
   ontologies:predicate ontologies:TURBO_0005611 ;
@@ -3154,7 +3154,7 @@ ontologies:shortcutPrescriptionToMedicationOrderName
 ontologies:shortcutPrescriptionToSymbolValue
   a ontologies:DatatypeConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutPrescriptionOptionalGroup ;
-  ontologies:inputTo ontologies:healthcareEncounterExpansionProcess ;
+  ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:shortcutHealthcareEncounterMedicationSymbolValue ;
   ontologies:predicate ontologies:TURBO_0005601 ;
@@ -3196,7 +3196,7 @@ ontologies:symbolToHomoSapiensId
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000503 ;
-  ontologies:outputOf ontologies:homoSapiensExpansionProcess ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0000504 ;

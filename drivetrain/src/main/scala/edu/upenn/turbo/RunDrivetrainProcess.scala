@@ -42,6 +42,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     {
         val startTime = System.nanoTime()
         val currDate = Calendar.getInstance().getTime()
+        val startingTriplesCount = helper.countTriplesInDatabase(cxn)
         logger.info("Starting process: " + process)
         val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
         
@@ -55,11 +56,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
         if (outputs.size == 0) throw new RuntimeException("Received a list of 0 outputs")
         
-        val inputNamedGraph = inputs(0)(graphFromSparql).toString
-        val outputNamedGraph = outputs(0)(graphFromSparql).toString
+        val inputNamedGraph = inputs(0)(GRAPH.toString).toString
+        val outputNamedGraph = outputs(0)(GRAPH.toString).toString
         
         // process base type is an ontology class which is manipulated in some way by the process
-        val processBaseType = inputs(0)(baseType).toString
+        val processBaseType = inputs(0)(BASETYPE.toString).toString
         // get list of all named graphs which match pattern specified in inputNamedGraph and include processBaseType
         var inputNamedGraphsList = getInputNamedGraphsList(inputNamedGraph, processBaseType)
         logger.info("input named graphs size: " + inputNamedGraphsList.size)
@@ -78,30 +79,33 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             primaryQuery.createWhereClause(inputs)
             primaryQuery.createInsertClause(outputs)
             
-            logger.info(primaryQuery.getQuery())
+            //logger.info(primaryQuery.getQuery())
             primaryQuery.runQuery(cxn)
         }
         
+        val endingTriplesCount = helper.countTriplesInDatabase(cxn)
+        val triplesAdded = endingTriplesCount - startingTriplesCount
         val endTime = System.nanoTime()
         val runtime: String = ((endTime - startTime)/1000000000.0).toString
         logger.info("Completed process " + process + " in " + runtime + " seconds")
         
         // create metadata about process
         val metaDataQuery = new DataQuery()
-        val metaInfo: HashMap[String, String] = HashMap(metaQuery -> primaryQuery.getQuery(), 
-                                                        date -> currDate.toString, 
-                                                        processVar -> process, 
-                                                        outputNamedGraphVal -> outputNamedGraph,
-                                                        processRuntime -> runtime
+        val metaInfo: HashMap[Value, String] = HashMap(METAQUERY -> primaryQuery.getQuery(), 
+                                                        DATE -> currDate.toString, 
+                                                        PROCESS -> process, 
+                                                        OUTPUTNAMEDGRAPH -> outputNamedGraph,
+                                                        PROCESSRUNTIME -> runtime,
+                                                        TRIPLESADDED -> triplesAdded.toString
                                                         )
                                                         
         val metaDataTriples = createMetaDataTriples(metaInfo)
         metaDataQuery.createInsertDataClause(metaDataTriples, processNamedGraph)
-        logger.info(metaDataQuery.getQuery())
+        //logger.info(metaDataQuery.getQuery())
         metaDataQuery.runQuery(cxn)
     }
     
-    def getInputs(process: String): ArrayBuffer[HashMap[String, Value]] =
+    def getInputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
     {
        var variablesToSelect = ""
        for (key <- requiredInputKeysList) variablesToSelect += "?" + key + " "
@@ -112,44 +116,45 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-            Values ?$connectionRecipeType {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
+            Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
             ?connection turbo:inputTo <$process> .
-            ?connection a ?$connectionRecipeType .
-            <$process> turbo:inputNamedGraph ?$graphFromSparql .
-            <$process> turbo:manipulatesBaseEntity ?$baseType .
-            ?connection turbo:subject ?$sparqlSubject .
-            ?connection turbo:predicate ?$sparqlPredicate .
-            ?connection turbo:object ?$sparqlObject .
-            ?connection turbo:required ?$requiredBool .
+            ?connection a ?$CONNECTIONRECIPETYPE .
+            <$process> turbo:inputNamedGraph ?$GRAPH .
+            <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
+            ?connection turbo:subject ?$SUBJECT .
+            ?connection turbo:predicate ?$PREDICATE .
+            ?connection turbo:object ?$OBJECT .
+            ?connection turbo:required ?$REQUIRED .
             
             Optional
             {
-                ?connection obo:BFO_0000050 ?$sparqlOptionalGroup .
+                ?connection obo:BFO_0000050 ?$OPTIONALGROUP .
             }
             Optional
             {
                 ?connection turbo:outputOf ?creatingProcess .
-                ?creatingProcess turbo:outputNamedGraph ?$graphOfCreatingProcess .
+                ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
             }
             
             Graph pmbb:ontology {
               Optional
               {
-                  ?$sparqlSubject a owl:Class .
-                  BIND (true AS ?$subjectType)
+                  ?$SUBJECT a owl:Class .
+                  BIND (true AS ?$SUBJECTTYPE)
               }
               Optional
               {
-                  ?$sparqlObject a owl:Class .
-                  BIND (true AS ?$objectType)
+                  ?$OBJECT a owl:Class .
+                  BIND (true AS ?$OBJECTTYPE)
               }
          }}
          
          """
+       
        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
     
-    def getOutputs(process: String): ArrayBuffer[HashMap[String, Value]] =
+    def getOutputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
     {
        var variablesToSelect = ""
        for (key <- requiredOutputKeysList) variablesToSelect += "?" + key + " "
@@ -159,26 +164,26 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          Select $variablesToSelect
          Where
          {
-            Values ?$connectionRecipeType {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
+            Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
             ?connection turbo:outputOf <$process> .
-            ?connection a ?$connectionRecipeType .
-            <$process> turbo:outputNamedGraph ?$graphFromSparql .
-            <$process> turbo:manipulatesBaseEntity ?$baseType .
-            ?connection turbo:subject ?$sparqlSubject .
-            ?connection turbo:predicate ?$sparqlPredicate .
-            ?connection turbo:object ?$sparqlObject .
+            ?connection a ?$CONNECTIONRECIPETYPE .
+            <$process> turbo:outputNamedGraph ?$GRAPH .
+            <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
+            ?connection turbo:subject ?$SUBJECT .
+            ?connection turbo:predicate ?$PREDICATE .
+            ?connection turbo:object ?$OBJECT .
             
             Graph pmbb:ontology 
             {
               Optional
               {
-                  ?$sparqlSubject a owl:Class .
-                  BIND (true AS ?$subjectType)
+                  ?$SUBJECT a owl:Class .
+                  BIND (true AS ?$SUBJECTTYPE)
               }
               Optional
               {
-                  ?$sparqlObject a owl:Class .
-                  BIND (true AS ?$objectType)
+                  ?$OBJECT a owl:Class .
+                  BIND (true AS ?$OBJECTTYPE)
               }
             }
          }
@@ -187,29 +192,29 @@ object RunDrivetrainProcess extends ProjectwideGlobals
        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
     
-    def getBind(process: String): ArrayBuffer[HashMap[String, Value]] =
+    def getBind(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
     {
         val query = s"""
           
-          Select distinct ?$expandedEntity ?$sparqlString ?$shortcutEntity ?$dependee ?$baseType
+          Select distinct ?$EXPANDEDENTITY ?$SPARQLSTRING ?$SHORTCUTENTITY ?$DEPENDEE ?$BASETYPE
           Where
           {
     		      values ?manipulationRuleType {turbo:VariableManipulationForIntermediateNode turbo:VariableManipulationForLiteralValue}
               <$process> turbo:usesVariableManipulationRule ?variableManipulationRule .
-              <$process> turbo:manipulatesBaseEntity ?$baseType .
+              <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
               
               ?variableManipulationRule a ?manipulationRuleType .
-              ?variableManipulationRule turbo:manipulationCreates ?$expandedEntity .
+              ?variableManipulationRule turbo:manipulationCreates ?$EXPANDEDENTITY .
               ?variableManipulationRule turbo:usesSparqlLogic ?logic .
-              ?logic turbo:usesSparql ?$sparqlString .
+              ?logic turbo:usesSparql ?$SPARQLSTRING .
               
               Optional
               {
-                  ?variableManipulationRule turbo:hasOriginalVariable ?$shortcutEntity .
+                  ?variableManipulationRule turbo:hasOriginalVariable ?$SHORTCUTENTITY .
               }
               Optional
               {
-                  ?variableManipulationRule turbo:manipulationDependsOn ?$dependee .
+                  ?variableManipulationRule turbo:manipulationDependsOn ?$DEPENDEE .
               }
           }
           
@@ -301,20 +306,26 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         else ArrayBuffer(inputNamedGraph)
     }
     
-    def createMetaDataTriples(metaInfo: HashMap[String, String]): ArrayBuffer[Triple] =
+    def createMetaDataTriples(metaInfo: HashMap[Value, String]): ArrayBuffer[Triple] =
     {
-        val processVal = metaInfo(processVar)
-        val currDate = metaInfo(date)
-        val queryVal = metaInfo(metaQuery)
-        val outputNamedGraph = metaInfo(outputNamedGraphVal)
-        val runtime = metaInfo(processRuntime)
+        val processVal = metaInfo(PROCESS)
+        val currDate = metaInfo(DATE)
+        val queryVal = metaInfo(METAQUERY)
+        val outputNamedGraph = metaInfo(OUTPUTNAMEDGRAPH)
+        val runtime = metaInfo(PROCESSRUNTIME)
+        val triplesAdded = metaInfo(TRIPLESADDED)
+        
+        val timeMeasDatum = helper.genPmbbIRI()
+        val processBoundary = helper.genPmbbIRI()
+        
         helper.validateURI(processNamedGraph)
         var metaTriples = ArrayBuffer(
-             new Triple(processVal, "rdfs:comment", queryVal, false, false),
+             new Triple(processVal, "turbo:TURBO_0010106", queryVal, false, false),
              new Triple(processVal, "turbo:hasDate", currDate, false, false),
              new Triple(processVal, "rdf:type", "turbo:TurboGraphProcess", false, false),
-             new Triple(processVal, "turbo:addedTriplesTo", outputNamedGraph, false, false),
-             new Triple(processVal, "turbo:completionTimeInSeconds", runtime, false, false)
+             new Triple(processVal, "turbo:TURBO_0010186", outputNamedGraph, false, false),
+             new Triple(processVal, "turbo:TURBO_0010107", runtime, false, false),
+             new Triple(processVal, "turbo:TURBO_0010108", triplesAdded, false, false)
         )
         metaTriples
     }

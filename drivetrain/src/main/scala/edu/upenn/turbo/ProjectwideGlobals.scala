@@ -9,7 +9,7 @@ import org.eclipse.rdf4j.rio.RDFFormat
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
-trait ProjectwideGlobals
+trait ProjectwideGlobals extends Enumeration
 {
     val helper: TurboMultiuseClass = new TurboMultiuseClass
     val update: SparqlUpdater = new SparqlUpdater
@@ -43,32 +43,30 @@ trait ProjectwideGlobals
      
      val replacementString = "[replaceMe]"
      
-     //define the SPARQL variables used in the retrieval methods
-      val sparqlSubject = "subject"
-      val sparqlPredicate = "predicate"
-      val sparqlObject = "object"
-      val subjectType = "subjectType"
-      val objectType = "objectType"
-      val graphFromSparql = "graph"
-      val requiredBool = "required"
-      val sparqlOptionalGroup = "optionalGroup"
-      val expandedEntity = "expandedEntity"
-      val sparqlString = "sparqlString"
-      val dependee = "dependee"
-      val baseType = "baseType"
-      val shortcutEntity = "shortcutEntity"
-      val connectionRecipeType = "connectionRecipeType"
-      val graphOfCreatingProcess = "graphOfCreatingProcess"
+     //define enums for SPARQL variables used in the retrieval methods
+      val SUBJECT = Value("SUBJECT")
+      val PREDICATE = Value("PREDICATE")
+      val OBJECT = Value("OBJECT")
+      val SUBJECTTYPE = Value("SUBJECTTYPE")
+      val OBJECTTYPE = Value("OBJECTTYPE")
+      val GRAPH = Value("GRAPH")
+      val REQUIRED = Value("REQUIRED")
+      val OPTIONALGROUP = Value("OPTIONALGROUP")
+      val EXPANDEDENTITY = Value("EXPANDEDENTITY")
+      val SPARQLSTRING = Value("SPARQLSTRING")
+      val DEPENDEE = Value("DEPENDEE")
+      val BASETYPE = Value("BASETYPE")
+      val SHORTCUTENTITY = Value("SHORTCUTENTITY")
+      val CONNECTIONRECIPETYPE = Value("CONNECTIONRECIPETYPE")
+      val GRAPHOFCREATINGPROCESS = Value("GRAPHOFCREATINGPROCESS")
       
-      val requiredInputKeysList = ArrayBuffer(sparqlSubject, sparqlPredicate, sparqlObject, subjectType, objectType, graphFromSparql, requiredBool,
-                                              sparqlOptionalGroup, connectionRecipeType, baseType, graphOfCreatingProcess)
+      val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, REQUIRED,
+                                              OPTIONALGROUP, CONNECTIONRECIPETYPE, BASETYPE, GRAPHOFCREATINGPROCESS)
                                               
-      val requiredOutputKeysList = ArrayBuffer(sparqlSubject, sparqlPredicate, sparqlObject, subjectType, objectType, graphFromSparql, connectionRecipeType,
-                                              baseType)
+      val requiredOutputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, CONNECTIONRECIPETYPE,
+                                              BASETYPE)
       
-      val processVar = "process"
-      val date = "date"
-      val outputNamedGraphVal = "outputNamedGraph"
-      val metaQuery = "query"
-      val processRuntime = "processRuntime"
+      // define enums used as keys for process meta info hashmap
+      val PROCESS, DATE, OUTPUTNAMEDGRAPH, METAQUERY, PROCESSRUNTIME, TRIPLESADDED, REPLACEMENTSTRING = Value
+
 }

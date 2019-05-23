@@ -9,7 +9,7 @@ import org.scalatest._
 import java.util.UUID
 import scala.collection.mutable.ArrayBuffer
 
-class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
 
@@ -68,7 +68,7 @@ class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter 
           """
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/lossOfFunctionExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010180")
         
         val output: String = """
           

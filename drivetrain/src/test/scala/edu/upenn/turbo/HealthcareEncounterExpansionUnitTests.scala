@@ -8,7 +8,7 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import java.util.UUID
 
-class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
     
@@ -192,7 +192,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
@@ -256,13 +256,13 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
-          a turbo:TURBO_0010158 ;te
+          a turbo:TURBO_0010158 ;
           turbo:TURBO_0000648 "20" ;
           turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> .
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
@@ -305,7 +305,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
@@ -331,7 +331,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
@@ -357,7 +357,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
@@ -396,7 +396,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
         
         val diagnosisNoXsd: String = """
           ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
@@ -524,7 +524,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           }}"""
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
         
         val checkDiag: String = """
           Ask
@@ -595,7 +595,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           }}"""
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
         
         val checkDiag: String = """
           Ask
@@ -716,7 +716,7 @@ class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndA
           }
           """
         update.updateSparql(testCxn, insert1)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
         
         val datasetCheck1: String = """
           ASK

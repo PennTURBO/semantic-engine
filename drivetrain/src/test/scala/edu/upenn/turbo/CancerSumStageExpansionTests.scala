@@ -9,7 +9,7 @@ import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
-class CancerSumStageExpansionTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals {
+class CancerSumStageExpansionTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers {
 
   val clearTestingRepositoryAfterRun: Boolean = true
   

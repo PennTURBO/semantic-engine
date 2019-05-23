@@ -14,7 +14,7 @@ import java.io.PrintWriter
 import java.io.File
 import scala.collection.mutable.HashMap
 
-class Sandbox extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+class Sandbox extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
     val objectOrientedExpander = new ObjectOrientedExpander

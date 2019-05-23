@@ -9,7 +9,7 @@ import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
-class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
     
@@ -194,7 +194,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             }
         """
       update.updateSparql(testCxn, insert)
-      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
+      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010183")
       
         val check: String = """
           ASK
@@ -305,7 +305,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
             }
         """
       update.updateSparql(testCxn, insert)
-      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
+      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010183")
         
         val check: String = """
           ASK
@@ -349,7 +349,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
     }
 }
     
-    class BiobankEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+    class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
     {
         val clearTestingRepositoryAfterRun: Boolean = false
         
@@ -503,7 +503,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                   }
               """
             update.updateSparql(testCxn, insert)
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010182")
             
              val check: String = """
               ASK
@@ -640,7 +640,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 }
             """
           update.updateSparql(testCxn, insert)
-          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
+          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010182")
           
           val check: String = """
             ASK
@@ -684,7 +684,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
       }
 }
     
-  class EntityLinkingIntegrationTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+  class EntityLinkingIntegrationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
   {
       val clearTestingRepositoryAfterRun: Boolean = false
       
@@ -932,8 +932,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends FunSuiteLike with Before
                 }
             """
           update.updateSparql(testCxn, insert)
-          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterLinkingProcess")
-          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/healthcareEncounterLinkingProcess")
+          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010182")
+          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010183")
           
            val check: String = """
             ASK

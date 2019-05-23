@@ -4,7 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
 
-class TriplesGroupBuilder extends Enumeration with ProjectwideGlobals
+class TriplesGroupBuilder extends ProjectwideGlobals
 {
     val requiredGroup = new TriplesGroup()
     val optionalGroups = new ArrayBuffer[TriplesGroup]
@@ -134,7 +134,6 @@ class TriplesGroupBuilder extends Enumeration with ProjectwideGlobals
             clause += addTriplesToClause(clauseType, requiredGroup, graph, false)
             for (optionalGroup <- optionalGroups)
             {
-                logger.info("adding group: " + optionalGroup.groupName)
                 clause += addTriplesToClause(clauseType, optionalGroup, graph, true)
             }
             clause += "}\n"

@@ -8,7 +8,7 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import java.util.UUID
 
-class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with Matchers with ProjectwideGlobals
+class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
 
@@ -123,7 +123,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
@@ -178,7 +178,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
@@ -218,7 +218,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
@@ -242,7 +242,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
@@ -266,7 +266,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
             
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
@@ -296,7 +296,7 @@ class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfte
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/biobankEncounterExpansionProcess")
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
         
         val dateNoXsd: String = """
           ask {

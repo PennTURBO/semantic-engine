@@ -65,7 +65,7 @@ class PatternMatchQuery extends Query
         this.process = process
     }
     
-    def createInsertClause(outputs: ArrayBuffer[HashMap[String, Value]])
+    def createInsertClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
         assert (insertClause == "")
         if (bindClause == "" || bindClause == null || whereClause == null || whereClause.size == 0) 
@@ -80,7 +80,7 @@ class PatternMatchQuery extends Query
         insertClause += s"INSERT { \n $innerClause \n}"
     }
     
-    def createWhereClause(inputs: ArrayBuffer[HashMap[String, Value]])
+    def createWhereClause(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
         assert (whereClause == "")
         assert (defaultInputGraph != null && defaultInputGraph != "")
@@ -88,8 +88,8 @@ class PatternMatchQuery extends Query
         varsForProcessInput = whereClauseBuilder.addTripleFromRowResult(inputs, defaultInputGraph)
         for (row <- inputs) 
         {
-            usedVariables += row(sparqlObject).toString
-            usedVariables += row(sparqlSubject).toString
+            usedVariables += row(OBJECT.toString).toString
+            usedVariables += row(SUBJECT.toString).toString
         }
         assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "")
         assert (whereClauseBuilder.clause.contains("GRAPH"))
@@ -98,32 +98,32 @@ class PatternMatchQuery extends Query
         whereClause += s"WHERE { \n $innerClause "
     }
     
-    def createBindClause(binds: ArrayBuffer[HashMap[String, Value]], localUUID: String)
+    def createBindClause(binds: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String)
     {
         assert (bindClause == "")
         var varList = new ArrayBuffer[Value]
         for (rule <- binds)
         {
-            var sparqlBind = rule(sparqlString).toString.replaceAll("\\$\\{replacement\\}", 
-                            helper.convertTypeToSparqlVariable(rule(expandedEntity)))
+            var sparqlBind = rule(SPARQLSTRING.toString).toString.replaceAll("\\$\\{replacement\\}", 
+                            helper.convertTypeToSparqlVariable(rule(EXPANDEDENTITY.toString)))
                                          .replaceAll("\\$\\{localUUID\\}", localUUID)
                                          .replaceAll("\\$\\{globalUUID\\}", RunDrivetrainProcess.globalUUID)
-                                         .replaceAll("\\$\\{mainExpansionTypeVariableName\\}", helper.convertTypeToSparqlVariable(rule(baseType)))
+                                         .replaceAll("\\$\\{mainExpansionTypeVariableName\\}", helper.convertTypeToSparqlVariable(rule(BASETYPE.toString)))
                                          .replaceAll("\\$\\{instantiationPlaceholder\\}", "\"" + RunDrivetrainProcess.instantiation + "\"")
             if (sparqlBind.contains("${dependent}")) sparqlBind = sparqlBind.replaceAll("\\$\\{dependent\\}",
-                helper.convertTypeToSparqlVariable(rule(dependee)))
+                helper.convertTypeToSparqlVariable(rule(DEPENDEE.toString)))
             if (sparqlBind.contains("${original}")) sparqlBind = sparqlBind.replaceAll("\\$\\{original\\}",
-                helper.convertTypeToSparqlVariable(rule(shortcutEntity)))
+                helper.convertTypeToSparqlVariable(rule(SHORTCUTENTITY.toString)))
             if (sparqlBind.contains("${singletonType}")) sparqlBind = sparqlBind.replaceAll("\\$\\{singletonType\\}",
-                rule(dependee).toString)
+                rule(DEPENDEE.toString).toString)
             
             bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
             
             // add all variables used in bind clause to list of used variables
-            if (rule(expandedEntity) != null) usedVariables += rule(expandedEntity).toString
-            if (rule(shortcutEntity) != null) usedVariables += rule(shortcutEntity).toString
-            if (rule(dependee) != null) usedVariables += rule(dependee).toString
-            if (rule(baseType) != null) usedVariables += rule(baseType).toString
+            if (rule(EXPANDEDENTITY.toString) != null) usedVariables += rule(EXPANDEDENTITY.toString).toString
+            if (rule(SHORTCUTENTITY.toString) != null) usedVariables += rule(SHORTCUTENTITY.toString).toString
+            if (rule(DEPENDEE.toString) != null) usedVariables += rule(DEPENDEE.toString).toString
+            if (rule(BASETYPE.toString) != null) usedVariables += rule(BASETYPE.toString).toString
         }
     }
 }
