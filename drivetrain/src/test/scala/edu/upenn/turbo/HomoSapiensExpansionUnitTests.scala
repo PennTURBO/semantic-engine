@@ -45,6 +45,27 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           
        }}"""
     
+    val processMeta: String = """
+        ASK 
+        { 
+          Graph pmbb:processes
+          {
+              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010176 .
+              ?processBoundary a obo:BFO_0000035 .
+              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+              ?timeMeasDatum a obo:IAO_0000416 .
+              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+              
+              ontologies:TURBO_0010176 
+                  turbo:TURBO_0010106 ?someQuery ;
+                  turbo:TURBO_0010107 ?someRuntime ;
+                  turbo:TURBO_0010108 ?someNumberOfTriples;
+                  turbo:TURBO_0010186 pmbb:expanded ;
+                  turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts ;
+          }
+        }
+        """
+    
     before
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
@@ -127,6 +148,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (true)
         update.querySparqlBoolean(testCxn, extraFields).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
@@ -178,6 +200,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")        
@@ -219,6 +242,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (false)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -241,6 +265,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (false)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -263,6 +288,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (false)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -320,6 +346,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (true)
         update.querySparqlBoolean(testCxn, dateNoXsd).get should be (true)
         update.querySparqlBoolean(testCxn, gidNoXsd).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
@@ -501,6 +528,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlAndUnpackTuple(testCxn, threeRegistries, "registrycount")(0).split("\"")(1) should be ("3")
         
         update.querySparqlBoolean(testCxn, output).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         
@@ -683,5 +712,29 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         result.size should be (75)
+        
+        val processMetaMultipleDatasets: String = """
+        ASK 
+        { 
+          Graph pmbb:processes
+          {
+              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010176 .
+              ?processBoundary a obo:BFO_0000035 .
+              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+              ?timeMeasDatum a obo:IAO_0000416 .
+              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+              
+              ontologies:TURBO_0010176 
+                  turbo:TURBO_0010106 ?someQuery ;
+                  turbo:TURBO_0010107 ?someRuntime ;
+                  turbo:TURBO_0010108 ?someNumberOfTriples;
+                  turbo:TURBO_0010186 pmbb:expanded ;
+                  turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts1 ;
+                  turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts2 ;
+                  turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts3 ;
+          }
+        }
+        """
+        update.querySparqlBoolean(testCxn, processMetaMultipleDatasets).get should be (true)
     }
 }

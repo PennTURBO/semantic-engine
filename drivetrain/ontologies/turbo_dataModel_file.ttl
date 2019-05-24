@@ -274,14 +274,6 @@ ontologies:TurboGraphDoubleLiteralValue
   rdfs:label "turbo graph double literal value" ;
   rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
 .
-ontologies:TurboGraphEntityLinkingProcess
-  a owl:Class ;
-  rdfs:subClassOf ontologies:TurboGraphProcess ;
-.
-ontologies:TurboGraphExpansionProcess
-  a owl:Class ;
-  rdfs:subClassOf ontologies:TurboGraphProcess ;
-.
 ontologies:TurboGraphIntegerLiteralValue
   a owl:Class ;
   rdfs:label "turbo graph integer literal value" ;
@@ -297,10 +289,6 @@ ontologies:TurboGraphMultiplicityRule
 .
 ontologies:TurboGraphOptionalGroup
   a owl:Class ;
-.
-ontologies:TurboGraphProcess
-  a owl:Class ;
-  rdfs:label "TURBO graph process" ;
 .
 ontologies:TurboGraphStringLiteralValue
   a owl:Class ;
@@ -528,7 +516,6 @@ ontologies:biobankEncounterDateVariableManipulation
   ontologies:usesSparqlLogic ontologies:BindIfBoundRandomUUID ;
 .
 ontologies:TURBO_0010177
-  a ontologies:TurboGraphExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:TURBO_0010169 ;
   ontologies:outputNamedGraph pmbb:expanded ;
@@ -604,7 +591,6 @@ ontologies:biobankEncounterIdentifierVariableManipulation
   ontologies:usesSparqlLogic ontologies:RandomUUID ;
 .
 ontologies:TURBO_0010182
-  a ontologies:TurboGraphEntityLinkingProcess ;
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
   ontologies:outputNamedGraph pmbb:expanded ;
@@ -1569,7 +1555,6 @@ ontologies:healthcareEncounterDateVariableManipulation
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
 .
 ontologies:TURBO_0010179
-  a ontologies:TurboGraphExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:TURBO_0010158 ;
   ontologies:outputNamedGraph pmbb:expanded ;
@@ -1642,7 +1627,6 @@ ontologies:healthcareEncounterIdentifierVariableManipulation
   ontologies:usesSparqlLogic ontologies:SHALocalRandom ;
 .
 ontologies:TURBO_0010183
-  a ontologies:TurboGraphEntityLinkingProcess ;
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
   ontologies:outputNamedGraph pmbb:expanded ;
@@ -1829,7 +1813,6 @@ ontologies:homoSapiensDateOfBirthStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
 .
 ontologies:TURBO_0010176
-  a ontologies:TurboGraphExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:TURBO_0010161 ;
   ontologies:outputNamedGraph pmbb:expanded ;
@@ -2084,7 +2067,7 @@ ontologies:identifierToPrescription
 .
 ontologies:inputNamedGraph
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphProcess ;
+  rdfs:domain ontologies:TURBO_0010178 ;
   rdfs:label "input named graph for a turbo process" ;
   rdfs:range ontologies:TurboNamedGraph ;
 .
@@ -2092,7 +2075,7 @@ ontologies:inputTo
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
   rdfs:label "input to an expansion process" ;
-  rdfs:range ontologies:TurboGraphProcess ;
+  rdfs:range ontologies:TURBO_0010178 ;
 .
 ontologies:instantiationProcessVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
@@ -2183,7 +2166,6 @@ ontologies:lengthMeasurementValueSpecificationVariableManipulation
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
 .
 ontologies:TURBO_0010180
-  a ontologies:TurboGraphExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:TURBO_0010144 ;
   ontologies:outputNamedGraph pmbb:expanded ;
@@ -2212,7 +2194,7 @@ ontologies:TURBO_0010180
 .
 ontologies:manipulatesBaseEntity
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphExpansionProcess ;
+  rdfs:domain ontologies:TURBO_0010178 ;
   rdfs:range rdfs:Resource ;
 .
 ontologies:manipulationCreates
@@ -2378,7 +2360,7 @@ ontologies:object
 .
 ontologies:outputNamedGraph
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphProcess ;
+  rdfs:domain ontologies:TURBO_0010178 ;
   rdfs:label "output named graph for a turbo process" ;
   rdfs:range ontologies:TurboNamedGraph ;
 .
@@ -2386,7 +2368,7 @@ ontologies:outputOf
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
   rdfs:label "output of an expansion process" ;
-  rdfs:range ontologies:TurboGraphProcess ;
+  rdfs:range ontologies:TURBO_0010178 ;
 .
 ontologies:participantUnderInvestigationRoleVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
@@ -2409,8 +2391,8 @@ ontologies:patientRoleVariableManipulation
 .
 ontologies:precedes
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphProcess ;
-  rdfs:range ontologies:TurboGraphProcess ;
+  rdfs:domain ontologies:TURBO_0010178 ;
+  rdfs:range ontologies:TURBO_0010178 ;
 .
 ontologies:predicate
   a owl:ObjectProperty ;
@@ -3213,7 +3195,7 @@ ontologies:usesSparqlLogic
 .
 ontologies:usesVariableManipulationRule
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphProcess ;
+  rdfs:domain ontologies:TURBO_0010178 ;
   rdfs:range ontologies:TurboGraphVariableManipulation ;
 .
 ontologies:weightValueVariableManipulation

@@ -85,6 +85,27 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         		?dataset a obo:IAO_0000100 .
           }}
       """
+    
+    val processMeta: String = """
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ?processBoundary obo:RO_0002223 ontologies:TURBO_0010177 .
+                ?processBoundary a obo:BFO_0000035 .
+                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+                ?timeMeasDatum a obo:IAO_0000416 .
+                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+                
+                ontologies:TURBO_0010177 
+                    turbo:TURBO_0010106 ?someQuery ;
+                    turbo:TURBO_0010107 ?someRuntime ;
+                    turbo:TURBO_0010108 ?someNumberOfTriples;
+                    turbo:TURBO_0010186 pmbb:expanded ;
+                    turbo:TURBO_0010187 pmbb:Shortcuts_biobankEncounterShortcuts ;
+            }
+          }
+          """
      
     before
     {
@@ -129,6 +150,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
         update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (true)
         update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
@@ -184,6 +206,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
         update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (false)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
@@ -224,6 +247,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
         update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (false)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -248,6 +272,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
         update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (false)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -272,6 +297,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
         update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (false)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -317,6 +343,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (true)
         update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (false) 
         update.querySparqlBoolean(testCxn, dateNoXsd).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")

@@ -467,163 +467,6 @@ class TurboMultiuseClass
     }
   
     /**
-     * Automatically deletes all triples from all named graphs which contain shortcut relationships. This is called as part of the post-expansion
-     * process.
-     */
-    def clearShortcutNamedGraphs (cxn: RepositoryConnection)
-    {
-        val graphs: ArrayBuffer[String] = generateNamedGraphsListFromPrefix(cxn, "http://www.itmat.upenn.edu/biobank/Shortcuts")
-        for (graph <- graphs) clearNamedGraph(cxn, graph)
-    }
-    
-    /**
-     * This is a strange method which executes a batched Referent Tracking completition phase, which entails moving all properties from a non-reftracked
-     * node to a reftracked node. The referent tracker class is responsible for creating pointers from non-reftracked nodes to reftracked nodes but not
-     * for migrating the properties or retiring the non-reftracked node. 
-     */
-    def completeReftrackProcess (cxn: RepositoryConnection, threshold: Integer = 1000)
-    {
-         logger.info("starting complete reftrack process")
-         /**
-          * it is required that all nodes to be reftracked be the subject and object of a triple. 
-          * As a workaround for some nodes not being the object of a triple, we can insert something temporarily and remove it later.
-          * Not ideal, but should work for now.
-          */
-         addTempSubjectToAllNodesToBeReftracked(cxn)
-         val getNodesToBeReftracked: String = """
-           select ?node where
-           {
-               graph pmbb:expanded
-               {
-                   ?node graphBuilder:willBeCombinedWith ?reftrackedNode .
-                   ?node graphBuilder:placeholderDemotionType ?demotionType .
-               }
-           }
-           """       
-          val result: ArrayBuffer[String] = updater.querySparqlAndUnpackTuple(cxn, getNodesToBeReftracked, "node")
-          var values: String = ""
-          val resultSize = result.size
-          logger.info("number of nodes to retire: " + resultSize)
-          for (a <- 0 to resultSize - 1)
-          {
-              values += "<" + result(a) + "> "
-              if ((a % threshold == 0 && a != 0) || a == (resultSize - 1))
-              {   
-                  //logger.info("running to node " + (a - 1))
-                  completeProcessForAllValuesInString(cxn, values, "Retiring " + a + " of " + resultSize + " nodes")
-                  values = ""
-                  //logger.info("back out in for loop")
-              }
-          }
-         cleanupAfterCompletingReftrackProcess(cxn)
-         logger.info("finished retiring nodes")
-    }
-    
-    /**
-     * This method contains the SPARQL responsible for migrating properties from and retiring non-reftracked nodes. It is called by the method above
-     * and executes the migration/retiring process for a set of nodes provided in the "values" string variable.
-     */
-    def completeProcessForAllValuesInString(cxn: RepositoryConnection, values: String, percentFinished: String)
-    {
-            val randomUUID: String = UUID.randomUUID().toString().replaceAll("-", "")       
-            val completeReftrackProcess: String = """
-            DELETE {
-              ?originalNode ?predicateForCopy1 ?objectForCopy .
-              ?subjectForCopy ?predicateForCopy2 ?originalNode .
-            }
-            INSERT {
-              # """ + percentFinished + """ 
-              GRAPH <http://www.itmat.upenn.edu/biobank/expanded>
-              {
-              ?reftrackedNode ?predicateForCopy1 ?objectForCopy .
-              ?reftrackedNode turbo:TURBO_0006602 ?originalNodeString .
-              ?subjectForCopy ?predicateForCopy2 ?reftrackedNode .
-              ?reftrackedNode turbo:TURBO_0006500 'true'^^xsd:boolean .
-              ?newRetiredNode rdf:type ?demotionType .
-              ?newRetiredNode turbo:TURBO_0001700 ?reftrackedNode .
-              ?newRetiredNode obo:IAO_0000225 obo:IAO_0000226 .
-              ?newRetiredNode turbo:TURBO_0006602 ?originalNodeString .
-            }}
-            WHERE {
-              VALUES ?originalNode { """+values+""" }
-              ?originalNode graphBuilder:willBeCombinedWith ?reftrackedNode .
-              ?originalNode graphBuilder:placeholderDemotionType ?demotionType .
-              ?originalNode ?predicateForCopy1 ?objectForCopy .
-              ?subjectForCopy ?predicateForCopy2 ?originalNode
-              BIND (str(?originalNode) AS ?originalNodeString)
-              # 3/20/18 adding md5 to ?newRetiredNode due to complications with "values" batching technique
-              BIND(uri(CONCAT("http://www.itmat.upenn.edu/biobank/",md5(CONCAT("retired node", str(?originalNode),""""+randomUUID+"""")))) AS ?newRetiredNode)
-            }
-          """
-        updater.updateSparql(cxn, completeReftrackProcess)
-        //updater.querySparqlAndUnpackTuple(cxn, completeReftrackProcess, ArrayBuffer("originalNode", "reftrackedNode", "demotionType", "predicateForDelete1", 
-            //"objectForDelete", "predicateForCopy1", "objectForCopy", "subjectForCopy", "predicateForCopy2", "originalNodeString", "newRetiredNode"))
-        //logger.info("received result")
-    }
-    
-    /**
-     * This method searches for all nodes which have been assigned referent tracking destinations and fills in a temporary subject with the 
-     * graphBuilder prefix. It is necessary to have this temporary subject during the completion of the referent tracking process, because
-     * the completeReftrackProcess method expects every node which is to be referent tracked to be the subject and the object of at least one triple.
-     */
-    def addTempSubjectToAllNodesToBeReftracked(cxn: RepositoryConnection)
-    {
-        val fixNodesThatAreNotObjects: String = """
-           insert 
-           {
-               graphBuilder:tempSubj graphBuilder:tempPred ?node .
-           }
-           where
-           {
-               graph pmbb:expanded
-               {
-                   ?node graphBuilder:willBeCombinedWith ?reftrackedNode .
-                   ?node graphBuilder:placeholderDemotionType ?demotionType .
-               }
-               minus
-               {
-                   ?subject ?predicate ?node .
-               }
-           }
-           """
-         updater.updateSparql(cxn, fixNodesThatAreNotObjects)
-    }
-    
-    /**
-     * This method performs two cleanup operations on the database. First, temporary subjects and predicates are removed. Second, all
-     * pre-referent tracking pointers are removed. After this method runs, no intermediate state triples generated by the referent 
-     * tracking process should exist in the graph.
-     */
-    def cleanupAfterCompletingReftrackProcess(cxn: RepositoryConnection)
-    {
-        val removeTemporaryPredicates: String = """
-           delete 
-           {
-               graphBuilder:tempSubj graphBuilder:tempPred ?node .
-           }
-           where
-           {
-               graphBuilder:tempSubj graphBuilder:tempPred ?node .
-           }
-           """
-         updater.updateSparql(cxn, removeTemporaryPredicates)
-         
-         val removeGraphBuilder: String = """
-           delete 
-           {
-               ?s graphBuilder:willBeCombinedWith ?o .
-               ?s graphBuilder:placeholderDemotionType ?type .
-           }
-           where 
-           {
-               ?s graphBuilder:willBeCombinedWith ?o .
-               ?s graphBuilder:placeholderDemotionType ?type .
-           }
-           """
-         updater.updateSparql(cxn, removeGraphBuilder)
-    }
-    
-    /**
      * This method executes SPARQL to search through a specified named graph for nodes which do not have labels. It then searches the TURBO
      * ontology to find the label of that node's type and concatanates this label with the first 4 digits of the node's UUID postfix to create
      * an instance label, which is applied to the node as a single triple using the "rdfs:label" predicate in the same named graph as the node.
@@ -730,42 +573,27 @@ class TurboMultiuseClass
     }
     
     /**
-     * Generates string of all Shortcut named graphs by issuing retrieving a list of shortcut graphs and transforming it to a string
-     * 
-     * @return a string representation of all shortcut named graphs for expansion
-     */
-    def generateShortcutNamedGraphsString(cxn: RepositoryConnection, asFrom: Boolean = false, prefix: String = "http://www.itmat.upenn.edu/biobank/Shortcuts"): String =
-    {
-        var graphsString = ""
-        for (a <- generateNamedGraphsListFromPrefix(cxn, prefix))
-        {
-            if (!asFrom) graphsString += "<" + a + "> "
-            else graphsString += "FROM <" + a + "> "
-        }
-        graphsString
-    }
-    
-    /**
      * Generates list of all Shortcut named graphs by issuing a Sparql command to retrieve all named graphs which start with "Shortcuts"
      * 
      * @return a list representation of all shortcut named graphs for expansion
      */
-    def generateNamedGraphsListFromPrefix(cxn: RepositoryConnection, 
-        graphsPrefix: String, baseType: String = null): ArrayBuffer[String] =
+    def generateNamedGraphsListFromPrefix(cxn: RepositoryConnection, graphsPrefix: String, whereClause: String): ArrayBuffer[String] =
     {
-        var triplesClause = "?s ?p ?o ."
-        if (baseType != null) triplesClause = s"?s a <$baseType> ."
-        val getGraphs: String = s"""
-        select distinct ?g where 
-        {
-            graph ?g
-            {
-                $triplesClause
-            }
-            filter (strStarts(str(?g), """"+graphsPrefix+""""))
-        }"""
+        assert (whereClause.contains("GRAPH") && whereClause.contains("WHERE"))
+        val graphVar = "g"
+        // remove last bracket of where clause
+        val whereClauseNoFinalBracket = whereClause.substring(0, whereClause.length-1)
+        // replace input named graph with sparql variable
+        val graphsPrefixWithBrackets = "<" + graphsPrefix + ">"
+        val replacementGraphVariable = s"?$graphVar"
+        val whereClauseWithGraphReplacement = whereClauseNoFinalBracket.replaceAll(graphsPrefixWithBrackets, replacementGraphVariable)
         
-        updater.querySparqlAndUnpackTuple(cxn, getGraphs, "g")
+        val getGraphs: String = s"""
+        select distinct ?$graphVar
+        $whereClauseWithGraphReplacement
+            filter (strStarts(str(?$graphVar), """"+graphsPrefix+""""))
+        }"""
+        updater.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
     }
     
     //These 2 globals are associated with the two methods below
@@ -895,53 +723,6 @@ class TurboMultiuseClass
           }
           """
         updater.querySparqlAndUnpackTuple(cxn, query, "dsTitle")
-    }
-    
-    def consolidateLOFShortcutGraphs(cxn: RepositoryConnection)
-    {
-        val lofGraphs: String = generateShortcutNamedGraphsString(cxn, false, "http://www.itmat.upenn.edu/biobank/LOFShortcuts")
-        //first count the number of unexpanded rows of LOF data
-        val countquery = """
-          select (count (?lof) as ?lofcount) where
-          {
-              ?lof turbo:TURBO_0007603 ?o .   
-          }
-          """
-        val count = updater.querySparqlAndUnpackTuple(cxn, countquery, "lofcount")(0).toString.split("\"")(1).toInt
-        //if count < 700,000 safe to consolidate
-        if (count < 700000)
-        {
-            val uuidForNewGraph = UUID.randomUUID().toString().replaceAll("-", "")
-            val consolidate = """
-              delete
-              {
-                  	graph ?g
-                  	{
-                          ?s ?p ?o .
-                  	}
-              }
-              insert
-              {
-                  graph pmbb:LOFShortcuts_consolidated_"""+uuidForNewGraph+"""
-                  {
-                      ?s ?p ?o .
-                  }
-              }
-              where
-              {
-                  values ?g 
-                  {
-                  """ + lofGraphs + """
-                  }
-              	graph ?g
-              	{
-                      ?s ?p ?o .
-              	}
-              }
-              
-            """
-            updater.updateSparql(cxn, consolidate)
-        }
     }
     
     def convertTypeToSparqlVariable(input: Value): String =

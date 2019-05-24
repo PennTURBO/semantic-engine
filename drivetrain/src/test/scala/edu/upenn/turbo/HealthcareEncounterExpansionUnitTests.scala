@@ -142,6 +142,27 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         		?encounter a obo:OGMS_0000097 .
            }}"""
     
+    val processMeta: String = """
+        ASK 
+        { 
+          Graph pmbb:processes
+          {
+              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010179 .
+              ?processBoundary a obo:BFO_0000035 .
+              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+              ?timeMeasDatum a obo:IAO_0000416 .
+              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+              
+              ontologies:TURBO_0010179 
+                  turbo:TURBO_0010106 ?someQuery ;
+                  turbo:TURBO_0010107 ?someRuntime ;
+                  turbo:TURBO_0010108 ?someNumberOfTriples;
+                  turbo:TURBO_0010186 pmbb:expanded ;
+                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts ;
+          }
+        }
+        """
+    
     before
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
@@ -201,6 +222,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
@@ -271,6 +293,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
@@ -314,6 +337,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -340,6 +364,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -366,6 +391,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -452,6 +478,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, diagnosisNoXsd).get should be (true)
         update.querySparqlBoolean(testCxn, dateNoXsd).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
@@ -567,6 +594,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
          update.querySparqlBoolean(testCxn, checkDiag).get should be (true)
          update.querySparqlAndUnpackTuple(testCxn, countDiag, "diagnosisCount")(0) should startWith ("\"2")
          update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
     }
     
     test("ensure medication info stays together with duplicate hc enc URI")
@@ -646,6 +674,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
          update.querySparqlAndUnpackTuple(testCxn, countDiag, "prescriptCount")(0) should startWith ("\"2")
          update.querySparqlAndUnpackTuple(testCxn, countDiag, "medCridCount")(0) should startWith ("\"2")
          update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
+         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
     }
     
     test("expand hc encs over multiple named graphs")
@@ -867,6 +896,32 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         
+        val processMetaMultipleDatasets: String = """
+        ASK 
+        { 
+          Graph pmbb:processes
+          {
+              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010179 .
+              ?processBoundary a obo:BFO_0000035 .
+              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+              ?timeMeasDatum a obo:IAO_0000416 .
+              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+              
+              ontologies:TURBO_0010179 
+                  turbo:TURBO_0010106 ?someQuery ;
+                  turbo:TURBO_0010107 ?someRuntime ;
+                  turbo:TURBO_0010108 ?someNumberOfTriples;
+                  turbo:TURBO_0010186 pmbb:expanded ;
+                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts ;
+                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts1 ;
+                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts2 ;
+                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts3 ;
+                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts4 ;
+          }
+        }
+        """
+        
+        update.querySparqlBoolean(testCxn, processMetaMultipleDatasets).get should be (true)
         update.querySparqlAndUnpackTuple(testCxn, thereShouldOnlyBeOneEncounter, "enc").size should be (1)
         update.querySparqlAndUnpackTuple(testCxn, thereShouldBeFiveDatasets, "dataset").size should be (5)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)

@@ -67,6 +67,6 @@ trait ProjectwideGlobals extends Enumeration
                                               BASETYPE)
       
       // define enums used as keys for process meta info hashmap
-      val PROCESS, DATE, OUTPUTNAMEDGRAPH, METAQUERY, PROCESSRUNTIME, TRIPLESADDED, REPLACEMENTSTRING = Value
+      val PROCESS, DATE, OUTPUTNAMEDGRAPH, METAQUERY, PROCESSRUNTIME, TRIPLESADDED, REPLACEMENTSTRING, INPUTNAMEDGRAPHS = Value
 
 }

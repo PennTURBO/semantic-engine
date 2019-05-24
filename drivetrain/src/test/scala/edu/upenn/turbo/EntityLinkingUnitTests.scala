@@ -32,7 +32,28 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
     {
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
     }
-      
+    
+    val processMeta: String = """
+    ASK 
+    { 
+      Graph pmbb:processes
+      {
+          ?processBoundary obo:RO_0002223 ontologies:TURBO_0010183 .
+          ?processBoundary a obo:BFO_0000035 .
+          ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+          ?timeMeasDatum a obo:IAO_0000416 .
+          ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+          
+          ontologies:TURBO_0010183 
+              turbo:TURBO_0010106 ?someQuery ;
+              turbo:TURBO_0010107 ?someRuntime ;
+              turbo:TURBO_0010108 ?someNumberOfTriples;
+              turbo:TURBO_0010186 pmbb:expanded ;
+              turbo:TURBO_0010187 pmbb:expanded ;
+      }
+    }
+    """
+ 
     test ("healthcare encounter entity linking - all fields")
     {
       // these triples were generated from the output of the first healthcare encounter expansion test and the first homo sapiens expansion unit test on 4/9/19
@@ -236,6 +257,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           """
         
         update.querySparqlBoolean(testCxn, check).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
     }
     
     test("healthcare encounter entity linking - minimum fields")
@@ -346,6 +368,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         
         update.querySparqlBoolean(testCxn, check).get should be (true)
         update.querySparqlBoolean(testCxn, noHeightWeightBmiOrDate).get should be (false)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
     }
 }
     
@@ -377,7 +400,28 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         {
             ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
         }
-    
+        
+        val processMeta: String = """
+        ASK 
+        { 
+          Graph pmbb:processes
+          {
+              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010182 .
+              ?processBoundary a obo:BFO_0000035 .
+              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+              ?timeMeasDatum a obo:IAO_0000416 .
+              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+              
+              ontologies:TURBO_0010182 
+                  turbo:TURBO_0010106 ?someQuery ;
+                  turbo:TURBO_0010107 ?someRuntime ;
+                  turbo:TURBO_0010108 ?someNumberOfTriples;
+                  turbo:TURBO_0010186 pmbb:expanded ;
+                  turbo:TURBO_0010187 pmbb:expanded ;
+          }
+        }
+        """
+        
         test("biobank encounter entity linking - all fields")
         {
             // these triples were generated from the output of the first biobank encounter expansion test and the first homo sapiens expansion unit test on 4/10/19
@@ -545,6 +589,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
               """
             
         update.querySparqlBoolean(testCxn, check).get should be (true)
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
       }
     
       test("biobank encounter entity linking - minimum fields")
@@ -681,6 +726,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           
           update.querySparqlBoolean(testCxn, check).get should be (true)
           update.querySparqlBoolean(testCxn, noHeightWeightBmiOrDate).get should be (false)
+          update.querySparqlBoolean(testCxn, processMeta).get should be (true)
       }
 }
     
@@ -1059,12 +1105,56 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
               ?weight a obo:PATO_0000128 .
           }
           """
+        
+        val processMetaBiobank: String = """
+        ASK 
+        { 
+          Graph pmbb:processes
+          {
+              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010182 .
+              ?processBoundary a obo:BFO_0000035 .
+              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+              ?timeMeasDatum a obo:IAO_0000416 .
+              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+              
+              ontologies:TURBO_0010182 
+                  turbo:TURBO_0010106 ?someQuery ;
+                  turbo:TURBO_0010107 ?someRuntime ;
+                  turbo:TURBO_0010108 ?someNumberOfTriples;
+                  turbo:TURBO_0010186 pmbb:expanded ;
+                  turbo:TURBO_0010187 pmbb:expanded ;
+          }
+        }
+        """
+        
+        val processMetaHealthcare: String = """
+        ASK 
+        { 
+          Graph pmbb:processes
+          {
+              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010183 .
+              ?processBoundary a obo:BFO_0000035 .
+              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+              ?timeMeasDatum a obo:IAO_0000416 .
+              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+              
+              ontologies:TURBO_0010183 
+                  turbo:TURBO_0010106 ?someQuery ;
+                  turbo:TURBO_0010107 ?someRuntime ;
+                  turbo:TURBO_0010108 ?someNumberOfTriples;
+                  turbo:TURBO_0010186 pmbb:expanded ;
+                  turbo:TURBO_0010187 pmbb:expanded ;
+          }
+        }
+        """
+        
         update.querySparqlAndUnpackTuple(testCxn, onlyOnePUIRole, "rolecount")(0).split("\"")(1) should be ("1")
         update.querySparqlAndUnpackTuple(testCxn, onlyOnePatientRole, "rolecount")(0).split("\"")(1) should be ("1")
         update.querySparqlAndUnpackTuple(testCxn, onlyOneHeight, "heightcount")(0).split("\"")(1) should be ("1")
         update.querySparqlAndUnpackTuple(testCxn, onlyOneWeight, "weightcount")(0).split("\"")(1) should be ("1")
         update.querySparqlAndUnpackTuple(testCxn, twoLinks, "encountercount")(0).split("\"")(1) should be ("2")
-        
+        update.querySparqlBoolean(testCxn, processMetaBiobank).get should be (true)
+        update.querySparqlBoolean(testCxn, processMetaHealthcare).get should be (true)
     }
   
     

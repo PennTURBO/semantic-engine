@@ -61,27 +61,31 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
         // process base type is an ontology class which is manipulated in some way by the process
         val processBaseType = inputs(0)(BASETYPE.toString).toString
-        // get list of all named graphs which match pattern specified in inputNamedGraph and include processBaseType
-        var inputNamedGraphsList = getInputNamedGraphsList(inputNamedGraph, processBaseType)
-        logger.info("input named graphs size: " + inputNamedGraphsList.size)
         
-        // for each input named graph, create and run query
-        var primaryQuery: PatternMatchQuery = null
+        // create primary query
+        val primaryQuery = new PatternMatchQuery()
+        primaryQuery.setProcess(process)
+        primaryQuery.setInputGraph(inputNamedGraph)
+        primaryQuery.setOutputGraph(outputNamedGraph)
+        
+        primaryQuery.createBindClause(binds, localUUID)
+        primaryQuery.createWhereClause(inputs)
+        primaryQuery.createInsertClause(outputs)
+        
+        val genericWhereClause = primaryQuery.whereClause
+        // get list of all named graphs which match pattern specified in inputNamedGraph and include processBaseType
+        var inputNamedGraphsList = getInputNamedGraphsList(inputNamedGraph, genericWhereClause)
+        logger.info("input named graphs size: " + inputNamedGraphsList.size)
+            
+        // for each input named graph, run query with specified named graph
         for (graph <- inputNamedGraphsList)
         {
-            // create primary query
-            primaryQuery = new PatternMatchQuery()
-            primaryQuery.setProcess(process)
-            primaryQuery.setInputGraph(graph)
-            primaryQuery.setOutputGraph(outputNamedGraph)
-            
-            primaryQuery.createBindClause(binds, localUUID)
-            primaryQuery.createWhereClause(inputs)
-            primaryQuery.createInsertClause(outputs)
-            
+            primaryQuery.whereClause = genericWhereClause.replaceAll(inputNamedGraph, graph)
             //logger.info(primaryQuery.getQuery())
             primaryQuery.runQuery(cxn)
         }
+        // set back to generic input named graph for storing in metadata
+        primaryQuery.whereClause = genericWhereClause
         
         val endingTriplesCount = helper.countTriplesInDatabase(cxn)
         val triplesAdded = endingTriplesCount - startingTriplesCount
@@ -91,12 +95,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
         // create metadata about process
         val metaDataQuery = new DataQuery()
-        val metaInfo: HashMap[Value, String] = HashMap(METAQUERY -> primaryQuery.getQuery(), 
-                                                        DATE -> currDate.toString, 
-                                                        PROCESS -> process, 
-                                                        OUTPUTNAMEDGRAPH -> outputNamedGraph,
-                                                        PROCESSRUNTIME -> runtime,
-                                                        TRIPLESADDED -> triplesAdded.toString
+        val metaInfo: HashMap[Value, ArrayBuffer[String]] = HashMap(METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
+                                                        DATE -> ArrayBuffer(currDate.toString), 
+                                                        PROCESS -> ArrayBuffer(process), 
+                                                        OUTPUTNAMEDGRAPH -> ArrayBuffer(outputNamedGraph),
+                                                        PROCESSRUNTIME -> ArrayBuffer(runtime),
+                                                        TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
+                                                        INPUTNAMEDGRAPHS -> inputNamedGraphsList
                                                         )
                                                         
         val metaDataTriples = createMetaDataTriples(metaInfo)
@@ -296,24 +301,25 @@ object RunDrivetrainProcess extends ProjectwideGlobals
      * 
      * @return ArrayBuffer[String] of all input named graphs to run generated query over
      */
-    def getInputNamedGraphsList(inputNamedGraph: String, processBaseType: String): ArrayBuffer[String] =
+    def getInputNamedGraphsList(inputNamedGraph: String, whereClause: String): ArrayBuffer[String] =
     {
         // In the model graph, an input named graph ending in '_' indicates a wildcard
         if (inputNamedGraph.charAt(inputNamedGraph.size-1) == '_') 
         {
-            helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph, processBaseType)
+            helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph, whereClause)
         }
         else ArrayBuffer(inputNamedGraph)
     }
     
-    def createMetaDataTriples(metaInfo: HashMap[Value, String]): ArrayBuffer[Triple] =
+    def createMetaDataTriples(metaInfo: HashMap[Value, ArrayBuffer[String]]): ArrayBuffer[Triple] =
     {
-        val processVal = metaInfo(PROCESS)
-        val currDate = metaInfo(DATE)
-        val queryVal = metaInfo(METAQUERY)
-        val outputNamedGraph = metaInfo(OUTPUTNAMEDGRAPH)
-        val runtime = metaInfo(PROCESSRUNTIME)
-        val triplesAdded = metaInfo(TRIPLESADDED)
+        val processVal = metaInfo(PROCESS)(0)
+        val currDate = metaInfo(DATE)(0)
+        val queryVal = metaInfo(METAQUERY)(0)
+        val outputNamedGraph = metaInfo(OUTPUTNAMEDGRAPH)(0)
+        val runtime = metaInfo(PROCESSRUNTIME)(0)
+        val triplesAdded = metaInfo(TRIPLESADDED)(0)
+        val inputNamedGraphsList = metaInfo(INPUTNAMEDGRAPHS)
         
         val timeMeasDatum = helper.genPmbbIRI()
         val processBoundary = helper.genPmbbIRI()
@@ -321,12 +327,16 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         helper.validateURI(processNamedGraph)
         var metaTriples = ArrayBuffer(
              new Triple(processVal, "turbo:TURBO_0010106", queryVal, false, false),
-             new Triple(processVal, "turbo:hasDate", currDate, false, false),
-             new Triple(processVal, "rdf:type", "turbo:TurboGraphProcess", false, false),
              new Triple(processVal, "turbo:TURBO_0010186", outputNamedGraph, false, false),
              new Triple(processVal, "turbo:TURBO_0010107", runtime, false, false),
-             new Triple(processVal, "turbo:TURBO_0010108", triplesAdded, false, false)
+             new Triple(processVal, "turbo:TURBO_0010108", triplesAdded, false, false),
+             new Triple(processBoundary, "obo:RO_0002223", processVal, false, false),
+             new Triple(processBoundary, "rdf:type", "obo:BFO_0000035", false, false),
+             new Triple(timeMeasDatum, "obo:IAO_0000136", processBoundary, false, false),
+             new Triple(timeMeasDatum, "rdf:type", "obo:IAO_0000416", false, false),
+             new Triple(timeMeasDatum, "turbo:TURBO_0010094", currDate, false, false)
         )
+        for (inputGraph <- inputNamedGraphsList) metaTriples += new Triple(processVal, "turbo:TURBO_0010187", inputGraph, false, false)
         metaTriples
     }
 }

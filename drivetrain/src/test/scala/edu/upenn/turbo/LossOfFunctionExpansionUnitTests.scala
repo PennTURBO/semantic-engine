@@ -186,5 +186,100 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         helper.checkStringArraysForEquivalency(checkPredicates, tripsResult.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         tripsResult.size should be (54)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010180 
+                
+                  obo:OBI_0000293 pmbb:allele1 ;
+                  obo:OBI_0000293 pmbb:part1 ;
+                  obo:OBI_0000293 pmbb:bbenc1 ;
+                  obo:OBI_0000293 pmbb:shortcutBbEnc1 ;
+                  
+                  ontologies:TURBO_0010184 ?TURBO_0000566 ;
+                  ontologies:TURBO_0010184 ?OBI_0001868 ;
+                  ontologies:TURBO_0010184 ?OBI_0001051 ;
+                  ontologies:TURBO_0010184 ?OBI_0200000 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000568 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000567 ;
+                  ontologies:TURBO_0010184 ?OBI_0002118 ;
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?OBI_0001479 ;
+                  ontologies:TURBO_0010184 ?OBI_0000257 ;
+                  ontologies:TURBO_0010184 ?OBI_0001352 ;
+                  ontologies:TURBO_0010184 ?OBI_0600005 ;
+                  ontologies:TURBO_0010184 ?OBI_0001573 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:allele1 ;
+                  ontologies:TURBO_0010184 pmbb:bbenc1 ;
+                  ontologies:TURBO_0010184 pmbb:part1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000068912> ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000451 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000590 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?TURBO_0000566 a turbo:TURBO_0000566 .
+                ?OBI_0001868 a obo:OBI_0001868 .
+                ?OBI_0001051 a obo:OBI_0001051 .
+                ?OBI_0200000 a obo:OBI_0200000 .
+                ?TURBO_0000568 a turbo:TURBO_0000568 .
+                ?TURBO_0000567 a turbo:TURBO_0000567 .
+                ?OBI_0002118 a obo:OBI_0002118 .
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?OBI_0001479 a obo:OBI_0001479 .
+                ?OBI_0000257 a obo:OBI_0000257 .
+                ?OBI_0001352 a obo:OBI_0001352 .
+                ?OBI_0600005 a obo:OBI_0600005 .
+                ?OBI_0001573 a obo:OBI_0001573 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        
+        val processMeta: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ?processBoundary obo:RO_0002223 ontologies:TURBO_0010180 .
+                ?processBoundary a obo:BFO_0000035 .
+                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+                ?timeMeasDatum a obo:IAO_0000416 .
+                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+                
+                ontologies:TURBO_0010180 
+                    turbo:TURBO_0010106 ?someQuery ;
+                    turbo:TURBO_0010107 ?someRuntime ;
+                    turbo:TURBO_0010108 ?someNumberOfTriples;
+                    turbo:TURBO_0010186 pmbb:expanded ;
+                    turbo:TURBO_0010187 pmbb:Shortcuts_LofShortcuts ;
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        
+        val countProcessTriples: String = 
+        """
+        Select * Where
+        {
+            Graph pmbb:processes
+            {
+                ?s ?p ?o .
+            }
+        }
+        """
+        val processTriplesResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countProcessTriples, "p")
+        processTriplesResult.size should be (34)
     }
 }
