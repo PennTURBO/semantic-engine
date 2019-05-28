@@ -36,7 +36,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         		?encsymb turbo:TURBO_0010094 'B' .
         		?encregden a turbo:TURBO_0000535 .
         		# ?encregden turbo:TURBO_0010094 'biobank' .
-        		?encregden obo:IAO_0000219 <http://transformunify.org/hcEncReg/biobank> .
+        		?encregden obo:IAO_0000219 turbo:TURBO_0000420 .
         		?dataset <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:IAO_0000100 .
        }}
       """
@@ -106,6 +106,16 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
             }
           }
           """
+    
+    val anyProcess: String = """
+      ASK
+      {
+          Graph pmbb:processes
+          {
+              ?s ?p ?o .
+          }
+      }
+      """
      
     before
     {
@@ -139,7 +149,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           turbo:TURBO_0000626 "180.34"^^xsd:float ;
           turbo:TURBO_0000625 "2017-01-15"^^xsd:date ;
           turbo:TURBO_0000629 "biobank" ;
-          turbo:TURBO_0000630 <http://transformunify.org/hcEncReg/biobank> ;
+          turbo:TURBO_0000630 turbo:TURBO_0000420 ;
           turbo:TURBO_0010133 "http://www.itmat.upenn.edu/biobank/part1"^^xsd:anyURI .
           }}
           """
@@ -186,6 +196,52 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (49)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010177
+                
+                  obo:OBI_0000293 pmbb:bbenc1 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000420 ;
+                  
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?OBI_0001929 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000531 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000532 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000533 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000534 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000535 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010138 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000527 ;
+                  ontologies:TURBO_0010184 ?EFO_0004340 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:bbenc1 ;
+                  ontologies:TURBO_0010184 pmbb:part1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?OBI_0001929 a obo:OBI_0001929 .
+                ?TURBO_0000531 a turbo:TURBO_0000531 .
+                ?TURBO_0000532 a turbo:TURBO_0000532 .
+                ?TURBO_0000533 a turbo:TURBO_0000533 .
+                ?TURBO_0000534 a turbo:TURBO_0000534 .
+                ?TURBO_0000535 a turbo:TURBO_0000535 .
+                ?TURBO_0010138 a turbo:TURBO_0010138 .
+                ?TURBO_0000527 a turbo:TURBO_0000527 .
+                ?EFO_0004340 a efo:EFO_0004340 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
     test("bb encounter with minimum required for expansion")
@@ -196,7 +252,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           a turbo:TURBO_0010169 ;
           turbo:TURBO_0000628 "B" ;
           turbo:TURBO_0000623 "enc_expand.csv" ;
-          turbo:TURBO_0000630 <http://transformunify.org/hcEncReg/biobank> .
+          turbo:TURBO_0000630 turbo:TURBO_0000420 .
           }}
           """
         update.updateSparql(testCxn, insert)
@@ -228,6 +284,41 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (21)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010177
+                
+                  obo:OBI_0000293 pmbb:bbenc1 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000420 ;
+                  
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000533 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000534 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000535 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000527 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:bbenc1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?TURBO_0000533 a turbo:TURBO_0000533 .
+                ?TURBO_0000534 a turbo:TURBO_0000534 .
+                ?TURBO_0000535 a turbo:TURBO_0000535 .
+                ?TURBO_0000527 a turbo:TURBO_0000527 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
    
     test("bb encounter without registry")
@@ -248,6 +339,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (false)
         update.querySparqlBoolean(testCxn, processMeta).get should be (false)
+        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -261,7 +353,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           pmbb:bbenc1
           turbo:TURBO_0000623 "enc_expand.csv" ;
           a turbo:TURBO_0010169 ;
-          turbo:TURBO_0000630 <http://transformunify.org/hcEncReg/biobank> ;
+          turbo:TURBO_0000630 turbo:TURBO_0000420 ;
           turbo:TURBO_0000629 "biobank" .
           }}
           """
@@ -273,6 +365,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (false)
         update.querySparqlBoolean(testCxn, processMeta).get should be (false)
+        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -286,7 +379,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           pmbb:bbenc1
           turbo:TURBO_0000628 "B" ;
           a turbo:TURBO_0010169 ;
-          turbo:TURBO_0000630 <http://transformunify.org/hcEncReg/biobank> ;
+          turbo:TURBO_0000630 turbo:TURBO_0000420 ;
           turbo:TURBO_0000629 "biobank" .
           }}
           """
@@ -298,6 +391,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (false)
         update.querySparqlBoolean(testCxn, processMeta).get should be (false)
+        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -317,7 +411,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           turbo:TURBO_0000627 "61.2244897959"^^xsd:float ;
           turbo:TURBO_0000626 "180.34"^^xsd:float ;
           turbo:TURBO_0000629 "biobank" ;
-          turbo:TURBO_0000630 <http://transformunify.org/hcEncReg/biobank> .
+          turbo:TURBO_0000630 turbo:TURBO_0000420 .
           # turbo:TURBO_0000625 "2017-01-15"^^xsd:date .
           }}
           """
@@ -378,5 +472,44 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (46)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010177
+                
+                  obo:OBI_0000293 pmbb:bbenc1 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000420 ;
+                  
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000533 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000534 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000535 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000532 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000531 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000527 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:bbenc1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?TURBO_0000533 a turbo:TURBO_0000533 .
+                ?TURBO_0000534 a turbo:TURBO_0000534 .
+                ?TURBO_0000535 a turbo:TURBO_0000535 .
+                ?TURBO_0000531 a turbo:TURBO_0000531 .
+                ?TURBO_0000532 a turbo:TURBO_0000532 .
+                ?TURBO_0000527 a turbo:TURBO_0000527 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
 }

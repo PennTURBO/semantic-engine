@@ -136,6 +136,10 @@ ontologies:GenderIdentityTypeRule
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${original}, obo:OMRSE_00000133) AS ${replacement})" ;
 .
+ontologies:RaceIdentityTypeRule
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${original}, obo:OMRSE_00000098) AS ${replacement})" ;
+.
 ontologies:GeneSymbolUriOfVariousTypes
   a owl:Class ;
   rdfs:subClassOf owl:Thing ;
@@ -2512,7 +2516,7 @@ ontologies:raceIdentityTypeVariableManipulation
   ontologies:hasOriginalVariable ontologies:shortcutRaceIdentityDatumOfVariousTypes ;
   ontologies:manipulationCreates ontologies:raceIdentityDatumType ;
   ontologies:manipulationDependsOn ontologies:shortcutRaceIdentityDatumOfVariousTypes ;
-  ontologies:usesSparqlLogic ontologies:BindAs ;
+  ontologies:usesSparqlLogic ontologies:RaceIdentityTypeRule ;
 .
 ontologies:required
   a owl:DatatypeProperty ;

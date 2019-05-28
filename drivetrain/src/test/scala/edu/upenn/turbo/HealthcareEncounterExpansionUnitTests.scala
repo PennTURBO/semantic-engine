@@ -163,6 +163,16 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         }
         """
     
+    val anyProcess: String = """
+      ASK
+      {
+          Graph pmbb:processes
+          {
+              ?s ?p ?o .
+          }
+      }
+      """
+    
     before
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
@@ -186,30 +196,30 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           
           <http://www.itmat.upenn.edu/biobank/hcenc1>
-          turbo:TURBO_0000655 "26.2577659792"^^xsd:float ;
-          turbo:TURBO_0000644 "15/Jan/2017" ;
-          turbo:TURBO_0000648 "20" ;
-          turbo:TURBO_0000647 "83.0082554658"^^xsd:float ;
-          turbo:TURBO_0000646 "177.8"^^xsd:float ;
-          turbo:TURBO_0000645 "2017-01-15"^^xsd:date ;
-          a turbo:TURBO_0010158 ;
-          turbo:TURBO_0010110 turbo:TURBO_0000440 ;
-          turbo:TURBO_0000643 "enc_expand.csv" ;
-          turbo:TURBO_0010131 "http://www.itmat.upenn.edu/biobank/part1"^^xsd:anyURI ;
+            turbo:TURBO_0000655 "26.2577659792"^^xsd:float ;
+            turbo:TURBO_0000644 "15/Jan/2017" ;
+            turbo:TURBO_0000648 "20" ;
+            turbo:TURBO_0000647 "83.0082554658"^^xsd:float ;
+            turbo:TURBO_0000646 "177.8"^^xsd:float ;
+            turbo:TURBO_0000645 "2017-01-15"^^xsd:date ;
+            a turbo:TURBO_0010158 ;
+            turbo:TURBO_0010110 turbo:TURBO_0000440 ;
+            turbo:TURBO_0000643 "enc_expand.csv" ;
+            turbo:TURBO_0010131 "http://www.itmat.upenn.edu/biobank/part1"^^xsd:anyURI ;
           
-          obo:OBI_0000299 turbo:diagnosis1 .
-          turbo:diagnosis1 a turbo:TURBO_0010160 ;
-          turbo:TURBO_0004603 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
-          turbo:TURBO_0004602 "ICD-9" ;
-          turbo:TURBO_0004601 "401.9" ;
-          turbo:TURBO_0010013 "true"^^xsd:Boolean ;
-          turbo:TURBO_0010014 "1"^^xsd:Integer .
+          obo:OBI_0000299 pmbb:diagnosis1 .
+          pmbb:diagnosis1 a turbo:TURBO_0010160 ;
+            turbo:TURBO_0004603 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
+            turbo:TURBO_0004602 "ICD-9" ;
+            turbo:TURBO_0004601 "401.9" ;
+            turbo:TURBO_0010013 "true"^^xsd:Boolean ;
+            turbo:TURBO_0010014 "1"^^xsd:Integer .
           
-          pmbb:hcenc1 obo:OBI_0000299 turbo:prescription1 .
-          turbo:prescription1 a turbo:TURBO_0010159 ;
-          turbo:TURBO_0005601 "3" ;
-          turbo:TURBO_0005611 "holistic soil from the ganges" ;
-          turbo:TURBO_0005612 turbo:someDrug .
+          pmbb:hcenc1 obo:OBI_0000299 pmbb:prescription1 .
+          pmbb:prescription1 a turbo:TURBO_0010159 ;
+            turbo:TURBO_0005601 "3" ;
+            turbo:TURBO_0005611 "holistic soil from the ganges" ;
+            turbo:TURBO_0005612 turbo:someDrug .
           }}
           """
         update.updateSparql(testCxn, insert)
@@ -270,6 +280,65 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (73)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010179
+                
+                  obo:OBI_0000293 pmbb:hcenc1 ;
+                  obo:OBI_0000293 pmbb:diagnosis1 ;
+                  obo:OBI_0000293 pmbb:prescription1 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000440 ;
+                  ontologies:TURBO_0010184 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
+                  ontologies:TURBO_0010184 <http://purl.bioontology.org/ontology/ICD9CM/401.9> ;
+                  ontologies:TURBO_0010184 turbo:someDrug ;
+                  
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?OBI_0001929 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000511 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000512 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000508 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000509 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000510 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010138 ;
+                  ontologies:TURBO_0010184 ?OGMS_0000097 ;
+                  ontologies:TURBO_0010184 ?EFO_0004340 ;
+                  ontologies:TURBO_0010184 ?OGMS_0000073 ;
+                  ontologies:TURBO_0010184 ?PDRO_0000001 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000562 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000561 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:hcenc1 ;
+                  ontologies:TURBO_0010184 pmbb:part1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?OBI_0001929 a obo:OBI_0001929 .
+                ?TURBO_0000511 a turbo:TURBO_0000511 .
+                ?TURBO_0000512 a turbo:TURBO_0000512 .
+                ?TURBO_0000508 a turbo:TURBO_0000508 .
+                ?TURBO_0000509 a turbo:TURBO_0000509 .
+                ?TURBO_0000510 a turbo:TURBO_0000510 .
+                ?TURBO_0010138 a turbo:TURBO_0010138 .
+                ?OGMS_0000097 a obo:OGMS_0000097 .
+                ?EFO_0004340 a efo:EFO_0004340 .
+                ?OGMS_0000073 a obo:OGMS_0000073 .
+                ?PDRO_0000001 a obo:PDRO_0000001 .
+                ?TURBO_0000562 a turbo:TURBO_0000562 .
+                ?TURBO_0000561 a turbo:TURBO_0000561 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
     test("hc encounter with minimum required for expansion")
@@ -315,6 +384,41 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (21)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010179
+                
+                  obo:OBI_0000293 pmbb:hcenc1 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000440 ;
+                  
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000508 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000509 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000510 ;
+                  ontologies:TURBO_0010184 ?OGMS_0000097 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:hcenc1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?TURBO_0000508 a turbo:TURBO_0000508 .
+                ?TURBO_0000509 a turbo:TURBO_0000509 .
+                ?TURBO_0000510 a turbo:TURBO_0000510 .
+                ?OGMS_0000097 a obo:OGMS_0000097 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
     test("hc encounter without ID")
@@ -338,6 +442,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
         update.querySparqlBoolean(testCxn, processMeta).get should be (false)
+        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -365,6 +470,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
         update.querySparqlBoolean(testCxn, processMeta).get should be (false)
+        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -392,6 +498,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
         update.querySparqlBoolean(testCxn, processMeta).get should be (false)
+        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -411,12 +518,12 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           turbo:TURBO_0000646 "177.8"^^xsd:float ;
           turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
           a turbo:TURBO_0010158 ;
-          obo:OBI_0000299 turbo:diagnosis1 .
-          turbo:diagnosis1 a turbo:TURBO_0010160 ;
+          obo:OBI_0000299 pmbb:diagnosis1 .
+          pmbb:diagnosis1 a turbo:TURBO_0010160 ;
               turbo:TURBO_0004602 "ICD-9" .
               
-          pmbb:hcenc1 obo:OBI_0000299 turbo:prescription1 .
-          turbo:prescription1 a turbo:TURBO_0010159 ;
+          pmbb:hcenc1 obo:OBI_0000299 pmbb:prescription1 .
+          pmbb:prescription1 a turbo:TURBO_0010159 ;
           turbo:TURBO_0005601 "3" .
           
           }}
@@ -450,24 +557,24 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
            }}"""
         
         val healthcareMedicationsMinimum: String = """
-      ask {graph pmbb:expanded {
-          ?dataset a obo:IAO_0000100 .
-          ?encounter a obo:OGMS_0000097 .
-          ?encounter obo:OBI_0000299 ?drugPrescript .
-      		?drugPrescript a obo:PDRO_0000001 .
-
-      		?medCrid obo:IAO_0000219 ?drugPrescript .
-      		?medCrid a turbo:TURBO_0000561 .
-      		?medCrid obo:BFO_0000051 ?medCridSymbol .
-      		?medCridSymbol a turbo:TURBO_0000562 .
-      		?medCridSymbol turbo:TURBO_0010094 "3" .
-      		
-      		?drugPrescript obo:BFO_0000050 ?dataset .
-      		?dataset obo:BFO_0000051 ?drugPrescript .
-      		?medCridSymbol obo:BFO_0000050 ?dataset .
-      		?dataset obo:BFO_0000051 ?medCridSymbol .
-      		}}
-      """
+        ask {graph pmbb:expanded {
+            ?dataset a obo:IAO_0000100 .
+            ?encounter a obo:OGMS_0000097 .
+            ?encounter obo:OBI_0000299 ?drugPrescript .
+        		?drugPrescript a obo:PDRO_0000001 .
+  
+        		?medCrid obo:IAO_0000219 ?drugPrescript .
+        		?medCrid a turbo:TURBO_0000561 .
+        		?medCrid obo:BFO_0000051 ?medCridSymbol .
+        		?medCridSymbol a turbo:TURBO_0000562 .
+        		?medCridSymbol turbo:TURBO_0010094 "3" .
+        		
+        		?drugPrescript obo:BFO_0000050 ?dataset .
+        		?dataset obo:BFO_0000051 ?drugPrescript .
+        		?medCridSymbol obo:BFO_0000050 ?dataset .
+        		?dataset obo:BFO_0000051 ?medCridSymbol .
+        		}}
+        """
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
@@ -521,6 +628,61 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (63)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010179
+                
+                  obo:OBI_0000293 pmbb:hcenc1 ;
+                  obo:OBI_0000293 pmbb:diagnosis1 ;
+                  obo:OBI_0000293 pmbb:prescription1 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000440 ;
+                  
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?OBI_0001929 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000511 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000512 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000508 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000509 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000510 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010138 ;
+                  ontologies:TURBO_0010184 ?OGMS_0000097 ;
+                  ontologies:TURBO_0010184 ?EFO_0004340 ;
+                  ontologies:TURBO_0010184 ?OGMS_0000073 ;
+                  ontologies:TURBO_0010184 ?PDRO_0000001 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000562 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000561 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:hcenc1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?OBI_0001929 a obo:OBI_0001929 .
+                ?TURBO_0000511 a turbo:TURBO_0000511 .
+                ?TURBO_0000512 a turbo:TURBO_0000512 .
+                ?TURBO_0000508 a turbo:TURBO_0000508 .
+                ?TURBO_0000509 a turbo:TURBO_0000509 .
+                ?TURBO_0000510 a turbo:TURBO_0000510 .
+                ?TURBO_0010138 a turbo:TURBO_0010138 .
+                ?OGMS_0000097 a obo:OGMS_0000097 .
+                ?EFO_0004340 a efo:EFO_0004340 .
+                ?OGMS_0000073 a obo:OGMS_0000073 .
+                ?PDRO_0000001 a obo:PDRO_0000001 .
+                ?TURBO_0000562 a turbo:TURBO_0000562 .
+                ?TURBO_0000561 a turbo:TURBO_0000561 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
     test("ensure diagnosis info stays together with duplicate hc enc URI")
@@ -532,8 +694,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           turbo:TURBO_0000648 "20" ;
           a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
-          obo:OBI_0000299 turbo:diagnosis1 .
-          turbo:diagnosis1 a turbo:TURBO_0010160 ;
+          obo:OBI_0000299 pmbb:diagnosis1 .
+          pmbb:diagnosis1 a turbo:TURBO_0010160 ;
           turbo:TURBO_0004603 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
           turbo:TURBO_0004602 "ICD-9" ;
           turbo:TURBO_0004601 "401.9" .
@@ -543,8 +705,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           turbo:TURBO_0000648 "20" ;
           a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
-          obo:OBI_0000299 turbo:diagnosis2 .
-          turbo:diagnosis2 a turbo:TURBO_0010160 ;
+          obo:OBI_0000299 pmbb:diagnosis2 .
+          pmbb:diagnosis2 a turbo:TURBO_0010160 ;
           turbo:TURBO_0004603 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892> ;
           turbo:TURBO_0004602 "ICD-10" ;
           turbo:TURBO_0004601 "177.8" . 
@@ -594,7 +756,52 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
          update.querySparqlBoolean(testCxn, checkDiag).get should be (true)
          update.querySparqlAndUnpackTuple(testCxn, countDiag, "diagnosisCount")(0) should startWith ("\"2")
          update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010179
+                
+                  obo:OBI_0000293 pmbb:hcenc1 ;
+                  obo:OBI_0000293 pmbb:diagnosis1 ;
+                  obo:OBI_0000293 pmbb:diagnosis2 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000440 ;
+                  ontologies:TURBO_0010184 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
+                  ontologies:TURBO_0010184 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892> ;
+                  ontologies:TURBO_0010184 <http://purl.bioontology.org/ontology/ICD9CM/401.9> ;
+                  ontologies:TURBO_0010184 <http://purl.bioontology.org/ontology/ICD10CM/177.8> ;
+                  
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000508 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000509 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000510 ;
+                  ontologies:TURBO_0010184 ?OGMS_0000097 ;
+                  ontologies:TURBO_0010184 ?OGMS_0000073_1 ;
+                  ontologies:TURBO_0010184 ?OGMS_0000073_2 ;
+
+                  ontologies:TURBO_0010184 pmbb:hcenc1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?TURBO_0000508 a turbo:TURBO_0000508 .
+                ?TURBO_0000509 a turbo:TURBO_0000509 .
+                ?TURBO_0000510 a turbo:TURBO_0000510 .
+                ?OGMS_0000097 a obo:OGMS_0000097 .
+                ?OGMS_0000073_1 a obo:OGMS_0000073 .
+                ?OGMS_0000073_2 a obo:OGMS_0000073 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
     test("ensure medication info stays together with duplicate hc enc URI")
@@ -606,8 +813,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           turbo:TURBO_0000648 "20" ;
           a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 turbo:TURBO_0000440 ;
-          obo:OBI_0000299 turbo:prescription1 .
-          turbo:prescription1 a turbo:TURBO_0010159 ;
+          obo:OBI_0000299 pmbb:prescription1 .
+          pmbb:prescription1 a turbo:TURBO_0010159 ;
           turbo:TURBO_0005601 "3" ;
           turbo:TURBO_0005611 "holistic soil from the ganges" .
           
@@ -616,8 +823,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           turbo:TURBO_0000648 "20" ;
           a turbo:TURBO_0010158 ;
           turbo:TURBO_0010110 turbo:TURBO_0000440 ;
-          obo:OBI_0000299 turbo:prescription2 .
-          turbo:prescription2 a turbo:TURBO_0010159 ;
+          obo:OBI_0000299 pmbb:prescription2 .
+          pmbb:prescription2 a turbo:TURBO_0010159 ;
           turbo:TURBO_0005601 "4" ;
           turbo:TURBO_0005611 "medicinal purple kush" . 
           }}"""
@@ -675,6 +882,54 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
          update.querySparqlAndUnpackTuple(testCxn, countDiag, "medCridCount")(0) should startWith ("\"2")
          update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
          update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        
+        val processInputsOutputs: String = """
+        ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010179
+                
+                  obo:OBI_0000293 pmbb:hcenc1 ;
+                  obo:OBI_0000293 pmbb:prescription1 ;
+                  obo:OBI_0000293 pmbb:prescription2 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000440 ;
+                  
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000508 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000509 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000510 ;
+                  ontologies:TURBO_0010184 ?OGMS_0000097 ;
+                  ontologies:TURBO_0010184 ?PDRO_0000001_1 ;
+                  ontologies:TURBO_0010184 ?PDRO_0000001_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000562_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000562_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000561_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000561_2 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:hcenc1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?TURBO_0000508 a turbo:TURBO_0000508 .
+                ?TURBO_0000509 a turbo:TURBO_0000509 .
+                ?TURBO_0000510 a turbo:TURBO_0000510 .
+                ?OGMS_0000097 a obo:OGMS_0000097 .
+                ?PDRO_0000001_1 a obo:PDRO_0000001 .
+                ?PDRO_0000001_2 a obo:PDRO_0000001 .
+                ?TURBO_0000562_1 a turbo:TURBO_0000562 .
+                ?TURBO_0000562_2 a turbo:TURBO_0000562 .
+                ?TURBO_0000561_1 a turbo:TURBO_0000561 .
+                ?TURBO_0000561_2 a turbo:TURBO_0000561 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
     test("expand hc encs over multiple named graphs")
@@ -935,5 +1190,71 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, datasetCheck3).get should be (true)
         update.querySparqlBoolean(testCxn, datasetCheck4).get should be (true)
         update.querySparqlBoolean(testCxn, datasetCheck5).get should be (true)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010179
+                
+                  obo:OBI_0000293 pmbb:hcenc1 ;
+                  obo:OBI_0000293 pmbb:diagCridSC ;
+                  obo:OBI_0000293 pmbb:prescription ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000440 ;
+                  ontologies:TURBO_0010184 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
+                  ontologies:TURBO_0010184 <http://purl.bioontology.org/ontology/ICD9CM/401.9> ;
+                  ontologies:TURBO_0010184 turbo:someDrug ;
+                  
+                  ontologies:TURBO_0010184 ?IAO_0000100_1 ;
+                  ontologies:TURBO_0010184 ?IAO_0000100_2 ;
+                  ontologies:TURBO_0010184 ?IAO_0000100_3 ;
+                  ontologies:TURBO_0010184 ?IAO_0000100_4 ;
+                  ontologies:TURBO_0010184 ?IAO_0000100_5 ;
+                  ontologies:TURBO_0010184 ?OBI_0001929 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000511 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000512 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000508 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000509 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000510 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010138 ;
+                  ontologies:TURBO_0010184 ?OGMS_0000097 ;
+                  ontologies:TURBO_0010184 ?EFO_0004340 ;
+                  ontologies:TURBO_0010184 ?OGMS_0000073 ;
+                  ontologies:TURBO_0010184 ?PDRO_0000001 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000562 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000561 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:hcenc1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?IAO_0000100_1 a obo:IAO_0000100 .
+                ?IAO_0000100_2 a obo:IAO_0000100 .
+                ?IAO_0000100_3 a obo:IAO_0000100 .
+                ?IAO_0000100_4 a obo:IAO_0000100 .
+                ?IAO_0000100_5 a obo:IAO_0000100 .
+                ?OBI_0001929 a obo:OBI_0001929 .
+                ?TURBO_0000511 a turbo:TURBO_0000511 .
+                ?TURBO_0000512 a turbo:TURBO_0000512 .
+                ?TURBO_0000508 a turbo:TURBO_0000508 .
+                ?TURBO_0000509 a turbo:TURBO_0000509 .
+                ?TURBO_0000510 a turbo:TURBO_0000510 .
+                ?TURBO_0010138 a turbo:TURBO_0010138 .
+                ?OGMS_0000097 a obo:OGMS_0000097 .
+                ?EFO_0004340 a efo:EFO_0004340 .
+                ?OGMS_0000073 a obo:OGMS_0000073 .
+                ?PDRO_0000001 a obo:PDRO_0000001 .
+                ?TURBO_0000562 a turbo:TURBO_0000562 .
+                ?TURBO_0000561 a turbo:TURBO_0000561 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
 }

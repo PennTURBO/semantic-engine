@@ -66,6 +66,16 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         }
         """
     
+    val anyProcess: String = """
+      ASK
+      {
+          Graph pmbb:processes
+          {
+              ?s ?p ?o .
+          }
+      }
+      """
+    
     before
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
@@ -182,6 +192,51 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (41)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010176
+                
+                  obo:OBI_0000293 pmbb:crid1 ;
+                  obo:OBI_0000293 pmbb:part1 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000410 ;
+                  ontologies:TURBO_0010184 ?UBERON_0035946 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000504 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000505 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000503 ;
+                  ontologies:TURBO_0010184 ?PATO_0000047 ;
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?OMRSE_00000138 ;
+                  ontologies:TURBO_0010184 ?EFO_0004950 ;
+                  ontologies:TURBO_0010184 ?OMRSE_00000181 ;
+                  ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:part1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?UBERON_0035946 a obo:UBERON_0035946 .
+                ?TURBO_0000504 a turbo:TURBO_0000504 .
+                ?TURBO_0000503 a turbo:TURBO_0000503 .
+                ?TURBO_0000505 a turbo:TURBO_0000505 .
+                ?PATO_0000047 a obo:PATO_0000047 .
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?OMRSE_00000138 a obo:OMRSE_00000138 .
+                ?EFO_0004950 a efo:EFO_0004950 .
+                ?OMRSE_00000181 a obo:OMRSE_00000181 .
+                ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
     test("participant with minimum required for expansion")
@@ -224,6 +279,41 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (21) 
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010176
+                
+                  obo:OBI_0000293 pmbb:crid1 ;
+                  obo:OBI_0000293 pmbb:part1 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000410 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000504 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000505 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000503 ;
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:part1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?TURBO_0000504 a turbo:TURBO_0000504 .
+                ?TURBO_0000503 a turbo:TURBO_0000503 .
+                ?TURBO_0000505 a turbo:TURBO_0000505 .
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
     test("participant without psc")
@@ -243,6 +333,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (false)
         update.querySparqlBoolean(testCxn, processMeta).get should be (false)
+        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -266,6 +357,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (false)
         update.querySparqlBoolean(testCxn, processMeta).get should be (false)
+        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -289,6 +381,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (false)
         update.querySparqlBoolean(testCxn, processMeta).get should be (false)
+        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
         
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
@@ -300,10 +393,10 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
               <http://www.itmat.upenn.edu/biobank/part1>
-              # turbo:TURBO_0010089 <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
-              # turbo:TURBO_0010086 "1969-05-04"^^xsd:date ;
+              
               a turbo:TURBO_0010161 ;
               turbo:TURBO_0010085 "04/May/1969" ;
+              turbo:TURBO_0010100 'asian' ;
               turbo:TURBO_0010098 "F" .
              
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
@@ -369,12 +462,59 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/IAO_0000136"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (35)
+        result.size should be (40)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010176
+                
+                  obo:OBI_0000293 pmbb:crid1 ;
+                  obo:OBI_0000293 pmbb:part1 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000410 ;
+                  ontologies:TURBO_0010184 ?UBERON_0035946 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000504 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000505 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000503 ;
+                  ontologies:TURBO_0010184 ?PATO_0000047 ;
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?OMRSE_00000133 ;
+                  ontologies:TURBO_0010184 ?EFO_0004950 ;
+                  ontologies:TURBO_0010184 ?OMRSE_00000098 ;
+                  ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:part1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?UBERON_0035946 a obo:UBERON_0035946 .
+                ?TURBO_0000504 a turbo:TURBO_0000504 .
+                ?TURBO_0000503 a turbo:TURBO_0000503 .
+                ?TURBO_0000505 a turbo:TURBO_0000505 .
+                ?PATO_0000047 a obo:PATO_0000047 .
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?OMRSE_00000133 a obo:OMRSE_00000133 .
+                ?EFO_0004950 a efo:EFO_0004950 .
+                ?OMRSE_00000098 a obo:OMRSE_00000098 .
+                ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
     test("expand homoSapiens with multiple identifiers - single dataset")
@@ -577,6 +717,70 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")  
         
         result.size should be (69)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010176
+                
+                  obo:OBI_0000293 pmbb:shortcutCrid1 ;
+                  obo:OBI_0000293 pmbb:shortcutCrid2 ;
+                  obo:OBI_0000293 pmbb:shortcutCrid3 ;
+                  obo:OBI_0000293 pmbb:part1 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000402 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000403 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000410 ;
+                  
+                  ontologies:TURBO_0010184 ?TURBO_0000504_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000505_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000503_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000504_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000505_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000503_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000504_3 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000505_3 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000503_3 ;
+                  
+                  ontologies:TURBO_0010184 ?UBERON_0035946 ;
+                  ontologies:TURBO_0010184 ?PATO_0000047 ;
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?OMRSE_00000138 ;
+                  ontologies:TURBO_0010184 ?EFO_0004950 ;
+                  ontologies:TURBO_0010184 ?OMRSE_00000181 ;
+                  ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:part1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?UBERON_0035946 a obo:UBERON_0035946 .
+                ?PATO_0000047 a obo:PATO_0000047 .
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?OMRSE_00000138 a obo:OMRSE_00000138 .
+                ?EFO_0004950 a efo:EFO_0004950 .
+                ?OMRSE_00000181 a obo:OMRSE_00000181 .
+                ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+                
+                ?TURBO_0000504_1 a turbo:TURBO_0000504 .
+                ?TURBO_0000503_1 a turbo:TURBO_0000503 .
+                ?TURBO_0000505_1 a turbo:TURBO_0000505 .
+                ?TURBO_0000504_2 a turbo:TURBO_0000504 .
+                ?TURBO_0000503_2 a turbo:TURBO_0000503 .
+                ?TURBO_0000505_2 a turbo:TURBO_0000505 .
+                ?TURBO_0000504_3 a turbo:TURBO_0000504 .
+                ?TURBO_0000503_3 a turbo:TURBO_0000503 .
+                ?TURBO_0000505_3 a turbo:TURBO_0000505 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
     test("expand homoSapiens with multiple identifiers - multiple datasets")
@@ -736,5 +940,69 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         }
         """
         update.querySparqlBoolean(testCxn, processMetaMultipleDatasets).get should be (true)
+        
+        val processInputsOutputs: String = """
+          
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ontologies:TURBO_0010176
+                
+                  obo:OBI_0000293 pmbb:shortcutCrid1 ;
+                  obo:OBI_0000293 pmbb:shortcutCrid2 ;
+                  obo:OBI_0000293 pmbb:shortcutCrid3 ;
+                  obo:OBI_0000293 pmbb:part1 ;
+                  
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000402 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000403 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000410 ;
+                  
+                  ontologies:TURBO_0010184 ?TURBO_0000504_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000505_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000503_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000504_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000505_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000503_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000504_3 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000505_3 ;
+                  ontologies:TURBO_0010184 ?TURBO_0000503_3 ;
+                  
+                  ontologies:TURBO_0010184 ?UBERON_0035946 ;
+                  ontologies:TURBO_0010184 ?PATO_0000047 ;
+                  ontologies:TURBO_0010184 ?IAO_0000100 ;
+                  ontologies:TURBO_0010184 ?OMRSE_00000138 ;
+                  ontologies:TURBO_0010184 ?EFO_0004950 ;
+                  ontologies:TURBO_0010184 ?OMRSE_00000181 ;
+                  ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
+                  
+                  ontologies:TURBO_0010184 pmbb:part1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+            }
+            Graph pmbb:expanded 
+            {
+                ?UBERON_0035946 a obo:UBERON_0035946 .
+                ?PATO_0000047 a obo:PATO_0000047 .
+                ?IAO_0000100 a obo:IAO_0000100 .
+                ?OMRSE_00000138 a obo:OMRSE_00000138 .
+                ?EFO_0004950 a efo:EFO_0004950 .
+                ?OMRSE_00000181 a obo:OMRSE_00000181 .
+                ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+                
+                ?TURBO_0000504_1 a turbo:TURBO_0000504 .
+                ?TURBO_0000503_1 a turbo:TURBO_0000503 .
+                ?TURBO_0000505_1 a turbo:TURBO_0000505 .
+                ?TURBO_0000504_2 a turbo:TURBO_0000504 .
+                ?TURBO_0000503_2 a turbo:TURBO_0000503 .
+                ?TURBO_0000505_2 a turbo:TURBO_0000505 .
+                ?TURBO_0000504_3 a turbo:TURBO_0000504 .
+                ?TURBO_0000503_3 a turbo:TURBO_0000503 .
+                ?TURBO_0000505_3 a turbo:TURBO_0000505 .
+            }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
 }

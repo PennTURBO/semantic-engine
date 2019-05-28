@@ -580,7 +580,11 @@ class TurboMultiuseClass
     def generateNamedGraphsListFromPrefix(cxn: RepositoryConnection, graphsPrefix: String, whereClause: String): ArrayBuffer[String] =
     {
         assert (whereClause.contains("GRAPH") && whereClause.contains("WHERE"))
+        
         val graphVar = "g"
+        var filterClause = "filter "
+        if (graphsPrefix.charAt(graphsPrefix.size-1) == '_') filterClause += s"(strStarts(str(?$graphVar), str(<$graphsPrefix>)))"
+        else filterClause += s"(?$graphVar = <$graphsPrefix>)"
         // remove last bracket of where clause
         val whereClauseNoFinalBracket = whereClause.substring(0, whereClause.length-1)
         // replace input named graph with sparql variable
@@ -591,7 +595,7 @@ class TurboMultiuseClass
         val getGraphs: String = s"""
         select distinct ?$graphVar
         $whereClauseWithGraphReplacement
-            filter (strStarts(str(?$graphVar), """"+graphsPrefix+""""))
+        $filterClause
         }"""
         updater.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
     }

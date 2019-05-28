@@ -73,41 +73,45 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         primaryQuery.createInsertClause(outputs)
         
         val genericWhereClause = primaryQuery.whereClause
-        // get list of all named graphs which match pattern specified in inputNamedGraph and include processBaseType
-        var inputNamedGraphsList = getInputNamedGraphsList(inputNamedGraph, genericWhereClause)
+        // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
+        var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph, genericWhereClause)
         logger.info("input named graphs size: " + inputNamedGraphsList.size)
             
-        // for each input named graph, run query with specified named graph
-        for (graph <- inputNamedGraphsList)
+        if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $process: no input named graphs found")
+        else
         {
-            primaryQuery.whereClause = genericWhereClause.replaceAll(inputNamedGraph, graph)
-            //logger.info(primaryQuery.getQuery())
-            primaryQuery.runQuery(cxn)
-        }
-        // set back to generic input named graph for storing in metadata
-        primaryQuery.whereClause = genericWhereClause
-        
-        val endingTriplesCount = helper.countTriplesInDatabase(cxn)
-        val triplesAdded = endingTriplesCount - startingTriplesCount
-        val endTime = System.nanoTime()
-        val runtime: String = ((endTime - startTime)/1000000000.0).toString
-        logger.info("Completed process " + process + " in " + runtime + " seconds")
-        
-        // create metadata about process
-        val metaDataQuery = new DataQuery()
-        val metaInfo: HashMap[Value, ArrayBuffer[String]] = HashMap(METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
-                                                        DATE -> ArrayBuffer(currDate.toString), 
-                                                        PROCESS -> ArrayBuffer(process), 
-                                                        OUTPUTNAMEDGRAPH -> ArrayBuffer(outputNamedGraph),
-                                                        PROCESSRUNTIME -> ArrayBuffer(runtime),
-                                                        TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
-                                                        INPUTNAMEDGRAPHS -> inputNamedGraphsList
-                                                        )
-                                                        
-        val metaDataTriples = createMetaDataTriples(metaInfo)
-        metaDataQuery.createInsertDataClause(metaDataTriples, processNamedGraph)
-        //logger.info(metaDataQuery.getQuery())
-        metaDataQuery.runQuery(cxn)
+            // for each input named graph, run query with specified named graph
+            for (graph <- inputNamedGraphsList)
+            {
+                primaryQuery.whereClause = genericWhereClause.replaceAll(inputNamedGraph, graph)
+                //logger.info(primaryQuery.getQuery())
+                primaryQuery.runQuery(cxn)
+            }
+            // set back to generic input named graph for storing in metadata
+            primaryQuery.whereClause = genericWhereClause
+            
+            val endingTriplesCount = helper.countTriplesInDatabase(cxn)
+            val triplesAdded = endingTriplesCount - startingTriplesCount
+            val endTime = System.nanoTime()
+            val runtime: String = ((endTime - startTime)/1000000000.0).toString
+            logger.info("Completed process " + process + " in " + runtime + " seconds")
+            
+            // create metadata about process
+            val metaDataQuery = new DataQuery()
+            val metaInfo: HashMap[Value, ArrayBuffer[String]] = HashMap(METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
+                                                            DATE -> ArrayBuffer(currDate.toString), 
+                                                            PROCESS -> ArrayBuffer(process), 
+                                                            OUTPUTNAMEDGRAPH -> ArrayBuffer(outputNamedGraph),
+                                                            PROCESSRUNTIME -> ArrayBuffer(runtime),
+                                                            TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
+                                                            INPUTNAMEDGRAPHS -> inputNamedGraphsList
+                                                            )
+                                                            
+            val metaDataTriples = createMetaDataTriples(metaInfo)
+            metaDataQuery.createInsertDataClause(metaDataTriples, processNamedGraph)
+            //logger.info(metaDataQuery.getQuery())
+            metaDataQuery.runQuery(cxn) 
+            }
     }
     
     def getInputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
@@ -294,21 +298,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             else currProcess = null
         }
         processesInOrder
-    }
-    
-    /*
-     * Get all named graphs in the target repository which contain the base type assigned to the process and match the input named graph provided from the process
-     * 
-     * @return ArrayBuffer[String] of all input named graphs to run generated query over
-     */
-    def getInputNamedGraphsList(inputNamedGraph: String, whereClause: String): ArrayBuffer[String] =
-    {
-        // In the model graph, an input named graph ending in '_' indicates a wildcard
-        if (inputNamedGraph.charAt(inputNamedGraph.size-1) == '_') 
-        {
-            helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph, whereClause)
-        }
-        else ArrayBuffer(inputNamedGraph)
     }
     
     def createMetaDataTriples(metaInfo: HashMap[Value, ArrayBuffer[String]]): ArrayBuffer[Triple] =

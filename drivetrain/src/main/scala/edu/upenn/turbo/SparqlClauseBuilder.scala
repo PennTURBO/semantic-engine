@@ -86,9 +86,12 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
                                       subjectAType, objectAType)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
-            val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false)
-            triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
-            if (!objectIsLiteral && newTriple.triplePredicate != "rdf:type")
+            if (usedVariables.contains(rowResult(SUBJECT.toString).toString))
+            {
+                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false)
+                triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
+            }
+            if (!objectIsLiteral && usedVariables.contains(rowResult(OBJECT.toString).toString) && newTriple.triplePredicate != "rdf:type")
             {
                 val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false)
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
