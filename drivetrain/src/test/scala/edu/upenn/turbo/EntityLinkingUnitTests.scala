@@ -258,6 +258,48 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         
         update.querySparqlBoolean(testCxn, check).get should be (true)
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+      
+        val processInputsOutputs: String = """
+          
+          ASK
+          {
+              GRAPH pmbb:processes
+              {
+                  ontologies:TURBO_0010183
+                  
+                    obo:OBI_0000293 pmbb:hcenc1 ;
+                    obo:OBI_0000293 pmbb:part1 ;
+                    obo:OBI_0000293 ?OGMS_0000097 ;
+                    obo:OBI_0000293 ?EFO_0004340 ;
+                    obo:OBI_0000293 ?TURBO_0010138 ;
+                    obo:OBI_0000293 ?OBI_0001929 ;
+                    obo:OBI_0000293 ?NCBITaxon_9606 ;
+                    
+                    ontologies:TURBO_0010184 ?OGMS_0000097 ;
+                    ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
+                    ontologies:TURBO_0010184 ?EFO_0004340 ;
+                    ontologies:TURBO_0010184 ?TURBO_0010138 ;
+                    ontologies:TURBO_0010184 ?OBI_0001929 ;
+                    ontologies:TURBO_0010184 ?PATO_0000119 ;
+                    ontologies:TURBO_0010184 ?OBI_0000093 ;
+                    ontologies:TURBO_0010184 ?PATO_0000128 ;
+              }
+              GRAPH pmbb:expanded
+              {
+                  ?OGMS_0000097 a obo:OGMS_0000097 .
+                  ?EFO_0004340 a efo:EFO_0004340 .
+                  ?TURBO_0010138 a turbo:TURBO_0010138 .
+                  ?OBI_0001929 a obo:OBI_0001929 .
+                  ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+                  ?PATO_0000119 a obo:PATO_0000119 .
+                  ?OBI_0000093 a obo:OBI_0000093 .
+                  ?PATO_0000128 a obo:PATO_0000128 .
+              }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
     test("healthcare encounter entity linking - minimum fields")
@@ -369,6 +411,35 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         update.querySparqlBoolean(testCxn, check).get should be (true)
         update.querySparqlBoolean(testCxn, noHeightWeightBmiOrDate).get should be (false)
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+      
+        val processInputsOutputs: String = """
+          
+          ASK
+          {
+              GRAPH pmbb:processes
+              {
+                  ontologies:TURBO_0010183
+                  
+                    obo:OBI_0000293 pmbb:hcenc1 ;
+                    obo:OBI_0000293 pmbb:part1 ;
+                    obo:OBI_0000293 ?OGMS_0000097 ;
+                    obo:OBI_0000293 ?NCBITaxon_9606 ;
+                    
+                    ontologies:TURBO_0010184 ?OGMS_0000097 ;
+                    ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
+                    ontologies:TURBO_0010184 ?OBI_0000093 ;
+              }
+              GRAPH pmbb:expanded
+              {
+                  ?OGMS_0000097 a obo:OGMS_0000097 .
+                  ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+                  ?OBI_0000093 a obo:OBI_0000093 .
+              }
+          }
+          
+          """
+        
+          update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
 }
     
@@ -590,6 +661,48 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
             
         update.querySparqlBoolean(testCxn, check).get should be (true)
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+            
+        val processInputsOutputs: String = """
+          
+          ASK
+          {
+              GRAPH pmbb:processes
+              {
+                  ontologies:TURBO_0010182
+                  
+                    obo:OBI_0000293 pmbb:bbenc1 ;
+                    obo:OBI_0000293 pmbb:part1 ;
+                    obo:OBI_0000293 ?TURBO_0000527 ;
+                    obo:OBI_0000293 ?EFO_0004340 ;
+                    obo:OBI_0000293 ?TURBO_0010138 ;
+                    obo:OBI_0000293 ?OBI_0001929 ;
+                    obo:OBI_0000293 ?NCBITaxon_9606 ;
+                    
+                    ontologies:TURBO_0010184 ?TURBO_0000527 ;
+                    ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
+                    ontologies:TURBO_0010184 ?EFO_0004340 ;
+                    ontologies:TURBO_0010184 ?TURBO_0010138 ;
+                    ontologies:TURBO_0010184 ?OBI_0001929 ;
+                    ontologies:TURBO_0010184 ?PATO_0000119 ;
+                    ontologies:TURBO_0010184 ?OBI_0000097 ;
+                    ontologies:TURBO_0010184 ?PATO_0000128 ;
+              }
+              GRAPH pmbb:expanded
+              {
+                  ?TURBO_0000527 a turbo:TURBO_0000527 .
+                  ?EFO_0004340 a efo:EFO_0004340 .
+                  ?TURBO_0010138 a turbo:TURBO_0010138 .
+                  ?OBI_0001929 a obo:OBI_0001929 .
+                  ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+                  ?PATO_0000119 a obo:PATO_0000119 .
+                  ?OBI_0000097 a obo:OBI_0000097 .
+                  ?PATO_0000128 a obo:PATO_0000128 .
+              }
+          }
+          
+          """
+        
+          update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
       }
     
       test("biobank encounter entity linking - minimum fields")
@@ -727,6 +840,35 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           update.querySparqlBoolean(testCxn, check).get should be (true)
           update.querySparqlBoolean(testCxn, noHeightWeightBmiOrDate).get should be (false)
           update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+          
+          val processInputsOutputs: String = """
+          
+          ASK
+          {
+              GRAPH pmbb:processes
+              {
+                  ontologies:TURBO_0010182
+                  
+                    obo:OBI_0000293 pmbb:bbenc1 ;
+                    obo:OBI_0000293 pmbb:part1 ;
+                    obo:OBI_0000293 ?TURBO_0000527 ;
+                    obo:OBI_0000293 ?NCBITaxon_9606 ;
+                    
+                    ontologies:TURBO_0010184 ?TURBO_0000527 ;
+                    ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
+                    ontologies:TURBO_0010184 ?OBI_0000097 ;
+              }
+              GRAPH pmbb:expanded
+              {
+                  ?TURBO_0000527 a turbo:TURBO_0000527 .
+                  ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+                  ?OBI_0000097 a obo:OBI_0000097 .
+              }
+          }
+          
+          """
+        
+          update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
       }
 }
     

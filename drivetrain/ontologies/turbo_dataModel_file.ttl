@@ -561,7 +561,6 @@ ontologies:biobankEncounterHomoSapiensConnectionVariableManipulation
 .
 ontologies:biobankEncounterIdToBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:TURBO_0010182 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000527 ;
   ontologies:outputOf ontologies:TURBO_0010177 ;
@@ -1867,8 +1866,6 @@ ontologies:homoSapiensIdToSymbol
 .
 ontologies:homoSapiensIdentifierToHomoSapiens
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:TURBO_0010182 ;
-  ontologies:inputTo ontologies:TURBO_0010183 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:outputOf ontologies:TURBO_0010176 ;
@@ -2040,7 +2037,6 @@ ontologies:homoSapiensVariableManipulation
 .
 ontologies:identifierToHealthcareEncounter
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:TURBO_0010183 ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:OGMS_0000097 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
