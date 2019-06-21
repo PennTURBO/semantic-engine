@@ -265,7 +265,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val getFirstProcess: String = """
           select ?firstProcess where
           {
-              ?firstProcess a turbo:TurboGraphProcess .
+              ?firstProcess rdfs:subClassOf turbo:TURBO_0010178 .
               Minus
               {
                   ?something turbo:precedes ?firstProcess .
@@ -276,8 +276,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val getProcesses: String = """
           select ?precedingProcess ?succeedingProcess where
           {
-              ?precedingProcess a turbo:TurboGraphProcess .
-              ?succeedingProcess a turbo:TurboGraphProcess .
               ?precedingProcess turbo:precedes ?succeedingProcess .
           }
         """

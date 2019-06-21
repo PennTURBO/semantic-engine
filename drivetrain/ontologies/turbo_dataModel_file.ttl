@@ -116,13 +116,18 @@ ontologies:DatatypeConnectionRecipe
   rdfs:label "datatype connection recipe" ;
   rdfs:subClassOf ontologies:TurboGraphConnectionRecipe ;
 .
-ontologies:DiagnosisRegistryRule
+ontologies:IcdDiagnosisRegistryRule
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """
         BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", ${original})), ?unbound) AS ?icd9term)
         BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat(\"http://purl.bioontology.org/ontology/ICD10CM/\", ${original})), ?unbound) AS ?icd10term)
         BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ${replacement})
-        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,${replacement}) as ${replacement})""" ;
+        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,${replacement}) as ${replacement})"""
+.
+ontologies:SnomedDiagnosisRegistryRule
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql """
+        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>, uri(concat("http://purl.bioontology.org/ontology/SNOMEDCT/", ${original})), ?unbound) AS ?SnomedTermOfVariousTypes)"""
 .
 ontologies:DrugTermOfVariousTypes
   a owl:Class ;
@@ -162,6 +167,10 @@ ontologies:IcdRegistryOfVariousTypes
 ontologies:IcdTermOfVariousTypes
   a owl:Class ;
   rdfs:label "some icd term" ;
+.
+ontologies:SnomedTermOfVariousTypes
+  a owl:Class ;
+  rdfs:label "some snomed term" ;
 .
 ontologies:InstantiationStringToURI
   a ontologies:TurboGraphVariableManipulationLogic ;
@@ -227,7 +236,7 @@ ontologies:ShortcutHomoSapiensRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "shortcut homo sapiens registry of various types" ;
 .
-ontologies:ShortcutIcdRegistryOfVariousTypes
+ontologies:ShortcutDiagnosisRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "some shortcut icd registry uri" ;
 .
@@ -1161,12 +1170,19 @@ ontologies:diagnosisIcdSuffixStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
   rdfs:label "diagnosis icd suffix literal string value" ;
 .
-ontologies:diagnosisIcdTermVariableManipulation
+ontologies:icdDiagnosisRegistryTermVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
   ontologies:hasOriginalVariable ontologies:shortcutHealthcareEncounterDiagnosisCode ;
   ontologies:manipulationCreates ontologies:IcdTermOfVariousTypes ;
-  ontologies:manipulationDependsOn ontologies:ShortcutIcdRegistryOfVariousTypes ;
-  ontologies:usesSparqlLogic ontologies:DiagnosisRegistryRule ;
+  ontologies:manipulationDependsOn ontologies:ShortcutDiagnosisRegistryOfVariousTypes ;
+  ontologies:usesSparqlLogic ontologies:IcdDiagnosisRegistryRule ;
+.
+ontologies:snomedDiagnosisRegistryTermVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:shortcutHealthcareEncounterDiagnosisCode ;
+  ontologies:manipulationCreates ontologies:SnomedTermOfVariousTypes ;
+  ontologies:manipulationDependsOn ontologies:ShortcutDiagnosisRegistryOfVariousTypes ;
+  ontologies:usesSparqlLogic ontologies:SnomedDiagnosisRegistryRule ;
 .
 ontologies:diagnosisRegistryStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
@@ -1180,13 +1196,13 @@ ontologies:diagnosisRegistryStringVariableManipulation
 .
 ontologies:diagnosisRegistryUriVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
-  ontologies:hasOriginalVariable ontologies:ShortcutIcdRegistryOfVariousTypes ;
+  ontologies:hasOriginalVariable ontologies:ShortcutDiagnosisRegistryOfVariousTypes ;
   ontologies:manipulationCreates ontologies:IcdRegistryOfVariousTypes ;
   ontologies:usesSparqlLogic ontologies:BindAs ;
 .
 ontologies:diagnosisRegistryVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
-  ontologies:hasOriginalVariable ontologies:ShortcutIcdRegistryOfVariousTypes ;
+  ontologies:hasOriginalVariable ontologies:ShortcutDiagnosisRegistryOfVariousTypes ;
   ontologies:manipulationCreates ontologies:IcdRegistryOfVariousTypes ;
   ontologies:usesSparqlLogic ontologies:BindAs ;
 .
@@ -1249,6 +1265,16 @@ ontologies:diagnosisToIcdTerm
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000073 ;
   rdfs:label "diagnosis to icd term connection" ;
+.
+ontologies:diagnosisToSnomedTerm
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:SnomedTermOfVariousTypes ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to snomed term connection" ;
 .
 ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
@@ -1568,7 +1594,8 @@ ontologies:TURBO_0010179
   ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:diagnosisCodeStringValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:diagnosisCodingSequenceVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:diagnosisIcdTermVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:icdDiagnosisRegistryTermVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:snomedDiagnosisRegistryTermVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:diagnosisRegistryStringVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:diagnosisRegistryUriVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:diagnosisRegistryVariableManipulation ;
@@ -2804,7 +2831,7 @@ ontologies:shortcutDiagnosisToRegistry
   obo:BFO_0000050 ontologies:shortcutDiagnosisOptionalGroup ;
   ontologies:inputTo ontologies:TURBO_0010179 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:ShortcutIcdRegistryOfVariousTypes ;
+  ontologies:object ontologies:ShortcutDiagnosisRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0004603 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010160 ;
