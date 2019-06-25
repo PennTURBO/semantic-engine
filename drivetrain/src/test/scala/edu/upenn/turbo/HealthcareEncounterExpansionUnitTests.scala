@@ -90,7 +90,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       		?medCrid obo:BFO_0000051 ?medCridSymbol .
       		?medCridSymbol a turbo:TURBO_0000562 .
       		?medCridSymbol turbo:TURBO_0010094 "3" .
-      		?drugPrescript turbo:TURBO_0000307 turbo:someDrug .
+      		?drugPrescript obo:IAO_0000142 turbo:someDrug .
       		
       		?drugPrescript obo:BFO_0000050 ?dataset .
       		?dataset obo:BFO_0000051 ?drugPrescript .
@@ -273,7 +273,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://transformunify.org/ontologies/TURBO_0010131", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010013",
-            "http://transformunify.org/ontologies/TURBO_0000307", "http://transformunify.org/ontologies/TURBO_0010014",
+            "http://purl.obolibrary.org/obo/IAO_0000142", "http://transformunify.org/ontologies/TURBO_0010014",
             "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000581"
         )
         

@@ -73,6 +73,10 @@ object ConnectToGraphDB extends ProjectwideGlobals
             testRepoManager.initialize()
             val testRepository: Repository = testRepoManager.getRepository(helper.retrievePropertyFromFile("testingRepository"))
             val testCxn: RepositoryConnection = testRepository.getConnection()
+
+            // update data model and ontology upon establishing connection
+            OntologyLoader.addOntologyFromUrl(gmCxn)
+            DrivetrainDriver.updateModel(gmCxn)
             
             graphConnect.setConnection(cxn)
             graphConnect.setRepoManager(repoManager)

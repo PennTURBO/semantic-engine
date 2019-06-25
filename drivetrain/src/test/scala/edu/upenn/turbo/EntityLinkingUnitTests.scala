@@ -143,7 +143,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                 <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0010095> "holistic soil from the ganges" .
                 <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0000703> <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
                 <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> obo:IAO_0000142 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
-                <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0000307> <http://transformunify.org/ontologies/someDrug> .
+                <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> obo:IAO_0000142 <http://transformunify.org/ontologies/someDrug> .
                 <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0006515> "ICD-9" .
                 <http://www.itmat.upenn.edu/biobank/hcenc1> turbo:TURBO_0010131 <http://www.itmat.upenn.edu/biobank/part1> .
                 <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0010013> "true"^^<http://www.w3.org/2001/XMLSchema#Boolean> .
@@ -989,7 +989,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                     <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0010095> "holistic soil from the ganges" .
                     <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0000703> <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> .
                     <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> obo:IAO_0000142 <http://purl.bioontology.org/ontology/ICD9CM/401.9> .
-                    <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> <http://transformunify.org/ontologies/TURBO_0000307> <http://transformunify.org/ontologies/someDrug> .
+                    <http://www.itmat.upenn.edu/biobank/875fc9f72f1dec3f42c4f0d7481aa793019e2999650c7d778cd52adb92b3746c> obo:IAO_0000142 <http://transformunify.org/ontologies/someDrug> .
                     <http://www.itmat.upenn.edu/biobank/fb2d542f8c40f9cfe47da7b8b41b023e0317c5db958748c3820921487ce57f5e> <http://transformunify.org/ontologies/TURBO_0006515> "ICD-9" .
                     <http://www.itmat.upenn.edu/biobank/hcenc1> turbo:TURBO_0010131 <http://www.itmat.upenn.edu/biobank/part1> .
                     <http://transformunify.org/ontologies/diagnosis1> <http://transformunify.org/ontologies/TURBO_0010013> "true"^^<http://www.w3.org/2001/XMLSchema#Boolean> .

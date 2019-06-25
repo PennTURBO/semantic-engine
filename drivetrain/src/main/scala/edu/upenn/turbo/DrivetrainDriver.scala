@@ -28,7 +28,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               
               cxn = graphDBMaterials.getConnection()
               repoManager = graphDBMaterials.getRepoManager()
-              repository = graphDBMaterials.getRepository() 
+              repository = graphDBMaterials.getRepository()
               
               gmCxn = graphDBMaterials.getGmConnection()
               gmRepoManager = graphDBMaterials.getGmRepoManager()
@@ -52,6 +52,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def updateModel(gmCxn: RepositoryConnection)
   {
+      logger.info("Updating graph model...")
       val graph = "http://www.itmat.upenn.edu/biobank/dataModel"
       helper.clearNamedGraph(gmCxn, graph)
       var query = s"INSERT DATA { Graph <$graph> {"

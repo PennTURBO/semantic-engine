@@ -2442,7 +2442,7 @@ ontologies:prescriptionToDrug
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DrugTermOfVariousTypes ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate ontologies:TURBO_0000307 ;
+  ontologies:predicate obo:IAO_0000142 ;
   ontologies:required false ;
   ontologies:subject obo:PDRO_0000001 ;
   rdfs:label "prescription to drug connection" ;
