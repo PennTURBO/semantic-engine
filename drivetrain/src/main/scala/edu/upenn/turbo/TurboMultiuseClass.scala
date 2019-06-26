@@ -375,13 +375,10 @@ class TurboMultiuseClass
               {
                     ?s ?p ?o . 
               }
-        graph pmbb:ontology {
+        graph <"""+ontologyURL+"""> {
             ?p a <http://www.w3.org/2002/07/owl#SymmetricProperty> .
             }
-            FILTER ("""+namedGraph_1+""" != pmbb:ontology)
-            FILTER ("""+namedGraph_1+""" != pmbb:ICD9Ontology)
-            FILTER ("""+namedGraph_1+""" != pmbb:ICD10Ontology)
-            FILTER ("""+namedGraph_1+""" != pmbb:mondoOntology)
+            FILTER ("""+namedGraph_1+""" != <"""+ontologyURL+""">)
         }
         """
             
@@ -403,7 +400,7 @@ class TurboMultiuseClass
         val getInversePreds: String = """
           Select ?p ?inverse Where
           {
-              Graph pmbb:ontology
+              Graph <"""+ontologyURL+""">
               {
                   ?p owl:inverseOf ?inverse .
               }
@@ -494,7 +491,7 @@ class TurboMultiuseClass
               {
                   ?node a ?nodetype .
               }
-              Graph pmbb:ontology
+              Graph <"""+ontologyURL+""">
               {
                   ?nodetype rdfs:label ?ontologylabel .
               }
@@ -506,7 +503,7 @@ class TurboMultiuseClass
               FILTER (?nodetype != turbo:TURBO_0000506)
               FILTER (?nodetype != turbo:TURBO_0000513)
               FILTER (?nodetype != turbo:TURBO_0000543)
-              FILTER ("""+namedGraph_1+""" != pmbb:ontology)
+              FILTER ("""+namedGraph_1+""" != <"""+ontologyURL+""">)
               FILTER ("""+namedGraph_1+""" != pmbb:ICD9Ontology)
               FILTER ("""+namedGraph_1+""" != pmbb:ICD10Ontology)
               FILTER ("""+namedGraph_1+""" != pmbb:mondoOntology)
@@ -553,14 +550,14 @@ class TurboMultiuseClass
         val update: String = """
           Insert 
           {
-              Graph pmbb:ontology
+              Graph <"""+ontologyURL+""">
               {
                   ?class rdfs:label ?stringLabel .
               }
           }
           Where
           {
-               Graph pmbb:ontology
+               Graph <"""+ontologyURL+""">
                {
                    ?class rdfs:label ?label .
                    FILTER (datatype(?label) = rdf:langString)

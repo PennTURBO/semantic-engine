@@ -115,16 +115,16 @@ object ConnectToGraphDB extends ProjectwideGlobals
     }
     
     /**
-     * Checks to see whether there is already data in named graph pmbb:ontology, and if there is not, inserts the TURBO ontology into the pmbb:ontology
+     * Checks to see whether there is already data in named graph <ontologyURL), and if there is not, inserts the TURBO ontology into the ontology
      * named graph. Neither of these variables are specified in call to helper.addOntologyFromURL(cxn) because they are default values for named graph
      * and ontology URL variables in that method.
      */
     def loadOntologyFromURLIfNotAlreadyLoaded(cxn: RepositoryConnection, repo: Repository)
     {
         val f: ValueFactory = cxn.getValueFactory()
-        val ontoGraphName = f.createIRI("http://www.itmat.upenn.edu/biobank/ontology");
+        val ontoGraphName = f.createIRI(ontologyURL);
         //check to see if there is already an ontology
-        if (helper.isThereDataInNamedGraph(cxn, ontoGraphName)) logger.info("There is already data in named graph \"pmbb:ontology\"")
+        if (helper.isThereDataInNamedGraph(cxn, ontoGraphName)) logger.info(s"There is already data in named graph <$ontologyURL>")
         //check to see if 
         else
         {

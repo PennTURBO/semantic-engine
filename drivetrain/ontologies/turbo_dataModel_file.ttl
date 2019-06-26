@@ -75,6 +75,7 @@ ontologies:BindIfBoundSingletonSHAOfBaseType
 ontologies:BiobankEncounterRegistryOfVariousTypes
   a owl:Class ;
 .
+
 ontologies:DNAExtractionProcessToDNAExtract
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -116,19 +117,6 @@ ontologies:DatatypeConnectionRecipe
   rdfs:label "datatype connection recipe" ;
   rdfs:subClassOf ontologies:TurboGraphConnectionRecipe ;
 .
-ontologies:IcdDiagnosisRegistryRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """
-        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", ${original})), ?unbound) AS ?icd9term)
-        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat(\"http://purl.bioontology.org/ontology/ICD10CM/\", ${original})), ?unbound) AS ?icd10term)
-        BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ${replacement})
-        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,${replacement}) as ${replacement})"""
-.
-ontologies:SnomedDiagnosisRegistryRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """
-        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>, uri(concat("http://purl.bioontology.org/ontology/SNOMEDCT/", ${original})), ?unbound) AS ?SnomedTermOfVariousTypes)"""
-.
 ontologies:DrugTermOfVariousTypes
   a owl:Class ;
   rdfs:label "drug term of various types" ;
@@ -140,10 +128,6 @@ ontologies:GenderIdentityDatumOfVariousTypes
 ontologies:GenderIdentityTypeRule
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${original}, obo:OMRSE_00000133) AS ${replacement})" ;
-.
-ontologies:RaceIdentityTypeRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${original}, obo:OMRSE_00000098) AS ${replacement})" ;
 .
 ontologies:GeneSymbolUriOfVariousTypes
   a owl:Class ;
@@ -160,6 +144,14 @@ ontologies:HomoSapiensRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "homo sapiens registry of various types" ;
 .
+ontologies:IcdDiagnosisRegistryRule
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql """
+        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", ${original})), ?unbound) AS ?icd9term)
+        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat(\"http://purl.bioontology.org/ontology/ICD10CM/\", ${original})), ?unbound) AS ?icd10term)
+        BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ${replacement})
+        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,${replacement}) as ${replacement})""" ;
+.
 ontologies:IcdRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "some icd registry uri" ;
@@ -167,10 +159,6 @@ ontologies:IcdRegistryOfVariousTypes
 ontologies:IcdTermOfVariousTypes
   a owl:Class ;
   rdfs:label "some icd term" ;
-.
-ontologies:SnomedTermOfVariousTypes
-  a owl:Class ;
-  rdfs:label "some snomed term" ;
 .
 ontologies:InstantiationStringToURI
   a ontologies:TurboGraphVariableManipulationLogic ;
@@ -184,6 +172,10 @@ ontologies:ObjectConnectionRecipe
 ontologies:RaceIdentityDatumOfVariousTypes
   a owl:Class ;
   rdfs:label "race identity datum of various types" ;
+.
+ontologies:RaceIdentityTypeRule
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${original}, obo:OMRSE_00000098) AS ${replacement})" ;
 .
 ontologies:RandomUUID
   a ontologies:TurboGraphVariableManipulationLogic ;
@@ -217,6 +209,10 @@ ontologies:SHALocalRandomWithDependent
 ontologies:ShortcutBiobankEncounterRegistryOfVariousTypes
   a owl:Class ;
 .
+ontologies:ShortcutDiagnosisRegistryOfVariousTypes
+  a owl:Class ;
+  rdfs:label "some shortcut icd registry uri" ;
+.
 ontologies:ShortcutDrugTermOfVariousTypes
   a owl:Class ;
   rdfs:label "shortcut drug term of various types" ;
@@ -235,10 +231,6 @@ ontologies:ShortcutHealthcareEncounterRegistryOfVariousTypes
 ontologies:ShortcutHomoSapiensRegistryOfVariousTypes
   a owl:Class ;
   rdfs:label "shortcut homo sapiens registry of various types" ;
-.
-ontologies:ShortcutDiagnosisRegistryOfVariousTypes
-  a owl:Class ;
-  rdfs:label "some shortcut icd registry uri" ;
 .
 ontologies:ShortcutZygosityUriOfVariousTypes
   a owl:Class ;
@@ -264,9 +256,176 @@ ontologies:SingletonSHAOfOriginalWithDependent
   ontologies:usesSparql """BIND(IF(BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
                                 SHA256(CONCAT(\"${replacement}\", str(${original}))))), ?unbound) AS ${replacement})""" ;
 .
+ontologies:SnomedDiagnosisRegistryRule
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql """
+        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>, uri(concat(\"http://purl.bioontology.org/ontology/SNOMEDCT/\", ${original})), ?unbound) AS ?SnomedTermOfVariousTypes)""" ;
+.
+ontologies:SnomedTermOfVariousTypes
+  a owl:Class ;
+  rdfs:label "some snomed term" ;
+.
 ontologies:StringToURI
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql "BIND(uri(${original}) AS ${replacement})" ;
+.
+ontologies:TURBO_0010158
+  a owl:Class ;
+  rdfs:label "shortcut healthcare encounter (placeholder)" ;
+.
+ontologies:TURBO_0010159
+  a owl:Class ;
+  rdfs:label "shortcut prescription (placeholder)" ;
+.
+ontologies:TURBO_0010160
+  a owl:Class ;
+  rdfs:label "shortcut diagnosis (placeholder)" ;
+.
+ontologies:TURBO_0010169
+  a owl:Class ;
+.
+ontologies:TURBO_0010176
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
+  ontologies:manipulatesBaseEntity ontologies:TURBO_0010161 ;
+  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:precedes ontologies:TURBO_0010179 ;
+  ontologies:usesVariableManipulationRule ontologies:biologicalSexVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:dateOfBirthDatumDateVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:dateOfBirthDatumStringVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:dateOfBirthDatumVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:dateOfBirthVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genderIdentityDatumValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genderIdentityDatumVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genderIdentityTypeVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:homoSapiensIdentifierVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:homoSapiensRegistryValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:homoSapiensRegistryVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:homoSapiensSymbolValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:homoSapiensSymbolVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:homoSapiensVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:raceIdentificationProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:raceIdentityDatumValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:raceIdentityDatumVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:raceIdentityTypeVariableManipulation ;
+  rdfs:label "homo sapiens expansion process" ;
+.
+ontologies:TURBO_0010177
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
+  ontologies:manipulatesBaseEntity ontologies:TURBO_0010169 ;
+  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:precedes ontologies:TURBO_0010183 ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterBMIVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterDateStringValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterDateValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterDateVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterHeightVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterHomoSapiensConnectionVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterIdentifierVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterRegistryValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterRegistryVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterStartVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterSymbolValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterSymbolVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:biobankEncounterWeightVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:bmiValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:heightValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:lengthMeasurementValueSpecificationVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:massMeasurementValueSpecificationVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:weightValueVariableManipulation ;
+.
+ontologies:TURBO_0010179
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
+  ontologies:manipulatesBaseEntity ontologies:TURBO_0010158 ;
+  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:precedes ontologies:TURBO_0010177 ;
+  ontologies:usesVariableManipulationRule ontologies:bmiValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:bmiVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:diagnosisCodeStringValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:diagnosisCodingSequenceVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:diagnosisRegistryStringVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:diagnosisRegistryUriVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:diagnosisRegistryVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:diagnosisVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterDateStringValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterDateValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterDateVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterHomoSapiensConnectionVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterIdentifierVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterRegistryValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterRegistryVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterStartVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterSymbolValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterSymbolVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:heightValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:icdDiagnosisRegistryTermVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:lengthMeasurementValueSpecificationVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:mappedMedicationTermVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:massMeasurementValueSpecificationVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:medicationCridVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:medicationOrderNameValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:medicationSymbolValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:medicationSymbolVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:prescriptionVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:primaryDiagnosisBooleanVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:snomedDiagnosisRegistryTermVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:weightValueVariableManipulation ;
+  rdfs:label "healthcare encounter expansion process" ;
+.
+ontologies:TURBO_0010180
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
+  ontologies:manipulatesBaseEntity ontologies:TURBO_0010144 ;
+  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:usesVariableManipulationRule ontologies:alleleGeneSymbolFirstPartVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:alleleGeneSymbolSecondPartVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:alleleVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:alleleZygosityIntegerValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:collectionProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:dnaExtractVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:dnaExtractionProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:dnaVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:exomeSequenceProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:formProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:geneSymbolUriValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genoIdLiteralVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genomeCridSymbolVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genomeCridVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genomeRegistryDenoterVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:genomeRegistryValueVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:sequenceDataVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:specimenVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:zygosityValueUriVariableManipulation ;
+.
+ontologies:TURBO_0010182
+  ontologies:inputNamedGraph pmbb:expanded ;
+  ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
+  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:precedes ontologies:TURBO_0010180 ;
+  ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:participantUnderInvestigationRoleVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
+.
+ontologies:TURBO_0010183
+  ontologies:inputNamedGraph pmbb:expanded ;
+  ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
+  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:precedes ontologies:TURBO_0010182 ;
+  ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:patientRoleVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
 .
 ontologies:TurboGraphBooleanLiteralValue
   a owl:Class ;
@@ -528,34 +687,6 @@ ontologies:biobankEncounterDateVariableManipulation
   ontologies:manipulationDependsOn ontologies:shortcutBiobankEncounterDateStringLiteralValue ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundRandomUUID ;
 .
-ontologies:TURBO_0010177
-  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:manipulatesBaseEntity ontologies:TURBO_0010169 ;
-  ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:precedes ontologies:TURBO_0010183 ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterBMIVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterDateStringValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterDateValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterDateVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterHeightVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterHomoSapiensConnectionVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterIdentifierVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterRegistryValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterRegistryVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterStartVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterSymbolValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterSymbolVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:biobankEncounterWeightVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:bmiValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:heightValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:lengthMeasurementValueSpecificationVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:massMeasurementValueSpecificationVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:weightValueVariableManipulation ;
-.
 ontologies:biobankEncounterHeightVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:lengthMeasurementDoubleLiteralValue ;
@@ -601,15 +732,6 @@ ontologies:biobankEncounterIdentifierVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000533 ;
   ontologies:usesSparqlLogic ontologies:RandomUUID ;
-.
-ontologies:TURBO_0010182
-  ontologies:inputNamedGraph pmbb:expanded ;
-  ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
-  ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:precedes ontologies:TURBO_0010180 ;
-  ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:participantUnderInvestigationRoleVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
 .
 ontologies:biobankEncounterRegistryDenoterToDataset
   a ontologies:ObjectConnectionRecipe ;
@@ -949,9 +1071,9 @@ ontologies:datasetToDatasetTitle
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:datasetTitleStringLiteralValue ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate dc11:title ;
   ontologies:required true ;
@@ -1170,20 +1292,6 @@ ontologies:diagnosisIcdSuffixStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
   rdfs:label "diagnosis icd suffix literal string value" ;
 .
-ontologies:icdDiagnosisRegistryTermVariableManipulation
-  a ontologies:VariableManipulationForLiteralValue ;
-  ontologies:hasOriginalVariable ontologies:shortcutHealthcareEncounterDiagnosisCode ;
-  ontologies:manipulationCreates ontologies:IcdTermOfVariousTypes ;
-  ontologies:manipulationDependsOn ontologies:ShortcutDiagnosisRegistryOfVariousTypes ;
-  ontologies:usesSparqlLogic ontologies:IcdDiagnosisRegistryRule ;
-.
-ontologies:snomedDiagnosisRegistryTermVariableManipulation
-  a ontologies:VariableManipulationForLiteralValue ;
-  ontologies:hasOriginalVariable ontologies:shortcutHealthcareEncounterDiagnosisCode ;
-  ontologies:manipulationCreates ontologies:SnomedTermOfVariousTypes ;
-  ontologies:manipulationDependsOn ontologies:ShortcutDiagnosisRegistryOfVariousTypes ;
-  ontologies:usesSparqlLogic ontologies:SnomedDiagnosisRegistryRule ;
-.
 ontologies:diagnosisRegistryStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
   rdfs:label "diagnosis registry string value" ;
@@ -1266,16 +1374,6 @@ ontologies:diagnosisToIcdTerm
   ontologies:subject obo:OGMS_0000073 ;
   rdfs:label "diagnosis to icd term connection" ;
 .
-ontologies:diagnosisToSnomedTerm
-  a ontologies:ObjectConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:SnomedTermOfVariousTypes ;
-  ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required false ;
-  ontologies:subject obo:OGMS_0000073 ;
-  rdfs:label "diagnosis to snomed term connection" ;
-.
 ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -1285,6 +1383,16 @@ ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000073 ;
   rdfs:label "diagnosis to primary diagnosis boolean value connection" ;
+.
+ontologies:diagnosisToSnomedTerm
+  a ontologies:ObjectConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:SnomedTermOfVariousTypes ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to snomed term connection" ;
 .
 ontologies:diagnosisVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
@@ -1583,48 +1691,6 @@ ontologies:healthcareEncounterDateVariableManipulation
   ontologies:manipulationDependsOn ontologies:shortcutHealthcareEncounterDateStringValue ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
 .
-ontologies:TURBO_0010179
-  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:manipulatesBaseEntity ontologies:TURBO_0010158 ;
-  ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:precedes ontologies:TURBO_0010177 ;
-  ontologies:usesVariableManipulationRule ontologies:bmiValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:bmiVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:diagnosisCodeStringValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:diagnosisCodingSequenceVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:icdDiagnosisRegistryTermVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:snomedDiagnosisRegistryTermVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:diagnosisRegistryStringVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:diagnosisRegistryUriVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:diagnosisRegistryVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:diagnosisVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterDateStringValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterDateValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterDateVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterHomoSapiensConnectionVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterIdentifierVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterRegistryValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterRegistryVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterStartVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterSymbolValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterSymbolVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:healthcareEncounterVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:heightValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:lengthMeasurementValueSpecificationVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:mappedMedicationTermVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:massMeasurementValueSpecificationVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:medicationCridVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:medicationOrderNameValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:medicationSymbolValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:medicationSymbolVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:prescriptionVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:primaryDiagnosisBooleanVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:weightValueVariableManipulation ;
-  rdfs:label "healthcare encounter expansion process" ;
-.
 ontologies:healthcareEncounterHomoSapiensConnectionVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
   ontologies:hasOriginalVariable ontologies:shortcutHealthcareEncounterHomoSapiensUriStringValue ;
@@ -1655,15 +1721,6 @@ ontologies:healthcareEncounterIdentifierVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates ontologies:TURBO_0000508 ;
   ontologies:usesSparqlLogic ontologies:SHALocalRandom ;
-.
-ontologies:TURBO_0010183
-  ontologies:inputNamedGraph pmbb:expanded ;
-  ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
-  ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:precedes ontologies:TURBO_0010182 ;
-  ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:patientRoleVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
 .
 ontologies:healthcareEncounterRegistryDenoterToDataset
   a ontologies:ObjectConnectionRecipe ;
@@ -1841,34 +1898,6 @@ ontologies:homoSapiensDateOfBirthDateLiteralValue
 .
 ontologies:homoSapiensDateOfBirthStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
-.
-ontologies:TURBO_0010176
-  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:manipulatesBaseEntity ontologies:TURBO_0010161 ;
-  ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:precedes ontologies:TURBO_0010179 ;
-  ontologies:usesVariableManipulationRule ontologies:biologicalSexVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:dateOfBirthDatumDateVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:dateOfBirthDatumStringVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:dateOfBirthDatumVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:dateOfBirthVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:genderIdentityDatumValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:genderIdentityDatumVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:genderIdentityTypeVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:homoSapiensIdentifierVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:homoSapiensRegistryValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:homoSapiensRegistryVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:homoSapiensSymbolValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:homoSapiensSymbolVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:homoSapiensVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:raceIdentificationProcessVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:raceIdentityDatumValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:raceIdentityDatumVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:raceIdentityTypeVariableManipulation ;
-  rdfs:label "homo sapiens expansion process" ;
 .
 ontologies:homoSapiensGenderIdentityStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
@@ -2062,6 +2091,13 @@ ontologies:homoSapiensVariableManipulation
   ontologies:manipulationCreates obo:NCBITaxon_9606 ;
   ontologies:usesSparqlLogic ontologies:SHAGlobalRandom ;
 .
+ontologies:icdDiagnosisRegistryTermVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:shortcutHealthcareEncounterDiagnosisCode ;
+  ontologies:manipulationCreates ontologies:IcdTermOfVariousTypes ;
+  ontologies:manipulationDependsOn ontologies:ShortcutDiagnosisRegistryOfVariousTypes ;
+  ontologies:usesSparqlLogic ontologies:IcdDiagnosisRegistryRule ;
+.
 ontologies:identifierToHealthcareEncounter
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
@@ -2113,9 +2149,9 @@ ontologies:instantiationToDataset
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:IAO_0000100 ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000293 ;
   ontologies:required true ;
@@ -2191,33 +2227,6 @@ ontologies:lengthMeasurementValueSpecificationVariableManipulation
   ontologies:manipulationCreates ontologies:TURBO_0010138 ;
   ontologies:manipulationDependsOn ontologies:shortcutHeightValue ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandomWithDependent ;
-.
-ontologies:TURBO_0010180
-  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:manipulatesBaseEntity ontologies:TURBO_0010144 ;
-  ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:usesVariableManipulationRule ontologies:alleleGeneSymbolFirstPartVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:alleleGeneSymbolSecondPartVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:alleleVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:alleleZygosityIntegerValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:collectionProcessVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:datasetVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:dnaExtractVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:dnaExtractionProcessVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:dnaVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:exomeSequenceProcessVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:formProcessVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:geneSymbolUriValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:genoIdLiteralVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:genomeCridSymbolVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:genomeCridVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:genomeRegistryDenoterVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:genomeRegistryValueVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:sequenceDataVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:specimenVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:zygosityValueUriVariableManipulation ;
 .
 ontologies:manipulatesBaseEntity
   a owl:ObjectProperty ;
@@ -2396,6 +2405,7 @@ ontologies:outputOf
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
   rdfs:label "output of an expansion process" ;
   rdfs:range ontologies:TURBO_0010178 ;
+  rdfs:range owl:Class ;
 .
 ontologies:participantUnderInvestigationRoleVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
@@ -2639,9 +2649,9 @@ ontologies:shortcutAlleleToShortcutAlleleRegistryUri
 .
 ontologies:shortcutAlleleToShortcutBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
+  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010169 ;
-  ontologies:inputTo ontologies:TURBO_0010180 ;
   ontologies:predicate ontologies:TURBO_0010142 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010144 ;
@@ -2717,8 +2727,8 @@ ontologies:shortcutBiobankEncounterToDateStringValue
 .
 ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter
   a ontologies:ObjectConnectionRecipe ;
-  ontologies:inputTo ontologies:TURBO_0010182 ;
   ontologies:inputTo ontologies:TURBO_0010180 ;
+  ontologies:inputTo ontologies:TURBO_0010182 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000527 ;
   ontologies:outputOf ontologies:TURBO_0010177 ;
@@ -3174,20 +3184,12 @@ ontologies:shortcutPrescriptionToSymbolValue
 ontologies:shortcutWeightValue
   a ontologies:TurboGraphDoubleLiteralValue ;
 .
-ontologies:TURBO_0010160
-  a owl:Class ;
-  rdfs:label "shortcut diagnosis (placeholder)" ;
-.
-ontologies:TURBO_0010158
-  a owl:Class ;
-  rdfs:label "shortcut healthcare encounter (placeholder)" ;
-.
-ontologies:TURBO_0010159
-  a owl:Class ;
-  rdfs:label "shortcut prescription (placeholder)" ;
-.
-ontologies:TURBO_0010169
-  a owl:Class ;
+ontologies:snomedDiagnosisRegistryTermVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:shortcutHealthcareEncounterDiagnosisCode ;
+  ontologies:manipulationCreates ontologies:SnomedTermOfVariousTypes ;
+  ontologies:manipulationDependsOn ontologies:ShortcutDiagnosisRegistryOfVariousTypes ;
+  ontologies:usesSparqlLogic ontologies:SnomedDiagnosisRegistryRule ;
 .
 ontologies:specimenVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;

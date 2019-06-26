@@ -30,6 +30,10 @@ object DrivetrainDriver extends ProjectwideGlobals {
               repoManager = graphDBMaterials.getRepoManager()
               repository = graphDBMaterials.getRepository()
               
+              testCxn = graphDBMaterials.getTestConnection()
+              testRepoManager = graphDBMaterials.getTestRepoManager()
+              testRepository = graphDBMaterials.getTestRepository()
+              
               gmCxn = graphDBMaterials.getGmConnection()
               gmRepoManager = graphDBMaterials.getGmRepoManager()
               gmRepository = graphDBMaterials.getGmRepository() 
@@ -38,6 +42,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.NQUADS)
               else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
               else if (args(0) == "loadTurboOntology") OntologyLoader.addOntologyFromUrl(cxn)
+              else if (args(0) == "loadTestTurboOntology") OntologyLoader.addOntologyFromUrl(testCxn)
               else if (args(0) == "updateModelOntology") OntologyLoader.addOntologyFromUrl(gmCxn)
               else if (args(0) == "updateModel") updateModel(gmCxn)
               else if (args(0) == "all") runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)

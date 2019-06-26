@@ -97,7 +97,7 @@ object OntologyLoader extends ProjectwideGlobals
      * Adds an RDF.XML formatted set of triples (usually an ontology) received from a given URL to the specified named graph.
      */
     def addOntologyFromUrl(cxn: RepositoryConnection, ontology: String = ontologyURL, 
-        formatting: Map[String, RDFFormat] = Map("http://www.itmat.upenn.edu/biobank/ontology" -> RDFFormat.RDFXML)) 
+        formatting: Map[String, RDFFormat] = Map(ontologyURL -> RDFFormat.RDFXML)) 
     {
         if (formatting.size > 1) throw new RuntimeException ("Formatting map size > 1, internal error occurred.")
         logger.info("Adding ontology " + ontology)
@@ -120,12 +120,12 @@ object OntologyLoader extends ProjectwideGlobals
             case g: SocketException => 
             {
                 logger.info("The ontology " + ontology + " was not loaded - socket exception thrown")
-                helper.writeErrorLog("Ontology loading", "Failed to load ontology " + ontology)
+                logger.info("exception: " + g.printStackTrace())
             }
             case e: RuntimeException => 
             {
                 logger.info("The ontology " + ontology + " was not loaded - generic runtime exception.")
-                helper.writeErrorLog("Ontology loading", "Failed to load ontology " + ontology)
+                logger.info("exception: " + e.printStackTrace())
             }
         }
         //logger.info("Committing transaction...")

@@ -145,7 +145,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
             }
             
-            Graph pmbb:ontology {
+            Graph <$ontologyURL> {
               Optional
               {
                   ?$SUBJECT a owl:Class .
@@ -182,7 +182,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             ?connection turbo:predicate ?$PREDICATE .
             ?connection turbo:object ?$OBJECT .
             
-            Graph pmbb:ontology 
+            Graph <$ontologyURL>
             {
               Optional
               {
