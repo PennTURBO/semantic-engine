@@ -54,6 +54,7 @@ class TurboMultiuseClass
 			"""
     val logger = LoggerFactory.getLogger(getClass)
     val updater: SparqlUpdater = new SparqlUpdater
+    def ontologyURL = retrievePropertyFromFile("ontologyURL")
     
     /**
      * Deletes all triples in the entire database, including all named graphs.
