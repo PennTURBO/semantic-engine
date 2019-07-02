@@ -3,7 +3,6 @@
 target/
 sbt
 *.project
-real_329/
 .cache-main
 .cache-tests
 .classpath

@@ -75,20 +75,20 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String)
   {
-      /*RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
+      RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
       if (reinferRepo)
       {
           logger.info("setting reasoning to rdf plus")
           ReasoningManager.setReasoningToRdfPlus(cxn)
           ReasoningManager.setReasoningToNone(cxn) 
-      }*/
+      }
       if (loadAdditionalOntologies)
       {
           logger.info("loading extra ontologies")
           OntologyLoader.addDiseaseOntologies(cxn)
-          /*OntologyLoader.addDrugOntologies(cxn)
+          OntologyLoader.addDrugOntologies(cxn)
           OntologyLoader.addGeneOntologies(cxn)
-          OntologyLoader.addMiscOntologies(cxn)*/
+          OntologyLoader.addMiscOntologies(cxn)
       }
   }
 }

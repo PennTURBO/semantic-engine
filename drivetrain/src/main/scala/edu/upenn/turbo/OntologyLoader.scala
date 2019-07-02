@@ -69,11 +69,11 @@ object OntologyLoader extends ProjectwideGlobals
     def addDiseaseOntologies(cxn: RepositoryConnection)
     {
         val diseaseOntologies: Map[String, Map[String, RDFFormat]] = Map(
-        "https://github.com/monarch-initiative/mondo/releases/download/current/mondo.owl" -> Map("https://github.com/monarch-initiative/mondo/releases/download/current/mondo.owl" -> RDFFormat.RDFXML)/*,
+        "https://github.com/monarch-initiative/mondo/releases/download/current/mondo.owl" -> Map("https://github.com/monarch-initiative/mondo/releases/download/current/mondo.owl" -> RDFFormat.RDFXML),
         "http://data.bioontology.org/ontologies/ICD10CM/submissions/"+getBioportalSubmissionInfo("ICD10CM").get+"/download?apikey="+bioportalApiKey -> 
                 Map("http://data.bioontology.org/ontologies/ICD10CM/" -> RDFFormat.TURTLE),
         "http://data.bioontology.org/ontologies/ICD9CM/submissions/"+getBioportalSubmissionInfo("ICD9CM").get+"/download?apikey="+bioportalApiKey -> 
-                Map("http://data.bioontology.org/ontologies/ICD9CM/" -> RDFFormat.TURTLE)*/
+                Map("http://data.bioontology.org/ontologies/ICD9CM/" -> RDFFormat.TURTLE)
         )
         
         addOntologiesFromMap(cxn, diseaseOntologies)
