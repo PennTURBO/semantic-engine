@@ -256,7 +256,8 @@ object ConnectToGraphDB extends ProjectwideGlobals
         val proceed: Boolean = true
         var requiredProperties: ArrayBuffer[String] = ArrayBuffer("serviceURL",
             "password","username","productionRepository",
-            "ontologyURL", "modelRepository", "testingRepository", "processNamedGraph")
+            "ontologyURL", "modelRepository", "testingRepository", 
+            "processNamedGraph", "reinferRepo", "loadAdditionalOntologies")
         var a = 0
         while (optToReturn == None && a < requiredProperties.size)
         {
@@ -264,6 +265,19 @@ object ConnectToGraphDB extends ProjectwideGlobals
             try
             {
                 props.getProperty(requiredProperties(a)).isEmpty()
+                if (requiredProperties(a) == "loadAdditionalOntologies")
+                {
+                    if (getBooleanProperty("loadAdditionalOntologies")) 
+                    try
+                    {
+                        props.getProperty("bioportalApiKey").isEmpty()
+                    }
+                    catch
+                    {
+                        
+                        case e: NullPointerException => optToReturn = Some("bioportalApiKey")
+                    }
+                }
             }
             catch
             {
@@ -272,8 +286,6 @@ object ConnectToGraphDB extends ProjectwideGlobals
             }
             a = a + 1
         }
-        // check for deprecated input graphs property
-        if (props.getProperty("inputFilesNamedGraphs") != null) logger.warn("Ignoring deprecated property 'inputFilesNamedGraphs'")
         optToReturn
     }
     

@@ -58,7 +58,9 @@ object OntologyLoader extends ProjectwideGlobals
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl" -> RDFFormat.RDFXML),
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ingredient.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ingredient.owl" -> RDFFormat.RDFXML),
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-pro.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-pro.owl" -> RDFFormat.RDFXML),
-        "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ndc.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ndc.owl" -> RDFFormat.RDFXML)
+        "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ndc.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ndc.owl" -> RDFFormat.RDFXML),
+        "http://data.bioontology.org/ontologies/RXNORM/submissions/"+getBioportalSubmissionInfo("RXNORM").get+"/download?apikey="+bioportalApiKey -> 
+          Map("http://data.bioontology.org/ontologies/RXNORM/" -> RDFFormat.TURTLE)
         )
         
         addOntologiesFromMap(cxn, drugOntologies)
@@ -67,10 +69,10 @@ object OntologyLoader extends ProjectwideGlobals
     def addDiseaseOntologies(cxn: RepositoryConnection)
     {
         val diseaseOntologies: Map[String, Map[String, RDFFormat]] = Map(
-        "http://purl.obolibrary.org/obo/mondo.owl" -> Map("http://purl.obolibrary.org/obo/mondo.owl" -> RDFFormat.RDFXML)/*,
-        "http://data.bioontology.org/ontologies/ICD10CM/submissions/"+getBioportalSubmissionInfo("ICD10CM").get+"/download?apikey="+bioportalAPIkey -> 
+        "https://github.com/monarch-initiative/mondo/releases/download/current/mondo.owl" -> Map("https://github.com/monarch-initiative/mondo/releases/download/current/mondo.owl" -> RDFFormat.RDFXML)/*,
+        "http://data.bioontology.org/ontologies/ICD10CM/submissions/"+getBioportalSubmissionInfo("ICD10CM").get+"/download?apikey="+bioportalApiKey -> 
                 Map("http://data.bioontology.org/ontologies/ICD10CM/" -> RDFFormat.TURTLE),
-        "http://data.bioontology.org/ontologies/ICD9CM/submissions/"+getBioportalSubmissionInfo("ICD9CM").get+"/download?apikey="+bioportalAPIkey -> 
+        "http://data.bioontology.org/ontologies/ICD9CM/submissions/"+getBioportalSubmissionInfo("ICD9CM").get+"/download?apikey="+bioportalApiKey -> 
                 Map("http://data.bioontology.org/ontologies/ICD9CM/" -> RDFFormat.TURTLE)*/
         )
         
@@ -80,11 +82,9 @@ object OntologyLoader extends ProjectwideGlobals
     def addMiscOntologies(cxn: RepositoryConnection)
     {
         val miscOntologies: Map[String, Map[String, RDFFormat]] = Map(
-        "ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> Map("ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> RDFFormat.RDFXML)/*,
-        "http://data.bioontology.org/ontologies/RXNORM/submissions/"+getBioportalSubmissionInfo("RXNORM").get+"/download?apikey="+bioportalAPIkey -> 
-          Map("http://data.bioontology.org/ontologies/RXNORM/" -> RDFFormat.RDFXML)*/
+        "ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> Map("ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> RDFFormat.RDFXML)
         )
-        
+
         addOntologiesFromMap(cxn, miscOntologies)
     }
     
@@ -120,21 +120,21 @@ object OntologyLoader extends ProjectwideGlobals
             case g: SocketException => 
             {
                 logger.info("The ontology " + ontology + " was not loaded - socket exception thrown")
-                logger.info("exception: " + g.printStackTrace())
+                logger.info("" + g.printStackTrace)
             }
             case e: RuntimeException => 
             {
-                logger.info("The ontology " + ontology + " was not loaded - generic runtime exception.")
-                logger.info("exception: " + e.printStackTrace())
+                logger.info("The ontology " + ontology + " was not loaded - runtime exception.")
+                logger.info("" + e.printStackTrace)
             }
         }
         //logger.info("Committing transaction...")
         //logger.info("Committing complete.")
     }
     
-    /*def getBioportalSubmissionInfo(ontology: String): Option[Int] =
+    def getBioportalSubmissionInfo(ontology: String): Option[Int] =
     {
-        val url = "http://data.bioontology.org/ontologies/"+ontology+"/latest_submission?apikey="+bioportalAPIkey
+        val url = "http://data.bioontology.org/ontologies/"+ontology+"/latest_submission?apikey="+bioportalApiKey
         try
         {
             var optReturn: Option[Int] = None:Option[Int]
@@ -169,5 +169,5 @@ object OntologyLoader extends ProjectwideGlobals
             case e: RuntimeException => logger.info("Something went wrong when looking up bioportal submission info from " + url)
             None
         }
-    }*/
+    }
 }

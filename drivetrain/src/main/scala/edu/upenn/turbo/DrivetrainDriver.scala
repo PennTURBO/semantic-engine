@@ -13,8 +13,6 @@ import java.io.FileReader
 
 object DrivetrainDriver extends ProjectwideGlobals {
   
-  val reasoner: ReasoningManager = new ReasoningManager()
-  
   def main(args: Array[String]): Unit =
   {
       val globalUUID = UUID.randomUUID().toString().replaceAll("-", "")
@@ -50,7 +48,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
           }
           finally 
           {
-              ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
+              if (cxn != null) ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
           }
       }
   }
@@ -77,6 +75,20 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String)
   {
-      RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
+      /*RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
+      if (reinferRepo)
+      {
+          logger.info("setting reasoning to rdf plus")
+          ReasoningManager.setReasoningToRdfPlus(cxn)
+          ReasoningManager.setReasoningToNone(cxn) 
+      }*/
+      if (loadAdditionalOntologies)
+      {
+          logger.info("loading extra ontologies")
+          OntologyLoader.addDiseaseOntologies(cxn)
+          /*OntologyLoader.addDrugOntologies(cxn)
+          OntologyLoader.addGeneOntologies(cxn)
+          OntologyLoader.addMiscOntologies(cxn)*/
+      }
   }
 }

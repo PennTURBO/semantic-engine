@@ -31,13 +31,28 @@ import java.io.InputStream
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
 import org.eclipse.rdf4j.model.Model
 
-class ReasoningManager extends ProjectwideGlobals
+object ReasoningManager extends ProjectwideGlobals
 {
     private val supportedReasoningLevels: ArrayBuffer[String] = ArrayBuffer(
         "empty",
         "rdfsplus-optimized",
         "owl-horst-optimized"
     )
+    
+    def setReasoningToRdfPlus(cxn: RepositoryConnection)
+    {
+        changeReasoningLevel(cxn, "rdfsplus-optimized")
+    }
+    
+    def setReasoningToNone(cxn: RepositoryConnection)
+    {
+        changeReasoningLevel(cxn, "empty")
+    }
+    
+    def setReasoningToOwlHorst(cxn: RepositoryConnection)
+    {
+        changeReasoningLevel(cxn, "owl-horst-optimized")
+    }
   
     def changeReasoningLevel(cxn: RepositoryConnection, newLevel: String)
     {
@@ -49,6 +64,7 @@ class ReasoningManager extends ProjectwideGlobals
             val setDefaultRuleset: String = """ INSERT DATA {_:b sys:defaultRuleset """"+newLevel+"""" } """    
             update.updateSparql(cxn, addRuleset)
             update.updateSparql(cxn, setDefaultRuleset)
+            reinferRepository(cxn)
         }
     }
     

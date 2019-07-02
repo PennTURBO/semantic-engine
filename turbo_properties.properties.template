@@ -2,10 +2,14 @@ serviceURL = http://turbo-prd-db01.pmacs.upenn.edu:7200/
 username = your_username
 password = your_password
 
-productionRepository = Haydens_graph_model
+productionRepository = Hayden_drivetrain
 testingRepository = Hayden_drivetrain
 modelRepository = Haydens_graph_model
 
 importOntologies = true
 ontologyURL = https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl
 processNamedGraph = "http://www.itmat.upenn.edu/biobank/processes"
+
+reinferRepo = true
+loadAdditionalOntologies = true
+bioportalApiKey = yourKey

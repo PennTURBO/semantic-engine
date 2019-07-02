@@ -40,6 +40,16 @@ trait ProjectwideGlobals extends Enumeration
      val testingRepository = helper.retrievePropertyFromFile("testingRepository")
      val modelRepository = helper.retrievePropertyFromFile("modelRepository")
      val processNamedGraph = helper.retrievePropertyFromFile("processNamedGraph").replace("\"","")
+     val bioportalApiKey = helper.retrievePropertyFromFile("bioportalApiKey")
+     val reinferRepo = getBooleanProperty("reinferRepo")
+     val loadAdditionalOntologies = getBooleanProperty("loadAdditionalOntologies")
+     
+     def getBooleanProperty(property: String): Boolean =
+     {
+        def boolAsString = helper.retrievePropertyFromFile(property)
+        if (boolAsString == "true") return true
+        else return false
+     }
      
      val replacementString = "[replaceMe]"
      
