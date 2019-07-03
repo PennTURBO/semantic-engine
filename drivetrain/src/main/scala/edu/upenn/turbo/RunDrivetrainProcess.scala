@@ -52,12 +52,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val inputs = getInputs(process)
         val outputs = getOutputs(process)
         val binds = getBind(process)
+        val removals = getRemovals(process)
         
         if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
-        if (outputs.size == 0) throw new RuntimeException("Received a list of 0 outputs")
+        if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
         
         val inputNamedGraph = inputs(0)(GRAPH.toString).toString
-        val outputNamedGraph = outputs(0)(GRAPH.toString).toString
         
         // process base type is an ontology class which is manipulated in some way by the process
         val processBaseType = inputs(0)(BASETYPE.toString).toString
@@ -66,11 +66,24 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val primaryQuery = new PatternMatchQuery()
         primaryQuery.setProcess(process)
         primaryQuery.setInputGraph(inputNamedGraph)
-        primaryQuery.setOutputGraph(outputNamedGraph)
+        
+        var outputNamedGraph: String = null
+        if (outputs.size != 0)
+        {
+           outputNamedGraph = outputs(0)(GRAPH.toString).toString   
+           primaryQuery.setOutputGraph(outputNamedGraph)
+        }
+        var removalsNamedGraph: String = null
+        if (removals.size != 0)
+        {
+            val removalsNamedGraph = removals(0)(GRAPH.toString).toString
+            primaryQuery.setRemovalsGraph(removalsNamedGraph)
+        }
         
         primaryQuery.createBindClause(binds, localUUID)
         primaryQuery.createWhereClause(inputs)
         primaryQuery.createInsertClause(outputs)
+        primaryQuery.createDeleteClause(removals)
         
         val genericWhereClause = primaryQuery.whereClause
         // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
@@ -101,7 +114,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             val metaInfo: HashMap[Value, ArrayBuffer[String]] = HashMap(METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
                                                             DATE -> ArrayBuffer(currDate.toString), 
                                                             PROCESS -> ArrayBuffer(process), 
-                                                            OUTPUTNAMEDGRAPH -> ArrayBuffer(outputNamedGraph),
+                                                            OUTPUTNAMEDGRAPH -> ArrayBuffer(outputNamedGraph, removalsNamedGraph),
                                                             PROCESSRUNTIME -> ArrayBuffer(runtime),
                                                             TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
                                                             INPUTNAMEDGRAPHS -> inputNamedGraphsList
@@ -141,6 +154,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             }
             Optional
             {
+                ?connection obo:BFO_0000050 ?$MINUSGROUP .
+            }
+            Optional
+            {
                 ?connection turbo:outputOf ?creatingProcess .
                 ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
             }
@@ -157,6 +174,33 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   BIND (true AS ?$OBJECTTYPE)
               }
          }}
+         
+         """
+       
+       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
+    }
+
+    def getRemovals(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
+    {
+       var variablesToSelect = ""
+       for (key <- requiredInputKeysList) variablesToSelect += "?" + key + " "
+       
+       val query = s"""
+         
+         Select $variablesToSelect
+         
+         Where
+         {
+            Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
+
+            ?connection turbo:removedBy <$process> .
+            ?connection a ?$CONNECTIONRECIPETYPE .
+            <$process> turbo:inputNamedGraph ?$GRAPH .
+            ?connection turbo:subject ?$SUBJECT .
+            ?connection turbo:predicate ?$PREDICATE .
+            ?connection turbo:object ?$OBJECT .
+            ?connection turbo:required ?$REQUIRED .
+         }
          
          """
        
@@ -304,6 +348,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val currDate = metaInfo(DATE)(0)
         val queryVal = metaInfo(METAQUERY)(0)
         val outputNamedGraph = metaInfo(OUTPUTNAMEDGRAPH)(0)
+        val removalsNamedGraph = metaInfo(OUTPUTNAMEDGRAPH)(1)
         val runtime = metaInfo(PROCESSRUNTIME)(0)
         val triplesAdded = metaInfo(TRIPLESADDED)(0)
         val inputNamedGraphsList = metaInfo(INPUTNAMEDGRAPHS)
@@ -314,7 +359,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         helper.validateURI(processNamedGraph)
         var metaTriples = ArrayBuffer(
              new Triple(processVal, "turbo:TURBO_0010106", queryVal, false, false),
-             new Triple(processVal, "turbo:TURBO_0010186", outputNamedGraph, false, false),
              new Triple(processVal, "turbo:TURBO_0010107", runtime, false, false),
              new Triple(processVal, "turbo:TURBO_0010108", triplesAdded, false, false),
              new Triple(processBoundary, "obo:RO_0002223", processVal, false, false),
@@ -324,6 +368,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
              new Triple(timeMeasDatum, "turbo:TURBO_0010094", currDate, false, false)
         )
         for (inputGraph <- inputNamedGraphsList) metaTriples += new Triple(processVal, "turbo:TURBO_0010187", inputGraph, false, false)
+        if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) metaTriples += new Triple(processVal, "turbo:TURBO_0010186", outputNamedGraph, false, false)
+        else if (removalsNamedGraph != null) metaTriples += new Triple(processVal, "turbo:TURBO_0010186", removalsNamedGraph, false, false)
         metaTriples
     }
 }

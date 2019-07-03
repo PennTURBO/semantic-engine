@@ -22,6 +22,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             
             var graphForThisRow: String = defaultInputGraph
             var optionalGroupForThisRow: String = null
+            var minusGroupForThisRow: String = null
             var subjectAType = false
             var objectAType = false
             
@@ -30,6 +31,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             
             if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
             if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
+            if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
             if (rowResult(SUBJECTTYPE.toString) != null) 
             {
                 subjectAType = true
@@ -40,22 +42,22 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 objectAType = true
                 varsForProcessInput += rowResult(OBJECT.toString).toString
             }
-            if (required && optionalGroupForThisRow == null)
-            {
-                val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
+            val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
                                                      subjectAType, objectAType)
+            if (minusGroupForThisRow != null)
+            {
+                triplesGroup.addTripleToMinusGroup(newTriple, graphForThisRow, minusGroupForThisRow)
+            }
+            else if (required && optionalGroupForThisRow == null)
+            {
                 triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graphForThisRow)
             }
             else if (optionalGroupForThisRow != null)
             {
-                val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
-                                          subjectAType, objectAType)
                 triplesGroup.addToOptionalGroup(newTriple, graphForThisRow, optionalGroupForThisRow, required)
             }
             else
             {
-                val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
-                                          subjectAType, objectAType)
                 triplesGroup.addOptionalTripleToRequiredGroup(newTriple, graphForThisRow)
             }
         }
@@ -103,6 +105,26 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             triplesGroup.addRequiredTripleToRequiredGroup(processInputTriple, processNamedGraph)
         }
         clause = triplesGroup.buildInsertClauseFromTriplesGroup(usedVariables)
+    }
+}
+
+class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
+{
+    def addTripleFromRowResult(removals: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], defaultRemovalsGraph: String)
+    {
+        val triplesGroup = new TriplesGroupBuilder()
+        for (rowResult <- removals)
+        {
+            for (key <- requiredOutputKeysList) assert (rowResult.contains(key.toString))
+            assert (!rowResult.contains(OPTIONALGROUP.toString))
+            helper.validateURI(defaultRemovalsGraph)
+        
+            val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
+                                  false, false)
+            triplesGroup.addRequiredTripleToRequiredGroup(newTriple, defaultRemovalsGraph)
+            
+            clause = triplesGroup.buildDeleteClauseFromTriplesGroup()
+        }
     }
 }
 

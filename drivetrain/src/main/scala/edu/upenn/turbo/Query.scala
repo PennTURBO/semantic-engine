@@ -25,12 +25,16 @@ class PatternMatchQuery extends Query
     var bindClause: String = ""
     var whereClause: String = ""
     var insertClause: String = ""
+    var deleteClause: String = ""
     
     var defaultInputGraph: String = null
+    var defaultRemovalsGraph: String = null
     
     var process: String = null
+
     var whereClauseBuilder: WhereClauseBuilder = new WhereClauseBuilder()
     var insertClauseBuilder: InsertClauseBuilder = new InsertClauseBuilder()
+    var deleteClauseBuilder: DeleteClauseBuilder = new DeleteClauseBuilder()
     
     var varsForProcessInput = new HashSet[String]
     
@@ -45,7 +49,7 @@ class PatternMatchQuery extends Query
         update.updateSparql(cxn, query)
     }
     
-    override def getQuery(): String = insertClause + "\n" + whereClause + "\n" + bindClause + "\n}"
+    override def getQuery(): String = insertClause + "\n" + deleteClause + "\n" + whereClause + "\n" + bindClause + "\n}"
     
     def setInputGraph(inputGraph: String)
     {
@@ -57,6 +61,12 @@ class PatternMatchQuery extends Query
     {
         helper.validateURI(outputGraph)
         this.defaultOutputGraph = outputGraph
+    }
+    
+    def setRemovalsGraph(removalsGraph: String)
+    {
+        helper.validateURI(removalsGraph)
+        this.defaultRemovalsGraph = removalsGraph
     }
     
     def setProcess(process: String)
@@ -76,8 +86,19 @@ class PatternMatchQuery extends Query
         assert (insertClauseBuilder.clause != null && insertClauseBuilder.clause != "")
         assert (insertClauseBuilder.clause.contains("GRAPH"))
         val innerClause = insertClauseBuilder.clause
-        assert (innerClause != "" && innerClause != null)
         insertClause += s"INSERT { \n $innerClause \n}"
+    }
+
+    def createDeleteClause(removals: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+    {
+        assert (deleteClause == "")
+        assert (defaultRemovalsGraph != null && defaultRemovalsGraph != "")
+        
+        deleteClauseBuilder.addTripleFromRowResult(removals, defaultRemovalsGraph)
+        assert (deleteClauseBuilder.clause != null && deleteClauseBuilder.clause != "")
+        assert (deleteClauseBuilder.clause.contains("GRAPH"))
+        val innerClause = deleteClauseBuilder.clause
+        deleteClause += s"DELETE { \n $innerClause \n}"
     }
     
     def createWhereClause(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
@@ -94,7 +115,6 @@ class PatternMatchQuery extends Query
         assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "")
         assert (whereClauseBuilder.clause.contains("GRAPH"))
         val innerClause = whereClauseBuilder.clause
-        assert (innerClause != "" && innerClause != null)
         whereClause += s"WHERE { \n $innerClause "
     }
     

@@ -6,15 +6,18 @@ import scala.collection.mutable.HashSet
 
 class TriplesGroupBuilder extends ProjectwideGlobals
 {
-    val requiredGroup = new TriplesGroup()
+    val INSERT, WHERE, INSERT_DATA, DELETE = Value
+    override val REQUIRED = Value
+    val MINUS, OPTIONAL = Value
+    
+    val requiredGroup = new TriplesGroup(REQUIRED)
     val optionalGroups = new ArrayBuffer[TriplesGroup]
+    val minusGroups = new ArrayBuffer[TriplesGroup]
     
     val allGraphsUsed = new HashSet[String]
     val typesUsed = new HashSet[String]
     
     var variablesUsed: HashSet[String] = null
-    
-    val INSERT, WHERE, INSERT_DATA = Value
     
     def addRequiredTripleToRequiredGroup(triple: Triple, graph: String)
     {
@@ -30,6 +33,38 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         else
         {
             requiredGroup.requiredInGroup += graph -> ArrayBuffer(triple)
+            allGraphsUsed += graph
+        }
+    }
+
+    def addTripleToMinusGroup(triple: Triple, graph: String, groupName: String)
+    {
+        var minusGroup: TriplesGroup = null
+        for (group <- minusGroups)
+        {
+            if (group.groupName == groupName)
+            {
+                minusGroup = group
+            }
+        }
+        if (minusGroup == null)
+        {
+           minusGroup = new TriplesGroup(MINUS)
+           minusGroup.groupName = groupName
+           minusGroups += minusGroup
+        }
+        var okToAdd: Boolean = true
+        if (minusGroup.requiredInGroup.contains(graph))
+        {
+            for (reqTriple <- minusGroup.requiredInGroup(graph))
+            {
+                if (triple.isSameAs(reqTriple)) okToAdd = false
+            }
+            if (okToAdd) minusGroup.requiredInGroup(graph) += triple
+        }
+        else
+        {
+            minusGroup.requiredInGroup += graph -> ArrayBuffer(triple)
             allGraphsUsed += graph
         }
     }
@@ -100,7 +135,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         }
         if (groupToAdd == null)
         {
-           groupToAdd = new TriplesGroup()
+           groupToAdd = new TriplesGroup(OPTIONAL)
            groupToAdd.groupName = groupName
            optionalGroups += groupToAdd
         }
@@ -124,6 +159,11 @@ class TriplesGroupBuilder extends ProjectwideGlobals
     {
         buildClauseFromTriplesGroup(INSERT_DATA)
     }
+
+    def buildDeleteClauseFromTriplesGroup(): String =
+    {
+        buildClauseFromTriplesGroup(DELETE)
+    }
     
     def buildClauseFromTriplesGroup(clauseType: Value): String =
     {
@@ -131,21 +171,35 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         for (graph <- allGraphsUsed)
         {
             clause += s"GRAPH <$graph> {\n"
-            clause += addTriplesToClause(clauseType, requiredGroup, graph, false)
+            clause += addTriplesToClause(clauseType, requiredGroup, graph)
             for (optionalGroup <- optionalGroups)
             {
-                clause += addTriplesToClause(clauseType, optionalGroup, graph, true)
+                clause += addTriplesToClause(clauseType, optionalGroup, graph)
+            }
+            for (minusGroup <- minusGroups)
+            {
+                clause += addTriplesToClause(clauseType, minusGroup, graph)
             }
             clause += "}\n"
         }
         clause
     }
     
-    def addTriplesToClause(clauseType: Value, group: TriplesGroup, graph: String, optionalGroup: Boolean): String =
+    def addTriplesToClause(clauseType: Value, group: TriplesGroup, graph: String): String =
     {
-        assert(clauseType == WHERE || clauseType == INSERT || clauseType == INSERT_DATA)
+        assert(clauseType == WHERE || clauseType == INSERT || clauseType == INSERT_DATA || clauseType == DELETE)
+        assert(group.groupType == OPTIONAL || group.groupType == REQUIRED || group.groupType == MINUS)
         var clause = ""
-        if (optionalGroup) clause += "OPTIONAL {\n"
+        if (group.groupType == OPTIONAL) 
+        {
+            if (clauseType != WHERE) throw new RuntimeException("Optional triples not allowed outside of WHERE clause")
+            clause += "OPTIONAL {\n"
+        }
+        else if (group.groupType == MINUS) 
+        {
+            if (clauseType != WHERE) throw new RuntimeException("Minus triples not allowed outside of WHERE clause")
+            clause += "MINUS {\n"
+        }
         if (group.requiredInGroup.contains(graph))
         {
             for (triple <- group.requiredInGroup(graph))
@@ -165,14 +219,14 @@ class TriplesGroupBuilder extends ProjectwideGlobals
                 clause += "}\n"
             }   
         }
-        if (optionalGroup) clause += "}\n"
+        if (group.groupType == OPTIONAL || group.groupType == MINUS) clause += "}\n"
         clause
     }
     
     def makeTriple(clauseType: Value, triple: Triple): String =
     {
         var clause = ""
-        if (clauseType == WHERE) clause += triple.makeTripleWithVariables()
+        if (clauseType == WHERE || clauseType == DELETE) clause += triple.makeTripleWithVariables()
         else if (clauseType == INSERT)
         {
             assert(variablesUsed != null && variablesUsed.size != 0)
@@ -201,8 +255,15 @@ class TriplesGroupBuilder extends ProjectwideGlobals
 
 class TriplesGroup extends ProjectwideGlobals
 {
-    var requiredInGroup: HashMap[String, ArrayBuffer[Triple]] = new HashMap[String, ArrayBuffer[Triple]]
-    var optionalInGroup: HashMap[String, ArrayBuffer[Triple]] = new HashMap[String, ArrayBuffer[Triple]]
+    def this(groupType: Object)
+    { 
+        this()
+        this.groupType = groupType.asInstanceOf[Value]
+    }
     
     var groupName: String = null
+    var groupType: Value = null
+
+    var requiredInGroup: HashMap[String, ArrayBuffer[Triple]] = new HashMap[String, ArrayBuffer[Triple]]
+    var optionalInGroup: HashMap[String, ArrayBuffer[Triple]] = new HashMap[String, ArrayBuffer[Triple]]
 }

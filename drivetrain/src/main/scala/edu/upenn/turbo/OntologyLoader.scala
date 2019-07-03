@@ -57,7 +57,6 @@ object OntologyLoader extends ProjectwideGlobals
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-hand.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-hand.owl" -> RDFFormat.RDFXML),
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl" -> RDFFormat.RDFXML),
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ingredient.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ingredient.owl" -> RDFFormat.RDFXML),
-        "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-pro.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-pro.owl" -> RDFFormat.RDFXML),
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ndc.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ndc.owl" -> RDFFormat.RDFXML),
         "http://data.bioontology.org/ontologies/RXNORM/submissions/"+getBioportalSubmissionInfo("RXNORM").get+"/download?apikey="+bioportalApiKey -> 
           Map("http://data.bioontology.org/ontologies/RXNORM/" -> RDFFormat.TURTLE)
@@ -77,15 +76,6 @@ object OntologyLoader extends ProjectwideGlobals
         )
         
         addOntologiesFromMap(cxn, diseaseOntologies)
-    }
-    
-    def addMiscOntologies(cxn: RepositoryConnection)
-    {
-        val miscOntologies: Map[String, Map[String, RDFFormat]] = Map(
-        "ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> Map("ftp://ftp.pir.georgetown.edu/databases/ontology/pro_obo/pro_reasoned.owl" -> RDFFormat.RDFXML)
-        )
-
-        addOntologiesFromMap(cxn, miscOntologies)
     }
     
     def addOntologiesFromMap(cxn: RepositoryConnection, ontMap: Map[String, Map[String, RDFFormat]])

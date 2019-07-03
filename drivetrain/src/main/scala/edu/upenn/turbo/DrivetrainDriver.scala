@@ -88,7 +88,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
           OntologyLoader.addDiseaseOntologies(cxn)
           OntologyLoader.addDrugOntologies(cxn)
           OntologyLoader.addGeneOntologies(cxn)
-          OntologyLoader.addMiscOntologies(cxn)
       }
   }
 }
