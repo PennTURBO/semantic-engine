@@ -70,10 +70,11 @@ trait ProjectwideGlobals extends Enumeration
       val CONNECTIONRECIPETYPE = Value("CONNECTIONRECIPETYPE")
       val GRAPHOFCREATINGPROCESS = Value("GRAPHOFCREATINGPROCESS")
       val MINUSGROUP = Value("MINUSGROUP")
+      val GRAPHOFORIGIN = Value("GRAPHOFORIGIN")
       
       val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, REQUIRED,
                                               OPTIONALGROUP, CONNECTIONRECIPETYPE, BASETYPE, GRAPHOFCREATINGPROCESS,
-                                              MINUSGROUP)
+                                              MINUSGROUP, GRAPHOFORIGIN)
                                               
       val requiredOutputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, CONNECTIONRECIPETYPE,
                                               BASETYPE)

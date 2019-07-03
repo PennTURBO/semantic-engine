@@ -80,7 +80,7 @@ class PatternMatchQuery extends Query
         assert (insertClause == "")
         if (bindClause == "" || bindClause == null || whereClause == null || whereClause.size == 0) 
         {
-            throw new RuntimeException("Insert clause cannot be built before bind clause and insert clause are built.")
+            throw new RuntimeException("Insert clause cannot be built before bind clause and where clause are built.")
         }
         insertClauseBuilder.addTripleFromRowResult(outputs, process, varsForProcessInput, usedVariables)
         assert (insertClauseBuilder.clause != null && insertClauseBuilder.clause != "")

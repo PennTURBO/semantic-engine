@@ -59,31 +59,28 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
         val inputNamedGraph = inputs(0)(GRAPH.toString).toString
         
-        // process base type is an ontology class which is manipulated in some way by the process
-        val processBaseType = inputs(0)(BASETYPE.toString).toString
-        
         // create primary query
         val primaryQuery = new PatternMatchQuery()
         primaryQuery.setProcess(process)
         primaryQuery.setInputGraph(inputNamedGraph)
         
         var outputNamedGraph: String = null
+
+        primaryQuery.createBindClause(binds, localUUID)
+        primaryQuery.createWhereClause(inputs)
         if (outputs.size != 0)
         {
            outputNamedGraph = outputs(0)(GRAPH.toString).toString   
            primaryQuery.setOutputGraph(outputNamedGraph)
+           primaryQuery.createInsertClause(outputs)
         }
         var removalsNamedGraph: String = null
         if (removals.size != 0)
         {
             val removalsNamedGraph = removals(0)(GRAPH.toString).toString
             primaryQuery.setRemovalsGraph(removalsNamedGraph)
+            primaryQuery.createDeleteClause(removals)
         }
-        
-        primaryQuery.createBindClause(binds, localUUID)
-        primaryQuery.createWhereClause(inputs)
-        primaryQuery.createInsertClause(outputs)
-        primaryQuery.createDeleteClause(removals)
         
         val genericWhereClause = primaryQuery.whereClause
         // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
@@ -97,7 +94,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             for (graph <- inputNamedGraphsList)
             {
                 primaryQuery.whereClause = genericWhereClause.replaceAll(inputNamedGraph, graph)
-                //logger.info(primaryQuery.getQuery())
+                logger.info(primaryQuery.getQuery())
                 primaryQuery.runQuery(cxn)
             }
             // set back to generic input named graph for storing in metadata
@@ -142,7 +139,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             ?connection turbo:inputTo <$process> .
             ?connection a ?$CONNECTIONRECIPETYPE .
             <$process> turbo:inputNamedGraph ?$GRAPH .
-            <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
             ?connection turbo:subject ?$SUBJECT .
             ?connection turbo:predicate ?$PREDICATE .
             ?connection turbo:object ?$OBJECT .
@@ -150,16 +146,26 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             
             Optional
             {
+                <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
+            }
+            Optional
+            {
                 ?connection obo:BFO_0000050 ?$OPTIONALGROUP .
+                ?$OPTIONALGROUP a turbo:TurboGraphOptionalGroup .
             }
             Optional
             {
                 ?connection obo:BFO_0000050 ?$MINUSGROUP .
+                ?$MINUSGROUP a turbo:TurboGraphMinusGroup .
             }
             Optional
             {
                 ?connection turbo:outputOf ?creatingProcess .
                 ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
+            }
+            Optional
+            {
+                ?connection turbo:referencedInGraph ?$GRAPHOFORIGIN .
             }
             
             Graph <$ontologyURL> {
@@ -183,7 +189,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     def getRemovals(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
     {
        var variablesToSelect = ""
-       for (key <- requiredInputKeysList) variablesToSelect += "?" + key + " "
+       for (key <- requiredOutputKeysList) variablesToSelect += "?" + key + " "
        
        val query = s"""
          

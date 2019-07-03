@@ -31,6 +31,9 @@
 @prefix wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+<http://data.bioontology.org/ontologies/RXNORM/>
+  a ontologies:TurboNamedGraph ;
+.
 <http://haydensgraph.org/>
   a owl:Ontology ;
   owl:imports ontologies: ;
@@ -75,7 +78,6 @@ ontologies:BindIfBoundSingletonSHAOfBaseType
 ontologies:BiobankEncounterRegistryOfVariousTypes
   a owl:Class ;
 .
-
 ontologies:DNAExtractionProcessToDNAExtract
   a ontologies:ObjectConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -180,6 +182,25 @@ ontologies:RaceIdentityTypeRule
 ontologies:RandomUUID
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(struuid()))) AS ${replacement})" ;
+.
+ontologies:RxNormDrugTermMinusGroup
+  a ontologies:TurboGraphMinusGroup ;
+.
+ontologies:RxNormDrugTermToTypeDeclaration
+  a ontologies:ObjectConnectionRecipe ;
+  obo:BFO_0000050 ontologies:RxNormDrugTermMinusGroup ;
+  ontologies:inputTo ontologies:RxNormUrlCleanupProcess ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object owl:Class ;
+  ontologies:predicate rdf:type ;
+  ontologies:referencedInGraph <http://data.bioontology.org/ontologies/RXNORM/> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:DrugTermOfVariousTypes ;
+.
+ontologies:RxNormUrlCleanupProcess
+  a ontologies:TURBO_0010178 ;
+  ontologies:inputNamedGraph pmbb:expanded ;
+  ontologies:outputNamedGraph pmbb:expanded ;
 .
 ontologies:SHAGlobalRandom
   a ontologies:TurboGraphVariableManipulationLogic ;
@@ -454,6 +475,9 @@ ontologies:TurboGraphIntegerLiteralValue
 ontologies:TurboGraphLiteralValue
   a owl:Class ;
   rdfs:label "Turbo Graph Literal Value" ;
+.
+ontologies:TurboGraphMinusGroup
+  a owl:Class ;
 .
 ontologies:TurboGraphMultiplicityRule
   a owl:Class ;
@@ -2138,7 +2162,6 @@ ontologies:inputTo
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
   rdfs:label "input to an expansion process" ;
-  rdfs:range ontologies:TURBO_0010178 ;
 .
 ontologies:instantiationProcessVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
@@ -2449,11 +2472,13 @@ ontologies:prescriptionToDataset
 .
 ontologies:prescriptionToDrug
   a ontologies:ObjectConnectionRecipe ;
+  ontologies:inputTo ontologies:RxNormUrlCleanupProcess ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DrugTermOfVariousTypes ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required false ;
+  ontologies:removedBy ontologies:RxNormUrlCleanupProcess ;
+  ontologies:required true ;
   ontologies:subject obo:PDRO_0000001 ;
   rdfs:label "prescription to drug connection" ;
 .
@@ -2550,6 +2575,14 @@ ontologies:raceIdentityTypeVariableManipulation
   ontologies:manipulationCreates ontologies:raceIdentityDatumType ;
   ontologies:manipulationDependsOn ontologies:shortcutRaceIdentityDatumOfVariousTypes ;
   ontologies:usesSparqlLogic ontologies:RaceIdentityTypeRule ;
+.
+ontologies:referencedInGraph
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+.
+ontologies:removedBy
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
 .
 ontologies:required
   a owl:DatatypeProperty ;

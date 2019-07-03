@@ -30,6 +30,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (rowResult(REQUIRED.toString).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
             
             if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
+            if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
             if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
             if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
             if (rowResult(SUBJECTTYPE.toString) != null) 
