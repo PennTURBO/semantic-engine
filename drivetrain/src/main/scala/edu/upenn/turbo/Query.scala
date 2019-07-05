@@ -49,7 +49,7 @@ class PatternMatchQuery extends Query
         update.updateSparql(cxn, query)
     }
     
-    override def getQuery(): String = insertClause + "\n" + deleteClause + "\n" + whereClause + "\n" + bindClause + "\n}"
+    override def getQuery(): String = deleteClause + "\n" + insertClause + "\n" + whereClause + "\n" + bindClause + "\n}"
     
     def setInputGraph(inputGraph: String)
     {
@@ -78,9 +78,9 @@ class PatternMatchQuery extends Query
     def createInsertClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
         assert (insertClause == "")
-        if (bindClause == "" || bindClause == null || whereClause == null || whereClause.size == 0) 
+        if (whereClause == null || whereClause.size == 0) 
         {
-            throw new RuntimeException("Insert clause cannot be built before bind clause and where clause are built.")
+            throw new RuntimeException("Insert clause cannot be built before where clause is built.")
         }
         insertClauseBuilder.addTripleFromRowResult(outputs, process, varsForProcessInput, usedVariables)
         assert (insertClauseBuilder.clause != null && insertClauseBuilder.clause != "")

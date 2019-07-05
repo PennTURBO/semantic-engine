@@ -72,15 +72,15 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         {
            outputNamedGraph = outputs(0)(GRAPH.toString).toString   
            primaryQuery.setOutputGraph(outputNamedGraph)
-           primaryQuery.createInsertClause(outputs)
         }
         var removalsNamedGraph: String = null
         if (removals.size != 0)
         {
-            val removalsNamedGraph = removals(0)(GRAPH.toString).toString
+            removalsNamedGraph = removals(0)(GRAPH.toString).toString
             primaryQuery.setRemovalsGraph(removalsNamedGraph)
             primaryQuery.createDeleteClause(removals)
         }
+        primaryQuery.createInsertClause(outputs)
         
         val genericWhereClause = primaryQuery.whereClause
         // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
@@ -135,14 +135,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-            Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
-            ?connection turbo:inputTo <$process> .
+            Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe turbo:ObjectConnectionToInstanceRecipe turbo:DatatypeConnectionRecipe}
+            Values ?$INPUTTYPE {turbo:requiredInputTo turbo:optionalInputTo}
+            ?connection ?$INPUTTYPE <$process> .
             ?connection a ?$CONNECTIONRECIPETYPE .
             <$process> turbo:inputNamedGraph ?$GRAPH .
             ?connection turbo:subject ?$SUBJECT .
             ?connection turbo:predicate ?$PREDICATE .
             ?connection turbo:object ?$OBJECT .
-            ?connection turbo:required ?$REQUIRED .
             
             Optional
             {
@@ -205,7 +205,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             ?connection turbo:subject ?$SUBJECT .
             ?connection turbo:predicate ?$PREDICATE .
             ?connection turbo:object ?$OBJECT .
-            ?connection turbo:required ?$REQUIRED .
          }
          
          """

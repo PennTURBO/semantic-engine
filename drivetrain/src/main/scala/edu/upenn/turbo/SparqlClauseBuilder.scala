@@ -27,7 +27,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             var objectAType = false
             
             var required = true
-            if (rowResult(REQUIRED.toString).toString == "\"false\"^^<http://www.w3.org/2001/XMLSchema#boolean>") required = false
+            if (rowResult(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/optionalInputTo") required = false
             
             if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
             if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString

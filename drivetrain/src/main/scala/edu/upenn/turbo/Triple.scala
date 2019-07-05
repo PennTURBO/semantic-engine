@@ -11,6 +11,7 @@ class Triple extends ProjectwideGlobals
     
     var subjectAType: Boolean = false
     var objectAType: Boolean = false
+    var staticUri: Boolean = false
     
     def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean, objectAType: Boolean)
     {
@@ -20,6 +21,7 @@ class Triple extends ProjectwideGlobals
         setObject(objectVar)
         this.subjectAType = subjectAType
         this.objectAType = objectAType
+        this.staticUri = staticUri
     }
     
     def setSubject(subject: String)

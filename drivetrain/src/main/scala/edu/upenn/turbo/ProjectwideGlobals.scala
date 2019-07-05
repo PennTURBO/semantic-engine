@@ -60,7 +60,6 @@ trait ProjectwideGlobals extends Enumeration
       val SUBJECTTYPE = Value("SUBJECTTYPE")
       val OBJECTTYPE = Value("OBJECTTYPE")
       val GRAPH = Value("GRAPH")
-      val REQUIRED = Value("REQUIRED")
       val OPTIONALGROUP = Value("OPTIONALGROUP")
       val EXPANDEDENTITY = Value("EXPANDEDENTITY")
       val SPARQLSTRING = Value("SPARQLSTRING")
@@ -71,10 +70,11 @@ trait ProjectwideGlobals extends Enumeration
       val GRAPHOFCREATINGPROCESS = Value("GRAPHOFCREATINGPROCESS")
       val MINUSGROUP = Value("MINUSGROUP")
       val GRAPHOFORIGIN = Value("GRAPHOFORIGIN")
+      val INPUTTYPE = Value("INPUTTYPE")
       
-      val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, REQUIRED,
+      val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, 
                                               OPTIONALGROUP, CONNECTIONRECIPETYPE, BASETYPE, GRAPHOFCREATINGPROCESS,
-                                              MINUSGROUP, GRAPHOFORIGIN)
+                                              MINUSGROUP, GRAPHOFORIGIN, INPUTTYPE)
                                               
       val requiredOutputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, CONNECTIONRECIPETYPE,
                                               BASETYPE)

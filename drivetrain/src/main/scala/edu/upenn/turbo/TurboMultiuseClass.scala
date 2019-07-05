@@ -736,7 +736,7 @@ class TurboMultiuseClass
     {
        val splitTypeToVar = input.split("\\/")
        "?" + splitTypeToVar(splitTypeToVar.size - 1).replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
-             .replaceAll("\\>","").replaceAll("\\<","")
+             .replaceAll("\\>","").replaceAll("\\<","").replaceAll("\\#","_")
     }
     
     def validateURI(uri: String)

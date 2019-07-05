@@ -7,8 +7,7 @@ import scala.collection.mutable.HashSet
 class TriplesGroupBuilder extends ProjectwideGlobals
 {
     val INSERT, WHERE, INSERT_DATA, DELETE = Value
-    override val REQUIRED = Value
-    val MINUS, OPTIONAL = Value
+    val MINUS, OPTIONAL, REQUIRED = Value
     
     val requiredGroup = new TriplesGroup(REQUIRED)
     val optionalGroups = new ArrayBuffer[TriplesGroup]
@@ -170,18 +169,45 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         var clause = ""
         for (graph <- allGraphsUsed)
         {
-            clause += s"GRAPH <$graph> {\n"
-            clause += addTriplesToClause(clauseType, requiredGroup, graph)
-            for (optionalGroup <- optionalGroups)
+            var useGraphForRequired = false
+            if (requiredGroup.requiredInGroup.contains(graph)) useGraphForRequired = true
+            if (!useGraphForRequired)
             {
-                clause += addTriplesToClause(clauseType, optionalGroup, graph)
+              for (optionalGroup <- optionalGroups)
+              {
+                  if (optionalGroup.requiredInGroup.contains(graph) || optionalGroup.optionalInGroup.contains(graph)) useGraphForRequired = true
+              }
             }
+            if (useGraphForRequired)
+            {
+                clause += s"GRAPH <$graph> {\n"
+                clause += addTriplesToClause(clauseType, requiredGroup, graph)
+                for (optionalGroup <- optionalGroups)
+                {
+                    clause += addTriplesToClause(clauseType, optionalGroup, graph)
+                }
+                clause += "}\n"   
+            }
+        }
+        if (minusGroups.size != 0) clause += "MINUS {\n"
+        for (graph <- allGraphsUsed)
+        {
+            var useGraphForMinus = false
             for (minusGroup <- minusGroups)
             {
-                clause += addTriplesToClause(clauseType, minusGroup, graph)
+                if (minusGroup.requiredInGroup.contains(graph) || minusGroup.optionalInGroup.contains(graph)) useGraphForMinus = true
             }
-            clause += "}\n"
+            if (useGraphForMinus)
+            {
+                clause += s"GRAPH <$graph> {\n"
+                for (minusGroup <- minusGroups)
+                {
+                    clause += addTriplesToClause(clauseType, minusGroup, graph)
+                }
+                clause += "}\n"
+            }
         }
+        if (minusGroups.size != 0) clause += "}\n"
         clause
     }
     
@@ -190,36 +216,34 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         assert(clauseType == WHERE || clauseType == INSERT || clauseType == INSERT_DATA || clauseType == DELETE)
         assert(group.groupType == OPTIONAL || group.groupType == REQUIRED || group.groupType == MINUS)
         var clause = ""
-        if (group.groupType == OPTIONAL) 
+        if (group.requiredInGroup.contains(graph) || group.optionalInGroup.contains(graph))
         {
-            if (clauseType != WHERE) throw new RuntimeException("Optional triples not allowed outside of WHERE clause")
-            clause += "OPTIONAL {\n"
-        }
-        else if (group.groupType == MINUS) 
-        {
-            if (clauseType != WHERE) throw new RuntimeException("Minus triples not allowed outside of WHERE clause")
-            clause += "MINUS {\n"
-        }
-        if (group.requiredInGroup.contains(graph))
-        {
-            for (triple <- group.requiredInGroup(graph))
+            if (group.groupType == OPTIONAL) 
             {
-               clause += makeTriple(clauseType, triple)
-               clause += addTypeTriples(triple)
+                if (clauseType != WHERE) throw new RuntimeException("Optional triples not allowed outside of WHERE clause")
+                clause += "OPTIONAL {\n"
             }
-        }
-        if (group.optionalInGroup.contains(graph))
-        {
-            for (triple <- group.optionalInGroup(graph))
+            if (group.requiredInGroup.contains(graph))
             {
-                val tripleString = makeTriple(clauseType, triple)
-                assert(tripleString != null && tripleString != "")
-                clause += s"OPTIONAL {\n $tripleString "
-                clause += addTypeTriples(triple)
-                clause += "}\n"
-            }   
+                for (triple <- group.requiredInGroup(graph))
+                {
+                   clause += makeTriple(clauseType, triple)
+                   clause += addTypeTriples(triple)
+                }
+            }
+            if (group.optionalInGroup.contains(graph))
+            {
+                for (triple <- group.optionalInGroup(graph))
+                {
+                    val tripleString = makeTriple(clauseType, triple)
+                    assert(tripleString != null && tripleString != "")
+                    clause += s"OPTIONAL {\n $tripleString "
+                    clause += addTypeTriples(triple)
+                    clause += "}\n"
+                }   
+            }
+            if (group.groupType == OPTIONAL) clause += "}\n"   
         }
-        if (group.groupType == OPTIONAL || group.groupType == MINUS) clause += "}\n"
         clause
     }
     
