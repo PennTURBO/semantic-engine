@@ -25,14 +25,15 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             var minusGroupForThisRow: String = null
             var subjectAType = false
             var objectAType = false
+            var objectStatic = false
             
             var required = true
             if (rowResult(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/optionalInputTo") required = false
-            
             if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
             if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
             if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
             if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
+            if (rowResult(OBJECTSTATIC.toString) == null && rowResult(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionToClassRecipe") objectStatic = true
             if (rowResult(SUBJECTTYPE.toString) != null) 
             {
                 subjectAType = true
@@ -44,7 +45,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 varsForProcessInput += rowResult(OBJECT.toString).toString
             }
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
-                                                     subjectAType, objectAType)
+                                                     subjectAType, objectAType, objectStatic)
             if (minusGroupForThisRow != null)
             {
                 triplesGroup.addTripleToMinusGroup(newTriple, graphForThisRow, minusGroupForThisRow)

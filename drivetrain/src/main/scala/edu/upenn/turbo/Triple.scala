@@ -11,9 +11,9 @@ class Triple extends ProjectwideGlobals
     
     var subjectAType: Boolean = false
     var objectAType: Boolean = false
-    var staticUri: Boolean = false
+    var objectStatic: Boolean = false
     
-    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean, objectAType: Boolean)
+    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean, objectAType: Boolean, objectStatic: Boolean = false)
     {
         this
         setSubject(subject)
@@ -21,7 +21,7 @@ class Triple extends ProjectwideGlobals
         setObject(objectVar)
         this.subjectAType = subjectAType
         this.objectAType = objectAType
-        this.staticUri = staticUri
+        this.objectStatic = objectStatic
     }
     
     def setSubject(subject: String)
@@ -73,7 +73,9 @@ class Triple extends ProjectwideGlobals
     
     def makeTripleWithVariables(): String = 
     {
-        val objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
+        var objectAsVar: String = ""
+        if (!objectStatic) objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
+        else objectAsVar = tripleObject
         val subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
         s"$subjectAsVar $triplePredicate $objectAsVar .\n"
     }
@@ -88,7 +90,7 @@ class Triple extends ProjectwideGlobals
         else subjectForString = tripleSubject
         
         var objectForString = ""
-        if (!preexistingSet.contains(tripleObject.replaceAll("\\<","").replaceAll("\\>",""))) objectForString = tripleObject
+        if (!preexistingSet.contains(tripleObject.replaceAll("\\<","").replaceAll("\\>","")) || objectStatic) objectForString = tripleObject
         else 
         {
             objectForString = helper.convertTypeToSparqlVariable(tripleObject)

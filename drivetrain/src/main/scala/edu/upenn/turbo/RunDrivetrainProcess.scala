@@ -68,6 +68,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
 
         primaryQuery.createBindClause(binds, localUUID)
         primaryQuery.createWhereClause(inputs)
+        
         if (outputs.size != 0)
         {
            outputNamedGraph = outputs(0)(GRAPH.toString).toString   
@@ -167,6 +168,15 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             {
                 ?connection turbo:referencedInGraph ?$GRAPHOFORIGIN .
             }
+            Optional
+            {
+                ?connection turbo:referencedInGraph ?$GRAPHOFORIGIN .
+            }
+            Optional
+            {
+                ?$OBJECT a turbo:MultiObjectDescriber .
+                BIND (false AS ?$OBJECTSTATIC)
+            }
             
             Graph <$ontologyURL> {
               Optional
@@ -182,7 +192,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          }}
          
          """
-       
        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
 

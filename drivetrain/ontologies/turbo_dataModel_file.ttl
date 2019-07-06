@@ -137,6 +137,12 @@ ontologies:GenderIdentityDatumOfVariousTypes
   ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
   ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000141> ;
 .
+ontologies:ShortcutGenderIdentityDatumOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000133> ;
+  ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000138> ;
+  ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000141> ;
+.
 ontologies:GenderIdentityTypeRule
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${original}, obo:OMRSE_00000133) AS ${replacement})" ;
@@ -196,6 +202,17 @@ ontologies:ObjectConnectionToClassRecipe
   rdfs:subClassOf ontologies:ObjectConnectionRecipe ;
 .
 ontologies:RaceIdentityDatumOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000180> ;
+  ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000181> ;
+  ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000182> ;
+  ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000183> ;
+  ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000184> ;
+  ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000098> ;
+  ontologies:range <http://transformunify.org/ontologies/TURBO_0001551> ;
+  ontologies:range <http://purl.obolibrary.org/obo/OBI_0000852> ;
+.
+ontologies:ShortcutRaceIdentityDatumOfVariousTypes
   a ontologies:MultiObjectDescriber ;
   ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000180> ;
   ontologies:range <http://purl.obolibrary.org/obo/OMRSE_00000181> ;
@@ -1570,9 +1587,9 @@ ontologies:genderIdentityDatumVariableManipulation
 .
 ontologies:genderIdentityTypeVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
-  ontologies:hasOriginalVariable ontologies:shortcutGenderIdentityDatumOfVariousTypes ;
+  ontologies:hasOriginalVariable ontologies:ShortcutGenderIdentityDatumOfVariousTypes ;
   ontologies:manipulationCreates ontologies:genderIdentityDatumType ;
-  ontologies:manipulationDependsOn ontologies:shortcutGenderIdentityDatumOfVariousTypes ;
+  ontologies:manipulationDependsOn ontologies:ShortcutGenderIdentityDatumOfVariousTypes ;
   ontologies:usesSparqlLogic ontologies:GenderIdentityTypeRule ;
 .
 ontologies:geneSymbolUriValueVariableManipulation
@@ -2021,7 +2038,7 @@ ontologies:homoSapiensRegistryDenoterToRegistry
 .
 ontologies:homoSapiensRegistryValueVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
-  ontologies:hasOriginalVariable ontologies:shortcutHomoSapiensRegistryOfVariousTypes ;
+  ontologies:hasOriginalVariable ontologies:ShortcutHomoSapiensRegistryOfVariousTypes ;
   ontologies:manipulationCreates ontologies:HomoSapiensRegistryOfVariousTypes ;
   ontologies:usesSparqlLogic ontologies:BindAs ;
 .
@@ -2606,9 +2623,9 @@ ontologies:raceIdentityDatumVariableManipulation
 .
 ontologies:raceIdentityTypeVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;
-  ontologies:hasOriginalVariable ontologies:shortcutRaceIdentityDatumOfVariousTypes ;
+  ontologies:hasOriginalVariable ontologies:ShortcutRaceIdentityDatumOfVariousTypes ;
   ontologies:manipulationCreates ontologies:raceIdentityDatumType ;
-  ontologies:manipulationDependsOn ontologies:shortcutRaceIdentityDatumOfVariousTypes ;
+  ontologies:manipulationDependsOn ontologies:ShortcutRaceIdentityDatumOfVariousTypes ;
   ontologies:usesSparqlLogic ontologies:RaceIdentityTypeRule ;
 .
 ontologies:referencedInGraph
@@ -3107,7 +3124,7 @@ ontologies:shortcutHomoSapiensIdToRegistry
   a ontologies:ObjectConnectionToClassRecipe ;
   ontologies:requiredInputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:shortcutHomoSapiensRegistryOfVariousTypes ;
+  ontologies:object ontologies:ShortcutHomoSapiensRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010082 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010168 ;
@@ -3180,7 +3197,7 @@ ontologies:shortcutHomoSapiensToGenderIdentityType
   ontologies:dependentOn ontologies:shortcutHomoSapiensToGenderIdentityValue ;
   ontologies:optionalInputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:shortcutGenderIdentityDatumOfVariousTypes ;
+  ontologies:object ontologies:ShortcutGenderIdentityDatumOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010089 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010161 ;
@@ -3199,7 +3216,7 @@ ontologies:shortcutHomoSapiensToRaceIdentityType
   ontologies:dependentOn ontologies:shortcutHomoSapiensToRaceIdentityValue ;
   ontologies:optionalInputTo ontologies:TURBO_0010176 ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:shortcutRaceIdentityDatumOfVariousTypes ;
+  ontologies:object ontologies:ShortcutRaceIdentityDatumOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010090 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010161 ;
