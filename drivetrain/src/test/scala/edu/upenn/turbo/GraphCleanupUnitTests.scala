@@ -152,4 +152,73 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
+    
+    test ("remove SC hc enc to SC person link from expanded graph")
+    {
+      val insert = s"""
+            INSERT DATA
+            {
+            Graph pmbb:expanded {
+                pmbb:scHcEnc1 turbo:TURBO_0010131 pmbb:scPerson1 .
+                pmbb:scHcEnc1 a turbo:TURBO_0010158 .
+                pmbb:scPerson1 a turbo:TURBO_0010161 .
+              }
+            }
+        """
+      update.updateSparql(testCxn, insert)
+      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess")
+      
+        val check1: String = """
+          ASK
+          {
+          Graph pmbb:expanded {
+                pmbb:scHcEnc1 turbo:TURBO_0010131 pmbb:scPerson1 .
+              }
+          }
+          """
+        
+        val rxNormCleanupProcessMeta: String = """
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ?processBoundary obo:RO_0002223 ontologies:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess .
+                ?processBoundary a obo:BFO_0000035 .
+                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+                ?timeMeasDatum a obo:IAO_0000416 .
+                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+                
+                ontologies:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess 
+                    turbo:TURBO_0010106 ?someQuery ;
+                    turbo:TURBO_0010107 ?someRuntime ;
+                    turbo:TURBO_0010108 ?someNumberOfTriples;
+                    turbo:TURBO_0010186 pmbb:expanded ;
+                    turbo:TURBO_0010187 pmbb:expanded ;
+            }
+          }
+          """
+        
+        update.querySparqlBoolean(testCxn, check1).get should be (false)
+        update.querySparqlBoolean(testCxn, rxNormCleanupProcessMeta).get should be (true)
+      
+        val count: String = "SELECT * WHERE {Graph pmbb:expanded {?s ?p ?o .}}"
+        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        result.size should be (2)
+      
+        val processInputsOutputs: String = """
+          
+          ASK
+          {
+              GRAPH pmbb:processes
+              {
+                  ontologies:RxNormUrlCleanupProcess
+                  
+                    obo:OBI_0000293 pmbb:prescription1 ;
+              }
+          }
+          
+          """
+        
+        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+    }
 }

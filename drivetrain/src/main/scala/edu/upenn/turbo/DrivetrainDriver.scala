@@ -64,7 +64,15 @@ object DrivetrainDriver extends ProjectwideGlobals {
       {
           if (line.size > 0)
           {
-              if (line.charAt(0) != '#' && line.charAt(0) != '@') query += line 
+              if (line.charAt(0) != '#') 
+              {
+                  if (line.charAt(0) != '@') query += line 
+                  else
+                  {
+                      var formattedPrefix = line.substring(2, line.size-1)
+                      query += formattedPrefix
+                  }
+              }
           }
       }
       query += "}}"
