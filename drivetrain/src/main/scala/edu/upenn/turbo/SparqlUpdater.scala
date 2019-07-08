@@ -61,6 +61,7 @@ class SparqlUpdater
       PREFIX snomed: <http://purl.bioontology.org/ontology/SNOMEDCT/>
       PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
       PREFIX ns3: <http://www.ebi.ac.uk/efo/>
+      PREFIX Thesaurus: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
 			"""
     
     

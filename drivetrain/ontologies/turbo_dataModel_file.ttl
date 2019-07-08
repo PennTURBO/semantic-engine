@@ -268,6 +268,12 @@ ontologies:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess
   rdfs:subClassOf ontologies:TURBO_0010178 ;
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:precedes ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
+.
+ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess
+  rdfs:subClassOf ontologies:TURBO_0010178 ;
+  ontologies:inputNamedGraph pmbb:expanded ;
+  ontologies:outputNamedGraph pmbb:expanded ;
 .
 ontologies:ShortcutDiagnosisRegistryOfVariousTypes
   a ontologies:MultiObjectDescriber ;
@@ -376,7 +382,6 @@ ontologies:TURBO_0010176
   ontologies:usesVariableManipulationRule ontologies:homoSapiensSymbolVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:homoSapiensVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:instantiationProcessVariableManipulation ;
-  ontologies:usesVariableManipulationRule ontologies:raceIdentificationProcessVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:raceIdentityDatumValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:raceIdentityDatumVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:raceIdentityTypeVariableManipulation ;
@@ -2561,19 +2566,6 @@ ontologies:primaryDiagnosisBooleanVariableManipulation
   ontologies:manipulationCreates ontologies:primaryDiagnosisBooleanLiteralValue ;
   ontologies:usesSparqlLogic ontologies:BindAs ;
 .
-ontologies:raceIdentificationProcessToRaceIdentityDatum
-  a ontologies:ObjectConnectionToClassRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:RaceIdentityDatumOfVariousTypes ;
-  ontologies:outputOf ontologies:TURBO_0010176 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required true ;
-.
-ontologies:raceIdentificationProcessVariableManipulation
-  a ontologies:VariableManipulationForIntermediateNode ;
-  ontologies:manipulationDependsOn ontologies:shortcutHomoSapiensRaceIdentityStringLiteralValue ;
-  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandom ;
-.
 ontologies:raceIdentityDatumToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
@@ -2854,6 +2846,8 @@ ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI
   ontologies:required false ;
   ontologies:requiredInputTo ontologies:TURBO_0010182 ;
   ontologies:subject ontologies:TURBO_0010169 ;
+  ontologies:requiredInputTo ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
+  ontologies:removedBy ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
 .
 ontologies:shortcutBiobankEncounterToShortcutHomoSapiensUriString
   a ontologies:DatatypeConnectionRecipe ;

@@ -35,8 +35,18 @@ object ConnectToGraphDB extends ProjectwideGlobals
         val graphConnect: TurboGraphConnection = initializeGraph(loadFromProperties)
         if (graphConnect.getConnection() != null)
         {
-            if (loadFromProperties) loadDataFromPropertiesFile(graphConnect.getConnection())
-            if (importOntologies == "true") loadOntologyFromURLIfNotAlreadyLoaded(graphConnect.getConnection(), graphConnect.getRepository())
+            try
+            {
+                if (loadFromProperties) loadDataFromPropertiesFile(graphConnect.getConnection())
+                if (importOntologies == "true") loadOntologyFromURLIfNotAlreadyLoaded(graphConnect.getConnection(), graphConnect.getRepository())
+                // update data model and ontology upon establishing connection
+                OntologyLoader.addOntologyFromUrl(graphConnect.getGmConnection())
+                DrivetrainDriver.updateModel(graphConnect.getGmConnection())
+            }
+            catch
+            {
+                case e: RuntimeException => closeGraphConnection(graphConnect, false)
+            }
         }
         graphConnect
     }
@@ -73,10 +83,6 @@ object ConnectToGraphDB extends ProjectwideGlobals
             testRepoManager.initialize()
             val testRepository: Repository = testRepoManager.getRepository(helper.retrievePropertyFromFile("testingRepository"))
             val testCxn: RepositoryConnection = testRepository.getConnection()
-
-            // update data model and ontology upon establishing connection
-            OntologyLoader.addOntologyFromUrl(gmCxn)
-            DrivetrainDriver.updateModel(gmCxn)
             
             graphConnect.setConnection(cxn)
             graphConnect.setRepoManager(repoManager)

@@ -50,7 +50,7 @@ class Triple extends ProjectwideGlobals
     {
         if (objectVar.charAt(0) == '?')
         {
-            helper.validateVariable(objectVar)
+            //helper.validateVariable(objectVar)
             this.tripleObject = objectVar
         }
         else if (!objectVar.contains(':') || objectVar.contains(' ')) 

@@ -36,6 +36,17 @@ import java.net.SocketException
 
 object OntologyLoader extends ProjectwideGlobals
 {   
+    def loadRelevantOntologies(cxn: RepositoryConnection)
+    {
+        addDrugOntologies(cxn)
+        addDiseaseOntologies(cxn)
+        // if expanded loss of function data, add gene ontologies
+        if (helper.wasThisProcessRun(cxn, "http://transformunify.org/ontologies/TURBO_0010180"))
+        {
+            addGeneOntologies(cxn)
+        }
+    }
+
     def addGeneOntologies(cxn: RepositoryConnection)
     {
         val geneOntologies: Map[String, Map[String, RDFFormat]] = Map(

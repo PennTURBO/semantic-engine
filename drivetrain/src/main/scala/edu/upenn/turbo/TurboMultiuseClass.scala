@@ -747,8 +747,42 @@ class TurboMultiuseClass
         for (char <- illegalCharacters) assert(!uri.contains(char))
     }
     
-    def validateVariable(variable: String)
+    def buildProcessMetaQuery(process: String): String =
     {
-        
+        s"""
+          ASK 
+          { 
+            Graph pmbb:processes
+            {
+                ?processBoundary obo:RO_0002223 <$process> .
+                ?processBoundary a obo:BFO_0000035 .
+                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+                ?timeMeasDatum a obo:IAO_0000416 .
+                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+                
+                <$process>
+                    turbo:TURBO_0010106 ?someQuery ;
+                    turbo:TURBO_0010107 ?someRuntime ;
+                    turbo:TURBO_0010108 ?someNumberOfTriples;
+                    turbo:TURBO_0010186 pmbb:expanded ;
+                    turbo:TURBO_0010187 pmbb:expanded ;
+            }
+          }
+          """
+    }
+
+    def wasThisProcessRun(cxn: RepositoryConnection, process: String): Boolean =
+    {
+        val ask: String = s"""
+        ASK 
+          { 
+            Graph pmbb:processes
+            {   
+                <$process> ?p ?o .
+            }
+          }
+
+        """
+        updater.querySparqlBoolean(cxn, ask).get
     }
 }

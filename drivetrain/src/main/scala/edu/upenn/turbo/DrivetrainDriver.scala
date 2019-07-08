@@ -59,6 +59,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       val graph = "http://www.itmat.upenn.edu/biobank/dataModel"
       helper.clearNamedGraph(gmCxn, graph)
       var query = s"INSERT DATA { Graph <$graph> {"
+      var prefixes = ""
       val br = io.Source.fromFile("ontologies//turbo_dataModel_file.ttl")
       for (line <- br.getLines())
       {
@@ -69,14 +70,13 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   if (line.charAt(0) != '@') query += line 
                   else
                   {
-                      var formattedPrefix = line.substring(2, line.size-1)
-                      query += formattedPrefix
+                      var formattedPrefix = line.substring(1, line.size-1)
+                      prefixes += formattedPrefix+"\n"
                   }
               }
           }
       }
       query += "}}"
-      //println(sparqlPrefixes + query)
       update.updateSparql(gmCxn, query)
       br.close()
   }
@@ -93,9 +93,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       if (loadAdditionalOntologies)
       {
           logger.info("loading extra ontologies")
-          OntologyLoader.addDiseaseOntologies(cxn)
-          OntologyLoader.addDrugOntologies(cxn)
-          OntologyLoader.addGeneOntologies(cxn)
+          OntologyLoader.loadRelevantOntologies(cxn)
       }
   }
 }
