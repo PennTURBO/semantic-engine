@@ -37,92 +37,108 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     {
         this.cxn = cxn
     }
+
+    def validateProcess(cxn: RepositoryConnection, process: String): Boolean =
+    {
+        val ask: String = s"""
+            ASK {
+              Graph <$ontologyURL> {
+              <$process> rdfs:subClassOf turbo:TURBO_0010178 .
+              }
+            }
+        """
+        update.querySparqlBoolean(cxn, ask).get
+    }
         
     def runProcess(process: String)
     {
-        val startTime = System.nanoTime()
-        val currDate = Calendar.getInstance().getTime()
-        val startingTriplesCount = helper.countTriplesInDatabase(cxn)
-        logger.info("Starting process: " + process)
-        val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
-        
-        // retrieve connections (inputs, outputs) and expansion rules (binds) from model graph
-        // the inputs become the "where" block of the SPARQL query
-        // the outputs become the "insert" block
-        val inputs = getInputs(process)
-        val outputs = getOutputs(process)
-        val binds = getBind(process)
-        val removals = getRemovals(process)
-        
-        if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
-        if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
-        
-        val inputNamedGraph = inputs(0)(GRAPH.toString).toString
-        
-        // create primary query
-        val primaryQuery = new PatternMatchQuery()
-        primaryQuery.setProcess(process)
-        primaryQuery.setInputGraph(inputNamedGraph)
-        
-        var outputNamedGraph: String = null
-
-        primaryQuery.createBindClause(binds, localUUID)
-        primaryQuery.createWhereClause(inputs)
-        
-        if (outputs.size != 0)
-        {
-           outputNamedGraph = outputs(0)(GRAPH.toString).toString   
-           primaryQuery.setOutputGraph(outputNamedGraph)
-        }
-        var removalsNamedGraph: String = null
-        if (removals.size != 0)
-        {
-            removalsNamedGraph = removals(0)(GRAPH.toString).toString
-            primaryQuery.setRemovalsGraph(removalsNamedGraph)
-            primaryQuery.createDeleteClause(removals)
-        }
-        primaryQuery.createInsertClause(outputs)
-        
-        val genericWhereClause = primaryQuery.whereClause
-        // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
-        var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph, genericWhereClause)
-        logger.info("input named graphs size: " + inputNamedGraphsList.size)
-            
-        if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $process: no input named graphs found")
+        if (!validateProcess(gmCxn, process)) logger.info(process + " not a valid TURBO process")
         else
         {
-            // for each input named graph, run query with specified named graph
-            for (graph <- inputNamedGraphsList)
+            val startTime = System.nanoTime()
+            val currDate = Calendar.getInstance().getTime()
+            val startingTriplesCount = helper.countTriplesInDatabase(cxn)
+            logger.info("Starting process: " + process)
+            val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
+            
+            // retrieve connections (inputs, outputs) and expansion rules (binds) from model graph
+            // the inputs become the "where" block of the SPARQL query
+            // the outputs become the "insert" block
+            val inputs = getInputs(process)
+            val outputs = getOutputs(process)
+            val binds = getBind(process)
+            val removals = getRemovals(process)
+            
+            if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
+            if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
+            
+            val inputNamedGraph = inputs(0)(GRAPH.toString).toString
+            
+            // create primary query
+            val primaryQuery = new PatternMatchQuery()
+            primaryQuery.setProcess(process)
+            primaryQuery.setInputGraph(inputNamedGraph)
+            
+            var outputNamedGraph: String = null
+
+            primaryQuery.createBindClause(binds, localUUID)
+            primaryQuery.createWhereClause(inputs)
+            
+            if (outputs.size != 0)
             {
-                primaryQuery.whereClause = genericWhereClause.replaceAll(inputNamedGraph, graph)
-                logger.info(primaryQuery.getQuery())
-                primaryQuery.runQuery(cxn)
+               outputNamedGraph = outputs(0)(GRAPH.toString).toString   
+               primaryQuery.setOutputGraph(outputNamedGraph)
             }
-            // set back to generic input named graph for storing in metadata
-            primaryQuery.whereClause = genericWhereClause
-            
-            val endingTriplesCount = helper.countTriplesInDatabase(cxn)
-            val triplesAdded = endingTriplesCount - startingTriplesCount
-            val endTime = System.nanoTime()
-            val runtime: String = ((endTime - startTime)/1000000000.0).toString
-            logger.info("Completed process " + process + " in " + runtime + " seconds")
-            
-            // create metadata about process
-            val metaDataQuery = new DataQuery()
-            val metaInfo: HashMap[Value, ArrayBuffer[String]] = HashMap(METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
-                                                            DATE -> ArrayBuffer(currDate.toString), 
-                                                            PROCESS -> ArrayBuffer(process), 
-                                                            OUTPUTNAMEDGRAPH -> ArrayBuffer(outputNamedGraph, removalsNamedGraph),
-                                                            PROCESSRUNTIME -> ArrayBuffer(runtime),
-                                                            TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
-                                                            INPUTNAMEDGRAPHS -> inputNamedGraphsList
-                                                            )
-                                                            
-            val metaDataTriples = createMetaDataTriples(metaInfo)
-            metaDataQuery.createInsertDataClause(metaDataTriples, processNamedGraph)
-            //logger.info(metaDataQuery.getQuery())
-            metaDataQuery.runQuery(cxn) 
+            var removalsNamedGraph: String = null
+            if (removals.size != 0)
+            {
+                removalsNamedGraph = removals(0)(GRAPH.toString).toString
+                primaryQuery.setRemovalsGraph(removalsNamedGraph)
+                primaryQuery.createDeleteClause(removals)
             }
+            primaryQuery.createInsertClause(outputs)
+            
+            val genericWhereClause = primaryQuery.whereClause
+            // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
+            var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph, genericWhereClause)
+            logger.info("input named graphs size: " + inputNamedGraphsList.size)
+                
+            if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $process: no input named graphs found")
+            else
+            {
+                // for each input named graph, run query with specified named graph
+                for (graph <- inputNamedGraphsList)
+                {
+                    primaryQuery.whereClause = genericWhereClause.replaceAll(inputNamedGraph, graph)
+                    //logger.info(primaryQuery.getQuery())
+                    primaryQuery.runQuery(cxn)
+                }
+                // set back to generic input named graph for storing in metadata
+                primaryQuery.whereClause = genericWhereClause
+                
+                val endingTriplesCount = helper.countTriplesInDatabase(cxn)
+                val triplesAdded = endingTriplesCount - startingTriplesCount
+                val endTime = System.nanoTime()
+                val runtime: String = ((endTime - startTime)/1000000000.0).toString
+                logger.info("Completed process " + process + " in " + runtime + " seconds")
+                
+                // create metadata about process
+                val metaDataQuery = new DataQuery()
+                val metaInfo: HashMap[Value, ArrayBuffer[String]] = HashMap(METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
+                                                                DATE -> ArrayBuffer(currDate.toString), 
+                                                                PROCESS -> ArrayBuffer(process), 
+                                                                OUTPUTNAMEDGRAPH -> ArrayBuffer(outputNamedGraph, removalsNamedGraph),
+                                                                PROCESSRUNTIME -> ArrayBuffer(runtime),
+                                                                TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
+                                                                INPUTNAMEDGRAPHS -> inputNamedGraphsList
+                                                                )
+                                                                
+                val metaDataTriples = createMetaDataTriples(metaInfo)
+                metaDataQuery.createInsertDataClause(metaDataTriples, processNamedGraph)
+                //logger.info(metaDataQuery.getQuery())
+                metaDataQuery.runQuery(cxn) 
+            }
+        }
     }
     
     def getInputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
@@ -136,46 +152,47 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-            Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe turbo:ObjectConnectionToInstanceRecipe turbo:DatatypeConnectionRecipe}
-            Values ?$INPUTTYPE {turbo:requiredInputTo turbo:optionalInputTo}
-            ?connection ?$INPUTTYPE <$process> .
-            ?connection a ?$CONNECTIONRECIPETYPE .
-            <$process> turbo:inputNamedGraph ?$GRAPH .
-            ?connection turbo:subject ?$SUBJECT .
-            ?connection turbo:predicate ?$PREDICATE .
-            ?connection turbo:object ?$OBJECT .
-            
-            Optional
+            Graph pmbb:dataModel
             {
-                <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
-            }
-            Optional
-            {
-                ?connection obo:BFO_0000050 ?$OPTIONALGROUP .
-                ?$OPTIONALGROUP a turbo:TurboGraphOptionalGroup .
-            }
-            Optional
-            {
-                ?connection obo:BFO_0000050 ?$MINUSGROUP .
-                ?$MINUSGROUP a turbo:TurboGraphMinusGroup .
-            }
-            Optional
-            {
-                ?connection turbo:outputOf ?creatingProcess .
-                ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
-            }
-            Optional
-            {
-                ?connection turbo:referencedInGraph ?$GRAPHOFORIGIN .
-            }
-            Optional
-            {
-                ?connection turbo:referencedInGraph ?$GRAPHOFORIGIN .
-            }
-            Optional
-            {
-                ?$OBJECT a turbo:MultiObjectDescriber .
-                BIND (false AS ?$OBJECTSTATIC)
+              Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
+                                            turbo:ObjectConnectionToInstanceRecipe
+                                            turbo:DatatypeConnectionRecipe}
+              Values ?$INPUTTYPE {turbo:requiredInputTo turbo:optionalInputTo}
+              ?connection ?$INPUTTYPE <$process> .
+              ?connection a ?$CONNECTIONRECIPETYPE .
+              <$process> turbo:inputNamedGraph ?$GRAPH .
+              ?connection turbo:subject ?$SUBJECT .
+              ?connection turbo:predicate ?$PREDICATE .
+              ?connection turbo:object ?$OBJECT .
+              
+              Optional
+              {
+                  <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
+              }
+              Optional
+              {
+                  ?connection obo:BFO_0000050 ?$OPTIONALGROUP .
+                  ?$OPTIONALGROUP a turbo:TurboGraphOptionalGroup .
+              }
+              Optional
+              {
+                  ?connection obo:BFO_0000050 ?$MINUSGROUP .
+                  ?$MINUSGROUP a turbo:TurboGraphMinusGroup .
+              }
+              Optional
+              {
+                  ?connection turbo:outputOf ?creatingProcess .
+                  ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
+              }
+              Optional
+              {
+                  ?connection turbo:referencedInGraph ?$GRAPHOFORIGIN .
+              }
+              Optional
+              {
+                  ?$OBJECT a turbo:MultiObjectDescriber .
+                  BIND (false AS ?$OBJECTSTATIC)
+              }
             }
             
             Graph <$ontologyURL> {
@@ -206,14 +223,19 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-            Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
+            Graph pmbb:dataModel
+            {
+                Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
+                                            turbo:ObjectConnectionToInstanceRecipe
+                                            turbo:DatatypeConnectionRecipe}
 
-            ?connection turbo:removedBy <$process> .
-            ?connection a ?$CONNECTIONRECIPETYPE .
-            <$process> turbo:inputNamedGraph ?$GRAPH .
-            ?connection turbo:subject ?$SUBJECT .
-            ?connection turbo:predicate ?$PREDICATE .
-            ?connection turbo:object ?$OBJECT .
+                ?connection turbo:removedBy <$process> .
+                ?connection a ?$CONNECTIONRECIPETYPE .
+                <$process> turbo:inputNamedGraph ?$GRAPH .
+                ?connection turbo:subject ?$SUBJECT .
+                ?connection turbo:predicate ?$PREDICATE .
+                ?connection turbo:object ?$OBJECT .
+            }
          }
          
          """
@@ -231,14 +253,19 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          Select $variablesToSelect
          Where
          {
-            Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionRecipe turbo:DatatypeConnectionRecipe}
-            ?connection turbo:outputOf <$process> .
-            ?connection a ?$CONNECTIONRECIPETYPE .
-            <$process> turbo:outputNamedGraph ?$GRAPH .
-            <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
-            ?connection turbo:subject ?$SUBJECT .
-            ?connection turbo:predicate ?$PREDICATE .
-            ?connection turbo:object ?$OBJECT .
+            Graph pmbb:dataModel
+            {
+              Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
+                                            turbo:ObjectConnectionToInstanceRecipe
+                                            turbo:DatatypeConnectionRecipe}
+              ?connection turbo:outputOf <$process> .
+              ?connection a ?$CONNECTIONRECIPETYPE .
+              <$process> turbo:outputNamedGraph ?$GRAPH .
+              <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
+              ?connection turbo:subject ?$SUBJECT .
+              ?connection turbo:predicate ?$PREDICATE .
+              ?connection turbo:object ?$OBJECT .
+            }
             
             Graph <$ontologyURL>
             {
@@ -266,22 +293,25 @@ object RunDrivetrainProcess extends ProjectwideGlobals
           Select distinct ?$EXPANDEDENTITY ?$SPARQLSTRING ?$SHORTCUTENTITY ?$DEPENDEE ?$BASETYPE
           Where
           {
-    		      values ?manipulationRuleType {turbo:VariableManipulationForIntermediateNode turbo:VariableManipulationForLiteralValue}
-              <$process> turbo:usesVariableManipulationRule ?variableManipulationRule .
-              <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
-              
-              ?variableManipulationRule a ?manipulationRuleType .
-              ?variableManipulationRule turbo:manipulationCreates ?$EXPANDEDENTITY .
-              ?variableManipulationRule turbo:usesSparqlLogic ?logic .
-              ?logic turbo:usesSparql ?$SPARQLSTRING .
-              
-              Optional
+              Graph pmbb:dataModel
               {
-                  ?variableManipulationRule turbo:hasOriginalVariable ?$SHORTCUTENTITY .
-              }
-              Optional
-              {
-                  ?variableManipulationRule turbo:manipulationDependsOn ?$DEPENDEE .
+      		      values ?manipulationRuleType {turbo:VariableManipulationForIntermediateNode turbo:VariableManipulationForLiteralValue}
+                <$process> turbo:usesVariableManipulationRule ?variableManipulationRule .
+                <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
+                
+                ?variableManipulationRule a ?manipulationRuleType .
+                ?variableManipulationRule turbo:manipulationCreates ?$EXPANDEDENTITY .
+                ?variableManipulationRule turbo:usesSparqlLogic ?logic .
+                ?logic turbo:usesSparql ?$SPARQLSTRING .
+                
+                Optional
+                {
+                    ?variableManipulationRule turbo:hasOriginalVariable ?$SHORTCUTENTITY .
+                }
+                Optional
+                {
+                    ?variableManipulationRule turbo:manipulationDependsOn ?$DEPENDEE .
+                }
               }
           }
           
@@ -299,9 +329,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         setGlobalUUID(globalUUID)
         setGraphModelConnection(gmCxn)
         setOutputRepositoryConnection(cxn)
-        
-        //load the TURBO ontology
-        OntologyLoader.addOntologyFromUrl(cxn)
       
         // get list of all processes in order
         val orderedProcessList: ArrayBuffer[String] = getAllProcessesInOrder(gmCxn)

@@ -19,7 +19,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
     
     before
     {
-        graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
+        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
         testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         testRepoManager = graphDBMaterials.getTestRepoManager()

@@ -22,7 +22,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       {
           try
           {
-              graphDBMaterials = ConnectToGraphDB.initializeGraph(true)
+              graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
               
               cxn = graphDBMaterials.getConnection()
               repoManager = graphDBMaterials.getRepoManager()
@@ -36,15 +36,33 @@ object DrivetrainDriver extends ProjectwideGlobals {
               gmRepoManager = graphDBMaterials.getGmRepoManager()
               gmRepository = graphDBMaterials.getGmRepository() 
               
+              //load the TURBO ontology
+              OntologyLoader.addOntologyFromUrl(cxn)
+              
               if (cxn == null || gmCxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
               else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.NQUADS)
               else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
-              else if (args(0) == "loadTurboOntology") OntologyLoader.addOntologyFromUrl(cxn)
               else if (args(0) == "loadTestTurboOntology") OntologyLoader.addOntologyFromUrl(testCxn)
               else if (args(0) == "updateModelOntology") OntologyLoader.addOntologyFromUrl(gmCxn)
               else if (args(0) == "updateModel") updateModel(gmCxn)
               else if (args(0) == "all") runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
-              else logger.info("Unrecognized command line argument " + args(0) + ", no action taken")
+              else if (args(0).startsWith("http://transformunify.org/ontologies/"))
+              {
+                  logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
+                  val instantiationURI = "http://www.itmat.upenn.edu/biobank/" + UUID.randomUUID().toString().replaceAll("-", "")
+                  RunDrivetrainProcess.setInstantiation(instantiationURI)
+                  RunDrivetrainProcess.setGlobalUUID(globalUUID)
+                  RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+                  RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+                  RunDrivetrainProcess.runProcess(args(0))
+              }
+              else logger.info("Ontology loaded in production repo, no further action taken.")
+          }
+          catch
+          {
+              case e: RuntimeException => 
+                logger.info("exception thrown:" + e.printStackTrace())
+                if (cxn != null) ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
           }
           finally 
           {

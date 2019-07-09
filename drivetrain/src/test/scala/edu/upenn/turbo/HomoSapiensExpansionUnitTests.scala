@@ -30,7 +30,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           
           ?part a obo:NCBITaxon_9606 .
           
-          ?partCrid a turbo:TURBO_0000503 .
+          ?partCrid a turbo:TURBO_0010092 .
           ?partCrid obo:IAO_0000219 ?part .
           ?partCrid obo:BFO_0000051 ?partSymbol .
           ?partCrid obo:BFO_0000051 ?partRegDen .
@@ -78,7 +78,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
     
     before
     {
-        graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
+        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
         testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         testRepoManager = graphDBMaterials.getTestRepoManager()
@@ -140,7 +140,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         		?dataset obo:BFO_0000051 ?dob .
         		
         		?patientCrid obo:IAO_0000219 ?part .
-        		?patientCrid a turbo:TURBO_0000503 .
+        		?patientCrid a turbo:TURBO_0010092 .
         		?patientCrid obo:BFO_0000051 ?patientRegDen .
         		?patientRegDen obo:BFO_0000050 ?patientCrid .
         		?patientRegDen a turbo:TURBO_0000505 .
@@ -208,7 +208,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 ?UBERON_0035946 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504 ;
                   ontologies:TURBO_0010184 ?TURBO_0000505 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000503 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010092 ;
                   ontologies:TURBO_0010184 ?PATO_0000047 ;
                   ontologies:TURBO_0010184 ?IAO_0000100 ;
                   ontologies:TURBO_0010184 ?OMRSE_00000138 ;
@@ -223,7 +223,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             {
                 ?UBERON_0035946 a obo:UBERON_0035946 .
                 ?TURBO_0000504 a turbo:TURBO_0000504 .
-                ?TURBO_0000503 a turbo:TURBO_0000503 .
+                ?TURBO_0010092 a turbo:TURBO_0010092 .
                 ?TURBO_0000505 a turbo:TURBO_0000505 .
                 ?PATO_0000047 a obo:PATO_0000047 .
                 ?IAO_0000100 a obo:IAO_0000100 .
@@ -294,7 +294,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 ontologies:TURBO_0000410 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504 ;
                   ontologies:TURBO_0010184 ?TURBO_0000505 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000503 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010092 ;
                   ontologies:TURBO_0010184 ?IAO_0000100 ;
                   ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
                   
@@ -304,7 +304,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             Graph pmbb:expanded 
             {
                 ?TURBO_0000504 a turbo:TURBO_0000504 .
-                ?TURBO_0000503 a turbo:TURBO_0000503 .
+                ?TURBO_0010092 a turbo:TURBO_0010092 .
                 ?TURBO_0000505 a turbo:TURBO_0000505 .
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
@@ -486,7 +486,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 ?UBERON_0035946 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504 ;
                   ontologies:TURBO_0010184 ?TURBO_0000505 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000503 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010092 ;
                   ontologies:TURBO_0010184 ?PATO_0000047 ;
                   ontologies:TURBO_0010184 ?IAO_0000100 ;
                   ontologies:TURBO_0010184 ?OMRSE_00000133 ;
@@ -501,7 +501,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             {
                 ?UBERON_0035946 a obo:UBERON_0035946 .
                 ?TURBO_0000504 a turbo:TURBO_0000504 .
-                ?TURBO_0000503 a turbo:TURBO_0000503 .
+                ?TURBO_0010092 a turbo:TURBO_0010092 .
                 ?TURBO_0000505 a turbo:TURBO_0000505 .
                 ?PATO_0000047 a obo:PATO_0000047 .
                 ?IAO_0000100 a obo:IAO_0000100 .
@@ -587,7 +587,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         		?dataset obo:BFO_0000051 ?rid .
         		
         		?patientCrid1 obo:IAO_0000219 ?part .
-        		?patientCrid1 a turbo:TURBO_0000503 .
+        		?patientCrid1 a turbo:TURBO_0010092 .
         		?patientCrid1 obo:BFO_0000051 ?patientRegDen1 .
         		?patientRegDen1 obo:BFO_0000050 ?patientCrid1 .
         		?patientRegDen1 a turbo:TURBO_0000505 .
@@ -602,7 +602,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             ?dataset obo:BFO_0000051 ?partSymb1 .
             
             ?patientCrid2 obo:IAO_0000219 ?part .
-        		?patientCrid2 a turbo:TURBO_0000503 .
+        		?patientCrid2 a turbo:TURBO_0010092 .
         		?patientCrid2 obo:BFO_0000051 ?patientRegDen2 .
         		?patientRegDen2 obo:BFO_0000050 ?patientCrid2 .
         		?patientRegDen2 a turbo:TURBO_0000505 .
@@ -617,7 +617,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             ?dataset obo:BFO_0000051 ?partSymb2 .
             
             ?patientCrid3 obo:IAO_0000219 ?part .
-        		?patientCrid3 a turbo:TURBO_0000503 .
+        		?patientCrid3 a turbo:TURBO_0010092 .
         		?patientCrid3 obo:BFO_0000051 ?patientRegDen3 .
         		?patientRegDen3 obo:BFO_0000050 ?patientCrid3 .
         		?patientRegDen3 a turbo:TURBO_0000505 .
@@ -644,7 +644,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         val threeIdentifiers = """
           select (count (?crid) as ?cridcount) where
           {
-              ?crid a turbo:TURBO_0000503 .
+              ?crid a turbo:TURBO_0010092 .
           }
           """
         
@@ -737,13 +737,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   
                   ontologies:TURBO_0010184 ?TURBO_0000504_1 ;
                   ontologies:TURBO_0010184 ?TURBO_0000505_1 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000503_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010092_1 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504_2 ;
                   ontologies:TURBO_0010184 ?TURBO_0000505_2 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000503_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010092_2 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504_3 ;
                   ontologies:TURBO_0010184 ?TURBO_0000505_3 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000503_3 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010092_3 ;
                   
                   ontologies:TURBO_0010184 ?UBERON_0035946 ;
                   ontologies:TURBO_0010184 ?PATO_0000047 ;
@@ -767,13 +767,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
                 
                 ?TURBO_0000504_1 a turbo:TURBO_0000504 .
-                ?TURBO_0000503_1 a turbo:TURBO_0000503 .
+                ?TURBO_0010092_1 a turbo:TURBO_0010092 .
                 ?TURBO_0000505_1 a turbo:TURBO_0000505 .
                 ?TURBO_0000504_2 a turbo:TURBO_0000504 .
-                ?TURBO_0000503_2 a turbo:TURBO_0000503 .
+                ?TURBO_0010092_2 a turbo:TURBO_0010092 .
                 ?TURBO_0000505_2 a turbo:TURBO_0000505 .
                 ?TURBO_0000504_3 a turbo:TURBO_0000504 .
-                ?TURBO_0000503_3 a turbo:TURBO_0000503 .
+                ?TURBO_0010092_3 a turbo:TURBO_0010092 .
                 ?TURBO_0000505_3 a turbo:TURBO_0000505 .
             }
           }
@@ -865,7 +865,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         		?dataset3 obo:BFO_0000051 ?rid .
         		
         		?patientCrid1 obo:IAO_0000219 ?part .
-        		?patientCrid1 a turbo:TURBO_0000503 .
+        		?patientCrid1 a turbo:TURBO_0010092 .
         		?patientCrid1 obo:BFO_0000051 ?patientRegDen1 .
         		?patientRegDen1 obo:BFO_0000050 ?patientCrid1 .
         		?patientRegDen1 a turbo:TURBO_0000505 .
@@ -880,7 +880,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             ?dataset1 obo:BFO_0000051 ?partSymb1 .
             
             ?patientCrid2 obo:IAO_0000219 ?part .
-        		?patientCrid2 a turbo:TURBO_0000503 .
+        		?patientCrid2 a turbo:TURBO_0010092 .
         		?patientCrid2 obo:BFO_0000051 ?patientRegDen2 .
         		?patientRegDen2 obo:BFO_0000050 ?patientCrid2 .
         		?patientRegDen2 a turbo:TURBO_0000505 .
@@ -895,7 +895,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             ?dataset2 obo:BFO_0000051 ?partSymb2 .
             
             ?patientCrid3 obo:IAO_0000219 ?part .
-        		?patientCrid3 a turbo:TURBO_0000503 .
+        		?patientCrid3 a turbo:TURBO_0010092 .
         		?patientCrid3 obo:BFO_0000051 ?patientRegDen3 .
         		?patientRegDen3 obo:BFO_0000050 ?patientCrid3 .
         		?patientRegDen3 a turbo:TURBO_0000505 .
@@ -960,13 +960,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   
                   ontologies:TURBO_0010184 ?TURBO_0000504_1 ;
                   ontologies:TURBO_0010184 ?TURBO_0000505_1 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000503_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010092_1 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504_2 ;
                   ontologies:TURBO_0010184 ?TURBO_0000505_2 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000503_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010092_2 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504_3 ;
                   ontologies:TURBO_0010184 ?TURBO_0000505_3 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000503_3 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010092_3 ;
                   
                   ontologies:TURBO_0010184 ?UBERON_0035946 ;
                   ontologies:TURBO_0010184 ?PATO_0000047 ;
@@ -990,13 +990,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
                 
                 ?TURBO_0000504_1 a turbo:TURBO_0000504 .
-                ?TURBO_0000503_1 a turbo:TURBO_0000503 .
+                ?TURBO_0010092_1 a turbo:TURBO_0010092 .
                 ?TURBO_0000505_1 a turbo:TURBO_0000505 .
                 ?TURBO_0000504_2 a turbo:TURBO_0000504 .
-                ?TURBO_0000503_2 a turbo:TURBO_0000503 .
+                ?TURBO_0010092_2 a turbo:TURBO_0010092 .
                 ?TURBO_0000505_2 a turbo:TURBO_0000505 .
                 ?TURBO_0000504_3 a turbo:TURBO_0000504 .
-                ?TURBO_0000503_3 a turbo:TURBO_0000503 .
+                ?TURBO_0010092_3 a turbo:TURBO_0010092 .
                 ?TURBO_0000505_3 a turbo:TURBO_0000505 .
             }
           }

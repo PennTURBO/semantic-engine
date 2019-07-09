@@ -30,15 +30,13 @@ object ConnectToGraphDB extends ProjectwideGlobals
      * Returns a TurboGraphConnection containing RepositoryConnection, Repository, and RemoteRepositoryManager objects to be handled and closed
      * by the calling class.
      */
-    def initializeGraphLoadData(loadFromProperties: Boolean): TurboGraphConnection =
+    def initializeGraphUpdateData(): TurboGraphConnection =
     {
-        val graphConnect: TurboGraphConnection = initializeGraph(loadFromProperties)
+        val graphConnect: TurboGraphConnection = initializeGraph()
         if (graphConnect.getConnection() != null)
         {
             try
             {
-                if (loadFromProperties) loadDataFromPropertiesFile(graphConnect.getConnection())
-                if (importOntologies == "true") loadOntologyFromURLIfNotAlreadyLoaded(graphConnect.getConnection(), graphConnect.getRepository())
                 // update data model and ontology upon establishing connection
                 OntologyLoader.addOntologyFromUrl(graphConnect.getGmConnection())
                 DrivetrainDriver.updateModel(graphConnect.getGmConnection())
@@ -55,9 +53,9 @@ object ConnectToGraphDB extends ProjectwideGlobals
      * Initializes the connection to the Graph DB instance after checking that the TURBO Properties file is in a valid state. Validates connection
      * with username and password specified in TURBO properties file and returns TurboGraphConnection object.
      */
-    def initializeGraph(loadFromProperties: Boolean): TurboGraphConnection =
+    def initializeGraph(): TurboGraphConnection =
     {
-        val missingProperty: Option[String] = checkForMissingProperties(loadFromProperties)
+        val missingProperty: Option[String] = checkForMissingProperties()
         val graphConnect: TurboGraphConnection = new TurboGraphConnection
         if (missingProperty != None)
         {
@@ -252,7 +250,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
      * Helper method called by graph connection methods in order to validate properties file. Ensures that all required properties for connection to Graph DB
      * are present in properties file.
      */
-    def checkForMissingProperties(requiredInputFileProps: Boolean): Option[String] =
+    def checkForMissingProperties(): Option[String] =
     { 
         val input: FileInputStream = new FileInputStream("..//turbo_properties.properties")
         val props: Properties = new Properties()

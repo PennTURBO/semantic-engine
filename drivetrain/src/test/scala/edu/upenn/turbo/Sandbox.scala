@@ -21,7 +21,7 @@ class Sandbox extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter w
     
     before
     {
-        graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
+        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
         cxn = graphDBMaterials.getConnection()
         repoManager = graphDBMaterials.getRepoManager()
         repository = graphDBMaterials.getRepository()

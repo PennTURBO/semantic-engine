@@ -119,7 +119,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
      
     before
     {
-        graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
+        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
         testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         testRepoManager = graphDBMaterials.getTestRepoManager()

@@ -19,7 +19,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
     
     before
     {
-        graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
+        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
         testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         testRepoManager = graphDBMaterials.getTestRepoManager()
@@ -90,7 +90,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
           		?homoSapiensHeight a obo:PATO_0000119 .
           		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
-          		?homoSapiensCrid a turbo:TURBO_0000503 .
+          		?homoSapiensCrid a turbo:TURBO_0010092 .
           		
           		?healthcareEncounter a obo:OGMS_0000097 .
           		?healthcareEncounterCrid obo:IAO_0000219 ?healthcareEncounter .
@@ -200,7 +200,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
               		
               		?homoSapiens a obo:NCBITaxon_9606 .
               		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
-              		?homoSapiensCrid a turbo:TURBO_0000503 .
+              		?homoSapiensCrid a turbo:TURBO_0010092 .
               		
               		?healthcareEncounter a obo:OGMS_0000097 .
               		?healthcareEncounterCrid obo:IAO_0000219 ?healthcareEncounter .
@@ -287,7 +287,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         
         before
         {
-            graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
+            graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
             testCxn = graphDBMaterials.getTestConnection()
             gmCxn = graphDBMaterials.getGmConnection()
             testRepoManager = graphDBMaterials.getTestRepoManager()
@@ -358,7 +358,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
               		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
               		?homoSapiensHeight a obo:PATO_0000119 .
               		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
-              		?homoSapiensCrid a turbo:TURBO_0000503 .
+              		?homoSapiensCrid a turbo:TURBO_0010092 .
               		
               		?biobankEncounter a turbo:TURBO_0000527 .
               		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
@@ -468,7 +468,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                 		
                 		?homoSapiens a obo:NCBITaxon_9606 .
                 		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
-                		?homoSapiensCrid a turbo:TURBO_0000503 .
+                		?homoSapiensCrid a turbo:TURBO_0010092 .
                 		
                 		?biobankEncounter a turbo:TURBO_0000527 .
                 		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
@@ -555,7 +555,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       
       before
       {
-          graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
+          graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
           testCxn = graphDBMaterials.getTestConnection()
           gmCxn = graphDBMaterials.getGmConnection()
           testRepoManager = graphDBMaterials.getTestRepoManager()
@@ -606,7 +606,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
             		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
             		?homoSapiensHeight a obo:PATO_0000119 .
             		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
-            		?homoSapiensCrid a turbo:TURBO_0000503 .
+            		?homoSapiensCrid a turbo:TURBO_0010092 .
             		
             		?biobankEncounter a turbo:TURBO_0000527 .
             		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
@@ -647,7 +647,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
               		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
               		?homoSapiensHeight a obo:PATO_0000119 .
               		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
-              		?homoSapiensCrid a turbo:TURBO_0000503 .
+              		?homoSapiensCrid a turbo:TURBO_0010092 .
               		
               		?healthcareEncounter a obo:OGMS_0000097 .
               		?healthcareEncounterCrid obo:IAO_0000219 ?healthcareEncounter .
@@ -792,7 +792,7 @@ trait EntityLinkingUnitTestFields
       <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
       <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010161> .
       <http://www.itmat.upenn.edu/biobank/crid1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010168> .
-      <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000503> .
+      <http://www.itmat.upenn.edu/biobank/5101e324d4fe0cb3262fe7c62d44db731137e5d958e1d97a3a0614459cbe605d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010092> .
       <http://www.itmat.upenn.edu/biobank/98bf372edccf5fa4e39a303137617beeecb20d86e1fde340ec340747920c0c8d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000504> .
       <http://www.itmat.upenn.edu/biobank/7c68a8a36f1a25a297cc895cac38bfe4fb6570462f1fc07b13bc888e6cedcfa0> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000505> .
       <http://www.itmat.upenn.edu/biobank/9bf9ca30cf4611505dd489a4288be250d2b89fa522f5d002589290addc4e2ddb> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OMRSE_00000138> .
@@ -842,7 +842,7 @@ trait EntityLinkingUnitTestFields
       <http://www.itmat.upenn.edu/biobank/test_instantiation_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
       <http://www.itmat.upenn.edu/biobank/part1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010161> .
       <http://www.itmat.upenn.edu/biobank/crid1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010168> .
-      <http://www.itmat.upenn.edu/biobank/c23be6c01fdd2f8733635beef06207397ffe895b57663b4005610e0b42428625> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000503> .
+      <http://www.itmat.upenn.edu/biobank/c23be6c01fdd2f8733635beef06207397ffe895b57663b4005610e0b42428625> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010092> .
       <http://www.itmat.upenn.edu/biobank/d991df175ba7e344e1590ccc389439f68beca50d4da128241865eba371813568> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000504> .
       <http://www.itmat.upenn.edu/biobank/259d0feee9e4784e50007726fbf2049eea067363b2feac34a9458b57f0aa5842> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000505> .
       <http://www.itmat.upenn.edu/biobank/52ae0822b37763ef4964e36a337909f88cd334b34c3cebfc4c45d39ecf5851e5> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .

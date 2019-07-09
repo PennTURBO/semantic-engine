@@ -18,7 +18,7 @@ class CancerSumStageExpansionTests extends ProjectwideGlobals with FunSuiteLike 
 
   before
   {
-      graphDBMaterials = ConnectToGraphDB.initializeGraphLoadData(false)
+      graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
       testCxn = graphDBMaterials.getTestConnection()
       gmCxn = graphDBMaterials.getGmConnection()
       testRepoManager = graphDBMaterials.getTestRepoManager()
@@ -76,7 +76,7 @@ class CancerSumStageExpansionTests extends ProjectwideGlobals with FunSuiteLike 
             <http://www.itmat.upenn.edu/biobank/patient> a obo:NCBITaxon_9606;
               obo:RO_0000056 <http://www.itmat.upenn.edu/biobank/af2e789-529b-41bf-93d2-57beefeff91e> .
             
-            <http://www.itmat.upenn.edu/biobank/consenter_crid1> a turbo:TURBO_0000503;
+            <http://www.itmat.upenn.edu/biobank/consenter_crid1> a turbo:TURBO_0010092;
               obo:IAO_0000219 <http://www.itmat.upenn.edu/biobank/patient> .
             
             <http://www.itmat.upenn.edu/biobank/crid_sym1> a turbo:TURBO_0000504;
@@ -142,7 +142,7 @@ class CancerSumStageExpansionTests extends ProjectwideGlobals with FunSuiteLike 
               ?patient obo:RO_0000056 ?disCourseProc .
               ?patient rdf:type obo:NCBITaxon_9606 .
               ?patientCrid obo:IAO_0000219 ?patient .
-              ?patientCrid rdf:type turbo:TURBO_0000503 .
+              ?patientCrid rdf:type turbo:TURBO_0010092 .
               ?patientCridSym obo:BFO_0000050 ?dataSet .
               ?patientCridSym obo:BFO_0000050 ?patientCrid .
               ?patientCridSym rdf:type turbo:TURBO_0000504 .

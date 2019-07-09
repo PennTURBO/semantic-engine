@@ -47,7 +47,7 @@ class RunQueriesFromTests extends ProjectwideGlobals with FunSuiteLike with Befo
     
     before
     {
-        val graphDBMaterials: TurboGraphConnection = connect.initializeGraphLoadData(false)
+        val graphDBMaterials: TurboGraphConnection = connect.initializeGraphUpdateData()
         cxn = graphDBMaterials.getConnection()
         repoManager = graphDBMaterials.getRepoManager()
         repository = graphDBMaterials.getRepository()
