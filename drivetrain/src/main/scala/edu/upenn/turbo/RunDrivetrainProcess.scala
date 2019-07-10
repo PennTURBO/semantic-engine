@@ -59,48 +59,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             val currDate = Calendar.getInstance().getTime()
             val startingTriplesCount = helper.countTriplesInDatabase(cxn)
             logger.info("Starting process: " + process)
-            val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
             
-            // retrieve connections (inputs, outputs) and expansion rules (binds) from model graph
-            // the inputs become the "where" block of the SPARQL query
-            // the outputs become the "insert" block
-            val inputs = getInputs(process)
-            val outputs = getOutputs(process)
-            val binds = getBind(process)
-            val removals = getRemovals(process)
-            
-            if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
-            if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
-            
-            val inputNamedGraph = inputs(0)(GRAPH.toString).toString
-            
-            // create primary query
-            val primaryQuery = new PatternMatchQuery()
-            primaryQuery.setProcess(process)
-            primaryQuery.setInputGraph(inputNamedGraph)
-            
-            var outputNamedGraph: String = null
-
-            primaryQuery.createBindClause(binds, localUUID)
-            primaryQuery.createWhereClause(inputs)
-            
-            if (outputs.size != 0)
-            {
-               outputNamedGraph = outputs(0)(GRAPH.toString).toString   
-               primaryQuery.setOutputGraph(outputNamedGraph)
-            }
-            var removalsNamedGraph: String = null
-            if (removals.size != 0)
-            {
-                removalsNamedGraph = removals(0)(GRAPH.toString).toString
-                primaryQuery.setRemovalsGraph(removalsNamedGraph)
-                primaryQuery.createDeleteClause(removals)
-            }
-            primaryQuery.createInsertClause(outputs)
+            val primaryQuery = createPatternMatchQuery(process)
             
             val genericWhereClause = primaryQuery.whereClause
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
-            var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, inputNamedGraph, genericWhereClause)
+            var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
             logger.info("input named graphs size: " + inputNamedGraphsList.size)
                 
             if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $process: no input named graphs found")
@@ -109,7 +73,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 // for each input named graph, run query with specified named graph
                 for (graph <- inputNamedGraphsList)
                 {
-                    primaryQuery.whereClause = genericWhereClause.replaceAll(inputNamedGraph, graph)
+                    primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)
                 }
@@ -127,7 +91,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 val metaInfo: HashMap[Value, ArrayBuffer[String]] = HashMap(METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
                                                                 DATE -> ArrayBuffer(currDate.toString), 
                                                                 PROCESS -> ArrayBuffer(process), 
-                                                                OUTPUTNAMEDGRAPH -> ArrayBuffer(outputNamedGraph, removalsNamedGraph),
+                                                                OUTPUTNAMEDGRAPH -> ArrayBuffer(primaryQuery.defaultOutputGraph, primaryQuery.defaultRemovalsGraph),
                                                                 PROCESSRUNTIME -> ArrayBuffer(runtime),
                                                                 TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
                                                                 INPUTNAMEDGRAPHS -> inputNamedGraphsList
@@ -139,6 +103,50 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 metaDataQuery.runQuery(cxn) 
             }
         }
+    }
+
+    def createPatternMatchQuery(process: String): PatternMatchQuery =
+    {
+        if (!validateProcess(gmCxn, process)) logger.info(process + " not a valid TURBO process")
+        // retrieve connections (inputs, outputs) and expansion rules (binds) from model graph
+        // the inputs become the "where" block of the SPARQL query
+        // the outputs become the "insert" block
+        val inputs = getInputs(process)
+        val outputs = getOutputs(process)
+        val binds = getBind(process)
+        val removals = getRemovals(process)
+        
+        val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
+        
+        if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
+        if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
+        
+        val inputNamedGraph = inputs(0)(GRAPH.toString).toString
+        
+        // create primary query
+        val primaryQuery = new PatternMatchQuery()
+        primaryQuery.setProcess(process)
+        primaryQuery.setInputGraph(inputNamedGraph)
+        
+        var outputNamedGraph: String = null
+
+        primaryQuery.createBindClause(binds, localUUID)
+        primaryQuery.createWhereClause(inputs)
+        
+        if (outputs.size != 0)
+        {
+           outputNamedGraph = outputs(0)(GRAPH.toString).toString   
+           primaryQuery.setOutputGraph(outputNamedGraph)
+        }
+        var removalsNamedGraph: String = null
+        if (removals.size != 0)
+        {
+            removalsNamedGraph = removals(0)(GRAPH.toString).toString
+            primaryQuery.setRemovalsGraph(removalsNamedGraph)
+            primaryQuery.createDeleteClause(removals)
+        }
+        primaryQuery.createInsertClause(outputs)
+        primaryQuery
     }
     
     def getInputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
@@ -351,9 +359,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
           select ?firstProcess where
           {
               ?firstProcess rdfs:subClassOf turbo:TURBO_0010178 .
-              Minus
+              Graph pmbb:dataModel
               {
-                  ?something turbo:precedes ?firstProcess .
+                  ?firstProcess turbo:precedes ?someProcess .
+                  Minus
+                  {
+                      ?someOtherProcess turbo:precedes ?firstProcess .
+                  }
               }
           }
         """
@@ -361,12 +373,16 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val getProcesses: String = """
           select ?precedingProcess ?succeedingProcess where
           {
-              ?precedingProcess turbo:precedes ?succeedingProcess .
+              Graph pmbb:dataModel
+              {
+                  ?precedingProcess turbo:precedes ?succeedingProcess .
+              }
           }
         """
         
         val firstProcessRes = update.querySparqlAndUnpackTuple(gmCxn, getFirstProcess, "firstProcess")
         if (firstProcessRes.size > 1) throw new RuntimeException ("Multiple starting processes discovered in graph model")
+        if (firstProcessRes.size == 0) throw new RuntimeException ("No starting process discovered in graph model")
         val res = update.querySparqlAndUnpackTuple(gmCxn, getProcesses, Array("precedingProcess", "succeedingProcess"))
         var currProcess: String = firstProcessRes(0)
         var processesInOrder: ArrayBuffer[String] = new ArrayBuffer[String]

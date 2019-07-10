@@ -46,6 +46,16 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "updateModelOntology") OntologyLoader.addOntologyFromUrl(gmCxn)
               else if (args(0) == "updateModel") updateModel(gmCxn)
               else if (args(0) == "all") runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
+              else if (args(0) == "printQuery")
+              {
+                  if (args.size < 2) logger.info("Must provide a process URI after printQuery declaration")
+                  else 
+                  {
+                      val query = RunDrivetrainProcess.createPatternMatchQuery(args(1))
+                      logger.info("Here is the SPARQL statement for the process you requested.")
+                      logger.info(query.getQuery())
+                  }
+              }
               else if (args(0).startsWith("http://transformunify.org/ontologies/"))
               {
                   logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
