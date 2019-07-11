@@ -81,23 +81,30 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             
             var subjectAType = false
             var objectAType = false
+            var subjectContext: String = ""
+            var objectContext: String = ""
+            
             if (rowResult(SUBJECTTYPE.toString) != null) subjectAType = true
             if (rowResult(OBJECTTYPE.toString) != null) objectAType = true
+            if (rowResult(SUBJECTCONTEXT.toString) != null) subjectContext = rowResult(SUBJECTCONTEXT.toString).toString
+            if (rowResult(OBJECTCONTEXT.toString) != null) objectContext = rowResult(OBJECTCONTEXT.toString).toString
+            
             var objectIsLiteral = false
             if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") objectIsLiteral = true
+            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToClassRecipe") objectAType = false
             val graph = rowResult(GRAPH.toString).toString
             
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
-                                      subjectAType, objectAType)
+                                      subjectAType, objectAType, false, subjectContext, objectContext)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
             if (usedVariables.contains(rowResult(SUBJECT.toString).toString))
             {
-                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false)
+                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false, false, "", subjectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
             }
             if (!objectIsLiteral && usedVariables.contains(rowResult(OBJECT.toString).toString) && newTriple.triplePredicate != "rdf:type")
             {
-                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false)
+                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false, false, "", objectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
             }
         }

@@ -117,15 +117,17 @@ class PatternMatchQuery extends Query
         val innerClause = whereClauseBuilder.clause
         whereClause += s"WHERE { \n $innerClause "
     }
-    
+
     def createBindClause(binds: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String)
     {
         assert (bindClause == "")
         var varList = new ArrayBuffer[Value]
         for (rule <- binds)
         {
+            var context: String = ""
+            if (rule("context") != null) context = "_"+helper.convertTypeToSparqlVariable(rule("context").toString).substring(1)
             var sparqlBind = rule(SPARQLSTRING.toString).toString.replaceAll("\\$\\{replacement\\}", 
-                            helper.convertTypeToSparqlVariable(rule(EXPANDEDENTITY.toString)))
+                            helper.convertTypeToSparqlVariable(rule(EXPANDEDENTITY.toString))+context)
                                          .replaceAll("\\$\\{localUUID\\}", localUUID)
                                          .replaceAll("\\$\\{globalUUID\\}", RunDrivetrainProcess.globalUUID)
                                          .replaceAll("\\$\\{mainExpansionTypeVariableName\\}", helper.convertTypeToSparqlVariable(rule(BASETYPE.toString)))

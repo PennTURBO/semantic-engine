@@ -99,12 +99,14 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       		}}
       """
     
-    val healthcareHeightWeightAndBMI: String = """
+    val healthcareMeasurements: String = """
           ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
           
                 ?encounter obo:OBI_0000299 ?BMI .
                 ?encounter turbo:TURBO_0010139 ?heightDatum .
                 ?encounter turbo:TURBO_0010139 ?weightDatum .
+                ?encounter obo:BFO_0000051 ?bpMeasProcess .
+                ?bpMeasProcess obo:BFO_0000050 ?encounter .
                 
                 ?encounter a obo:OGMS_0000097 .
             		?BMI a <http://www.ebi.ac.uk/efo/EFO_0004340> .
@@ -121,10 +123,32 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           	                 obo:BFO_0000050 ?dataset ;
           	                 obo:IAO_0000039 obo:UO_0000009 ;
           	                 turbo:TURBO_0010094 "83.0082554658"^^xsd:float  .
+          	                 
+          	    ?bpMeasProcess a obo:VSO_0000006 ;
+          	        obo:OBI_0000299 ?systolicBpMeasDatum ;
+          	        obo:OBI_0000299 ?diastolicBpMeasDatum .
+          	    
+          	    ?systolicBpMeasDatum a obo:HTN_00000001 ;
+          	        obo:OBI_0001938 ?systolicBpValSpec .
+          	    ?diastolicBpMeasDatum a obo:HTN_00000000 ;
+          	        obo:OBI_0001938 ?diastolicBpValSpec .
+          	        
+          	    ?systolicBpValSpec a turbo:TURBO_0010150 ;
+          	        turbo:TURBO_0010094 "120"^^xsd:Float ;
+          	        obo:IAO_0000039 obo:UO_0000272 .
+          	    ?diastolicBpValSpec a turbo:TURBO_0010150 ;
+          	        turbo:TURBO_0010094 "80"^^xsd:Float ;
+          	        obo:IAO_0000039 obo:UO_0000272 .
           	                   
           	    ?dataset obo:BFO_0000051 ?BMI .
           		  ?dataset obo:BFO_0000051 ?weightDatum .
           		  ?dataset obo:BFO_0000051 ?heightDatum .
+          		  ?dataset obo:BFO_0000051 ?systolicBpMeasDatum .
+          		  ?dataset obo:BFO_0000051 ?diastolicBpMeasDatum .
+          		  ?systolicBpMeasDatum obo:BFO_0000050 ?dataset .
+          		  ?diastolicBpMeasDatum obo:BFO_0000050 ?dataset .
+          		  
+          		  filter (?systolicBpValSpec != ?diastolicBpValSpec)
         	}}
         	"""
     
@@ -206,6 +230,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             turbo:TURBO_0010110 turbo:TURBO_0000440 ;
             turbo:TURBO_0000643 "enc_expand.csv" ;
             turbo:TURBO_0010131 "http://www.itmat.upenn.edu/biobank/part1"^^xsd:anyURI ;
+            turbo:TURBO_0010259 "80"^^xsd:Float ;
+            turbo:TURBO_0010258 "120"^^xsd:Float ;
           
           obo:OBI_0000299 pmbb:diagnosis1 .
           pmbb:diagnosis1 a turbo:TURBO_0010160 ;
@@ -229,7 +255,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareMedications).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
@@ -274,12 +300,21 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://transformunify.org/ontologies/TURBO_0010131", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010013",
             "http://purl.obolibrary.org/obo/IAO_0000142", "http://transformunify.org/ontologies/TURBO_0010014",
-            "http://transformunify.org/ontologies/TURBO_0010113"
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://purl.obolibrary.org/obo/OBI_0001938", "http://purl.obolibrary.org/obo/OBI_0001938",
+            "http://transformunify.org/ontologies/TURBO_0010094","http://transformunify.org/ontologies/TURBO_0010094",
+            "http://purl.obolibrary.org/obo/IAO_0000039","http://purl.obolibrary.org/obo/IAO_0000039",
+            "http://purl.obolibrary.org/obo/BFO_0000051","http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000051"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (73)
+        result.size should be (checkPredicates.size)
         
         val processInputsOutputs: String = """
           
@@ -313,9 +348,15 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 ?TURBO_0000562 ;
                   ontologies:TURBO_0010184 ?TURBO_0000561 ;
                   
+                  ontologies:TURBO_0010184 ?VSO_0000006 ;
+                  ontologies:TURBO_0010184 ?HTN_00000000 ;
+                  ontologies:TURBO_0010184 ?HTN_00000001 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010150_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010150_2 ;
+                  
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
                   ontologies:TURBO_0010184 pmbb:part1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 .
             }
             Graph pmbb:expanded 
             {
@@ -333,7 +374,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                 ?PDRO_0000001 a obo:PDRO_0000001 .
                 ?TURBO_0000562 a turbo:TURBO_0000562 .
                 ?TURBO_0000561 a turbo:TURBO_0000561 .
+                ?VSO_0000006 a obo:VSO_0000006 .
+                ?HTN_00000000 a obo:HTN_00000000 .
+                ?HTN_00000001 a obo:HTN_00000001 .
+                ?TURBO_0010150_1 a turbo:TURBO_0010150 .
+                ?TURBO_0010150_2 a turbo:TURBO_0010150 .
             }
+            filter (?TURBO_0010150_1 != ?TURBO_0010150_2)
           }
           
           """
@@ -357,7 +404,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
@@ -436,7 +483,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
@@ -464,7 +511,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
@@ -492,7 +539,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (false)
+        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
@@ -518,6 +565,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           turbo:TURBO_0000646 "177.8"^^xsd:float ;
           turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
           a turbo:TURBO_0010158 ;
+          turbo:TURBO_0010259 "80"^^xsd:Float ;
+          turbo:TURBO_0010258 "120"^^xsd:Float ;
+          
           obo:OBI_0000299 pmbb:diagnosis1 .
           pmbb:diagnosis1 a turbo:TURBO_0010160 ;
               turbo:TURBO_0004602 "ICD-9" .
@@ -578,7 +628,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareMedicationsMinimum).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
@@ -622,12 +672,21 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://purl.obolibrary.org/obo/OBI_0000299", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://transformunify.org/ontologies/TURBO_0010139", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/IAO_0000039", "http://transformunify.org/ontologies/TURBO_0006515",
-            "http://purl.obolibrary.org/obo/BFO_0000050"
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://purl.obolibrary.org/obo/OBI_0001938", "http://purl.obolibrary.org/obo/OBI_0001938",
+            "http://transformunify.org/ontologies/TURBO_0010094","http://transformunify.org/ontologies/TURBO_0010094",
+            "http://purl.obolibrary.org/obo/IAO_0000039","http://purl.obolibrary.org/obo/IAO_0000039",
+            "http://purl.obolibrary.org/obo/BFO_0000051","http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000051"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (63)
+        result.size should be (checkPredicates.size)
         
         val processInputsOutputs: String = """
           
@@ -981,7 +1040,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                       turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000440> ;
                       turbo:TURBO_0000646 '177.8'^^xsd:float ;
                       turbo:TURBO_0000647 '83.0082554658'^^xsd:float ;
-                      turbo:TURBO_0000655 '26.2577659792'^^xsd:float .
+                      turbo:TURBO_0000655 '26.2577659792'^^xsd:float ;
+                      turbo:TURBO_0010259 "80"^^xsd:Float ;
+                      turbo:TURBO_0010258 "120"^^xsd:Float .
               }
               
               GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts4
@@ -1182,7 +1243,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareMedications).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareHeightWeightAndBMI).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
         update.querySparqlBoolean(testCxn, datasetCheck1).get should be (true)

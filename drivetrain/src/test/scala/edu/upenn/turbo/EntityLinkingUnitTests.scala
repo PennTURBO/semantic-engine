@@ -99,10 +99,10 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           		?heightDatum a turbo:TURBO_0010138 .
           		?weightDatum a obo:OBI_0001929 .
           		
-                ?BMI obo:IAO_0000136 ?homoSapiens .
-                ?BMI a efo:EFO_0004340 .
-                ?BMI obo:IAO_0000581 ?encounterDate .
-                ?encounterStart a turbo:TURBO_0000511 .
+              ?BMI obo:IAO_0000136 ?homoSapiens .
+              ?BMI a efo:EFO_0004340 .
+              ?BMI obo:IAO_0000581 ?encounterDate .
+              ?encounterStart a turbo:TURBO_0000511 .
           		?encounterStart obo:RO_0002223 ?healthcareEncounter .          
           		?encounterDate a turbo:TURBO_0000512 .
           		?encounterDate obo:IAO_0000136 ?encounterStart .
