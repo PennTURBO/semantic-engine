@@ -33,84 +33,24 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
     {
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
     }
-    
-    val processMeta: String = """
-    ASK 
-    { 
-      Graph pmbb:processes
-      {
-          ?processBoundary obo:RO_0002223 ontologies:TURBO_0010183 .
-          ?processBoundary a obo:BFO_0000035 .
-          ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-          ?timeMeasDatum a obo:IAO_0000416 .
-          ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-          
-          ontologies:TURBO_0010183 
-              turbo:TURBO_0010106 ?someQuery ;
-              turbo:TURBO_0010107 ?someRuntime ;
-              turbo:TURBO_0010108 ?someNumberOfTriples;
-              turbo:TURBO_0010186 pmbb:expanded ;
-              turbo:TURBO_0010187 pmbb:expanded ;
-      }
-    }
-    """
  
     test ("healthcare encounter entity linking - all fields")
     {
-      // these triples were generated from the output of the first healthcare encounter expansion test and the first homo sapiens expansion unit test on 4/9/19
-      val insert = s"""
-            INSERT DATA
-            {
-            Graph pmbb:expanded {
-                $healthcareEncounterTriplesAllFields
-                $homoSapiensTriplesAllFields
+        // these triples were generated from the output of the first healthcare encounter expansion test and the first homo sapiens expansion unit test on 4/9/19
+        val insert = s"""
+              INSERT DATA
+              {
+              Graph pmbb:expanded {
+                  $healthcareEncounterTriplesAllFields
+                  $homoSapiensTriplesAllFields
+                }
               }
-            }
-        """
-      update.updateSparql(testCxn, insert)
-      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010183")
-      
-        val check: String = """
-          ASK
-          {
-          graph pmbb:expanded {
-              ?homoSapiens obo:RO_0000056 ?healthcareEncounter .
-              ?homoSapiens obo:RO_0000087 ?puirole .
-          		?puirole a obo:OBI_0000093 .
-          		?puirole obo:BFO_0000054 ?healthcareEncounter .
-          		
-          		?weightDatum obo:IAO_0000136 ?homoSapiens.
-          		?heightDatum obo:IAO_0000136 ?homoSapiens.
-          		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
-          		?heightDatum obo:IAO_0000221 ?homoSapiensHeight .
-          		
-          		?homoSapiens a obo:NCBITaxon_9606 .
-          		?homoSapiens obo:RO_0000086 ?homoSapiensWeight .
-          		?homoSapiensWeight a obo:PATO_0000128 .
-          		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
-          		?homoSapiensHeight a obo:PATO_0000119 .
-          		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
-          		?homoSapiensCrid a turbo:TURBO_0010092 .
-          		
-          		?healthcareEncounter a obo:OGMS_0000097 .
-          		?healthcareEncounterCrid obo:IAO_0000219 ?healthcareEncounter .
-          		?healthcareEncounterCrid a turbo:TURBO_0000508 .
-
-          		?heightDatum a turbo:TURBO_0010138 .
-          		?weightDatum a obo:OBI_0001929 .
-          		
-              ?BMI obo:IAO_0000136 ?homoSapiens .
-              ?BMI a efo:EFO_0004340 .
-              ?BMI obo:IAO_0000581 ?encounterDate .
-              ?encounterStart a turbo:TURBO_0000511 .
-          		?encounterStart obo:RO_0002223 ?healthcareEncounter .          
-          		?encounterDate a turbo:TURBO_0000512 .
-          		?encounterDate obo:IAO_0000136 ?encounterStart .
-          }}
           """
-        
-        update.querySparqlBoolean(testCxn, check).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.updateSparql(testCxn, insert)
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010183")
+          
+        update.querySparqlBoolean(testCxn, healthcareEncounterAllFieldsOutput).get should be (true)
+        update.querySparqlBoolean(testCxn, processMetaHealthcare).get should be (true)
       
         val processInputsOutputs: String = """
           
@@ -127,6 +67,9 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                     obo:OBI_0000293 ?TURBO_0010138 ;
                     obo:OBI_0000293 ?OBI_0001929 ;
                     obo:OBI_0000293 ?NCBITaxon_9606 ;
+                    obo:OBI_0000293 ?HTN_00000000 ;
+                    obo:OBI_0000293 ?HTN_00000001 ;
+                    obo:OBI_0000293 ?VSO_0000006 ;
                     
                     ontologies:TURBO_0010184 ?OGMS_0000097 ;
                     ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
@@ -136,6 +79,9 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                     ontologies:TURBO_0010184 ?PATO_0000119 ;
                     ontologies:TURBO_0010184 ?OBI_0000093 ;
                     ontologies:TURBO_0010184 ?PATO_0000128 ;
+                    ontologies:TURBO_0010184 ?HTN_00000000 ;
+                    ontologies:TURBO_0010184 ?HTN_00000001 ;
+                    ontologies:TURBO_0010184 ?VSO_0000004 .
               }
               GRAPH pmbb:expanded
               {
@@ -147,6 +93,10 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                   ?PATO_0000119 a obo:PATO_0000119 .
                   ?OBI_0000093 a obo:OBI_0000093 .
                   ?PATO_0000128 a obo:PATO_0000128 .
+                  ?HTN_00000000 a obo:HTN_00000000 .
+                  ?HTN_00000001 a obo:HTN_00000001 .
+                  ?VSO_0000004 a obo:VSO_0000004 .
+                  ?VSO_0000006 a obo:VSO_0000006 .
               }
           }
           
@@ -164,6 +114,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
             "http://purl.obolibrary.org/obo/IAO_0000221", "http://purl.obolibrary.org/obo/BFO_0000054",
             "http://purl.obolibrary.org/obo/IAO_0000136", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000221", "http://purl.obolibrary.org/obo/RO_0000087",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://purl.obolibrary.org/obo/IAO_0000221",
+            "http://purl.obolibrary.org/obo/IAO_0000221","http://purl.obolibrary.org/obo/RO_0000052",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         homoSapiensAllFieldsExpectedPredicates.foreach(expectedPredicates += _)
@@ -209,7 +161,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           }
           """
         
-        val noHeightWeightBmiOrDate: String = """
+        val noMeasurementsOrDate: String = """
               ASK {
               values ?notexists {
                 obo:PATO_0000119 
@@ -221,13 +173,14 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                 efo:EFO_0004340
                 turbo:TURBO_0000511
                 turbo:TURBO_0000512
+                turbo:VSO_0000004
                 }
               ?s a ?notexists . }
           """
         
         update.querySparqlBoolean(testCxn, check).get should be (true)
-        update.querySparqlBoolean(testCxn, noHeightWeightBmiOrDate).get should be (false)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(testCxn, noMeasurementsOrDate).get should be (false)
+        update.querySparqlBoolean(testCxn, processMetaHealthcare).get should be (true)
       
         val processInputsOutputs: String = """
           
@@ -302,27 +255,6 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
             ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
         }
         
-        val processMeta: String = """
-        ASK 
-        { 
-          Graph pmbb:processes
-          {
-              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010182 .
-              ?processBoundary a obo:BFO_0000035 .
-              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-              ?timeMeasDatum a obo:IAO_0000416 .
-              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-              
-              ontologies:TURBO_0010182 
-                  turbo:TURBO_0010106 ?someQuery ;
-                  turbo:TURBO_0010107 ?someRuntime ;
-                  turbo:TURBO_0010108 ?someNumberOfTriples;
-                  turbo:TURBO_0010186 pmbb:expanded ;
-                  turbo:TURBO_0010187 pmbb:expanded ;
-          }
-        }
-        """
-        
         test("biobank encounter entity linking - all fields")
         {
             // these triples were generated from the output of the first biobank encounter expansion test and the first homo sapiens expansion unit test on 4/10/19
@@ -378,7 +310,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
               """
             
         update.querySparqlBoolean(testCxn, check).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(testCxn, processMetaBiobank).get should be (true)
             
         val processInputsOutputs: String = """
           
@@ -495,7 +427,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           
           update.querySparqlBoolean(testCxn, check).get should be (true)
           update.querySparqlBoolean(testCxn, noHeightWeightBmiOrDate).get should be (false)
-          update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+          update.querySparqlBoolean(testCxn, processMetaBiobank).get should be (true)
           
           val processInputsOutputs: String = """
           
@@ -586,87 +518,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010182")
           RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010183")
           
-           val check: String = """
-            ASK
-            {
-            graph pmbb:expanded {
-                ?homoSapiens obo:RO_0000056 ?biobankEncounter .
-                ?homoSapiens obo:RO_0000087 ?puirole .
-            		?puirole a obo:OBI_0000097 .
-            		?puirole obo:BFO_0000054 ?biobankEncounter .
-
-            		?weightDatum obo:IAO_0000136 ?homoSapiens.
-            		?heightDatum obo:IAO_0000136 ?homoSapiens.
-            		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
-            		?heightDatum obo:IAO_0000221 ?homoSapiensHeight .
-            		
-            		?homoSapiens a obo:NCBITaxon_9606 .
-            		?homoSapiens obo:RO_0000086 ?homoSapiensWeight .
-            		?homoSapiensWeight a obo:PATO_0000128 .
-            		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
-            		?homoSapiensHeight a obo:PATO_0000119 .
-            		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
-            		?homoSapiensCrid a turbo:TURBO_0010092 .
-            		
-            		?biobankEncounter a turbo:TURBO_0000527 .
-            		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
-            		?biobankEncounterCrid a turbo:TURBO_0000533 .
-  
-            		?heightDatum a turbo:TURBO_0010138 .
-            		?weightDatum a obo:OBI_0001929 .
-            		
-                ?BMI obo:IAO_0000136 ?homoSapiens .
-                ?BMI a efo:EFO_0004340 .
-                ?BMI obo:IAO_0000581 ?encounterDate .
-                ?encounterStart a turbo:TURBO_0000531 .
-            		?encounterStart obo:RO_0002223 ?biobankEncounter .          
-            		?encounterDate a turbo:TURBO_0000532 .
-            		?encounterDate obo:IAO_0000136 ?encounterStart .
-            }}
-            """
-          
-      update.querySparqlBoolean(testCxn, check).get should be (true)
-          
-          val check2: String = """
-              ASK
-              {
-              graph pmbb:expanded {
-                  ?homoSapiens obo:RO_0000056 ?healthcareEncounter .
-                  ?homoSapiens obo:RO_0000087 ?patientRole .
-              		?patientRole a obo:OBI_0000093 .
-              		?patientRole obo:BFO_0000054 ?healthcareEncounter .
-
-              		?weightDatum obo:IAO_0000136 ?homoSapiens.
-              		?heightDatum obo:IAO_0000136 ?homoSapiens.
-              		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
-              		?heightDatum obo:IAO_0000221 ?homoSapiensHeight .
-              		
-              		?homoSapiens a obo:NCBITaxon_9606 .
-              		?homoSapiens obo:RO_0000086 ?homoSapiensWeight .
-              		?homoSapiensWeight a obo:PATO_0000128 .
-              		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
-              		?homoSapiensHeight a obo:PATO_0000119 .
-              		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
-              		?homoSapiensCrid a turbo:TURBO_0010092 .
-              		
-              		?healthcareEncounter a obo:OGMS_0000097 .
-              		?healthcareEncounterCrid obo:IAO_0000219 ?healthcareEncounter .
-              		?healthcareEncounterCrid a turbo:TURBO_0000508 .
-    
-              		?heightDatum a turbo:TURBO_0010138 .
-              		?weightDatum a obo:OBI_0001929 .
-              		
-                  ?BMI obo:IAO_0000136 ?homoSapiens .
-                  ?BMI a efo:EFO_0004340 .
-                  ?BMI obo:IAO_0000581 ?encounterDate .
-                  ?encounterStart a turbo:TURBO_0000511 .
-              		?encounterStart obo:RO_0002223 ?healthcareEncounter .          
-              		?encounterDate a turbo:TURBO_0000512 .
-              		?encounterDate obo:IAO_0000136 ?encounterStart .
-              }}
-              """
-            
-        update.querySparqlBoolean(testCxn, check2).get should be (true)
+        update.querySparqlBoolean(testCxn, biobankEncounterAllFieldsOutput).get should be (true)
+        update.querySparqlBoolean(testCxn, healthcareEncounterAllFieldsOutput).get should be (true)
           
         val twoLinks = """
         select (count (?encounter) as ?encountercount) where
@@ -711,48 +564,6 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           }
           """
         
-        val processMetaBiobank: String = """
-        ASK 
-        { 
-          Graph pmbb:processes
-          {
-              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010182 .
-              ?processBoundary a obo:BFO_0000035 .
-              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-              ?timeMeasDatum a obo:IAO_0000416 .
-              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-              
-              ontologies:TURBO_0010182 
-                  turbo:TURBO_0010106 ?someQuery ;
-                  turbo:TURBO_0010107 ?someRuntime ;
-                  turbo:TURBO_0010108 ?someNumberOfTriples;
-                  turbo:TURBO_0010186 pmbb:expanded ;
-                  turbo:TURBO_0010187 pmbb:expanded ;
-          }
-        }
-        """
-        
-        val processMetaHealthcare: String = """
-        ASK 
-        { 
-          Graph pmbb:processes
-          {
-              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010183 .
-              ?processBoundary a obo:BFO_0000035 .
-              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-              ?timeMeasDatum a obo:IAO_0000416 .
-              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-              
-              ontologies:TURBO_0010183 
-                  turbo:TURBO_0010106 ?someQuery ;
-                  turbo:TURBO_0010107 ?someRuntime ;
-                  turbo:TURBO_0010108 ?someNumberOfTriples;
-                  turbo:TURBO_0010186 pmbb:expanded ;
-                  turbo:TURBO_0010187 pmbb:expanded ;
-          }
-        }
-        """
-        
         update.querySparqlAndUnpackTuple(testCxn, onlyOnePUIRole, "rolecount")(0).split("\"")(1) should be ("1")
         update.querySparqlAndUnpackTuple(testCxn, onlyOnePatientRole, "rolecount")(0).split("\"")(1) should be ("1")
         update.querySparqlAndUnpackTuple(testCxn, onlyOneHeight, "heightcount")(0).split("\"")(1) should be ("1")
@@ -774,7 +585,9 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
             "http://purl.obolibrary.org/obo/RO_0000086", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000136", "http://purl.obolibrary.org/obo/IAO_0000136",
             "http://purl.obolibrary.org/obo/IAO_0000221", "http://purl.obolibrary.org/obo/BFO_0000054",
-            "http://purl.obolibrary.org/obo/IAO_0000136", "http://purl.obolibrary.org/obo/IAO_0000221"
+            "http://purl.obolibrary.org/obo/IAO_0000136", "http://purl.obolibrary.org/obo/IAO_0000221",
+            "http://purl.obolibrary.org/obo/IAO_0000221", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/IAO_0000221","http://purl.obolibrary.org/obo/RO_0000052"
         )
         homoSapiensAllFieldsExpectedPredicates.foreach(expectedPredicates += _)
         biobankEncounterAllFieldsExpectedPredicates.foreach(expectedPredicates += _)
@@ -1001,6 +814,29 @@ trait EntityLinkingUnitTestFields
       <http://www.itmat.upenn.edu/biobank/18e9dc1aee9d7a306f4ae1075f109e82218aa606c391b9ae073bc15a2b2f2b0e> <http://transformunify.org/ontologies/TURBO_0010094> "26.2577659792"^^<http://www.w3.org/2001/XMLSchema#float> .
       <http://www.itmat.upenn.edu/biobank/51517ee9477e67cf4f34c3fb8e007d99532c0e78c3ac32c904aa9bb20de8d61a> <http://transformunify.org/ontologies/TURBO_0010094> "177.8"^^<http://www.w3.org/2001/XMLSchema#float> .
       <http://www.itmat.upenn.edu/biobank/bbde93384a4ae0247f0df4c1722840e34c40c91078e0ed4894292a99f79c57a6> <http://transformunify.org/ontologies/TURBO_0010094> "83.0082554658"^^<http://www.w3.org/2001/XMLSchema#float> .
+      <http://www.itmat.upenn.edu/biobank/eb02a191-24e3-48ea-97fb-3a822a0a35da>
+        a obo:VSO_0000006 ;
+        obo:BFO_0000050 <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> ;
+        obo:OBI_0000299 <http://www.itmat.upenn.edu/biobank/1eaefdde-6f9c-4c36-bb6b-a70b9a09b263>, <http://www.itmat.upenn.edu/biobank/2ffce06c-5a34-4fa9-ac10-dd3ddc5364d7> .
+      <http://www.itmat.upenn.edu/biobank/1eaefdde-6f9c-4c36-bb6b-a70b9a09b263>
+        a obo:HTN_00000000 ;
+        obo:OBI_0001938 <http://www.itmat.upenn.edu/biobank/263a5315-e0e5-42dc-814a-157ff337a4fa> .
+      <http://www.itmat.upenn.edu/biobank/263a5315-e0e5-42dc-814a-157ff337a4fa>
+        a turbo:TURBO_0010150 ;
+        obo:IAO_0000039 obo:UO_0000272 ;
+        turbo:TURBO_0010094 71.7 .
+      <http://www.itmat.upenn.edu/biobank/2ffce06c-5a34-4fa9-ac10-dd3ddc5364d7>
+        a obo:HTN_00000001 ;
+        obo:OBI_0001938 <http://www.itmat.upenn.edu/biobank/7b0cba9c-f81b-4363-83ff-7f4c7e13e3c0> .
+      <http://www.itmat.upenn.edu/biobank/7b0cba9c-f81b-4363-83ff-7f4c7e13e3c0>
+        a turbo:TURBO_0010149 ;
+        obo:IAO_0000039 obo:UO_0000272 ;
+        turbo:TURBO_0010094 130.2 .
+      <http://www.itmat.upenn.edu/biobank/c705c96ae7d783fe1df73258008081314b0bef58d2131cb422cde4c2ee9377b3> obo:BFO_0000051 <http://www.itmat.upenn.edu/biobank/eb02a191-24e3-48ea-97fb-3a822a0a35da> .
+      <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> obo:BFO_0000051 <http://www.itmat.upenn.edu/biobank/2ffce06c-5a34-4fa9-ac10-dd3ddc5364d7> .
+      <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> obo:BFO_0000051 <http://www.itmat.upenn.edu/biobank/1eaefdde-6f9c-4c36-bb6b-a70b9a09b263> .
+      <http://www.itmat.upenn.edu/biobank/1eaefdde-6f9c-4c36-bb6b-a70b9a09b263> obo:BFO_0000050 <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
+      <http://www.itmat.upenn.edu/biobank/2ffce06c-5a34-4fa9-ac10-dd3ddc5364d7> obo:BFO_0000050 <http://www.itmat.upenn.edu/biobank/3f46602e1d017e31a31d658ce6a368ff7ce0c95f28ce54b2305ffbcc269eb074> .
         
       """
     
@@ -1098,7 +934,17 @@ trait EntityLinkingUnitTestFields
             "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/OBI_0000299",
             "http://purl.obolibrary.org/obo/OBI_0000299", "http://transformunify.org/ontologies/TURBO_0010013",
             "http://transformunify.org/ontologies/TURBO_0010014", "http://transformunify.org/ontologies/TURBO_0010110",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/OBI_0000299",
+            "http://purl.obolibrary.org/obo/OBI_0001938", "http://purl.obolibrary.org/obo/OBI_0001938",
+            "http://transformunify.org/ontologies/TURBO_0010094","http://transformunify.org/ontologies/TURBO_0010094",
+            "http://purl.obolibrary.org/obo/IAO_0000039","http://purl.obolibrary.org/obo/IAO_0000039",
+            "http://purl.obolibrary.org/obo/BFO_0000051","http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000051"
         )
         
     val healthcareEncounterMinimumFieldsExpectedPredicates = Array (
@@ -1195,5 +1041,135 @@ trait EntityLinkingUnitTestFields
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000219"
         )
+        
+    val healthcareEncounterAllFieldsOutput: String = """
+          ASK
+          {
+          graph pmbb:expanded {
+          
+              ?homoSapiens obo:RO_0000056 ?healthcareEncounter .
+              ?homoSapiens obo:RO_0000087 ?puirole .
+          		?puirole a obo:OBI_0000093 .
+          		?puirole obo:BFO_0000054 ?healthcareEncounter .
+          		
+          		?weightDatum obo:IAO_0000136 ?homoSapiens.
+          		?heightDatum obo:IAO_0000136 ?homoSapiens.
+          		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
+          		?heightDatum obo:IAO_0000221 ?homoSapiensHeight .
+          		
+          		?homoSapiens a obo:NCBITaxon_9606 .
+          		?homoSapiens obo:RO_0000086 ?homoSapiensWeight .
+          		?homoSapiensWeight a obo:PATO_0000128 .
+          		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
+          		?homoSapiensHeight a obo:PATO_0000119 .
+          		?homoSapiensBloodPressure a obo:VSO_0000004 .
+          		?homoSapiensBloodPressure obo:RO_0000052 ?homoSapiens .
+          		
+          		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
+          		?homoSapiensCrid a turbo:TURBO_0010092 .
+          		
+          		?healthcareEncounter a obo:OGMS_0000097 .
+          		?healthcareEncounterCrid obo:IAO_0000219 ?healthcareEncounter .
+          		?healthcareEncounterCrid a turbo:TURBO_0000508 .
+
+          		?heightDatum a turbo:TURBO_0010138 .
+          		?weightDatum a obo:OBI_0001929 .
+          		
+              ?BMI obo:IAO_0000136 ?homoSapiens .
+              ?BMI a efo:EFO_0004340 .
+              ?BMI obo:IAO_0000581 ?encounterDate .
+              ?encounterStart a turbo:TURBO_0000511 .
+          		?encounterStart obo:RO_0002223 ?healthcareEncounter .          
+          		?encounterDate a turbo:TURBO_0000512 .
+          		?encounterDate obo:IAO_0000136 ?encounterStart .
+          		
+          		?systolicBloodPressureDatum a obo:HTN_00000001 .
+          		?diastolicBloodPressureDatum a obo:HTN_00000000 .
+          		?systolicBloodPressureDatum obo:IAO_0000221 ?homoSapiensBloodPressure .
+          		?diastolicBloodPressureDatum obo:IAO_0000221 ?homoSapiensBloodPressure .
+          }}
+          """
+    
+    val biobankEncounterAllFieldsOutput: String = """
+            ASK
+            {
+            graph pmbb:expanded {
+                ?homoSapiens obo:RO_0000056 ?biobankEncounter .
+                ?homoSapiens obo:RO_0000087 ?puirole .
+            		?puirole a obo:OBI_0000097 .
+            		?puirole obo:BFO_0000054 ?biobankEncounter .
+
+            		?weightDatum obo:IAO_0000136 ?homoSapiens.
+            		?heightDatum obo:IAO_0000136 ?homoSapiens.
+            		?weightDatum obo:IAO_0000221 ?homoSapiensWeight .
+            		?heightDatum obo:IAO_0000221 ?homoSapiensHeight .
+            		
+            		?homoSapiens a obo:NCBITaxon_9606 .
+            		?homoSapiens obo:RO_0000086 ?homoSapiensWeight .
+            		?homoSapiensWeight a obo:PATO_0000128 .
+            		?homoSapiens obo:RO_0000086 ?homoSapiensHeight .
+            		?homoSapiensHeight a obo:PATO_0000119 .
+            		?homoSapiensCrid obo:IAO_0000219 ?homoSapiens .
+            		?homoSapiensCrid a turbo:TURBO_0010092 .
+            		
+            		?biobankEncounter a turbo:TURBO_0000527 .
+            		?biobankEncounterCrid obo:IAO_0000219 ?biobankEncounter .
+            		?biobankEncounterCrid a turbo:TURBO_0000533 .
+  
+            		?heightDatum a turbo:TURBO_0010138 .
+            		?weightDatum a obo:OBI_0001929 .
+            		
+                ?BMI obo:IAO_0000136 ?homoSapiens .
+                ?BMI a efo:EFO_0004340 .
+                ?BMI obo:IAO_0000581 ?encounterDate .
+                ?encounterStart a turbo:TURBO_0000531 .
+            		?encounterStart obo:RO_0002223 ?biobankEncounter .          
+            		?encounterDate a turbo:TURBO_0000532 .
+            		?encounterDate obo:IAO_0000136 ?encounterStart .
+            }}
+            """
+    
+    val processMetaBiobank: String = """
+        ASK 
+        { 
+          Graph pmbb:processes
+          {
+              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010182 .
+              ?processBoundary a obo:BFO_0000035 .
+              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+              ?timeMeasDatum a obo:IAO_0000416 .
+              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+              
+              ontologies:TURBO_0010182 
+                  turbo:TURBO_0010106 ?someQuery ;
+                  turbo:TURBO_0010107 ?someRuntime ;
+                  turbo:TURBO_0010108 ?someNumberOfTriples;
+                  turbo:TURBO_0010186 pmbb:expanded ;
+                  turbo:TURBO_0010187 pmbb:expanded ;
+          }
+        }
+        """
+        
+        val processMetaHealthcare: String = """
+        ASK 
+        { 
+          Graph pmbb:processes
+          {
+              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010183 .
+              ?processBoundary a obo:BFO_0000035 .
+              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+              ?timeMeasDatum a obo:IAO_0000416 .
+              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+              
+              ontologies:TURBO_0010183 
+                  turbo:TURBO_0010106 ?someQuery ;
+                  turbo:TURBO_0010107 ?someRuntime ;
+                  turbo:TURBO_0010108 ?someNumberOfTriples;
+                  turbo:TURBO_0010186 pmbb:expanded ;
+                  turbo:TURBO_0010187 pmbb:expanded ;
+          }
+        }
+        """
+
 }
     

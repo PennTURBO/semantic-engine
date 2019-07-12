@@ -74,6 +74,7 @@ trait ProjectwideGlobals extends Enumeration
       val OBJECTSTATIC = Value("OBJECTSTATIC")
       val SUBJECTCONTEXT = Value("SUBJECTCONTEXT")
       val OBJECTCONTEXT = Value("OBJECTCONTEXT")
+      val CONTEXT = Value("CONTEXT")
       
       val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, 
                                               OPTIONALGROUP, CONNECTIONRECIPETYPE, BASETYPE, GRAPHOFCREATINGPROCESS,

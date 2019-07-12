@@ -133,7 +133,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           	    ?diastolicBpMeasDatum a obo:HTN_00000000 ;
           	        obo:OBI_0001938 ?diastolicBpValSpec .
           	        
-          	    ?systolicBpValSpec a turbo:TURBO_0010150 ;
+          	    ?systolicBpValSpec a turbo:TURBO_0010149 ;
           	        turbo:TURBO_0010094 "120"^^xsd:Float ;
           	        obo:IAO_0000039 obo:UO_0000272 .
           	    ?diastolicBpValSpec a turbo:TURBO_0010150 ;
@@ -147,8 +147,6 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           		  ?dataset obo:BFO_0000051 ?diastolicBpMeasDatum .
           		  ?systolicBpMeasDatum obo:BFO_0000050 ?dataset .
           		  ?diastolicBpMeasDatum obo:BFO_0000050 ?dataset .
-          		  
-          		  filter (?systolicBpValSpec != ?diastolicBpValSpec)
         	}}
         	"""
     
@@ -351,8 +349,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 ?VSO_0000006 ;
                   ontologies:TURBO_0010184 ?HTN_00000000 ;
                   ontologies:TURBO_0010184 ?HTN_00000001 ;
-                  ontologies:TURBO_0010184 ?TURBO_0010150_1 ;
-                  ontologies:TURBO_0010184 ?TURBO_0010150_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010150 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010149 ;
                   
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
                   ontologies:TURBO_0010184 pmbb:part1 ;
@@ -377,10 +375,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                 ?VSO_0000006 a obo:VSO_0000006 .
                 ?HTN_00000000 a obo:HTN_00000000 .
                 ?HTN_00000001 a obo:HTN_00000001 .
-                ?TURBO_0010150_1 a turbo:TURBO_0010150 .
-                ?TURBO_0010150_2 a turbo:TURBO_0010150 .
+                ?TURBO_0010150 a turbo:TURBO_0010150 .
+                ?TURBO_0010149 a turbo:TURBO_0010149 .
             }
-            filter (?TURBO_0010150_1 != ?TURBO_0010150_2)
           }
           
           """
@@ -716,6 +713,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 ?PDRO_0000001 ;
                   ontologies:TURBO_0010184 ?TURBO_0000562 ;
                   ontologies:TURBO_0010184 ?TURBO_0000561 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010150 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010149 ;
                   
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
                   ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
@@ -736,6 +735,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                 ?PDRO_0000001 a obo:PDRO_0000001 .
                 ?TURBO_0000562 a turbo:TURBO_0000562 .
                 ?TURBO_0000561 a turbo:TURBO_0000561 .
+                ?TURBO_0010150 a turbo:TURBO_0010150 .
+                ?TURBO_0010149 a turbo:TURBO_0010149 .
             }
           }
           
@@ -1287,6 +1288,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 ?PDRO_0000001 ;
                   ontologies:TURBO_0010184 ?TURBO_0000562 ;
                   ontologies:TURBO_0010184 ?TURBO_0000561 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010150 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010149 ;
                   
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
                   ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
@@ -1311,6 +1314,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                 ?PDRO_0000001 a obo:PDRO_0000001 .
                 ?TURBO_0000562 a turbo:TURBO_0000562 .
                 ?TURBO_0000561 a turbo:TURBO_0000561 .
+                ?TURBO_0010150 a turbo:TURBO_0010150 .
+                ?TURBO_0010149 a turbo:TURBO_0010149 .
             }
           }
           

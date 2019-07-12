@@ -199,11 +199,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?connection obo:BFO_0000050 ?$OPTIONALGROUP .
                   ?$OPTIONALGROUP a turbo:TurboGraphOptionalGroup .
+                  <$process> turbo:buildsOptionalGroup ?$OPTIONALGROUP .
               }
               Optional
               {
                   ?connection obo:BFO_0000050 ?$MINUSGROUP .
                   ?$MINUSGROUP a turbo:TurboGraphMinusGroup .
+                  <$process> turbo:buildsMinusGroup ?$MINUSGROUP .
               }
               Optional
               {
@@ -235,6 +237,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          }}
          
          """
+       //println(query)          
        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
 
@@ -329,7 +332,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     {
         val query = s"""
           
-          Select distinct ?$EXPANDEDENTITY ?$SPARQLSTRING ?$SHORTCUTENTITY ?$DEPENDEE ?$BASETYPE ?context
+          Select distinct ?$EXPANDEDENTITY ?$SPARQLSTRING ?$SHORTCUTENTITY ?$DEPENDEE ?$BASETYPE ?$CONTEXT
           Where
           {
               Graph pmbb:dataModel

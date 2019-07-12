@@ -125,7 +125,7 @@ class PatternMatchQuery extends Query
         for (rule <- binds)
         {
             var context: String = ""
-            if (rule("context") != null) context = "_"+helper.convertTypeToSparqlVariable(rule("context").toString).substring(1)
+            if (rule(CONTEXT.toString) != null) context = "_"+helper.convertTypeToSparqlVariable(rule(CONTEXT.toString).toString).substring(1)
             var sparqlBind = rule(SPARQLSTRING.toString).toString.replaceAll("\\$\\{replacement\\}", 
                             helper.convertTypeToSparqlVariable(rule(EXPANDEDENTITY.toString))+context)
                                          .replaceAll("\\$\\{localUUID\\}", localUUID)
