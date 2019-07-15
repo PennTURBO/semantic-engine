@@ -73,7 +73,7 @@ class SparqlUpdater
      */
       def querySparqlAndUnpackTuple(cxn: RepositoryConnection, query: String, variable: String): ArrayBuffer[String] =
       {
-          assert (cxn != null)
+          assert (cxn != null, "The RepositoryConnection object was null")
           val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
           val unpackedResult: ArrayBuffer[String] = unpackTuple(result.get, variable)
           //close tupleQueryResult to free resources
@@ -89,7 +89,7 @@ class SparqlUpdater
      */
       def querySparqlAndUnpackTuple(cxn: RepositoryConnection, query: String, variable: Array[String]): ArrayBuffer[ArrayBuffer[Value]] =
       {
-          assert (cxn != null)
+          assert (cxn != null, "The RepositoryConnection object was null")
           val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
           val unpackedResult: ArrayBuffer[ArrayBuffer[Value]] = unpackTuple(result.get, variable)
           //close tupleQueryResult to free resources
@@ -99,7 +99,7 @@ class SparqlUpdater
       
       def querySparqlAndUnpackTuple(query: String, variable: Array[String]): ArrayBuffer[ArrayBuffer[Value]] =
       {
-          assert (cxn != null)
+          assert (cxn != null, "The RepositoryConnection object was null")
           val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
           val unpackedResult: ArrayBuffer[ArrayBuffer[Value]] = unpackTuple(result.get, variable)
           //close tupleQueryResult to free resources
@@ -115,7 +115,7 @@ class SparqlUpdater
      */
       def querySparqlAndUnpackTuple(cxn: RepositoryConnection, query: String, variable: ArrayBuffer[String]): ArrayBuffer[ArrayBuffer[Value]] =
       {
-          assert (cxn != null)
+          assert (cxn != null, "The RepositoryConnection object was null")
           val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
           val unpackedResult: ArrayBuffer[ArrayBuffer[Value]] = unpackTuple(result.get, variable)
           //close tupleQueryResult to free resources
@@ -125,7 +125,7 @@ class SparqlUpdater
 
       def querySparqlAndUnpackToMap(cxn: RepositoryConnection, query: String): HashMap[String, ArrayBuffer[Value]] =
       {
-          assert (cxn != null)
+          assert (cxn != null, "The RepositoryConnection object was null")
           val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
           val unpackedResult: HashMap[String, ArrayBuffer[Value]] = unpackTupleToMap(result.get)
           //close tupleQueryResult to free resources
@@ -135,7 +135,7 @@ class SparqlUpdater
       
       def querySparqlAndUnpackToListOfMap(cxn: RepositoryConnection, query: String): ArrayBuffer[HashMap[String, Value]] =
       {
-          assert (cxn != null)
+          assert (cxn != null, "The RepositoryConnection object was null")
           val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
           val unpackedResult: ArrayBuffer[HashMap[String, Value]] = unpackTupleToListOfMaps(result.get)
           //close tupleQueryResult to free resources
@@ -173,7 +173,7 @@ class SparqlUpdater
        */
       def querySparqlBoolean(cxn: RepositoryConnection, query: String): Option[Boolean] =
       {  
-          assert (cxn != null)
+          assert (cxn != null, "The RepositoryConnection object was null")
           try
           {
               val boolQueryResult: BooleanQuery = cxn.prepareBooleanQuery(QueryLanguage.SPARQL, sparqlPrefixes + query)
