@@ -72,13 +72,16 @@ trait ProjectwideGlobals extends Enumeration
       val GRAPHOFORIGIN = Value("GRAPHOFORIGIN")
       val INPUTTYPE = Value("INPUTTYPE")
       val OBJECTSTATIC = Value("OBJECTSTATIC")
+      val SUBJECTCONTEXT = Value("SUBJECTCONTEXT")
+      val OBJECTCONTEXT = Value("OBJECTCONTEXT")
+      val CONTEXT = Value("CONTEXT")
       
       val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, 
                                               OPTIONALGROUP, CONNECTIONRECIPETYPE, BASETYPE, GRAPHOFCREATINGPROCESS,
                                               MINUSGROUP, GRAPHOFORIGIN, INPUTTYPE, OBJECTSTATIC)
                                               
       val requiredOutputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, CONNECTIONRECIPETYPE,
-                                              BASETYPE)
+                                              BASETYPE, SUBJECTCONTEXT, OBJECTCONTEXT)
       
       // define enums used as keys for process meta info hashmap
       val PROCESS, DATE, OUTPUTNAMEDGRAPH, METAQUERY, PROCESSRUNTIME, TRIPLESADDED, REPLACEMENTSTRING, INPUTNAMEDGRAPHS = Value

@@ -13,7 +13,10 @@ class Triple extends ProjectwideGlobals
     var objectAType: Boolean = false
     var objectStatic: Boolean = false
     
-    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean, objectAType: Boolean, objectStatic: Boolean = false)
+    var subjectContext: String = ""
+    var objectContext: String = ""
+    
+    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean, objectAType: Boolean, objectStatic: Boolean = false, subjectContext: String = "", objectContext: String = "")
     {
         this
         setSubject(subject)
@@ -22,6 +25,11 @@ class Triple extends ProjectwideGlobals
         this.subjectAType = subjectAType
         this.objectAType = objectAType
         this.objectStatic = objectStatic
+        
+        this.subjectContext = helper.convertTypeToSparqlVariable(subjectContext)
+        this.objectContext = helper.convertTypeToSparqlVariable(objectContext)
+        if (this.subjectContext.size > 1) this.subjectContext = this.subjectContext.substring(1)
+        if (this.objectContext.size > 1) this.objectContext = this.objectContext.substring(1)
     }
     
     def setSubject(subject: String)
@@ -74,9 +82,14 @@ class Triple extends ProjectwideGlobals
     def makeTripleWithVariables(): String = 
     {
         var objectAsVar: String = ""
-        if (!objectStatic) objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
+        if (!objectStatic) 
+        {
+            objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
+            if (objectContext != "") objectAsVar += s"_$objectContext"
+        }
         else objectAsVar = tripleObject
-        val subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
+        var subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
+        if (subjectContext != "") subjectAsVar += s"_$subjectContext"
         s"$subjectAsVar $triplePredicate $objectAsVar .\n"
     }
     
@@ -86,6 +99,7 @@ class Triple extends ProjectwideGlobals
         if (preexistingSet.contains(tripleSubject.replaceAll("\\<","").replaceAll("\\>","")))
         {
             subjectForString = helper.convertTypeToSparqlVariable(tripleSubject)
+            if (subjectContext != "") subjectForString += s"_$subjectContext"
         }
         else subjectForString = tripleSubject
         
@@ -94,6 +108,7 @@ class Triple extends ProjectwideGlobals
         else 
         {
             objectForString = helper.convertTypeToSparqlVariable(tripleObject)
+            if (objectContext != "") objectForString += s"_$objectContext"
         }
 
         s"$subjectForString $triplePredicate $objectForString .\n"
@@ -101,13 +116,15 @@ class Triple extends ProjectwideGlobals
     
     def makeSubjectTypeTriple(): String =
     {
-        val subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
+        var subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
+        if (subjectContext != "") subjectAsVar += s"_$subjectContext"
         s"$subjectAsVar rdf:type $tripleSubject .\n"
     }
     
     def makeObjectTypeTriple(): String =
     {
-        val objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
+        var objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
+        if (objectContext != "") objectAsVar += s"_$objectContext"
         s"$objectAsVar rdf:type $tripleObject .\n"
     }
     
@@ -115,7 +132,9 @@ class Triple extends ProjectwideGlobals
     {
         if (triple.tripleSubject == this.tripleSubject 
             && triple.triplePredicate == this.triplePredicate
-            && triple.tripleObject == this.tripleObject) true
+            && triple.tripleObject == this.tripleObject
+            && triple.subjectContext == this.subjectContext
+            && triple.objectContext == this.objectContext) true
         else false
     }
 }

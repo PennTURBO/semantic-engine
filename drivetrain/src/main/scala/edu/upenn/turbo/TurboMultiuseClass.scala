@@ -734,9 +734,13 @@ class TurboMultiuseClass
     
     def convertTypeToSparqlVariable(input: String): String =
     {
-       val splitTypeToVar = input.split("\\/")
-       "?" + splitTypeToVar(splitTypeToVar.size - 1).replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
+      if (input != "" && input != null)
+      {
+          val splitTypeToVar = input.split("\\/")
+          "?" + splitTypeToVar(splitTypeToVar.size - 1).replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
              .replaceAll("\\>","").replaceAll("\\<","").replaceAll("\\#","_")
+      }
+      else ""
     }
     
     def validateURI(uri: String)

@@ -40,19 +40,30 @@ object RunDrivetrainProcess extends ProjectwideGlobals
 
     def validateProcess(cxn: RepositoryConnection, process: String): Boolean =
     {
-        val ask: String = s"""
-            ASK {
-              Graph <$ontologyURL> {
-              <$process> rdfs:subClassOf turbo:TURBO_0010178 .
-              }
-            }
-        """
-        update.querySparqlBoolean(cxn, ask).get
+        // list of valid processes which are temporary or have not yet been added to the ontology
+        def validProcesses = Array(
+            "http://transformunify.org/ontologies/RxNormUrlCleanupProcess",
+            "http://transformunify.org/ontologies/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess",
+            "http://transformunify.org/ontologies/ShortcutBiobankEncounterToShortcutPersonCleanupProcess"
+        )
+        if (validProcesses.contains(process)) true
+        else
+        {
+             val ask: String = s"""
+                ASK {
+                  Graph <$ontologyURL> {
+                  values ?processSuperClass {turbo:TURBO_0001542 turbo:TURBO_0010178}
+                  <$process> rdfs:subClassOf ?processSuperClass .
+                  }
+                }
+                """
+              update.querySparqlBoolean(cxn, ask).get
+        }
     }
         
     def runProcess(process: String)
     {
-        if (!validateProcess(gmCxn, process)) logger.info(process + " not a valid TURBO process")
+        if (!validateProcess(gmCxn, process)) logger.info(process + " is not a valid TURBO process")
         else
         {
             val startTime = System.nanoTime()
@@ -107,46 +118,53 @@ object RunDrivetrainProcess extends ProjectwideGlobals
 
     def createPatternMatchQuery(process: String): PatternMatchQuery =
     {
-        if (!validateProcess(gmCxn, process)) logger.info(process + " not a valid TURBO process")
-        // retrieve connections (inputs, outputs) and expansion rules (binds) from model graph
-        // the inputs become the "where" block of the SPARQL query
-        // the outputs become the "insert" block
-        val inputs = getInputs(process)
-        val outputs = getOutputs(process)
-        val binds = getBind(process)
-        val removals = getRemovals(process)
-        
-        val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
-        
-        if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
-        if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
-        
-        val inputNamedGraph = inputs(0)(GRAPH.toString).toString
-        
-        // create primary query
-        val primaryQuery = new PatternMatchQuery()
-        primaryQuery.setProcess(process)
-        primaryQuery.setInputGraph(inputNamedGraph)
-        
-        var outputNamedGraph: String = null
-
-        primaryQuery.createBindClause(binds, localUUID)
-        primaryQuery.createWhereClause(inputs)
-        
-        if (outputs.size != 0)
+        if (!validateProcess(gmCxn, process)) 
         {
-           outputNamedGraph = outputs(0)(GRAPH.toString).toString   
-           primaryQuery.setOutputGraph(outputNamedGraph)
+            logger.info(process + " is not a valid TURBO process")
+            return null
         }
-        var removalsNamedGraph: String = null
-        if (removals.size != 0)
+        else
         {
-            removalsNamedGraph = removals(0)(GRAPH.toString).toString
-            primaryQuery.setRemovalsGraph(removalsNamedGraph)
-            primaryQuery.createDeleteClause(removals)
+            // retrieve connections (inputs, outputs) and expansion rules (binds) from model graph
+            // the inputs become the "where" block of the SPARQL query
+            // the outputs become the "insert" block
+            val inputs = getInputs(process)
+            val outputs = getOutputs(process)
+            val binds = getBind(process)
+            val removals = getRemovals(process)
+            
+            val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
+            
+            if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
+            if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
+            
+            val inputNamedGraph = inputs(0)(GRAPH.toString).toString
+            
+            // create primary query
+            val primaryQuery = new PatternMatchQuery()
+            primaryQuery.setProcess(process)
+            primaryQuery.setInputGraph(inputNamedGraph)
+            
+            var outputNamedGraph: String = null
+    
+            primaryQuery.createBindClause(binds, localUUID)
+            primaryQuery.createWhereClause(inputs)
+            
+            if (outputs.size != 0)
+            {
+               outputNamedGraph = outputs(0)(GRAPH.toString).toString   
+               primaryQuery.setOutputGraph(outputNamedGraph)
+            }
+            var removalsNamedGraph: String = null
+            if (removals.size != 0)
+            {
+                removalsNamedGraph = removals(0)(GRAPH.toString).toString
+                primaryQuery.setRemovalsGraph(removalsNamedGraph)
+                primaryQuery.createDeleteClause(removals)
+            }
+            primaryQuery.createInsertClause(outputs)
+            primaryQuery 
         }
-        primaryQuery.createInsertClause(outputs)
-        primaryQuery
     }
     
     def getInputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
@@ -181,11 +199,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?connection obo:BFO_0000050 ?$OPTIONALGROUP .
                   ?$OPTIONALGROUP a turbo:TurboGraphOptionalGroup .
+                  <$process> turbo:buildsOptionalGroup ?$OPTIONALGROUP .
               }
               Optional
               {
                   ?connection obo:BFO_0000050 ?$MINUSGROUP .
                   ?$MINUSGROUP a turbo:TurboGraphMinusGroup .
+                  <$process> turbo:buildsMinusGroup ?$MINUSGROUP .
               }
               Optional
               {
@@ -217,6 +237,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          }}
          
          """
+       //println(query)          
        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
 
@@ -273,6 +294,19 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?connection turbo:subject ?$SUBJECT .
               ?connection turbo:predicate ?$PREDICATE .
               ?connection turbo:object ?$OBJECT .
+              
+              Optional
+              {
+                  ?connection turbo:subjectUsesContext ?$SUBJECTCONTEXT .
+                  ?$SUBJECT turbo:hasPossibleContext ?$SUBJECTCONTEXT .
+                  ?$SUBJECTCONTEXT a turbo:TurboGraphContext .
+              }
+              Optional
+              {
+                  ?connection turbo:objectUsesContext ?$OBJECTCONTEXT .
+                  ?$OBJECT turbo:hasPossibleContext ?$OBJECTCONTEXT .
+                  ?$OBJECTCONTEXT a turbo:TurboGraphContext .
+              }
             }
             
             Graph <$ontologyURL>
@@ -298,7 +332,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     {
         val query = s"""
           
-          Select distinct ?$EXPANDEDENTITY ?$SPARQLSTRING ?$SHORTCUTENTITY ?$DEPENDEE ?$BASETYPE
+          Select distinct ?$EXPANDEDENTITY ?$SPARQLSTRING ?$SHORTCUTENTITY ?$DEPENDEE ?$BASETYPE ?$CONTEXT
           Where
           {
               Graph pmbb:dataModel
@@ -319,6 +353,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 Optional
                 {
                     ?variableManipulationRule turbo:manipulationDependsOn ?$DEPENDEE .
+                }
+                Optional
+                {
+                    ?$EXPANDEDENTITY turbo:hasPossibleContext ?context .
+                    ?context turbo:shouldBeConsideredBy ?variableManipulationRule .
                 }
               }
           }

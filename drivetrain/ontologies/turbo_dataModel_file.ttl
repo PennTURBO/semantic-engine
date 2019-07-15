@@ -57,23 +57,20 @@ ontologies:BindAs
 .
 ontologies:BindIfBoundRandomUUID
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\", 
-                                            SHA256(struuid()))), ?unbound) AS ${replacement})""" ;
+  ontologies:usesSparql """BIND(IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\", SHA256(struuid()))), ?unbound) AS ${replacement})""" ;
 .
 ontologies:BindIfBoundSHALocalRandom
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND (IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                        SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${mainExpansionTypeVariableName}))))), ?unbound) AS ${replacement})""" ;
+  ontologies:usesSparql """BIND (uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${mainExpansionTypeVariableName}),str(${dependent}))))) AS ${replacement})""" ;
 .
 ontologies:BindIfBoundSHALocalRandomWithDependent
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND (IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                        SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${mainExpansionTypeVariableName}), str(${dependent}))))), ?unbound) AS ${replacement})""" ;
+  ontologies:usesSparql """BIND (IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${mainExpansionTypeVariableName}), str(${dependent}))))), ?unbound) AS ${replacement})""" ;
 .
 ontologies:BindIfBoundSingletonSHAOfBaseType
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql """BIND(IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",str(${mainExpansionTypeVariableName}))))),?unbound) AS ${replacement})""" ;
+  SHA256(CONCAT(\"${replacement}\",str(${mainExpansionTypeVariableName}))))), ?unbound) AS ${replacement})""" ;
 .
 ontologies:BiobankEncounterRegistryOfVariousTypes
   a ontologies:MultiObjectDescriber ;
@@ -117,10 +114,64 @@ ontologies:DNAToHomoSapiens
   ontologies:required false ;
   ontologies:subject obo:OBI_0001868 ;
 .
+ontologies:DatasetToDiastolicBloodPressureMeasurementDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object obo:HTN_00000000 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:DatasetToSystolicBloodPressureMeasurementDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object obo:HTN_00000001 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
 ontologies:DatatypeConnectionRecipe
   a owl:Class ;
   rdfs:label "datatype connection recipe" ;
   rdfs:subClassOf ontologies:TurboGraphConnectionRecipe ;
+.
+ontologies:DiastolicBloodPressureMeasurementDatumToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject obo:HTN_00000000 ;
+.
+ontologies:DiastolicBloodPressureMeasurementDatumToValueSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0010150 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:OBI_0001938 ;
+  ontologies:required true ;
+  ontologies:subject obo:HTN_00000000 ;
+.
+ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:UO_0000272 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:IAO_0000039 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010150 ;
+.
+ontologies:DiastolicBloodPressureValueSpecificationToValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:diastolicBloodPressureDoubleLiteralValue ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010150 ;
 .
 ontologies:DrugTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;
@@ -231,6 +282,7 @@ ontologies:RxNormDrugTermToTypeDeclaration
 ontologies:RxNormUrlCleanupProcess
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:buildsMinusGroup ontologies:RxNormDrugTermMinusGroup ;
   rdfs:subClassOf ontologies:TURBO_0010178 ;
 .
 ontologies:SHAGlobalRandom
@@ -360,6 +412,43 @@ ontologies:StringToURI
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql "BIND(uri(${original}) AS ${replacement})" ;
 .
+ontologies:SystolicBloodPressureMeasurementDatumToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject obo:HTN_00000001 ;
+.
+ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0010149 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:OBI_0001938 ;
+  ontologies:required true ;
+  ontologies:subject obo:HTN_00000001 ;
+.
+ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:UO_0000272 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:IAO_0000039 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010149 ;
+.
+ontologies:SystolicBloodPressureValueSpecificationToValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:systolicBloodPressureDoubleLiteralValue ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010149 ;
+.
+
 ontologies:TURBO_0010176
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:manipulatesBaseEntity ontologies:TURBO_0010161 ;
@@ -385,6 +474,8 @@ ontologies:TURBO_0010176
   ontologies:usesVariableManipulationRule ontologies:raceIdentityDatumValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:raceIdentityDatumVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:raceIdentityTypeVariableManipulation ;
+  ontologies:buildsOptionalGroup ontologies:shortcutPrescriptionOptionalGroup ;
+  ontologies:buildsOptionalGroup ontologies:shortcutDiagnosisOptionalGroup ;
   rdfs:label "homo sapiens expansion process" ;
 .
 ontologies:TURBO_0010177
@@ -420,6 +511,7 @@ ontologies:TURBO_0010179
   ontologies:manipulatesBaseEntity ontologies:TURBO_0010158 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes ontologies:TURBO_0010177 ;
+  ontologies:usesVariableManipulationRule ontologies:bloodPressureMeasurementProcessVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:bmiValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:bmiVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:datasetTitleVariableManipulation ;
@@ -430,6 +522,9 @@ ontologies:TURBO_0010179
   ontologies:usesVariableManipulationRule ontologies:diagnosisRegistryUriVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:diagnosisRegistryVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:diagnosisVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:diastolicBloodPressureMeasurementDatumVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:diastolicBloodPressureValueSpecificationVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:diastolicBloodPressureValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:healthcareEncounterDateStringValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:healthcareEncounterDateValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:healthcareEncounterDateVariableManipulation ;
@@ -454,6 +549,9 @@ ontologies:TURBO_0010179
   ontologies:usesVariableManipulationRule ontologies:prescriptionVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:primaryDiagnosisBooleanVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:snomedDiagnosisRegistryTermVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:systolicBloodPressureMeasurementDatumVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:systolicBloodPressureValueSpecificationVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:systolicBloodPressureValueVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:weightValueVariableManipulation ;
   rdfs:label "healthcare encounter expansion process" ;
 .
@@ -502,6 +600,8 @@ ontologies:TURBO_0010183
   ontologies:usesVariableManipulationRule ontologies:heightVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:patientRoleVariableManipulation ;
   ontologies:usesVariableManipulationRule ontologies:weightVariableManipulation ;
+  ontologies:usesVariableManipulationRule ontologies:bloodPressureVariableManipulation ;
+  ontologies:buildsOptionalGroup ontologies:bloodPressureOptionalGroup ;
 .
 ontologies:TurboGraphBooleanLiteralValue
   a owl:Class ;
@@ -511,6 +611,10 @@ ontologies:TurboGraphBooleanLiteralValue
 ontologies:TurboGraphConnectionRecipe
   a owl:Class ;
   rdfs:label "connection recipe" ;
+.
+ontologies:TurboGraphContext
+  a owl:Class ;
+  rdfs:subClassOf owl:Thing ;
 .
 ontologies:TurboGraphDateLiteralValue
   a owl:Class ;
@@ -973,86 +1077,43 @@ ontologies:biologicalSexVariableManipulation
   ontologies:manipulationDependsOn ontologies:shortcutHomoSapiensGenderIdentityStringLiteralValue ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandom ;
 .
+ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:HTN_00000000 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required false ;
+  ontologies:subject obo:VSO_0000006 ;
+  ontologies:optionalInputTo ontologies:TURBO_0010183 ;
+  obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
+.
 ontologies:bloodPressureMeasurementProcessToHealthcareEncounter
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:OGMS_0000097 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:predicate obo:BFO_0000050 ;
   ontologies:required false ;
   ontologies:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required false ;
-  ontologies:subject obo:VSO_0000006 ; 
   ontologies:object obo:HTN_00000001 ;
-.
-ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
-  ontologies:subject obo:VSO_0000006 ; 
-  ontologies:object obo:HTN_00000000 ;
+  ontologies:subject obo:VSO_0000006 ;
+  ontologies:optionalInputTo ontologies:TURBO_0010183 ;
+  obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
 .
-ontologies:DiastolicBloodPressureMeasurementDatumToValueSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate obo:OBI_0001938 ;
-  ontologies:required true ;
-  ontologies:subject obo:HTN_00000000 ; 
-  ontologies:object ontologies:TURBO_0010150 ;
-.
-ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate obo:OBI_0001938 ;
-  ontologies:required true ;
-  ontologies:subject obo:HTN_00000001 ; 
-  ontologies:object ontologies:TURBO_0010150 ;
-.
-ontologies:SystolicBloodPressureValueSpecificationToValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010150 ; 
-  ontologies:object ontologies:systolicBloodPressureDoubleLiteralValue ;
-.
-ontologies:DiastolicBloodPressureValueSpecificationToValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010150 ; 
-  ontologies:object ontologies:diastolicBloodPressureDoubleLiteralValue ;
-.
-ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
-  a ontologies:ObjectConnectionToClassRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate ontologies:IAO_0000039 ;
-  ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010150 ; 
-  ontologies:object obo:UO_0000272 ;
-.
-ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters
-  a ontologies:ObjectConnectionToClassRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate ontologies:IAO_0000039 ;
-  ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010150 ; 
-  ontologies:object obo:UO_0000272 ;
+ontologies:bloodPressureMeasurementProcessVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:VSO_0000006 ;
+  ontologies:manipulationDependsOn ontologies:shortcutDiastolicBloodPressureValue ;
+  ontologies:manipulationDependsOn ontologies:shortcutSystolicBloodPressureValue ;
+  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandom ;
 .
 ontologies:bmiDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
@@ -1566,6 +1627,24 @@ ontologies:diagnosisVariableManipulation
 ontologies:diastolicBloodPressureDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
 .
+ontologies:diastolicBloodPressureMeasurementDatumVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationDependsOn ontologies:shortcutDiastolicBloodPressureValue ;
+  ontologies:manipulationCreates obo:HTN_00000000 ;
+  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandom ;
+.
+ontologies:diastolicBloodPressureValueSpecificationVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates ontologies:TURBO_0010150 ;
+  ontologies:manipulationDependsOn ontologies:shortcutDiastolicBloodPressureValue ;
+  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandom ;
+.
+ontologies:diastolicBloodPressureValueVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:shortcutDiastolicBloodPressureValue ;
+  ontologies:manipulationCreates ontologies:diastolicBloodPressureDoubleLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:BindAs ;
+.
 ontologies:dnaExtractVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates obo:OBI_0001051 ;
@@ -1791,6 +1870,11 @@ ontologies:hasOriginalVariable
   rdfs:domain ontologies:VariableManipulationForLiteralValue ;
   rdfs:range rdfs:Resource ;
 .
+ontologies:hasPossibleContext
+  a owl:ObjectProperty ;
+  rdfs:domain rdfs:Resource ;
+  rdfs:range rdfs:Resource ;
+.
 ontologies:healthcareEncounterDateLiteralValue
   a ontologies:TurboGraphDateLiteralValue ;
   rdfs:label "healthcare encounter date value" ;
@@ -2003,10 +2087,12 @@ ontologies:healthcareEncounterToBMI
 .
 ontologies:healthcareEncounterToBloodPressureMeasurementProcess
   a ontologies:ObjectConnectionToInstanceRecipe ;
+  obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:VSO_0000006 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:requiredInputTo ontologies:TURBO_0010183 ;
+  ontologies:predicate obo:BFO_0000051 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
 .
@@ -2066,6 +2152,12 @@ ontologies:heightVariableManipulation
   a ontologies:VariableManipulationForIntermediateNode ;
   ontologies:manipulationCreates obo:PATO_0000119 ;
   ontologies:manipulationDependsOn ontologies:TURBO_0010138 ;
+  ontologies:usesSparqlLogic ontologies:BindIfBoundSingletonSHAOfBaseType ;
+.
+ontologies:bloodPressureVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:VSO_0000004 ;
+  ontologies:manipulationDependsOn obo:VSO_0000006 ;
   ontologies:usesSparqlLogic ontologies:BindIfBoundSingletonSHAOfBaseType ;
 .
 ontologies:homoSapiensDateOfBirthDateLiteralValue
@@ -2233,6 +2325,15 @@ ontologies:homoSapiensToHeight
   ontologies:required false ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
+ontologies:bloodPressureToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject obo:VSO_0000004 ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
+  ontologies:predicate obo:RO_0000052 ;
+  ontologies:required false ;
+  ontologies:object obo:NCBITaxon_9606 ;
+.
 ontologies:homoSapiensToInvestigationRole
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
@@ -2379,6 +2480,24 @@ ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight
   ontologies:predicate obo:IAO_0000221 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010138 ;
+.
+ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:VSO_0000004 ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
+  ontologies:predicate obo:IAO_0000221 ;
+  ontologies:required false ;
+  ontologies:subject obo:HTN_00000000 ;
+.
+ontologies:systolicBloodPressureMeasurementDatumToBloodPressure
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:VSO_0000004 ;
+  ontologies:outputOf ontologies:TURBO_0010183 ;
+  ontologies:predicate obo:IAO_0000221 ;
+  ontologies:required false ;
+  ontologies:subject obo:HTN_00000001 ;
 .
 ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
@@ -2563,6 +2682,9 @@ ontologies:object
   rdfs:label "object of connection recipe" ;
   rdfs:range rdfs:Resource ;
 .
+ontologies:objectUsesContext
+  a owl:ObjectProperty ;
+.
 ontologies:optionalInputTo
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
@@ -2732,7 +2854,11 @@ ontologies:required
 ontologies:requiredInputTo
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
-  rdfs:label "input to an expansion process" ;
+  rdfs:range rdfs:Resource ;
+.
+ontologies:shouldBeConsideredBy
+  a owl:ObjectProperty ;
+  rdfs:domain rdfs:Resource ;
   rdfs:range rdfs:Resource ;
 .
 ontologies:sequenceDataVariableManipulation
@@ -2981,6 +3107,9 @@ ontologies:shortcutDatasetTitleStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
 .
 ontologies:shortcutDiagnosisOptionalGroup
+  a ontologies:TurboGraphOptionalGroup ;
+.
+ontologies:bloodPressureOptionalGroup
   a ontologies:TurboGraphOptionalGroup ;
 .
 ontologies:shortcutDiagnosisToCodingSequence
@@ -3409,6 +3538,9 @@ ontologies:subject
   rdfs:label "subject of connection recipe" ;
   rdfs:range owl:Class ;
 .
+ontologies:subjectUsesContext
+  a owl:ObjectProperty ;
+.
 ontologies:symbolToHomoSapiensId
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -3420,6 +3552,24 @@ ontologies:symbolToHomoSapiensId
 .
 ontologies:systolicBloodPressureDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
+.
+ontologies:systolicBloodPressureMeasurementDatumVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates obo:HTN_00000001 ;
+  ontologies:manipulationDependsOn ontologies:shortcutSystolicBloodPressureValue ;
+  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandom ;
+.
+ontologies:systolicBloodPressureValueSpecificationVariableManipulation
+  a ontologies:VariableManipulationForIntermediateNode ;
+  ontologies:manipulationCreates ontologies:TURBO_0010149 ;
+  ontologies:manipulationDependsOn ontologies:shortcutSystolicBloodPressureValue ;
+  ontologies:usesSparqlLogic ontologies:BindIfBoundSHALocalRandom ;
+.
+ontologies:systolicBloodPressureValueVariableManipulation
+  a ontologies:VariableManipulationForLiteralValue ;
+  ontologies:hasOriginalVariable ontologies:shortcutSystolicBloodPressureValue ;
+  ontologies:manipulationCreates ontologies:systolicBloodPressureDoubleLiteralValue ;
+  ontologies:usesSparqlLogic ontologies:BindAs ;
 .
 ontologies:usesSparql
   a owl:DatatypeProperty ;
@@ -3435,6 +3585,16 @@ ontologies:usesVariableManipulationRule
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TURBO_0010178 ;
   rdfs:range ontologies:TurboGraphVariableManipulation ;
+.
+ontologies:buildsOptionalGroup
+  a owl:ObjectProperty ;
+  rdfs:domain rdfs:Resource ;
+  rdfs:range rdfs:Resource ;
+.
+ontologies:buildsMinusGroup
+  a owl:ObjectProperty ;
+  rdfs:domain rdfs:Resource ;
+  rdfs:range rdfs:Resource ;
 .
 ontologies:weightValueVariableManipulation
   a ontologies:VariableManipulationForLiteralValue ;

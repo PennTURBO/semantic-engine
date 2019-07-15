@@ -36,8 +36,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
               gmRepoManager = graphDBMaterials.getGmRepoManager()
               gmRepository = graphDBMaterials.getGmRepository() 
               
-              //load the TURBO ontology
-              OntologyLoader.addOntologyFromUrl(cxn)
+              val instantiationURI = "http://www.itmat.upenn.edu/biobank/" + UUID.randomUUID().toString().replaceAll("-", "")
               
               if (cxn == null || gmCxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
               else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.NQUADS)
@@ -51,15 +50,24 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   if (args.size < 2) logger.info("Must provide a process URI after printQuery declaration")
                   else 
                   {
+                      RunDrivetrainProcess.setInstantiation(instantiationURI)
+                      RunDrivetrainProcess.setGlobalUUID(globalUUID)
+                      RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+                      RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
                       val query = RunDrivetrainProcess.createPatternMatchQuery(args(1))
-                      logger.info("Here is the SPARQL statement for the process you requested.")
-                      logger.info(query.getQuery())
+                      if (query != null)
+                      {
+                          logger.info("Here is the SPARQL statement for the process you requested.")
+                          logger.info(query.getQuery()) 
+                      }
                   }
               }
               else if (args(0).startsWith("http://transformunify.org/ontologies/"))
               {
+                  //load the TURBO ontology
+                  OntologyLoader.addOntologyFromUrl(cxn)
+                  
                   logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
-                  val instantiationURI = "http://www.itmat.upenn.edu/biobank/" + UUID.randomUUID().toString().replaceAll("-", "")
                   RunDrivetrainProcess.setInstantiation(instantiationURI)
                   RunDrivetrainProcess.setGlobalUUID(globalUUID)
                   RunDrivetrainProcess.setGraphModelConnection(gmCxn)
@@ -112,6 +120,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String)
   {
+      //load the TURBO ontology
+      OntologyLoader.addOntologyFromUrl(cxn)
       RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
       if (reinferRepo)
       {
