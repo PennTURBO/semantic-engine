@@ -182,7 +182,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             {
               Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe}
+                                            turbo:DatatypeConnectionRecipe
+                                            turbo:ShortcutObjectConnectionToClassRecipe
+                                            turbo:ShortcutObjectConnectionToInstanceRecipe
+                                            turbo:ShortcutDatatypeConnectionRecipe}
               Values ?$INPUTTYPE {turbo:requiredInputTo turbo:optionalInputTo}
               ?connection ?$INPUTTYPE <$process> .
               ?connection a ?$CONNECTIONRECIPETYPE .
@@ -332,34 +335,22 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     {
         val query = s"""
           
-          Select distinct ?$EXPANDEDENTITY ?$SPARQLSTRING ?$SHORTCUTENTITY ?$DEPENDEE ?$BASETYPE ?$CONTEXT
+          Select *
           Where
           {
               Graph pmbb:dataModel
               {
-      		      values ?manipulationRuleType {turbo:VariableManipulationForIntermediateNode turbo:VariableManipulationForLiteralValue}
-                <$process> turbo:usesVariableManipulationRule ?variableManipulationRule .
-                <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
-                
-                ?variableManipulationRule a ?manipulationRuleType .
-                ?variableManipulationRule turbo:manipulationCreates ?$EXPANDEDENTITY .
-                ?variableManipulationRule turbo:usesSparqlLogic ?logic .
-                ?logic turbo:usesSparql ?$SPARQLSTRING .
-                
-                Optional
-                {
-                    ?variableManipulationRule turbo:hasOriginalVariable ?$SHORTCUTENTITY .
-                }
-                Optional
-                {
-                    ?variableManipulationRule turbo:manipulationDependsOn ?$DEPENDEE .
-                }
-                Optional
-                {
-                    ?$EXPANDEDENTITY turbo:hasPossibleContext ?context .
-                    ?context turbo:shouldBeConsideredBy ?variableManipulationRule .
-                }
-              }
+                  Values ?someRule {turbo:expansionCreatesSubjectOf
+                                    turbo:expansionCreatesObjectOf}
+              
+      		        ?s ?someRule ?o .
+                  ?s turbo:subject ?thisSubject .
+                  ?s turbo:object ?thisObject .
+                  
+                  ?o turbo:subject ?thatSubject .
+                  ?o turbo:object ?thatObject .
+                  ?o turbo:multiplicity ?multiplicity .
+      		    }
           }
           
         """

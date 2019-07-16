@@ -121,32 +121,61 @@ class PatternMatchQuery extends Query
     def createBindClause(binds: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String)
     {
         assert (bindClause == "")
-        var varList = new ArrayBuffer[Value]
+        var bindRules = new HashSet[String]
         for (rule <- binds)
         {
-            var context: String = ""
-            if (rule(CONTEXT.toString) != null) context = "_"+helper.convertTypeToSparqlVariable(rule(CONTEXT.toString).toString).substring(1)
-            var sparqlBind = rule(SPARQLSTRING.toString).toString.replaceAll("\\$\\{replacement\\}", 
-                            helper.convertTypeToSparqlVariable(rule(EXPANDEDENTITY.toString))+context)
-                                         .replaceAll("\\$\\{localUUID\\}", localUUID)
-                                         .replaceAll("\\$\\{globalUUID\\}", RunDrivetrainProcess.globalUUID)
-                                         .replaceAll("\\$\\{mainExpansionTypeVariableName\\}", helper.convertTypeToSparqlVariable(rule(BASETYPE.toString)))
-                                         .replaceAll("\\$\\{instantiationPlaceholder\\}", "\"" + RunDrivetrainProcess.instantiation + "\"")
-            if (sparqlBind.contains("${dependent}")) sparqlBind = sparqlBind.replaceAll("\\$\\{dependent\\}",
-                helper.convertTypeToSparqlVariable(rule(DEPENDEE.toString)))
-            if (sparqlBind.contains("${original}")) sparqlBind = sparqlBind.replaceAll("\\$\\{original\\}",
-                helper.convertTypeToSparqlVariable(rule(SHORTCUTENTITY.toString)))
-            if (sparqlBind.contains("${singletonType}")) sparqlBind = sparqlBind.replaceAll("\\$\\{singletonType\\}",
-                rule(DEPENDEE.toString).toString)
+            val thatSubject = rule("thatSubject")
+            val thisObject = rule("thisObject")
+            val thatObject = rule("thatObject")
+            val thisSubject = rule("thisSubject")
             
-            bindClause += sparqlBind.substring(1).split("\"\\^")(0) + "\n"
+            val thisMultiplicity = rule("multiplicity").toString
             
-            // add all variables used in bind clause to list of used variables
-            if (rule(EXPANDEDENTITY.toString) != null) usedVariables += rule(EXPANDEDENTITY.toString).toString
-            if (rule(SHORTCUTENTITY.toString) != null) usedVariables += rule(SHORTCUTENTITY.toString).toString
-            if (rule(DEPENDEE.toString) != null) usedVariables += rule(DEPENDEE.toString).toString
-            if (rule(BASETYPE.toString) != null) usedVariables += rule(BASETYPE.toString).toString
+            val thatObjectAsVar = helper.convertTypeToSparqlVariable(thatObject)
+            val thatSubjectAsVar = helper.convertTypeToSparqlVariable(thatSubject)
+            val thisObjectAsVar = helper.convertTypeToSparqlVariable(thisObject)
+            val thisSubjectAsVar = helper.convertTypeToSparqlVariable(thisSubject)
+            
+            val expansionRule = rule("someRule").toString
+            
+            if (thatObject != thisObject)
+            {
+                if (expansionRule == "http://transformunify.org/ontologies/expansionCreatesObjectOf")
+                {
+                    if (thisMultiplicity == "http://transformunify.org/ontologies/many-singleton") 
+                    {
+                      bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                        SHA256(CONCAT(\"${thatObjectAsVar}\",\"${localUUID}\",\"${process}")))) AS ${thatObjectAsVar})\n"""
+                    }
+                    else
+                    {
+                        var multiplicityMaker = thisSubjectAsVar
+                        if (thisMultiplicity == "http://transformunify.org/ontologies/many-1") multiplicityMaker = thisObjectAsVar
+                        bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                          SHA256(CONCAT(\"${thatObjectAsVar}\",\"${localUUID}\", str(${multiplicityMaker}))))) AS ${thatObjectAsVar})\n"""   
+                    }
+                }
+            }
+            if (thatSubject != thisSubject)
+            {
+                if (expansionRule == "http://transformunify.org/ontologies/expansionCreatesSubjectOf")
+                {
+                    if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-many") 
+                    {
+                      bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                        SHA256(CONCAT(\"${thatSubjectAsVar}\",\"${localUUID}\",\"${process}")))) AS ${thatSubjectAsVar})\n"""
+                    }
+                    else
+                    {
+                        var multiplicityMaker = thisSubjectAsVar
+                        if (thisMultiplicity == "http://transformunify.org/ontologies/1-many") multiplicityMaker = thisObjectAsVar
+                        bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                          SHA256(CONCAT(\"${thatSubjectAsVar}\",\"${localUUID}\", str(${multiplicityMaker}))))) AS ${thatSubjectAsVar})\n"""   
+                    }
+                }
+            }
         }
+        for (a <- bindRules) bindClause += a
     }
 }
 

@@ -97,7 +97,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       var query = s"INSERT DATA { Graph <$graph> {"
       var prefixes = ""
       //val br = io.Source.fromFile("ontologies//turbo_dataModel_file.ttl")
-      val br = io.Source.fromFile("C://Users//hfree//TBCSEWorkspace//TURBO_GraphModel_experimental//turbo_dataModel_file.ttl")
+      val br = io.Source.fromFile("ontologies//turbo_dataModel_file_experimental.ttl")
       for (line <- br.getLines())
       {
           if (line.size > 0)
