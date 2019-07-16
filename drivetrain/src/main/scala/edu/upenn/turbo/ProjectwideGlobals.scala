@@ -62,9 +62,6 @@ trait ProjectwideGlobals extends Enumeration
       val GRAPH = Value("GRAPH")
       val OPTIONALGROUP = Value("OPTIONALGROUP")
       val EXPANDEDENTITY = Value("EXPANDEDENTITY")
-      val SPARQLSTRING = Value("SPARQLSTRING")
-      val DEPENDEE = Value("DEPENDEE")
-      val BASETYPE = Value("BASETYPE")
       val SHORTCUTENTITY = Value("SHORTCUTENTITY")
       val CONNECTIONRECIPETYPE = Value("CONNECTIONRECIPETYPE")
       val GRAPHOFCREATINGPROCESS = Value("GRAPHOFCREATINGPROCESS")
@@ -75,13 +72,14 @@ trait ProjectwideGlobals extends Enumeration
       val SUBJECTCONTEXT = Value("SUBJECTCONTEXT")
       val OBJECTCONTEXT = Value("OBJECTCONTEXT")
       val CONTEXT = Value("CONTEXT")
+      val MULTIPLICITY = Value("MULTIPLICITY")
       
       val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, 
-                                              OPTIONALGROUP, CONNECTIONRECIPETYPE, BASETYPE, GRAPHOFCREATINGPROCESS,
+                                              OPTIONALGROUP, CONNECTIONRECIPETYPE, GRAPHOFCREATINGPROCESS,
                                               MINUSGROUP, GRAPHOFORIGIN, INPUTTYPE, OBJECTSTATIC)
                                               
       val requiredOutputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, CONNECTIONRECIPETYPE,
-                                              BASETYPE, SUBJECTCONTEXT, OBJECTCONTEXT)
+                                              SUBJECTCONTEXT, OBJECTCONTEXT, MULTIPLICITY)
       
       // define enums used as keys for process meta info hashmap
       val PROCESS, DATE, OUTPUTNAMEDGRAPH, METAQUERY, PROCESSRUNTIME, TRIPLESADDED, REPLACEMENTSTRING, INPUTNAMEDGRAPHS = Value

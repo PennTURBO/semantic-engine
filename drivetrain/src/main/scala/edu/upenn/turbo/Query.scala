@@ -35,6 +35,7 @@ class PatternMatchQuery extends Query
     var whereClauseBuilder: WhereClauseBuilder = new WhereClauseBuilder()
     var insertClauseBuilder: InsertClauseBuilder = new InsertClauseBuilder()
     var deleteClauseBuilder: DeleteClauseBuilder = new DeleteClauseBuilder()
+    var bindClauseBuilder: BindClauseBuilder = new BindClauseBuilder()
     
     var varsForProcessInput = new HashSet[String]
     
@@ -118,64 +119,15 @@ class PatternMatchQuery extends Query
         whereClause += s"WHERE { \n $innerClause "
     }
 
-    def createBindClause(binds: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String)
+    def createBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String)
     {
         assert (bindClause == "")
-        var bindRules = new HashSet[String]
-        for (rule <- binds)
+        if (whereClause == null || whereClause.size == 0) 
         {
-            val thatSubject = rule("thatSubject")
-            val thisObject = rule("thisObject")
-            val thatObject = rule("thatObject")
-            val thisSubject = rule("thisSubject")
-            
-            val thisMultiplicity = rule("multiplicity").toString
-            
-            val thatObjectAsVar = helper.convertTypeToSparqlVariable(thatObject)
-            val thatSubjectAsVar = helper.convertTypeToSparqlVariable(thatSubject)
-            val thisObjectAsVar = helper.convertTypeToSparqlVariable(thisObject)
-            val thisSubjectAsVar = helper.convertTypeToSparqlVariable(thisSubject)
-            
-            val expansionRule = rule("someRule").toString
-            
-            if (thatObject != thisObject)
-            {
-                if (expansionRule == "http://transformunify.org/ontologies/expansionCreatesObjectOf")
-                {
-                    if (thisMultiplicity == "http://transformunify.org/ontologies/many-singleton") 
-                    {
-                      bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                        SHA256(CONCAT(\"${thatObjectAsVar}\",\"${localUUID}\",\"${process}")))) AS ${thatObjectAsVar})\n"""
-                    }
-                    else
-                    {
-                        var multiplicityMaker = thisSubjectAsVar
-                        if (thisMultiplicity == "http://transformunify.org/ontologies/many-1") multiplicityMaker = thisObjectAsVar
-                        bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                          SHA256(CONCAT(\"${thatObjectAsVar}\",\"${localUUID}\", str(${multiplicityMaker}))))) AS ${thatObjectAsVar})\n"""   
-                    }
-                }
-            }
-            if (thatSubject != thisSubject)
-            {
-                if (expansionRule == "http://transformunify.org/ontologies/expansionCreatesSubjectOf")
-                {
-                    if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-many") 
-                    {
-                      bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                        SHA256(CONCAT(\"${thatSubjectAsVar}\",\"${localUUID}\",\"${process}")))) AS ${thatSubjectAsVar})\n"""
-                    }
-                    else
-                    {
-                        var multiplicityMaker = thisSubjectAsVar
-                        if (thisMultiplicity == "http://transformunify.org/ontologies/1-many") multiplicityMaker = thisObjectAsVar
-                        bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                          SHA256(CONCAT(\"${thatSubjectAsVar}\",\"${localUUID}\", str(${multiplicityMaker}))))) AS ${thatSubjectAsVar})\n"""   
-                    }
-                }
-            }
+            throw new RuntimeException("Bind clause cannot be built before where clause is built.")
         }
-        for (a <- bindRules) bindClause += a
+        bindClauseBuilder.buildBindClause(outputs, localUUID, process, usedVariables)
+        bindClause = bindClauseBuilder.clause
     }
 }
 

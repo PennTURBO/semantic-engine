@@ -253,8 +253,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         if (clauseType == WHERE || clauseType == DELETE) clause += triple.makeTripleWithVariables()
         else if (clauseType == INSERT)
         {
-            assert(variablesUsed != null && variablesUsed.size != 0)
-            clause += triple.makeTripleWithVariablesIfPreexisting(variablesUsed)
+            clause += triple.makeTripleWithVariablesExcludeList(variablesUsed)
         }
         else if (clauseType == INSERT_DATA) clause += triple.makeTriple()
         clause

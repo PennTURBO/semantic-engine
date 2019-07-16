@@ -17,8 +17,8 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     
     val instantiationAndDataset: String = """
       ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
-            pmbb:test_instantiation_1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000522 .
-        		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
+            ?instantiation <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000522 .
+        		?instantiation obo:OBI_0000293 ?dataset .
         		?dataset a obo:IAO_0000100 .
         		?dataset dc11:title "enc_expand.csv"^^xsd:string .
        }}"""
@@ -244,7 +244,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
-    test("bb encounter with minimum required for expansion")
+    /*test("bb encounter with minimum required for expansion")
     {
         val insert: String = """
           INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
@@ -511,5 +511,5 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           """
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
-    }
+    }*/
 }

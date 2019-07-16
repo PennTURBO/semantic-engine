@@ -130,7 +130,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             // the outputs become the "insert" block
             val inputs = getInputs(process)
             val outputs = getOutputs(process)
-            val binds = getBind(process)
             val removals = getRemovals(process)
             
             val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
@@ -147,8 +146,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             
             var outputNamedGraph: String = null
     
-            primaryQuery.createBindClause(binds, localUUID)
             primaryQuery.createWhereClause(inputs)
+            primaryQuery.createBindClause(outputs, localUUID)
             
             if (outputs.size != 0)
             {
@@ -194,10 +193,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?connection turbo:predicate ?$PREDICATE .
               ?connection turbo:object ?$OBJECT .
               
-              Optional
-              {
-                  <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
-              }
               Optional
               {
                   ?connection obo:BFO_0000050 ?$OPTIONALGROUP .
@@ -293,10 +288,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?connection turbo:outputOf <$process> .
               ?connection a ?$CONNECTIONRECIPETYPE .
               <$process> turbo:outputNamedGraph ?$GRAPH .
-              <$process> turbo:manipulatesBaseEntity ?$BASETYPE .
               ?connection turbo:subject ?$SUBJECT .
               ?connection turbo:predicate ?$PREDICATE .
               ?connection turbo:object ?$OBJECT .
+              ?connection turbo:multiplicity ?$MULTIPLICITY .
               
               Optional
               {
@@ -329,33 +324,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          """
        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
-    }
-    
-    def getBind(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
-    {
-        val query = s"""
-          
-          Select *
-          Where
-          {
-              Graph pmbb:dataModel
-              {
-                  Values ?someRule {turbo:expansionCreatesSubjectOf
-                                    turbo:expansionCreatesObjectOf}
-              
-      		        ?s ?someRule ?o .
-                  ?s turbo:subject ?thisSubject .
-                  ?s turbo:object ?thisObject .
-                  
-                  ?o turbo:subject ?thatSubject .
-                  ?o turbo:object ?thatObject .
-                  ?o turbo:multiplicity ?multiplicity .
-      		    }
-          }
-          
-        """
-        
-        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
     
     /**

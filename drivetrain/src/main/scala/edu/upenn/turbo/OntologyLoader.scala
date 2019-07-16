@@ -128,6 +128,11 @@ object OntologyLoader extends ProjectwideGlobals
                 logger.info("The ontology " + ontology + " was not loaded - runtime exception.")
                 logger.info("" + e.printStackTrace)
             }
+            case c: Throwable => 
+            {
+                logger.info("The ontology " + ontology + " was not loaded - unknown exception.")
+                logger.info("" + c.printStackTrace)
+            }
         }
         //logger.info("Committing transaction...")
         //logger.info("Committing complete.")

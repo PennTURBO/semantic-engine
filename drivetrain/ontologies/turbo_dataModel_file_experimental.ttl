@@ -59,7 +59,15 @@ ontologies:
   a ontologies:TurboGraphMultiplicityRule ;
   rdfs:label "singleton-many multiplicity rule" ;
 .
+<http://transformunify.org/ontologies/superSingleton-many>
+  a ontologies:TurboGraphMultiplicityRule ;
+  rdfs:label "singleton-many multiplicity rule" ;
+.
 <http://transformunify.org/ontologies/many-singleton>
+  a ontologies:TurboGraphMultiplicityRule ;
+  rdfs:label "many-singleton multiplicity rule" ;
+.
+<http://transformunify.org/ontologies/many-superSingleton>
   a ontologies:TurboGraphMultiplicityRule ;
   rdfs:label "many-singleton multiplicity rule" ;
 .
@@ -211,7 +219,7 @@ ontologies:DiagnosisRegistryOfVariousTypes
   ontologies:range Thesaurus:C71892 ;
   ontologies:range Thesaurus:C53489 ;
 .
-ontologies:IcdTermOfVariousTypes
+ontologies:DiagnosisTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;
   ontologies:range owl:Class ;
 .
@@ -346,14 +354,10 @@ ontologies:SnomedDiagnosisRegistryRule
   ontologies:usesSparql """
         BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>, uri(concat(\"http://purl.bioontology.org/ontology/SNOMEDCT/\", ${original})), ?unbound) AS ?SnomedTermOfVariousTypes)""" ;
 .
-ontologies:SnomedTermOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range owl:Class ;
-.
 ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010150 ;
+  ontologies:object ontologies:TURBO_0010149 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:OBI_0001938 ;
   ontologies:required true ;
@@ -366,7 +370,7 @@ ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
   ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:IAO_0000039 ;
   ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010150 ;
+  ontologies:subject ontologies:TURBO_0010149 ;
 .
 ontologies:SystolicBloodPressureValueSpecificationToValue
   a ontologies:DatatypeConnectionRecipe ;
@@ -375,45 +379,45 @@ ontologies:SystolicBloodPressureValueSpecificationToValue
   ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010150 ;
+  ontologies:subject ontologies:TURBO_0010149 ;
 .
 ontologies:TURBO_0010176
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:manipulatesBaseEntity ontologies:TURBO_0010161 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes ontologies:TURBO_0010179 ;
   rdfs:label "homo sapiens expansion process" ;
 .
 ontologies:TURBO_0010177
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:manipulatesBaseEntity ontologies:TURBO_0010169 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes ontologies:TURBO_0010183 ;
 .
 ontologies:TURBO_0010179
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:manipulatesBaseEntity ontologies:TURBO_0010158 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes ontologies:TURBO_0010177 ;
+  ontologies:buildsOptionalGroup ontologies:shortcutDiagnosisOptionalGroup ;
+  ontologies:buildsOptionalGroup ontologies:shortcutPrescriptionOptionalGroup ;
   rdfs:label "healthcare encounter expansion process" ;
 .
 ontologies:TURBO_0010180
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:manipulatesBaseEntity ontologies:TURBO_0010144 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes ontologies:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess ;
 .
 ontologies:TURBO_0010182
   ontologies:inputNamedGraph pmbb:expanded ;
-  ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes ontologies:TURBO_0010180 ;
 .
 ontologies:TURBO_0010183
   ontologies:inputNamedGraph pmbb:expanded ;
-  ontologies:manipulatesBaseEntity obo:NCBITaxon_9606 ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes ontologies:TURBO_0010182 ;
+  ontologies:buildsOptionalGroup ontologies:bloodPressureOptionalGroup ;
+.
+ontologies:bloodPressureOptionalGroup
+  a ontologies:TurboGraphOptionalGroup ;
 .
 ontologies:TurboGraphBooleanLiteralValue
   a owl:Class ;
@@ -587,7 +591,7 @@ ontologies:biobankEncounterDateToBiobankEncounterStart
   rdfs:label "biobank encounter date to biobank encounter start connection" ;
 .
 ontologies:biobankEncounterDateToDataset
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:outputOf ontologies:TURBO_0010177 ;
@@ -766,10 +770,11 @@ ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDat
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject obo:VSO_0000006 ;
+  obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
 .
 ontologies:bloodPressureMeasurementProcessToHealthcareEncounter
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:multiplicity ontologies:1-1 ;
   ontologies:object obo:OGMS_0000097 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -784,6 +789,7 @@ ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatu
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject obo:VSO_0000006 ;
+  obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
 .
 ontologies:bmiDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
@@ -1164,20 +1170,20 @@ ontologies:diagnosisToDiagnosisRegistryStringLiteralValue
   ontologies:subject obo:OGMS_0000073 ;
   rdfs:label "diagnosis to diagnosis registry literal string value" ;
 .
-ontologies:diagnosisToIcdRegistry
+ontologies:diagnosisToDiagnosisRegistry
   a ontologies:ObjectConnectionToClassRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:IcdRegistryOfVariousTypes ;
+  ontologies:object ontologies:DiagnosisRegistryOfVariousTypes ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0000703 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000073 ;
   rdfs:label "diagnosis to icd registry connection" ;
 .
-ontologies:diagnosisToIcdTerm
+ontologies:diagnosisToDiagnosisTerm
   a ontologies:ObjectConnectionToClassRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:IcdTermOfVariousTypes ;
+  ontologies:object ontologies:DiagnosisTermOfVariousTypes ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:IAO_0000142 ;
   ontologies:required false ;
@@ -1193,16 +1199,6 @@ ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000073 ;
   rdfs:label "diagnosis to primary diagnosis boolean value connection" ;
-.
-ontologies:diagnosisToSnomedTerm
-  a ontologies:ObjectConnectionToClassRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:SnomedTermOfVariousTypes ;
-  ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required false ;
-  ontologies:subject obo:OGMS_0000073 ;
-  rdfs:label "diagnosis to snomed term connection" ;
 .
 ontologies:diastolicBloodPressureDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
@@ -1501,12 +1497,13 @@ ontologies:healthcareEncounterToBMI
 .
 ontologies:healthcareEncounterToBloodPressureMeasurementProcess
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:VSO_0000006 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
+  obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
 .
 ontologies:healthcareEncounterToDiagnosis
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -1685,7 +1682,7 @@ ontologies:homoSapiensToHeight
 .
 ontologies:homoSapiensToInvestigationRole
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/many-superSingleton> ;
   ontologies:object obo:OBI_0000097 ;
   ontologies:outputOf ontologies:TURBO_0010182 ;
   ontologies:predicate obo:RO_0000087 ;
@@ -1694,7 +1691,7 @@ ontologies:homoSapiensToInvestigationRole
 .
 ontologies:homoSapiensToPatientRole
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/many-superSingleton> ;
   ontologies:object obo:OBI_0000093 ;
   ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:RO_0000087 ;
@@ -1761,7 +1758,7 @@ ontologies:instantiationToDataset
 .
 ontologies:investigationRoleToBiobankEncounter
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/superSingleton-many> ;
   ontologies:object ontologies:TURBO_0000527 ;
   ontologies:outputOf ontologies:TURBO_0010182 ;
   ontologies:predicate obo:BFO_0000054 ;
@@ -1823,19 +1820,6 @@ ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010138 ;
   rdfs:label "length measurement datum to length measurement literal value connection" ;
-.
-ontologies:manipulatesBaseEntity
-  a owl:ObjectProperty ;
-  rdfs:domain ontologies:TURBO_0010178 ;
-  rdfs:range rdfs:Resource ;
-.
-ontologies:manipulationCreates
-  a owl:ObjectProperty ;
-  rdfs:range rdfs:Resource ;
-.
-ontologies:manipulationDependsOn
-  a owl:ObjectProperty ;
-  rdfs:range rdfs:Resource ;
 .
 ontologies:many-1
   a ontologies:TurboGraphMultiplicityRule ;
@@ -1973,7 +1957,7 @@ ontologies:outputOf
 .
 ontologies:patientRoleToHealthcareEncounter
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/superSingleton-many> ;
   ontologies:object obo:OGMS_0000097 ;
   ontologies:outputOf ontologies:TURBO_0010183 ;
   ontologies:predicate obo:BFO_0000054 ;
@@ -2249,6 +2233,7 @@ ontologies:shortcutBiobankEncounterToRegistry
 .
 ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI
   a ontologies:ShortcutObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:TURBO_0010161 ;
   ontologies:outputOf ontologies:TURBO_0010177 ;
@@ -2487,8 +2472,6 @@ ontologies:shortcutHomoSapiensIdToRegistry
   ontologies:required true ;
   ontologies:requiredInputTo ontologies:TURBO_0010176 ;
   ontologies:subject ontologies:TURBO_0010168 ;
-  ontologies:expansionCreatesSubjectOf ontologies:homoSapiensIdToRegistryDenoter ;
-  ontologies:expansionCreatesObjectOf ontologies:homoSapiensIdToRegistryDenoter ;
 .
 ontologies:shortcutHomoSapiensIdToSymbol
   a ontologies:ShortcutDatatypeConnectionRecipe ;
@@ -2498,8 +2481,6 @@ ontologies:shortcutHomoSapiensIdToSymbol
   ontologies:required true ;
   ontologies:requiredInputTo ontologies:TURBO_0010176 ;
   ontologies:subject ontologies:TURBO_0010168 ;
-  ontologies:expansionCreatesSubjectOf ontologies:symbolToHomoSapiensId ;
-  ontologies:expansionCreatesObjectOf ontologies:symbolToHomoSapiensId ;
 .
 ontologies:shortcutHomoSapiensIdentifierToShortcutHomoSapiens
   a ontologies:ShortcutObjectConnectionToInstanceRecipe ;
@@ -2509,8 +2490,6 @@ ontologies:shortcutHomoSapiensIdentifierToShortcutHomoSapiens
   ontologies:required true ;
   ontologies:requiredInputTo ontologies:TURBO_0010176 ;
   ontologies:subject ontologies:TURBO_0010168 ;
-  ontologies:expansionCreatesSubjectOf ontologies:homoSapiensIdentifierToHomoSapiens ;
-  ontologies:expansionCreatesObjectOf ontologies:homoSapiensIdentifierToHomoSapiens ;
 .
 ontologies:shortcutHomoSapiensToDatasetTitle
   a ontologies:ShortcutDatatypeConnectionRecipe ;
@@ -2520,7 +2499,6 @@ ontologies:shortcutHomoSapiensToDatasetTitle
   ontologies:required true ;
   ontologies:requiredInputTo ontologies:TURBO_0010176 ;
   ontologies:subject ontologies:TURBO_0010168 ;
-  ontologies:expansionCreatesObjectOf ontologies:homoSapiensRegistryDenoterToDataset ;
 .
 ontologies:shortcutHomoSapiensToDateOfBirthDate
   a ontologies:ShortcutDatatypeConnectionRecipe ;
@@ -2539,8 +2517,6 @@ ontologies:shortcutHomoSapiensToDateOfBirthString
   ontologies:predicate ontologies:TURBO_0010085 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010161 ;
-  ontologies:expansionCreatesSubjectOf ontologies:dateOfBirthDatumToBirth ;
-  ontologies:expansionCreatesObjectOf ontologies:dateOfBirthDatumToBirth ;
 .
 ontologies:shortcutHomoSapiensToExpandedHomoSapiens
   a ontologies:ObjectConnectionToInstanceRecipe ;
