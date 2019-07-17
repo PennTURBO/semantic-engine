@@ -26,7 +26,6 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             var minusGroupForThisRow: String = null
             var subjectAType = false
             var objectAType = false
-            var objectStatic = false
             
             var required = true
             if (rowResult(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/optionalInputTo") required = false
@@ -34,7 +33,6 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
             if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
             if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
-            if (rowResult(OBJECTSTATIC.toString) == null && rowResult(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionToClassRecipe") objectStatic = true
             if (rowResult(SUBJECTTYPE.toString) != null) 
             {
                 subjectAType = true
@@ -46,7 +44,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 varsForProcessInput += rowResult(OBJECT.toString).toString
             }
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
-                                                     subjectAType, objectAType, objectStatic)
+                                                     subjectAType, objectAType)
             if (minusGroupForThisRow != null)
             {
                 triplesGroup.addTripleToMinusGroup(newTriple, graphForThisRow, minusGroupForThisRow)
@@ -71,7 +69,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 
 class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
-    def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], process: String, varsForProcessInput: HashSet[String], usedVariables: HashSet[String])
+    def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], process: String, varsForProcessInput: HashSet[String], usedVariables: HashMap[String, Boolean])
     {
         val triplesGroup = new TriplesGroupBuilder()
         var nonVariableClasses: HashSet[String] = new HashSet[String]
@@ -101,16 +99,16 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val graph = rowResult(GRAPH.toString).toString
             
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
-                                      subjectAType, objectAType, false, subjectContext, objectContext)
+                                      subjectAType, objectAType, subjectContext, objectContext)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
             if (usedVariables.contains(rowResult(SUBJECT.toString).toString))
             {
-                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false, false, "", subjectContext)
+                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false, "", subjectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
             }
             if (!objectIsLiteral && usedVariables.contains(rowResult(OBJECT.toString).toString) && newTriple.triplePredicate != "rdf:type")
             {
-                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false, false, "", objectContext)
+                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false, "", objectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
             }
         }
@@ -145,27 +143,34 @@ class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 
 class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
-    def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashSet[String])
+    def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean])
     {
         var bindRules = new HashSet[String]
         var singletonClasses = new HashSet[String]
         var superSingletonClasses = new HashSet[String]
         var multiplicityCreators = new ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]
-        var currentGroups = new HashSet[String]
+        var currentGroups = new HashMap[String, HashMap[String, org.eclipse.rdf4j.model.Value]]
         var oneToOneConnections = new HashMap[String, HashSet[String]]
         
         val multiplicityCreatorRules = Array("http://transformunify.org/ontologies/1-many", "http://transformunify.org/ontologies/many-1")
         for (row <- outputs)
         {
-            if (row(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe")
+            if (row(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe"
+                || row(SUBJECTADESCRIBER.toString) != null || row(OBJECTADESCRIBER.toString) != null)
             {
                 if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/1-1")
                 {
                     val thisSubject = row(SUBJECT.toString).toString
                     val thisObject = row(OBJECT.toString).toString
                     
-                    currentGroups += thisSubject
-                    currentGroups += thisObject
+                    val specialSubjectRule = row(SUBJECTRULE.toString)
+                    val specialObjectRule = row(OBJECTRULE.toString)
+                    
+                    val subjectDependent = row(SUBJECTDEPENDEE.toString)
+                    val objectDependent = row(OBJECTDEPENDEE.toString)
+                    
+                    currentGroups += thisSubject -> HashMap("customRule" -> specialSubjectRule, "dependee" -> subjectDependent)
+                    currentGroups += thisObject -> HashMap("customRule" -> specialObjectRule, "dependee" -> objectDependent)
                     
                     if (oneToOneConnections.contains(thisObject) && oneToOneConnections.contains(thisSubject))
                     {
@@ -235,6 +240,11 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
               {
                   singletonClasses += row(SUBJECT.toString).toString
               }
+                else if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/singleton-singleton")
+              {
+                  singletonClasses += row(SUBJECT.toString).toString
+                  singletonClasses += row(OBJECT.toString).toString
+              }
               else if (row(MULTIPLICITY.toString).toString.endsWith("superSingleton"))
               {
                   superSingletonClasses += row(OBJECT.toString).toString
@@ -267,6 +277,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                             SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\")))) AS ${singletonAsVar})\n"""
             }
         }
+        var itemsToRemove = new HashSet[String]
         for (multiplicityCreator <- multiplicityCreators)
         {
             var changeAgent: String = ""
@@ -278,12 +289,20 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             {
                 changeAgent = multiplicityCreator(SUBJECT.toString).toString
             }
-            currentGroups.remove(changeAgent)
+            itemsToRemove += changeAgent
+            val changeAgentAsVar = helper.convertTypeToSparqlVariable(changeAgent)
+            var multiplicityEnforcer = helper.convertTypeToSparqlVariable(changeAgent)
             if (!(usedVariables.contains(changeAgent)))
             {
-                val changeAgentAsVar = helper.convertTypeToSparqlVariable(changeAgent)
+                if (oneToOneConnections.contains(changeAgent))
+                {
+                    for (conn <- oneToOneConnections(changeAgent)) 
+                    {
+                        if (usedVariables.contains(conn) && usedVariables(conn)) multiplicityEnforcer = helper.convertTypeToSparqlVariable(conn)
+                    }
+                }
                 bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                         SHA256(CONCAT(\"${changeAgentAsVar}\",\"${localUUID}\", str(${changeAgentAsVar}))))) AS ${changeAgentAsVar})\n""" 
+                         SHA256(CONCAT(\"${changeAgentAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}))))) AS ${changeAgentAsVar})\n"""
             }
             if (oneToOneConnections.contains(changeAgent))
             {
@@ -293,32 +312,57 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                     {
                       val changeAgentAsVar = helper.convertTypeToSparqlVariable(changeAgent)
                       val connAsVar = helper.convertTypeToSparqlVariable(conn)
-                      bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                           SHA256(CONCAT(\"${connAsVar}\",\"${localUUID}\", str(${changeAgentAsVar}))))) AS ${connAsVar})\n"""
+                      if (currentGroups(conn)("dependee") == null)
+                      {
+                          bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                           SHA256(CONCAT(\"${connAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}))))) AS ${connAsVar})\n""" 
+                      }
+                      else
+                      {
+                          val dependee = helper.convertTypeToSparqlVariable(currentGroups(conn)("dependee"))
+                          bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                           SHA256(CONCAT(\"${connAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}), str(${dependee})))) AS ${connAsVar})\n"""
+                      }
                     }
-                    currentGroups.remove(conn)
+                    itemsToRemove += conn
                 }
             }
         }
-        var default: String = "default"
-        for (conn <- currentGroups)
+        for (item <- itemsToRemove) currentGroups.remove(item)
+        for ((k,v) <- currentGroups)
         {
-            if (!(usedVariables.contains(conn)))
+            var multiplicityEnforcer = helper.convertTypeToSparqlVariable(k)
+            if (!(usedVariables.contains(k)))
             {
-                val connAsVar = helper.convertTypeToSparqlVariable(conn)
-                val defaultMultiplier = "default"
-                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                         SHA256(CONCAT(\"${connAsVar}\",\"${localUUID}\", str(${defaultMultiplier}))))) AS ${connAsVar})\n"""
-            }
-            //VERY VERY VERY BAD!!!!!
-            else if (Pattern.compile("[0-9]").matcher(conn).find())
-            {
-                default = helper.convertTypeToSparqlVariable(conn)
+                if (oneToOneConnections.contains(k))
+                {
+                    for (item <- oneToOneConnections(k)) 
+                    {
+                        if (usedVariables.contains(item) && usedVariables(item)) multiplicityEnforcer = helper.convertTypeToSparqlVariable(item)
+                    }
+                }
+                val connAsVar = helper.convertTypeToSparqlVariable(k)
+                if (v("customRule") == null)
+                {
+                    if (v("dependee") == null)
+                      {
+                          bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                         SHA256(CONCAT(\"${connAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}))))) AS ${connAsVar})\n"""  
+                      }
+                      else
+                      {
+                          val dependee = helper.convertTypeToSparqlVariable(v("dependee"))
+                          bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                           SHA256(CONCAT(\"${connAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}), str(${dependee})))) AS ${connAsVar})\n"""
+                      }
+                }
+                else
+                {
+                    bindRules += v.toString.split("\"")(1)+"\n"
+                }
             }
         }
         for (a <- bindRules) clause += a
-        clause = clause.replaceAll("default", default)
-        
     }
 }
 

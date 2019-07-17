@@ -11,12 +11,11 @@ class Triple extends ProjectwideGlobals
     
     var subjectAType: Boolean = false
     var objectAType: Boolean = false
-    var objectStatic: Boolean = false
     
     var subjectContext: String = ""
     var objectContext: String = ""
     
-    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean, objectAType: Boolean, objectStatic: Boolean = false, subjectContext: String = "", objectContext: String = "")
+    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean, objectAType: Boolean, subjectContext: String = "", objectContext: String = "")
     {
         this
         setSubject(subject)
@@ -24,7 +23,6 @@ class Triple extends ProjectwideGlobals
         setObject(objectVar)
         this.subjectAType = subjectAType
         this.objectAType = objectAType
-        this.objectStatic = objectStatic
         
         this.subjectContext = helper.convertTypeToSparqlVariable(subjectContext)
         this.objectContext = helper.convertTypeToSparqlVariable(objectContext)
@@ -82,12 +80,8 @@ class Triple extends ProjectwideGlobals
     def makeTripleWithVariables(): String = 
     {
         var objectAsVar: String = ""
-        if (!objectStatic) 
-        {
-            objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
-            if (objectContext != "") objectAsVar += s"_$objectContext"
-        }
-        else objectAsVar = tripleObject
+        objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
+        if (objectContext != "") objectAsVar += s"_$objectContext"
         var subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
         if (subjectContext != "") subjectAsVar += s"_$subjectContext"
         s"$subjectAsVar $triplePredicate $objectAsVar .\n"
@@ -104,7 +98,7 @@ class Triple extends ProjectwideGlobals
         else subjectForString = tripleSubject
         
         var objectForString = ""
-        if (preexistingSet.contains(tripleObject.replaceAll("\\<","").replaceAll("\\>","")) || objectStatic) objectForString = tripleObject
+        if (preexistingSet.contains(tripleObject.replaceAll("\\<","").replaceAll("\\>",""))) objectForString = tripleObject
         else 
         {
             objectForString = helper.convertTypeToSparqlVariable(tripleObject)

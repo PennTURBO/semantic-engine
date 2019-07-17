@@ -214,11 +214,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?connection turbo:referencedInGraph ?$GRAPHOFORIGIN .
               }
-              Optional
-              {
-                  ?$OBJECT a turbo:MultiObjectDescriber .
-                  BIND (false AS ?$OBJECTSTATIC)
-              }
             }
             
             Graph <$ontologyURL> {
@@ -305,6 +300,36 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?$OBJECT turbo:hasPossibleContext ?$OBJECTCONTEXT .
                   ?$OBJECTCONTEXT a turbo:TurboGraphContext .
               }
+              Optional
+              {
+                  ?$SUBJECT turbo:usesCustomVariableManipulationRule ?subjectRuleDenoter .
+                  ?subjectRuleDenoter ontologies:usesSparql ?$SUBJECTRULE .
+              }
+              Optional
+              {
+                  ?$OBJECT turbo:usesCustomVariableManipulationRule ?objectRuleDenoter .
+                  ?objectRuleDenoter ontologies:usesSparql ?$OBJECTRULE .
+              }
+              Optional
+              {
+                  ?$SUBJECT a turbo:MultiObjectDescriber .
+                  BIND (true as ?$SUBJECTADESCRIBER)
+              }
+              Optional
+              {
+                  ?$OBJECT a turbo:MultiObjectDescriber .
+                  BIND (true as ?$OBJECTADESCRIBER)
+              }
+              Optional
+              {
+                  ?recipe turbo:objectRequiredToCreate ?$OBJECT .
+                  ?recipe turbo:object ?$OBJECTDEPENDEE .
+              }
+              Optional
+              {
+                  ?recipe turbo:objectRequiredToCreate ?$SUBJECT .
+                  ?recipe turbo:object ?$SUBJECTDEPENDEE .
+              }
             }
             
             Graph <$ontologyURL>
@@ -323,6 +348,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          }
          
          """
+       //println(query)
        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
     

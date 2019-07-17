@@ -41,7 +41,7 @@ class PatternMatchQuery extends Query
     
     /* Contains set of of variables used in bind and where clauses, so the insert clause knows that these have already been defined. Any URI present in the 
      in the insert clause will not be converted to a variable unless it is included in this list. */
-    var usedVariables: HashSet[String] = new HashSet[String]
+    var usedVariables: HashMap[String, Boolean] = new HashMap[String, Boolean]
     
     override def runQuery(cxn: RepositoryConnection)
     {
@@ -110,8 +110,12 @@ class PatternMatchQuery extends Query
         varsForProcessInput = whereClauseBuilder.addTripleFromRowResult(inputs, defaultInputGraph)
         for (row <- inputs) 
         {
-            usedVariables += row(OBJECT.toString).toString
-            usedVariables += row(SUBJECT.toString).toString
+            var subjectAType = false
+            var objectAType = false
+            if (row(OBJECTTYPE.toString) != null) objectAType = true
+            if (row(SUBJECTTYPE.toString) != null) subjectAType = true
+            usedVariables += row(OBJECT.toString).toString -> objectAType
+            usedVariables += row(SUBJECT.toString).toString -> subjectAType
         }
         assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "")
         assert (whereClauseBuilder.clause.contains("GRAPH"))
