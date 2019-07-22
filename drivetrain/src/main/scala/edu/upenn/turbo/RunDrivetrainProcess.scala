@@ -15,16 +15,11 @@ import java.util.Calendar
 object RunDrivetrainProcess extends ProjectwideGlobals
 {
     var globalUUID: String = null
-    var instantiation: String = null
     var variableSet = new HashSet[Value]
     var inputSet = new HashSet[Value]
     var inputProcessSet = new HashSet[String]
     var typeMap = new HashMap[String,Value]
     
-    def setInstantiation(instantiation: String)
-    {
-        this.instantiation = instantiation
-    }
     def setGlobalUUID(globalUUID: String)
     {
         this.globalUUID = globalUUID
@@ -355,9 +350,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     /**
      * Sets instantiation and globalUUID variables, and retrieves list of all processes in the order that they should be run. Then runs each process.
      */
-    def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String, instantiation: String = helper.genPmbbIRI())
+    def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String)
     {
-        setInstantiation(instantiation)
         setGlobalUUID(globalUUID)
         setGraphModelConnection(gmCxn)
         setOutputRepositoryConnection(cxn)

@@ -15,7 +15,6 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
     val clearTestingRepositoryAfterRun: Boolean = false
     
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-    RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
     
     before
     {

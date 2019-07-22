@@ -50,7 +50,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   if (args.size < 2) logger.info("Must provide a process URI after printQuery declaration")
                   else 
                   {
-                      RunDrivetrainProcess.setInstantiation(instantiationURI)
                       RunDrivetrainProcess.setGlobalUUID(globalUUID)
                       RunDrivetrainProcess.setGraphModelConnection(gmCxn)
                       RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
@@ -68,7 +67,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   OntologyLoader.addOntologyFromUrl(cxn)
                   
                   logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
-                  RunDrivetrainProcess.setInstantiation(instantiationURI)
                   RunDrivetrainProcess.setGlobalUUID(globalUUID)
                   RunDrivetrainProcess.setGraphModelConnection(gmCxn)
                   RunDrivetrainProcess.setOutputRepositoryConnection(cxn)

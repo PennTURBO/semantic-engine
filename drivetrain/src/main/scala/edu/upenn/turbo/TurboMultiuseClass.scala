@@ -613,8 +613,8 @@ class TurboMultiuseClass
     {
         logger.info("about to check string arrays for equivalency")
         
-        logger.info("size of array 1: " + arr1.size)
-        logger.info("size of array 2: " + arr2.size)
+        logger.info("size of expected predicates list: " + arr1.size)
+        logger.info("size of actual results received: " + arr2.size)
         
         //first, sort each array in alphabetical order
         scala.util.Sorting.quickSort(arr1)
@@ -623,9 +623,9 @@ class TurboMultiuseClass
         //search line by line for differences in array
         findSortedArrayDifferences(arr1, 0, arr2, 0)
         
-        logger.info("nonMatchesArr1: " + nonMatchesArr1.size)
+        logger.info("nonMatches expected predicates: " + nonMatchesArr1.size)
         for (a <- nonMatchesArr1) logger.info(a)
-        logger.info("nonMatchesArr2: " + nonMatchesArr2.size)
+        logger.info("nonMatches actual results: " + nonMatchesArr2.size)
         for (a <- nonMatchesArr2) logger.info(a)
         
         var boolToReturn: Boolean = false

@@ -15,7 +15,6 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
     val clearTestingRepositoryAfterRun: Boolean = false
     
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-    RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
     
     before
     {
@@ -236,7 +235,6 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         var masterPlan: IRI = null
         
         RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-        RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
         
         before
         {
@@ -483,7 +481,6 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       var masterPlan: IRI = null
       
       RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-      RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
       
       before
       {

@@ -79,9 +79,9 @@ class PatternMatchQuery extends Query
     def createInsertClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
         assert (insertClause == "")
-        if (whereClause == null || whereClause.size == 0) 
+        if (whereClause == null || whereClause.size == 0 || bindClause == null || bindClause.size == 0) 
         {
-            throw new RuntimeException("Insert clause cannot be built before where clause is built.")
+            throw new RuntimeException("Insert clause cannot be built before where or bind clauses are built.")
         }
         insertClauseBuilder.addTripleFromRowResult(outputs, process, varsForProcessInput, usedVariables)
         assert (insertClauseBuilder.clause != null && insertClauseBuilder.clause != "")
@@ -130,7 +130,10 @@ class PatternMatchQuery extends Query
         {
             throw new RuntimeException("Bind clause cannot be built before where clause is built.")
         }
-        bindClauseBuilder.buildBindClause(outputs, localUUID, process, usedVariables)
+        for ((k,v) <- bindClauseBuilder.buildBindClause(outputs, localUUID, process, usedVariables))
+        {
+            if (!usedVariables.contains(k)) usedVariables += k -> v
+        }
         bindClause = bindClauseBuilder.clause
     }
 }

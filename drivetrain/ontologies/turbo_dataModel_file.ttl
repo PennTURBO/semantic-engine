@@ -78,26 +78,6 @@ ontologies:
   a ontologies:TurboGraphMultiplicityRule ;
   rdfs:label "1-many multiplicity rule" ;
 .
-ontologies:BindIfBoundRandomUUID
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\", 
-                                            SHA256(struuid()))), ?unbound) AS ${replacement})""" ;
-.
-ontologies:BindIfBoundSHALocalRandom
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND (IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                        SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${mainExpansionTypeVariableName}))))), ?unbound) AS ${replacement})""" ;
-.
-ontologies:BindIfBoundSHALocalRandomWithDependent
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND (IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                        SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${mainExpansionTypeVariableName}), str(${dependent}))))), ?unbound) AS ${replacement})""" ;
-.
-ontologies:BindIfBoundSingletonSHAOfBaseType
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(IF (BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",str(${mainExpansionTypeVariableName}))))),?unbound) AS ${replacement})""" ;
-.
 ontologies:BiobankEncounterRegistryOfVariousTypes
   a ontologies:MultiObjectDescriber ;
   ontologies:range ontologies:TURBO_0000420 ;
@@ -190,6 +170,10 @@ ontologies:GenderIdentityDatumOfVariousTypes
   a ontologies:MultiObjectDescriber ;
   rdfs:label "gender identity datum of various types" ;
 .
+ontologies:ShortcutGenderIdentityDatumOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  rdfs:label "gender identity datum of various types" ;
+.
 ontologies:GenderIdentityDatumType
   a ontologies:MultiObjectDescriber ;
   ontologies:range obo:OMRSE_00000133 ;
@@ -199,7 +183,7 @@ ontologies:GenderIdentityDatumType
 .
 ontologies:GenderIdentityTypeRule
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${original}, obo:OMRSE_00000133) AS ${replacement})" ;
+  ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000133) AS ${replacement})" ;
 .
 ontologies:GeneSymbolUriOfVariousTypes
   a ontologies:MultiObjectDescriber ;
@@ -239,10 +223,6 @@ ontologies:DiagnosisTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;
   ontologies:range owl:Class ;
 .
-ontologies:InstantiationStringToURI
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(uri(${instantiationPlaceholder}) AS ${replacement})" ;
-.
 ontologies:MultiObjectDescriber
   a owl:Class ;
 .
@@ -274,6 +254,9 @@ ontologies:ShortcutDatatypeConnectionRecipe
 ontologies:RaceIdentityDatumOfVariousTypes
   a ontologies:MultiObjectDescriber ;
 .
+ontologies:ShortcutRaceIdentityDatumOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+.
 ontologies:RaceIdentityDatumType
   a ontologies:MultiObjectDescriber ;
   ontologies:range obo:OBI_0000852 ;
@@ -288,11 +271,7 @@ ontologies:RaceIdentityDatumType
 .
 ontologies:RaceIdentityTypeRule
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${original}, obo:OMRSE_00000098) AS ${replacement})" ;
-.
-ontologies:RandomUUID
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(struuid()))) AS ${replacement})" ;
+  ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000098) AS ${replacement})" ;
 .
 ontologies:RxNormDrugTermMinusGroup
   a ontologies:TurboGraphMinusGroup ;
@@ -313,31 +292,6 @@ ontologies:RxNormUrlCleanupProcess
   ontologies:outputNamedGraph pmbb:expanded ;
   rdfs:subClassOf ontologies:TURBO_0010178 ;
 .
-ontologies:SHAGlobalRandom
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",\"${globalUUID}\", str(${mainExpansionTypeVariableName}))))) AS ${replacement})""" ;
-.
-ontologies:SHAGlobalRandomWithDependent
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(uri(CONCAT(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\", \"${globalUUID}\", str(${dependent}))))) AS ${replacement})""" ;
-.
-ontologies:SHAGlobalRandomWithOriginal
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",\"${globalUUID}\", str(${original}))))) AS ${replacement})""" ;
-.
-ontologies:SHALocalRandom
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",\"${localUUID}\", str(${mainExpansionTypeVariableName}))))) AS ${replacement})""" ;
-.
-ontologies:SHALocalRandomWithDependent
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(uri(CONCAT(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${dependent}))))) AS ${replacement})""" ;
-.
 ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:outputNamedGraph pmbb:expanded ;
@@ -348,26 +302,6 @@ ontologies:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
   rdfs:subClassOf ontologies:TURBO_0010178 ;
-.
-ontologies:SingletonOfType
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(str(<${singletonType}>)))) AS ${replacement})""" ;
-.
-ontologies:SingletonSHAOfBaseType
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",str(${mainExpansionTypeVariableName}))))) AS ${replacement})""" ;
-.
-ontologies:SingletonSHAOfOriginal
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\",str(${original}))))) AS ${replacement})""" ;
-.
-ontologies:SingletonSHAOfOriginalWithDependent
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(IF(BOUND(${dependent}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                                SHA256(CONCAT(\"${replacement}\", str(${original}))))), ?unbound) AS ${replacement})""" ;
 .
 ontologies:SnomedDiagnosisRegistryRule
   a ontologies:TurboGraphVariableManipulationLogic ;
@@ -2592,12 +2526,12 @@ ontologies:shortcutHomoSapiensIdentifierToExpandedHomoSapiensIdentifier
 ontologies:shortcutHomoSapiensToGenderIdentityType
   a ontologies:ShortcutObjectConnectionToClassRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:GenderIdentityDatumOfVariousTypes ;
+  ontologies:object ontologies:ShortcutGenderIdentityDatumOfVariousTypes ;
   ontologies:optionalInputTo ontologies:TURBO_0010176 ;
   ontologies:predicate ontologies:TURBO_0010089 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010161 ;
-  ontologies:objectRequiredToCreate obo:PATO_0000047 ;
+  ontologies:objectRequiredToCreate ontologies:GenderIdentityDatumType ;
 .
 ontologies:shortcutHomoSapiensToGenderIdentityValue
   a ontologies:ShortcutDatatypeConnectionRecipe ;
@@ -2607,15 +2541,18 @@ ontologies:shortcutHomoSapiensToGenderIdentityValue
   ontologies:predicate ontologies:TURBO_0010098 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010161 ;
+  ontologies:objectRequiredToCreate obo:PATO_0000047 ;
+  ontologies:objectRequiredToCreate ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:shortcutHomoSapiensToRaceIdentityType
   a ontologies:ShortcutObjectConnectionToClassRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:RaceIdentityDatumOfVariousTypes ;
+  ontologies:object ontologies:ShortcutRaceIdentityDatumOfVariousTypes ;
   ontologies:optionalInputTo ontologies:TURBO_0010176 ;
   ontologies:predicate ontologies:TURBO_0010090 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010161 ;
+  ontologies:objectRequiredToCreate ontologies:RaceIdentityDatumType ;
 .
 ontologies:shortcutHomoSapiensToRaceIdentityValue
   a ontologies:ShortcutDatatypeConnectionRecipe ;
@@ -2625,6 +2562,7 @@ ontologies:shortcutHomoSapiensToRaceIdentityValue
   ontologies:predicate ontologies:TURBO_0010100 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010161 ;
+  ontologies:objectRequiredToCreate ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:shortcutPrescriptionOptionalGroup
   a ontologies:TurboGraphOptionalGroup ;
@@ -2707,10 +2645,6 @@ ontologies:systolicBloodPressureMeasurementDatumToBloodPressure
 .
 ontologies:systolicBloodPressureDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
-.
-ontologies:usesSparqlLogic
-  a owl:ObjectProperty ;
-  rdfs:range ontologies:TurboGraphVariableManipulationLogic ;
 .
 pmbb:Shortcuts_
   a ontologies:TurboNamedGraph ;

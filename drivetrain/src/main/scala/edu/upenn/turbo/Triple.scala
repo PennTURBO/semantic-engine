@@ -87,10 +87,10 @@ class Triple extends ProjectwideGlobals
         s"$subjectAsVar $triplePredicate $objectAsVar .\n"
     }
     
-    def makeTripleWithVariablesExcludeList(preexistingSet: HashSet[String]): String = 
+    def makeTripleWithVariablesExcludeList(excludeList: HashSet[String]): String = 
     {
         var subjectForString = ""
-        if (!preexistingSet.contains(tripleSubject.replaceAll("\\<","").replaceAll("\\>","")))
+        if (!excludeList.contains(tripleSubject.replaceAll("\\<","").replaceAll("\\>","")))
         {
             subjectForString = helper.convertTypeToSparqlVariable(tripleSubject)
             if (subjectContext != "") subjectForString += s"_$subjectContext"
@@ -98,7 +98,7 @@ class Triple extends ProjectwideGlobals
         else subjectForString = tripleSubject
         
         var objectForString = ""
-        if (preexistingSet.contains(tripleObject.replaceAll("\\<","").replaceAll("\\>",""))) objectForString = tripleObject
+        if (excludeList.contains(tripleObject.replaceAll("\\<","").replaceAll("\\>",""))) objectForString = tripleObject
         else 
         {
             objectForString = helper.convertTypeToSparqlVariable(tripleObject)

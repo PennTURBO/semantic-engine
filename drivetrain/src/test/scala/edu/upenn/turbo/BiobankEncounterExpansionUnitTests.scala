@@ -13,7 +13,6 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     val clearTestingRepositoryAfterRun: Boolean = false
 
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-    RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
     
     val instantiationAndDataset: String = """
       ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {

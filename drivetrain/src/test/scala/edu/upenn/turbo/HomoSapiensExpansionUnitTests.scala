@@ -14,7 +14,6 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
     val clearTestingRepositoryAfterRun: Boolean = false
     
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-    RunDrivetrainProcess.setInstantiation("http://www.itmat.upenn.edu/biobank/test_instantiation_1")
     
     val instantiationAndDataset: String = """
       ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
@@ -186,12 +185,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/IAO_0000136", "http://purl.obolibrary.org/obo/IAO_0000136",
             "http://transformunify.org/ontologies/TURBO_0010096", "http://transformunify.org/ontologies/TURBO_0010095",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010113",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (41)
+        result.size should be (expectedPredicates.size)
         
         val processInputsOutputs: String = """
           
@@ -217,7 +217,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
                   
                   ontologies:TURBO_0010184 pmbb:part1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -231,6 +231,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 ?EFO_0004950 a efo:EFO_0004950 .
                 ?OMRSE_00000181 a obo:OMRSE_00000181 .
                 ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
@@ -239,7 +240,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
-    /*test("participant with minimum required for expansion")
+    test("participant with minimum required for expansion")
     {
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
@@ -273,12 +274,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://transformunify.org/ontologies/TURBO_0010094", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010113",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (21) 
+        result.size should be (expectedPredicates.size) 
         
         val processInputsOutputs: String = """
           
@@ -299,7 +301,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
                   
                   ontologies:TURBO_0010184 pmbb:part1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -308,6 +310,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 ?TURBO_0000505 a turbo:TURBO_0000505 .
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
@@ -464,12 +467,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/IAO_0000136"
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/IAO_0000136",
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        result.size should be (40)
+        result.size should be (expectedPredicates.size)
         
         val processInputsOutputs: String = """
           
@@ -495,7 +499,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
                   
                   ontologies:TURBO_0010184 pmbb:part1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -509,6 +513,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 ?EFO_0004950 a efo:EFO_0004950 .
                 ?OMRSE_00000098 a obo:OMRSE_00000098 .
                 ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
@@ -557,8 +562,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           ASK {GRAPH pmbb:expanded {
         	
         		?part a obo:NCBITaxon_9606 .
-        		pmbb:test_instantiation_1 a turbo:TURBO_0000522 .
-        		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
+        		?instantiation a turbo:TURBO_0000522 .
+        		?instantiation obo:OBI_0000293 ?dataset .
         		?dataset a obo:IAO_0000100 .
         		?dataset dc11:title "dataset1" .
 
@@ -709,14 +714,17 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://purl.obolibrary.org/obo/BFO_0000050"
+            "http://purl.obolibrary.org/obo/BFO_0000050","http://transformunify.org/ontologies/TURBO_0010113",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://transformunify.org/ontologies/TURBO_0010113",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://transformunify.org/ontologies/TURBO_0010113",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
             
           
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")  
         
-        result.size should be (69)
+        result.size should be (expectedPredicates.size)
         
         val processInputsOutputs: String = """
           
@@ -754,7 +762,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
                   
                   ontologies:TURBO_0010184 pmbb:part1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -775,6 +783,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 ?TURBO_0000504_3 a turbo:TURBO_0000504 .
                 ?TURBO_0010092_3 a turbo:TURBO_0010092 .
                 ?TURBO_0000505_3 a turbo:TURBO_0000505 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
@@ -829,14 +838,14 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           ASK {GRAPH pmbb:expanded {
         	
         		?part a obo:NCBITaxon_9606 .
-        		pmbb:test_instantiation_1 a turbo:TURBO_0000522 .
-        		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset1 .
+        		?instantiation a turbo:TURBO_0000522 .
+        		?instantiation obo:OBI_0000293 ?dataset1 .
         		?dataset1 a obo:IAO_0000100 .
         		?dataset1 dc11:title "dataset1" .
-        		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset2 .
+        		?instantiation obo:OBI_0000293 ?dataset2 .
         		?dataset2 a obo:IAO_0000100 .
         		?dataset2 dc11:title "dataset2" .
-        		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset3 .
+        		?instantiation obo:OBI_0000293 ?dataset3 .
         		?dataset3 a obo:IAO_0000100 .
         		?dataset3 dc11:title "dataset3" .
         		
@@ -915,7 +924,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
-        result.size should be (75)
+        result.size should be (77)
         
         val processMetaMultipleDatasets: String = """
         ASK 
@@ -977,7 +986,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
                   
                   ontologies:TURBO_0010184 pmbb:part1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -998,11 +1007,12 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 ?TURBO_0000504_3 a turbo:TURBO_0000504 .
                 ?TURBO_0010092_3 a turbo:TURBO_0010092 .
                 ?TURBO_0000505_3 a turbo:TURBO_0000505 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
           """
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
-    }*/
+    }
 }
