@@ -226,7 +226,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             a turbo:TURBO_0010158 ;
             turbo:TURBO_0010110 turbo:TURBO_0000440 ;
             turbo:TURBO_0000643 "enc_expand.csv" ;
-            turbo:TURBO_0010131 "http://www.itmat.upenn.edu/biobank/part1"^^xsd:anyURI ;
+            turbo:TURBO_0010131 pmbb:part1 ;
             turbo:TURBO_0010259 "80"^^xsd:Float ;
             turbo:TURBO_0010258 "120"^^xsd:Float ;
           
@@ -243,6 +243,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             turbo:TURBO_0005601 "3" ;
             turbo:TURBO_0005611 "holistic soil from the ganges" ;
             turbo:TURBO_0005612 turbo:someDrug .
+            
+            pmbb:part1 a turbo:TURBO_0010161 .
           }}
           """
         update.updateSparql(testCxn, insert)
@@ -306,7 +308,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://purl.obolibrary.org/obo/IAO_0000039","http://purl.obolibrary.org/obo/IAO_0000039",
             "http://purl.obolibrary.org/obo/BFO_0000051","http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000051"
+            "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
@@ -353,7 +357,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
                   ontologies:TURBO_0010184 pmbb:part1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 .
+                  ontologies:TURBO_0010184 ?instantiation .
             }
             Graph pmbb:expanded 
             {
@@ -376,6 +380,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                 ?HTN_00000001 a obo:HTN_00000001 .
                 ?TURBO_0010150 a turbo:TURBO_0010150 .
                 ?TURBO_0010149 a turbo:TURBO_0010149 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
@@ -447,7 +452,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 ?OGMS_0000097 ;
                   
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -456,6 +461,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                 ?TURBO_0000509 a turbo:TURBO_0000509 .
                 ?TURBO_0000510 a turbo:TURBO_0000510 .
                 ?OGMS_0000097 a obo:OGMS_0000097 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
@@ -677,7 +683,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://purl.obolibrary.org/obo/IAO_0000039","http://purl.obolibrary.org/obo/IAO_0000039",
             "http://purl.obolibrary.org/obo/BFO_0000051","http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000051"
+            "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://transformunify.org/ontologies/TURBO_0010113","http://transformunify.org/ontologies/TURBO_0010113",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
@@ -716,7 +724,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 ?TURBO_0010149 ;
                   
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -736,6 +744,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                 ?TURBO_0000561 a turbo:TURBO_0000561 .
                 ?TURBO_0010150 a turbo:TURBO_0010150 .
                 ?TURBO_0010149 a turbo:TURBO_0010149 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
@@ -844,7 +853,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 ?OGMS_0000073_2 ;
 
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -855,6 +864,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                 ?OGMS_0000097 a obo:OGMS_0000097 .
                 ?OGMS_0000073_1 a obo:OGMS_0000073 .
                 ?OGMS_0000073_2 a obo:OGMS_0000073 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
@@ -968,7 +978,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 ?TURBO_0000561_2 ;
                   
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -983,6 +993,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                 ?TURBO_0000562_2 a turbo:TURBO_0000562 .
                 ?TURBO_0000561_1 a turbo:TURBO_0000561 .
                 ?TURBO_0000561_2 a turbo:TURBO_0000561 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
@@ -1083,8 +1094,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               		
               		?dataset a obo:IAO_0000100 .
               		?dataset dc11:title 'identifierAndRegistry.csv'^^xsd:string .
-              		pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
-              		pmbb:test_instantiation_1 a turbo:TURBO_0000522 .
+              		?instantiation obo:OBI_0000293 ?dataset .
+              		?instantiation a turbo:TURBO_0000522 .
               }
           }
           """
@@ -1096,7 +1107,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               {
                   ?dataset a obo:IAO_0000100 .
                   ?dataset dc11:title 'diagnosis.csv'^^xsd:string .
-                  pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
+                  ?instantiation obo:OBI_0000293 ?dataset .
                   
                   ?encounter a obo:OGMS_0000097 .
               		?encounter obo:OBI_0000299 ?diagnosis .
@@ -1119,7 +1130,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               {
                   ?dataset a obo:IAO_0000100 .
                   ?dataset dc11:title 'meds.csv'^^xsd:string .
-                  pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
+                  ?instantiation obo:OBI_0000293 ?dataset .
                   
                   ?encounter a obo:OGMS_0000097 .
               		?encounter obo:OBI_0000299 ?drugPrescript .
@@ -1144,7 +1155,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               {
                 ?dataset a obo:IAO_0000100 .
                 ?dataset dc11:title 'bmiAndHeightWeight.csv'^^xsd:string .
-                pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
+                ?instantiation obo:OBI_0000293 ?dataset .
               
                 ?encounter a obo:OGMS_0000097 .
                 ?encounter obo:OBI_0000299 ?BMI .
@@ -1182,7 +1193,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               {
                 ?dataset a obo:IAO_0000100 .
                 ?dataset dc11:title 'date.csv' .
-                pmbb:test_instantiation_1 obo:OBI_0000293 ?dataset .
+                ?instantiation obo:OBI_0000293 ?dataset .
               
                 ?encounter a obo:OGMS_0000097 .
                 ?encDate <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000512 .
@@ -1291,7 +1302,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 ?TURBO_0010149 ;
                   
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -1315,6 +1326,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                 ?TURBO_0000561 a turbo:TURBO_0000561 .
                 ?TURBO_0010150 a turbo:TURBO_0010150 .
                 ?TURBO_0010149 a turbo:TURBO_0010149 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           

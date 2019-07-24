@@ -200,11 +200,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?$MINUSGROUP a turbo:TurboGraphMinusGroup .
                   <$process> turbo:buildsMinusGroup ?$MINUSGROUP .
               }
-              Optional
-              {
-                  ?connection turbo:outputOf ?creatingProcess .
-                  ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
-              }
+              #Optional
+              #{
+              #    ?connection turbo:outputOf ?creatingProcess .
+              #    ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
+              #}
               Optional
               {
                   ?connection turbo:referencedInGraph ?$GRAPHOFORIGIN .
@@ -274,7 +274,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             {
               Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe}
+                                            turbo:DatatypeConnectionRecipe
+                                            turbo:ShortcutObjectConnectionToClassRecipe
+                                            turbo:ShortcutObjectConnectionToInstanceRecipe
+                                            turbo:ShortcutDatatypeConnectionRecipe}
               ?connection turbo:outputOf <$process> .
               ?connection a ?$CONNECTIONRECIPETYPE .
               <$process> turbo:outputNamedGraph ?$GRAPH .
@@ -322,8 +325,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               Optional
               {
-                  ?recipe turbo:objectRequiredToCreate ?$SUBJECT .
-                  ?recipe turbo:object ?$SUBJECTDEPENDEE .
+                  ?recipe turbo:objectRequiredToCreate ?SUBJECT .
+                  ?recipe turbo:object ?SUBJECTDEPENDEE .
               }
             }
             

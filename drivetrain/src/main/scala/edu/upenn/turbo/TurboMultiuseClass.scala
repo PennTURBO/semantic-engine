@@ -209,6 +209,19 @@ class TurboMultiuseClass
         result
     }
     
+    def removeQuotesFromString(input: String): String =
+    {
+        var result: String = input
+        if (result.length > 0)
+        {
+            if (result.charAt(0) == '"' && result.charAt(result.length-1) == '"')
+            {
+                result = result.substring(1, result.length-1)
+            }
+        }
+        result
+    }
+    
     /**
      * Moves all RDF data in a specified Graph DB repository to another specified Graph DB repository.  This method is somewhat inefficient.
      */

@@ -148,7 +148,7 @@ ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000272 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate ontologies:IAO_0000039 ;
+  ontologies:predicate obo:IAO_0000039 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010150 ;
 .
@@ -181,6 +181,8 @@ ontologies:GenderIdentityDatumType
   ontologies:range obo:OMRSE_00000141 ;
   ontologies:usesCustomVariableManipulationRule ontologies:GenderIdentityTypeRule ;
 .
+obo:VSO_0000006 ontologies:usesCustomVariableManipulationRule ontologies:BloodPressureMeasurementProcessRule ;
+.
 ontologies:GenderIdentityTypeRule
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000133) AS ${replacement})" ;
@@ -207,11 +209,14 @@ ontologies:HomoSapiensRegistryOfVariousTypes
 .
 ontologies:IcdDiagnosisRegistryRule
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """
-        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", ${original})), ?unbound) AS ?icd9term)
-        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat(\"http://purl.bioontology.org/ontology/ICD10CM/\", ${original})), ?unbound) AS ?icd10term)
-        BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ${replacement})
-        BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,${replacement}) as ${replacement})""" ;
+  ontologies:usesSparql """BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat("http://purl.bioontology.org/ontology/ICD9CM/", ?diagnosisTermSuffixStringLiteralValue)), ?unbound) AS ?icd9term)\n
+BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat("http://purl.bioontology.org/ontology/ICD10CM/", ?diagnosisTermSuffixStringLiteralValue)), ?unbound) AS ?icd10term)\n
+BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ${replacement})\n
+BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,${replacement}) as ${replacement})""" ;
+.
+ontologies:BloodPressureMeasurementProcessRule
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql """BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat("http://www.itmat.upenn.edu/biobank/", SHA256(CONCAT("${replacement}", "${localUUID}", str(${multiplicityEnforcer}))))), ?unbound) AS ${replacement})"""
 .
 ontologies:DiagnosisRegistryOfVariousTypes
   a ontologies:MultiObjectDescriber ;
@@ -219,9 +224,15 @@ ontologies:DiagnosisRegistryOfVariousTypes
   ontologies:range Thesaurus:C71892 ;
   ontologies:range Thesaurus:C53489 ;
 .
-ontologies:DiagnosisTermOfVariousTypes
+ontologies:IcdTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;
   ontologies:range owl:Class ;
+  ontologies:usesCustomVariableManipulationRule ontologies:IcdDiagnosisRegistryRule ;
+.
+ontologies:SnomedTermOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range owl:Class ;
+  ontologies:usesCustomVariableManipulationRule ontologies:SnomedDiagnosisRegistryRule ;
 .
 ontologies:MultiObjectDescriber
   a owl:Class ;
@@ -305,8 +316,7 @@ ontologies:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess
 .
 ontologies:SnomedDiagnosisRegistryRule
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """
-        BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>, uri(concat(\"http://purl.bioontology.org/ontology/SNOMEDCT/\", ${original})), ?unbound) AS ?SnomedTermOfVariousTypes)""" ;
+  ontologies:usesSparql """BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>, uri(concat(\"http://purl.bioontology.org/ontology/SNOMEDCT/\", ?diagnosisTermSuffixStringLiteralValue)), ?unbound) AS ?SnomedTermOfVariousTypes)""" ;
 .
 ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -322,7 +332,7 @@ ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000272 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate ontologies:IAO_0000039 ;
+  ontologies:predicate obo:IAO_0000039 ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010149 ;
 .
@@ -725,13 +735,14 @@ ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDat
   ontologies:required false ;
   ontologies:subject obo:VSO_0000006 ;
   obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
+  ontologies:optionalInputTo ontologies:TURBO_0010183 ;
 .
 ontologies:bloodPressureMeasurementProcessToHealthcareEncounter
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:object obo:OGMS_0000097 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:predicate obo:BFO_0000050 ;
   ontologies:required false ;
   ontologies:subject obo:VSO_0000006 ;
 .
@@ -744,6 +755,43 @@ ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatu
   ontologies:required false ;
   ontologies:subject obo:VSO_0000006 ;
   obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
+  ontologies:optionalInputTo ontologies:TURBO_0010183 ;
+.
+ontologies:DatasetToDiastolicBloodPressureMeasurementDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/singleton-many> ;
+  ontologies:object obo:HTN_00000000 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:DatasetToSystolicBloodPressureMeasurementDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/singleton-many> ;
+  ontologies:object obo:HTN_00000001 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:SystolicBloodPressureMeasurementDatumToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject obo:HTN_00000001 ;
+.
+ontologies:DiastolicBloodPressureMeasurementDatumToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject obo:HTN_00000000 ;
 .
 ontologies:bmiDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
@@ -1076,9 +1124,9 @@ ontologies:diagnosisCodingSequenceIntegerLiteralValue
   a ontologies:TurboGraphIntegerLiteralValue ;
   rdfs:label "diagnosis coding sequence integer literal value" ;
 .
-ontologies:diagnosisIcdSuffixStringLiteralValue
+ontologies:diagnosisTermSuffixStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
-  rdfs:label "diagnosis icd suffix literal string value" ;
+  rdfs:label "diagnosis term suffix literal string value" ;
 .
 ontologies:diagnosisRegistryStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
@@ -1097,7 +1145,7 @@ ontologies:diagnosisToDataset
 ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:diagnosisIcdSuffixStringLiteralValue ;
+  ontologies:object ontologies:diagnosisTermSuffixStringLiteralValue ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required false ;
@@ -1134,15 +1182,24 @@ ontologies:diagnosisToDiagnosisRegistry
   ontologies:subject obo:OGMS_0000073 ;
   rdfs:label "diagnosis to icd registry connection" ;
 .
-ontologies:diagnosisToDiagnosisTerm
+ontologies:diagnosisToIcdTerm
   a ontologies:ObjectConnectionToClassRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:DiagnosisTermOfVariousTypes ;
+  ontologies:object ontologies:IcdTermOfVariousTypes ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
   ontologies:predicate obo:IAO_0000142 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000073 ;
   rdfs:label "diagnosis to icd term connection" ;
+.
+ontologies:diagnosisToSnomedTerm
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:SnomedTermOfVariousTypes ;
+  ontologies:outputOf ontologies:TURBO_0010179 ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
@@ -1458,10 +1515,11 @@ ontologies:healthcareEncounterToBloodPressureMeasurementProcess
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:VSO_0000006 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
-  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:predicate obo:BFO_0000051 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
   obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
+  ontologies:optionalInputTo ontologies:TURBO_0010183 ;
 .
 ontologies:healthcareEncounterToDiagnosis
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -2196,14 +2254,6 @@ ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI
   ontologies:predicate ontologies:TURBO_0010133 ;
   ontologies:optionalInputTo ontologies:TURBO_0010177 ;
   ontologies:required false ;
-  ontologies:subject ontologies:TURBO_0010169 ;
-.
-ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010161 ;
-  ontologies:outputOf ontologies:TURBO_0010177 ;
-  ontologies:predicate ontologies:TURBO_0010133 ;
   ontologies:removedBy ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
   ontologies:required false ;
   ontologies:requiredInputTo ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
@@ -2246,7 +2296,7 @@ ontologies:shortcutDiagnosisToDiagnosisCode
   a ontologies:ShortcutDatatypeConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutDiagnosisOptionalGroup ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:diagnosisIcdSuffixStringLiteralValue ;
+  ontologies:object ontologies:diagnosisTermSuffixStringLiteralValue ;
   ontologies:optionalInputTo ontologies:TURBO_0010179 ;
   ontologies:predicate ontologies:TURBO_0004601 ;
   ontologies:required false ;
@@ -2274,6 +2324,8 @@ ontologies:shortcutDiagnosisToRegistry
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010160 ;
   rdfs:label "shortcut diagnosis to registry connection" ;
+  ontologies:objectRequiredToCreate ontologies:IcdTermOfVariousTypes ;
+  ontologies:objectRequiredToCreate ontologies:SnomedTermOfVariousTypes ;
 .
 ontologies:shortcutDiagnosisToRegistryString
   a ontologies:ShortcutDatatypeConnectionRecipe ;
@@ -2295,6 +2347,7 @@ ontologies:shortcutHealthcareEncounterToBmiValue
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010158 ;
   rdfs:label "shortcut healthcare encounter to BMI value connection" ;
+  ontologies:objectRequiredToCreate ns3:EFO_0004340 ;
 .
 ontologies:shortcutHealthcareEncounterToDatasetTitle
   a ontologies:ShortcutDatatypeConnectionRecipe ;
@@ -2315,6 +2368,8 @@ ontologies:shortcutHealthcareEncounterToDateStringValue
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010158 ;
   rdfs:label "shortcut healthcare encounter to date string value connection" ;
+  ontologies:objectRequiredToCreate ontologies:TURBO_0000511 ;
+  ontologies:objectRequiredToCreate ontologies:TURBO_0000512 ;
 .
 ontologies:shortcutHealthcareEncounterToDateValue
   a ontologies:ShortcutDatatypeConnectionRecipe ;
@@ -2345,6 +2400,8 @@ ontologies:shortcutHealthcareEncounterToDiastolicBloodPressureLiteralValue
   ontologies:predicate ontologies:TURBO_0010259 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010158 ;
+  ontologies:objectRequiredToCreate obo:HTN_00000000 ;
+  ontologies:objectRequiredToCreate ontologies:TURBO_0010150 ;
 .
 ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -2393,6 +2450,7 @@ ontologies:shortcutHealthcareEncounterToHeightValue
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010158 ;
   rdfs:label "shortcut healthcare encounter to height value connection" ;
+  ontologies:objectRequiredToCreate ontologies:TURBO_0010138 ;
 .
 ontologies:shortcutHealthcareEncounterToPrescription
   a ontologies:ShortcutObjectConnectionToInstanceRecipe ;
@@ -2436,6 +2494,8 @@ ontologies:shortcutHealthcareEncounterToSystolicBloodPressureLiteralValue
   ontologies:predicate ontologies:TURBO_0010258 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010158 ;
+  ontologies:objectRequiredToCreate obo:HTN_00000001 ;
+  ontologies:objectRequiredToCreate ontologies:TURBO_0010149 ;
 .
 ontologies:shortcutHealthcareEncounterToWeightValue
   a ontologies:ShortcutDatatypeConnectionRecipe ;
@@ -2446,6 +2506,7 @@ ontologies:shortcutHealthcareEncounterToWeightValue
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010158 ;
   rdfs:label "shortcut healthcare encounter to weight value connection" ;
+  ontologies:objectRequiredToCreate obo:OBI_0001929 ;
 .
 ontologies:shortcutHomoSapiensIdToRegistry
   a ontologies:ShortcutObjectConnectionToClassRecipe ;

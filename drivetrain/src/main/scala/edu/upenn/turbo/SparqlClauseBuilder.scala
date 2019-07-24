@@ -236,8 +236,22 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         val subjectDependent = row(SUBJECTDEPENDEE.toString)
         val objectDependent = row(OBJECTDEPENDEE.toString)
         
-        currentGroups += thisSubject -> HashMap("customRule" -> specialSubjectRule, "dependee" -> subjectDependent)
-        currentGroups += thisObject -> HashMap("customRule" -> specialObjectRule, "dependee" -> objectDependent)
+        if (!currentGroups.contains(thisSubject)) currentGroups += thisSubject -> HashMap("customRule" -> specialSubjectRule, "dependee" -> subjectDependent)
+        else 
+        {
+            if (currentGroups(thisSubject)("dependee") != null && subjectDependent != null) assert (currentGroups(thisSubject)("dependee") == subjectDependent)
+            if (currentGroups(thisSubject)("customRule") != null && specialSubjectRule != null) assert (currentGroups(thisSubject)("customRule") == specialSubjectRule)
+            if (currentGroups(thisSubject)("dependee") == null) currentGroups(thisSubject)("dependee") = subjectDependent
+            if (currentGroups(thisSubject)("customRule") == null) currentGroups(thisSubject)("customRule") = specialSubjectRule
+        }
+        if (!currentGroups.contains(thisObject)) currentGroups += thisObject -> HashMap("customRule" -> specialObjectRule, "dependee" -> objectDependent)
+        else 
+        {
+            if (currentGroups(thisObject)("dependee") != null && objectDependent != null) assert (currentGroups(thisObject)("dependee") == objectDependent)
+            if (currentGroups(thisObject)("customRule") != null && specialObjectRule != null) assert (currentGroups(thisObject)("customRule") == specialObjectRule)
+            if (currentGroups(thisObject)("dependee") == null) currentGroups(thisObject)("dependee") = objectDependent
+            if (currentGroups(thisObject)("customRule") == null) currentGroups(thisObject)("customRule") = specialObjectRule
+        }
         
         if (oneToOneConnections.contains(thisObject) && oneToOneConnections.contains(thisSubject))
         {
@@ -308,15 +322,26 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     def getMultiplicityEnforcer(changeAgent: String, usedVariables: HashMap[String, Boolean]): String =
     {
-        assert (oneToOneConnections.contains(changeAgent))
         var multiplicityEnforcer = ""
-        for (conn <- oneToOneConnections(changeAgent)) 
-        {
-            if (usedVariables.contains(conn) && usedVariables(conn)) 
+        if (usedVariables.contains(changeAgent))
+        {   
+            if (usedVariables(changeAgent)) 
             {
                 assert (multiplicityEnforcer == "")
-                multiplicityEnforcer = helper.convertTypeToSparqlVariable(conn)
+                multiplicityEnforcer = helper.convertTypeToSparqlVariable(changeAgent)
             }
+        }
+        else
+        {
+            assert (oneToOneConnections.contains(changeAgent))
+            for (conn <- oneToOneConnections(changeAgent)) 
+            {
+                if (usedVariables.contains(conn) && usedVariables(conn)) 
+                {
+                    assert (multiplicityEnforcer == "")
+                    multiplicityEnforcer = helper.convertTypeToSparqlVariable(conn)
+                }
+            }   
         }
         assert (multiplicityEnforcer != "")
         multiplicityEnforcer
@@ -381,14 +406,19 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
         else
         {
-             var customRule = v.toString.split("\"")(1)+"\n"
+             var customRule = helper.removeQuotesFromString(v("customRule").toString.split("\\^")(0))+"\n"
              if (v("dependee") != null && customRule.contains("dependent"))
              {
                  val dependee = helper.convertTypeToSparqlVariable(v("dependee"))
-                 customRule = customRule.replaceAll("\\$\\{original\\}", dependee)
                  customRule = customRule.replaceAll("\\$\\{dependent\\}", dependee)
              }
              customRule = customRule.replaceAll("\\$\\{replacement\\}", connAsVar)
+             customRule = customRule.replaceAll("\\$\\{localUUID\\}", localUUID)
+             customRule = customRule.replaceAll("\\$\\{multiplicityEnforcer\\}", multiplicityEnforcer)
+             assert (!customRule.contains("replacement"))
+             assert (!customRule.contains("dependent"))
+             assert (!customRule.contains("localUUID"))
+             assert (!customRule.contains("multiplicityEnforcer"))
              bindRules += customRule
         }
     }
