@@ -135,6 +135,8 @@ class PatternMatchQuery extends Query
             if (!usedVariables.contains(k)) usedVariables += k -> v
         }
         bindClause = bindClauseBuilder.clause
+        // if we attempted to build the bind clause and no binds were necessary, make the clause contain a single empty character so that other clauses can be built
+        if (bindClause == "") bindClause += " "
     }
 }
 

@@ -14,7 +14,7 @@ import java.util.Calendar
 
 object RunDrivetrainProcess extends ProjectwideGlobals
 {
-    var globalUUID: String = null
+    var localUUID: String = null
     var variableSet = new HashSet[Value]
     var inputSet = new HashSet[Value]
     var inputProcessSet = new HashSet[String]
@@ -22,7 +22,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     
     def setGlobalUUID(globalUUID: String)
     {
-        this.globalUUID = globalUUID
+        this.localUUID = globalUUID
     }
     def setGraphModelConnection(gmCxn: RepositoryConnection)
     {
@@ -113,6 +113,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
 
     def createPatternMatchQuery(process: String): PatternMatchQuery =
     {
+        assert (localUUID != null, "You must set the globalUUID before running any process.")
         if (!validateProcess(gmCxn, process)) 
         {
             logger.info(process + " is not a valid TURBO process")
@@ -126,8 +127,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             val inputs = getInputs(process)
             val outputs = getOutputs(process)
             val removals = getRemovals(process)
-            
-            val localUUID = java.util.UUID.randomUUID().toString.replaceAll("-","")
             
             if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
             if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
@@ -200,11 +199,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?$MINUSGROUP a turbo:TurboGraphMinusGroup .
                   <$process> turbo:buildsMinusGroup ?$MINUSGROUP .
               }
-              #Optional
-              #{
-              #    ?connection turbo:outputOf ?creatingProcess .
-              #    ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
-              #}
+              Optional
+              {
+                  ?connection turbo:outputOf ?creatingProcess .
+                  ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
+              }
               Optional
               {
                   ?connection turbo:referencedInGraph ?$GRAPHOFORIGIN .
@@ -272,12 +271,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          {
             Graph pmbb:dataModel
             {
+              Values ?INPUTTO {turbo:requiredInputTo turbo:optionalInputTo}
               Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe
-                                            turbo:ShortcutObjectConnectionToClassRecipe
-                                            turbo:ShortcutObjectConnectionToInstanceRecipe
-                                            turbo:ShortcutDatatypeConnectionRecipe}
+                                            turbo:DatatypeConnectionRecipe}
               ?connection turbo:outputOf <$process> .
               ?connection a ?$CONNECTIONRECIPETYPE .
               <$process> turbo:outputNamedGraph ?$GRAPH .
@@ -321,12 +318,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Optional
               {
                   ?recipe turbo:objectRequiredToCreate ?$OBJECT .
+                  ?recipe ?INPUTTO <$process> .
                   ?recipe turbo:object ?$OBJECTDEPENDEE .
               }
               Optional
               {
-                  ?recipe turbo:objectRequiredToCreate ?SUBJECT .
-                  ?recipe turbo:object ?SUBJECTDEPENDEE .
+                  ?recipe turbo:objectRequiredToCreate ?$SUBJECT .
+                  ?recipe ?INPUTTO <$process> .
+                  ?recipe turbo:object ?$SUBJECTDEPENDEE .
               }
             }
             

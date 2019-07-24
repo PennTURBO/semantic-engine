@@ -216,7 +216,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                   ontologies:TURBO_0010184 pmbb:allele1 ;
                   ontologies:TURBO_0010184 pmbb:bbenc1 ;
                   ontologies:TURBO_0010184 pmbb:part1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
                   ontologies:TURBO_0010184 <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000068912> ;
                   ontologies:TURBO_0010184 ontologies:TURBO_0000451 ;
                   ontologies:TURBO_0010184 ontologies:TURBO_0000590 ;
@@ -236,6 +236,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                 ?OBI_0001352 a obo:OBI_0001352 .
                 ?OBI_0600005 a obo:OBI_0600005 .
                 ?OBI_0001573 a obo:OBI_0001573 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           

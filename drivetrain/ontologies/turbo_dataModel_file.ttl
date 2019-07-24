@@ -302,6 +302,7 @@ ontologies:RxNormUrlCleanupProcess
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:outputNamedGraph pmbb:expanded ;
   rdfs:subClassOf ontologies:TURBO_0010178 ;
+  ontologies:buildsMinusGroup ontologies:RxNormDrugTermMinusGroup ;
 .
 ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess
   ontologies:inputNamedGraph pmbb:expanded ;
@@ -715,6 +716,7 @@ ontologies:biobankEncounterToLengthMeasurementValueSpecification
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000527 ;
   rdfs:label "object connection to length measurement datum" ;
+  ontologies:objectRequiredToCreate obo:PATO_0000119 ;
 .
 ontologies:biobankEncounterToMassMeasurementValueSpecification
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -725,6 +727,7 @@ ontologies:biobankEncounterToMassMeasurementValueSpecification
   ontologies:predicate ontologies:TURBO_0010139 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000527 ;
+  ontologies:objectRequiredToCreate obo:PATO_0000128 ;
 .
 ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -1519,7 +1522,8 @@ ontologies:healthcareEncounterToBloodPressureMeasurementProcess
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
   obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
-  ontologies:optionalInputTo ontologies:TURBO_0010183 ;
+  ontologies:requiredInputTo ontologies:TURBO_0010183 ;
+  ontologies:objectRequiredToCreate obo:VSO_0000004 ;
 .
 ontologies:healthcareEncounterToDiagnosis
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -1541,6 +1545,7 @@ ontologies:healthcareEncounterToLengthMeasurementValueSpecification
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
   rdfs:label "object connection to length measurement datum" ;
+  ontologies:objectRequiredToCreate obo:PATO_0000119 ;
 .
 ontologies:healthcareEncounterToMassValueSpecification
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -1551,6 +1556,7 @@ ontologies:healthcareEncounterToMassValueSpecification
   ontologies:predicate ontologies:TURBO_0010139 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;
+  ontologies:objectRequiredToCreate obo:PATO_0000128 ;
 .
 ontologies:healthcareEncounterToPrescription
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -2190,6 +2196,7 @@ ontologies:shortcutBiobankEncounterToBmiValue
   ontologies:predicate ontologies:TURBO_0000635 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010169 ;
+  ontologies:objectRequiredToCreate ns3:EFO_0004340 ;
 .
 ontologies:shortcutBiobankEncounterToDatasetTitle
   a ontologies:ShortcutDatatypeConnectionRecipe ;
@@ -2217,6 +2224,8 @@ ontologies:shortcutBiobankEncounterToDateStringValue
   ontologies:predicate ontologies:TURBO_0000624 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010169 ;
+  ontologies:objectRequiredToCreate ontologies:TURBO_0000531 ;
+  ontologies:objectRequiredToCreate ontologies:TURBO_0000532 ;
 .
 ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -2237,6 +2246,7 @@ ontologies:shortcutBiobankEncounterToHeightLiteralValue
   ontologies:predicate ontologies:TURBO_0000626 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010169 ;
+  ontologies:objectRequiredToCreate ontologies:TURBO_0010138 ;
 .
 ontologies:shortcutBiobankEncounterToRegistry
   a ontologies:ShortcutObjectConnectionToClassRecipe ;
@@ -2247,13 +2257,21 @@ ontologies:shortcutBiobankEncounterToRegistry
   ontologies:requiredInputTo ontologies:TURBO_0010177 ;
   ontologies:subject ontologies:TURBO_0010169 ;
 .
-ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI
+ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_shortcut
   a ontologies:ShortcutObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:TURBO_0010161 ;
   ontologies:predicate ontologies:TURBO_0010133 ;
-  ontologies:optionalInputTo ontologies:TURBO_0010177 ;
   ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0010169 ;
+  ontologies:optionalInputTo ontologies:TURBO_0010177 ;
+.
+ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:TURBO_0010161 ;
+  ontologies:predicate ontologies:TURBO_0010133 ;
+  ontologies:outputOf ontologies:TURBO_0010177 ;
   ontologies:removedBy ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
   ontologies:required false ;
   ontologies:requiredInputTo ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
@@ -2277,6 +2295,7 @@ ontologies:shortcutBiobankEncounterToWeightLiteralValue
   ontologies:predicate ontologies:TURBO_0000627 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010169 ;
+  ontologies:objectRequiredToCreate obo:OBI_0001929 ;
 .
 ontologies:shortcutDiagnosisOptionalGroup
   a ontologies:TurboGraphOptionalGroup ;
@@ -2463,8 +2482,17 @@ ontologies:shortcutHealthcareEncounterToPrescription
   ontologies:subject ontologies:TURBO_0010158 ;
   rdfs:label "shortcut healthcare encounter to prescription connection" ;
 .
-ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI
+ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_shortcut
   a ontologies:ShortcutObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:TURBO_0010161 ;
+  ontologies:predicate ontologies:TURBO_0010131 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0010158 ;
+  ontologies:optionalInputTo ontologies:TURBO_0010179 ;
+.
+ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded
+  a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object ontologies:TURBO_0010161 ;
   ontologies:outputOf ontologies:TURBO_0010179 ;
@@ -2474,7 +2502,6 @@ ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI
   ontologies:requiredInputTo ontologies:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess ;
   ontologies:requiredInputTo ontologies:TURBO_0010183 ;
   ontologies:subject ontologies:TURBO_0010158 ;
-  ontologies:optionalInputTo ontologies:TURBO_0010179 ;
 .
 ontologies:shortcutHealthcareEncounterToSymbolValue
   a ontologies:ShortcutDatatypeConnectionRecipe ;

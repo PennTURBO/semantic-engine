@@ -149,7 +149,8 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           turbo:TURBO_0000625 "2017-01-15"^^xsd:date ;
           turbo:TURBO_0000629 "biobank" ;
           turbo:TURBO_0000630 turbo:TURBO_0000420 ;
-          turbo:TURBO_0010133 "http://www.itmat.upenn.edu/biobank/part1"^^xsd:anyURI .
+          turbo:TURBO_0010133 pmbb:part1 .
+          pmbb:part1 a turbo:TURBO_0010161 .
           }}
           """
         update.updateSparql(testCxn, insert)
@@ -221,7 +222,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
                   
                   ontologies:TURBO_0010184 pmbb:bbenc1 ;
                   ontologies:TURBO_0010184 pmbb:part1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -235,6 +236,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
                 ?TURBO_0010138 a turbo:TURBO_0010138 .
                 ?TURBO_0000527 a turbo:TURBO_0000527 .
                 ?EFO_0004340 a efo:EFO_0004340 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
@@ -243,7 +245,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
-    /*test("bb encounter with minimum required for expansion")
+    test("bb encounter with minimum required for expansion")
     {
         val insert: String = """
           INSERT DATA { GRAPH pmbb:Shortcuts_biobankEncounterShortcuts {
@@ -303,7 +305,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
                   ontologies:TURBO_0010184 ?TURBO_0000527 ;
                   
                   ontologies:TURBO_0010184 pmbb:bbenc1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -312,6 +314,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
                 ?TURBO_0000534 a turbo:TURBO_0000534 .
                 ?TURBO_0000535 a turbo:TURBO_0000535 .
                 ?TURBO_0000527 a turbo:TURBO_0000527 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
@@ -493,7 +496,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
                   ontologies:TURBO_0010184 ?TURBO_0000527 ;
                   
                   ontologies:TURBO_0010184 pmbb:bbenc1 ;
-                  ontologies:TURBO_0010184 pmbb:test_instantiation_1 ;
+                  ontologies:TURBO_0010184 ?instantiation ;
             }
             Graph pmbb:expanded 
             {
@@ -504,11 +507,12 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
                 ?TURBO_0000531 a turbo:TURBO_0000531 .
                 ?TURBO_0000532 a turbo:TURBO_0000532 .
                 ?TURBO_0000527 a turbo:TURBO_0000527 .
+                ?instantiation a turbo:TURBO_0000522 .
             }
           }
           
           """
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
-    }*/
+    }
 }

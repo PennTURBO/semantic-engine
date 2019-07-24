@@ -338,7 +338,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             {
                 if (usedVariables.contains(conn) && usedVariables(conn)) 
                 {
-                    assert (multiplicityEnforcer == "")
+                    //need solution for when multiple possibilities occur here
+                    //assert (multiplicityEnforcer == "")
                     multiplicityEnforcer = helper.convertTypeToSparqlVariable(conn)
                 }
             }   
@@ -356,8 +357,11 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             itemsToRemove += changeAgent
             val changeAgentAsVar = helper.convertTypeToSparqlVariable(changeAgent)
             val multiplicityEnforcer = getMultiplicityEnforcer(changeAgent, usedVariables)
-            bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                     SHA256(CONCAT(\"${changeAgentAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}))))) AS ${changeAgentAsVar})\n"""
+            if (!usedVariables.contains(changeAgent))
+            {
+                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                     SHA256(CONCAT(\"${changeAgentAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}))))) AS ${changeAgentAsVar})\n""" 
+            }
             if (oneToOneConnections.contains(changeAgent))
             {
                 for (conn <- oneToOneConnections(changeAgent))
@@ -400,8 +404,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
               else
               {
                   val dependee = helper.convertTypeToSparqlVariable(v("dependee"))
-                  bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                   SHA256(CONCAT(\"${connAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}), str(${dependee}))))) AS ${connAsVar})\n"""
+                  bindRules += s"""BIND(IF (BOUND(${dependee}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                   SHA256(CONCAT(\"${connAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}))))), ?unbound) AS ${connAsVar})\n"""
               }
         }
         else
