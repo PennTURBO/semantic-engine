@@ -32,14 +32,11 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           ?partCrid a turbo:TURBO_0010092 .
           ?partCrid obo:IAO_0000219 ?part .
           ?partCrid obo:BFO_0000051 ?partSymbol .
-          ?partCrid obo:BFO_0000051 ?partRegDen .
+          ?partCrid obo:BFO_0000051 turbo:TURBO_0000505 .
           ?partSymbol a turbo:TURBO_0000504 .
           ?partSymbol turbo:TURBO_0010094 "4" .
-          ?partRegDen a turbo:TURBO_0000505 .
-          ?partRegDen obo:IAO_0000219 turbo:TURBO_0000410 .
           
           ?partSymbol obo:BFO_0000050 ?dataset .
-          ?partRegDen obo:BFO_0000050 ?dataset .
           ?dataset a obo:IAO_0000100 .
           
        }}"""
@@ -110,9 +107,19 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
               a turbo:TURBO_0010168 ;
-              turbo:TURBO_0010082 turbo:TURBO_0000410 ;
+              turbo:TURBO_0010282 turbo:TURBO_0000505 ;
               turbo:TURBO_0010079 "4" ;
               turbo:TURBO_0010084 "part_expand" .
+              
+              pmbb:scTumorCrid1 a turbo:TURBO_0010191 ;
+              obo:IAO_0000219 pmbb:part1 ;
+              turbo:TURBO_0010194 '123' ;
+              turbo:TURBO_0010277 <http://transformunify.org/ontologies/TURBO_0010274> .
+              
+              pmbb:scTumorCrid2 a turbo:TURBO_0010191 ;
+              obo:IAO_0000219 pmbb:part1 ;
+              turbo:TURBO_0010194 '456' ;
+              turbo:TURBO_0010277 <http://transformunify.org/ontologies/TURBO_0010274> .
           }}"""
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
@@ -140,9 +147,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         		
         		?patientCrid obo:IAO_0000219 ?part .
         		?patientCrid a turbo:TURBO_0010092 .
-        		?patientCrid obo:BFO_0000051 ?patientRegDen .
-        		?patientRegDen obo:BFO_0000050 ?patientCrid .
-        		?patientRegDen a turbo:TURBO_0000505 .
+        		?patientCrid obo:BFO_0000051 turbo:TURBO_0000505 .
+        		turbo:TURBO_0000505 obo:BFO_0000050 ?patientCrid .
         		# ?patientRegDen turbo:TURBO_0010094 'inpatient' .
         		
         		?rid obo:IAO_0000136 ?part .
@@ -151,7 +157,42 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         		
         		?part obo:RO_0000086 ?biosex .
         		?biosex a obo:PATO_0000047 .
+        		
+        		?disease1 a obo:MONDO_0004992 ;
+            obo:RO_0000052 ?part .
+            ?disease2 a obo:MONDO_0004992 ;
+            obo:RO_0000052 ?part .
             
+           ?tumor1 a obo:UBERON_0000465  ;
+            a ontologies:TURBO_0010069 ;
+            obo:BFO_0000050 ?part .
+            ?part obo:BFO_0000051 ?tumor1 .
+            
+            ?tumor2 a obo:UBERON_0000465  ;
+            a ontologies:TURBO_0010069 ;
+            obo:BFO_0000050 ?part .
+            ?part obo:BFO_0000051 ?tumor2 .
+            
+            ?tumorCrid1 a ontologies:TURBO_0010188 ;
+            obo:IAO_0000219 ?tumor1 .
+            
+            ?tumorCrid2 a ontologies:TURBO_0010188 ;
+            obo:IAO_0000219 ?tumor2 .
+            
+           ?tumorCridSymb1 a obo:IAO_0000577 ;
+            obo:BFO_0000050 ?tumorCrid1 ;
+            ontologies:TURBO_0010094 "123" .
+           ontologies:TURBO_0010274 obo:BFO_0000050 ?tumorCrid1 .
+           ?tumorCrid1 obo:BFO_0000051 ontologies:TURBO_0010274 .
+           ?tumorCridSymb1 obo:BFO_0000051 ?tumorCrid1 .
+            
+           ?tumorCridSymb2 a obo:IAO_0000577 ;
+            obo:BFO_0000050 ?tumorCrid2 ;
+            ontologies:TURBO_0010094 "456" .
+           ontologies:TURBO_0010274 obo:BFO_0000050 ?tumorCrid2 .
+           ?tumorCrid2 obo:BFO_0000051 ontologies:TURBO_0010274 .
+           ?tumorCridSymb2 obo:BFO_0000051 ?tumorCrid2 .
+           
           }}
           """
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
@@ -186,7 +227,19 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://purl.obolibrary.org/obo/IAO_0000136", "http://purl.obolibrary.org/obo/IAO_0000136",
             "http://transformunify.org/ontologies/TURBO_0010096", "http://transformunify.org/ontologies/TURBO_0010095",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010113",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010113",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/RO_0000052",
+            "http://purl.obolibrary.org/obo/RO_0000052", "http://purl.obolibrary.org/obo/BFO_0000050", 
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051", 
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0010113",
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050", 
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051", 
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0010094",
+            "http://transformunify.org/ontologies/TURBO_0010094"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
@@ -203,11 +256,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 
                   obo:OBI_0000293 pmbb:crid1 ;
                   obo:OBI_0000293 pmbb:part1 ;
+                  obo:OBI_0000293 pmbb:scTumorCrid1 ;
+                  obo:OBI_0000293 pmbb:scTumorCrid2 ;
                   
-                  ontologies:TURBO_0010184 ontologies:TURBO_0000410 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000505 ;
                   ontologies:TURBO_0010184 ?UBERON_0035946 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000505 ;
+                  ontologies:TURBO_0010184 turbo:TURBO_0000505 ;
                   ontologies:TURBO_0010184 ?TURBO_0010092 ;
                   ontologies:TURBO_0010184 ?PATO_0000047 ;
                   ontologies:TURBO_0010184 ?IAO_0000100 ;
@@ -215,6 +270,15 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 ?EFO_0004950 ;
                   ontologies:TURBO_0010184 ?OMRSE_00000181 ;
                   ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
+                  ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
+                  ontologies:TURBO_0010184 ?MONDO_0004992_1 ;
+                  ontologies:TURBO_0010184 ?MONDO_0004992_2 ;
+                  ontologies:TURBO_0010184 ?UBERON_0000465_1 ;
+                  ontologies:TURBO_0010184 ?UBERON_0000465_2 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010188_1 ;
+                  ontologies:TURBO_0010184 ?TURBO_0010188_2 ;
+                  ontologies:TURBO_0010184 ?IAO_0000577_1 ;
+                  ontologies:TURBO_0010184 ?IAO_0000577_2 ;
                   
                   ontologies:TURBO_0010184 pmbb:part1 ;
                   ontologies:TURBO_0010184 ?instantiation ;
@@ -224,7 +288,6 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 ?UBERON_0035946 a obo:UBERON_0035946 .
                 ?TURBO_0000504 a turbo:TURBO_0000504 .
                 ?TURBO_0010092 a turbo:TURBO_0010092 .
-                ?TURBO_0000505 a turbo:TURBO_0000505 .
                 ?PATO_0000047 a obo:PATO_0000047 .
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OMRSE_00000138 a obo:OMRSE_00000138 .
@@ -232,7 +295,20 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 ?OMRSE_00000181 a obo:OMRSE_00000181 .
                 ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
                 ?instantiation a turbo:TURBO_0000522 .
+                ?MONDO_0004992_1 a obo:MONDO_0004992 .
+                ?MONDO_0004992_2 a obo:MONDO_0004992 .
+                ?UBERON_0000465_1 a obo:UBERON_0000465 .
+                ?UBERON_0000465_2 a obo:UBERON_0000465 .
+                ?TURBO_0010188_1 a turbo:TURBO_0010188 .
+                ?TURBO_0010188_2 a turbo:TURBO_0010188 .
+                ?IAO_0000577_1 a obo:IAO_0000577 .
+                ?IAO_0000577_2 a obo:IAO_0000577 .
             }
+            
+            filter (?MONDO_0004992_1 != ?MONDO_0004992_2)
+            filter (?UBERON_0000465_1 != ?UBERON_0000465_2)
+            filter (?TURBO_0010188_1 != ?TURBO_0010188_2)
+            filter (?IAO_0000577_1 != ?IAO_0000577_2)
           }
           
           """
@@ -249,7 +325,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               a turbo:TURBO_0010168 ;
               turbo:TURBO_0010084 "part_expand" ;
               turbo:TURBO_0010079 "4" ;
-              turbo:TURBO_0010082 turbo:TURBO_0000410 .
+              turbo:TURBO_0010282 turbo:TURBO_0000505 .
           }}"""
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
@@ -266,15 +342,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         val expectedPredicates = Array (
             "http://purl.obolibrary.org/obo/OBI_0000293", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.org/dc/elements/1.1/title",
-            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://transformunify.org/ontologies/TURBO_0010094", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010113",
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0010113",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
@@ -293,9 +367,9 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   obo:OBI_0000293 pmbb:crid1 ;
                   obo:OBI_0000293 pmbb:part1 ;
                   
-                  ontologies:TURBO_0010184 ontologies:TURBO_0000410 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000505 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000505 ;
+                  ontologies:TURBO_0010184 turbo:TURBO_0000505 ;
                   ontologies:TURBO_0010184 ?TURBO_0010092 ;
                   ontologies:TURBO_0010184 ?IAO_0000100 ;
                   ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
@@ -307,7 +381,6 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             {
                 ?TURBO_0000504 a turbo:TURBO_0000504 .
                 ?TURBO_0010092 a turbo:TURBO_0010092 .
-                ?TURBO_0000505 a turbo:TURBO_0000505 .
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
                 ?instantiation a turbo:TURBO_0000522 .
@@ -328,7 +401,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
               a turbo:TURBO_0010168 ;
               turbo:TURBO_0010084 "part_expand" ;
-              turbo:TURBO_0010082 turbo:TURBO_0000410 .
+              turbo:TURBO_0010282 turbo:TURBO_0000505 .
           }}"""
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
@@ -352,7 +425,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
               a turbo:TURBO_0010168 ;
               turbo:TURBO_0010079 "4" ;
-              turbo:TURBO_0010082 turbo:TURBO_0000410 .
+              turbo:TURBO_0010282 turbo:TURBO_0000505 .
           }}"""
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
@@ -405,7 +478,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
               a turbo:TURBO_0010168 ;
               turbo:TURBO_0000609 "inpatient" ;
-              turbo:TURBO_0010082 turbo:TURBO_0000410 ;
+              turbo:TURBO_0010282 turbo:TURBO_0000505 ;
               turbo:TURBO_0010084 "part_expand" ;
               turbo:TURBO_0010079 "4" .
               
@@ -459,16 +532,14 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://transformunify.org/ontologies/TURBO_0010095", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/IAO_0000136",
-            "http://transformunify.org/ontologies/TURBO_0010113", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            "http://purl.obolibrary.org/obo/IAO_0000136", "http://transformunify.org/ontologies/TURBO_0010113"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
@@ -486,10 +557,10 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   obo:OBI_0000293 pmbb:crid1 ;
                   obo:OBI_0000293 pmbb:part1 ;
                   
-                  ontologies:TURBO_0010184 ontologies:TURBO_0000410 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000505 ;
                   ontologies:TURBO_0010184 ?UBERON_0035946 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000505 ;
+                  ontologies:TURBO_0010184 turbo:TURBO_0000505 ;
                   ontologies:TURBO_0010184 ?TURBO_0010092 ;
                   ontologies:TURBO_0010184 ?PATO_0000047 ;
                   ontologies:TURBO_0010184 ?IAO_0000100 ;
@@ -506,7 +577,6 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 ?UBERON_0035946 a obo:UBERON_0035946 .
                 ?TURBO_0000504 a turbo:TURBO_0000504 .
                 ?TURBO_0010092 a turbo:TURBO_0010092 .
-                ?TURBO_0000505 a turbo:TURBO_0000505 .
                 ?PATO_0000047 a obo:PATO_0000047 .
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OMRSE_00000133 a obo:OMRSE_00000133 .
@@ -550,9 +620,9 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             pmbb:shortcutCrid2 turbo:TURBO_0010079 'kramer' .
             pmbb:shortcutCrid3 turbo:TURBO_0010079 'elaine' .
             
-            pmbb:shortcutCrid1 turbo:TURBO_0010082 <http://transformunify.org/ontologies/TURBO_0000402> .
-            pmbb:shortcutCrid2 turbo:TURBO_0010082 <http://transformunify.org/ontologies/TURBO_0000403> .
-            pmbb:shortcutCrid3 turbo:TURBO_0010082 <http://transformunify.org/ontologies/TURBO_0000410> .
+            pmbb:shortcutCrid1 turbo:TURBO_0010282 <http://transformunify.org/ontologies/TURBO_0000505> .
+            pmbb:shortcutCrid2 turbo:TURBO_0010282 <http://transformunify.org/ontologies/TURBO_0010275> .
+            pmbb:shortcutCrid3 turbo:TURBO_0010282 <http://transformunify.org/ontologies/TURBO_0000505> .
 
           }}"""
         update.updateSparql(testCxn, insert)
@@ -593,46 +663,34 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         		
         		?patientCrid1 obo:IAO_0000219 ?part .
         		?patientCrid1 a turbo:TURBO_0010092 .
-        		?patientCrid1 obo:BFO_0000051 ?patientRegDen1 .
-        		?patientRegDen1 obo:BFO_0000050 ?patientCrid1 .
-        		?patientRegDen1 a turbo:TURBO_0000505 .
-        		?patientRegDen1 obo:IAO_0000219 turbo:TURBO_0000402 .
+        		?patientCrid1 obo:BFO_0000051 turbo:TURBO_0000505 .
+        		turbo:TURBO_0000505 obo:BFO_0000050 ?patientCrid1 .
         		?patientCrid1 obo:BFO_0000051 ?partSymbol1 .
         		?partSymbol1 obo:BFO_0000050 ?patientCrid1 .
             ?partSymbol1 a turbo:TURBO_0000504 .
             ?partSymbol1 turbo:TURBO_0010094 "jerry"^^xsd:string .
-            ?patientRegDen1 obo:BFO_0000050 ?dataset .
-            ?dataset obo:BFO_0000051 ?patientRegDen1 .
             ?partSymb1 obo:BFO_0000050 ?dataset .
             ?dataset obo:BFO_0000051 ?partSymb1 .
             
             ?patientCrid2 obo:IAO_0000219 ?part .
         		?patientCrid2 a turbo:TURBO_0010092 .
-        		?patientCrid2 obo:BFO_0000051 ?patientRegDen2 .
-        		?patientRegDen2 obo:BFO_0000050 ?patientCrid2 .
-        		?patientRegDen2 a turbo:TURBO_0000505 .
-        		?patientRegDen2 obo:IAO_0000219 turbo:TURBO_0000403 .
+        		?patientCrid2 obo:BFO_0000051 turbo:TURBO_0010275 .
+        		turbo:TURBO_0010275 obo:BFO_0000050 ?patientCrid2 .
         		?patientCrid2 obo:BFO_0000051 ?partSymbol2 .
         		?partSymbol2 obo:BFO_0000050 ?patientCrid2 .
             ?partSymbol2 a turbo:TURBO_0000504 .
             ?partSymbol2 turbo:TURBO_0010094 "kramer"^^xsd:string .
-            ?patientRegDen2 obo:BFO_0000050 ?dataset .
-            ?dataset obo:BFO_0000051 ?patientRegDen2 .
             ?partSymb2 obo:BFO_0000050 ?dataset .
             ?dataset obo:BFO_0000051 ?partSymb2 .
             
             ?patientCrid3 obo:IAO_0000219 ?part .
         		?patientCrid3 a turbo:TURBO_0010092 .
-        		?patientCrid3 obo:BFO_0000051 ?patientRegDen3 .
-        		?patientRegDen3 obo:BFO_0000050 ?patientCrid3 .
-        		?patientRegDen3 a turbo:TURBO_0000505 .
-        		?patientRegDen3 obo:IAO_0000219 turbo:TURBO_0000410 .
+        		?patientCrid3 obo:BFO_0000051 turbo:TURBO_0000505 .
+        		turbo:TURBO_0000505 obo:BFO_0000050 ?patientCrid3 .
         		?patientCrid3 obo:BFO_0000051 ?partSymbol3 .
         		?partSymbol3 obo:BFO_0000050 ?patientCrid3 .
             ?partSymbol3 a turbo:TURBO_0000504 .
             ?partSymbol3 turbo:TURBO_0010094 "elaine"^^xsd:string .
-            ?patientRegDen3 obo:BFO_0000050 ?dataset .
-            ?dataset obo:BFO_0000051 ?patientRegDen3 .
             ?partSymb3 obo:BFO_0000050 ?dataset .
             ?dataset obo:BFO_0000051 ?partSymb3 .
         		
@@ -706,8 +764,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://transformunify.org/ontologies/TURBO_0010113",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
@@ -716,10 +773,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/BFO_0000050","http://transformunify.org/ontologies/TURBO_0010113",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://transformunify.org/ontologies/TURBO_0010113",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://transformunify.org/ontologies/TURBO_0010113",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
             
-          
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")  
@@ -739,18 +794,14 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   obo:OBI_0000293 pmbb:shortcutCrid3 ;
                   obo:OBI_0000293 pmbb:part1 ;
                   
-                  ontologies:TURBO_0010184 ontologies:TURBO_0000402 ;
-                  ontologies:TURBO_0010184 ontologies:TURBO_0000403 ;
-                  ontologies:TURBO_0010184 ontologies:TURBO_0000410 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000505 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0010275 ;
                   
                   ontologies:TURBO_0010184 ?TURBO_0000504_1 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000505_1 ;
                   ontologies:TURBO_0010184 ?TURBO_0010092_1 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504_2 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000505_2 ;
                   ontologies:TURBO_0010184 ?TURBO_0010092_2 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504_3 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000505_3 ;
                   ontologies:TURBO_0010184 ?TURBO_0010092_3 ;
                   
                   ontologies:TURBO_0010184 ?UBERON_0035946 ;
@@ -776,13 +827,10 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 
                 ?TURBO_0000504_1 a turbo:TURBO_0000504 .
                 ?TURBO_0010092_1 a turbo:TURBO_0010092 .
-                ?TURBO_0000505_1 a turbo:TURBO_0000505 .
                 ?TURBO_0000504_2 a turbo:TURBO_0000504 .
                 ?TURBO_0010092_2 a turbo:TURBO_0010092 .
-                ?TURBO_0000505_2 a turbo:TURBO_0000505 .
                 ?TURBO_0000504_3 a turbo:TURBO_0000504 .
                 ?TURBO_0010092_3 a turbo:TURBO_0010092 .
-                ?TURBO_0000505_3 a turbo:TURBO_0000505 .
                 ?instantiation a turbo:TURBO_0000522 .
             }
           }
@@ -805,7 +853,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             pmbb:shortcutCrid1 a turbo:TURBO_0010168 .
             pmbb:shortcutCrid1 turbo:TURBO_0010084 'dataset1' .
             pmbb:shortcutCrid1 turbo:TURBO_0010079 'jerry' .
-            pmbb:shortcutCrid1 turbo:TURBO_0010082 <http://transformunify.org/ontologies/TURBO_0000402> .  
+            pmbb:shortcutCrid1 turbo:TURBO_0010282 <http://transformunify.org/ontologies/TURBO_0010275> .  
           }
           
           GRAPH pmbb:Shortcuts_homoSapiensShortcuts2 {
@@ -816,7 +864,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             pmbb:shortcutCrid2 a turbo:TURBO_0010168 .
             pmbb:shortcutCrid2 turbo:TURBO_0010084 'dataset2' .
             pmbb:shortcutCrid2 turbo:TURBO_0010079 'kramer' .
-            pmbb:shortcutCrid2 turbo:TURBO_0010082 <http://transformunify.org/ontologies/TURBO_0000403> .
+            pmbb:shortcutCrid2 turbo:TURBO_0010282 <http://transformunify.org/ontologies/TURBO_0000505> .
           }
           
           GRAPH pmbb:Shortcuts_homoSapiensShortcuts3 {
@@ -827,7 +875,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             pmbb:shortcutCrid3 a turbo:TURBO_0010168 .
             pmbb:shortcutCrid3 turbo:TURBO_0010084 'dataset3' .
             pmbb:shortcutCrid3 turbo:TURBO_0010079 'elaine' .
-            pmbb:shortcutCrid3 turbo:TURBO_0010082 <http://transformunify.org/ontologies/TURBO_0000410> .
+            pmbb:shortcutCrid3 turbo:TURBO_0010282 <http://transformunify.org/ontologies/TURBO_0000505> .
           }
           
           }"""
@@ -875,46 +923,34 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         		
         		?patientCrid1 obo:IAO_0000219 ?part .
         		?patientCrid1 a turbo:TURBO_0010092 .
-        		?patientCrid1 obo:BFO_0000051 ?patientRegDen1 .
-        		?patientRegDen1 obo:BFO_0000050 ?patientCrid1 .
-        		?patientRegDen1 a turbo:TURBO_0000505 .
-        		?patientRegDen1 obo:IAO_0000219 turbo:TURBO_0000402 .
+        		?patientCrid1 obo:BFO_0000051 turbo:TURBO_0010275 .
+        		turbo:TURBO_0010275 obo:BFO_0000050 ?patientCrid1 .
         		?patientCrid1 obo:BFO_0000051 ?partSymbol1 .
         		?partSymbol1 obo:BFO_0000050 ?patientCrid1 .
             ?partSymbol1 a turbo:TURBO_0000504 .
             ?partSymbol1 turbo:TURBO_0010094 "jerry"^^xsd:string .
-            ?patientRegDen1 obo:BFO_0000050 ?dataset1 .
-            ?dataset1 obo:BFO_0000051 ?patientRegDen1 .
             ?partSymb1 obo:BFO_0000050 ?dataset1 .
             ?dataset1 obo:BFO_0000051 ?partSymb1 .
             
             ?patientCrid2 obo:IAO_0000219 ?part .
         		?patientCrid2 a turbo:TURBO_0010092 .
-        		?patientCrid2 obo:BFO_0000051 ?patientRegDen2 .
-        		?patientRegDen2 obo:BFO_0000050 ?patientCrid2 .
-        		?patientRegDen2 a turbo:TURBO_0000505 .
-        		?patientRegDen2 obo:IAO_0000219 turbo:TURBO_0000403 .
+        		?patientCrid2 obo:BFO_0000051 turbo:TURBO_0000505 .
+        		turbo:TURBO_0000505 obo:BFO_0000050 ?patientCrid2 .
         		?patientCrid2 obo:BFO_0000051 ?partSymbol2 .
         		?partSymbol2 obo:BFO_0000050 ?patientCrid2 .
             ?partSymbol2 a turbo:TURBO_0000504 .
             ?partSymbol2 turbo:TURBO_0010094 "kramer"^^xsd:string .
-            ?patientRegDen2 obo:BFO_0000050 ?dataset2 .
-            ?dataset2 obo:BFO_0000051 ?patientRegDen2 .
             ?partSymb2 obo:BFO_0000050 ?dataset2 .
             ?dataset2 obo:BFO_0000051 ?partSymb2 .
             
             ?patientCrid3 obo:IAO_0000219 ?part .
         		?patientCrid3 a turbo:TURBO_0010092 .
-        		?patientCrid3 obo:BFO_0000051 ?patientRegDen3 .
-        		?patientRegDen3 obo:BFO_0000050 ?patientCrid3 .
-        		?patientRegDen3 a turbo:TURBO_0000505 .
-        		?patientRegDen3 obo:IAO_0000219 turbo:TURBO_0000410 .
+        		?patientCrid3 obo:BFO_0000051 turbo:TURBO_0000505 .
+        		turbo:TURBO_0000505 obo:BFO_0000050 ?patientCrid3 .
         		?patientCrid3 obo:BFO_0000051 ?partSymbol3 .
         		?partSymbol3 obo:BFO_0000050 ?patientCrid3 .
             ?partSymbol3 a turbo:TURBO_0000504 .
             ?partSymbol3 turbo:TURBO_0010094 "elaine"^^xsd:string .
-            ?patientRegDen3 obo:BFO_0000050 ?dataset3 .
-            ?dataset3 obo:BFO_0000051 ?patientRegDen3 .
             ?partSymb3 obo:BFO_0000050 ?dataset3 .
             ?dataset3 obo:BFO_0000051 ?partSymb3 .
         		
@@ -963,18 +999,14 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   obo:OBI_0000293 pmbb:shortcutCrid3 ;
                   obo:OBI_0000293 pmbb:part1 ;
                   
-                  ontologies:TURBO_0010184 ontologies:TURBO_0000402 ;
-                  ontologies:TURBO_0010184 ontologies:TURBO_0000403 ;
-                  ontologies:TURBO_0010184 ontologies:TURBO_0000410 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0010275 ;
+                  ontologies:TURBO_0010184 ontologies:TURBO_0000505 ;
                   
                   ontologies:TURBO_0010184 ?TURBO_0000504_1 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000505_1 ;
                   ontologies:TURBO_0010184 ?TURBO_0010092_1 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504_2 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000505_2 ;
                   ontologies:TURBO_0010184 ?TURBO_0010092_2 ;
                   ontologies:TURBO_0010184 ?TURBO_0000504_3 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000505_3 ;
                   ontologies:TURBO_0010184 ?TURBO_0010092_3 ;
                   
                   ontologies:TURBO_0010184 ?UBERON_0035946 ;
@@ -1000,13 +1032,10 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 
                 ?TURBO_0000504_1 a turbo:TURBO_0000504 .
                 ?TURBO_0010092_1 a turbo:TURBO_0010092 .
-                ?TURBO_0000505_1 a turbo:TURBO_0000505 .
                 ?TURBO_0000504_2 a turbo:TURBO_0000504 .
                 ?TURBO_0010092_2 a turbo:TURBO_0010092 .
-                ?TURBO_0000505_2 a turbo:TURBO_0000505 .
                 ?TURBO_0000504_3 a turbo:TURBO_0000504 .
                 ?TURBO_0010092_3 a turbo:TURBO_0010092 .
-                ?TURBO_0000505_3 a turbo:TURBO_0000505 .
                 ?instantiation a turbo:TURBO_0000522 .
             }
           }

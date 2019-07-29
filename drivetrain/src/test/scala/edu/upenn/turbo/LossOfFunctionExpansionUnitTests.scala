@@ -56,7 +56,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                   pmbb:allele1 turbo:TURBO_0010142 pmbb:shortcutBbEnc1 .
                   pmbb:allele1 turbo:TURBO_0007608 "lof_data_from_tests"^^xsd:String .
                   pmbb:allele1 obo:IAO_0000142 <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000068912> .
-                  pmbb:allele1 turbo:TURBO_0007609 turbo:TURBO_0000451 .
+                  pmbb:allele1 turbo:TURBO_0010285 turbo:TURBO_0000567 .
                   pmbb:allele1 turbo:TURBO_0010015 "ERLEC1"^^xsd:String .
                   pmbb:allele1 turbo:TURBO_0010016 "ENSG00000068912"^^xsd:String .
                   
@@ -81,8 +81,6 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                   ?dataset obo:BFO_0000051 ?allele .
                   ?genomeCridSymb obo:BFO_0000050 ?dataset .
                   ?dataset obo:BFO_0000051 ?genomeCridSymb .
-                  ?dataset obo:BFO_0000051 ?genomeRegDen .
-                  ?genomeRegDen obo:BFO_0000050 ?dataset .
                   ?dataset a obo:IAO_0000100 .
                   ?dataset dc11:title "lof_data_from_tests"^^xsd:String .
                   ?instantiation a turbo:TURBO_0000522 .
@@ -127,10 +125,8 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                   ?genomeCridSymb turbo:TURBO_0010094 "UPENN_UPENN10000047_someDigits"^^xsd:String .
                   ?genomeCridSymb a turbo:TURBO_0000568 .
                   
-                  ?genomeRegDen obo:BFO_0000050 ?genomeCrid .
-                  ?genomeRegDen a turbo:TURBO_0000567 .
-                  ?genomeRegDen obo:IAO_0000219 ?genomeRegURI .
-                  ?genomeCrid obo:BFO_0000051 ?genomeRegDen .
+                  turbo:TURBO_0000567 obo:BFO_0000050 ?genomeCrid .
+                  ?genomeCrid obo:BFO_0000051 turbo:TURBO_0000567 .
               
               }
           }
@@ -165,7 +161,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/BFO_0000051",
+            "http://purl.obolibrary.org/obo/BFO_0000051",  "http://transformunify.org/ontologies/TURBO_0010015",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/OBI_0000293",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -175,16 +171,14 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
             "http://purl.obolibrary.org/obo/OBI_0000299", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/OGG_0000000014", "http://purl.obolibrary.org/obo/OBI_0000293",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010113",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/RO_0000056",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010015"
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/RO_0000056"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, tripsResult.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
-        tripsResult.size should be (54)
+        tripsResult.size should be (checkPredicates.size)
         
         val processInputsOutputs: String = """
           
@@ -204,7 +198,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                   ontologies:TURBO_0010184 ?OBI_0001051 ;
                   ontologies:TURBO_0010184 ?OBI_0200000 ;
                   ontologies:TURBO_0010184 ?TURBO_0000568 ;
-                  ontologies:TURBO_0010184 ?TURBO_0000567 ;
+                  ontologies:TURBO_0010184 turbo:TURBO_0000567 ;
                   ontologies:TURBO_0010184 ?OBI_0002118 ;
                   ontologies:TURBO_0010184 ?IAO_0000100 ;
                   ontologies:TURBO_0010184 ?OBI_0001479 ;
@@ -218,7 +212,6 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                   ontologies:TURBO_0010184 pmbb:part1 ;
                   ontologies:TURBO_0010184 ?instantiation ;
                   ontologies:TURBO_0010184 <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000068912> ;
-                  ontologies:TURBO_0010184 ontologies:TURBO_0000451 ;
                   ontologies:TURBO_0010184 ontologies:TURBO_0000590 ;
             }
             Graph pmbb:expanded 
@@ -228,7 +221,6 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                 ?OBI_0001051 a obo:OBI_0001051 .
                 ?OBI_0200000 a obo:OBI_0200000 .
                 ?TURBO_0000568 a turbo:TURBO_0000568 .
-                ?TURBO_0000567 a turbo:TURBO_0000567 .
                 ?OBI_0002118 a obo:OBI_0002118 .
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OBI_0001479 a obo:OBI_0001479 .
@@ -280,6 +272,6 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         }
         """
         val processTriplesResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countProcessTriples, "p")
-        processTriplesResult.size should be (34)
+        processTriplesResult.size should be (33)
     }
 }
