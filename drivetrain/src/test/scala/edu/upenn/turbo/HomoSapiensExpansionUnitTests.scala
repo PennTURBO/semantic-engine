@@ -164,12 +164,10 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             obo:RO_0000052 ?part .
             
            ?tumor1 a obo:UBERON_0000465  ;
-            a ontologies:TURBO_0010069 ;
             obo:BFO_0000050 ?part .
             ?part obo:BFO_0000051 ?tumor1 .
             
             ?tumor2 a obo:UBERON_0000465  ;
-            a ontologies:TURBO_0010069 ;
             obo:BFO_0000050 ?part .
             ?part obo:BFO_0000051 ?tumor2 .
             
@@ -184,16 +182,21 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             ontologies:TURBO_0010094 "123" .
            ontologies:TURBO_0010274 obo:BFO_0000050 ?tumorCrid1 .
            ?tumorCrid1 obo:BFO_0000051 ontologies:TURBO_0010274 .
-           ?tumorCridSymb1 obo:BFO_0000051 ?tumorCrid1 .
+           ?tumorCrid1 obo:BFO_0000051 ?tumorCridSymb1 .
             
            ?tumorCridSymb2 a obo:IAO_0000577 ;
             obo:BFO_0000050 ?tumorCrid2 ;
             ontologies:TURBO_0010094 "456" .
            ontologies:TURBO_0010274 obo:BFO_0000050 ?tumorCrid2 .
            ?tumorCrid2 obo:BFO_0000051 ontologies:TURBO_0010274 .
-           ?tumorCridSymb2 obo:BFO_0000051 ?tumorCrid2 .
+           ?tumorCrid2 obo:BFO_0000051 ?tumorCridSymb2 .
            
-          }}
+          }
+           filter (?disease1 != ?disease2)
+           filter (?tumor1 != ?tumor2)
+           filter (?tumorCrid1 != ?tumorCrid2)
+           filter (?tumorCridSymbol1 != ?tumorCridSymbol2)
+          }
           """
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (true)
@@ -239,7 +242,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050", 
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://transformunify.org/ontologies/TURBO_0010094"
+            "http://transformunify.org/ontologies/TURBO_0010094", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
@@ -718,17 +722,9 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           }
           """
         
-        val threeRegistries = """
-          select (count (?registry) as ?registrycount) where
-          {
-              ?registry a turbo:TURBO_0000505 .
-          }
-          """
-        
         update.querySparqlAndUnpackTuple(testCxn, oneConsenter, "homosapienscount")(0).split("\"")(1) should be ("1")
         update.querySparqlAndUnpackTuple(testCxn, threeIdentifiers, "cridcount")(0).split("\"")(1) should be ("3")
         update.querySparqlAndUnpackTuple(testCxn, threeSymbols, "symbolcount")(0).split("\"")(1) should be ("3")
-        update.querySparqlAndUnpackTuple(testCxn, threeRegistries, "registrycount")(0).split("\"")(1) should be ("3")
         
         update.querySparqlBoolean(testCxn, output).get should be (true)
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
@@ -744,13 +740,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/RO_0000086", "http://transformunify.org/ontologies/TURBO_0000303",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://purl.obolibrary.org/obo/IAO_0000219", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://purl.obolibrary.org/obo/IAO_0000219", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000136",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000219",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010113",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
@@ -762,17 +758,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://transformunify.org/ontologies/TURBO_0010113", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", 
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000219",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://transformunify.org/ontologies/TURBO_0010113",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://transformunify.org/ontologies/TURBO_0010094", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/BFO_0000050","http://transformunify.org/ontologies/TURBO_0010113",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://transformunify.org/ontologies/TURBO_0010113",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
             
         )
@@ -960,7 +952,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
-        result.size should be (77)
+        result.size should be (65)
         
         val processMetaMultipleDatasets: String = """
         ASK 

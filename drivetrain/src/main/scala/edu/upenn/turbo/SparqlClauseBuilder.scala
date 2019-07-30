@@ -153,18 +153,39 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     var multiplicityCreators = new ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]
     var currentGroups = new HashMap[String, HashMap[String, org.eclipse.rdf4j.model.Value]]
     var oneToOneConnections = new HashMap[String, HashSet[String]]
+    var customBuilds = new ArrayBuffer[String]
     
     val multiplicityCreatorRules = Array("http://transformunify.org/ontologies/1-many", "http://transformunify.org/ontologies/many-1")
     val objToInstRecipe = "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe"
     
     def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean]): HashMap[String, Boolean] =
     {   
+        for (item <- buildNodeBuilderStatements(outputs, localUUID)) customBuilds += item
         val newUsedVariables = populateConnectionLists(outputs)
         buildSingletonBindClauses(localUUID, process, usedVariables)
         for (item <- buildMultiplicityGroupsBindClauses(localUUID, usedVariables)) currentGroups.remove(item)
         buildBaseGroupBindClauses(localUUID, usedVariables)
         for (a <- bindRules) clause += a
         newUsedVariables
+    }
+    
+    def buildNodeBuilderStatements(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String): ArrayBuffer[String] =
+    {
+        val returns: ArrayBuffer[String] = new ArrayBuffer[String]
+        for (row <- outputs)
+        {
+            if (row(SUBJECTMULTIPLICITYENFORCER.toString) != null)
+            {
+                addStandardBindRule(row(SUBJECT.toString).toString, localUUID, row(SUBJECTMULTIPLICITYENFORCER.toString).toString)
+                returns += row(SUBJECT.toString).toString
+            }
+            if (row(OBJECTMULTIPLICITYENFORCER.toString) != null)
+            {
+                addStandardBindRule(row(OBJECT.toString).toString, localUUID, row(OBJECTMULTIPLICITYENFORCER.toString).toString)
+                returns += row(OBJECT.toString).toString
+            }
+        }
+        returns
     }
     
     def populateConnectionLists(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]): HashMap[String, Boolean] =
@@ -287,7 +308,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     {
         for (singleton <- singletonClasses)
         {
-            if (!(usedVariables.contains(singleton)))
+            if (!(usedVariables.contains(singleton)) && !customBuilds.contains(singleton))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
                 bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
@@ -296,7 +317,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
         for (singleton <- superSingletonClasses)
         {
-            if (!(usedVariables.contains(singleton)))
+            if (!(usedVariables.contains(singleton)) && !customBuilds.contains(singleton))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
                 bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
@@ -333,18 +354,21 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
         else
         {
-            assert (oneToOneConnections.contains(changeAgent))
-            for (conn <- oneToOneConnections(changeAgent)) 
+            //assert (oneToOneConnections.contains(changeAgent))
+            if (oneToOneConnections.contains(changeAgent))
             {
-                if (usedVariables.contains(conn) && usedVariables(conn)) 
+                for (conn <- oneToOneConnections(changeAgent)) 
                 {
-                    //need solution for when multiple possibilities occur here
-                    //assert (multiplicityEnforcer == "")
-                    multiplicityEnforcer = helper.convertTypeToSparqlVariable(conn)
-                }
-            }   
+                    if (usedVariables.contains(conn) && usedVariables(conn)) 
+                    {
+                        //need solution for when multiple possibilities occur here
+                        //assert (multiplicityEnforcer == "")
+                        multiplicityEnforcer = helper.convertTypeToSparqlVariable(conn)
+                    }
+                }    
+            }
         }
-        assert (multiplicityEnforcer != "")
+        //assert (multiplicityEnforcer != "", s"Unable to determine multiplicity enforcer for element $changeAgent. Please specify an IntermediateNodeBuilder for this element in the graph model.")
         multiplicityEnforcer
     }
     
@@ -359,8 +383,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val multiplicityEnforcer = getMultiplicityEnforcer(changeAgent, usedVariables)
             if (!usedVariables.contains(changeAgent))
             {
-                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                     SHA256(CONCAT(\"${changeAgentAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}))))) AS ${changeAgentAsVar})\n""" 
+                addStandardBindRule(changeAgentAsVar, localUUID, multiplicityEnforcer) 
             }
             if (oneToOneConnections.contains(changeAgent))
             {
@@ -398,14 +421,12 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         {
             if (v("dependee") == null)
               {
-                  bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                 SHA256(CONCAT(\"${connAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}))))) AS ${connAsVar})\n"""  
+                  addStandardBindRule(connAsVar, localUUID, multiplicityEnforcer)  
               }
               else
               {
                   val dependee = helper.convertTypeToSparqlVariable(v("dependee"))
-                  bindRules += s"""BIND(IF (BOUND(${dependee}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                   SHA256(CONCAT(\"${connAsVar}\",\"${localUUID}\", str(${multiplicityEnforcer}))))), ?unbound) AS ${connAsVar})\n"""
+                  addDependentBindRule(connAsVar, localUUID, multiplicityEnforcer, dependee)
               }
         }
         else
@@ -424,6 +445,51 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
              assert (!customRule.contains("localUUID"))
              assert (!customRule.contains("multiplicityEnforcer"))
              bindRules += customRule
+        }
+    }
+    
+    def addStandardBindRule(newNode: String, localUUID: String, multiplicityEnforcer: String)
+    {
+        if (newNode != "" && multiplicityEnforcer != "")
+        {
+            var newNodeAsVar = newNode
+            var multiplicityEnforcerAsVar = multiplicityEnforcer
+            if (!newNode.contains('?'))
+            {
+                newNodeAsVar = helper.convertTypeToSparqlVariable(newNode)
+            }
+            if (!multiplicityEnforcer.contains('?'))
+            {
+                multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(multiplicityEnforcer)
+            }
+    
+            bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                 SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""   
+        }
+    }
+    
+    def addDependentBindRule(newNode: String, localUUID: String, multiplicityEnforcer: String, dependee: String)
+    {
+        if (newNode != "" && multiplicityEnforcer != "")
+        {
+            var newNodeAsVar = newNode
+            var multiplicityEnforcerAsVar = multiplicityEnforcer
+            var dependeeAsVar = dependee
+            if (!newNode.contains('?'))
+            {
+                newNodeAsVar = helper.convertTypeToSparqlVariable(newNode)
+            }
+            if (!multiplicityEnforcer.contains('?'))
+            {
+                multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(multiplicityEnforcer)
+            }
+            if (!dependee.contains('?'))
+            {
+                dependeeAsVar = helper.convertTypeToSparqlVariable(dependee)
+            }
+            
+            bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
+                       SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
         }
     }
 }

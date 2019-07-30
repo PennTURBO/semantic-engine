@@ -78,6 +78,8 @@ trait ProjectwideGlobals extends Enumeration
       val OBJECTADESCRIBER = Value("OBJECTADESCRIBER")
       val SUBJECTDEPENDEE = Value("SUBJECTDEPENDEE")
       val OBJECTDEPENDEE = Value("OBJECTDEPENDEE")
+      val SUBJECTMULTIPLICITYENFORCER = Value("SUBJECTMULTIPLICITYENFORCER")
+      val OBJECTMULTIPLICITYENFORCER = Value("OBJECTMULTIPLICITYENFORCER")
       
       val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, 
                                               OPTIONALGROUP, CONNECTIONRECIPETYPE, GRAPHOFCREATINGPROCESS,
@@ -85,7 +87,8 @@ trait ProjectwideGlobals extends Enumeration
                                               
       val requiredOutputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, CONNECTIONRECIPETYPE,
                                               SUBJECTCONTEXT, OBJECTCONTEXT, MULTIPLICITY, OBJECTRULE, SUBJECTRULE, OBJECTADESCRIBER,
-                                              SUBJECTADESCRIBER, SUBJECTDEPENDEE, OBJECTDEPENDEE)
+                                              SUBJECTADESCRIBER, SUBJECTDEPENDEE, OBJECTDEPENDEE, SUBJECTMULTIPLICITYENFORCER,
+                                              OBJECTMULTIPLICITYENFORCER)
       
       // define enums used as keys for process meta info hashmap
       val PROCESS, DATE, OUTPUTNAMEDGRAPH, METAQUERY, PROCESSRUNTIME, TRIPLESADDED, REPLACEMENTSTRING, INPUTNAMEDGRAPHS = Value

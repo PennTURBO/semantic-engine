@@ -175,10 +175,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             {
               Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe
-                                            turbo:ShortcutObjectConnectionToClassRecipe
-                                            turbo:ShortcutObjectConnectionToInstanceRecipe
-                                            turbo:ShortcutDatatypeConnectionRecipe}
+                                            turbo:DatatypeConnectionRecipe}
               Values ?$INPUTTYPE {turbo:requiredInputTo turbo:optionalInputTo}
               ?connection ?$INPUTTYPE <$process> .
               ?connection a ?$CONNECTIONRECIPETYPE .
@@ -326,6 +323,16 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?recipe turbo:objectRequiredToCreate ?$SUBJECT .
                   ?recipe ?INPUTTO <$process> .
                   ?recipe turbo:object ?$SUBJECTDEPENDEE .
+              }
+              Optional
+              {
+                  ?subjectNodeBuilder turbo:creates ?$SUBJECT .
+                  ?subjectNodeBuilder ontologies:mimicsMultiplicityOf ?$SUBJECTMULTIPLICITYENFORCER .
+              }
+              Optional
+              {
+                  ?objectNodeBuilder turbo:creates ?$OBJECT .
+                  ?objectNodeBuilder ontologies:mimicsMultiplicityOf ?$OBJECTMULTIPLICITYENFORCER .
               }
             }
             
