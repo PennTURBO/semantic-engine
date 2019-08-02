@@ -62,11 +62,6 @@ ontologies:BloodPressureMeasurementProcessRule
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql "BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat(\"http://www.itmat.upenn.edu/biobank/\", SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${multiplicityEnforcer}))))), ?unbound) AS ${replacement})" ;
 .
-ontologies:CancerNodeBuilder
-  a ontologies:IntermediateNodeBuilder ;
-  ontologies:creates obo:MONDO_0004992 ;
-  ontologies:mimicsMultiplicityOf ontologies:TURBO_0010191 ;
-.
 ontologies:DNAExtractionProcessToDNAExtract
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -354,7 +349,6 @@ ontologies:TURBO_0010176
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes ontologies:TURBO_0010179 ;
-  ontologies:usesNodeBuilder ontologies:CancerNodeBuilder ;
   rdfs:label "homo sapiens expansion process" ;
 .
 ontologies:TURBO_0010177
@@ -2512,6 +2506,15 @@ ontologies:shortcutHomoSapiensToExpandedHomoSapiens
   ontologies:requiredInputTo ontologies:TURBO_0010182 ;
   ontologies:requiredInputTo ontologies:TURBO_0010183 ;
   ontologies:subject ontologies:TURBO_0010161 ;
+.
+ontologies:shortcutTumorToExpandedCancer
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:MONDO_0004992 ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
+  ontologies:predicate ontologies:TURBO_0010113 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010191 ;
 .
 ontologies:shortcutHomoSapiensToGenderIdentityType
   a ontologies:ObjectConnectionToClassRecipe ;
