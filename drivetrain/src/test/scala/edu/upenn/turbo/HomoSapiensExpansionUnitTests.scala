@@ -190,6 +190,12 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
            ontologies:TURBO_0010274 obo:BFO_0000050 ?tumorCrid2 .
            ?tumorCrid2 obo:BFO_0000051 ontologies:TURBO_0010274 .
            ?tumorCrid2 obo:BFO_0000051 ?tumorCridSymb2 .
+
+           ?tumorCrid1 obo:BFO_0000050 ?dataset .
+           ?tumorCrid2 obo:BFO_0000050 ?dataset .
+
+           ?dataset obo:BFO_0000051 ?tumorCrid1 .
+           ?dataset obo:BFO_0000051 ?tumorCrid2 .
            
           }
            filter (?disease1 != ?disease2)
@@ -243,7 +249,10 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://transformunify.org/ontologies/TURBO_0010094", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://transformunify.org/ontologies/TURBO_0010113",
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/BFO_0000051", 
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051", 
+            "http://purl.obolibrary.org/obo/BFO_0000050"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")

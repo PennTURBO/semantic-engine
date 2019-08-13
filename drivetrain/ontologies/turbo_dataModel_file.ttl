@@ -2712,6 +2712,24 @@ ontologies:tumorCridToTumor
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010188 ;
 .
+ontologies:tumorCridToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/many-singleton> ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010188 ;
+.
+ontologies:datasetToTumorCrid
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/singleton-many> ;
+  ontologies:subject obo:IAO_0000100 ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:object ontologies:TURBO_0010188 ;
+.
 ontologies:tumorCridToTumorCridSymbol
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
