@@ -813,6 +813,15 @@ ontologies:cancerToHomoSapiens
   ontologies:required false ;
   ontologies:subject obo:MONDO_0004992 ;
 .
+ontologies:cancerToTumor
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object turbo:TURBO_0010070 ;
+  ontologies:outputOf ontologies:TURBO_0010176 ;
+  ontologies:predicate obo:IDO_0000664 ;
+  ontologies:required true ;
+  ontologies:subject obo:MONDO_0004992 ;
+.
 ontologies:collectionProcessToBiobankEncounter
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -1606,7 +1615,7 @@ ontologies:homoSapiensToPatientRole
 ontologies:homoSapiensToTumor
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object obo:UBERON_0000465 ;
+  ontologies:object ontologies:TURBO_0010070 ;
   ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required false ;
@@ -2507,15 +2516,6 @@ ontologies:shortcutHomoSapiensToExpandedHomoSapiens
   ontologies:requiredInputTo ontologies:TURBO_0010183 ;
   ontologies:subject ontologies:TURBO_0010161 ;
 .
-ontologies:shortcutTumorToExpandedCancer
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:MONDO_0004992 ;
-  ontologies:outputOf ontologies:TURBO_0010176 ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010191 ;
-.
 ontologies:shortcutHomoSapiensToGenderIdentityType
   a ontologies:ObjectConnectionToClassRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -2608,7 +2608,7 @@ ontologies:shortcutTumorOptionalGroup
 ontologies:shortcutTumorToExpandedTumor
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:UBERON_0000465 ;
+  ontologies:object ontologies:TURBO_0010070 ;
   ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate ontologies:TURBO_0010113 ;
   ontologies:required true ;
@@ -2706,7 +2706,7 @@ ontologies:tumorCridSymbolToTumorCrid
 ontologies:tumorCridToTumor
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:UBERON_0000465 ;
+  ontologies:object ontologies:TURBO_0010070 ;
   ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:required true ;
@@ -2767,7 +2767,7 @@ ontologies:tumorToHomoSapiens
   ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required false ;
-  ontologies:subject obo:UBERON_0000465 ;
+  ontologies:subject ontologies:TURBO_0010070 ;
 .
 ontologies:usesCustomVariableManipulationRule
   a owl:ObjectProperty ;

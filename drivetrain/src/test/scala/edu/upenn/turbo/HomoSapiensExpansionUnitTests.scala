@@ -162,12 +162,14 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             obo:RO_0000052 ?part .
             ?disease2 a obo:MONDO_0004992 ;
             obo:RO_0000052 ?part .
+            ?disease1 obo:IDO_0000664 ?tumor1 .
+            ?disease2 obo:IDO_0000664 ?tumor2 .
             
-           ?tumor1 a obo:UBERON_0000465  ;
+           ?tumor1 a turbo:TURBO_0010070  ;
             obo:BFO_0000050 ?part .
             ?part obo:BFO_0000051 ?tumor1 .
             
-            ?tumor2 a obo:UBERON_0000465  ;
+            ?tumor2 a turbo:TURBO_0010070  ;
             obo:BFO_0000050 ?part .
             ?part obo:BFO_0000051 ?tumor2 .
             
@@ -249,10 +251,10 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://transformunify.org/ontologies/TURBO_0010094", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://transformunify.org/ontologies/TURBO_0010113",
-            "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/BFO_0000051", 
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051", 
-            "http://purl.obolibrary.org/obo/BFO_0000050"
+            "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/IDO_0000664",
+            "http://purl.obolibrary.org/obo/IDO_0000664"
         )
         
         helper.checkStringArraysForEquivalency(expectedPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
@@ -310,8 +312,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                 ?instantiation a turbo:TURBO_0000522 .
                 ?MONDO_0004992_1 a obo:MONDO_0004992 .
                 ?MONDO_0004992_2 a obo:MONDO_0004992 .
-                ?UBERON_0000465_1 a obo:UBERON_0000465 .
-                ?UBERON_0000465_2 a obo:UBERON_0000465 .
+                ?UBERON_0000465_1 a turbo:TURBO_0010070 .
+                ?UBERON_0000465_2 a turbo:TURBO_0010070 .
                 ?TURBO_0010188_1 a turbo:TURBO_0010188 .
                 ?TURBO_0010188_2 a turbo:TURBO_0010188 .
                 ?IAO_0000577_1 a obo:IAO_0000577 .
