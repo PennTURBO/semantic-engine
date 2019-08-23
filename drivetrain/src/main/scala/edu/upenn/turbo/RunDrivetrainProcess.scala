@@ -53,19 +53,27 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               update.querySparqlBoolean(cxn, ask).get
         }
     }
-        
+    
     def runProcess(process: String)
     {
-        if (!validateProcess(gmCxn, process)) logger.info(process + " is not a valid TURBO process")
-        else
+        runProcess(ArrayBuffer(process))
+    }
+        
+    def runProcess(processes: ArrayBuffer[String])
+    {
+        var processQueryMap = new HashMap[String, PatternMatchQuery]
+        for (process <- processes)
+        {
+            if (!validateProcess(gmCxn, process)) logger.info(process + " is not a valid TURBO process")
+            else processQueryMap += process -> createPatternMatchQuery(process)
+        }
+        for ((process, primaryQuery) <- processQueryMap)
         {
             val startTime = System.nanoTime()
             val currDate = Calendar.getInstance().getTime()
             val startingTriplesCount = helper.countTriplesInDatabase(cxn)
             logger.info("Starting process: " + process)
-            
-            val primaryQuery = createPatternMatchQuery(process)
-            
+           
             val genericWhereClause = primaryQuery.whereClause
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
             var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
@@ -370,7 +378,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         for (a <- orderedProcessList) logger.info(a)
         
         // run each process
-        for (process <- orderedProcessList) runProcess(process)
+        runProcess(orderedProcessList)
     }
 
     /**

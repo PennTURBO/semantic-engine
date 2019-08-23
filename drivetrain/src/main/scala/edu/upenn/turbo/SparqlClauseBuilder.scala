@@ -155,14 +155,17 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     var oneToOneConnections = new HashMap[String, HashSet[String]]
     var customBuilds = new ArrayBuffer[String]
     
+    var process: String = ""
+    
     val multiplicityCreatorRules = Array("http://transformunify.org/ontologies/1-many", "http://transformunify.org/ontologies/many-1")
     val objToInstRecipe = "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe"
     
     def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean]): HashMap[String, Boolean] =
     {   
+        this.process = process
         for (item <- buildNodeBuilderStatements(outputs, localUUID)) customBuilds += item
         val newUsedVariables = populateConnectionLists(outputs)
-        buildSingletonBindClauses(localUUID, process, usedVariables)
+        buildSingletonBindClauses(localUUID, usedVariables)
         for (item <- buildMultiplicityGroupsBindClauses(localUUID, usedVariables)) currentGroups.remove(item)
         buildBaseGroupBindClauses(localUUID, usedVariables)
         for (a <- bindRules) clause += a
@@ -304,7 +307,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
     }
     
-    def buildSingletonBindClauses(localUUID: String, process: String, usedVariables: HashMap[String, Boolean])
+    def buildSingletonBindClauses(localUUID: String, usedVariables: HashMap[String, Boolean])
     {
         for (singleton <- singletonClasses)
         {
@@ -450,7 +453,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     def addStandardBindRule(newNode: String, localUUID: String, multiplicityEnforcer: String)
     {
-        if (newNode != "" && multiplicityEnforcer != "")
+        assert (multiplicityEnforcer != "", s"Error in graph model: For process $process, there is not sufficient context to create $newNode")
+        if (newNode != "")
         {
             var newNodeAsVar = newNode
             var multiplicityEnforcerAsVar = multiplicityEnforcer
@@ -470,7 +474,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     def addDependentBindRule(newNode: String, localUUID: String, multiplicityEnforcer: String, dependee: String)
     {
-        if (newNode != "" && multiplicityEnforcer != "")
+        assert (multiplicityEnforcer != "", s"Error in graph model: For process $process, there is not sufficient context to create $newNode")
+        if (newNode != "")
         {
             var newNodeAsVar = newNode
             var multiplicityEnforcerAsVar = multiplicityEnforcer
