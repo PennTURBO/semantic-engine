@@ -46,10 +46,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         {
              val ask: String = s"""
                 ASK {
-                  Graph <$ontologyURL> {
                   values ?processSuperClass {turbo:TURBO_0001542 turbo:TURBO_0010178}
                   <$process> rdfs:subClassOf ?processSuperClass .
-                  }
                 }
                 """
               update.querySparqlBoolean(cxn, ask).get
