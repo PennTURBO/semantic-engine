@@ -153,7 +153,6 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     var multiplicityCreators = new ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]
     var currentGroups = new HashMap[String, HashMap[String, org.eclipse.rdf4j.model.Value]]
     var oneToOneConnections = new HashMap[String, HashSet[String]]
-    var customBuilds = new ArrayBuffer[String]
     
     var process: String = ""
     
@@ -163,32 +162,12 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean]): HashMap[String, Boolean] =
     {   
         this.process = process
-        for (item <- buildNodeBuilderStatements(outputs, localUUID)) customBuilds += item
         val newUsedVariables = populateConnectionLists(outputs)
         buildSingletonBindClauses(localUUID, usedVariables)
         for (item <- buildMultiplicityGroupsBindClauses(localUUID, usedVariables)) currentGroups.remove(item)
         buildBaseGroupBindClauses(localUUID, usedVariables)
         for (a <- bindRules) clause += a
         newUsedVariables
-    }
-    
-    def buildNodeBuilderStatements(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String): ArrayBuffer[String] =
-    {
-        val returns: ArrayBuffer[String] = new ArrayBuffer[String]
-        for (row <- outputs)
-        {
-            if (row(SUBJECTMULTIPLICITYENFORCER.toString) != null)
-            {
-                addStandardBindRule(row(SUBJECT.toString).toString, localUUID, row(SUBJECTMULTIPLICITYENFORCER.toString).toString)
-                returns += row(SUBJECT.toString).toString
-            }
-            if (row(OBJECTMULTIPLICITYENFORCER.toString) != null)
-            {
-                addStandardBindRule(row(OBJECT.toString).toString, localUUID, row(OBJECTMULTIPLICITYENFORCER.toString).toString)
-                returns += row(OBJECT.toString).toString
-            }
-        }
-        returns
     }
     
     def populateConnectionLists(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]): HashMap[String, Boolean] =
@@ -311,7 +290,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     {
         for (singleton <- singletonClasses)
         {
-            if (!(usedVariables.contains(singleton)) && !customBuilds.contains(singleton))
+            if (!(usedVariables.contains(singleton)))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
                 bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
@@ -320,7 +299,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
         for (singleton <- superSingletonClasses)
         {
-            if (!(usedVariables.contains(singleton)) && !customBuilds.contains(singleton))
+            if (!(usedVariables.contains(singleton)))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
                 bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
@@ -351,27 +330,27 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         {   
             if (usedVariables(changeAgent)) 
             {
-                assert (multiplicityEnforcer == "")
-                multiplicityEnforcer = helper.convertTypeToSparqlVariable(changeAgent)
+                val newEnforcer = helper.convertTypeToSparqlVariable(changeAgent)
+                assert (multiplicityEnforcer == "", s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
+                multiplicityEnforcer = newEnforcer
             }
         }
         else
         {
-            //assert (oneToOneConnections.contains(changeAgent))
             if (oneToOneConnections.contains(changeAgent))
             {
                 for (conn <- oneToOneConnections(changeAgent)) 
                 {
                     if (usedVariables.contains(conn) && usedVariables(conn)) 
                     {
-                        //need solution for when multiple possibilities occur here
-                        //assert (multiplicityEnforcer == "")
-                        multiplicityEnforcer = helper.convertTypeToSparqlVariable(conn)
+                        val newEnforcer = helper.convertTypeToSparqlVariable(conn)
+                        assert (multiplicityEnforcer == "", s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
+                        multiplicityEnforcer = newEnforcer
                     }
                 }    
             }
         }
-        //assert (multiplicityEnforcer != "", s"Unable to determine multiplicity enforcer for element $changeAgent. Please specify an IntermediateNodeBuilder for this element in the graph model.")
+        assert (multiplicityEnforcer != "", s"Error in graph model: For process $process, there is not sufficient context to create $changeAgent")
         multiplicityEnforcer
     }
     
@@ -452,8 +431,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     }
     
     def addStandardBindRule(newNode: String, localUUID: String, multiplicityEnforcer: String)
-    {
-        assert (multiplicityEnforcer != "", s"Error in graph model: For process $process, there is not sufficient context to create $newNode")
+    {   
         if (newNode != "")
         {
             var newNodeAsVar = newNode
@@ -474,7 +452,6 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     def addDependentBindRule(newNode: String, localUUID: String, multiplicityEnforcer: String, dependee: String)
     {
-        assert (multiplicityEnforcer != "", s"Error in graph model: For process $process, there is not sufficient context to create $newNode")
         if (newNode != "")
         {
             var newNodeAsVar = newNode

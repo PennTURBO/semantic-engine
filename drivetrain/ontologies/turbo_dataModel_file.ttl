@@ -82,7 +82,7 @@ ontologies:DNAExtractionProcessToSpecimen
 .
 ontologies:DNAToDNAExtract
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OBI_0001051 ;
   ontologies:outputOf ontologies:TURBO_0010180 ;
   ontologies:predicate obo:OBI_0000643 ;

@@ -330,16 +330,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?recipe ?INPUTTO <$process> .
                   ?recipe turbo:object ?$SUBJECTDEPENDEE .
               }
-              Optional
-              {
-                  ?subjectNodeBuilder turbo:creates ?$SUBJECT .
-                  ?subjectNodeBuilder ontologies:mimicsMultiplicityOf ?$SUBJECTMULTIPLICITYENFORCER .
-              }
-              Optional
-              {
-                  ?objectNodeBuilder turbo:creates ?$OBJECT .
-                  ?objectNodeBuilder ontologies:mimicsMultiplicityOf ?$OBJECTMULTIPLICITYENFORCER .
-              }
             }
             
             Graph <$ontologyURL>

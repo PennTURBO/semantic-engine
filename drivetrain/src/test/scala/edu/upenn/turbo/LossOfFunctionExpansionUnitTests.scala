@@ -408,11 +408,9 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                   ?formProcess2 obo:OBI_0000293 ?sequenceData2 .
                   ?sequenceData2 a obo:OBI_0001573 .
                   
-                  ?allele2 obo:IAO_0000136 ?DNA2 .
-                  ?DNA2 a obo:OBI_0001868 .
-                  ?DNA2 obo:OGG_0000000014 pmbb:part1 .
+                  ?allele2 obo:IAO_0000136 ?DNA .
                   
-                  ?DNA2 obo:OBI_0000643 ?DNAextract2 .
+                  ?DNA obo:OBI_0000643 ?DNAextract2 .
                   ?DNAextract2 a obo:OBI_0001051 .
                   ?DNAextractionProcess2 a obo:OBI_0000257 .
                   ?DNAextractionProcess2 obo:OBI_0000299 ?DNAextract2 .
@@ -445,7 +443,6 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                   filter (?collectionProcess != ?collectionProcess2)
                   filter (?specimen != ?specimen2)
                   filter (?exomeSquenceProcess != ?exomeSequenceProcess2)
-                  filter (?DNA != ?DNA2)
                   filter (?DNAextract != ?DNAextract2)
                   filter (?DNAextractionProcess != ?DNAextractionProcess2)
                   filter (?formProcess != ?formProcess2)
@@ -482,9 +479,22 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         """
         val alleleRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countAllele, "allele")
         alleleRes.size should be (2)
+
+        val countDNA: String = 
+        """
+        Select * Where
+        {
+            Graph pmbb:expanded
+            {
+                ?dna a obo:OBI_0001868 .
+            }
+        }
+        """
+        val dnaRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countDNA, "dna")
+        dnaRes.size should be (1)
     }
 
-        test("double allele expansion - multiple specimens")
+        test("double allele expansion - multiple alleles")
     {
         val insert: String = """
           
