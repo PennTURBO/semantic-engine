@@ -211,18 +211,24 @@ object ConnectToGraphDB extends ProjectwideGlobals
              tupleDelete.execute()
              testCxn.commit()
         }
-        
-        cxn.close()
-        repository.shutDown()
-        repoManager.shutDown()
-        
-        gmCxn.close()
-        gmRepository.shutDown()
-        gmRepoManager.shutDown()
-        
-        testCxn.close()
-        testRepository.shutDown()
-        testRepoManager.shutDown()
+        if (cxn != null)
+        {
+            cxn.close()
+            repository.shutDown()
+            repoManager.shutDown() 
+        }
+        if (gmCxn != null)
+        {
+            gmCxn.close()
+            gmRepository.shutDown()
+            gmRepoManager.shutDown()
+        }
+        if (testCxn != null)
+        {
+            testCxn.close()
+            testRepository.shutDown()
+            testRepoManager.shutDown()
+        }
     }
     
     /**

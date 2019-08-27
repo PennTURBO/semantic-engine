@@ -150,9 +150,10 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     var bindRules = new HashSet[String]
     var singletonClasses = new HashSet[String]
     var superSingletonClasses = new HashSet[String]
-    var multiplicityCreators = new ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]
+    var multiplicityCreators = new HashSet[String]
     var currentGroups = new HashMap[String, HashMap[String, org.eclipse.rdf4j.model.Value]]
     var oneToOneConnections = new HashMap[String, HashSet[String]]
+    var usedVariables = new HashMap[String, Boolean]
     
     var process: String = ""
     
@@ -162,19 +163,26 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean]): HashMap[String, Boolean] =
     {   
         this.process = process
+        this.usedVariables = usedVariables
         val newUsedVariables = populateConnectionLists(outputs)
-        buildSingletonBindClauses(localUUID, usedVariables)
-        for (item <- buildMultiplicityGroupsBindClauses(localUUID, usedVariables)) currentGroups.remove(item)
-        buildBaseGroupBindClauses(localUUID, usedVariables)
+        buildSingletonBindClauses(localUUID)
+        buildBaseGroupBindClauses(localUUID)
+        assert (multiplicityCreators.size == 0, s"Error in graph model: For process $process, there is not sufficient context to create the following: $multiplicityCreators")
         for (a <- bindRules) clause += a
         newUsedVariables
     }
     
     def populateConnectionLists(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]): HashMap[String, Boolean] =
     {
-        var usedVariables = new HashMap[String,Boolean]
+        var variablesToBind = new HashMap[String,Boolean]
+        var discoveredMap = new HashMap[String, String]
         for (row <- outputs)
         {
+            val subjectString = row(OBJECT.toString).toString
+            val objectString = row(SUBJECT.toString).toString
+            val discoveryCode = subjectString + objectString
+            if (discoveredMap.contains(discoveryCode)) assert(discoveredMap(discoveryCode) == row(MULTIPLICITY.toString).toString, s"There are multiple connections between $subjectString and $objectString with non-matching multiplicities")
+            else discoveredMap += discoveryCode -> row(MULTIPLICITY.toString).toString
             if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe || row(SUBJECTADESCRIBER.toString) != null || row(OBJECTADESCRIBER.toString) != null) 
             {  
                 if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/1-1") handleOneToOneConnection(row)
@@ -201,7 +209,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 }
                 else if (multiplicityCreatorRules.contains(row(MULTIPLICITY.toString).toString))
                 {
-                    multiplicityCreators += row
+                    val ca = findChangeAgent(row)
+                    if (!usedVariables.contains(ca)) multiplicityCreators += ca
                 }
                 val obj = row(OBJECT.toString).toString
                 val subj = row(SUBJECT.toString).toString
@@ -209,11 +218,21 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 if (row(SUBJECTTYPE.toString) != null) subjAType = true
                 var objAType = false
                 if (row(OBJECTTYPE.toString) != null) objAType = true
-                usedVariables += obj -> objAType
-                usedVariables += subj -> subjAType
+                variablesToBind += obj -> objAType
+                variablesToBind += subj -> subjAType
            }
         }
-        usedVariables
+        validateConnectionLists()
+        variablesToBind
+    }
+    
+    def validateConnectionLists()
+    {
+        for ((k,v) <- oneToOneConnections)
+        {
+            assert (!singletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a Singleton")
+            assert (!superSingletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a SuperSingleton")
+        }
     }
     
     def addToConnectionList(element: String)
@@ -223,7 +242,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         {
             for (a <- connectionList)
             {
-                if (a != conn) oneToOneConnections(conn) += a
+                oneToOneConnections(conn) += a
             }
         }   
     }
@@ -260,6 +279,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         {
             oneToOneConnections(thisObject) += thisSubject
             oneToOneConnections(thisSubject) += thisObject
+            oneToOneConnections(thisObject) += thisObject
+            oneToOneConnections(thisSubject) += thisSubject
             
             addToConnectionList(thisSubject)
             addToConnectionList(thisObject)
@@ -268,14 +289,18 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         else if (oneToOneConnections.contains(thisObject) && (!oneToOneConnections.contains(thisSubject)))
         {
             oneToOneConnections(thisObject) += thisSubject
+            oneToOneConnections(thisObject) += thisObject
             oneToOneConnections.put(thisSubject, HashSet(thisObject))
+            oneToOneConnections(thisSubject) += thisSubject
           
             addToConnectionList(thisObject)
         }
         else if (oneToOneConnections.contains(thisSubject) && (!oneToOneConnections.contains(thisObject)))
         {
             oneToOneConnections(thisSubject) += thisObject
+            oneToOneConnections(thisSubject) += thisSubject
             oneToOneConnections.put(thisObject, HashSet(thisSubject))
+            oneToOneConnections(thisObject) += thisObject
           
             addToConnectionList(thisSubject)
         }
@@ -283,10 +308,12 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         {
             oneToOneConnections.put(thisObject, HashSet(thisSubject))
             oneToOneConnections.put(thisSubject, HashSet(thisObject))
+            oneToOneConnections(thisObject) += thisObject
+            oneToOneConnections(thisSubject) += thisSubject
         }
     }
     
-    def buildSingletonBindClauses(localUUID: String, usedVariables: HashMap[String, Boolean])
+    def buildSingletonBindClauses(localUUID: String)
     {
         for (singleton <- singletonClasses)
         {
@@ -323,76 +350,33 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         changeAgent
     }
     
-    def getMultiplicityEnforcer(changeAgent: String, usedVariables: HashMap[String, Boolean]): String =
+    def getMultiplicityEnforcer(changeAgent: String): String =
     {
         var multiplicityEnforcer = ""
-        if (usedVariables.contains(changeAgent))
-        {   
-            if (usedVariables(changeAgent)) 
+        assert (oneToOneConnections.contains(changeAgent))
+        for (conn <- oneToOneConnections(changeAgent))
+        {
+            if (usedVariables.contains(conn) && usedVariables(conn)) 
             {
-                val newEnforcer = helper.convertTypeToSparqlVariable(changeAgent)
+                val newEnforcer = helper.convertTypeToSparqlVariable(conn)
                 assert (multiplicityEnforcer == "", s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
                 multiplicityEnforcer = newEnforcer
             }
-        }
-        else
-        {
-            if (oneToOneConnections.contains(changeAgent))
-            {
-                for (conn <- oneToOneConnections(changeAgent)) 
-                {
-                    if (usedVariables.contains(conn) && usedVariables(conn)) 
-                    {
-                        val newEnforcer = helper.convertTypeToSparqlVariable(conn)
-                        assert (multiplicityEnforcer == "", s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
-                        multiplicityEnforcer = newEnforcer
-                    }
-                }    
-            }
-        }
-        assert (multiplicityEnforcer != "", s"Error in graph model: For process $process, there is not sufficient context to create $changeAgent")
+        }  
+        assert (multiplicityEnforcer != "")
         multiplicityEnforcer
     }
     
-    def buildMultiplicityGroupsBindClauses(localUUID: String, usedVariables: HashMap[String, Boolean]): HashSet[String] =
-    {
-        var itemsToRemove = new HashSet[String]
-        for (multiplicityCreator <- multiplicityCreators)
-        {
-            var changeAgent: String = findChangeAgent(multiplicityCreator)
-            itemsToRemove += changeAgent
-            val changeAgentAsVar = helper.convertTypeToSparqlVariable(changeAgent)
-            val multiplicityEnforcer = getMultiplicityEnforcer(changeAgent, usedVariables)
-            if (!usedVariables.contains(changeAgent))
-            {
-                addStandardBindRule(changeAgentAsVar, localUUID, multiplicityEnforcer) 
-            }
-            if (oneToOneConnections.contains(changeAgent))
-            {
-                for (conn <- oneToOneConnections(changeAgent))
-                {
-                    if (!(usedVariables.contains(conn)))
-                    {
-                      val changeAgentAsVar = helper.convertTypeToSparqlVariable(changeAgent)
-                      val connAsVar = helper.convertTypeToSparqlVariable(conn)
-                      addBindRule(currentGroups(conn), localUUID, multiplicityEnforcer, connAsVar)
-                    }
-                    itemsToRemove += conn
-                }
-            }
-        }
-        itemsToRemove
-    }
-    
-    def buildBaseGroupBindClauses(localUUID: String, usedVariables: HashMap[String, Boolean])
+    def buildBaseGroupBindClauses(localUUID: String)
     {
         for ((k,v) <- currentGroups)
         {
             if (!(usedVariables.contains(k)))
             {
-                val multiplicityEnforcer = getMultiplicityEnforcer(k, usedVariables)
+                val multiplicityEnforcer = getMultiplicityEnforcer(k)
                 val connAsVar = helper.convertTypeToSparqlVariable(k)
                 addBindRule(v, localUUID, multiplicityEnforcer, connAsVar)
+                multiplicityCreators.remove(k)
             }
         }
     }

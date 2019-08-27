@@ -816,7 +816,7 @@ ontologies:cancerToHomoSapiens
 ontologies:cancerToTumor
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object turbo:TURBO_0010070 ;
+  ontologies:object ontologies:TURBO_0010070 ;
   ontologies:outputOf ontologies:TURBO_0010176 ;
   ontologies:predicate obo:IDO_0000664 ;
   ontologies:required true ;

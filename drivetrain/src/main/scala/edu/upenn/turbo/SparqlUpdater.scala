@@ -312,7 +312,7 @@ class SparqlUpdater
          tupleUpdate.execute()
          //logger.info("finished execute")
          cxn.commit()
-         //logger.info("changes committed")
+         //logger.info("changes committed") 
      }
     
     /**

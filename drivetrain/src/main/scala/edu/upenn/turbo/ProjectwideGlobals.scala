@@ -43,6 +43,7 @@ trait ProjectwideGlobals extends Enumeration
      val bioportalApiKey = helper.retrievePropertyFromFile("bioportalApiKey")
      val reinferRepo = getBooleanProperty("reinferRepo")
      val loadAdditionalOntologies = getBooleanProperty("loadAdditionalOntologies")
+     val graphModelFile = helper.retrievePropertyFromFile("graphModelFile")
      
      def getBooleanProperty(property: String): Boolean =
      {

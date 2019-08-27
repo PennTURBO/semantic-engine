@@ -78,11 +78,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
           {
               case e: RuntimeException => 
                 logger.info("exception thrown:" + e.printStackTrace())
-                if (cxn != null) ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
+                ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
           }
           finally 
           {
-              if (cxn != null) ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
+              ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
           }
       }
   }
@@ -94,8 +94,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       helper.clearNamedGraph(gmCxn, graph)
       var query = s"INSERT DATA { Graph <$graph> {"
       var prefixes = ""
-      val br = io.Source.fromFile("ontologies//turbo_dataModel_file.ttl")
-      //val br = io.Source.fromFile("ontologies//tutorial_data_model.ttl")
+      val br = io.Source.fromFile(s"ontologies//$graphModelFile")
       for (line <- br.getLines())
       {
           if (line.size > 0)
