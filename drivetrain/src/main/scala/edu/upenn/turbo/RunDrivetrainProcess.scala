@@ -147,7 +147,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             var outputNamedGraph: String = null
     
             primaryQuery.createWhereClause(inputs)
-            primaryQuery.createBindClause(outputs, localUUID)
+            primaryQuery.createBindClause(outputs, inputs, localUUID)
             
             if (outputs.size != 0)
             {
@@ -189,6 +189,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?connection turbo:subject ?$SUBJECT .
               ?connection turbo:predicate ?$PREDICATE .
               ?connection turbo:object ?$OBJECT .
+              ?connection turbo:multiplicity ?$MULTIPLICITY .
               
               Optional
               {
@@ -213,7 +214,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
             }
             
-            Graph <$ontologyURL> {
               Optional
               {
                   ?$SUBJECT a owl:Class .
@@ -224,7 +224,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?$OBJECT a owl:Class .
                   BIND (true AS ?$OBJECTTYPE)
               }
-         }}
+         }
          
          """
        //println(query)          

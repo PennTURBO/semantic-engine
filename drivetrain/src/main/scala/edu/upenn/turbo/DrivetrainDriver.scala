@@ -87,19 +87,19 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
   }
   
-  def updateModel(gmCxn: RepositoryConnection)
+  def updateModel(gmCxn: RepositoryConnection, file: String = graphModelFile)
   {
-      logger.info("Updating graph model...")
+      logger.info("Updating graph model using file " + file)
       val graph = "http://www.itmat.upenn.edu/biobank/dataModel"
       helper.clearNamedGraph(gmCxn, graph)
       var query = s"INSERT DATA { Graph <$graph> {"
       var prefixes = ""
-      val br = io.Source.fromFile(s"ontologies//$graphModelFile")
+      val br = io.Source.fromFile(s"ontologies//$file")
       for (line <- br.getLines())
       {
           if (line.size > 0)
           {
-              if (line.charAt(0) != '#') 
+              if (line.charAt(0) != '#')
               {
                   if (line.charAt(0) != '@') query += line 
                   else

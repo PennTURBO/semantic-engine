@@ -152,19 +152,23 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     var superSingletonClasses = new HashSet[String]
     var multiplicityCreators = new HashSet[String]
     var currentGroups = new HashMap[String, HashMap[String, org.eclipse.rdf4j.model.Value]]
-    var oneToOneConnections = new HashMap[String, HashSet[String]]
+    var outputOneToOneConnections = new HashMap[String, HashSet[String]]
+    var inputOneToOneConnections = new HashMap[String, HashSet[String]]
+    var inputOneToManyConnections = new HashMap[String, HashSet[String]]
+    var outputOneToManyConnections = new HashMap[String, HashSet[String]]
     var usedVariables = new HashMap[String, Boolean]
     
     var process: String = ""
     
-    val multiplicityCreatorRules = Array("http://transformunify.org/ontologies/1-many", "http://transformunify.org/ontologies/many-1")
+    val manyToOneMultiplicity = "http://transformunify.org/ontologies/many-1"
+    val oneToManyMultiplicity = "http://transformunify.org/ontologies/1-many"
     val objToInstRecipe = "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe"
     
-    def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean]): HashMap[String, Boolean] =
+    def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean]): HashMap[String, Boolean] =
     {   
         this.process = process
         this.usedVariables = usedVariables
-        val newUsedVariables = populateConnectionLists(outputs)
+        val newUsedVariables = populateConnectionLists(outputs, inputs)
         buildSingletonBindClauses(localUUID)
         buildBaseGroupBindClauses(localUUID)
         assert (multiplicityCreators.size == 0, s"Error in graph model: For process $process, there is not sufficient context to create the following: $multiplicityCreators")
@@ -172,7 +176,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         newUsedVariables
     }
     
-    def populateConnectionLists(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]): HashMap[String, Boolean] =
+    def populateConnectionLists(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]): HashMap[String, Boolean] =
     {
         var variablesToBind = new HashMap[String,Boolean]
         var discoveredMap = new HashMap[String, String]
@@ -185,7 +189,11 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             else discoveredMap += discoveryCode -> row(MULTIPLICITY.toString).toString
             if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe || row(SUBJECTADESCRIBER.toString) != null || row(OBJECTADESCRIBER.toString) != null) 
             {  
-                if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/1-1") handleOneToOneConnection(row)
+                if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/1-1") 
+                {
+                    handleOneToOneConnection(row, outputOneToOneConnections)
+                    populateDependenciesAndCustomRuleList(row)
+                }
                 else if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/many-singleton")
                 {
                     singletonClasses += row(OBJECT.toString).toString
@@ -207,10 +215,19 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 {
                     superSingletonClasses += row(SUBJECT.toString).toString
                 }
-                else if (multiplicityCreatorRules.contains(row(MULTIPLICITY.toString).toString))
+                else if (row(MULTIPLICITY.toString).toString == manyToOneMultiplicity)
                 {
-                    val ca = findChangeAgent(row)
-                    if (!usedVariables.contains(ca)) multiplicityCreators += ca
+                    if (!usedVariables.contains(row(SUBJECT.toString).toString)) multiplicityCreators += row(SUBJECT.toString).toString
+                    if (!usedVariables.contains(row(OBJECT.toString).toString)) multiplicityCreators += row(OBJECT.toString).toString
+                    if (outputOneToManyConnections.contains(row(OBJECT.toString).toString)) outputOneToManyConnections(row(OBJECT.toString).toString) += row(SUBJECT.toString).toString
+                    else outputOneToManyConnections += row(OBJECT.toString).toString -> HashSet(row(SUBJECT.toString).toString)
+                }
+                else if (row(MULTIPLICITY.toString).toString == oneToManyMultiplicity)
+                {
+                    if (!usedVariables.contains(row(SUBJECT.toString).toString)) multiplicityCreators += row(SUBJECT.toString).toString
+                    if (!usedVariables.contains(row(OBJECT.toString).toString)) multiplicityCreators += row(OBJECT.toString).toString
+                    if (outputOneToManyConnections.contains(row(SUBJECT.toString).toString)) outputOneToManyConnections(row(SUBJECT.toString).toString) += row(OBJECT.toString).toString
+                    else outputOneToManyConnections += row(SUBJECT.toString).toString -> HashSet(row(OBJECT.toString).toString)
                 }
                 val obj = row(OBJECT.toString).toString
                 val subj = row(SUBJECT.toString).toString
@@ -222,32 +239,25 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 variablesToBind += subj -> subjAType
            }
         }
+        for (row <- inputs)
+        {
+            if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/1-1") handleOneToOneConnection(row, inputOneToOneConnections)
+            else if (row(MULTIPLICITY.toString).toString == oneToManyMultiplicity)
+            {
+                if (inputOneToManyConnections.contains(row(SUBJECT.toString).toString)) inputOneToManyConnections(row(SUBJECT.toString).toString) += row(OBJECT.toString).toString
+                else inputOneToManyConnections += row(SUBJECT.toString).toString -> HashSet(row(OBJECT.toString).toString)
+            }
+            else if (row(MULTIPLICITY.toString).toString == manyToOneMultiplicity)
+            {
+                if (inputOneToManyConnections.contains(row(OBJECT.toString).toString)) inputOneToManyConnections(row(OBJECT.toString).toString) += row(SUBJECT.toString).toString
+                else inputOneToManyConnections += row(OBJECT.toString).toString -> HashSet(row(SUBJECT.toString).toString)
+            }
+        }
         validateConnectionLists()
         variablesToBind
     }
     
-    def validateConnectionLists()
-    {
-        for ((k,v) <- oneToOneConnections)
-        {
-            assert (!singletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a Singleton")
-            assert (!superSingletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a SuperSingleton")
-        }
-    }
-    
-    def addToConnectionList(element: String)
-    {
-        val connectionList = oneToOneConnections(element)
-        for (conn <- connectionList)
-        {
-            for (a <- connectionList)
-            {
-                oneToOneConnections(conn) += a
-            }
-        }   
-    }
-    
-    def handleOneToOneConnection(row: HashMap[String, org.eclipse.rdf4j.model.Value])
+    def populateDependenciesAndCustomRuleList(row: HashMap[String, org.eclipse.rdf4j.model.Value])
     {
         val thisSubject = row(SUBJECT.toString).toString
         val thisObject = row(OBJECT.toString).toString
@@ -274,42 +284,101 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (currentGroups(thisObject)("dependee") == null) currentGroups(thisObject)("dependee") = objectDependent
             if (currentGroups(thisObject)("customRule") == null) currentGroups(thisObject)("customRule") = specialObjectRule
         }
-        
-        if (oneToOneConnections.contains(thisObject) && oneToOneConnections.contains(thisSubject))
+    }
+    
+    def validateConnectionLists()
+    {
+        for ((k,v) <- outputOneToOneConnections)
         {
-            oneToOneConnections(thisObject) += thisSubject
-            oneToOneConnections(thisSubject) += thisObject
-            oneToOneConnections(thisObject) += thisObject
-            oneToOneConnections(thisSubject) += thisSubject
+            assert (!singletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a Singleton")
+            assert (!superSingletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a SuperSingleton")
+            for (connection <- v)
+            {
+                if (inputOneToManyConnections.contains(connection))
+                {
+                    assert(!inputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
+                }
+                if (outputOneToManyConnections.contains(connection))
+                {
+                    assert(!outputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
+                }
+            }
+        }
+        for ((k,v) <- inputOneToOneConnections)
+        {
+            assert (!singletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a Singleton")
+            assert (!superSingletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a SuperSingleton")
+            for (connection <- v)
+            {
+                if (inputOneToManyConnections.contains(connection))
+                {
+                    assert(!inputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
+                }
+                if (outputOneToManyConnections.contains(connection))
+                {
+                    assert(!outputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
+                }
+            }
+        }
+        for (item <- multiplicityCreators)
+        {
+            assert (!singletonClasses.contains(item), s"For process $process, $item has a 1-many or many-1 relationship and is also considered a Singleton")
+            assert (!superSingletonClasses.contains(item), s"For process $process, $item has a 1-many or many-1 relationship and is also considered a SuperSingleton")
+        }
+    }
+    
+    def addToConnectionList(element: String, listToPopulate: HashMap[String, HashSet[String]])
+    {
+        val connectionList = listToPopulate(element)
+        for (conn <- connectionList)
+        {
+            for (a <- connectionList)
+            {
+                listToPopulate(conn) += a
+            }
+        }   
+    }
+    
+    def handleOneToOneConnection(row: HashMap[String, org.eclipse.rdf4j.model.Value], listToPopulate: HashMap[String, HashSet[String]])
+    {
+        val thisSubject = row(SUBJECT.toString).toString
+        val thisObject = row(OBJECT.toString).toString
+        
+        if (listToPopulate.contains(thisObject) && listToPopulate.contains(thisSubject))
+        {
+            listToPopulate(thisObject) += thisSubject
+            listToPopulate(thisSubject) += thisObject
+            listToPopulate(thisObject) += thisObject
+            listToPopulate(thisSubject) += thisSubject
             
-            addToConnectionList(thisSubject)
-            addToConnectionList(thisObject)
+            addToConnectionList(thisSubject, listToPopulate)
+            addToConnectionList(thisObject, listToPopulate)
         }
         
-        else if (oneToOneConnections.contains(thisObject) && (!oneToOneConnections.contains(thisSubject)))
+        else if (listToPopulate.contains(thisObject) && (!listToPopulate.contains(thisSubject)))
         {
-            oneToOneConnections(thisObject) += thisSubject
-            oneToOneConnections(thisObject) += thisObject
-            oneToOneConnections.put(thisSubject, HashSet(thisObject))
-            oneToOneConnections(thisSubject) += thisSubject
+            listToPopulate(thisObject) += thisSubject
+            listToPopulate(thisObject) += thisObject
+            listToPopulate.put(thisSubject, HashSet(thisObject))
+            listToPopulate(thisSubject) += thisSubject
           
-            addToConnectionList(thisObject)
+            addToConnectionList(thisObject, listToPopulate)
         }
-        else if (oneToOneConnections.contains(thisSubject) && (!oneToOneConnections.contains(thisObject)))
+        else if (listToPopulate.contains(thisSubject) && (!listToPopulate.contains(thisObject)))
         {
-            oneToOneConnections(thisSubject) += thisObject
-            oneToOneConnections(thisSubject) += thisSubject
-            oneToOneConnections.put(thisObject, HashSet(thisSubject))
-            oneToOneConnections(thisObject) += thisObject
+            listToPopulate(thisSubject) += thisObject
+            listToPopulate(thisSubject) += thisSubject
+            listToPopulate.put(thisObject, HashSet(thisSubject))
+            listToPopulate(thisObject) += thisObject
           
-            addToConnectionList(thisSubject)
+            addToConnectionList(thisSubject, listToPopulate)
         }
         else
         {
-            oneToOneConnections.put(thisObject, HashSet(thisSubject))
-            oneToOneConnections.put(thisSubject, HashSet(thisObject))
-            oneToOneConnections(thisObject) += thisObject
-            oneToOneConnections(thisSubject) += thisSubject
+            listToPopulate.put(thisObject, HashSet(thisSubject))
+            listToPopulate.put(thisSubject, HashSet(thisObject))
+            listToPopulate(thisObject) += thisObject
+            listToPopulate(thisSubject) += thisSubject
         }
     }
     
@@ -335,32 +404,23 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
     }
     
-    def findChangeAgent(multiplicityCreator: HashMap[String, org.eclipse.rdf4j.model.Value]): String =
-    {
-        var changeAgent: String = ""
-        if (multiplicityCreator(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/1-many")
-        {
-            changeAgent = multiplicityCreator(OBJECT.toString).toString   
-        }
-        if (multiplicityCreator(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/many-1")
-        {
-            changeAgent = multiplicityCreator(SUBJECT.toString).toString
-        }
-        assert (changeAgent != "")
-        changeAgent
-    }
-    
     def getMultiplicityEnforcer(changeAgent: String): String =
     {
         var multiplicityEnforcer = ""
-        assert (oneToOneConnections.contains(changeAgent))
-        for (conn <- oneToOneConnections(changeAgent))
+        var enforcerAsUri = ""
+        assert (outputOneToOneConnections.contains(changeAgent))
+        for (conn <- outputOneToOneConnections(changeAgent))
         {
             if (usedVariables.contains(conn) && usedVariables(conn)) 
             {
                 val newEnforcer = helper.convertTypeToSparqlVariable(conn)
-                assert (multiplicityEnforcer == "", s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
+                if (multiplicityEnforcer != "")
+                {
+                    assert(inputOneToOneConnections.contains(enforcerAsUri) && inputOneToOneConnections(enforcerAsUri).contains(conn),
+                        s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
+                }
                 multiplicityEnforcer = newEnforcer
+                enforcerAsUri = conn
             }
         }  
         assert (multiplicityEnforcer != "")
