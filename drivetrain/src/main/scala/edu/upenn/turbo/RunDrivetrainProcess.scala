@@ -19,6 +19,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     var inputSet = new HashSet[Value]
     var inputProcessSet = new HashSet[String]
     var typeMap = new HashMap[String,Value]
+    var validMultiplicityTermList = new ArrayBuffer[String]
     
     def setGlobalUUID(globalUUID: String)
     {
@@ -27,6 +28,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     def setGraphModelConnection(gmCxn: RepositoryConnection)
     {
         this.gmCxn = gmCxn
+        validMultiplicityTermList = helper.getMultiplicityTermsFromGraphModel(gmCxn)
     }
     def setOutputRepositoryConnection(cxn: RepositoryConnection)
     {
@@ -147,7 +149,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             var outputNamedGraph: String = null
     
             primaryQuery.createWhereClause(inputs)
-            primaryQuery.createBindClause(outputs, inputs, localUUID)
+            primaryQuery.createBindClause(outputs, inputs, localUUID, validMultiplicityTermList)
             
             if (outputs.size != 0)
             {

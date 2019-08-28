@@ -162,16 +162,18 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     var inputSingletonClasses = new HashSet[String]
     var inputSuperSingletonClasses = new HashSet[String]
     
+    var multiplicityList: ArrayBuffer[String] = new ArrayBuffer[String]
     var process: String = ""
     
     val manyToOneMultiplicity = "http://transformunify.org/ontologies/many-1"
     val oneToManyMultiplicity = "http://transformunify.org/ontologies/1-many"
     val objToInstRecipe = "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe"
     
-    def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean]): HashMap[String, Boolean] =
+    def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean], multiplicityList: ArrayBuffer[String]): HashMap[String, Boolean] =
     {   
         this.process = process
         this.usedVariables = usedVariables
+        this.multiplicityList = multiplicityList
         val newUsedVariables = populateConnectionLists(outputs, inputs)
         buildSingletonBindClauses(localUUID)
         buildBaseGroupBindClauses(localUUID)
@@ -194,6 +196,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         var discoveredMap = new HashMap[String, String]
         for (row <- outputs)
         {
+            assert (multiplicityList.contains(row(MULTIPLICITY.toString).toString))
             val subjectString = row(OBJECT.toString).toString
             val objectString = row(SUBJECT.toString).toString
             val discoveryCode = subjectString + objectString
@@ -258,6 +261,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     {
         for (row <- inputs)
         {
+            assert (multiplicityList.contains(row(MULTIPLICITY.toString).toString)) 
             if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/1-1") handleOneToOneConnection(row, inputOneToOneConnections)
             else if (row(MULTIPLICITY.toString).toString == oneToManyMultiplicity)
             {

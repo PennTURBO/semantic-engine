@@ -802,4 +802,16 @@ class TurboMultiuseClass
         """
         updater.querySparqlBoolean(cxn, ask).get
     }
+    
+    def getMultiplicityTermsFromGraphModel(gmCxn: RepositoryConnection): ArrayBuffer[String] =
+    {
+        val ask: String = s"""
+        Select * Where 
+          { 
+              ?term a ontologies:TurboGraphMultiplicityRule .
+          }"""
+        
+        logger.info("first res: " + updater.querySparqlAndUnpackTuple(gmCxn, ask, "term")(0))
+        new ArrayBuffer[String]
+    }
 }
