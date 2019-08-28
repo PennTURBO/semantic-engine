@@ -252,7 +252,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: For process http://transformunify.org/ontologies/myProcess1, http://transformunify.org/ontologies/object4 has a 1-many or many-1 relationship and is also considered a Singleton")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: For process http://transformunify.org/ontologies/myProcess1, http://transformunify.org/ontologies/object4 has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
         }
     }
     
@@ -383,6 +383,57 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test ("element declared as singleton in output and not as a singleton in input")
     {
-        assert (1==2)
+        val insertDataModel: String = """
+          
+          INSERT DATA
+          {
+              Graph pmbb:dataModel
+              {
+                  ontologies:object2ToObject4_input
+                    a ontologies:ObjectConnectionToInstanceRecipe ;
+                    ontologies:multiplicity <http://transformunify.org/ontologies/many-singleton> ;
+                    ontologies:object turbo:object4 ;
+                    ontologies:requiredInputTo ontologies:myProcess1 ;
+                    ontologies:predicate turbo:pred3 ;
+                    ontologies:subject turbo:object2 ;
+                  .
+                  
+                  ontologies:object2ToObject4_output
+                    a ontologies:ObjectConnectionToInstanceRecipe ;
+                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+                    ontologies:object turbo:object4 ;
+                    ontologies:outputOf ontologies:myProcess1 ;
+                    ontologies:predicate turbo:pred4 ;
+                    ontologies:subject turbo:object2 ;
+                  .
+               }
+           }
+        """
+        
+        val insertData: String = """
+          
+          INSERT DATA
+          {
+              Graph pmbb:expanded
+              {
+                  pmbb:obj2 turbo:pred3 pmbb:obj4 .
+                  pmbb:obj4 a turbo:object4 .
+              }
+          }
+ 
+        """
+        
+        update.updateSparql(gmCxn, insertDataModel)
+        update.updateSparql(testCxn, insertData)
+        
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: For process http://transformunify.org/ontologies/myProcess1, http://transformunify.org/ontologies/object4 has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
+        }
     }
 }

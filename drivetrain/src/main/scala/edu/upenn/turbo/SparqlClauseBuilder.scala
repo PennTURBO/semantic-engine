@@ -148,15 +148,19 @@ class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
     var bindRules = new HashSet[String]
-    var singletonClasses = new HashSet[String]
-    var superSingletonClasses = new HashSet[String]
     var multiplicityCreators = new HashSet[String]
     var currentGroups = new HashMap[String, HashMap[String, org.eclipse.rdf4j.model.Value]]
+    var usedVariables = new HashMap[String, Boolean]
+    
+    var outputSingletonClasses = new HashSet[String]
+    var outputSuperSingletonClasses = new HashSet[String]
     var outputOneToOneConnections = new HashMap[String, HashSet[String]]
+    var outputOneToManyConnections = new HashMap[String, HashSet[String]]
+    
     var inputOneToOneConnections = new HashMap[String, HashSet[String]]
     var inputOneToManyConnections = new HashMap[String, HashSet[String]]
-    var outputOneToManyConnections = new HashMap[String, HashSet[String]]
-    var usedVariables = new HashMap[String, Boolean]
+    var inputSingletonClasses = new HashSet[String]
+    var inputSuperSingletonClasses = new HashSet[String]
     
     var process: String = ""
     
@@ -178,6 +182,14 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     def populateConnectionLists(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]): HashMap[String, Boolean] =
     {
+        val variablesToBind = populateOutputs(outputs)
+        populateInputs(inputs)
+        validateConnectionLists()
+        variablesToBind
+    }
+    
+    def populateOutputs(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]): HashMap[String, Boolean] =
+    {
         var variablesToBind = new HashMap[String,Boolean]
         var discoveredMap = new HashMap[String, String]
         for (row <- outputs)
@@ -196,24 +208,24 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 }
                 else if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/many-singleton")
                 {
-                    singletonClasses += row(OBJECT.toString).toString
+                    outputSingletonClasses += row(OBJECT.toString).toString
                 }
                 else if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/singleton-many")
                 {
-                    singletonClasses += row(SUBJECT.toString).toString
+                    outputSingletonClasses += row(SUBJECT.toString).toString
                 }
                   else if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/singleton-singleton")
                 {
-                    singletonClasses += row(SUBJECT.toString).toString
-                    singletonClasses += row(OBJECT.toString).toString
+                    outputSingletonClasses += row(SUBJECT.toString).toString
+                    outputSingletonClasses += row(OBJECT.toString).toString
                 }
                 else if (row(MULTIPLICITY.toString).toString.endsWith("superSingleton"))
                 {
-                    superSingletonClasses += row(OBJECT.toString).toString
+                    outputSuperSingletonClasses += row(OBJECT.toString).toString
                 }
                 else if (row(MULTIPLICITY.toString).toString.contains("superSingleton"))
                 {
-                    superSingletonClasses += row(SUBJECT.toString).toString
+                    outputSuperSingletonClasses += row(SUBJECT.toString).toString
                 }
                 else if (row(MULTIPLICITY.toString).toString == manyToOneMultiplicity)
                 {
@@ -239,6 +251,11 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 variablesToBind += subj -> subjAType
            }
         }
+        variablesToBind
+    }
+    
+    def populateInputs(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+    {
         for (row <- inputs)
         {
             if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/1-1") handleOneToOneConnection(row, inputOneToOneConnections)
@@ -252,9 +269,28 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 if (inputOneToManyConnections.contains(row(OBJECT.toString).toString)) inputOneToManyConnections(row(OBJECT.toString).toString) += row(SUBJECT.toString).toString
                 else inputOneToManyConnections += row(OBJECT.toString).toString -> HashSet(row(SUBJECT.toString).toString)
             }
+            else if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/many-singleton")
+            {
+                inputSingletonClasses += row(OBJECT.toString).toString
+            }
+            else if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/singleton-many")
+            {
+                inputSingletonClasses += row(SUBJECT.toString).toString
+            }
+            else if (row(MULTIPLICITY.toString).toString == "http://transformunify.org/ontologies/singleton-singleton")
+            {
+                inputSingletonClasses += row(SUBJECT.toString).toString
+                inputSingletonClasses += row(OBJECT.toString).toString
+            }
+            else if (row(MULTIPLICITY.toString).toString.endsWith("superSingleton"))
+            {
+                inputSuperSingletonClasses += row(OBJECT.toString).toString
+            }
+            else if (row(MULTIPLICITY.toString).toString.contains("superSingleton"))
+            {
+                inputSuperSingletonClasses += row(SUBJECT.toString).toString
+            }
         }
-        validateConnectionLists()
-        variablesToBind
     }
     
     def populateDependenciesAndCustomRuleList(row: HashMap[String, org.eclipse.rdf4j.model.Value])
@@ -290,40 +326,37 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     {
         for ((k,v) <- outputOneToOneConnections)
         {
-            assert (!singletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a Singleton")
-            assert (!superSingletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a SuperSingleton")
-            for (connection <- v)
-            {
-                if (inputOneToManyConnections.contains(connection))
-                {
-                    assert(!inputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
-                }
-                if (outputOneToManyConnections.contains(connection))
-                {
-                    assert(!outputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
-                }
-            }
+            validateSingletonClasses(k)
+            validateManyToOneClasses(k,v)
         }
         for ((k,v) <- inputOneToOneConnections)
         {
-            assert (!singletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a Singleton")
-            assert (!superSingletonClasses.contains(k), s"For process $process, $k has a 1-1 relationship and is also considered a SuperSingleton")
-            for (connection <- v)
-            {
-                if (inputOneToManyConnections.contains(connection))
-                {
-                    assert(!inputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
-                }
-                if (outputOneToManyConnections.contains(connection))
-                {
-                    assert(!outputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
-                }
-            }
+            validateSingletonClasses(k)
+            validateManyToOneClasses(k,v)
         }
-        for (item <- multiplicityCreators)
+        for (item <- multiplicityCreators) validateSingletonClasses(item)
+    }
+    
+    def validateSingletonClasses(k: String)
+    {
+        assert (!inputSingletonClasses.contains(k), s"For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
+        assert (!inputSuperSingletonClasses.contains(k), s"For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a SuperSingleton")
+        assert (!outputSingletonClasses.contains(k), s"For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
+        assert (!outputSuperSingletonClasses.contains(k), s"For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a SuperSingleton")
+    }
+    
+    def validateManyToOneClasses(k: String, v: HashSet[String])
+    {
+        for (connection <- v)
         {
-            assert (!singletonClasses.contains(item), s"For process $process, $item has a 1-many or many-1 relationship and is also considered a Singleton")
-            assert (!superSingletonClasses.contains(item), s"For process $process, $item has a 1-many or many-1 relationship and is also considered a SuperSingleton")
+            if (inputOneToManyConnections.contains(connection))
+            {
+                assert(!inputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
+            }
+            if (outputOneToManyConnections.contains(connection))
+            {
+                assert(!outputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
+            }
         }
     }
     
@@ -384,7 +417,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     def buildSingletonBindClauses(localUUID: String)
     {
-        for (singleton <- singletonClasses)
+        for (singleton <- outputSingletonClasses)
         {
             if (!(usedVariables.contains(singleton)))
             {
@@ -393,7 +426,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                         SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
             }
         }
-        for (singleton <- superSingletonClasses)
+        for (singleton <- outputSuperSingletonClasses)
         {
             if (!(usedVariables.contains(singleton)))
             {
