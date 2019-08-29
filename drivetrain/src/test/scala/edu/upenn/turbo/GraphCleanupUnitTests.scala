@@ -227,4 +227,29 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
+    
+    test("shift data models out of expanded graph back to original shortcut graphs")
+    {
+        /*val insert = s"""
+            INSERT DATA
+            {
+            
+              }
+            }
+        """
+        
+        update.updateSparql(testCxn, insert)
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
+      
+        val check1: String = """
+          ASK
+          {
+        
+              }
+          }
+          """
+        
+        update.querySparqlBoolean(testCxn, check1).get should be (false)
+        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://transformunify.org/ontologies/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)*/
+    }
 }

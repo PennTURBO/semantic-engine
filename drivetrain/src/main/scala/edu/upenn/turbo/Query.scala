@@ -123,14 +123,14 @@ class PatternMatchQuery extends Query
         whereClause += s"WHERE { \n $innerClause "
     }
 
-    def createBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, multiplicityList: ArrayBuffer[String])
+    def createBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String)
     {
         assert (bindClause == "")
         if (whereClause == null || whereClause.size == 0) 
         {
             throw new RuntimeException("Bind clause cannot be built before where clause is built.")
         }
-        for ((k,v) <- bindClauseBuilder.buildBindClause(outputs, inputs, localUUID, process, usedVariables, multiplicityList))
+        for ((k,v) <- bindClauseBuilder.buildBindClause(outputs, inputs, localUUID, process, usedVariables))
         {
             if (!usedVariables.contains(k)) usedVariables += k -> v
         }

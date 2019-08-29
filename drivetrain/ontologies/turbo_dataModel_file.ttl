@@ -1748,10 +1748,6 @@ ontologies:many-1
   a ontologies:TurboGraphMultiplicityRule ;
   rdfs:label "many-1 multiplicity rule" ;
 .
-ontologies:many-many
-  a ontologies:TurboGraphMultiplicityRule ;
-  rdfs:label "many-many multiplicity rule" ;
-.
 ontologies:many-singleton
   a ontologies:TurboGraphMultiplicityRule ;
   rdfs:label "many-singleton multiplicity rule" ;

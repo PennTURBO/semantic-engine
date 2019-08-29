@@ -811,7 +811,6 @@ class TurboMultiuseClass
               ?term a ontologies:TurboGraphMultiplicityRule .
           }"""
         
-        logger.info("first res: " + updater.querySparqlAndUnpackTuple(gmCxn, ask, "term")(0))
-        new ArrayBuffer[String]
+        updater.querySparqlAndUnpackTuple(gmCxn, ask, "term")
     }
 }

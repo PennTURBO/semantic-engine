@@ -101,7 +101,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
           {
               if (line.charAt(0) != '#')
               {
-                  if (line.charAt(0) != '@') query += line 
+                  if (line.charAt(0) != '@') query += line+"\n"
                   else
                   {
                       var formattedPrefix = line.substring(1, line.size-1)
@@ -111,6 +111,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
           }
       }
       query += "}}"
+      //logger.info(query)
       update.updateSparql(gmCxn, query)
       br.close()
   }
