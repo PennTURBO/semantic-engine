@@ -85,6 +85,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 // for each input named graph, run query with specified named graph
                 for (graph <- inputNamedGraphsList)
                 {
+                    //run validation if data comes from a shortcut graph
+                    if (graph.startsWith("Shortcuts_")) validateInputData(graph, primaryQuery.rawInputData)
                     primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)
@@ -127,7 +129,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         }
         else
         {
-            // retrieve connections (inputs, outputs) and expansion rules (binds) from model graph
+            // retrieve connections (inputs, outputs) from model graph
             // the inputs become the "where" block of the SPARQL query
             // the outputs become the "insert" block
             val inputs = getInputs(process)
@@ -143,6 +145,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             val primaryQuery = new PatternMatchQuery()
             primaryQuery.setProcess(process)
             primaryQuery.setInputGraph(inputNamedGraph)
+            primaryQuery.setInputData(inputs)
             
             var outputNamedGraph: String = null
     
@@ -190,6 +193,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?connection turbo:predicate ?$PREDICATE .
               ?connection turbo:object ?$OBJECT .
               ?connection turbo:multiplicity ?$MULTIPLICITY .
+              ?connection turbo:required ?$MANDATED .
               
               Optional
               {
@@ -451,5 +455,32 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) metaTriples += new Triple(processVal, "turbo:TURBO_0010186", outputNamedGraph, false, false)
         else if (removalsNamedGraph != null) metaTriples += new Triple(processVal, "turbo:TURBO_0010186", removalsNamedGraph, false, false)
         metaTriples
+    }
+    
+    def validateInputData(graph: String, inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+    {
+        for (input <- inputs)
+        {
+            val subjectAsType = input(SUBJECT.toString).toString
+            val predicate = input(PREDICATE.toString).toString
+            val objectAsType = input(OBJECT.toString).toString
+            
+            val multiplicity = input(MULTIPLICITY.toString).toString
+            val required = input(MANDATED.toString).toString
+            
+            val checkRequired = s"""
+              SELECT * WHERE
+              {
+                  ?subject1 a $subjectAsType .
+                  MINUS
+                  {
+                      ?subject1 $predicate ?object1 .
+                      ?object1 a $objectAsType .
+                  }
+              }
+              """
+            val res = update.querySparqlAndUnpackTuple(cxn, checkRequired, "subject1")
+            assert (res.size == 0, s"Input data error: an instance of type $subjectAsType does not have the required connection to an instance of type $objectAsType in graph $graph")
+        }
     }
 }

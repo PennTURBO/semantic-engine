@@ -75,7 +75,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         pw.close()
                       
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(testModelFile)
-        //graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData("graphModelTestFile_107e35f622ce485b896643cd1b2af715.ttl")
         testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         testRepoManager = graphDBMaterials.getTestRepoManager()
@@ -127,7 +126,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
                     ontologies:object turbo:object2 ;
                     ontologies:outputOf ontologies:myProcess1 ;
-                    ontologies:predicate turbo:pred1 ;
+                    ontologies:predicate turbo:pred5 ;
                     ontologies:subject turbo:object1 ;
                   .
               }
