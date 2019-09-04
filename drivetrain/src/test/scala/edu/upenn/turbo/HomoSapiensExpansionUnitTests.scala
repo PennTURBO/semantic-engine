@@ -77,8 +77,6 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
         testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        testRepoManager = graphDBMaterials.getTestRepoManager()
-        testRepository = graphDBMaterials.getTestRepository()
         helper.deleteAllTriplesInDatabase(testCxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)

@@ -26,6 +26,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             var minusGroupForThisRow: String = null
             var subjectAType = false
             var objectAType = false
+            var objectADescriber = false
             
             var required = true
             if (rowResult(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/optionalInputTo") required = false
@@ -33,6 +34,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
             if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
             if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
+            if (rowResult(OBJECTMULTIOBJECTDESCRIBER.toString) != null) objectADescriber = true
             if (rowResult(SUBJECTTYPE.toString) != null) 
             {
                 subjectAType = true
@@ -44,7 +46,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 varsForProcessInput += rowResult(OBJECT.toString).toString
             }
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
-                                                     subjectAType, objectAType)
+                                                     subjectAType, objectAType, objectADescriber)
             if (minusGroupForThisRow != null)
             {
                 triplesGroup.addTripleToMinusGroup(newTriple, graphForThisRow, minusGroupForThisRow)
@@ -103,22 +105,22 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val graph = rowResult(GRAPH.toString).toString
             
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
-                                      subjectAType, objectAType, subjectContext, objectContext)
+                                      subjectAType, objectAType, false, subjectContext, objectContext)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
             if (usedVariables.contains(rowResult(SUBJECT.toString).toString))
             {
-                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false, "", subjectContext)
+                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false, false, "", subjectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
             }
             if (!objectIsLiteral && usedVariables.contains(rowResult(OBJECT.toString).toString) && newTriple.triplePredicate != "rdf:type")
             {
-                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false, "", objectContext)
+                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false, false, "", objectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
             }
         }
         for (uri <- varsForProcessInput)
         {
-            val processInputTriple = new Triple(process, "obo:OBI_0000293", uri, false, false)
+            val processInputTriple = new Triple(process, "obo:OBI_0000293", uri, false, false, false)
             triplesGroup.addRequiredTripleToRequiredGroup(processInputTriple, processNamedGraph)
         }
         clause = triplesGroup.buildInsertClauseFromTriplesGroup(nonVariableClasses)
@@ -137,7 +139,7 @@ class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             helper.validateURI(defaultRemovalsGraph)
         
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
-                                  false, false)
+                                  false, false, false)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, defaultRemovalsGraph)
             
             clause = triplesGroup.buildDeleteClauseFromTriplesGroup()
@@ -198,7 +200,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val subjectString = row(OBJECT.toString).toString
             val objectString = row(SUBJECT.toString).toString
             val discoveryCode = subjectString + objectString
-            if (discoveredMap.contains(discoveryCode)) assert(discoveredMap(discoveryCode) == row(MULTIPLICITY.toString).toString, s"There are multiple connections between $subjectString and $objectString with non-matching multiplicities")
+            if (discoveredMap.contains(discoveryCode)) assert(discoveredMap(discoveryCode) == row(MULTIPLICITY.toString).toString, s"Error in graph model: There are multiple connections between $subjectString and $objectString with non-matching multiplicities")
             else discoveredMap += discoveryCode -> row(MULTIPLICITY.toString).toString
             if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe || row(SUBJECTADESCRIBER.toString) != null || row(OBJECTADESCRIBER.toString) != null) 
             {  
@@ -244,7 +246,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 }
                 else
                 {
-                    assert (1==2, s"Graph model error: Discovered invalid multiplicity $thisMultiplicity")
+                    assert (1==2, s"Error in graph model: Discovered invalid multiplicity $thisMultiplicity")
                 }
                 val obj = row(OBJECT.toString).toString
                 val subj = row(SUBJECT.toString).toString
@@ -298,7 +300,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             }
             else
             {
-                assert (1==2, s"Graph model error: Discovered invalid multiplicity $thisMultiplicity")
+                assert (1==2, s"Error in graph model:: Discovered invalid multiplicity $thisMultiplicity")
             }
         }
     }
@@ -349,10 +351,10 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     def validateSingletonClasses(k: String)
     {
-        assert (!inputSingletonClasses.contains(k), s"For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
-        assert (!inputSuperSingletonClasses.contains(k), s"For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a SuperSingleton")
-        assert (!outputSingletonClasses.contains(k), s"For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
-        assert (!outputSuperSingletonClasses.contains(k), s"For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a SuperSingleton")
+        assert (!inputSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
+        assert (!inputSuperSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a SuperSingleton")
+        assert (!outputSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
+        assert (!outputSuperSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a SuperSingleton")
     }
     
     def validateManyToOneClasses(k: String, v: HashSet[String])
@@ -361,11 +363,11 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         {
             if (inputOneToManyConnections.contains(connection))
             {
-                assert(!inputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
+                assert(!inputOneToManyConnections(connection).contains(k), s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently.")
             }
             if (outputOneToManyConnections.contains(connection))
             {
-                assert(!outputOneToManyConnections(connection).contains(k), s"Logical graph model error: for process $process, the multiplicity of $k has not been defined consistently.")
+                assert(!outputOneToManyConnections(connection).contains(k), s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently.")
             }
         }
     }
@@ -494,7 +496,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
               }
               else
               {
-                  val dependee = helper.convertTypeToSparqlVariable(v("dependee"))
+                  val dependee = helper.convertTypeToSparqlVariable(v("dependee"), true)
                   addDependentBindRule(connAsVar, localUUID, multiplicityEnforcer, dependee)
               }
         }
@@ -503,7 +505,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
              var customRule = helper.removeQuotesFromString(v("customRule").toString.split("\\^")(0))+"\n"
              if (v("dependee") != null && customRule.contains("dependent"))
              {
-                 val dependee = helper.convertTypeToSparqlVariable(v("dependee"))
+                 val dependee = helper.convertTypeToSparqlVariable(v("dependee"), true)
                  customRule = customRule.replaceAll("\\$\\{dependent\\}", dependee)
              }
              customRule = customRule.replaceAll("\\$\\{replacement\\}", connAsVar)

@@ -72,11 +72,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             val startTime = System.nanoTime()
             val currDate = Calendar.getInstance().getTime()
             val startingTriplesCount = helper.countTriplesInDatabase(cxn)
+            val processGraphsList = new ArrayBuffer[String]
             logger.info("Starting process: " + process)
            
             val genericWhereClause = primaryQuery.whereClause
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
-            var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
+            //var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
+            var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph)
             logger.info("input named graphs size: " + inputNamedGraphsList.size)
                 
             if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $process: no input named graphs found")
@@ -85,11 +87,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 // for each input named graph, run query with specified named graph
                 for (graph <- inputNamedGraphsList)
                 {
-                    //run validation if data comes from a shortcut graph
-                    if (graph.startsWith("Shortcuts_")) validateInputData(graph, primaryQuery.rawInputData)
+                    val localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
+                    //run validation on input graph
+                    validateInputData(graph, primaryQuery.rawInputData)
                     primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)
+                    val localEndingTriplesCount = helper.countTriplesInDatabase(cxn)
+                    if (localStartingTriplesCount != localEndingTriplesCount) processGraphsList += graph
                 }
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
@@ -108,7 +113,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                                                                 OUTPUTNAMEDGRAPH -> ArrayBuffer(primaryQuery.defaultOutputGraph, primaryQuery.defaultRemovalsGraph),
                                                                 PROCESSRUNTIME -> ArrayBuffer(runtime),
                                                                 TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
-                                                                INPUTNAMEDGRAPHS -> inputNamedGraphsList
+                                                                INPUTNAMEDGRAPHS -> processGraphsList
                                                                 )
                                                                 
                 val metaDataTriples = createMetaDataTriples(metaInfo)
@@ -193,7 +198,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?connection turbo:predicate ?$PREDICATE .
               ?connection turbo:object ?$OBJECT .
               ?connection turbo:multiplicity ?$MULTIPLICITY .
-              ?connection turbo:required ?$MANDATED .
               
               Optional
               {
@@ -215,6 +219,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Optional
               {
                   ?connection turbo:referencedInGraph ?$GRAPHOFORIGIN .
+              }
+              Optional
+              {
+                  ?$OBJECT a ontologies:MultiObjectDescriber .
+                  BIND (true AS ?$OBJECTMULTIOBJECTDESCRIBER)
               }
             }
             
@@ -442,45 +451,63 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
         helper.validateURI(processNamedGraph)
         var metaTriples = ArrayBuffer(
-             new Triple(processVal, "turbo:TURBO_0010106", queryVal, false, false),
-             new Triple(processVal, "turbo:TURBO_0010107", runtime, false, false),
-             new Triple(processVal, "turbo:TURBO_0010108", triplesAdded, false, false),
-             new Triple(processBoundary, "obo:RO_0002223", processVal, false, false),
-             new Triple(processBoundary, "rdf:type", "obo:BFO_0000035", false, false),
-             new Triple(timeMeasDatum, "obo:IAO_0000136", processBoundary, false, false),
-             new Triple(timeMeasDatum, "rdf:type", "obo:IAO_0000416", false, false),
-             new Triple(timeMeasDatum, "turbo:TURBO_0010094", currDate, false, false)
+             new Triple(processVal, "turbo:TURBO_0010106", queryVal),
+             new Triple(processVal, "turbo:TURBO_0010107", runtime),
+             new Triple(processVal, "turbo:TURBO_0010108", triplesAdded),
+             new Triple(processBoundary, "obo:RO_0002223", processVal),
+             new Triple(processBoundary, "rdf:type", "obo:BFO_0000035"),
+             new Triple(timeMeasDatum, "obo:IAO_0000136", processBoundary),
+             new Triple(timeMeasDatum, "rdf:type", "obo:IAO_0000416"),
+             new Triple(timeMeasDatum, "turbo:TURBO_0010094", currDate)
         )
-        for (inputGraph <- inputNamedGraphsList) metaTriples += new Triple(processVal, "turbo:TURBO_0010187", inputGraph, false, false)
-        if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) metaTriples += new Triple(processVal, "turbo:TURBO_0010186", outputNamedGraph, false, false)
-        else if (removalsNamedGraph != null) metaTriples += new Triple(processVal, "turbo:TURBO_0010186", removalsNamedGraph, false, false)
+        for (inputGraph <- inputNamedGraphsList) metaTriples += new Triple(processVal, "turbo:TURBO_0010187", inputGraph)
+        if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) metaTriples += new Triple(processVal, "turbo:TURBO_0010186", outputNamedGraph)
+        else if (removalsNamedGraph != null) metaTriples += new Triple(processVal, "turbo:TURBO_0010186", removalsNamedGraph)
         metaTriples
     }
     
     def validateInputData(graph: String, inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
+        val f = cxn.getValueFactory()
         for (input <- inputs)
         {
-            val subjectAsType = input(SUBJECT.toString).toString
-            val predicate = input(PREDICATE.toString).toString
-            val objectAsType = input(OBJECT.toString).toString
+            val subjectAsType = input(SUBJECT.toString)
+            val objectAsType = input(OBJECT.toString)
+            val subjectAsVar = helper.convertTypeToSparqlVariable(subjectAsType, false)
             
             val multiplicity = input(MULTIPLICITY.toString).toString
-            val required = input(MANDATED.toString).toString
-            
-            val checkRequired = s"""
-              SELECT * WHERE
-              {
-                  ?subject1 a $subjectAsType .
-                  MINUS
-                  {
-                      ?subject1 $predicate ?object1 .
-                      ?object1 a $objectAsType .
-                  }
-              }
-              """
-            val res = update.querySparqlAndUnpackTuple(cxn, checkRequired, "subject1")
-            assert (res.size == 0, s"Input data error: an instance of type $subjectAsType does not have the required connection to an instance of type $objectAsType in graph $graph")
+            if (!(input(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/optionalInputTo"))
+            {
+                val query = new PatternMatchQuery()
+                query.setInputGraph(graph)
+                input(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
+                input(SUBJECTTYPE.toString) = null
+                
+                val typeTriple = new HashMap[String, org.eclipse.rdf4j.model.Value]
+                typeTriple(SUBJECT.toString) = subjectAsType
+                typeTriple(SUBJECTTYPE.toString) = null
+                typeTriple(OBJECTTYPE.toString) = null
+                typeTriple(GRAPHOFORIGIN.toString) = null
+                typeTriple(GRAPHOFCREATINGPROCESS.toString) = null
+                typeTriple(OBJECT.toString) = subjectAsType
+                typeTriple(MINUSGROUP.toString) = null
+                typeTriple(OPTIONALGROUP.toString) = null
+                typeTriple(PREDICATE.toString) = f.createIRI("rdf:type")
+                typeTriple(CONNECTIONRECIPETYPE.toString) = f.createIRI("http://transformunify.org/ontologies/ObjectToClassConnectionRecipe")
+                typeTriple(INPUTTYPE.toString) = f.createIRI("http://transformunify.org/ontologies/requiredInputTo")
+                typeTriple(MULTIPLICITY.toString) = f.createIRI("http://transformunify.org/ontologies/1-1")
+                typeTriple(GRAPH.toString) = f.createIRI(graph)
+                typeTriple(OBJECTMULTIOBJECTDESCRIBER.toString) = null
+                
+                query.createWhereClause(ArrayBuffer(input, typeTriple))
+                val whereBlock = query.whereClause
+                val checkRequired = s"SELECT * $whereBlock }"
+                println(checkRequired)
+                var firstResult = ""
+                val res = update.querySparqlAndUnpackTuple(cxn, checkRequired, subjectAsVar)
+                if (res.size != 0) firstResult = res(0)
+                assert (firstResult == "", s"Input data error: instance $firstResult of type $subjectAsType does not have the required connection to an instance of type $objectAsType in graph $graph") 
+            }
         }
     }
 }

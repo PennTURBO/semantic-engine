@@ -12,10 +12,12 @@ class Triple extends ProjectwideGlobals
     var subjectAType: Boolean = false
     var objectAType: Boolean = false
     
+    var objectADescriber: Boolean = false
+    
     var subjectContext: String = ""
     var objectContext: String = ""
     
-    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean, objectAType: Boolean, subjectContext: String = "", objectContext: String = "")
+    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean = false, objectAType: Boolean = false, objectADescriber: Boolean = false, subjectContext: String = "", objectContext: String = "")
     {
         this
         setSubject(subject)
@@ -23,6 +25,7 @@ class Triple extends ProjectwideGlobals
         setObject(objectVar)
         this.subjectAType = subjectAType
         this.objectAType = objectAType
+        this.objectADescriber = objectADescriber
         
         this.subjectContext = helper.convertTypeToSparqlVariable(subjectContext)
         this.objectContext = helper.convertTypeToSparqlVariable(objectContext)
@@ -79,11 +82,20 @@ class Triple extends ProjectwideGlobals
     
     def makeTripleWithVariables(): String = 
     {
-        var objectAsVar: String = ""
-        objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
-        if (objectContext != "") objectAsVar += s"_$objectContext"
+        var objectAsVar = ""
+        if (!objectADescriber && triplePredicate == "rdf:type")
+        {
+            objectAsVar = tripleObject   
+        }
+        else
+        {
+            objectAsVar = helper.convertTypeToSparqlVariable(tripleObject)
+            if (objectContext != "") objectAsVar += s"_$objectContext" 
+        }
+        
         var subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
         if (subjectContext != "") subjectAsVar += s"_$subjectContext"
+        
         s"$subjectAsVar $triplePredicate $objectAsVar .\n"
     }
     

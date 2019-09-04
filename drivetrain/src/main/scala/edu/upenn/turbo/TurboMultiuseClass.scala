@@ -611,6 +611,20 @@ class TurboMultiuseClass
         updater.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
     }
     
+    def generateSimpleNamedGraphsListFromPrefix(cxn: RepositoryConnection, graphsPrefix: String): ArrayBuffer[String] =
+    {
+        val graphVar = "g"
+        var filterClause = "filter "
+        if (graphsPrefix.charAt(graphsPrefix.size-1) == '_') filterClause += s"(strStarts(str(?$graphVar), str(<$graphsPrefix>)))"
+        else filterClause += s"(?$graphVar = <$graphsPrefix>)"
+        val getGraphs: String = s"""
+        select distinct ?$graphVar
+        Where {?s ?p ?o .}
+        $filterClause
+        }"""
+        updater.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
+    }
+    
     //These 2 globals are associated with the two methods below
     private var nonMatchesArr1: ArrayBuffer[String] = new ArrayBuffer[String]
     private var nonMatchesArr2: ArrayBuffer[String] = new ArrayBuffer[String]
@@ -740,17 +754,19 @@ class TurboMultiuseClass
         updater.querySparqlAndUnpackTuple(cxn, query, "dsTitle")
     }
     
-    def convertTypeToSparqlVariable(input: Value): String =
+    def convertTypeToSparqlVariable(input: Value, withQuestionMark: Boolean): String =
     {
-       convertTypeToSparqlVariable(input.toString)
+       convertTypeToSparqlVariable(input.toString, withQuestionMark)
     }
     
-    def convertTypeToSparqlVariable(input: String): String =
+    def convertTypeToSparqlVariable(input: String, withQuestionMark: Boolean = true): String =
     {
       if (input != "" && input != null)
       {
           val splitTypeToVar = input.split("\\/")
-          "?" + splitTypeToVar(splitTypeToVar.size - 1).replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
+          var qm = ""
+          if (withQuestionMark) qm = "?"
+          qm + splitTypeToVar(splitTypeToVar.size - 1).replaceAll("\\/","_").replaceAll("\\:","").replaceAll("\\.","_")
              .replaceAll("\\>","").replaceAll("\\<","").replaceAll("\\#","_")
       }
       else ""

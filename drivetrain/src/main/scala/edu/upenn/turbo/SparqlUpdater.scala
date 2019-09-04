@@ -200,7 +200,15 @@ class SparqlUpdater
         while (resultTuple.hasNext())
         {
             val bindingset: BindingSet = resultTuple.next()
-            var result: String = removeQuotesFromString(bindingset.getValue(variableToUnpack).toString)
+            var result: String = ""
+            try
+            {
+                result = removeQuotesFromString(bindingset.getValue(variableToUnpack).toString)
+            }
+            catch
+            {
+                case e: NullPointerException => throw new RuntimeException(s"Variable $variableToUnpack requested but not present in query select statement")
+            }
             resultList += result
         }
         //Return list of results as Strings
@@ -222,7 +230,16 @@ class SparqlUpdater
             val bindingset: BindingSet = resultTuple.next()
             for (a <- 0 to variables.size - 1)
             {
-                val result: Value = bindingset.getValue(variables(a))
+                var result: Value = null
+                val variableToUnpack = variables(a)
+                try
+                {
+                    result = bindingset.getValue(variableToUnpack)
+                }
+                catch
+                {
+                    case e: NullPointerException => throw new RuntimeException(s"Variable $variableToUnpack requested but not present in query select statement")
+                }
                 oneResult += result
             }
             resultList += oneResult
@@ -238,22 +255,7 @@ class SparqlUpdater
      */
     def unpackTuple(resultTuple: TupleQueryResult, variables: ArrayBuffer[String]): ArrayBuffer[ArrayBuffer[Value]] =
     {
-        //Create empty list of lists to be populated and returned
-        val resultList: ArrayBuffer[ArrayBuffer[Value]] = new ArrayBuffer[ArrayBuffer[Value]]
-        //For each result, add it to the list. Note that this method does not convert to Strings but leaves results as Values
-        while (resultTuple.hasNext())
-        {
-            val oneResult: ArrayBuffer[Value] = new ArrayBuffer[Value]
-            val bindingset: BindingSet = resultTuple.next()
-            for (a <- 0 to variables.size - 1)
-            {
-                val result: Value = bindingset.getValue(variables(a))
-                oneResult += result
-            }
-            resultList += oneResult
-        }
-        //Return list of lists of Value objects
-        resultList
+        unpackTuple(resultTuple, variables.toArray)
     }
 
     def unpackTupleToMap(resultTuple: TupleQueryResult): HashMap[String, ArrayBuffer[Value]] =
