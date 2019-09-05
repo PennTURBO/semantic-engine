@@ -77,8 +77,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
            
             val genericWhereClause = primaryQuery.whereClause
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
-            //var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
-            var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph)
+            var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
+            //var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph)
             logger.info("input named graphs size: " + inputNamedGraphsList.size)
                 
             if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $process: no input named graphs found")
@@ -89,7 +89,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 {
                     val localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
                     //run validation on input graph
-                    validateInputData(graph, primaryQuery.rawInputData)
+                    //validateInputData(graph, primaryQuery.rawInputData)
                     primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)
@@ -104,7 +104,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 val endTime = System.nanoTime()
                 val runtime: String = ((endTime - startTime)/1000000000.0).toString
                 logger.info("Completed process " + process + " in " + runtime + " seconds")
-                
+
                 // create metadata about process
                 val metaDataQuery = new DataQuery()
                 val metaInfo: HashMap[Value, ArrayBuffer[String]] = HashMap(METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
@@ -113,13 +113,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                                                                 OUTPUTNAMEDGRAPH -> ArrayBuffer(primaryQuery.defaultOutputGraph, primaryQuery.defaultRemovalsGraph),
                                                                 PROCESSRUNTIME -> ArrayBuffer(runtime),
                                                                 TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
-                                                                INPUTNAMEDGRAPHS -> processGraphsList
+                                                                INPUTNAMEDGRAPHS -> /*processGraphsList*/ inputNamedGraphsList
                                                                 )
                                                                 
                 val metaDataTriples = createMetaDataTriples(metaInfo)
                 metaDataQuery.createInsertDataClause(metaDataTriples, processNamedGraph)
                 //logger.info(metaDataQuery.getQuery())
-                metaDataQuery.runQuery(cxn) 
+                metaDataQuery.runQuery(cxn)  
             }
         }
     }
