@@ -608,6 +608,7 @@ class TurboMultiuseClass
         $whereClauseWithGraphReplacement
         $filterClause
         }"""
+        //println(getGraphs)
         updater.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
     }
     
@@ -619,9 +620,10 @@ class TurboMultiuseClass
         else filterClause += s"(?$graphVar = <$graphsPrefix>)"
         val getGraphs: String = s"""
         select distinct ?$graphVar
-        Where {?s ?p ?o .}
+        Where { GRAPH ?$graphVar { ?s ?p ?o . }
         $filterClause
         }"""
+        //println(getGraphs)
         updater.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
     }
     

@@ -300,7 +300,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             }
             else
             {
-                assert (1==2, s"Error in graph model:: Discovered invalid multiplicity $thisMultiplicity")
+                assert (1==2, s"Error in graph model: Discovered invalid multiplicity $thisMultiplicity")
             }
         }
     }

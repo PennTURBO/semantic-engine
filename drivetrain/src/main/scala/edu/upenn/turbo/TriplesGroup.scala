@@ -166,7 +166,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
     
     def buildClauseFromTriplesGroup(clauseType: Value): String =
     {
-        var clause = ""
+        var graphsAndTriples: HashMap[String, HashSet[String]] = new HashMap[String, HashSet[String]]
         for (graph <- allGraphsUsed)
         {
             var useGraphForRequired = false
@@ -180,18 +180,14 @@ class TriplesGroupBuilder extends ProjectwideGlobals
             }
             if (useGraphForRequired)
             {
-                clause += s"GRAPH <$graph> {\n"
-                clause += addTriplesToClause(clauseType, requiredGroup, graph)
+                if (graphsAndTriples.contains(graph)) graphsAndTriples(graph) += addTriplesToClause(clauseType, requiredGroup, graph)
+                else graphsAndTriples += graph -> HashSet(addTriplesToClause(clauseType, requiredGroup, graph))
                 for (optionalGroup <- optionalGroups)
                 {
-                    clause += addTriplesToClause(clauseType, optionalGroup, graph)
+                    if (graphsAndTriples.contains(graph)) graphsAndTriples(graph) += addTriplesToClause(clauseType, optionalGroup, graph)
+                    else graphsAndTriples += graph -> HashSet(addTriplesToClause(clauseType, optionalGroup, graph))
                 }
-                clause += "}\n"   
             }
-        }
-        if (minusGroups.size != 0) clause += "MINUS {\n"
-        for (graph <- allGraphsUsed)
-        {
             var useGraphForMinus = false
             for (minusGroup <- minusGroups)
             {
@@ -199,15 +195,28 @@ class TriplesGroupBuilder extends ProjectwideGlobals
             }
             if (useGraphForMinus)
             {
-                clause += s"GRAPH <$graph> {\n"
                 for (minusGroup <- minusGroups)
                 {
-                    clause += addTriplesToClause(clauseType, minusGroup, graph)
+                    if (graphsAndTriples.contains(graph)) graphsAndTriples(graph) += "MINUS {\n" + addTriplesToClause(clauseType, minusGroup, graph) + "}\n"
+                    else graphsAndTriples += graph -> HashSet(addTriplesToClause(clauseType, minusGroup, graph))
                 }
-                clause += "}\n"
             }
         }
-        if (minusGroups.size != 0) clause += "}\n"
+        createClauseFromGraphsAndTriplesGroup(graphsAndTriples)
+    }
+    
+    def createClauseFromGraphsAndTriplesGroup(graphsAndTriples: HashMap[String, HashSet[String]]): String =
+    {
+        var clause = ""
+        for ((graph,triplesGroups) <- graphsAndTriples)
+        {
+            clause += s"GRAPH <$graph> {\n"
+            for (group <- triplesGroups)
+            {
+                clause += group
+            }
+            clause += "}\n"
+        }
         clause
     }
     
