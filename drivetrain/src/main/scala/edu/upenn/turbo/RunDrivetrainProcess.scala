@@ -35,23 +35,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
 
     def validateProcess(cxn: RepositoryConnection, process: String): Boolean =
     {
-        // list of valid processes which are temporary or have not yet been added to the ontology
-        def validProcesses = Array(
-            "http://transformunify.org/ontologies/RxNormUrlCleanupProcess",
-            "http://transformunify.org/ontologies/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess",
-            "http://transformunify.org/ontologies/ShortcutBiobankEncounterToShortcutPersonCleanupProcess"
-        )
-        if (validProcesses.contains(process)) true
-        else
-        {
-             val ask: String = s"""
-                ASK {
-                  values ?processSuperClass {turbo:TURBO_0001542 turbo:TURBO_0010178}
-                  <$process> rdfs:subClassOf ?processSuperClass .
-                }
-                """
-              update.querySparqlBoolean(cxn, ask).get
-        }
+       val ask: String = s"""
+          ASK {
+            values ?processSuperClass {turbo:TURBO_0001542 turbo:TURBO_0010178}
+            <$process> rdfs:subClassOf ?processSuperClass .
+          }
+          """
+        update.querySparqlBoolean(cxn, ask).get
     }
     
     def runProcess(process: String)
