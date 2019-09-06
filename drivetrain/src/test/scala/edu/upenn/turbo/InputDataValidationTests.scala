@@ -220,9 +220,9 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
-    }
-    */
-    test("hc enc")
+    }*/
+    
+    /*test("hc enc")
     {
         try
         {
@@ -237,5 +237,5 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
-    }
+    }*/
 }
