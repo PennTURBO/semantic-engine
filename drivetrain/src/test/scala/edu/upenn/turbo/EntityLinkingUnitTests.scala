@@ -46,7 +46,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
               }
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010183")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess")
           
         update.querySparqlBoolean(testCxn, healthcareEncounterAllFieldsOutput).get should be (true)
         update.querySparqlBoolean(testCxn, processMetaHealthcare).get should be (true)
@@ -57,7 +57,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           {
               GRAPH pmbb:processes
               {
-                  ontologies:TURBO_0010183
+                  pmbb:HealthcareEncounterEntityLinkingProcess
                   
                     obo:OBI_0000293 pmbb:hcenc1 ;
                     obo:OBI_0000293 pmbb:part1 ;
@@ -137,7 +137,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
             }
         """
       update.updateSparql(testCxn, insert)
-      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010183")
+      RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess")
         
         val check: String = """
           ASK
@@ -187,7 +187,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           {
               GRAPH pmbb:processes
               {
-                  ontologies:TURBO_0010183
+                  pmbb:HealthcareEncounterEntityLinkingProcess
                   
                     obo:OBI_0000293 pmbb:hcenc1 ;
                     obo:OBI_0000293 pmbb:part1 ;
@@ -266,7 +266,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                   }
               """
             update.updateSparql(testCxn, insert)
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010182")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
             
              val check: String = """
               ASK
@@ -316,7 +316,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           {
               GRAPH pmbb:processes
               {
-                  ontologies:TURBO_0010182
+                  pmbb:BiobankEncounterEntityLinkingProcess
                   
                     obo:OBI_0000293 pmbb:bbenc1 ;
                     obo:OBI_0000293 pmbb:part1 ;
@@ -384,7 +384,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                 }
             """
           update.updateSparql(testCxn, insert)
-          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010182")
+          RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
           
           val check: String = """
             ASK
@@ -433,7 +433,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           {
               GRAPH pmbb:processes
               {
-                  ontologies:TURBO_0010182
+                  pmbb:BiobankEncounterEntityLinkingProcess
                   
                     obo:OBI_0000293 pmbb:bbenc1 ;
                     obo:OBI_0000293 pmbb:part1 ;
@@ -512,8 +512,8 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                 }
             """
           update.updateSparql(testCxn, insert)
-          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010182")
-          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010183")
+          RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
+          RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess")
           
         update.querySparqlBoolean(testCxn, biobankEncounterAllFieldsOutput).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterAllFieldsOutput).get should be (true)
@@ -1131,13 +1131,13 @@ trait EntityLinkingUnitTestFields
         { 
           Graph pmbb:processes
           {
-              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010182 .
+              ?processBoundary obo:RO_0002223 pmbb:BiobankEncounterEntityLinkingProcess .
               ?processBoundary a obo:BFO_0000035 .
               ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
               ?timeMeasDatum a obo:IAO_0000416 .
               ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
               
-              ontologies:TURBO_0010182 
+              pmbb:BiobankEncounterEntityLinkingProcess 
                   turbo:TURBO_0010106 ?someQuery ;
                   turbo:TURBO_0010107 ?someRuntime ;
                   turbo:TURBO_0010108 ?someNumberOfTriples;
@@ -1152,13 +1152,13 @@ trait EntityLinkingUnitTestFields
         { 
           Graph pmbb:processes
           {
-              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010183 .
+              ?processBoundary obo:RO_0002223 pmbb:HealthcareEncounterEntityLinkingProcess .
               ?processBoundary a obo:BFO_0000035 .
               ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
               ?timeMeasDatum a obo:IAO_0000416 .
               ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
               
-              ontologies:TURBO_0010183 
+              pmbb:HealthcareEncounterEntityLinkingProcess 
                   turbo:TURBO_0010106 ?someQuery ;
                   turbo:TURBO_0010107 ?someRuntime ;
                   turbo:TURBO_0010108 ?someNumberOfTriples;

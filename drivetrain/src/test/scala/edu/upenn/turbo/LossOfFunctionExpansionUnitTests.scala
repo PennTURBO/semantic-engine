@@ -67,7 +67,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           """
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010180")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
         
         val output: String = """
           
@@ -186,7 +186,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010180 
+                pmbb:LossOfFunctionExpansionProcess 
                 
                   obo:OBI_0000293 pmbb:allele1 ;
                   obo:OBI_0000293 pmbb:part1 ;
@@ -242,13 +242,13 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           { 
             Graph pmbb:processes
             {
-                ?processBoundary obo:RO_0002223 ontologies:TURBO_0010180 .
+                ?processBoundary obo:RO_0002223 pmbb:LossOfFunctionExpansionProcess .
                 ?processBoundary a obo:BFO_0000035 .
                 ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
                 ?timeMeasDatum a obo:IAO_0000416 .
                 ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
                 
-                ontologies:TURBO_0010180 
+                pmbb:LossOfFunctionExpansionProcess 
                     turbo:TURBO_0010106 ?someQuery ;
                     turbo:TURBO_0010107 ?someRuntime ;
                     turbo:TURBO_0010108 ?someNumberOfTriples;
@@ -329,7 +329,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           """
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010180")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
         
         val output: String = """
           
@@ -541,7 +541,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           """
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010180")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
         
         val output: String = """
           

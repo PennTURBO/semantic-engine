@@ -88,13 +88,13 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           { 
             Graph pmbb:processes
             {
-                ?processBoundary obo:RO_0002223 ontologies:TURBO_0010177 .
+                ?processBoundary obo:RO_0002223 pmbb:BiobankEncounterExpansionProcess .
                 ?processBoundary a obo:BFO_0000035 .
                 ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
                 ?timeMeasDatum a obo:IAO_0000416 .
                 ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
                 
-                ontologies:TURBO_0010177 
+                pmbb:BiobankEncounterExpansionProcess 
                     turbo:TURBO_0010106 ?someQuery ;
                     turbo:TURBO_0010107 ?someRuntime ;
                     turbo:TURBO_0010108 ?someNumberOfTriples;
@@ -152,7 +152,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
@@ -200,7 +200,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010177
+                pmbb:BiobankEncounterExpansionProcess
                 
                   obo:OBI_0000293 pmbb:bbenc1 ;
                   
@@ -251,7 +251,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
@@ -284,7 +284,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010177
+                pmbb:BiobankEncounterExpansionProcess
                 
                   obo:OBI_0000293 pmbb:bbenc1 ;
                   
@@ -323,7 +323,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
@@ -349,7 +349,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
@@ -375,7 +375,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
             
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (false)
@@ -407,7 +407,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010177")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
         
         val dateNoXsd: String = """
           ask {
@@ -467,7 +467,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010177
+                pmbb:BiobankEncounterExpansionProcess
                 
                   obo:OBI_0000293 pmbb:bbenc1 ;
                   

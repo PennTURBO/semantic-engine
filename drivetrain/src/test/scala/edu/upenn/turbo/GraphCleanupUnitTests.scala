@@ -49,7 +49,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
             }
         """
       update.updateSparql(testCxn, insert)
-      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/RxNormUrlCleanupProcess")
+      RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/RxNormUrlCleanupProcess")
       
         val check: String = """
           ASK
@@ -66,7 +66,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           """
         
         update.querySparqlBoolean(testCxn, check).get should be (true)
-        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://transformunify.org/ontologies/RxNormUrlCleanupProcess")).get should be (false)
+        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/RxNormUrlCleanupProcess")).get should be (false)
       
         val count: String = "SELECT * WHERE {?s ?p ?o .}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
@@ -85,7 +85,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
             }
         """
       update.updateSparql(testCxn, insert)
-      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/RxNormUrlCleanupProcess")
+      RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/RxNormUrlCleanupProcess")
       
         val check1: String = """
           ASK
@@ -107,7 +107,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         
         update.querySparqlBoolean(testCxn, check1).get should be (false)
         update.querySparqlBoolean(testCxn, check2).get should be (true)
-        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://transformunify.org/ontologies/RxNormUrlCleanupProcess")).get should be (true)
+        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/RxNormUrlCleanupProcess")).get should be (true)
       
         val count: String = "SELECT * WHERE {Graph pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
@@ -119,7 +119,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           {
               GRAPH pmbb:processes
               {
-                  ontologies:RxNormUrlCleanupProcess
+                  pmbb:RxNormUrlCleanupProcess
                   
                     obo:OBI_0000293 pmbb:prescription1 ;
               }
@@ -143,7 +143,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
             }
         """
       update.updateSparql(testCxn, insert)
-      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess")
+      RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess")
       
         val check1: String = """
           ASK
@@ -155,7 +155,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           """
         
         update.querySparqlBoolean(testCxn, check1).get should be (false)
-        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://transformunify.org/ontologies/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess")).get should be (true)
+        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess")).get should be (true)
       
         val count: String = "SELECT * WHERE {Graph pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
@@ -167,7 +167,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           {
               GRAPH pmbb:processes
               {
-                  ontologies:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess
+                  pmbb:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess
                   
                     obo:OBI_0000293 pmbb:scHcEnc1 ;
                     obo:OBI_0000293 pmbb:scPerson1 ;
@@ -192,7 +192,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
             }
         """
       update.updateSparql(testCxn, insert)
-      RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
+      RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
       
         val check1: String = """
           ASK
@@ -204,7 +204,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           """
         
         update.querySparqlBoolean(testCxn, check1).get should be (false)
-        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://transformunify.org/ontologies/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)
+        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)
       
         val count: String = "SELECT * WHERE {Graph pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
@@ -216,7 +216,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           {
               GRAPH pmbb:processes
               {
-                  ontologies:ShortcutBiobankEncounterToShortcutPersonCleanupProcess
+                  pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess
                   
                     obo:OBI_0000293 pmbb:scBbEnc1 ;
                     obo:OBI_0000293 pmbb:scPerson1 ;
@@ -239,7 +239,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         """
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
       
         val check1: String = """
           ASK
@@ -250,6 +250,6 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           """
         
         update.querySparqlBoolean(testCxn, check1).get should be (false)
-        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://transformunify.org/ontologies/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)*/
+        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)*/
     }
 }

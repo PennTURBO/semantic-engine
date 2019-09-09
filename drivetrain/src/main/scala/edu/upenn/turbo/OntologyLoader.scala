@@ -41,7 +41,7 @@ object OntologyLoader extends ProjectwideGlobals
         addDrugOntologies(cxn)
         addDiseaseOntologies(cxn)
         // if expanded loss of function data, add gene ontologies
-        if (helper.wasThisProcessRun(cxn, "http://transformunify.org/ontologies/TURBO_0010180"))
+        if (helper.wasThisProcessRun(cxn, "http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess"))
         {
             addGeneOntologies(cxn)
         }

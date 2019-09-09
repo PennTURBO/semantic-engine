@@ -38,7 +38,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
        val ask: String = s"""
           ASK {
             values ?processSuperClass {turbo:TURBO_0001542 turbo:TURBO_0010178}
-            <$process> rdfs:subClassOf ?processSuperClass .
+            <$process> a ?processSuperClass .
           }
           """
         update.querySparqlBoolean(cxn, ask).get
@@ -175,13 +175,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-            Graph pmbb:dataModel
-            {
               Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
                                             turbo:DatatypeConnectionRecipe}
-              Values ?$INPUTTYPE {turbo:requiredInputTo turbo:optionalInputTo}
-              ?connection ?$INPUTTYPE <$process> .
+              Values ?$INPUTTYPE {turbo:hasRequiredInput turbo:hasOptionalInput}
+              <$process> ?$INPUTTYPE ?connection .
               ?connection a ?$CONNECTIONRECIPETYPE .
               <$process> turbo:inputNamedGraph ?$GRAPH .
               ?connection turbo:subject ?$SUBJECT .
@@ -203,7 +201,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               Optional
               {
-                  ?connection turbo:outputOf ?creatingProcess .
+                  ?creatingProcess turbo:hasOutput ?connection .
                   ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
               }
               Optional
@@ -215,8 +213,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?$OBJECT a ontologies:MultiObjectDescriber .
                   BIND (true AS ?$OBJECTMULTIOBJECTDESCRIBER)
               }
-            }
-            
               Optional
               {
                   ?$SUBJECT a owl:Class .
@@ -245,19 +241,16 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-            Graph pmbb:dataModel
-            {
-                Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
-                                            turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe}
-
-                ?connection turbo:removedBy <$process> .
-                ?connection a ?$CONNECTIONRECIPETYPE .
-                <$process> turbo:inputNamedGraph ?$GRAPH .
-                ?connection turbo:subject ?$SUBJECT .
-                ?connection turbo:predicate ?$PREDICATE .
-                ?connection turbo:object ?$OBJECT .
-            }
+              Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
+                                          turbo:ObjectConnectionToInstanceRecipe
+                                          turbo:DatatypeConnectionRecipe}
+  
+              <$process> turbo:removes ?connection .
+              ?connection a ?$CONNECTIONRECIPETYPE .
+              <$process> turbo:inputNamedGraph ?$GRAPH .
+              ?connection turbo:subject ?$SUBJECT .
+              ?connection turbo:predicate ?$PREDICATE .
+              ?connection turbo:object ?$OBJECT .
          }
          
          """
@@ -275,13 +268,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          Select $variablesToSelect
          Where
          {
-            Graph pmbb:dataModel
-            {
-              Values ?INPUTTO {turbo:requiredInputTo turbo:optionalInputTo}
+              Values ?INPUTTO {turbo:hasRequiredInput turbo:hasOptionalInput}
               Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
                                             turbo:DatatypeConnectionRecipe}
-              ?connection turbo:outputOf <$process> .
+              <$process> turbo:hasOutput ?connection .
               ?connection a ?$CONNECTIONRECIPETYPE .
               <$process> turbo:outputNamedGraph ?$GRAPH .
               ?connection turbo:subject ?$SUBJECT .
@@ -324,7 +315,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Optional
               {
                   ?recipe turbo:objectRequiredToCreate ?$OBJECT .
-                  ?recipe ?INPUTTO <$process> .
+                  <$process> ?INPUTTO ?recipe .
                   ?recipe turbo:object ?$OBJECTDEPENDEE .
               }
               Optional
@@ -333,7 +324,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?recipe ?INPUTTO <$process> .
                   ?recipe turbo:object ?$SUBJECTDEPENDEE .
               }
-            }
             
             Graph <$ontologyURL>
             {

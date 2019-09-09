@@ -46,13 +46,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         { 
           Graph pmbb:processes
           {
-              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010176 .
+              ?processBoundary obo:RO_0002223 pmbb:HomoSapiensExpansionProcess .
               ?processBoundary a obo:BFO_0000035 .
               ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
               ?timeMeasDatum a obo:IAO_0000416 .
               ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
               
-              ontologies:TURBO_0010176 
+              pmbb:HomoSapiensExpansionProcess 
                   turbo:TURBO_0010106 ?someQuery ;
                   turbo:TURBO_0010107 ?someRuntime ;
                   turbo:TURBO_0010108 ?someNumberOfTriples;
@@ -120,7 +120,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               turbo:TURBO_0010277 <http://transformunify.org/ontologies/TURBO_0010274> .
           }}"""
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
         
         val extraFields: String = """
           ASK {GRAPH pmbb:expanded {
@@ -265,7 +265,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010176
+                pmbb:HomoSapiensExpansionProcess
                 
                   obo:OBI_0000293 pmbb:crid1 ;
                   obo:OBI_0000293 pmbb:part1 ;
@@ -341,7 +341,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               turbo:TURBO_0010282 turbo:TURBO_0000505 .
           }}"""
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (true)
@@ -375,7 +375,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010176
+                pmbb:HomoSapiensExpansionProcess
                 
                   obo:OBI_0000293 pmbb:crid1 ;
                   obo:OBI_0000293 pmbb:part1 ;
@@ -425,7 +425,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               
           }}"""
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
         
         val dateNoXsd: String = """
           ASK {GRAPH pmbb:expanded {
@@ -493,7 +493,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010176
+                pmbb:HomoSapiensExpansionProcess
                 
                   obo:OBI_0000293 pmbb:crid1 ;
                   obo:OBI_0000293 pmbb:part1 ;
@@ -567,7 +567,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
 
           }}"""
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
     
         val output: String = """
           ASK {GRAPH pmbb:expanded {
@@ -716,7 +716,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010176
+                pmbb:HomoSapiensExpansionProcess
                 
                   obo:OBI_0000293 pmbb:shortcutCrid1 ;
                   obo:OBI_0000293 pmbb:shortcutCrid2 ;
@@ -809,7 +809,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           
           }"""
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
         
           val output: String = """
           ASK {GRAPH pmbb:expanded {
@@ -896,13 +896,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         { 
           Graph pmbb:processes
           {
-              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010176 .
+              ?processBoundary obo:RO_0002223 pmbb:HomoSapiensExpansionProcess .
               ?processBoundary a obo:BFO_0000035 .
               ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
               ?timeMeasDatum a obo:IAO_0000416 .
               ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
               
-              ontologies:TURBO_0010176 
+              pmbb:HomoSapiensExpansionProcess 
                   turbo:TURBO_0010106 ?someQuery ;
                   turbo:TURBO_0010107 ?someRuntime ;
                   turbo:TURBO_0010108 ?someNumberOfTriples;
@@ -921,7 +921,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010176
+                pmbb:HomoSapiensExpansionProcess
                 
                   obo:OBI_0000293 pmbb:shortcutCrid1 ;
                   obo:OBI_0000293 pmbb:shortcutCrid2 ;

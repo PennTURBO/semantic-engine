@@ -72,7 +72,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
             assert (1==2)
         }
         catch
@@ -100,7 +100,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
             assert (1==2)
         }
         catch
@@ -128,7 +128,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
             assert (1==2)
         }
         catch
@@ -155,7 +155,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
             assert (1==2)
         }
         catch
@@ -182,7 +182,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
             assert (1==2)
         }
         catch
@@ -209,7 +209,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010176")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
             assert (1==2)
         }
         catch
@@ -226,7 +226,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
     {
         try
         {
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
             assert (1==2)
         }
         catch

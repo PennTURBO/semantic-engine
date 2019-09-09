@@ -113,6 +113,29 @@ object DrivetrainDriver extends ProjectwideGlobals {
       query += "}}"
       //logger.info(query)
       update.updateSparql(gmCxn, query)
+      
+      val graphSpecGraph = "http://www.itmat.upenn.edu/biobank/graphSpecification"
+      query = s"INSERT DATA { Graph <$graphSpecGraph> {"
+      val graphSpecBr = io.Source.fromFile("ontologies//turbo_graphSpecification.ttl")
+      for (line <- graphSpecBr.getLines())
+      {
+          if (line.size > 0)
+          {
+              if (line.charAt(0) != '#')
+              {
+                  if (line.charAt(0) != '@') query += line+"\n"
+                  else
+                  {
+                      var formattedPrefix = line.substring(1, line.size-1)
+                      prefixes += formattedPrefix+"\n"
+                  }
+              }
+          }
+      }
+      query += "}}"
+      //logger.info(query)
+      update.updateSparql(gmCxn, query)
+      
       br.close()
   }
   

@@ -164,13 +164,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         { 
           Graph pmbb:processes
           {
-              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010179 .
+              ?processBoundary obo:RO_0002223 pmbb:HealthcareEncounterExpansionProcess .
               ?processBoundary a obo:BFO_0000035 .
               ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
               ?timeMeasDatum a obo:IAO_0000416 .
               ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
               
-              ontologies:TURBO_0010179 
+              pmbb:HealthcareEncounterExpansionProcess 
                   turbo:TURBO_0010106 ?someQuery ;
                   turbo:TURBO_0010107 ?someRuntime ;
                   turbo:TURBO_0010108 ?someNumberOfTriples;
@@ -244,7 +244,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
@@ -317,7 +317,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010179
+                pmbb:HealthcareEncounterExpansionProcess
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:diagnosis1 ;
@@ -393,7 +393,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
@@ -429,7 +429,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010179
+                pmbb:HealthcareEncounterExpansionProcess
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   
@@ -469,7 +469,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
@@ -497,7 +497,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
@@ -525,7 +525,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
@@ -569,7 +569,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
         
         val diagnosisNoXsd: String = """
           ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
@@ -684,7 +684,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010179
+                pmbb:HealthcareEncounterExpansionProcess
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:diagnosis1 ;
@@ -765,7 +765,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}"""
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
         
         val checkDiag: String = """
           Ask
@@ -816,7 +816,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010179
+                pmbb:HealthcareEncounterExpansionProcess
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:diagnosis1 ;
@@ -880,7 +880,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}"""
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
         
         val checkDiag: String = """
           Ask
@@ -938,7 +938,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010179
+                pmbb:HealthcareEncounterExpansionProcess
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:prescription1 ;
@@ -1051,7 +1051,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         update.updateSparql(testCxn, insert1)
-        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/TURBO_0010179")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
         
         val datasetCheck1: String = """
           ASK
@@ -1204,13 +1204,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         { 
           Graph pmbb:processes
           {
-              ?processBoundary obo:RO_0002223 ontologies:TURBO_0010179 .
+              ?processBoundary obo:RO_0002223 pmbb:HealthcareEncounterExpansionProcess .
               ?processBoundary a obo:BFO_0000035 .
               ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
               ?timeMeasDatum a obo:IAO_0000416 .
               ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
               
-              ontologies:TURBO_0010179 
+              pmbb:HealthcareEncounterExpansionProcess 
                   turbo:TURBO_0010106 ?someQuery ;
                   turbo:TURBO_0010107 ?someRuntime ;
                   turbo:TURBO_0010108 ?someNumberOfTriples;
@@ -1245,7 +1245,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           { 
             Graph pmbb:processes
             {
-                ontologies:TURBO_0010179
+                pmbb:HealthcareEncounterExpansionProcess
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:diagCridSC ;
