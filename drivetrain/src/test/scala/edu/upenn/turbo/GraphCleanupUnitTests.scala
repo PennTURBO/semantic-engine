@@ -33,7 +33,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
     }
     
-    test ("invalid RxNORM URI removal - valid RxNORN URI")
+    /*test ("invalid RxNORM URI removal - valid RxNORN URI")
     {
       val insert = s"""
             INSERT DATA
@@ -128,7 +128,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           """
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
-    }
+    }*/
     
     test ("remove SC hc enc to SC person link from expanded graph")
     {
@@ -228,9 +228,9 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
-    test("shift data models out of expanded graph back to original shortcut graphs")
+    /*test("shift data models out of expanded graph back to original shortcut graphs")
     {
-        /*val insert = s"""
+        val insert = s"""
             INSERT DATA
             {
             
@@ -250,6 +250,6 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           """
         
         update.querySparqlBoolean(testCxn, check1).get should be (false)
-        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)*/
-    }
+        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)
+    }*/
 }

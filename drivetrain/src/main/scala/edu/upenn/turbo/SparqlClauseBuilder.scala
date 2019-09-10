@@ -468,7 +468,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 enforcerAsUri = conn
             }
         }  
-        assert (multiplicityEnforcer != "")
+        assert (multiplicityEnforcer != "", s"Error in graph model: For process $process, there is not sufficient context to create: $changeAgent")
         multiplicityEnforcer
     }
     

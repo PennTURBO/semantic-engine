@@ -744,6 +744,20 @@ class TurboMultiuseClass
          updater.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1).toInt
     }
     
+    def countTriplesInNamedGraph(cxn: RepositoryConnection, namedGraph: String): Int =
+    {        
+        val query: String = s"""
+          select (count (?s) as ?tripcount) where
+          {
+              Graph <$namedGraph>
+              {
+                  ?s ?p ?o .
+              }
+          }
+          """
+         updater.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1).toInt
+    }
+    
     def getDatasetNames(cxn: RepositoryConnection): ArrayBuffer[String] = 
     {
         val query: String = """

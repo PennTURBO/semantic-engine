@@ -513,4 +513,37 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
             case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: Discovered invalid multiplicity http://transformunify.org/ontologies/thisisntamultiplicity")
         }
     }
+    
+    test("graph specification contains connection not present as output in data model")
+    {
+        helper.clearNamedGraph(gmCxn, "http://www.itmat.upenn.edu/biobank/graphSpecification")
+        val insertDataModel: String = """
+          
+          INSERT DATA
+          {
+              Graph pmbb:graphSpecification
+              {
+                  ontologies:notPresentConnection
+                    a ontologies:ObjectConnectionToInstanceRecipe ;
+                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+                    ontologies:object turbo:obj1 ;
+                    ontologies:predicate turbo:pred1 ;
+                    ontologies:subject turbo:obj2 ;
+                  .
+               }
+           }
+        """
+      
+        update.updateSparql(gmCxn, insertDataModel)
+        
+        try
+        {
+            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: connection http://transformunify.org/ontologies/notPresentConnection in graph specification is not the output of a queued process in the data model")
+        }
+    }
 }

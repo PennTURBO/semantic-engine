@@ -115,6 +115,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       update.updateSparql(gmCxn, query)
       
       val graphSpecGraph = "http://www.itmat.upenn.edu/biobank/graphSpecification"
+      helper.clearNamedGraph(gmCxn, graphSpecGraph)
       query = s"INSERT DATA { Graph <$graphSpecGraph> {"
       val graphSpecBr = io.Source.fromFile("ontologies//turbo_graphSpecification.ttl")
       for (line <- graphSpecBr.getLines())

@@ -57,7 +57,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             if (!validateProcess(gmCxn, process)) logger.info(process + " is not a valid TURBO process")
             else processQueryMap += process -> createPatternMatchQuery(process)
         }
-        for ((process, primaryQuery) <- processQueryMap)
+        for (process <- processes)
         {
             val startTime = System.nanoTime()
             val currDate = Calendar.getInstance().getTime()
@@ -65,6 +65,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             val processGraphsList = new ArrayBuffer[String]
             logger.info("Starting process: " + process)
            
+            val primaryQuery = processQueryMap(process)
             val genericWhereClause = primaryQuery.whereClause
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
             var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
@@ -348,7 +349,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     /**
      * Sets instantiation and globalUUID variables, and retrieves list of all processes in the order that they should be run. Then runs each process.
      */
-    def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String)
+    def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String = UUID.randomUUID().toString.replaceAll("-", ""))
     {
         setGlobalUUID(globalUUID)
         setGraphModelConnection(gmCxn)
@@ -356,12 +357,50 @@ object RunDrivetrainProcess extends ProjectwideGlobals
       
         // get list of all processes in order
         val orderedProcessList: ArrayBuffer[String] = getAllProcessesInOrder(gmCxn)
+
+        validateProcessesAgainstGraphSpecification(orderedProcessList)
         
         logger.info("Drivetrain will now run the following processes in this order:")
         for (a <- orderedProcessList) logger.info(a)
         
         // run each process
         runProcess(orderedProcessList)
+    }
+    
+    def validateProcessesAgainstGraphSpecification(processList: ArrayBuffer[String])
+    {
+        var processListAsString = ""
+        for (process <- processList)
+        {
+            processListAsString += " <" + process + "> "
+        }
+        assert (processListAsString != "")
+        
+        val getOutputsOfAllProcesses = s"""
+          Select ?recipe Where
+          {
+              Graph pmbb:graphSpecification
+              {
+                  Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
+                                            turbo:ObjectConnectionToInstanceRecipe
+                                            turbo:DatatypeConnectionRecipe}
+                  ?recipe a ?CONNECTIONRECIPETYPE .
+              }
+              Minus
+              {
+                  Graph pmbb:dataModel
+                  {
+                      Values ?process {$processListAsString}
+                      ?process ontologies:hasOutput ?recipe .
+                  }
+              }
+          }
+          """
+        //println(getOutputsOfAllProcesses)
+        var firstRes = ""
+        val res = update.querySparqlAndUnpackTuple(gmCxn, getOutputsOfAllProcesses, "recipe")
+        if (res.size > 0) firstRes = res(0)
+        assert(firstRes == "", s"Error in graph model: connection $firstRes in graph specification is not the output of a queued process in the data model")
     }
 
     /**
@@ -374,13 +413,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val getFirstProcess: String = """
           select ?firstProcess where
           {
-              ?firstProcess rdfs:subClassOf turbo:TURBO_0010178 .
               Graph pmbb:dataModel
               {
-                  ?firstProcess turbo:precedes ?someProcess .
+                  ?firstProcess a turbo:TURBO_0010178 .
                   Minus
                   {
                       ?someOtherProcess turbo:precedes ?firstProcess .
+                      ?someOtherProcess a turbo:TURBO_0010178 .
                   }
               }
           }
@@ -392,6 +431,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Graph pmbb:dataModel
               {
                   ?precedingProcess turbo:precedes ?succeedingProcess .
+                  ?precedingProcess a turbo:TURBO_0010178 .
+                  ?succeedingProcess a turbo:TURBO_0010178 .
               }
           }
         """
