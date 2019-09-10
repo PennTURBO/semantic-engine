@@ -284,7 +284,7 @@ ontologies:biobankEncounterSymbolToSymbolValue
 ontologies:biobankEncounterToBMI
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ns3:EFO_0004340 ;
+  ontologies:object efo:EFO_0004340 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0000527 ;
@@ -352,7 +352,7 @@ ontologies:bmiToBiobankEncounterDate
   ontologies:object ontologies:TURBO_0000532 ;
   ontologies:predicate obo:IAO_0000581 ;
   ontologies:required false ;
-  ontologies:subject ns3:EFO_0004340 ;
+  ontologies:subject efo:EFO_0004340 ;
 .
 ontologies:bmiToBmiDoubleLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
@@ -360,7 +360,7 @@ ontologies:bmiToBmiDoubleLiteralValue
   ontologies:object ontologies:bmiDoubleLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required true ;
-  ontologies:subject ns3:EFO_0004340 ;
+  ontologies:subject efo:EFO_0004340 ;
   rdfs:label "bmi double literal value" ;
 .
 ontologies:bmiToDataset
@@ -369,7 +369,7 @@ ontologies:bmiToDataset
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required true ;
-  ontologies:subject ns3:EFO_0004340 ;
+  ontologies:subject efo:EFO_0004340 ;
   rdfs:label "BMI to dataset connection" ;
 .
 ontologies:bmiToHealthcareEncounterDate
@@ -378,7 +378,7 @@ ontologies:bmiToHealthcareEncounterDate
   ontologies:object ontologies:TURBO_0000512 ;
   ontologies:predicate obo:IAO_0000581 ;
   ontologies:required false ;
-  ontologies:subject ns3:EFO_0004340 ;
+  ontologies:subject efo:EFO_0004340 ;
 .
 ontologies:bmiToHomoSapiens
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -386,7 +386,7 @@ ontologies:bmiToHomoSapiens
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required false ;
-  ontologies:subject ns3:EFO_0004340 ;
+  ontologies:subject efo:EFO_0004340 ;
 .
 ontologies:cancerToHomoSapiens
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -465,7 +465,7 @@ ontologies:datasetToBiobankEncounterSymbol
 ontologies:datasetToBmi
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:singleton-many ;
-  ontologies:object ns3:EFO_0004340 ;
+  ontologies:object efo:EFO_0004340 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required false ;
   ontologies:subject obo:IAO_0000100 ;
@@ -482,7 +482,7 @@ ontologies:datasetToDatasetTitle
 ontologies:datasetToDateOfBirthDatum
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:singleton-many ;
-  ontologies:object ns3:EFO_0004950 ;
+  ontologies:object efo:EFO_0004950 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required false ;
   ontologies:subject obo:IAO_0000100 ;
@@ -580,7 +580,7 @@ ontologies:dateOfBirthDatumToBirth
   ontologies:object obo:UBERON_0035946 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required true ;
-  ontologies:subject ns3:EFO_0004950 ;
+  ontologies:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -588,7 +588,7 @@ ontologies:dateOfBirthDatumToDataset
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required false ;
-  ontologies:subject ns3:EFO_0004950 ;
+  ontologies:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToDateLiteral
   a ontologies:DatatypeConnectionRecipe ;
@@ -596,7 +596,7 @@ ontologies:dateOfBirthDatumToDateLiteral
   ontologies:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010096 ;
   ontologies:required false ;
-  ontologies:subject ns3:EFO_0004950 ;
+  ontologies:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToStringLiteral
   a ontologies:DatatypeConnectionRecipe ;
@@ -604,7 +604,7 @@ ontologies:dateOfBirthDatumToStringLiteral
   ontologies:object ontologies:homoSapiensDateOfBirthStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010095 ;
   ontologies:required true ;
-  ontologies:subject ns3:EFO_0004950 ;
+  ontologies:subject efo:EFO_0004950 ;
 .
 ontologies:diagnosisToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -899,7 +899,7 @@ ontologies:healthcareEncounterSymbolToSymbolValue
 ontologies:healthcareEncounterToBMI
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ns3:EFO_0004340 ;
+  ontologies:object efo:EFO_0004340 ;
   ontologies:predicate obo:OBI_0000299 ;
   ontologies:required false ;
   ontologies:subject obo:OGMS_0000097 ;

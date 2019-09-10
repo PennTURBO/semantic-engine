@@ -14,7 +14,7 @@
 @prefix ncbitaxon: <http://purl.obolibrary.org/obo/ncbitaxon#> .
 @prefix ns1: <http://example.com/resource/> .
 @prefix ns11: <http://www.geneontology.org/formats/oboInOwl#> .
-@prefix ns3: <http://www.ebi.ac.uk/efo/> .
+@prefix efo: <http://www.ebi.ac.uk/efo/> .
 @prefix obo: <http://purl.obolibrary.org/obo/> .
 @prefix ontologies: <http://transformunify.org/ontologies/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -529,7 +529,7 @@ ontologies:shortcutBiobankEncounterToBmiValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:bmiDoubleLiteralValue ;
-  ontologies:objectRequiredToCreate ns3:EFO_0004340 ;
+  ontologies:objectRequiredToCreate efo:EFO_0004340 ;
   ontologies:predicate ontologies:TURBO_0000635 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010169 ;
@@ -685,7 +685,7 @@ ontologies:shortcutHealthcareEncounterToBmiValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:bmiDoubleLiteralValue ;
-  ontologies:objectRequiredToCreate ns3:EFO_0004340 ;
+  ontologies:objectRequiredToCreate efo:EFO_0004340 ;
   ontologies:predicate ontologies:TURBO_0000655 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010158 ;
@@ -875,7 +875,7 @@ ontologies:shortcutHomoSapiensToDateOfBirthString
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensDateOfBirthStringLiteralValue ;
   ontologies:objectRequiredToCreate obo:UBERON_0035946 ;
-  ontologies:objectRequiredToCreate ns3:EFO_0004950 ;
+  ontologies:objectRequiredToCreate efo:EFO_0004950 ;
   ontologies:predicate ontologies:TURBO_0010085 ;
   ontologies:required false ;
   ontologies:subject ontologies:TURBO_0010161 ;

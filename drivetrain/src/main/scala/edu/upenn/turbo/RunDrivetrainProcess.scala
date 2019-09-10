@@ -321,7 +321,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Optional
               {
                   ?recipe turbo:objectRequiredToCreate ?$SUBJECT .
-                  ?recipe ?INPUTTO <$process> .
+                  <$process> ?INPUTTO ?recipe .
                   ?recipe turbo:object ?$SUBJECTDEPENDEE .
               }
             

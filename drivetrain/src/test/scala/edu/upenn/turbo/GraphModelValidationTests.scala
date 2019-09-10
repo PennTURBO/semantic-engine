@@ -29,9 +29,12 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         
         pw.write("""
           
-          ontologies:myProcess1 rdfs:subClassOf ontologies:TURBO_0010178 ;
+          ontologies:myProcess1 a ontologies:TURBO_0010178 ;
               ontologies:inputNamedGraph pmbb:expanded ;
               ontologies:outputNamedGraph pmbb:expanded ; 
+              ontologies:hasOutput ontologies:object1ToObject2 ;
+              ontologies:hasRequiredInput ontologies:object1ToObject3 ;
+              ontologies:hasRequiredInput ontologies:object2ToObject3 ;
           .
               
           turbo:object1 a owl:Class .
@@ -49,7 +52,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               a ontologies:ObjectConnectionToInstanceRecipe ;
               ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
               ontologies:object turbo:object2 ;
-              ontologies:outputOf ontologies:myProcess1 ;
               ontologies:predicate turbo:pred1 ;
               ontologies:subject turbo:object1 ;
             .
@@ -58,7 +60,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               a ontologies:ObjectConnectionToInstanceRecipe ;
               ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
               ontologies:object turbo:object3 ;
-              ontologies:requiredInputTo ontologies:myProcess1 ;
               ontologies:predicate turbo:pred2 ;
               ontologies:subject turbo:object1 ;
             .
@@ -67,7 +68,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               a ontologies:ObjectConnectionToInstanceRecipe ;
               ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
               ontologies:object turbo:object3 ;
-              ontologies:requiredInputTo ontologies:myProcess1 ;
               ontologies:predicate turbo:pred3 ;
               ontologies:subject turbo:object2 ;
             .""")
@@ -123,10 +123,10 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
                     ontologies:object turbo:object2 ;
-                    ontologies:outputOf ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred5 ;
                     ontologies:subject turbo:object1 ;
                   .
+                  ontologies:myProcess1 ontologies:hasOutput ontologies:object1ToObject2_2 .
               }
           }
  
@@ -157,10 +157,10 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
                     ontologies:object turbo:object4 ;
-                    ontologies:outputOf ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred1 ;
                     ontologies:subject turbo:object1 ;
                   .
+                  ontologies:myProcess1 ontologies:hasOutput ontologies:object1ToObject4 .
                }
            }
         """
@@ -190,10 +190,10 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
                     ontologies:object turbo:object4 ;
-                    ontologies:outputOf ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred1 ;
                     ontologies:subject turbo:object1 ;
                   .
+                  ontologies:myProcess1 ontologies:hasOutput ontologies:object1ToObject4 .
                }
            }
         """
@@ -223,7 +223,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/many-singleton> ;
                     ontologies:object turbo:object4 ;
-                    ontologies:outputOf ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred1 ;
                     ontologies:subject turbo:object1 ;
                   .
@@ -232,10 +231,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
                     ontologies:object turbo:object4 ;
-                    ontologies:outputOf ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred1 ;
                     ontologies:subject turbo:object2 ;
                   .
+                  ontologies:myProcess1 ontologies:hasOutput ontologies:object1ToObject4 .
+                  ontologies:myProcess1 ontologies:hasOutput ontologies:object2ToObject4 .
                }
            }
         """
@@ -265,7 +265,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
                     ontologies:object turbo:object4 ;
-                    ontologies:requiredInputTo ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred3 ;
                     ontologies:subject turbo:object2 ;
                   .
@@ -274,7 +273,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
                     ontologies:object turbo:object5 ;
-                    ontologies:requiredInputTo ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred1 ;
                     ontologies:subject turbo:object2 ;
                   .
@@ -283,10 +281,12 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
                     ontologies:object turbo:object5 ;
-                    ontologies:requiredInputTo ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred1 ;
                     ontologies:subject turbo:object4 ;
                   .
+                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object2ToObject4 .
+                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object2ToObject5 .
+                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object4ToObject5 .
                }
            }
         """
@@ -334,7 +334,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
                     ontologies:object turbo:object4 ;
-                    ontologies:requiredInputTo ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred3 ;
                     ontologies:subject turbo:object2 ;
                   .
@@ -343,10 +342,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
                     ontologies:object turbo:object4 ;
-                    ontologies:outputOf ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred4 ;
                     ontologies:subject turbo:object2 ;
                   .
+                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object2ToObject4_input .
+                  ontologies:myProcess1 ontologies:hasOutput ontologies:object2ToObject4_output .
                }
            }
         """
@@ -390,7 +390,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/many-singleton> ;
                     ontologies:object turbo:object4 ;
-                    ontologies:requiredInputTo ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred3 ;
                     ontologies:subject turbo:object2 ;
                   .
@@ -399,10 +398,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
                     ontologies:object turbo:object4 ;
-                    ontologies:outputOf ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred4 ;
                     ontologies:subject turbo:object2 ;
                   .
+                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object2ToObject4_input .
+                  ontologies:myProcess1 ontologies:hasOutput ontologies:object2ToObject4_output .
                }
            }
         """
@@ -446,10 +446,10 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/thisisntamultiplicity> ;
                     ontologies:object turbo:object4 ;
-                    ontologies:requiredInputTo ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred3 ;
                     ontologies:subject turbo:object2 ;
                   .
+                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object2ToObject4_input .
                }
            }
         """
@@ -489,14 +489,14 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           {
               Graph pmbb:dataModel
               {
-                  ontologies:object2ToObject4_input
+                  ontologies:object2ToObject4_output
                     a ontologies:ObjectConnectionToInstanceRecipe ;
                     ontologies:multiplicity <http://transformunify.org/ontologies/thisisntamultiplicity> ;
                     ontologies:object turbo:object4 ;
-                    ontologies:outputOf ontologies:myProcess1 ;
                     ontologies:predicate turbo:pred3 ;
                     ontologies:subject turbo:object2 ;
                   .
+                  ontologies:myProcess1 ontologies:hasOutput ontologies:object2ToObject4_output .
                }
            }
         """
