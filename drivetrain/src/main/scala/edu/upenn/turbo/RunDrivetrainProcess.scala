@@ -372,8 +372,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         var processListAsString = ""
         for (process <- processList)
         {
-            processListAsString += " <" + process + "> "
+            processListAsString += " <" + process + ">,"
         }
+        processListAsString = processListAsString.substring(0, processListAsString.size-1)
         assert (processListAsString != "")
         
         val getOutputsOfAllProcesses = s"""
@@ -390,8 +391,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   Graph pmbb:dataModel
                   {
-                      Values ?process {$processListAsString}
                       ?process ontologies:hasOutput ?recipe .
+                      Minus
+                      {
+                          ?someOtherProcess ontologies:removes ?recipe .
+                      }
+                      filter (?process != ?someOtherProcess)
+                      filter (?process IN ($processListAsString))
+                      filter (?someOtherProcess IN ($processListAsString))
                   }
               }
           }

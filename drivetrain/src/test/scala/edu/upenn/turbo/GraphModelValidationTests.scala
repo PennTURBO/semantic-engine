@@ -538,12 +538,57 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses(testCxn, gmCxn)
             assert (1 == 2)
         }
         catch
         {
             case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: connection http://transformunify.org/ontologies/notPresentConnection in graph specification is not the output of a queued process in the data model")
+        }
+    }
+    
+    test("graph specification contains connection present but removed as output in data model")
+    {
+        helper.clearNamedGraph(gmCxn, "http://www.itmat.upenn.edu/biobank/graphSpecification")
+        val insertDataModel: String = """
+          
+          INSERT DATA
+          {
+              Graph pmbb:graphSpecification
+              {
+                  ontologies:object1ToObject4
+                    a ontologies:ObjectConnectionToInstanceRecipe ;
+                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+                    ontologies:subject turbo:object1 ;
+                    ontologies:predicate turbo:pred1 ;
+                    ontologies:object turbo:TURBO_0000502 ;
+                  .
+               }
+               
+               Graph pmbb:dataModel
+               {
+                   ontologies:myProcess1 ontologies:hasOutput ontologies:object1ToObject4 ;
+                       ontologies:precedes ontologies:myProcess2 .
+                   
+                   ontologies:myProcess2 ontologies:inputNamedGraph pmbb:expanded ;
+                       a turbo:TURBO_0010178 ;
+                       ontologies:outputNamedGraph pmbb:expanded ; 
+                       ontologies:hasRequiredInput ontologies:object1ToObject4 ;
+                       ontologies:removes ontologies:object1ToObject4 .
+               }
+           }
+        """
+      
+        update.updateSparql(gmCxn, insertDataModel)
+        
+        try
+        {
+            RunDrivetrainProcess.runAllDrivetrainProcesses(testCxn, gmCxn)
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: connection http://transformunify.org/ontologies/object1ToObject4 in graph specification is not the output of a queued process in the data model")
         }
     }
 }
