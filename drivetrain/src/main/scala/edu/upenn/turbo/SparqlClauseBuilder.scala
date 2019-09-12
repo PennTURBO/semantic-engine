@@ -194,14 +194,19 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     {
         var variablesToBind = new HashMap[String,Boolean]
         var discoveredMap = new HashMap[String, String]
+        var scannedConnections = new HashMap[String, String]
         for (row <- outputs)
         {
+            val connectionName = row(CONNECTIONNAME.toString).toString
             val thisMultiplicity = row(MULTIPLICITY.toString).toString
             val subjectString = row(OBJECT.toString).toString
             val objectString = row(SUBJECT.toString).toString
             val discoveryCode = subjectString + objectString
             if (discoveredMap.contains(discoveryCode)) assert(discoveredMap(discoveryCode) == row(MULTIPLICITY.toString).toString, s"Error in graph model: There are multiple connections between $subjectString and $objectString with non-matching multiplicities")
             else discoveredMap += discoveryCode -> row(MULTIPLICITY.toString).toString
+            val codePlus = discoveryCode + row(PREDICATE.toString).toString + thisMultiplicity
+            if (scannedConnections.contains(connectionName)) assert(scannedConnections(connectionName) == codePlus, s"Error in graph model: recipe $connectionName may have duplicate properties")
+            else scannedConnections += connectionName -> codePlus
             if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe || row(SUBJECTADESCRIBER.toString) != null || row(OBJECTADESCRIBER.toString) != null) 
             {  
                 if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") 
@@ -263,8 +268,13 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     def populateInputs(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
+        var scannedConnections = new HashMap[String, String]
         for (row <- inputs)
         {
+            val connectionName = row(CONNECTIONNAME.toString).toString
+            val codePlus = row(SUBJECT.toString).toString + row(PREDICATE.toString).toString + row(OBJECT.toString).toString + row(MULTIPLICITY.toString).toString
+            if (scannedConnections.contains(connectionName)) assert(scannedConnections(connectionName) == codePlus, s"Error in graph model: recipe $connectionName may have duplicate properties")
+            else scannedConnections += connectionName -> codePlus
             val thisMultiplicity = row(MULTIPLICITY.toString).toString
             if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") handleOneToOneConnection(row, inputOneToOneConnections)
             else if (thisMultiplicity == oneToManyMultiplicity)

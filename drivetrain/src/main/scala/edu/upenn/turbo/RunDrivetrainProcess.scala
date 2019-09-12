@@ -176,38 +176,38 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-              Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
+              Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
                                             turbo:DatatypeConnectionRecipe}
               Values ?$INPUTTYPE {turbo:hasRequiredInput turbo:hasOptionalInput}
-              <$process> ?$INPUTTYPE ?connection .
-              ?connection a ?$CONNECTIONRECIPETYPE .
+              <$process> ?$INPUTTYPE ?$CONNECTIONNAME .
+              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
               <$process> turbo:inputNamedGraph ?$GRAPH .
-              ?connection turbo:subject ?$SUBJECT .
-              ?connection turbo:predicate ?$PREDICATE .
-              ?connection turbo:object ?$OBJECT .
-              ?connection turbo:multiplicity ?$MULTIPLICITY .
+              ?$CONNECTIONNAME turbo:subject ?$SUBJECT .
+              ?$CONNECTIONNAME turbo:predicate ?$PREDICATE .
+              ?$CONNECTIONNAME turbo:object ?$OBJECT .
+              ?$CONNECTIONNAME turbo:multiplicity ?$MULTIPLICITY .
               
               Optional
               {
-                  ?connection obo:BFO_0000050 ?$OPTIONALGROUP .
+                  ?$CONNECTIONNAME obo:BFO_0000050 ?$OPTIONALGROUP .
                   ?$OPTIONALGROUP a turbo:TurboGraphOptionalGroup .
                   <$process> turbo:buildsOptionalGroup ?$OPTIONALGROUP .
               }
               Optional
               {
-                  ?connection obo:BFO_0000050 ?$MINUSGROUP .
+                  ?$CONNECTIONNAME obo:BFO_0000050 ?$MINUSGROUP .
                   ?$MINUSGROUP a turbo:TurboGraphMinusGroup .
                   <$process> turbo:buildsMinusGroup ?$MINUSGROUP .
               }
               Optional
               {
-                  ?creatingProcess turbo:hasOutput ?connection .
+                  ?creatingProcess turbo:hasOutput ?$CONNECTIONNAME .
                   ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
               }
               Optional
               {
-                  ?connection turbo:referencedInGraph ?$GRAPHOFORIGIN .
+                  ?$CONNECTIONNAME turbo:referencedInGraph ?$GRAPHOFORIGIN .
               }
               Optional
               {
@@ -246,12 +246,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                                           turbo:ObjectConnectionToInstanceRecipe
                                           turbo:DatatypeConnectionRecipe}
   
-              <$process> turbo:removes ?connection .
-              ?connection a ?$CONNECTIONRECIPETYPE .
+              <$process> turbo:removes ?$CONNECTIONNAME .
+              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
               <$process> turbo:inputNamedGraph ?$GRAPH .
-              ?connection turbo:subject ?$SUBJECT .
-              ?connection turbo:predicate ?$PREDICATE .
-              ?connection turbo:object ?$OBJECT .
+              ?$CONNECTIONNAME turbo:subject ?$SUBJECT .
+              ?$CONNECTIONNAME turbo:predicate ?$PREDICATE .
+              ?$CONNECTIONNAME turbo:object ?$OBJECT .
          }
          
          """
@@ -273,23 +273,23 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
                                             turbo:DatatypeConnectionRecipe}
-              <$process> turbo:hasOutput ?connection .
-              ?connection a ?$CONNECTIONRECIPETYPE .
+              <$process> turbo:hasOutput ?$CONNECTIONNAME .
+              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
               <$process> turbo:outputNamedGraph ?$GRAPH .
-              ?connection turbo:subject ?$SUBJECT .
-              ?connection turbo:predicate ?$PREDICATE .
-              ?connection turbo:object ?$OBJECT .
-              ?connection turbo:multiplicity ?$MULTIPLICITY .
+              ?$CONNECTIONNAME turbo:subject ?$SUBJECT .
+              ?$CONNECTIONNAME turbo:predicate ?$PREDICATE .
+              ?$CONNECTIONNAME turbo:object ?$OBJECT .
+              ?$CONNECTIONNAME turbo:multiplicity ?$MULTIPLICITY .
               
               Optional
               {
-                  ?connection turbo:subjectUsesContext ?$SUBJECTCONTEXT .
+                  ?$CONNECTIONNAME turbo:subjectUsesContext ?$SUBJECTCONTEXT .
                   ?$SUBJECT turbo:hasPossibleContext ?$SUBJECTCONTEXT .
                   ?$SUBJECTCONTEXT a turbo:TurboGraphContext .
               }
               Optional
               {
-                  ?connection turbo:objectUsesContext ?$OBJECTCONTEXT .
+                  ?$CONNECTIONNAME turbo:objectUsesContext ?$OBJECTCONTEXT .
                   ?$OBJECT turbo:hasPossibleContext ?$OBJECTCONTEXT .
                   ?$OBJECTCONTEXT a turbo:TurboGraphContext .
               }

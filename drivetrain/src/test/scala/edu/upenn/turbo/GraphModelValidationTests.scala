@@ -591,4 +591,56 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
             case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: connection http://transformunify.org/ontologies/object1ToObject4 in graph specification is not the output of a queued process in the data model")
         }
     }
+    
+    test("duplicate property of recipe in input")
+    {
+        val insertDataModel: String = """
+          
+          INSERT DATA
+          {
+               Graph pmbb:dataModel
+               {
+                   ontologies:object1ToObject3 ontologies:subject ontologies:someSubject .
+               }
+           }
+        """
+      
+        update.updateSparql(gmCxn, insertDataModel)
+        
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: recipe http://transformunify.org/ontologies/object1ToObject3 may have duplicate properties")
+        }
+    }
+    
+    test("duplicate property of recipe in output")
+    {
+        val insertDataModel: String = """
+          
+          INSERT DATA
+          {
+               Graph pmbb:dataModel
+               {
+                   ontologies:object1ToObject2 ontologies:predicate ontologies:somePredicate .
+               }
+           }
+        """
+      
+        update.updateSparql(gmCxn, insertDataModel)
+        
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: recipe http://transformunify.org/ontologies/object1ToObject2 may have duplicate properties")
+        }
+    }
 }
