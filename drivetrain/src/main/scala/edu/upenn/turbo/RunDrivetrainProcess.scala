@@ -78,14 +78,15 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 // for each input named graph, run query with specified named graph
                 for (graph <- inputNamedGraphsList)
                 {
-                    val localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
+                    logger.info("Now running on input graph " + graph)
+                    /*val localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
                     //run validation on input graph
-                    //validateInputData(graph, primaryQuery.rawInputData)
+                    validateInputData(graph, primaryQuery.rawInputData)*/
                     primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)
-                    val localEndingTriplesCount = helper.countTriplesInDatabase(cxn)
-                    if (localStartingTriplesCount != localEndingTriplesCount) processGraphsList += graph
+                    /*val localEndingTriplesCount = helper.countTriplesInDatabase(cxn)
+                    if (localStartingTriplesCount != localEndingTriplesCount) processGraphsList += graph*/
                 }
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
@@ -392,7 +393,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   Graph pmbb:dataModel
                   {
                       ?process ontologies:hasOutput ?recipe .
-                      Minus
+                      Filter Not Exists
                       {
                           ?someOtherProcess ontologies:removes ?recipe .
                       }
