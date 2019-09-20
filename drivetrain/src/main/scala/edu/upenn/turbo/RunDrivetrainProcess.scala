@@ -377,6 +377,19 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         }
         processListAsString = processListAsString.substring(0, processListAsString.size-1)
         assert (processListAsString != "")
+
+        var filterMultipleProcesses = ""
+        if (processList.size > 1)
+        {
+             filterMultipleProcesses = s"""
+                Filter Not Exists
+                {
+                    ?someOtherProcess ontologies:removes ?recipe .
+                }
+                filter (?process != ?someOtherProcess)
+                filter (?someOtherProcess IN ($processListAsString))
+              """
+        }
         
         val getOutputsOfAllProcesses = s"""
           Select ?recipe Where
@@ -393,13 +406,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   Graph pmbb:dataModel
                   {
                       ?process ontologies:hasOutput ?recipe .
-                      Filter Not Exists
-                      {
-                          ?someOtherProcess ontologies:removes ?recipe .
-                      }
-                      filter (?process != ?someOtherProcess)
+                      $filterMultipleProcesses
                       filter (?process IN ($processListAsString))
-                      filter (?someOtherProcess IN ($processListAsString))
                   }
               }
           }
@@ -461,6 +469,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             if (processMap.contains(currProcess)) currProcess = processMap(currProcess)
             else currProcess = null
         }
+        for (a <- processesInOrder) println("discovered process: " + a)
         processesInOrder
     }
     

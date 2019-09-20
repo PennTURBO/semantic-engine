@@ -87,14 +87,14 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
   }
   
-  def updateModel(gmCxn: RepositoryConnection, file: String = graphModelFile)
+  def updateModel(gmCxn: RepositoryConnection, graphModelFile: String = graphModelFile, graphSpecFile: String = graphSpecificationFile)
   {
-      logger.info("Updating graph model using file " + file)
+      logger.info("Updating graph model using file " + graphModelFile)
       val graph = "http://www.itmat.upenn.edu/biobank/dataModel"
       helper.clearNamedGraph(gmCxn, graph)
       var query = s"INSERT DATA { Graph <$graph> {"
       var prefixes = ""
-      val br = io.Source.fromFile(s"ontologies//$file")
+      val br = io.Source.fromFile(s"ontologies//$graphModelFile")
       for (line <- br.getLines())
       {
           if (line.size > 0)
@@ -114,10 +114,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
       //logger.info(query)
       update.updateSparql(gmCxn, query)
       
+      logger.info("Updating graph specification using file " + graphSpecFile)
       val graphSpecGraph = "http://www.itmat.upenn.edu/biobank/graphSpecification"
       helper.clearNamedGraph(gmCxn, graphSpecGraph)
       query = s"INSERT DATA { Graph <$graphSpecGraph> {"
-      val graphSpecBr = io.Source.fromFile("ontologies//turbo_graphSpecification.ttl")
+      val graphSpecBr = io.Source.fromFile(s"ontologies//$graphSpecFile")
       for (line <- graphSpecBr.getLines())
       {
           if (line.size > 0)
