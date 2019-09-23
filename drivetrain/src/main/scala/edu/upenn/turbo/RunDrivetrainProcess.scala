@@ -461,6 +461,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             if (processMap.contains(currProcess)) currProcess = processMap(currProcess)
             else currProcess = null
         }
+		
+		for (a <- processesInOrder) println("process: " + a)
+
         processesInOrder
     }
     

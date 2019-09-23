@@ -1,0 +1,1770 @@
+ontologies:DNAExtractionProcessToDNAExtract
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001051 ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0000257 ;
+.
+ontologies:DNAExtractionProcessToSpecimen
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001479 ;
+  ontologies:predicate obo:OBI_0000293 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0000257 ;
+.
+ontologies:DNAToDNAExtract
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object obo:OBI_0001051 ;
+  ontologies:predicate obo:OBI_0000643 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001868 ;
+.
+ontologies:DNAToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:OGG_0000000014 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0001868 ;
+.
+ontologies:DatasetToDiastolicBloodPressureMeasurementDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object obo:HTN_00000000 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:DatasetToSystolicBloodPressureMeasurementDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object obo:HTN_00000001 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:DiastolicBloodPressureMeasurementDatumToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject obo:HTN_00000000 ;
+.
+ontologies:DiastolicBloodPressureMeasurementDatumToValueSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0010150 ;
+  ontologies:predicate obo:OBI_0001938 ;
+  ontologies:required true ;
+  ontologies:subject obo:HTN_00000000 ;
+.
+ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:UO_0000272 ;
+  ontologies:predicate obo:IAO_0000039 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010150 ;
+.
+ontologies:DiastolicBloodPressureValueSpecificationToValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:diastolicBloodPressureDoubleLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010150 ;
+.
+ontologies:SystolicBloodPressureMeasurementDatumToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject obo:HTN_00000001 ;
+.
+ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0010149 ;
+  ontologies:predicate obo:OBI_0001938 ;
+  ontologies:required true ;
+  ontologies:subject obo:HTN_00000001 ;
+.
+ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:UO_0000272 ;
+  ontologies:predicate obo:IAO_0000039 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010149 ;
+.
+ontologies:SystolicBloodPressureValueSpecificationToValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:systolicBloodPressureDoubleLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010149 ;
+.
+ontologies:alleleCridSymbolToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000568 ;
+.
+ontologies:alleleToDNA
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:OBI_0001868 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToGeneSymbolFirstPart
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:alleleGeneSymbolFirstPartStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010016 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToGeneSymbolSecondPart
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:alleleGeneSymbolSecondPartStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010015 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToGeneSymbolUri
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:GeneSymbolUriOfVariousTypes ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToZygosityIntegerValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:alleleZygosityIntegerLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010095 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:alleleToZygosityUri
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:ZygosityUriOfVariousTypes ;
+  ontologies:predicate obo:OBI_0001938 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001352 ;
+.
+ontologies:biobankEncounterDateToBiobankEncounterStart
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000531 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000532 ;
+  rdfs:label "biobank encounter date to biobank encounter start connection" ;
+.
+ontologies:biobankEncounterDateToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000532 ;
+  rdfs:label "biobank encounter date to dataset connection" ;
+.
+ontologies:biobankEncounterDateToDateLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:biobankEncounterDateLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010096 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0000532 ;
+  rdfs:label "biobank encounter date to date string value connection" ;
+.
+ontologies:biobankEncounterDateToStringLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:biobankEncounterDateStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010095 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000532 ;
+  rdfs:label "biobank encounter date to string literal value connection" ;
+.
+ontologies:biobankEncounterIdToBiobankEncounter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000527 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000533 ;
+.
+ontologies:biobankEncounterIdToRegistryDenoter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object ontologies:BiobankEncounterRegistryOfVariousTypes ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000533 ;
+  rdfs:label "biobank encounter id to registry denoter connection" ;
+.
+ontologies:biobankEncounterIdToSymbol
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000534 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000533 ;
+  rdfs:label "biobank enc id to symbol connection" ;
+.
+ontologies:biobankEncounterRegistryDenoterToId
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0000533 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:BiobankEncounterRegistryOfVariousTypes ;
+  rdfs:label "biobank encounter registry denoter to id connection" ;
+.
+ontologies:biobankEncounterStartToBiobankEncounter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000527 ;
+  ontologies:predicate obo:RO_0002223 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0000531 ;
+  rdfs:label "biobank encounter start to biobank encounter" ;
+.
+ontologies:biobankEncounterSymbolToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000534 ;
+  rdfs:label "biobank enc symbol to dataset connection" ;
+.
+ontologies:biobankEncounterSymbolToId
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000533 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000534 ;
+  rdfs:label "biobank enc symbol to id connection" ;
+.
+ontologies:biobankEncounterSymbolToSymbolValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:biobankEncounterSymbolStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000534 ;
+  rdfs:label "biobank enc symbol to symbol value connection" ;
+.
+ontologies:biobankEncounterToBMI
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object efo:EFO_0004340 ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0000527 ;
+.
+ontologies:biobankEncounterToCollectionProcess
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0600005 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0000527 ;
+.
+ontologies:biobankEncounterToLengthMeasurementValueSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0010138 ;
+  ontologies:predicate ontologies:TURBO_0010139 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0000527 ;
+  rdfs:label "object connection to length measurement datum" ;
+.
+ontologies:biobankEncounterToMassMeasurementValueSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001929 ;
+  ontologies:predicate ontologies:TURBO_0010139 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0000527 ;
+.
+ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:HTN_00000000 ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required false ;
+  ontologies:subject obo:VSO_0000006 ;
+.
+ontologies:bloodPressureMeasurementProcessToHealthcareEncounter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OGMS_0000097 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required false ;
+  ontologies:subject obo:VSO_0000006 ;
+.
+ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:HTN_00000001 ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required false ;
+  ontologies:subject obo:VSO_0000006 ;
+.
+ontologies:bloodPressureToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:RO_0000052 ;
+  ontologies:required false ;
+  ontologies:subject obo:VSO_0000004 ;
+.
+ontologies:bmiToBiobankEncounterDate
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000532 ;
+  ontologies:predicate obo:IAO_0000581 ;
+  ontologies:required false ;
+  ontologies:subject efo:EFO_0004340 ;
+.
+ontologies:bmiToBmiDoubleLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:bmiDoubleLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject efo:EFO_0004340 ;
+  rdfs:label "bmi double literal value" ;
+.
+ontologies:bmiToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject efo:EFO_0004340 ;
+  rdfs:label "BMI to dataset connection" ;
+.
+ontologies:bmiToHealthcareEncounterDate
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000512 ;
+  ontologies:predicate obo:IAO_0000581 ;
+  ontologies:required false ;
+  ontologies:subject efo:EFO_0004340 ;
+.
+ontologies:bmiToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required false ;
+  ontologies:subject efo:EFO_0004340 ;
+.
+ontologies:cancerToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:RO_0000052 ;
+  ontologies:required false ;
+  ontologies:subject obo:MONDO_0004992 ;
+.
+ontologies:cancerToTumor
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010070 ;
+  ontologies:predicate obo:IDO_0000664 ;
+  ontologies:required true ;
+  ontologies:subject obo:MONDO_0004992 ;
+.
+ontologies:collectionProcessToBiobankEncounter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000527 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0600005 ;
+.
+ontologies:collectionProcessToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:OBI_0000293 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0600005 ;
+.
+ontologies:collectionProcessToSpecimen
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001479 ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0600005 ;
+.
+ontologies:datasetToAllele
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object obo:OBI_0001352 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:datasetToAlleleCridSymbol
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0000568 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:datasetToBiobankEncounterDate
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0000532 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+  rdfs:label "dataset to biobank encounter date connection" ;
+.
+ontologies:datasetToBiobankEncounterSymbol
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0000534 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+  rdfs:label "dataset to biobank encounter symbol" ;
+.
+ontologies:datasetToBmi
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object efo:EFO_0004340 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:IAO_0000100 ;
+  rdfs:label "dataset to BMI connection" ;
+.
+ontologies:datasetToDatasetTitle
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:singleton-singleton ;
+  ontologies:object ontologies:datasetTitleStringLiteralValue ;
+  ontologies:predicate dc11:title ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:datasetToDateOfBirthDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object efo:EFO_0004950 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:datasetToDiagnosis
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object obo:OGMS_0000073 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:IAO_0000100 ;
+  rdfs:label "dataset to diagnosis connection" ;
+.
+ontologies:datasetToGenderIdentityDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:GenderIdentityDatumOfVariousTypes ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:datasetToHealthcareEncounterDate
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0000512 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:IAO_0000100 ;
+  rdfs:label "dataset to healthcare encounter date connection" ;
+.
+ontologies:datasetToHealthcareEncounterSymbol
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0000509 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+  rdfs:label "dataset to healthcare encounter symbol" ;
+.
+ontologies:datasetToHomoSapiensSymbol
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0000504 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:datasetToLengthMeasurementValueSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0010138 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:IAO_0000100 ;
+  rdfs:label "dataset to length measurement connection" ;
+.
+ontologies:datasetToMassMeasurementValueSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object obo:OBI_0001929 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:IAO_0000100 ;
+  rdfs:label "dataset to mass measurement connection" ;
+.
+ontologies:datasetToMedicationSymbol
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0000562 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:IAO_0000100 ;
+  rdfs:label "dataset to medication symbol connection" ;
+.
+ontologies:datasetToPrescription
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object obo:PDRO_0000001 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:IAO_0000100 ;
+  rdfs:label "dataset to prescription connection" ;
+.
+ontologies:datasetToRaceIdentityDatum
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:RaceIdentityDatumOfVariousTypes ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:IAO_0000100 ;
+.
+ontologies:dateOfBirthDatumToBirth
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:UBERON_0035946 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required true ;
+  ontologies:subject efo:EFO_0004950 ;
+.
+ontologies:dateOfBirthDatumToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required false ;
+  ontologies:subject efo:EFO_0004950 ;
+.
+ontologies:dateOfBirthDatumToDateLiteral
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010096 ;
+  ontologies:required false ;
+  ontologies:subject efo:EFO_0004950 ;
+.
+ontologies:dateOfBirthDatumToStringLiteral
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:homoSapiensDateOfBirthStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010095 ;
+  ontologies:required true ;
+  ontologies:subject efo:EFO_0004950 ;
+.
+ontologies:diagnosisToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to dataset connection" ;
+.
+ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:diagnosisTermSuffixStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to diagnosis code suffix literal value" ;
+.
+ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:diagnosisCodingSequenceIntegerLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010014 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to diagnosis coding sequence literal value" ;
+.
+ontologies:diagnosisToDiagnosisRegistry
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:DiagnosisRegistryOfVariousTypes ;
+  ontologies:predicate ontologies:TURBO_0000703 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to icd registry connection" ;
+.
+ontologies:diagnosisToDiagnosisRegistryStringLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:diagnosisRegistryStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0006515 ;
+  ontologies:required true ;
+  ontologies:subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to diagnosis registry literal string value" ;
+.
+ontologies:diagnosisToIcdTerm
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:IcdTermOfVariousTypes ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to icd term connection" ;
+.
+ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:primaryDiagnosisBooleanLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010013 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000073 ;
+  rdfs:label "diagnosis to primary diagnosis boolean value connection" ;
+.
+ontologies:diagnosisToSnomedTerm
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:SnomedTermOfVariousTypes ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000073 ;
+.
+ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:VSO_0000004 ;
+  ontologies:predicate obo:IAO_0000221 ;
+  ontologies:required false ;
+  ontologies:subject obo:HTN_00000000 ;
+.
+ontologies:exomeSequenceProcessToDNAExtract
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001051 ;
+  ontologies:predicate obo:OBI_0000293 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0002118 ;
+.
+ontologies:exomeSequenceProcessToSequenceData
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001573 ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0002118 ;
+.
+ontologies:formProcessToAllele
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object obo:OBI_0001352 ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0200000 ;
+.
+ontologies:formProcessToSequenceData
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001573 ;
+  ontologies:predicate obo:OBI_0000293 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0200000 ;
+.
+ontologies:genderIdentityDatumToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
+.
+ontologies:genderIdentityDatumToGenderIdentityDatumLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:homoSapiensGenderIdentityStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
+.
+ontologies:genderIdentityDatumToGenderIdentityDatumType
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:GenderIdentityDatumType ;
+  ontologies:predicate rdf:type ;
+  ontologies:required true ;
+  ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
+.
+ontologies:genderIdentityDatumToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
+.
+ontologies:genomeCridRegistryDenoterToGenomeCrid
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0000566 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:GenomeRegistryOfVariousTypes ;
+.
+ontologies:genomeCridSymbolToGenomeCrid
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000566 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000568 ;
+.
+ontologies:genomeCridSymbolToSymbolValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:alleleGenoIdStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000568 ;
+.
+ontologies:genomeCridToGenomeCridRegistryDenoter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object ontologies:GenomeRegistryOfVariousTypes ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000566 ;
+.
+ontologies:genomeCridToGenomeCridSymbol
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000568 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000566 ;
+.
+ontologies:genomeCridToSpecimen
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001479 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000566 ;
+.
+ontologies:healthcareEncounterDateToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000512 ;
+  rdfs:label "healthcare encounter date to dataset connection" ;
+.
+ontologies:healthcareEncounterDateToDateLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:healthcareEncounterDateLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010096 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000512 ;
+  rdfs:label "healthcare encounter date to date string value connection" ;
+.
+ontologies:healthcareEncounterDateToHealthcareEncounterStart
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000511 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000512 ;
+  rdfs:label "healthcare encounter date to healthcare encounter start connection" ;
+.
+ontologies:healthcareEncounterDateToStringLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:healthcareEncounterDateStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010095 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000512 ;
+  rdfs:label "healthcare encounter date to string literal value connection" ;
+.
+ontologies:healthcareEncounterIdToRegistryDenoter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object ontologies:HealthcareEncounterRegistryOfVariousTypes ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000508 ;
+  rdfs:label "healthcare encounter id to registry denoter connection" ;
+.
+ontologies:healthcareEncounterIdToSymbol
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000509 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000508 ;
+  rdfs:label "healthcare enc id to symbol connection" ;
+.
+ontologies:healthcareEncounterRegistryDenoterToId
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0000508 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:HealthcareEncounterRegistryOfVariousTypes ;
+  rdfs:label "healthcare encounter registry denoter to id connection" ;
+.
+ontologies:healthcareEncounterStartToHealthcareEncounter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OGMS_0000097 ;
+  ontologies:predicate obo:RO_0002223 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0000511 ;
+  rdfs:label "healthcare encounter start to healthcare encounter" ;
+.
+ontologies:healthcareEncounterSymbolToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000509 ;
+  rdfs:label "healthcare enc symbol to dataset connection" ;
+.
+ontologies:healthcareEncounterSymbolToId
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000508 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000509 ;
+  rdfs:label "healthcare enc symbol to id connection" ;
+.
+ontologies:healthcareEncounterSymbolToSymbolValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:healthcareEncounterSymbolLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000509 ;
+  rdfs:label "healthcare enc symbol to symbol value connection" ;
+.
+ontologies:healthcareEncounterToBMI
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object efo:EFO_0004340 ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000097 ;
+  rdfs:label "healthcare encounter to BMI connection" ;
+.
+ontologies:healthcareEncounterToBloodPressureMeasurementProcess
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:VSO_0000006 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000097 ;
+.
+ontologies:healthcareEncounterToDiagnosis
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object obo:OGMS_0000073 ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000097 ;
+  rdfs:label "healthcare encounter to diagnosis connection" ;
+.
+ontologies:healthcareEncounterToLengthMeasurementValueSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0010138 ;
+  ontologies:predicate ontologies:TURBO_0010139 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000097 ;
+  rdfs:label "object connection to length measurement datum" ;
+.
+ontologies:healthcareEncounterToMassValueSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OBI_0001929 ;
+  ontologies:predicate ontologies:TURBO_0010139 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000097 ;
+.
+ontologies:healthcareEncounterToPrescription
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object obo:PDRO_0000001 ;
+  ontologies:predicate obo:OBI_0000299 ;
+  ontologies:required false ;
+  ontologies:subject obo:OGMS_0000097 ;
+  rdfs:label "healthcare encounter to drug prescription connection" ;
+.
+ontologies:homoSapiensIdToRegistryDenoter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object ontologies:HomoSapiensRegistryOfVariousTypes ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010092 ;
+.
+ontologies:homoSapiensIdToSymbol
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000504 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010092 ;
+.
+ontologies:homoSapiensIdentifierToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010092 ;
+.
+ontologies:homoSapiensRegistryDenoterToId
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:object ontologies:TURBO_0010092 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:HomoSapiensRegistryOfVariousTypes ;
+.
+ontologies:homoSapiensSymbolToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000504 ;
+.
+ontologies:homoSapiensSymbolToSymbolValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:homoSapiensSymbolStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000504 ;
+.
+ontologies:homoSapiensToBiobankEncounter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object ontologies:TURBO_0000527 ;
+  ontologies:predicate obo:RO_0000056 ;
+  ontologies:required false ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+.
+ontologies:homoSapiensToBiosex
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:PATO_0000047 ;
+  ontologies:predicate obo:RO_0000086 ;
+  ontologies:required false ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+.
+ontologies:homoSapiensToBirth
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:UBERON_0035946 ;
+  ontologies:predicate ontologies:TURBO_0000303 ;
+  ontologies:required false ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+.
+ontologies:homoSapiensToHealthcareEncounter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object obo:OGMS_0000097 ;
+  ontologies:predicate obo:RO_0000056 ;
+  ontologies:required false ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+.
+ontologies:homoSapiensToHeight
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:PATO_0000119 ;
+  ontologies:predicate obo:RO_0000086 ;
+  ontologies:required false ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+.
+ontologies:homoSapiensToInvestigationRole
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-superSingleton ;
+  ontologies:object obo:OBI_0000097 ;
+  ontologies:predicate obo:RO_0000087 ;
+  ontologies:required false ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+.
+ontologies:homoSapiensToPatientRole
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-superSingleton ;
+  ontologies:object obo:OBI_0000093 ;
+  ontologies:predicate obo:RO_0000087 ;
+  ontologies:required false ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+.
+ontologies:homoSapiensToTumor
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
+  ontologies:object ontologies:TURBO_0010070 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required false ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+.
+ontologies:homoSapiensToWeight
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:PATO_0000128 ;
+  ontologies:predicate obo:RO_0000086 ;
+  ontologies:required false ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+.
+ontologies:identifierToHealthcareEncounter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OGMS_0000097 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000508 ;
+  rdfs:label "Identifier to Healthcare Encounter Connection" ;
+.
+ontologies:identifierToMedicationSymbol
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000562 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000561 ;
+  rdfs:label "identifier to medication symbol connection" ;
+.
+ontologies:identifierToPrescription
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:PDRO_0000001 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000561 ;
+  rdfs:label "identifier to prescription connection" ;
+.
+ontologies:instantiationToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:superSingleton-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:OBI_0000293 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000522 ;
+.
+ontologies:investigationRoleToBiobankEncounter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:superSingleton-many ;
+  ontologies:object ontologies:TURBO_0000527 ;
+  ontologies:predicate obo:BFO_0000054 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0000097 ;
+.
+ontologies:lengthMeasurementValueSpecificationToCentimeter
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:UO_0000015 ;
+  ontologies:predicate obo:IAO_0000039 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010138 ;
+.
+ontologies:lengthMeasurementValueSpecificationToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010138 ;
+  rdfs:label "length measurement connection to dataset" ;
+.
+ontologies:lengthMeasurementValueSpecificationToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0010138 ;
+.
+ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:PATO_0000119 ;
+  ontologies:predicate obo:IAO_0000221 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0010138 ;
+.
+ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:lengthMeasurementDoubleLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010138 ;
+  rdfs:label "length measurement datum to length measurement literal value connection" ;
+.
+ontologies:massMeasurementValueSpecificationToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0001929 ;
+  rdfs:label "mass measurement connection to dataset" ;
+.
+ontologies:massMeasurementValueSpecificationToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0001929 ;
+.
+ontologies:massMeasurementValueSpecificationToHomoSapiensWeight
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:PATO_0000128 ;
+  ontologies:predicate obo:IAO_0000221 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0001929 ;
+.
+ontologies:massMeasurementValueSpecificationToKilogram
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:UO_0000009 ;
+  ontologies:predicate obo:IAO_0000039 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001929 ;
+  rdfs:label "mass measurement datum to kilogram" ;
+.
+ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:massMeasurementDoubleLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject obo:OBI_0001929 ;
+  rdfs:label "mass measurement datum to mass measurement double literal value connection" ;
+.
+ontologies:medicationSymbolToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0000562 ;
+  rdfs:label "medication symbol to dataset connection" ;
+.
+ontologies:medicationSymbolToMedicationSymbolStringLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:medicationSymbolStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000562 ;
+  rdfs:label "medication symbol to medication symbol string literal value" ;
+.
+ontologies:medicationSymbolToidentifier
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0000561 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000562 ;
+  rdfs:label "medication symbol to identifier connection" ;
+.
+ontologies:patientRoleToHealthcareEncounter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:superSingleton-many ;
+  ontologies:object obo:OGMS_0000097 ;
+  ontologies:predicate obo:BFO_0000054 ;
+  ontologies:required false ;
+  ontologies:subject obo:OBI_0000093 ;
+.
+ontologies:prescriptionToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required false ;
+  ontologies:subject obo:PDRO_0000001 ;
+  rdfs:label "prescription to dataset connection" ;
+.
+ontologies:prescriptionToDrug
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:DrugTermOfVariousTypes ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:required false ;
+  ontologies:subject obo:PDRO_0000001 ;
+  rdfs:label "prescription to drug connection" ;
+.
+ontologies:prescriptionToMedicationOrderNameStringLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:medicationOrderNameStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required false ;
+  ontologies:subject obo:PDRO_0000001 ;
+  rdfs:label "prescription to med order name lit value connection" ;
+.
+ontologies:raceIdentityDatumToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
+.
+ontologies:raceIdentityDatumToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
+.
+ontologies:raceIdentityDatumToRaceIdentityDatumLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:homoSapiensRaceIdentityStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
+.
+ontologies:raceIdentityDatumToRaceIdentityDatumType
+  a ontologies:ObjectConnectionToClassRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:RaceIdentityDatumType ;
+  ontologies:predicate rdf:type ;
+  ontologies:required true ;
+  ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
+.
+ontologies:symbolToHomoSapiensId
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0010092 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0000504 ;
+.
+ontologies:systolicBloodPressureMeasurementDatumToBloodPressure
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:VSO_0000004 ;
+  ontologies:predicate obo:IAO_0000221 ;
+  ontologies:required false ;
+  ontologies:subject obo:HTN_00000001 ;
+.
+ontologies:tumorCridSymbolToSymbolLiteralValue
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:tumorSymbolStringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000577 ;
+.
+ontologies:tumorCridSymbolToTumorCrid
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0010188 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000577 ;
+.
+ontologies:tumorCridToTumor
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0010070 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010188 ;
+.
+ontologies:tumorCridToDataset
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/many-singleton> ;
+  ontologies:object obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010188 ;
+.
+ontologies:datasetToTumorCrid
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/singleton-many> ;
+  ontologies:subject obo:IAO_0000100 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:object ontologies:TURBO_0010188 ;
+.
+ontologies:tumorCridToTumorCridSymbol
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:IAO_0000577 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010188 ;
+.
+ontologies:tumorCridToTumorRegistryDenoter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TumorRegistryDenoterOfVariousTypes ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010188 ;
+.
+ontologies:tumorRegistryDenoterToTumorCrid
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:TURBO_0010188 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TumorRegistryDenoterOfVariousTypes ;
+.
+ontologies:tumorToHomoSapiens
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:required false ;
+  ontologies:subject ontologies:TURBO_0010070 ;
+.
+<http://transformunify.org/ontologies/1-1>
+  a ontologies:TurboGraphMultiplicityRule ;
+  rdfs:label "1-1 multiplicity rule" ;
+.
+<http://transformunify.org/ontologies/1-many>
+  a ontologies:TurboGraphMultiplicityRule ;
+  rdfs:label "1-many multiplicity rule" ;
+.
+ontologies:BiobankEncounterRegistryOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range ontologies:TURBO_0000535 ;
+.
+ontologies:DatatypeConnectionRecipe
+  a owl:Class ;
+  rdfs:label "datatype connection recipe" ;
+  rdfs:subClassOf ontologies:TurboGraphConnectionRecipe ;
+.
+ontologies:DiagnosisRegistryOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range Thesaurus:C53489 ;
+  ontologies:range Thesaurus:C71890 ;
+  ontologies:range Thesaurus:C71892 ;
+.
+ontologies:DrugTermOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range owl:Class ;
+  rdfs:label "drug term of various types" ;
+.
+ontologies:GenderIdentityDatumOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  rdfs:label "gender identity datum of various types" ;
+.
+ontologies:GenderIdentityDatumType
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range obo:OMRSE_00000133 ;
+  ontologies:range obo:OMRSE_00000138 ;
+  ontologies:range obo:OMRSE_00000141 ;
+  ontologies:usesCustomVariableManipulationRule ontologies:GenderIdentityTypeRule ;
+.
+ontologies:GeneSymbolUriOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range rdfs:Resource ;
+.
+ontologies:GenomeRegistryOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range ontologies:TURBO_0000567 ;
+.
+ontologies:HealthcareEncounterRegistryOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range ontologies:TURBO_0000510 ;
+  ontologies:range ontologies:TURBO_0010256 ;
+.
+ontologies:HomoSapiensRegistryOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range ontologies:TURBO_0000505 ;
+  ontologies:range ontologies:TURBO_0010275 ;
+.
+ontologies:IcdTermOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range owl:Class ;
+  ontologies:usesCustomVariableManipulationRule ontologies:IcdDiagnosisRegistryRule ;
+.
+ontologies:MultiObjectDescriber
+  a owl:Class ;
+.
+ontologies:ObjectConnectionRecipe
+  a owl:Class ;
+  rdfs:label "object connection recipe" ;
+  rdfs:subClassOf ontologies:TurboGraphConnectionRecipe ;
+.
+ontologies:ObjectConnectionToClassRecipe
+  a owl:Class ;
+  rdfs:subClassOf ontologies:ObjectConnectionRecipe ;
+.
+ontologies:ObjectConnectionToInstanceRecipe
+  a owl:Class ;
+  rdfs:subClassOf ontologies:ObjectConnectionRecipe ;
+.
+ontologies:RaceIdentityDatumOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+.
+ontologies:RaceIdentityDatumType
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range obo:OBI_0000852 ;
+  ontologies:range obo:OMRSE_00000098 ;
+  ontologies:range obo:OMRSE_00000180 ;
+  ontologies:range obo:OMRSE_00000181 ;
+  ontologies:range obo:OMRSE_00000182 ;
+  ontologies:range obo:OMRSE_00000183 ;
+  ontologies:range obo:OMRSE_00000184 ;
+  ontologies:range ontologies:TURBO_0001551 ;
+  ontologies:usesCustomVariableManipulationRule ontologies:RaceIdentityTypeRule ;
+.
+ontologies:SnomedTermOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range owl:Class ;
+  ontologies:usesCustomVariableManipulationRule ontologies:SnomedDiagnosisRegistryRule ;
+.
+ontologies:TumorRegistryDenoterOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+.
+ontologies:TurboGraphBooleanLiteralValue
+  a owl:Class ;
+  rdfs:label "turbo graph boolean literal value" ;
+  rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
+.
+ontologies:TurboGraphConnectionRecipe
+  a owl:Class ;
+  rdfs:label "connection recipe" ;
+.
+ontologies:TurboGraphDateLiteralValue
+  a owl:Class ;
+  rdfs:label "Turbo Graph date literal value" ;
+  rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
+.
+ontologies:TurboGraphDoubleLiteralValue
+  a owl:Class ;
+  rdfs:label "turbo graph double literal value" ;
+  rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
+.
+ontologies:TurboGraphIntegerLiteralValue
+  a owl:Class ;
+  rdfs:label "turbo graph integer literal value" ;
+  rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
+.
+ontologies:TurboGraphLiteralValue
+  a owl:Class ;
+  rdfs:label "Turbo Graph Literal Value" ;
+.
+ontologies:TurboGraphMinusGroup
+  a owl:Class ;
+.
+ontologies:TurboGraphMultiplicityRule
+  a owl:Class ;
+  rdfs:label "TURBO graph multiplicity rule" ;
+.
+ontologies:TurboGraphOptionalGroup
+  a owl:Class ;
+.
+ontologies:TurboGraphStringLiteralValue
+  a owl:Class ;
+  rdfs:label "TURBO graph string literal value" ;
+  rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
+.
+ontologies:TurboGraphVariableManipulationLogic
+  a owl:Class ;
+  rdfs:label "TURBO graph expansion rule logic" ;
+.
+ontologies:TurboNamedGraph
+  a owl:Class ;
+  rdfs:label "named graph in turbo repository" ;
+  rdfs:subClassOf owl:Thing ;
+.
+ontologies:ZygosityUriOfVariousTypes
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range ontologies:TURBO_0000590 ;
+  ontologies:range ontologies:TURBO_0000591 ;
+.
+ontologies:alleleGeneSymbolFirstPartStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:alleleGeneSymbolSecondPartStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:alleleGeneSymbolStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:alleleGenoIdStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:alleleZygosityIntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+ontologies:biobankEncounterDateLiteralValue
+  a ontologies:TurboGraphDateLiteralValue ;
+  rdfs:label "biobank encounter date value" ;
+.
+ontologies:biobankEncounterDateStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+  rdfs:label "biobank encounter date string value" ;
+.
+ontologies:biobankEncounterSymbolStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:bmiDoubleLiteralValue
+  a ontologies:TurboGraphDoubleLiteralValue ;
+  rdfs:label "bmi double literal value" ;
+.
+ontologies:buildsMinusGroup
+  a owl:ObjectProperty ;
+.
+ontologies:buildsOptionalGroup
+  a owl:ObjectProperty ;
+  rdfs:domain rdfs:Resource ;
+  rdfs:range rdfs:Resource ;
+.
+ontologies:datasetTitleStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:diagnosisCodingSequenceIntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
+  rdfs:label "diagnosis coding sequence integer literal value" ;
+.
+ontologies:diagnosisRegistryStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+  rdfs:label "diagnosis registry string value" ;
+.
+ontologies:diagnosisTermSuffixStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+  rdfs:label "diagnosis term suffix literal string value" ;
+.
+ontologies:diastolicBloodPressureDoubleLiteralValue
+  a ontologies:TurboGraphDoubleLiteralValue ;
+.
+ontologies:hasOriginalVariable
+  a owl:ObjectProperty ;
+  rdfs:range rdfs:Resource ;
+.
+ontologies:healthcareEncounterDateLiteralValue
+  a ontologies:TurboGraphDateLiteralValue ;
+  rdfs:label "healthcare encounter date value" ;
+.
+ontologies:healthcareEncounterDateStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+  rdfs:label "healthcare encounter date string value" ;
+.
+ontologies:healthcareEncounterSymbolLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+  rdfs:label "healthcare encounter symbol value" ;
+.
+ontologies:homoSapiensDateOfBirthDateLiteralValue
+  a ontologies:TurboGraphDateLiteralValue ;
+.
+ontologies:homoSapiensDateOfBirthStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:homoSapiensGenderIdentityStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:homoSapiensRaceIdentityStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:homoSapiensSymbolStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:inputNamedGraph
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TURBO_0010178 ;
+  rdfs:label "input named graph for a turbo process" ;
+  rdfs:range ontologies:TurboNamedGraph ;
+.
+ontologies:lengthMeasurementDoubleLiteralValue
+  a ontologies:TurboGraphDoubleLiteralValue ;
+  rdfs:label "length measurement double literal value" ;
+.
+ontologies:many-1
+  a ontologies:TurboGraphMultiplicityRule ;
+  rdfs:label "many-1 multiplicity rule" ;
+.
+ontologies:many-singleton
+  a ontologies:TurboGraphMultiplicityRule ;
+  rdfs:label "many-singleton multiplicity rule" ;
+.
+ontologies:many-superSingleton
+  a ontologies:TurboGraphMultiplicityRule ;
+  rdfs:label "many-singleton multiplicity rule" ;
+.
+ontologies:massMeasurementDoubleLiteralValue
+  a ontologies:TurboGraphDoubleLiteralValue ;
+  rdfs:label "mass measurement datum double literal value" ;
+.
+ontologies:medicationOrderNameStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+  rdfs:label "med order name string literal value" ;
+.
+ontologies:medicationSymbolStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+  rdfs:label "medication identifier string literal value" ;
+.
+ontologies:multiplicity
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:label "multiplicity definition for connection recipe" ;
+  rdfs:range ontologies:TurboGraphMultiplicityRule ;
+.
+ontologies:object
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:label "object of connection recipe" ;
+  rdfs:range rdfs:Resource ;
+.
+ontologies:objectRequiredToCreate
+  a owl:ObjectProperty ;
+  rdfs:domain owl:Class ;
+  rdfs:range rdfs:Resource ;
+.
+ontologies:optionalInputTo
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:label "input to an expansion process" ;
+  rdfs:range rdfs:Resource ;
+.
+ontologies:outputNamedGraph
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TURBO_0010178 ;
+  rdfs:label "output named graph for a turbo process" ;
+  rdfs:range ontologies:TurboNamedGraph ;
+.
+ontologies:outputOf
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:label "output of an expansion process" ;
+  rdfs:range ontologies:TURBO_0010178 ;
+  rdfs:range owl:Class ;
+.
+ontologies:precedes
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TURBO_0010178 ;
+  rdfs:range ontologies:TURBO_0010178 ;
+.
+ontologies:predicate
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:label "predicate of connection recipe" ;
+  rdfs:range rdf:Property ;
+.
+ontologies:primaryDiagnosisBooleanLiteralValue
+  a ontologies:TurboGraphBooleanLiteralValue ;
+  rdfs:label "diagnosis primary t/f" ;
+.
+ontologies:referencedInGraph
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+.
+ontologies:removedBy
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+.
+ontologies:required
+  a owl:DatatypeProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:label "is connection recipe required in model?" ;
+  rdfs:range xsd:boolean ;
+.
+ontologies:requiredInputTo
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:label "input to an expansion process" ;
+  rdfs:range rdfs:Resource ;
+.
+ontologies:singleton-many
+  a ontologies:TurboGraphMultiplicityRule ;
+  rdfs:label "singleton-many multiplicity rule" ;
+.
+ontologies:singleton-singleton
+  a ontologies:TurboGraphMultiplicityRule ;
+.
+ontologies:singleton-superSingleton
+  a ontologies:TurboGraphMultiplicityRule ;
+  rdfs:label "singleton-superSingleton multiplicity rule" ;
+.
+ontologies:subject
+  a owl:ObjectProperty ;
+  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:label "subject of connection recipe" ;
+  rdfs:range owl:Class ;
+.
+ontologies:subjectRequiredToCreate
+  a owl:ObjectProperty ;
+  rdfs:domain owl:Class ;
+  rdfs:range rdfs:Resource ;
+.
+ontologies:superSingleton-many
+  a ontologies:TurboGraphMultiplicityRule ;
+  rdfs:label "singleton-many multiplicity rule" ;
+.
+ontologies:superSingleton-singleton
+  a ontologies:TurboGraphMultiplicityRule ;
+  rdfs:label "superSingleton-singleton multiplicity rule" ;
+.
+ontologies:systolicBloodPressureDoubleLiteralValue
+  a ontologies:TurboGraphDoubleLiteralValue ;
+.
+ontologies:tumorSymbolStringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+ontologies:usesCustomVariableManipulationRule
+  a owl:ObjectProperty ;
+  rdfs:range rdfs:Resource ;
+.
