@@ -460,12 +460,17 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         var multiplicityEnforcer = ""
         var enforcerAsUri = ""
         assert (outputOneToOneConnections.contains(changeAgent))
-        // if there are no one-many connections in input, you can choose any element from the input as a multiplicity enforcer
-        if (inputOneToManyConnections.size == 0) 
+        // if there are no one-many connections that are qualified enforcers in input, you can choose any element from the input as a multiplicity enforcer
+        var useAnyQualified = true
+        for ((k,v) <- inputOneToOneConnections)
         {
-            for ((k,v) <- inputOneToOneConnections)
+            if (usedVariables.contains(k) && usedVariables(k)) 
             {
-                if (usedVariables.contains(k) && usedVariables(k)) 
+                for ((key,value) <- inputOneToManyConnections)
+                {
+                    if (k != key && usedVariables.contains(key) && usedVariables(key)) useAnyQualified = false
+                }
+                if (useAnyQualified)
                 {
                     val newEnforcer = helper.convertTypeToSparqlVariable(k)
                     if (multiplicityEnforcer != "")
@@ -474,11 +479,11 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                             s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
                     }
                     multiplicityEnforcer = newEnforcer
-                    enforcerAsUri = k
-                }  
-            }
+                    enforcerAsUri = k   
+                }
+            }  
         }
-        else
+        if (multiplicityEnforcer == "")
         {
             for (conn <- outputOneToOneConnections(changeAgent))
             {
