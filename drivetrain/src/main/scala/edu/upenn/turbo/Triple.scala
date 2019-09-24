@@ -74,6 +74,20 @@ class Triple extends ProjectwideGlobals
         }
         else this.tripleObject = objectVar
     }
+
+    def getSubjectWithContext(): String =
+    {
+        var subjectWithContext = helper.removeAngleBracketsFromString(tripleSubject)
+        if (subjectContext != "") subjectWithContext += "_" + subjectContext
+        subjectWithContext
+    }
+
+    def getObjectWithContext(): String = 
+    {
+        var objectWithContext = helper.removeAngleBracketsFromString(tripleObject)
+        if (objectContext != "") objectWithContext += "_" + objectContext
+        objectWithContext
+    }
     
     def makeTriple(): String = 
     {

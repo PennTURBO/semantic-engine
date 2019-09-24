@@ -107,12 +107,14 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
                                       subjectAType, objectAType, false, subjectContext, objectContext)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
-            if (usedVariables.contains(rowResult(SUBJECT.toString).toString))
+            logger.info("checking for " + newTriple.getSubjectWithContext())
+            logger.info("checking for " + newTriple.getObjectWithContext())
+            if (usedVariables.contains(newTriple.getSubjectWithContext()))
             {
                 val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false, false, "", subjectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
             }
-            if (!objectIsLiteral && usedVariables.contains(rowResult(OBJECT.toString).toString) && newTriple.triplePredicate != "rdf:type")
+            if (!objectIsLiteral && usedVariables.contains(newTriple.getObjectWithContext()) && newTriple.triplePredicate != "rdf:type")
             {
                 val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false, false, "", objectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
@@ -263,6 +265,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 if (row(OBJECTTYPE.toString) != null) objAType = true
                 variablesToBind += objectString -> objAType
                 variablesToBind += subjectString -> subjAType
+                logger.info("added " + objectString + " to vtb")
+                logger.info("added " + subjectString + " to vtb")
            }
         }
         variablesToBind
