@@ -1,19 +1,23 @@
 # _ is wildcard 
 ontologies:miniHceExpansionSpec 
   a ontologies:TURBO_0010178 ;
-  ontologies:inputNamedGraph ontologies:hceShortcuts ;
-  ontologies:outputNamedGraph ontologies:hceExpanded ;
   ontologies:hasOutput ontologies:cridDenotesHce ;
-  ontologies:hasOutput ontologies:symbolPartOfCridForHce ;
   ontologies:hasOutput ontologies:cridsymbHasRepresentation ;
   ontologies:hasOutput ontologies:hceExpansionSpecification ;
-  ontologies:hasRequiredInput ontologies:miniHceCridsymShortcut ;
-  ontologies:hasRequiredInput ontologies:miniHceStartdateShortcut ;
+  # ontologies:hasOutput ontologies:procboundEndsEnc ;
   ontologies:hasOutput ontologies:procboundStartsEnc ;
-  ontologies:hasOutput ontologies:tmdAboutProcbound ;
-  ontologies:hasOutput ontologies:tmdHasMeasVal ;
   ontologies:hasOutput ontologies:regdenPartOfCrid ;
+  ontologies:hasOutput ontologies:startingTmdAboutProcbound ;
+  ontologies:hasOutput ontologies:startingTmdHasMeasVal ;
+  # ontologies:hasOutput ontologies:endingTmdAboutProcbound ;
+  # ontologies:hasOutput ontologies:endingTmdHasMeasVal ;
+  ontologies:hasOutput ontologies:symbolPartOfCridForHce ;
+  ontologies:hasRequiredInput ontologies:miniHceCridsymShortcut ;
+  # ontologies:hasRequiredInput ontologies:miniHceEnddateShortcut ;
+  ontologies:hasRequiredInput ontologies:miniHceStartdateShortcut ;
   ontologies:hasRequiredInput ontologies:regdenFromShorts ;
+  ontologies:inputNamedGraph ontologies:hceShortcuts ;
+  ontologies:outputNamedGraph ontologies:hceExpanded ;
 .
   
 ontologies:miniHceCridsymShortcut 
@@ -33,6 +37,15 @@ ontologies:miniHceStartdateShortcut
   ontologies:predicate ontologies:omop_enc_start_date_sc_pred  ;
   ontologies:object ontologies:encStartValue ;
 .
+
+# ontologies:miniHceEnddateShortcut 
+  # a ontologies:DatatypeConnectionRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:required true ;
+  # ontologies:subject ontologies:TURBO_0010158 ;
+  # ontologies:predicate ontologies:omop_enc_end_date_sc_pred  ;
+  # ontologies:object ontologies:encEndValue ;
+# .
 
 ontologies:regdenFromShorts a ontologies:ObjectConnectionToClassRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
