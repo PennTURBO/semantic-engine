@@ -107,8 +107,6 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
                                       subjectAType, objectAType, false, subjectContext, objectContext)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
-            logger.info("checking for " + newTriple.getSubjectWithContext())
-            logger.info("checking for " + newTriple.getObjectWithContext())
             if (usedVariables.contains(newTriple.getSubjectWithContext()))
             {
                 val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false, false, "", subjectContext)
@@ -265,8 +263,6 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 if (row(OBJECTTYPE.toString) != null) objAType = true
                 variablesToBind += objectString -> objAType
                 variablesToBind += subjectString -> subjAType
-                logger.info("added " + objectString + " to vtb")
-                logger.info("added " + subjectString + " to vtb")
            }
         }
         variablesToBind
@@ -464,20 +460,41 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         var multiplicityEnforcer = ""
         var enforcerAsUri = ""
         assert (outputOneToOneConnections.contains(changeAgent))
-        for (conn <- outputOneToOneConnections(changeAgent))
+        // if there are no one-many connections in input, you can choose any element from the input as a multiplicity enforcer
+        if (inputOneToManyConnections.size == 0) 
         {
-            if (usedVariables.contains(conn) && usedVariables(conn)) 
+            for ((k,v) <- inputOneToOneConnections)
             {
-                val newEnforcer = helper.convertTypeToSparqlVariable(conn)
-                if (multiplicityEnforcer != "")
+                if (usedVariables.contains(k) && usedVariables(k)) 
                 {
-                    assert(inputOneToOneConnections.contains(enforcerAsUri) && inputOneToOneConnections(enforcerAsUri).contains(conn),
-                        s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
-                }
-                multiplicityEnforcer = newEnforcer
-                enforcerAsUri = conn
+                    val newEnforcer = helper.convertTypeToSparqlVariable(k)
+                    if (multiplicityEnforcer != "")
+                    {
+                        assert(inputOneToOneConnections.contains(enforcerAsUri) && inputOneToOneConnections(enforcerAsUri).contains(k),
+                            s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
+                    }
+                    multiplicityEnforcer = newEnforcer
+                    enforcerAsUri = k
+                }  
             }
-        }  
+        }
+        else
+        {
+            for (conn <- outputOneToOneConnections(changeAgent))
+            {
+                if (usedVariables.contains(conn) && usedVariables(conn)) 
+                {
+                    val newEnforcer = helper.convertTypeToSparqlVariable(conn)
+                    if (multiplicityEnforcer != "")
+                    {
+                        assert(inputOneToOneConnections.contains(enforcerAsUri) && inputOneToOneConnections(enforcerAsUri).contains(conn),
+                            s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
+                    }
+                    multiplicityEnforcer = newEnforcer
+                    enforcerAsUri = conn
+                }
+            }   
+        }
         assert (multiplicityEnforcer != "", s"Error in graph model: For process $process, there is not sufficient context to create: $changeAgent")
         multiplicityEnforcer
     }
