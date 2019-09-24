@@ -34,9 +34,9 @@ ontologies:cridsymbRepresentationStringValue
   a ontologies:TurboGraphStringLiteralValue ;
 .
 
-# ontologies:encStartValue 
-  # a ontologies:TurboGraphDateLiteralValue ;
-# .
+ ontologies:encStartValue 
+  a ontologies:TurboGraphDateLiteralValue ;
+.
 
 ontologies:cridsymbHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
@@ -87,45 +87,45 @@ ontologies:startingTmdHasMeasVal
   ontologies:subjectUsesContext ontologies:encStartContext ;
 .
 
-# ontologies:encEndValue 
-  # a ontologies:TurboGraphDateLiteralValue ;
-# .
+ ontologies:encEndValue 
+  a ontologies:TurboGraphDateLiteralValue ;
+ .
 
-# ontologies:procboundEndsEnc
-  # a ontologies:ObjectConnectionToInstanceRecipe ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:required true ;
-  # ontologies:subject obo:BFO_0000035 ;
-  # ontologies:predicate obo:RO_0002223 ;
-  # ontologies:object obo:OGMS_0000097 ;
-  # ontologies:subjectUsesContext ontologies:encEndContext ;
-# .
+ontologies:procboundEndsEnc
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:BFO_0000035 ;
+  ontologies:predicate obo:RO_0002229 ;
+  ontologies:object obo:OGMS_0000097 ;
+  ontologies:subjectUsesContext ontologies:encEndContext ;
+.
 
-# ontologies:endingTmdAboutProcbound 
-  # a ontologies:ObjectConnectionToInstanceRecipe ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:required true ;
-  # ontologies:subject obo:IAO_0000416 ;
-  # ontologies:predicate obo:IAO_0000136 ;
-  # ontologies:object obo:BFO_0000035 ;
-  # ontologies:subjectUsesContext ontologies:encEndContext ;
-  # ontologies:objectUsesContext ontologies:encEndContext ;
-# .
+ontologies:endingTmdAboutProcbound 
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000416 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:object obo:BFO_0000035 ;
+  ontologies:subjectUsesContext ontologies:encEndContext ;
+  ontologies:objectUsesContext ontologies:encEndContext ;
+.
 
-# ontologies:endingTmdHasMeasVal 
-  # a ontologies:DatatypeConnectionRecipe ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:required true ;
-  # ontologies:subject obo:IAO_0000416 ;
-  # ontologies:predicate obo:IAO_0000004 ;
-  # ontologies:object ontologies:encEndValue ;
-  # ontologies:subjectUsesContext ontologies:encEndContext ;
-# .
+ontologies:endingTmdHasMeasVal 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000416 ;
+  ontologies:predicate obo:IAO_0000004 ;
+  ontologies:object ontologies:encEndValue ;
+  ontologies:subjectUsesContext ontologies:encEndContext ;
+.
 
 ontologies:encStartContext a ontologies:TurboGraphContext .
 obo:IAO_0000416 ontologies:hasPossibleContext ontologies:encStartContext .
 obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encStartContext .
 
-# ontologies:encEndContext a ontologies:TurboGraphContext .
-# obo:IAO_0000416 ontologies:hasPossibleContext ontologies:encEndContext .
-# obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encEndContext .
+ontologies:encEndContext a ontologies:TurboGraphContext .
+obo:IAO_0000416 ontologies:hasPossibleContext ontologies:encEndContext .
+obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encEndContext .
