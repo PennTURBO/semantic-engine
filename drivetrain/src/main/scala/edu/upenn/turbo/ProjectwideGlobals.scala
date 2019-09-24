@@ -44,6 +44,7 @@ trait ProjectwideGlobals extends Enumeration
      val reinferRepo = getBooleanProperty("reinferRepo")
      val loadAdditionalOntologies = getBooleanProperty("loadAdditionalOntologies")
      val graphModelFile = helper.retrievePropertyFromFile("graphModelFile")
+     val graphSpecificationFile = helper.retrievePropertyFromFile("graphSpecificationFile")
      
      def getBooleanProperty(property: String): Boolean =
      {

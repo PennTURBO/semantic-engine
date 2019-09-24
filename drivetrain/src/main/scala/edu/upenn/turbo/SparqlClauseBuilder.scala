@@ -199,9 +199,13 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         {
             val connectionName = row(CONNECTIONNAME.toString).toString
             val thisMultiplicity = row(MULTIPLICITY.toString).toString
-            val subjectString = row(OBJECT.toString).toString
-            val objectString = row(SUBJECT.toString).toString
+            var subjectString = row(SUBJECT.toString).toString
+            var objectString = row(OBJECT.toString).toString
+            if (row(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
+            if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
+            
             val discoveryCode = subjectString + objectString
+            
             if (discoveredMap.contains(discoveryCode)) assert(discoveredMap(discoveryCode) == row(MULTIPLICITY.toString).toString, s"Error in graph model: There are multiple connections between $subjectString and $objectString with non-matching multiplicities")
             else discoveredMap += discoveryCode -> row(MULTIPLICITY.toString).toString
             val codePlus = discoveryCode + row(PREDICATE.toString).toString + thisMultiplicity
@@ -211,56 +215,54 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             {  
                 if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") 
                 {
-                    handleOneToOneConnection(row, outputOneToOneConnections)
-                    populateDependenciesAndCustomRuleList(row)
+                    handleOneToOneConnection(subjectString, objectString, outputOneToOneConnections)
+                    populateDependenciesAndCustomRuleList(row, subjectString, objectString)
                 }
                 else if (thisMultiplicity == "http://transformunify.org/ontologies/many-singleton")
                 {
-                    outputSingletonClasses += row(OBJECT.toString).toString
+                    outputSingletonClasses += objectString
                 }
                 else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-many")
                 {
-                    outputSingletonClasses += row(SUBJECT.toString).toString
+                    outputSingletonClasses += subjectString
                 }
                   else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-singleton")
                 {
-                    outputSingletonClasses += row(SUBJECT.toString).toString
-                    outputSingletonClasses += row(OBJECT.toString).toString
+                    outputSingletonClasses += subjectString
+                    outputSingletonClasses += objectString
                 }
                 else if (thisMultiplicity.endsWith("superSingleton"))
                 {
-                    outputSuperSingletonClasses += row(OBJECT.toString).toString
+                    outputSuperSingletonClasses += objectString
                 }
                 else if (thisMultiplicity.contains("superSingleton"))
                 {
-                    outputSuperSingletonClasses += row(SUBJECT.toString).toString
+                    outputSuperSingletonClasses += subjectString
                 }
                 else if (thisMultiplicity == manyToOneMultiplicity)
                 {
-                    if (!usedVariables.contains(row(SUBJECT.toString).toString)) multiplicityCreators += row(SUBJECT.toString).toString
-                    if (!usedVariables.contains(row(OBJECT.toString).toString)) multiplicityCreators += row(OBJECT.toString).toString
-                    if (outputOneToManyConnections.contains(row(OBJECT.toString).toString)) outputOneToManyConnections(row(OBJECT.toString).toString) += row(SUBJECT.toString).toString
-                    else outputOneToManyConnections += row(OBJECT.toString).toString -> HashSet(row(SUBJECT.toString).toString)
+                    if (!usedVariables.contains(subjectString)) multiplicityCreators += subjectString
+                    if (!usedVariables.contains(objectString)) multiplicityCreators += objectString
+                    if (outputOneToManyConnections.contains(objectString)) outputOneToManyConnections(objectString) += subjectString
+                    else outputOneToManyConnections += objectString -> HashSet(subjectString)
                 }
                 else if (thisMultiplicity == oneToManyMultiplicity)
                 {
-                    if (!usedVariables.contains(row(SUBJECT.toString).toString)) multiplicityCreators += row(SUBJECT.toString).toString
-                    if (!usedVariables.contains(row(OBJECT.toString).toString)) multiplicityCreators += row(OBJECT.toString).toString
-                    if (outputOneToManyConnections.contains(row(SUBJECT.toString).toString)) outputOneToManyConnections(row(SUBJECT.toString).toString) += row(OBJECT.toString).toString
-                    else outputOneToManyConnections += row(SUBJECT.toString).toString -> HashSet(row(OBJECT.toString).toString)
+                    if (!usedVariables.contains(subjectString)) multiplicityCreators += subjectString
+                    if (!usedVariables.contains(objectString)) multiplicityCreators += objectString
+                    if (outputOneToManyConnections.contains(subjectString)) outputOneToManyConnections(subjectString) += objectString
+                    else outputOneToManyConnections += subjectString -> HashSet(objectString)
                 }
                 else
                 {
                     assert (1==2, s"Error in graph model: Discovered invalid multiplicity $thisMultiplicity")
                 }
-                val obj = row(OBJECT.toString).toString
-                val subj = row(SUBJECT.toString).toString
                 var subjAType = false
                 if (row(SUBJECTTYPE.toString) != null) subjAType = true
                 var objAType = false
                 if (row(OBJECTTYPE.toString) != null) objAType = true
-                variablesToBind += obj -> objAType
-                variablesToBind += subj -> subjAType
+                variablesToBind += objectString -> objAType
+                variablesToBind += subjectString -> subjAType
            }
         }
         variablesToBind
@@ -276,7 +278,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (scannedConnections.contains(connectionName)) assert(scannedConnections(connectionName) == codePlus, s"Error in graph model: recipe $connectionName may have duplicate properties")
             else scannedConnections += connectionName -> codePlus
             val thisMultiplicity = row(MULTIPLICITY.toString).toString
-            if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") handleOneToOneConnection(row, inputOneToOneConnections)
+            if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") handleOneToOneConnection(row(SUBJECT.toString).toString, row(OBJECT.toString).toString, inputOneToOneConnections)
             else if (thisMultiplicity == oneToManyMultiplicity)
             {
                 if (inputOneToManyConnections.contains(row(SUBJECT.toString).toString)) inputOneToManyConnections(row(SUBJECT.toString).toString) += row(OBJECT.toString).toString
@@ -315,11 +317,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
     }
     
-    def populateDependenciesAndCustomRuleList(row: HashMap[String, org.eclipse.rdf4j.model.Value])
-    {
-        val thisSubject = row(SUBJECT.toString).toString
-        val thisObject = row(OBJECT.toString).toString
-        
+    def populateDependenciesAndCustomRuleList(row: HashMap[String, org.eclipse.rdf4j.model.Value], thisSubject: String, thisObject: String)
+    {        
         val specialSubjectRule = row(SUBJECTRULE.toString)
         val specialObjectRule = row(OBJECTRULE.toString)
         
@@ -394,11 +393,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }   
     }
     
-    def handleOneToOneConnection(row: HashMap[String, org.eclipse.rdf4j.model.Value], listToPopulate: HashMap[String, HashSet[String]])
+    def handleOneToOneConnection(thisSubject: String, thisObject: String, listToPopulate: HashMap[String, HashSet[String]])
     {
-        val thisSubject = row(SUBJECT.toString).toString
-        val thisObject = row(OBJECT.toString).toString
-        
         if (listToPopulate.contains(thisObject) && listToPopulate.contains(thisSubject))
         {
             listToPopulate(thisObject) += thisSubject
