@@ -72,6 +72,144 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
       }
       """
     
+    val expectedQuery: String = """
+      INSERT {
+      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      ?GenderIdentityDatumOfVariousTypes rdf:type ?GenderIdentityDatumType .
+      ?RaceIdentityDatumOfVariousTypes rdf:type ?RaceIdentityDatumType .
+      ?TURBO_0010092 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0000504 .
+      ?TURBO_0010092 rdf:type <http://transformunify.org/ontologies/TURBO_0010092> .
+      ?TURBO_0000504 rdf:type <http://transformunify.org/ontologies/TURBO_0000504> .
+      ?TURBO_0010092 <http://purl.obolibrary.org/obo/BFO_0000051> ?HomoSapiensRegistryOfVariousTypes .
+      ?HomoSapiensRegistryOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0010092 .
+      ?GenderIdentityDatumOfVariousTypes <http://purl.obolibrary.org/obo/IAO_0000136> ?NCBITaxon_9606 .
+      ?NCBITaxon_9606 rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+      ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/RO_0000086> ?PATO_0000047 .
+      ?PATO_0000047 rdf:type <http://purl.obolibrary.org/obo/PATO_0000047> .
+      ?TURBO_0000504 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?IAO_0000100 rdf:type <http://purl.obolibrary.org/obo/IAO_0000100> .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0000504 .
+      ?GenderIdentityDatumOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?GenderIdentityDatumOfVariousTypes .
+      ?RaceIdentityDatumOfVariousTypes <http://purl.obolibrary.org/obo/IAO_0000136> ?NCBITaxon_9606 .
+      ?RaceIdentityDatumOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?RaceIdentityDatumOfVariousTypes .
+      ?EFO_0004950 <http://purl.obolibrary.org/obo/IAO_0000136> ?UBERON_0035946 .
+      ?EFO_0004950 rdf:type <http://www.ebi.ac.uk/efo/EFO_0004950> .
+      ?UBERON_0035946 rdf:type <http://purl.obolibrary.org/obo/UBERON_0035946> .
+      ?NCBITaxon_9606 <http://transformunify.org/ontologies/TURBO_0000303> ?UBERON_0035946 .
+      ?EFO_0004950 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?EFO_0004950 .
+      ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010113> ?NCBITaxon_9606 .
+      ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
+      ?TURBO_0010092 <http://purl.obolibrary.org/obo/IAO_0000219> ?NCBITaxon_9606 .
+      ?TURBO_0000522 <http://purl.obolibrary.org/obo/OBI_0000293> ?IAO_0000100 .
+      ?TURBO_0000522 rdf:type <http://transformunify.org/ontologies/TURBO_0000522> .
+      ?TURBO_0000504 <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0010092 .
+      ?TURBO_0010168 <http://transformunify.org/ontologies/TURBO_0010113> ?TURBO_0010092 .
+      ?TURBO_0010168 rdf:type <http://transformunify.org/ontologies/TURBO_0010168> .
+      ?MONDO_0004992 <http://purl.obolibrary.org/obo/RO_0000052> ?NCBITaxon_9606 .
+      ?MONDO_0004992 rdf:type <http://purl.obolibrary.org/obo/MONDO_0004992> .
+      ?TURBO_0010191 <http://transformunify.org/ontologies/TURBO_0010113> ?TURBO_0010070 .
+      ?TURBO_0010191 rdf:type <http://transformunify.org/ontologies/TURBO_0010191> .
+      ?TURBO_0010070 rdf:type <http://transformunify.org/ontologies/TURBO_0010070> .
+      ?TURBO_0010070 <http://purl.obolibrary.org/obo/BFO_0000050> ?NCBITaxon_9606 .
+      ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0010070 .
+      ?TURBO_0010188 <http://purl.obolibrary.org/obo/IAO_0000219> ?TURBO_0010070 .
+      ?TURBO_0010188 rdf:type <http://transformunify.org/ontologies/TURBO_0010188> .
+      ?IAO_0000577 <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0010188 .
+      ?IAO_0000577 rdf:type <http://purl.obolibrary.org/obo/IAO_0000577> .
+      ?TURBO_0010188 <http://purl.obolibrary.org/obo/BFO_0000051> ?IAO_0000577 .
+      ?TURBO_0010188 <http://purl.obolibrary.org/obo/BFO_0000051> ?TumorRegistryDenoterOfVariousTypes .
+      ?TumorRegistryDenoterOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0010188 .
+      ?MONDO_0004992 <http://purl.obolibrary.org/obo/IDO_0000664> ?TURBO_0010070 .
+      ?TURBO_0010188 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0010188 .
+      ?TURBO_0000504 <http://transformunify.org/ontologies/TURBO_0010094> ?homoSapiensSymbolStringLiteralValue .
+      ?GenderIdentityDatumOfVariousTypes <http://transformunify.org/ontologies/TURBO_0010094> ?homoSapiensGenderIdentityStringLiteralValue .
+      ?RaceIdentityDatumOfVariousTypes <http://transformunify.org/ontologies/TURBO_0010094> ?homoSapiensRaceIdentityStringLiteralValue .
+      ?EFO_0004950 <http://transformunify.org/ontologies/TURBO_0010095> ?homoSapiensDateOfBirthStringLiteralValue .
+      ?EFO_0004950 <http://transformunify.org/ontologies/TURBO_0010096> ?homoSapiensDateOfBirthDateLiteralValue .
+      ?IAO_0000100 <http://purl.org/dc/elements/1.1/title> ?datasetTitleStringLiteralValue .
+      ?IAO_0000577 <http://transformunify.org/ontologies/TURBO_0010094> ?tumorSymbolStringLiteralValue .
+      }
+      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?GenderIdentityDatumOfVariousTypes .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?RaceIdentityDatumOfVariousTypes .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010092 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000504 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?HomoSapiensRegistryOfVariousTypes .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?NCBITaxon_9606 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?PATO_0000047 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?IAO_0000100 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?EFO_0004950 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?UBERON_0035946 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010161 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000522 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010168 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?MONDO_0004992 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010191 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010070 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010188 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?IAO_0000577 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TumorRegistryDenoterOfVariousTypes .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> obo:OBI_0000293 ?TURBO_0010191 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> obo:OBI_0000293 ?TURBO_0010161 .
+      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> obo:OBI_0000293 ?TURBO_0010168 .
+      }
+      }
+      WHERE {
+      GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
+      ?TURBO_0010168 <http://transformunify.org/ontologies/TURBO_0010282> ?HomoSapiensRegistryOfVariousTypes .
+      ?TURBO_0010168 rdf:type <http://transformunify.org/ontologies/TURBO_0010168> .
+      ?TURBO_0010168 <http://purl.obolibrary.org/obo/IAO_0000219> ?TURBO_0010161 .
+      ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
+      ?TURBO_0010168 <http://transformunify.org/ontologies/TURBO_0010079> ?homoSapiensSymbolStringLiteralValue .
+      ?TURBO_0010168 <http://transformunify.org/ontologies/TURBO_0010084> ?datasetTitleStringLiteralValue .
+      OPTIONAL {
+       ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010089> ?ShortcutGenderIdentityDatumOfVariousTypes .
+       }
+      OPTIONAL {
+       ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010090> ?ShortcutRaceIdentityDatumOfVariousTypes .
+       }
+      OPTIONAL {
+       ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010085> ?homoSapiensDateOfBirthStringLiteralValue .
+       }
+      OPTIONAL {
+       ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010086> ?homoSapiensDateOfBirthDateLiteralValue .
+       }
+      OPTIONAL {
+       ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010098> ?homoSapiensGenderIdentityStringLiteralValue .
+       }
+      OPTIONAL {
+       ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010100> ?homoSapiensRaceIdentityStringLiteralValue .
+       }
+      OPTIONAL {
+      ?TURBO_0010191 <http://transformunify.org/ontologies/TURBO_0010277> ?TumorRegistryDenoterOfVariousTypes .
+      ?TURBO_0010191 rdf:type <http://transformunify.org/ontologies/TURBO_0010191> .
+      ?TURBO_0010191 <http://purl.obolibrary.org/obo/IAO_0000219> ?TURBO_0010161 .
+      ?TURBO_0010191 <http://transformunify.org/ontologies/TURBO_0010194> ?tumorSymbolStringLiteralValue .
+      }
+      }
+      BIND(IF (BOUND(?homoSapiensGenderIdentityStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?PATO_0000047","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?PATO_0000047)
+      BIND(IF (BOUND(?homoSapiensRaceIdentityStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?RaceIdentityDatumOfVariousTypes","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?RaceIdentityDatumOfVariousTypes)
+      BIND(IF(BOUND(?ShortcutGenderIdentityDatumOfVariousTypes), ?ShortcutGenderIdentityDatumOfVariousTypes, obo:OMRSE_00000133) AS ?GenderIdentityDatumType)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?IAO_0000577","localUUID", str(?TURBO_0010191))))) AS ?IAO_0000577)
+      BIND(IF (BOUND(?homoSapiensGenderIdentityStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?GenderIdentityDatumOfVariousTypes","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?GenderIdentityDatumOfVariousTypes)
+      BIND(IF (BOUND(?homoSapiensDateOfBirthStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?UBERON_0035946","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?UBERON_0035946)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010188","localUUID", str(?TURBO_0010191))))) AS ?TURBO_0010188)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000504","localUUID", str(?TURBO_0010168))))) AS ?TURBO_0000504)
+      BIND(IF (BOUND(?homoSapiensDateOfBirthStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?EFO_0004950","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?EFO_0004950)
+      BIND(IF(BOUND(?ShortcutRaceIdentityDatumOfVariousTypes), ?ShortcutRaceIdentityDatumOfVariousTypes, obo:OMRSE_00000098) AS ?RaceIdentityDatumType)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010070","localUUID", str(?TURBO_0010191))))) AS ?TURBO_0010070)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?MONDO_0004992","localUUID", str(?TURBO_0010191))))) AS ?MONDO_0004992)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?NCBITaxon_9606","localUUID", str(?TURBO_0010161))))) AS ?NCBITaxon_9606)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010092","localUUID", str(?TURBO_0010168))))) AS ?TURBO_0010092)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?IAO_0000100","localUUID","http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")))) AS ?IAO_0000100)
+      }
+      """
+    
     before
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
@@ -85,6 +223,21 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
     after
     {
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+    }
+    
+    test("generated query matched expected query")
+    {
+        var expectedQueryListBuffer = new ArrayBuffer[String]
+        for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
+        {
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID)
+            expectedQueryListBuffer += replacement
+        }
+        var expectedQueryList = expectedQueryListBuffer.toArray
+        
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess").getQuery().replaceAll(" ", "").split("\\n")
+        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
     
     test("participant with all fields")

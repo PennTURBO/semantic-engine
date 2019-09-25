@@ -44,12 +44,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         update.querySparqlBoolean(cxn, ask).get
     }
     
-    def runProcess(process: String)
+    def runProcess(process: String): HashMap[String, PatternMatchQuery] =
     {
         runProcess(ArrayBuffer(process))
     }
         
-    def runProcess(processes: ArrayBuffer[String])
+    def runProcess(processes: ArrayBuffer[String]): HashMap[String, PatternMatchQuery] =
     {
         var processQueryMap = new HashMap[String, PatternMatchQuery]
         for (process <- processes)
@@ -114,6 +114,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 metaDataQuery.runQuery(cxn)  
             }
         }
+        processQueryMap
     }
 
     def createPatternMatchQuery(process: String): PatternMatchQuery =
