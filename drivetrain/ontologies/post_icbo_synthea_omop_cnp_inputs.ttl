@@ -1,32 +1,28 @@
+<http://api.stardog.com/visit_occurrence> a owl:Class .
+
 # _ is wildcard 
 ontologies:post_icbo_synthea_omop_cnp_inputs
   a ontologies:TURBO_0010178 ;
   ontologies:hasOutput ontologies:cridDenotesHce ;
   ontologies:hasOutput ontologies:cridsymbHasRepresentation ;
   ontologies:hasOutput ontologies:hceExpansionSpecification ;
-  ontologies:hasOutput ontologies:procboundEndsEnc ;
-  ontologies:hasOutput ontologies:procboundStartsEnc ;
 #  ontologies:hasOutput ontologies:regdenPartOfCrid ;
-  ontologies:hasOutput ontologies:startingTmdAboutProcbound ;
-  ontologies:hasOutput ontologies:startingTmdHasMeasVal ;
-  ontologies:hasOutput ontologies:endingTmdAboutProcbound ;
-  ontologies:hasOutput ontologies:endingTmdHasMeasVal ;
   ontologies:hasOutput ontologies:symbolPartOfCridForHce ;
   ontologies:hasRequiredInput ontologies:miniHceCridsymShortcut ;
-  ontologies:hasRequiredInput ontologies:miniHceEnddateShortcut ;
-  ontologies:hasRequiredInput ontologies:miniHceStartdateShortcut ;
 #  ontologies:hasRequiredInput ontologies:regdenFromShorts ;
+  ontologies:hasOutput ontologies:hardcodedRegden ;
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
-.
+  ontologies:hasRequiredInput ontologies:miniHceEnddateShortcut ;
+  ontologies:hasOutput ontologies:procboundEndsEnc ;
+  ontologies:hasOutput ontologies:endingTmdAboutProcbound ;
+  ontologies:hasOutput ontologies:endingTmdHasMeasVal ;
+  ontologies:hasRequiredInput ontologies:miniHceStartdateShortcut ;
+  ontologies:hasOutput ontologies:procboundStartsEnc ;
+  ontologies:hasOutput ontologies:startingTmdAboutProcbound ;
+  ontologies:hasOutput ontologies:startingTmdHasMeasVal ;
 
-# ontologies:regdenFromShorts a ontologies:ObjectConnectionToClassRecipe ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:required true ;
-  # ontologies:subject ontologies:TURBO_0010158 ;
-  # ontologies:predicate ontologies:assertedRegden ;
-  # ontologies:object ontologies:allowedEncounterRegdenList ;
-# .
+.
   
 ontologies:miniHceCridsymShortcut 
   a ontologies:DatatypeConnectionRecipe ;
@@ -54,6 +50,14 @@ ontologies:miniHceEnddateShortcut
   ontologies:predicate <http://api.stardog.com/visit_occurrence#visit_end_date> ;
   ontologies:object ontologies:visit_end_date_DateLiteralValue ;
 .
+
+# ontologies:regdenFromShorts a ontologies:ObjectConnectionToClassRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:required true ;
+  # ontologies:subject ontologies:TURBO_0010158 ;
+  # ontologies:predicate ontologies:assertedRegden ;
+  # ontologies:object ontologies:allowedEncounterRegdenList ;
+# .
 
 # ontologies:ObjectConnectionToClassRecipe 
   # a ontologies:DatatypeConnectionRecipe ;
