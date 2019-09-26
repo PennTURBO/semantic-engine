@@ -428,7 +428,32 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     def validateGraphSpecificationAgainstOntology()
     {
         val query: String = """
-          
+          select * where
+          {
+              graph pmbb:graphSpecification
+              {
+                  Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionFromTermRecipe 
+                                                turbo:ObjectConnectionToInstanceRecipe
+                                                turbo:ObjectConnectionToTermRecipe
+                                                }
+                  ?recipe a ?CONNECTIONRECIPETYPE .
+                  ?recipe turbo:object ?object .
+                  ?recipe turbo:predicate ?predicate .
+                  minus
+                  {
+                      ?object a turbo:MultiObjectDescriber .
+                  }
+              }
+              graph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl>
+              {
+                  ?predicate rdfs:range ?range .
+                  ?range rdfs:subPropertyOf* ?superRange .
+                  minus
+                  {
+                      ?object rdfs:subClassOf* ?superRange .
+                  }
+              }
+          }
           """
         val res = update.querySparqlAndUnpackTuple(gmCxn, query, "recipe")
         var firstRes = ""
@@ -486,7 +511,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             if (processMap.contains(currProcess)) currProcess = processMap(currProcess)
             else currProcess = null
         }
-        for (a <- processesInOrder) println("discovered process: " + a)
         processesInOrder
     }
     

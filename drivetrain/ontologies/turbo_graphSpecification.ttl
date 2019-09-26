@@ -63,7 +63,7 @@ ontologies:DiastolicBloodPressureMeasurementDatumToValueSpecification
   ontologies:subject obo:HTN_00000000 ;
 .
 ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000272 ;
   ontologies:predicate obo:IAO_0000039 ;
@@ -95,7 +95,7 @@ ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification
   ontologies:subject obo:HTN_00000001 ;
 .
 ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000272 ;
   ontologies:predicate obo:IAO_0000039 ;
@@ -151,7 +151,7 @@ ontologies:alleleToGeneSymbolSecondPart
   ontologies:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToGeneSymbolUri
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:GeneSymbolUriOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
@@ -167,7 +167,7 @@ ontologies:alleleToZygosityIntegerValue
   ontologies:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToZygosityUri
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ZygosityUriOfVariousTypes ;
   ontologies:predicate obo:OBI_0001938 ;
@@ -634,7 +634,7 @@ ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue
   rdfs:label "diagnosis to diagnosis coding sequence literal value" ;
 .
 ontologies:diagnosisToDiagnosisRegistry
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DiagnosisRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0000703 ;
@@ -652,7 +652,7 @@ ontologies:diagnosisToDiagnosisRegistryStringLiteralValue
   rdfs:label "diagnosis to diagnosis registry literal string value" ;
 .
 ontologies:diagnosisToIcdTerm
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:IcdTermOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
@@ -670,7 +670,7 @@ ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
   rdfs:label "diagnosis to primary diagnosis boolean value connection" ;
 .
 ontologies:diagnosisToSnomedTerm
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:SnomedTermOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
@@ -734,7 +734,7 @@ ontologies:genderIdentityDatumToGenderIdentityDatumLiteralValue
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genderIdentityDatumToGenderIdentityDatumType
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:GenderIdentityDatumType ;
   ontologies:predicate rdf:type ;
@@ -1112,7 +1112,7 @@ ontologies:investigationRoleToBiobankEncounter
   ontologies:subject obo:OBI_0000097 ;
 .
 ontologies:lengthMeasurementValueSpecificationToCentimeter
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000015 ;
   ontologies:predicate obo:IAO_0000039 ;
@@ -1179,7 +1179,7 @@ ontologies:massMeasurementValueSpecificationToHomoSapiensWeight
   ontologies:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToKilogram
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000009 ;
   ontologies:predicate obo:IAO_0000039 ;
@@ -1241,7 +1241,7 @@ ontologies:prescriptionToDataset
   rdfs:label "prescription to dataset connection" ;
 .
 ontologies:prescriptionToDrug
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DrugTermOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
@@ -1283,7 +1283,7 @@ ontologies:raceIdentityDatumToRaceIdentityDatumLiteralValue
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:raceIdentityDatumToRaceIdentityDatumType
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:RaceIdentityDatumType ;
   ontologies:predicate rdf:type ;
@@ -1446,7 +1446,7 @@ ontologies:ObjectConnectionRecipe
   rdfs:label "object connection recipe" ;
   rdfs:subClassOf ontologies:TurboGraphConnectionRecipe ;
 .
-ontologies:ObjectConnectionToClassRecipe
+ontologies:ObjectConnectionToTermRecipe
   a owl:Class ;
   rdfs:subClassOf ontologies:ObjectConnectionRecipe ;
 .
