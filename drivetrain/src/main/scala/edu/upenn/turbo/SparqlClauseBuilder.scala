@@ -97,10 +97,15 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             
             var objectIsLiteral = false
             if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") objectIsLiteral = true
-            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToClassRecipe") 
+            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe") 
             {
                 objectAType = false
                 if (!usedVariables.contains(rowResult(OBJECT.toString).toString)) nonVariableClasses += rowResult(OBJECT.toString).toString
+            }
+            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe") 
+            {
+                subjectAType = false
+                if (!usedVariables.contains(rowResult(SUBJECT.toString).toString)) nonVariableClasses += rowResult(SUBJECT.toString).toString
             }
             val graph = rowResult(GRAPH.toString).toString
             

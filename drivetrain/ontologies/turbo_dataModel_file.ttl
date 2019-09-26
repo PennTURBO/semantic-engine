@@ -72,7 +72,7 @@ ontologies:RxNormDrugTermMinusGroup
   a ontologies:TurboGraphMinusGroup ;
 .
 ontologies:RxNormDrugTermToTypeDeclaration
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   obo:BFO_0000050 ontologies:RxNormDrugTermMinusGroup ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object owl:Class ;
@@ -478,7 +478,7 @@ ontologies:shortcutAlleleToGeneSymbolSecondPart
   ontologies:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToGeneSymbolUri
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:GeneSymbolUriOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
@@ -494,7 +494,7 @@ ontologies:shortcutAlleleToGenoId
   ontologies:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToShortcutAlleleRegistryUri
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:GenomeRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010285 ;
@@ -518,7 +518,7 @@ ontologies:shortcutAlleleToZygosityIntegerValue
   ontologies:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToZygosityValueUri
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ZygosityUriOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0007607 ;
@@ -578,7 +578,7 @@ ontologies:shortcutBiobankEncounterToHeightLiteralValue
   ontologies:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToRegistry
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:BiobankEncounterRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010286 ;
@@ -660,7 +660,7 @@ ontologies:shortcutDiagnosisToPrimaryDiagnosisBooleanValue
   rdfs:label "shortcut diagnosis to primary boolean value connection" ;
 .
 ontologies:shortcutDiagnosisToRegistry
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   obo:BFO_0000050 ontologies:shortcutDiagnosisOptionalGroup ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DiagnosisRegistryOfVariousTypes ;
@@ -749,7 +749,7 @@ ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter
   ontologies:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:HealthcareEncounterRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010110 ;
@@ -823,7 +823,7 @@ ontologies:shortcutHealthcareEncounterToWeightValue
   rdfs:label "shortcut healthcare encounter to weight value connection" ;
 .
 ontologies:shortcutHomoSapiensIdToRegistry
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:HomoSapiensRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010282 ;
@@ -889,7 +889,7 @@ ontologies:shortcutHomoSapiensToExpandedHomoSapiens
   ontologies:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToGenderIdentityType
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ShortcutGenderIdentityDatumOfVariousTypes ;
   ontologies:objectRequiredToCreate ontologies:GenderIdentityDatumType ;
@@ -908,7 +908,7 @@ ontologies:shortcutHomoSapiensToGenderIdentityValue
   ontologies:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToRaceIdentityType
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ShortcutRaceIdentityDatumOfVariousTypes ;
   ontologies:objectRequiredToCreate ontologies:RaceIdentityDatumType ;
@@ -929,7 +929,7 @@ ontologies:shortcutPrescriptionOptionalGroup
   a ontologies:TurboGraphOptionalGroup ;
 .
 ontologies:shortcutPrescriptionToDrugTerm
-  a ontologies:ObjectConnectionToClassRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   obo:BFO_0000050 ontologies:shortcutPrescriptionOptionalGroup ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DrugTermOfVariousTypes ;
@@ -1027,4 +1027,16 @@ ontologies:biobankEncounterToLengthMeasurementValueSpecification
 .
 ontologies:bloodPressureOptionalGroup
   a ontologies:TurboGraphOptionalGroup ;
+.
+ontologies:GenderIdentityDatumType
+  ontologies:usesCustomVariableManipulationRule ontologies:GenderIdentityTypeRule ;
+.
+ontologies:RaceIdentityDatumType
+  ontologies:usesCustomVariableManipulationRule ontologies:RaceIdentityTypeRule ;
+.
+ontologies:IcdTermOfVariousTypes 
+  ontologies:usesCustomVariableManipulationRule ontologies:IcdDiagnosisRegistryRule ;
+.
+ontologies:SnomedTermOfVariousTypes 
+  ontologies:usesCustomVariableManipulationRule ontologies:SnomedDiagnosisRegistryRule ;
 .
