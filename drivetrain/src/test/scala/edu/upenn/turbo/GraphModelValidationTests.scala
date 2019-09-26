@@ -602,6 +602,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                Graph pmbb:dataModel
                {
                    ontologies:object1ToObject3 ontologies:subject ontologies:someSubject .
+                   ontologies:someSubject a owl:Class .
                }
            }
         """
