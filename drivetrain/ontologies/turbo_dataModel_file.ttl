@@ -1028,3 +1028,15 @@ ontologies:biobankEncounterToLengthMeasurementValueSpecification
 ontologies:bloodPressureOptionalGroup
   a ontologies:TurboGraphOptionalGroup ;
 .
+ontologies:genderIdentityDatumType 
+  ontologies:usesCustomVariableManipulationRule ontologies:GenderIdentityTypeRule ;
+.
+ontologies:IcdTermOfVariousTypes
+  ontologies:usesCustomVariableManipulationRule ontologies:IcdDiagnosisRegistryRule ;
+.
+ontologies:RaceIdentityDatumType
+  ontologies:usesCustomVariableManipulationRule ontologies:RaceIdentityTypeRule ;
+.
+ontologies:SnomedTermOfVariousTypes
+  ontologies:usesCustomVariableManipulationRule ontologies:SnomedDiagnosisRegistryRule ;
+.

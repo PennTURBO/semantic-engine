@@ -180,7 +180,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          {
               Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe}
+                                            turbo:DatatypeConnectionRecipe
+                                            turbo:ObjectConnectionFromClassRecipe}
               Values ?$INPUTTYPE {turbo:hasRequiredInput turbo:hasOptionalInput}
               <$process> ?$INPUTTYPE ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
@@ -246,7 +247,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          {
               Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                           turbo:ObjectConnectionToInstanceRecipe
-                                          turbo:DatatypeConnectionRecipe}
+                                          turbo:DatatypeConnectionRecipe
+                                          turbo:ObjectConnectionFromClassRecipe}
   
               <$process> turbo:removes ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
@@ -274,7 +276,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Values ?INPUTTO {turbo:hasRequiredInput turbo:hasOptionalInput}
               Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe}
+                                            turbo:DatatypeConnectionRecipe
+                                            turbo:ObjectConnectionFromClassRecipe}
               <$process> turbo:hasOutput ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
               <$process> turbo:outputNamedGraph ?$GRAPH .
@@ -361,6 +364,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val orderedProcessList: ArrayBuffer[String] = getAllProcessesInOrder(gmCxn)
 
         validateProcessesAgainstGraphSpecification(orderedProcessList)
+        //validateGraphSpecificationAgainstOntology()
         
         logger.info("Drivetrain will now run the following processes in this order:")
         for (a <- orderedProcessList) logger.info(a)
@@ -399,7 +403,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe}
+                                            turbo:DatatypeConnectionRecipe
+                                            turbo:ObjectConnectionFromClassRecipe}
                   ?recipe a ?CONNECTIONRECIPETYPE .
               }
               Minus
@@ -418,6 +423,17 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val res = update.querySparqlAndUnpackTuple(gmCxn, getOutputsOfAllProcesses, "recipe")
         if (res.size > 0) firstRes = res(0)
         assert(firstRes == "", s"Error in graph model: connection $firstRes in graph specification is not the output of a queued process in the data model")
+    }
+    
+    def validateGraphSpecificationAgainstOntology()
+    {
+        val query: String = """
+          
+          """
+        val res = update.querySparqlAndUnpackTuple(gmCxn, query, "recipe")
+        var firstRes = ""
+        if (res.size > 0) firstRes = res(0)
+        assert(firstRes == "")
     }
 
     /**

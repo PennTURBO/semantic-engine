@@ -102,6 +102,11 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 objectAType = false
                 if (!usedVariables.contains(rowResult(OBJECT.toString).toString)) nonVariableClasses += rowResult(OBJECT.toString).toString
             }
+            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionFromClassRecipe") 
+            {
+                subjectAType = false
+                if (!usedVariables.contains(rowResult(SUBJECT.toString).toString)) nonVariableClasses += rowResult(SUBJECT.toString).toString
+            }
             val graph = rowResult(GRAPH.toString).toString
             
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 

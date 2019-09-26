@@ -679,28 +679,34 @@ class TurboMultiuseClass
     {
         if (arr1.size - 1 >= index1 && arr2.size - 1 >= index2)
         {
-            val compare: Int = arr1(index1).compareTo(arr2(index2))
-            if (compare == 0) findSortedArrayDifferences(arr1, index1+1, arr2, index2+1)
-            else if (compare > 0)
+            // blank lines should be ignored
+            if (arr1(index1).size == 0) findSortedArrayDifferences(arr1, index1+1, arr2, index2)
+            else if (arr2(index2).size == 0) findSortedArrayDifferences(arr1, index1, arr2, index2+1)
+            else
             {
-                nonMatchesArr2 += arr2(index2)
-                findSortedArrayDifferences(arr1, index1, arr2, index2+1)
-            }
-            else if (compare < 0) 
-            {
-                nonMatchesArr1 += arr1(index1)
-                findSortedArrayDifferences(arr1, index1+1, arr2, index2)
+              val compare: Int = arr1(index1).compareTo(arr2(index2))
+              if (compare == 0) findSortedArrayDifferences(arr1, index1+1, arr2, index2+1)
+              else if (compare > 0)
+              {
+                  nonMatchesArr2 += arr2(index2)
+                  findSortedArrayDifferences(arr1, index1, arr2, index2+1)
+              }
+              else if (compare < 0) 
+              {
+                  nonMatchesArr1 += arr1(index1)
+                  findSortedArrayDifferences(arr1, index1+1, arr2, index2)
+              }
             }
         }
         else
         {
             if (arr1.size -1 < index1)
             {
-                for (a <- index2 to arr2.size - 1) nonMatchesArr2 += arr2(a)
+                for (a <- index2 to arr2.size - 1) if (arr2(a).size > 0) nonMatchesArr2 += arr2(a)
             }
             if (arr2.size -1 < index2)
             {
-                for (a <- index1 to arr1.size - 1) nonMatchesArr1 += arr1(a)
+                for (a <- index1 to arr1.size - 1) if (arr1(a).size > 0) nonMatchesArr1 += arr1(a)
             }
         }
     }

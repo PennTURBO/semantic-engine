@@ -16,6 +16,48 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
     
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
+    val scHcEncToScPersonCleanupExpectedQuery: String = """
+      DELETE {
+      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010131> ?TURBO_0010161 .
+      }
+      }
+      INSERT {
+      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
+      <http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess> obo:OBI_0000293 ?TURBO_0010158 .
+      <http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess> obo:OBI_0000293 ?TURBO_0010161 .
+      }
+      }
+      WHERE {
+      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010131> ?TURBO_0010161 .
+      ?TURBO_0010158 rdf:type <http://transformunify.org/ontologies/TURBO_0010158> .
+      ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
+      }
+       }
+    """
+    
+    val scBbEncToScPersonCleanupExpectedQuery: String = """
+      DELETE {
+      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010133> ?TURBO_0010161 .
+      }
+      }
+      INSERT {
+      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
+      <http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess> obo:OBI_0000293 ?TURBO_0010161 .
+      <http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess> obo:OBI_0000293 ?TURBO_0010169 .
+      }
+      }
+      WHERE {
+      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010133> ?TURBO_0010161 .
+      ?TURBO_0010169 rdf:type <http://transformunify.org/ontologies/TURBO_0010169> .
+      ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
+      }
+       }
+    """
+    
     before
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
@@ -130,6 +172,21 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }*/
     
+    test("generated healthcare encounter cleanup query matched expected query")
+    {
+        var expectedQueryListBuffer = new ArrayBuffer[String]
+        for (a <- scHcEncToScPersonCleanupExpectedQuery.replaceAll(" ","").split("\\n"))
+        {
+            val replacement = a.substring(0,a.length()-1)
+            expectedQueryListBuffer += replacement
+        }
+        var expectedQueryList = expectedQueryListBuffer.toArray
+        
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess")
+        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess").getQuery().replaceAll(" ", "").split("\\n")
+        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+    }
+    
     test ("remove SC hc enc to SC person link from expanded graph")
     {
       val insert = s"""
@@ -177,6 +234,21 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           """
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+    }
+    
+    test("generated biobank encounter cleanup query matched expected query")
+    {
+        var expectedQueryListBuffer = new ArrayBuffer[String]
+        for (a <- scBbEncToScPersonCleanupExpectedQuery.replaceAll(" ","").split("\\n"))
+        {
+            val replacement = a.substring(0,a.length()-1)
+            expectedQueryListBuffer += replacement
+        }
+        var expectedQueryList = expectedQueryListBuffer.toArray
+        
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
+        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess").getQuery().replaceAll(" ", "").split("\\n")
+        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
     
     test ("remove SC bb enc to SC person link from expanded graph")

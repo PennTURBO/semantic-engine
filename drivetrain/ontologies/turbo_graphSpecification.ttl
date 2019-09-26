@@ -1415,7 +1415,6 @@ ontologies:GenderIdentityDatumType
   ontologies:range obo:OMRSE_00000133 ;
   ontologies:range obo:OMRSE_00000138 ;
   ontologies:range obo:OMRSE_00000141 ;
-  ontologies:usesCustomVariableManipulationRule ontologies:GenderIdentityTypeRule ;
 .
 ontologies:GeneSymbolUriOfVariousTypes
   a ontologies:MultiObjectDescriber ;
@@ -1438,7 +1437,6 @@ ontologies:HomoSapiensRegistryOfVariousTypes
 ontologies:IcdTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;
   ontologies:range owl:Class ;
-  ontologies:usesCustomVariableManipulationRule ontologies:IcdDiagnosisRegistryRule ;
 .
 ontologies:MultiObjectDescriber
   a owl:Class ;
@@ -1469,12 +1467,10 @@ ontologies:RaceIdentityDatumType
   ontologies:range obo:OMRSE_00000183 ;
   ontologies:range obo:OMRSE_00000184 ;
   ontologies:range ontologies:TURBO_0001551 ;
-  ontologies:usesCustomVariableManipulationRule ontologies:RaceIdentityTypeRule ;
 .
 ontologies:SnomedTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;
   ontologies:range owl:Class ;
-  ontologies:usesCustomVariableManipulationRule ontologies:SnomedDiagnosisRegistryRule ;
 .
 ontologies:TumorRegistryDenoterOfVariousTypes
   a ontologies:MultiObjectDescriber ;
