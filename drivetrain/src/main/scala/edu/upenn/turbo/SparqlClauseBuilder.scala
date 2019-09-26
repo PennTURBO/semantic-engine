@@ -107,12 +107,12 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
                                       subjectAType, objectAType, false, subjectContext, objectContext)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
-            if (usedVariables.contains(rowResult(SUBJECT.toString).toString))
+            if (usedVariables.contains(newTriple.getSubjectWithContext()))
             {
                 val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false, false, "", subjectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
             }
-            if (!objectIsLiteral && usedVariables.contains(rowResult(OBJECT.toString).toString) && newTriple.triplePredicate != "rdf:type")
+            if (!objectIsLiteral && usedVariables.contains(newTriple.getObjectWithContext()) && newTriple.triplePredicate != "rdf:type")
             {
                 val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false, false, "", objectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
@@ -440,8 +440,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (!(usedVariables.contains(singleton)))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
-                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                        SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
+                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
             }
         }
         for (singleton <- outputSuperSingletonClasses)
@@ -449,8 +448,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (!(usedVariables.contains(singleton)))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
-                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                            SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\")))) AS ${singletonAsVar})\n"""
+                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\")))) AS ${singletonAsVar})\n"""
             }
         }
     }
@@ -460,20 +458,46 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         var multiplicityEnforcer = ""
         var enforcerAsUri = ""
         assert (outputOneToOneConnections.contains(changeAgent))
-        for (conn <- outputOneToOneConnections(changeAgent))
+        // if there are no one-many connections that are qualified enforcers in input, you can choose any element from the input as a multiplicity enforcer
+        var useAnyQualified = true
+        for ((k,v) <- inputOneToOneConnections)
         {
-            if (usedVariables.contains(conn) && usedVariables(conn)) 
+            if (usedVariables.contains(k) && usedVariables(k)) 
             {
-                val newEnforcer = helper.convertTypeToSparqlVariable(conn)
-                if (multiplicityEnforcer != "")
+                for ((key,value) <- inputOneToManyConnections)
                 {
-                    assert(inputOneToOneConnections.contains(enforcerAsUri) && inputOneToOneConnections(enforcerAsUri).contains(conn),
-                        s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
+                    if (k != key && usedVariables.contains(key) && usedVariables(key)) useAnyQualified = false
                 }
-                multiplicityEnforcer = newEnforcer
-                enforcerAsUri = conn
-            }
-        }  
+                if (useAnyQualified)
+                {
+                    val newEnforcer = helper.convertTypeToSparqlVariable(k)
+                    if (multiplicityEnforcer != "")
+                    {
+                        assert(inputOneToOneConnections.contains(enforcerAsUri) && inputOneToOneConnections(enforcerAsUri).contains(k),
+                            s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
+                    }
+                    multiplicityEnforcer = newEnforcer
+                    enforcerAsUri = k   
+                }
+            }  
+        }
+        if (multiplicityEnforcer == "")
+        {
+            for (conn <- outputOneToOneConnections(changeAgent))
+            {
+                if (usedVariables.contains(conn) && usedVariables(conn)) 
+                {
+                    val newEnforcer = helper.convertTypeToSparqlVariable(conn)
+                    if (multiplicityEnforcer != "")
+                    {
+                        assert(inputOneToOneConnections.contains(enforcerAsUri) && inputOneToOneConnections(enforcerAsUri).contains(conn),
+                            s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
+                    }
+                    multiplicityEnforcer = newEnforcer
+                    enforcerAsUri = conn
+                }
+            }   
+        }
         assert (multiplicityEnforcer != "", s"Error in graph model: For process $process, there is not sufficient context to create: $changeAgent")
         multiplicityEnforcer
     }
@@ -540,8 +564,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(multiplicityEnforcer)
             }
     
-            bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                 SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""   
+            bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""   
         }
     }
     
@@ -565,8 +588,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 dependeeAsVar = helper.convertTypeToSparqlVariable(dependee)
             }
             
-            bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                       SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
+            bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
         }
     }
 }

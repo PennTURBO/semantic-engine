@@ -15,6 +15,120 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
 
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
+    val expectedQuery: String = """
+      INSERT {
+      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      ?OBI_0001352 <http://purl.obolibrary.org/obo/IAO_0000142> ?GeneSymbolUriOfVariousTypes .
+      ?OBI_0001352 rdf:type <http://purl.obolibrary.org/obo/OBI_0001352> .
+      ?OBI_0001352 <http://purl.obolibrary.org/obo/OBI_0001938> ?ZygosityUriOfVariousTypes .
+      ?TURBO_0000522 <http://purl.obolibrary.org/obo/OBI_0000293> ?IAO_0000100 .
+      ?TURBO_0000522 rdf:type <http://transformunify.org/ontologies/TURBO_0000522> .
+      ?IAO_0000100 rdf:type <http://purl.obolibrary.org/obo/IAO_0000100> .
+      ?OBI_0001352 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?OBI_0001352 .
+      ?TURBO_0000568 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?TURBO_0000568 rdf:type <http://transformunify.org/ontologies/TURBO_0000568> .
+      ?OBI_0001352 <http://purl.obolibrary.org/obo/IAO_0000136> ?OBI_0001868 .
+      ?OBI_0001868 rdf:type <http://purl.obolibrary.org/obo/OBI_0001868> .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0000568 .
+      ?OBI_0200000 <http://purl.obolibrary.org/obo/OBI_0000299> ?OBI_0001352 .
+      ?OBI_0200000 rdf:type <http://purl.obolibrary.org/obo/OBI_0200000> .
+      ?OBI_0200000 <http://purl.obolibrary.org/obo/OBI_0000293> ?OBI_0001573 .
+      ?OBI_0001573 rdf:type <http://purl.obolibrary.org/obo/OBI_0001573> .
+      ?OBI_0000257 <http://purl.obolibrary.org/obo/OBI_0000299> ?OBI_0001051 .
+      ?OBI_0000257 rdf:type <http://purl.obolibrary.org/obo/OBI_0000257> .
+      ?OBI_0001051 rdf:type <http://purl.obolibrary.org/obo/OBI_0001051> .
+      ?OBI_0000257 <http://purl.obolibrary.org/obo/OBI_0000293> ?OBI_0001479 .
+      ?OBI_0001479 rdf:type <http://purl.obolibrary.org/obo/OBI_0001479> .
+      ?OBI_0001868 <http://purl.obolibrary.org/obo/OBI_0000643> ?OBI_0001051 .
+      ?OBI_0001868 <http://purl.obolibrary.org/obo/OGG_0000000014> ?NCBITaxon_9606 .
+      ?NCBITaxon_9606 rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+      ?TURBO_0000527 <http://purl.obolibrary.org/obo/BFO_0000051> ?OBI_0600005 .
+      ?TURBO_0000527 rdf:type <http://transformunify.org/ontologies/TURBO_0000527> .
+      ?OBI_0600005 rdf:type <http://purl.obolibrary.org/obo/OBI_0600005> .
+      ?OBI_0600005 <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0000527 .
+      ?OBI_0600005 <http://purl.obolibrary.org/obo/OBI_0000293> ?NCBITaxon_9606 .
+      ?OBI_0600005 <http://purl.obolibrary.org/obo/OBI_0000299> ?OBI_0001479 .
+      ?OBI_0002118 <http://purl.obolibrary.org/obo/OBI_0000293> ?OBI_0001051 .
+      ?OBI_0002118 rdf:type <http://purl.obolibrary.org/obo/OBI_0002118> .
+      ?OBI_0002118 <http://purl.obolibrary.org/obo/OBI_0000299> ?OBI_0001573 .
+      ?GenomeRegistryOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0000566 .
+      ?TURBO_0000566 rdf:type <http://transformunify.org/ontologies/TURBO_0000566> .
+      ?TURBO_0000568 <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0000566 .
+      ?TURBO_0000566 <http://purl.obolibrary.org/obo/BFO_0000051> ?GenomeRegistryOfVariousTypes .
+      ?TURBO_0000566 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0000568 .
+      ?TURBO_0000566 <http://purl.obolibrary.org/obo/IAO_0000219> ?OBI_0001479 .
+      ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0010113> ?OBI_0001352 .
+      ?TURBO_0010144 rdf:type <http://transformunify.org/ontologies/TURBO_0010144> .
+      ?IAO_0000100 <http://purl.org/dc/elements/1.1/title> ?datasetTitleStringLiteralValue .
+      ?OBI_0001352 <http://transformunify.org/ontologies/TURBO_0010016> ?alleleGeneSymbolFirstPartStringLiteralValue .
+      ?OBI_0001352 <http://transformunify.org/ontologies/TURBO_0010015> ?alleleGeneSymbolSecondPartStringLiteralValue .
+      ?OBI_0001352 <http://transformunify.org/ontologies/TURBO_0010095> ?alleleZygosityIntegerLiteralValue .
+      ?TURBO_0000568 <http://transformunify.org/ontologies/TURBO_0010094> ?alleleGenoIdStringLiteralValue .
+      }
+      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0001352 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?GeneSymbolUriOfVariousTypes .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?ZygosityUriOfVariousTypes .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000522 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?IAO_0000100 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000568 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0001868 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0200000 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0001573 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0000257 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0001051 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0001479 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?NCBITaxon_9606 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000527 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0600005 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0002118 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?GenomeRegistryOfVariousTypes .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000566 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010144 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> obo:OBI_0000293 ?NCBITaxon_9606 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> obo:OBI_0000293 ?TURBO_0010144 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> obo:OBI_0000293 ?TURBO_0000527 .
+      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> obo:OBI_0000293 ?TURBO_0010169 .
+      }
+      }
+      WHERE {
+      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010113> ?TURBO_0000527 .
+      ?TURBO_0000527 rdf:type <http://transformunify.org/ontologies/TURBO_0000527> .
+      ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/RO_0000056> ?TURBO_0000527 .
+      ?NCBITaxon_9606 rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+      }
+      GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
+      ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0007607> ?ZygosityUriOfVariousTypes .
+      ?TURBO_0010144 rdf:type <http://transformunify.org/ontologies/TURBO_0010144> .
+      ?TURBO_0010144 <http://purl.obolibrary.org/obo/IAO_0000142> ?GeneSymbolUriOfVariousTypes .
+      ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0010285> ?GenomeRegistryOfVariousTypes .
+      ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0010142> ?TURBO_0010169 .
+      ?TURBO_0010169 rdf:type <http://transformunify.org/ontologies/TURBO_0010169> .
+      ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0007608> ?datasetTitleStringLiteralValue .
+      ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0007605> ?alleleGeneSymbolStringLiteralValue .
+      ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0007602> ?alleleGenoIdStringLiteralValue .
+      ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0010095> ?alleleZygosityIntegerLiteralValue .
+      ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0010015> ?alleleGeneSymbolFirstPartStringLiteralValue .
+      ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0010016> ?alleleGeneSymbolSecondPartStringLiteralValue .
+      }
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0002118","localUUID", str(?TURBO_0000527))))) AS ?OBI_0002118)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000566","localUUID", str(?TURBO_0000527))))) AS ?TURBO_0000566)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001868","localUUID", str(?NCBITaxon_9606))))) AS ?OBI_0001868)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000568","localUUID", str(?TURBO_0000527))))) AS ?TURBO_0000568)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001479","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001479)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0200000","localUUID", str(?TURBO_0000527))))) AS ?OBI_0200000)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001051","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001051)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001352","localUUID", str(?TURBO_0010144))))) AS ?OBI_0001352)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001573","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001573)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0000257","localUUID", str(?TURBO_0000527))))) AS ?OBI_0000257)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?IAO_0000100","localUUID","http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")))) AS ?IAO_0000100)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0600005","localUUID", str(?TURBO_0000527))))) AS ?OBI_0600005)
+      }
+      """
+    
     before
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
@@ -30,6 +144,21 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
     after
     {
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+    }
+    
+    test("generated query matched expected query")
+    {
+        var expectedQueryListBuffer = new ArrayBuffer[String]
+        for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
+        {
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID)
+            expectedQueryListBuffer += replacement
+        }
+        var expectedQueryList = expectedQueryListBuffer.toArray
+        
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
+        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess").getQuery().replaceAll(" ", "").split("\\n")
+        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
   
     test("single allele expansion")

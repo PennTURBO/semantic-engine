@@ -41,7 +41,9 @@ class PatternMatchQuery extends Query
     var rawInputData = new ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]
     
     /* Contains set of of variables used in bind and where clauses, so the insert clause knows that these have already been defined. Any URI present in the 
-     in the insert clause will not be converted to a variable unless it is included in this list. */
+     in the insert clause will not be converted to a variable unless it is included in this list. The boolean value represents whether a URI is qualified
+     to be a multiplicity enforcer for the bind clause. To be qualified, it must have a type declared in the Where block and at some point be listed as required
+     input to the process. */
     var usedVariables: HashMap[String, Boolean] = new HashMap[String, Boolean]
     
     override def runQuery(cxn: RepositoryConnection)
@@ -51,7 +53,7 @@ class PatternMatchQuery extends Query
         update.updateSparql(cxn, query)
     }
     
-    override def getQuery(): String = deleteClause + "\n" + insertClause + "\n" + whereClause + "\n" + bindClause + "\n}"
+    override def getQuery(): String = deleteClause + "\n" + insertClause + "\n" + whereClause + bindClause + "}"
     
     def setInputGraph(inputGraph: String)
     {
@@ -93,7 +95,7 @@ class PatternMatchQuery extends Query
         assert (insertClauseBuilder.clause != null && insertClauseBuilder.clause != "")
         assert (insertClauseBuilder.clause.contains("GRAPH"))
         val innerClause = insertClauseBuilder.clause
-        insertClause += s"INSERT { \n $innerClause \n}"
+        insertClause += s"INSERT { \n$innerClause}"
     }
 
     def createDeleteClause(removals: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
@@ -105,7 +107,7 @@ class PatternMatchQuery extends Query
         assert (deleteClauseBuilder.clause != null && deleteClauseBuilder.clause != "")
         assert (deleteClauseBuilder.clause.contains("GRAPH"))
         val innerClause = deleteClauseBuilder.clause
-        deleteClause += s"DELETE { \n $innerClause \n}"
+        deleteClause += s"DELETE { \n$innerClause}"
     }
     
     def createWhereClause(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
@@ -114,19 +116,32 @@ class PatternMatchQuery extends Query
         assert (defaultInputGraph != null && defaultInputGraph != "")
         
         varsForProcessInput = whereClauseBuilder.addTripleFromRowResult(inputs, defaultInputGraph)
+        // this part of the code determines whether a variable is qualified to be a multiplicity enforcer in the bind clause. If set to true then it is qualified.
         for (row <- inputs) 
         {
             var subjectAType = false
             var objectAType = false
+            var required = true
             if (row(OBJECTTYPE.toString) != null) objectAType = true
             if (row(SUBJECTTYPE.toString) != null) subjectAType = true
-            usedVariables += row(OBJECT.toString).toString -> objectAType
-            usedVariables += row(SUBJECT.toString).toString -> subjectAType
+            if (row(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/hasOptionalInput") required = false
+            
+            var objectResultBool = true
+            if (!required || !objectAType) objectResultBool = false
+            
+            var subjectResultBool = true
+            if (!required || !subjectAType) subjectResultBool = false
+            
+            val thisObject = row(OBJECT.toString).toString
+            val thisSubject = row(SUBJECT.toString).toString
+            
+            if (!usedVariables.contains(thisObject) || !usedVariables(thisObject)) usedVariables += thisObject -> objectResultBool
+            if (!usedVariables.contains(thisSubject) || !usedVariables(thisSubject)) usedVariables += thisSubject -> subjectResultBool
         }
         assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "")
         assert (whereClauseBuilder.clause.contains("GRAPH"))
         val innerClause = whereClauseBuilder.clause
-        whereClause += s"WHERE { \n $innerClause "
+        whereClause += s"WHERE { \n$innerClause"
     }
 
     def createBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String)

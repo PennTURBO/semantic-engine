@@ -141,7 +141,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: There are multiple connections between http://transformunify.org/ontologies/object2 and http://transformunify.org/ontologies/object1 with non-matching multiplicities")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: There are multiple connections between http://transformunify.org/ontologies/object2 and http://transformunify.org/ontologies/object1 with non-matching multiplicities" ||
+                e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: There are multiple connections between http://transformunify.org/ontologies/object1 and http://transformunify.org/ontologies/object2 with non-matching multiplicities")
         }
     }
     
