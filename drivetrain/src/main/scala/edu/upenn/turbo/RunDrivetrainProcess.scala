@@ -44,12 +44,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         update.querySparqlBoolean(cxn, ask).get
     }
     
-    def runProcess(process: String)
+    def runProcess(process: String): HashMap[String, PatternMatchQuery] =
     {
         runProcess(ArrayBuffer(process))
     }
         
-    def runProcess(processes: ArrayBuffer[String])
+    def runProcess(processes: ArrayBuffer[String]): HashMap[String, PatternMatchQuery] =
     {
         var processQueryMap = new HashMap[String, PatternMatchQuery]
         for (process <- processes)
@@ -114,6 +114,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 metaDataQuery.runQuery(cxn)  
             }
         }
+        processQueryMap
     }
 
     def createPatternMatchQuery(process: String): PatternMatchQuery =
@@ -179,7 +180,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          {
               Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe}
+                                            turbo:DatatypeConnectionRecipe
+                                            turbo:ObjectConnectionFromClassRecipe}
               Values ?$INPUTTYPE {turbo:hasRequiredInput turbo:hasOptionalInput}
               <$process> ?$INPUTTYPE ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
@@ -245,7 +247,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          {
               Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                           turbo:ObjectConnectionToInstanceRecipe
-                                          turbo:DatatypeConnectionRecipe}
+                                          turbo:DatatypeConnectionRecipe
+                                          turbo:ObjectConnectionFromClassRecipe}
   
               <$process> turbo:removes ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
@@ -273,7 +276,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Values ?INPUTTO {turbo:hasRequiredInput turbo:hasOptionalInput}
               Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe}
+                                            turbo:DatatypeConnectionRecipe
+                                            turbo:ObjectConnectionFromClassRecipe}
               <$process> turbo:hasOutput ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
               <$process> turbo:outputNamedGraph ?$GRAPH .
@@ -360,6 +364,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val orderedProcessList: ArrayBuffer[String] = getAllProcessesInOrder(gmCxn)
 
         validateProcessesAgainstGraphSpecification(orderedProcessList)
+        //validateGraphSpecificationAgainstOntology()
         
         logger.info("Drivetrain will now run the following processes in this order:")
         for (a <- orderedProcessList) logger.info(a)
@@ -398,7 +403,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe}
+                                            turbo:DatatypeConnectionRecipe
+                                            turbo:ObjectConnectionFromClassRecipe}
                   ?recipe a ?CONNECTIONRECIPETYPE .
               }
               Minus
@@ -417,6 +423,42 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val res = update.querySparqlAndUnpackTuple(gmCxn, getOutputsOfAllProcesses, "recipe")
         if (res.size > 0) firstRes = res(0)
         assert(firstRes == "", s"Error in graph model: connection $firstRes in graph specification is not the output of a queued process in the data model")
+    }
+    
+    def validateGraphSpecificationAgainstOntology()
+    {
+        val query: String = """
+          select * where
+          {
+              graph pmbb:graphSpecification
+              {
+                  Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionFromTermRecipe 
+                                                turbo:ObjectConnectionToInstanceRecipe
+                                                turbo:ObjectConnectionToTermRecipe
+                                                }
+                  ?recipe a ?CONNECTIONRECIPETYPE .
+                  ?recipe turbo:object ?object .
+                  ?recipe turbo:predicate ?predicate .
+                  minus
+                  {
+                      ?object a turbo:MultiObjectDescriber .
+                  }
+              }
+              graph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl>
+              {
+                  ?predicate rdfs:range ?range .
+                  ?range rdfs:subPropertyOf* ?superRange .
+                  minus
+                  {
+                      ?object rdfs:subClassOf* ?superRange .
+                  }
+              }
+          }
+          """
+        val res = update.querySparqlAndUnpackTuple(gmCxn, query, "recipe")
+        var firstRes = ""
+        if (res.size > 0) firstRes = res(0)
+        assert(firstRes == "")
     }
 
     /**
@@ -469,7 +511,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             if (processMap.contains(currProcess)) currProcess = processMap(currProcess)
             else currProcess = null
         }
-        for (a <- processesInOrder) println("discovered process: " + a)
         processesInOrder
     }
     

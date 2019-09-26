@@ -97,10 +97,15 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             
             var objectIsLiteral = false
             if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") objectIsLiteral = true
-            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToClassRecipe") 
+            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe") 
             {
                 objectAType = false
                 if (!usedVariables.contains(rowResult(OBJECT.toString).toString)) nonVariableClasses += rowResult(OBJECT.toString).toString
+            }
+            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe") 
+            {
+                subjectAType = false
+                if (!usedVariables.contains(rowResult(SUBJECT.toString).toString)) nonVariableClasses += rowResult(SUBJECT.toString).toString
             }
             val graph = rowResult(GRAPH.toString).toString
             
@@ -440,8 +445,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (!(usedVariables.contains(singleton)))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
-                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                        SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
+                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
             }
         }
         for (singleton <- outputSuperSingletonClasses)
@@ -449,8 +453,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (!(usedVariables.contains(singleton)))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
-                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                            SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\")))) AS ${singletonAsVar})\n"""
+                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\")))) AS ${singletonAsVar})\n"""
             }
         }
     }
@@ -566,8 +569,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(multiplicityEnforcer)
             }
     
-            bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                 SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""   
+            bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""   
         }
     }
     
@@ -591,8 +593,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 dependeeAsVar = helper.convertTypeToSparqlVariable(dependee)
             }
             
-            bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",
-                       SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
+            bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
         }
     }
 }

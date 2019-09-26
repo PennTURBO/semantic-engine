@@ -53,7 +53,7 @@ class PatternMatchQuery extends Query
         update.updateSparql(cxn, query)
     }
     
-    override def getQuery(): String = deleteClause + "\n" + insertClause + "\n" + whereClause + "\n" + bindClause + "\n}"
+    override def getQuery(): String = deleteClause + "\n" + insertClause + "\n" + whereClause + bindClause + "}"
     
     def setInputGraph(inputGraph: String)
     {
@@ -95,7 +95,7 @@ class PatternMatchQuery extends Query
         assert (insertClauseBuilder.clause != null && insertClauseBuilder.clause != "")
         assert (insertClauseBuilder.clause.contains("GRAPH"))
         val innerClause = insertClauseBuilder.clause
-        insertClause += s"INSERT { \n $innerClause \n}"
+        insertClause += s"INSERT { \n$innerClause}"
     }
 
     def createDeleteClause(removals: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
@@ -107,7 +107,7 @@ class PatternMatchQuery extends Query
         assert (deleteClauseBuilder.clause != null && deleteClauseBuilder.clause != "")
         assert (deleteClauseBuilder.clause.contains("GRAPH"))
         val innerClause = deleteClauseBuilder.clause
-        deleteClause += s"DELETE { \n $innerClause \n}"
+        deleteClause += s"DELETE { \n$innerClause}"
     }
     
     def createWhereClause(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
@@ -141,7 +141,7 @@ class PatternMatchQuery extends Query
         assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "")
         assert (whereClauseBuilder.clause.contains("GRAPH"))
         val innerClause = whereClauseBuilder.clause
-        whereClause += s"WHERE { \n $innerClause "
+        whereClause += s"WHERE { \n$innerClause"
     }
 
     def createBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String)

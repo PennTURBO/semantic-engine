@@ -7,6 +7,7 @@ import org.eclipse.rdf4j.model.IRI
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import java.util.UUID
+import scala.collection.mutable.ArrayBuffer
 
 class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
 {
@@ -113,7 +114,113 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }
       }
       """
-     
+    
+    val expectedQuery: String = """
+      INSERT {
+      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      ?TURBO_0010138 <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000015> .
+      ?TURBO_0010138 rdf:type <http://transformunify.org/ontologies/TURBO_0010138> .
+      ?OBI_0001929 <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000009> .
+      ?OBI_0001929 rdf:type <http://purl.obolibrary.org/obo/OBI_0001929> .
+      ?EFO_0004340 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?EFO_0004340 rdf:type <http://www.ebi.ac.uk/efo/EFO_0004340> .
+      ?IAO_0000100 rdf:type <http://purl.obolibrary.org/obo/IAO_0000100> .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?EFO_0004340 .
+      ?TURBO_0000522 <http://purl.obolibrary.org/obo/OBI_0000293> ?IAO_0000100 .
+      ?TURBO_0000522 rdf:type <http://transformunify.org/ontologies/TURBO_0000522> .
+      ?TURBO_0000533 <http://purl.obolibrary.org/obo/IAO_0000219> ?TURBO_0000527 .
+      ?TURBO_0000533 rdf:type <http://transformunify.org/ontologies/TURBO_0000533> .
+      ?TURBO_0000527 rdf:type <http://transformunify.org/ontologies/TURBO_0000527> .
+      ?TURBO_0000527 <http://purl.obolibrary.org/obo/OBI_0000299> ?EFO_0004340 .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0000534 .
+      ?TURBO_0000534 rdf:type <http://transformunify.org/ontologies/TURBO_0000534> .
+      ?TURBO_0000533 <http://purl.obolibrary.org/obo/BFO_0000051> ?BiobankEncounterRegistryOfVariousTypes .
+      ?TURBO_0000533 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0000534 .
+      ?BiobankEncounterRegistryOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0000533 .
+      ?TURBO_0000534 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?TURBO_0000534 <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0000533 .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0000532 .
+      ?TURBO_0000532 rdf:type <http://transformunify.org/ontologies/TURBO_0000532> .
+      ?TURBO_0000532 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?TURBO_0000532 <http://purl.obolibrary.org/obo/IAO_0000136> ?TURBO_0000531 .
+      ?TURBO_0000531 rdf:type <http://transformunify.org/ontologies/TURBO_0000531> .
+      ?TURBO_0000531 <http://purl.obolibrary.org/obo/RO_0002223> ?TURBO_0000527 .
+      ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010113> ?TURBO_0000527 .
+      ?TURBO_0010169 rdf:type <http://transformunify.org/ontologies/TURBO_0010169> .
+      ?EFO_0004340 <http://purl.obolibrary.org/obo/IAO_0000581> ?TURBO_0000532 .
+      ?TURBO_0000527 <http://transformunify.org/ontologies/TURBO_0010139> ?TURBO_0010138 .
+      ?TURBO_0000527 <http://transformunify.org/ontologies/TURBO_0010139> ?OBI_0001929 .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0010138 .
+      ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?OBI_0001929 .
+      ?TURBO_0010138 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?OBI_0001929 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
+      ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010133> ?TURBO_0010161 .
+      ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
+      ?EFO_0004340 <http://transformunify.org/ontologies/TURBO_0010094> ?bmiDoubleLiteralValue .
+      ?IAO_0000100 <http://purl.org/dc/elements/1.1/title> ?datasetTitleStringLiteralValue .
+      ?TURBO_0000534 <http://transformunify.org/ontologies/TURBO_0010094> ?biobankEncounterSymbolStringLiteralValue .
+      ?TURBO_0000532 <http://transformunify.org/ontologies/TURBO_0010096> ?biobankEncounterDateLiteralValue .
+      ?TURBO_0000532 <http://transformunify.org/ontologies/TURBO_0010095> ?biobankEncounterDateStringLiteralValue .
+      ?TURBO_0010138 <http://transformunify.org/ontologies/TURBO_0010094> ?lengthMeasurementDoubleLiteralValue .
+      ?OBI_0001929 <http://transformunify.org/ontologies/TURBO_0010094> ?massMeasurementDoubleLiteralValue .
+      }
+      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010138 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?OBI_0001929 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?EFO_0004340 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?IAO_0000100 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000522 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000533 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000527 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000534 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?BiobankEncounterRegistryOfVariousTypes .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000532 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000531 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010169 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010161 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> obo:OBI_0000293 ?TURBO_0010161 .
+      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> obo:OBI_0000293 ?TURBO_0010169 .
+      }
+      }
+      WHERE {
+      GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
+      ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010286> ?BiobankEncounterRegistryOfVariousTypes .
+      ?TURBO_0010169 rdf:type <http://transformunify.org/ontologies/TURBO_0010169> .
+      ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0000623> ?datasetTitleStringLiteralValue .
+      ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0000628> ?biobankEncounterSymbolStringLiteralValue .
+      OPTIONAL {
+       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010133> ?TURBO_0010161 .
+       ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
+      }
+      OPTIONAL {
+       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0000635> ?bmiDoubleLiteralValue .
+       }
+      OPTIONAL {
+       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0000625> ?biobankEncounterDateLiteralValue .
+       }
+      OPTIONAL {
+       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0000624> ?biobankEncounterDateStringLiteralValue .
+       }
+      OPTIONAL {
+       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0000626> ?lengthMeasurementDoubleLiteralValue .
+       }
+      OPTIONAL {
+       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0000627> ?massMeasurementDoubleLiteralValue .
+       }
+      }
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000527","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000527)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000534","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000534)
+      BIND(IF (BOUND(?lengthMeasurementDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010138","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0010138)
+      BIND(IF (BOUND(?massMeasurementDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001929","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?OBI_0001929)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
+      BIND(IF (BOUND(?biobankEncounterDateStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000532","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0000532)
+      BIND(IF (BOUND(?biobankEncounterDateStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000531","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0000531)
+      BIND(IF (BOUND(?bmiDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?EFO_0004340","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?EFO_0004340)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000533","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000533)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?IAO_0000100","localUUID","http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")))) AS ?IAO_0000100)
+      }
+      """
+    
     before
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
@@ -129,6 +236,21 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     after
     {
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+    }
+    
+    test("generated query matched expected query")
+    {
+        var expectedQueryListBuffer = new ArrayBuffer[String]
+        for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
+        {
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID)
+            expectedQueryListBuffer += replacement
+        }
+        var expectedQueryList = expectedQueryListBuffer.toArray
+        
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
+        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess").getQuery().replaceAll(" ", "").split("\\n")
+        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
   
     test("bb encounter with all fields")
@@ -152,8 +274,9 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
         
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
+          
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
         update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (true)
