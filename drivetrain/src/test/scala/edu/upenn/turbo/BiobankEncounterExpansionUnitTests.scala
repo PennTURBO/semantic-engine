@@ -184,6 +184,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
       }
       WHERE {
       GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
+      VALUES ?BiobankEncounterRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000535>}
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010286> ?BiobankEncounterRegistryOfVariousTypes .
       ?TURBO_0010169 rdf:type <http://transformunify.org/ontologies/TURBO_0010169> .
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0000623> ?datasetTitleStringLiteralValue .

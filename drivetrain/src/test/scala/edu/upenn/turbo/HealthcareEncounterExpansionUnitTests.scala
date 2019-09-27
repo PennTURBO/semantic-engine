@@ -324,6 +324,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       }
       }
       WHERE {
+      VALUES ?DiagnosisRegistryOfVariousTypes {<http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890><http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892><http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>}
+      VALUES ?HealthcareEncounterRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000510><http://transformunify.org/ontologies/TURBO_0010256>}
       GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
       OPTIONAL {
       ?TURBO_0010158 <http://purl.obolibrary.org/obo/OBI_0000299> ?TURBO_0010159 .

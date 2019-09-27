@@ -1403,7 +1403,6 @@ ontologies:DiagnosisRegistryOfVariousTypes
 .
 ontologies:DrugTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;
-  ontologies:range owl:Class ;
   rdfs:label "drug term of various types" ;
 .
 ontologies:GenderIdentityDatumOfVariousTypes
@@ -1418,7 +1417,6 @@ ontologies:GenderIdentityDatumType
 .
 ontologies:GeneSymbolUriOfVariousTypes
   a ontologies:MultiObjectDescriber ;
-  ontologies:range rdfs:Resource ;
 .
 ontologies:GenomeRegistryOfVariousTypes
   a ontologies:MultiObjectDescriber ;
@@ -1436,7 +1434,6 @@ ontologies:HomoSapiensRegistryOfVariousTypes
 .
 ontologies:IcdTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;
-  ontologies:range owl:Class ;
 .
 ontologies:MultiObjectDescriber
   a owl:Class ;
@@ -1470,10 +1467,10 @@ ontologies:RaceIdentityDatumType
 .
 ontologies:SnomedTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;
-  ontologies:range owl:Class ;
 .
 ontologies:TumorRegistryDenoterOfVariousTypes
   a ontologies:MultiObjectDescriber ;
+  ontologies:range ontologies:TURBO_0010274 ;
 .
 ontologies:TurboGraphBooleanLiteralValue
   a owl:Class ;
