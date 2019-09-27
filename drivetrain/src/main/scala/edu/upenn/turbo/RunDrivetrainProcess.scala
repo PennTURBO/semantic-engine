@@ -178,10 +178,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-              Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
+              Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionToTermRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
                                             turbo:DatatypeConnectionRecipe
-                                            turbo:ObjectConnectionFromClassRecipe}
+                                            turbo:ObjectConnectionFromTermRecipe}
               Values ?$INPUTTYPE {turbo:hasRequiredInput turbo:hasOptionalInput}
               <$process> ?$INPUTTYPE ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
@@ -215,7 +215,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Optional
               {
                   ?$OBJECT a ontologies:MultiObjectDescriber .
-                  BIND (true AS ?$OBJECTMULTIOBJECTDESCRIBER)
+                  BIND (true AS ?$OBJECTADESCRIBER)
+              }
+              Optional
+              {
+                  ?$SUBJECT a ontologies:MultiObjectDescriber .
+                  BIND (true AS ?$SUBJECTADESCRIBER)
               }
               Optional
               {
@@ -245,10 +250,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-              Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
+              Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToTermRecipe 
                                           turbo:ObjectConnectionToInstanceRecipe
                                           turbo:DatatypeConnectionRecipe
-                                          turbo:ObjectConnectionFromClassRecipe}
+                                          turbo:ObjectConnectionFromTermRecipe}
   
               <$process> turbo:removes ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
@@ -274,10 +279,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          Where
          {
               Values ?INPUTTO {turbo:hasRequiredInput turbo:hasOptionalInput}
-              Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
+              Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToTermRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
                                             turbo:DatatypeConnectionRecipe
-                                            turbo:ObjectConnectionFromClassRecipe}
+                                            turbo:ObjectConnectionFromTermRecipe}
               <$process> turbo:hasOutput ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
               <$process> turbo:outputNamedGraph ?$GRAPH .
@@ -330,9 +335,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   <$process> ?INPUTTO ?recipe .
                   ?recipe turbo:object ?$SUBJECTDEPENDEE .
               }
-            
-            Graph <$ontologyURL>
-            {
               Optional
               {
                   ?$SUBJECT a owl:Class .
@@ -343,7 +345,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?$OBJECT a owl:Class .
                   BIND (true AS ?$OBJECTTYPE)
               }
-            }
          }
          
          """
@@ -401,10 +402,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
           {
               Graph pmbb:graphSpecification
               {
-                  Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToClassRecipe 
+                  Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToTermRecipe 
                                             turbo:ObjectConnectionToInstanceRecipe
                                             turbo:DatatypeConnectionRecipe
-                                            turbo:ObjectConnectionFromClassRecipe}
+                                            turbo:ObjectConnectionFromTermRecipe}
                   ?recipe a ?CONNECTIONRECIPETYPE .
               }
               Minus
@@ -576,7 +577,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 typeTriple(INPUTTYPE.toString) = f.createIRI("http://transformunify.org/ontologies/requiredInputTo")
                 typeTriple(MULTIPLICITY.toString) = f.createIRI("http://transformunify.org/ontologies/1-1")
                 typeTriple(GRAPH.toString) = f.createIRI(graph)
-                typeTriple(OBJECTMULTIOBJECTDESCRIBER.toString) = null
+                typeTriple(OBJECTADESCRIBER.toString) = null
                 
                 query.createWhereClause(ArrayBuffer(input, typeTriple))
                 val whereBlock = query.whereClause

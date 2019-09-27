@@ -24,9 +24,14 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             var graphForThisRow: String = defaultInputGraph
             var optionalGroupForThisRow: String = null
             var minusGroupForThisRow: String = null
+            
             var subjectAType = false
             var objectAType = false
+            
             var objectADescriber = false
+            var subjectADescriber = false
+            
+            val connectionName = rowResult(CONNECTIONNAME.toString).toString
             
             var required = true
             if (rowResult(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/hasOptionalInput") required = false
@@ -34,7 +39,8 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
             if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
             if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
-            if (rowResult(OBJECTMULTIOBJECTDESCRIBER.toString) != null) objectADescriber = true
+            if (rowResult(OBJECTADESCRIBER.toString) != null) objectADescriber = true
+            if (rowResult(SUBJECTADESCRIBER.toString) != null) subjectADescriber = true
             if (rowResult(SUBJECTTYPE.toString) != null) 
             {
                 subjectAType = true
@@ -45,6 +51,25 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 objectAType = true
                 varsForProcessInput += rowResult(OBJECT.toString).toString
             }
+            
+            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") 
+            {
+                assert (subjectAType || subjectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
+            }
+            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe") 
+            {
+                assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology" )
+            }
+            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe") 
+            {
+                assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
+            }
+            else
+            {
+                assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
+                assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
+            }
+            
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
                                                      subjectAType, objectAType, objectADescriber)
             if (minusGroupForThisRow != null)
@@ -85,28 +110,48 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             assert (!rowResult.contains(OPTIONALGROUP.toString))
             helper.validateURI(processNamedGraph)
             
+            val connectionName = rowResult(CONNECTIONNAME.toString).toString
+            
             var subjectAType = false
             var objectAType = false
             var subjectContext: String = ""
             var objectContext: String = ""
             
+            var objectADescriber = false
+            var subjectADescriber = false
+            
             if (rowResult(SUBJECTTYPE.toString) != null) subjectAType = true
             if (rowResult(OBJECTTYPE.toString) != null) objectAType = true
             if (rowResult(SUBJECTCONTEXT.toString) != null) subjectContext = rowResult(SUBJECTCONTEXT.toString).toString
             if (rowResult(OBJECTCONTEXT.toString) != null) objectContext = rowResult(OBJECTCONTEXT.toString).toString
+            if (rowResult(OBJECTADESCRIBER.toString) != null) objectADescriber = true
+            if (rowResult(SUBJECTADESCRIBER.toString) != null) subjectADescriber = true
             
             var objectIsLiteral = false
-            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") objectIsLiteral = true
-            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe") 
+            
+            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") 
+            {
+                assert (subjectAType || subjectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
+                objectIsLiteral = true
+            }
+            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe") 
             {
                 objectAType = false
                 if (!usedVariables.contains(rowResult(OBJECT.toString).toString)) nonVariableClasses += rowResult(OBJECT.toString).toString
+                assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
             }
-            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe") 
+            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe") 
             {
                 subjectAType = false
                 if (!usedVariables.contains(rowResult(SUBJECT.toString).toString)) nonVariableClasses += rowResult(SUBJECT.toString).toString
+                assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
             }
+            else
+            {
+                assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
+                assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
+            }
+            
             val graph = rowResult(GRAPH.toString).toString
             
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
