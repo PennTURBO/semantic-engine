@@ -583,6 +583,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         else
         {
              var customRule = helper.removeQuotesFromString(v("customRule").toString.split("\\^")(0))+"\n"
+             logger.info("dependee: " + v("dependee"))
              if (v("dependee") != null && customRule.contains("dependent"))
              {
                  val dependee = helper.convertTypeToSparqlVariable(v("dependee"), true)
@@ -592,7 +593,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
              customRule = customRule.replaceAll("\\$\\{localUUID\\}", localUUID)
              customRule = customRule.replaceAll("\\$\\{multiplicityEnforcer\\}", multiplicityEnforcer)
              assert (!customRule.contains("replacement"))
-             assert (!customRule.contains("dependent"))
+             assert (!customRule.contains("dependent"), s"No dependent for custom rule was identified, but custom rule requires a dependent. Rule string: $customRule")
              assert (!customRule.contains("localUUID"))
              assert (!customRule.contains("multiplicityEnforcer"))
              bindRules += customRule
