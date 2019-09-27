@@ -159,6 +159,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
       }
       }
       WHERE {
+      VALUES ?HomoSapiensRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000505><http://transformunify.org/ontologies/TURBO_0010275>}
+      VALUES ?TumorRegistryDenoterOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0010274>}
       GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
       ?TURBO_0010168 <http://transformunify.org/ontologies/TURBO_0010282> ?HomoSapiensRegistryOfVariousTypes .
       ?TURBO_0010168 rdf:type <http://transformunify.org/ontologies/TURBO_0010168> .

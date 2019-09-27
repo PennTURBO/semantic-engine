@@ -144,9 +144,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             primaryQuery.setProcess(process)
             primaryQuery.setInputGraph(inputNamedGraph)
             primaryQuery.setInputData(inputs)
+            primaryQuery.setGraphModelConnection(gmCxn)
             
             var outputNamedGraph: String = null
-    
             primaryQuery.createWhereClause(inputs)
             primaryQuery.createBindClause(outputs, inputs, localUUID)
             
@@ -428,7 +428,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     
     def validateGraphSpecificationAgainstOntology()
     {
-        val query: String = """
+        val rangeQuery: String = """
           select * where
           {
               graph pmbb:graphSpecification
@@ -447,17 +447,51 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               graph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl>
               {
-                  ?predicate rdfs:range ?range .
-                  ?range rdfs:subPropertyOf* ?superRange .
+                  ?predicate rdfs:subPropertyOf* ?superPredicate .
+                  ?superPredicate rdfs:range ?range .
                   minus
                   {
-                      ?object rdfs:subClassOf* ?superRange .
+                      ?object rdfs:subClassOf* ?range .
                   }
               }
           }
           """
-        val res = update.querySparqlAndUnpackTuple(gmCxn, query, "recipe")
+        var res = update.querySparqlAndUnpackTuple(gmCxn, rangeQuery, "recipe")
         var firstRes = ""
+        if (res.size > 0) firstRes = res(0)
+        assert(firstRes == "")
+
+        val domainQuery: String = """
+          select * where
+          {
+              graph pmbb:graphSpecification
+              {
+                  Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionFromTermRecipe 
+                                                turbo:ObjectConnectionToInstanceRecipe
+                                                turbo:ObjectConnectionToTermRecipe
+                                                turbo:DatatypeConnectionRecipe
+                                                }
+                  ?recipe a ?CONNECTIONRECIPETYPE .
+                  ?recipe turbo:subject ?subject .
+                  ?recipe turbo:predicate ?predicate .
+                  minus
+                  {
+                      ?subject a turbo:MultiObjectDescriber .
+                  }
+              }
+              graph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl>
+              {
+                  ?predicate rdfs:subPropertyOf* ?superPredicate .
+                  ?superPredicate rdfs:domain ?domain .
+                  minus
+                  {
+                      ?subject rdfs:subClassOf* ?domain .
+                  }
+              }
+          }
+          """
+        res = update.querySparqlAndUnpackTuple(gmCxn, domainQuery, "recipe")
+        firstRes = ""
         if (res.size > 0) firstRes = res(0)
         assert(firstRes == "")
     }
