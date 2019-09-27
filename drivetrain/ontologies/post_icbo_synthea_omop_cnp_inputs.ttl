@@ -6,11 +6,9 @@ ontologies:post_icbo_synthea_omop_cnp_inputs
   ontologies:hasOutput ontologies:cridDenotesHce ;
   ontologies:hasOutput ontologies:cridsymbHasRepresentation ;
   ontologies:hasOutput ontologies:hceExpansionSpecification ;
-#  ontologies:hasOutput ontologies:regdenPartOfCrid ;
   ontologies:hasOutput ontologies:symbolPartOfCridForHce ;
   ontologies:hasRequiredInput ontologies:miniHceCridsymShortcut ;
-#  ontologies:hasRequiredInput ontologies:regdenFromShorts ;
-  ontologies:hasOutput ontologies:hardcodedRegden ;
+  ontologies:hasOutput ontologies:hardcodedRegden_octtr ;
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:hasRequiredInput ontologies:miniHceEnddateShortcut ;
@@ -59,13 +57,5 @@ ontologies:miniHceEnddateShortcut
   # ontologies:object ontologies:allowedEncounterRegdenList ;
 # .
 
-# ontologies:ObjectConnectionToClassRecipe 
-  # a ontologies:DatatypeConnectionRecipe ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:required true ;
-  # ontologies:subject <http://api.stardog.com/visit_occurrence> ;
-  # ontologies:predicate ontologies:assertedRegden ;
-  # ontologies:object ontologies:allowedEncounterRegdenList ;
-# .
-
-# http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_inputs
+# run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_inputs
+# run            http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_inputs

@@ -18,13 +18,22 @@ ontologies:symbolPartOfCridForHce
   ontologies:object obo:IAO_0000578 ;
 .
 
-ontologies:hardcodedRegden a ontologies:ObjectConnectionToClassRecipe ;
+ontologies:hardcodedRegden_octtr a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
-  ontologies:subject ontologies:IAO_0000578  ;
+  ontologies:subject obo:IAO_0000578  ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:object ontologies:TURBO_0010158 ;
+  ontologies:object ontologies:TURBO_0010256 ;
 .
+
+# ontologies:hardcodedRegden_ocftr a ontologies:ObjectConnectionFromTermRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:required true ;
+  # ontologies:subject obo:IAO_0000578  ;
+  # ontologies:predicate obo:BFO_0000051 ;
+  # ontologies:object ontologies:TURBO_0010256 ;
+# .
+
 
 # ontologies:regdenPartOfCrid
   # a ontologies:ObjectConnectionToInstanceRecipe ;
