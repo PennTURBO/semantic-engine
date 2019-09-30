@@ -5,6 +5,7 @@ import scala.collection.mutable.HashSet
 import scala.collection.mutable.ArrayBuffer
 import org.eclipse.rdf4j.model.Value
 import java.util.regex.Pattern
+import org.eclipse.rdf4j.repository.RepositoryConnection
 
 abstract class SparqlClauseBuilder extends ProjectwideGlobals
 {
@@ -13,9 +14,15 @@ abstract class SparqlClauseBuilder extends ProjectwideGlobals
 
 class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
+    def setGraphModelConnection(gmCxn: RepositoryConnection)
+    {
+        this.gmCxn = gmCxn
+    }
+    
     def addTripleFromRowResult(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], defaultInputGraph: String): HashSet[String] =
     {
         var varsForProcessInput = new HashSet[String]
+        var valuesBlock: HashMap[String, String] = new HashMap[String, String]
         val triplesGroup = new TriplesGroupBuilder()
         for (rowResult <- inputs)
         {
@@ -39,8 +46,18 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
             if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
             if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
-            if (rowResult(OBJECTADESCRIBER.toString) != null) objectADescriber = true
-            if (rowResult(SUBJECTADESCRIBER.toString) != null) subjectADescriber = true
+            if (rowResult(OBJECTADESCRIBER.toString) != null) 
+            {
+                objectADescriber = true
+                val valsAsString = getDescriberRangesAsString(rowResult(OBJECT.toString).toString)
+                if (valsAsString.size > 0) valuesBlock += rowResult(OBJECT.toString).toString -> valsAsString
+            }
+            if (rowResult(SUBJECTADESCRIBER.toString) != null) 
+            {
+                subjectADescriber = true
+                val valsAsString = getDescriberRangesAsString(rowResult(SUBJECT.toString).toString)
+                if (valsAsString.size > 0) valuesBlock += rowResult(SUBJECT.toString).toString -> valsAsString
+            }
             if (rowResult(SUBJECTTYPE.toString) != null) 
             {
                 subjectAType = true
@@ -51,7 +68,6 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 objectAType = true
                 varsForProcessInput += rowResult(OBJECT.toString).toString
             }
-            
             if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") 
             {
                 assert (subjectAType || subjectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
@@ -89,8 +105,29 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 triplesGroup.addOptionalTripleToRequiredGroup(newTriple, graphForThisRow)
             }
         }
-        clause = triplesGroup.buildWhereClauseFromTriplesGroup()
+        var valuesBlockAsString = ""
+        for ((k,v) <- valuesBlock) valuesBlockAsString += v+"\n"
+        clause = valuesBlockAsString + triplesGroup.buildWhereClauseFromTriplesGroup()
         varsForProcessInput
+    }
+    
+    def getDescriberRangesAsString(describer: String): String =
+    {
+        val sparql: String = s"""
+          Select * Where
+          {
+              <$describer> turbo:range ?range .
+          }
+          """
+        val sparqlResults = update.querySparqlAndUnpackTuple(gmCxn, sparql, "range")
+        if (sparqlResults.size == 0) ""
+        else 
+        {
+            val describerAsVar = helper.convertTypeToSparqlVariable(describer, true)
+            var res = s"VALUES $describerAsVar {"
+            for (item <- sparqlResults) res += "<" + item + ">"
+            res + "}"
+        }
     }
 }
 
@@ -592,7 +629,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
              customRule = customRule.replaceAll("\\$\\{localUUID\\}", localUUID)
              customRule = customRule.replaceAll("\\$\\{multiplicityEnforcer\\}", multiplicityEnforcer)
              assert (!customRule.contains("replacement"))
-             assert (!customRule.contains("dependent"))
+             assert (!customRule.contains("dependent"), s"No dependent for custom rule was identified, but custom rule requires a dependent. Rule string: $customRule")
              assert (!customRule.contains("localUUID"))
              assert (!customRule.contains("multiplicityEnforcer"))
              bindRules += customRule

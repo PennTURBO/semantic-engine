@@ -22,6 +22,11 @@ abstract class Query extends ProjectwideGlobals
 
 class PatternMatchQuery extends Query
 {
+    def setGraphModelConnection(gmCxn: RepositoryConnection)
+    {
+        this.gmCxn = gmCxn
+    }
+    
     var bindClause: String = ""
     var whereClause: String = ""
     var insertClause: String = ""
@@ -114,7 +119,7 @@ class PatternMatchQuery extends Query
     {
         assert (whereClause == "")
         assert (defaultInputGraph != null && defaultInputGraph != "")
-        
+        whereClauseBuilder.setGraphModelConnection(gmCxn)
         varsForProcessInput = whereClauseBuilder.addTripleFromRowResult(inputs, defaultInputGraph)
         // this part of the code determines whether a variable is qualified to be a multiplicity enforcer in the bind clause. If set to true then it is qualified.
         for (row <- inputs) 
