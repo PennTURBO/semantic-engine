@@ -1,0 +1,23 @@
+turbo:pmbb:connection2 a turbo:ObjectConnectionToInstanceRecipe ;
+  turbo:subject turbo:object3 ;
+  turbo:predicate turbo:predicate2 ;
+  turbo:object turbo:object4 ;
+  turbo:multiplicity turbo:1-1 ;
+  turbo:subjectUsesContext turbo:context1 ;
+.
+turbo:pmbb:connection2 a turbo:ObjectConnectionToInstanceRecipe ;
+  turbo:subject turbo:object3 ;
+  turbo:predicate turbo:predicate3 ;
+  turbo:object turbo:object5 ;
+  turbo:multiplicity turbo:1-1 ;
+  turbo:subjectUsesContext turbo:context2 ;
+.
+turbo:object3 a owl:Class ;
+  turbo:hasPossibleContext turbo:context1 ;
+  turbo:hasPossibleContext turbo:context2 ; 
+.
+turbo:object4 a owl:Class .
+turbo:object5 a owl:Class .
+
+turbo:context1 a turbo:TurboGraphContext .
+turbo:context2 a turbo:TurboGraphContext.

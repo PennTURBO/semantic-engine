@@ -1,0 +1,16 @@
+turbo:myProcess1 a turbo:TURBO_0010178 ;
+  turbo:inputNamedGraph pmbb:expanded ;
+  turbo:outputNamedGraph pmbb:expanded ;
+  turbo:hasRequiredInput pmbb:connection1 ;
+  turbo:hasOutput pmbb:connection2 ;
+  turbo:hasOutput pmbb:connection3 ;
+.
+turbo:pmbb:connection1 a turbo:ObjectConnectionToInstanceRecipe ;
+  turbo:subject turbo:object1 ;
+  turbo:predicate turbo:predicate1 ;
+  turbo:object turbo:object2 ;
+  turbo:multiplicity turbo:1-1 ;
+  #turbo:objectRequiredToCreate turbo:object3 ;
+.
+turbo:object1 a owl:Class .
+turbo:object2 a owl:Class .
