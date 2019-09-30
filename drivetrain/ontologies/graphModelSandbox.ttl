@@ -1,16 +1,28 @@
 turbo:myProcess1 a turbo:TURBO_0010178 ;
   turbo:inputNamedGraph pmbb:expanded ;
   turbo:outputNamedGraph pmbb:expanded ;
-  turbo:hasRequiredInput pmbb:connection1 ;
-  turbo:hasOutput pmbb:connection2 ;
-  turbo:hasOutput pmbb:connection3 ;
+  turbo:hasRequiredInput turbo:connection1 ;
+  turbo:hasRequiredInput turbo:connection4 ;
+  turbo:hasOutput turbo:connection2 ;
+  turbo:hasOutput turbo:connection3 ;
 .
-turbo:pmbb:connection1 a turbo:ObjectConnectionToInstanceRecipe ;
+turbo:connection1 a turbo:ObjectConnectionToInstanceRecipe ;
   turbo:subject turbo:object1 ;
   turbo:predicate turbo:predicate1 ;
   turbo:object turbo:object2 ;
   turbo:multiplicity turbo:1-1 ;
-  #turbo:objectRequiredToCreate turbo:object3 ;
+.
+turbo:connection4 a turbo:ObjectConnectionToInstanceRecipe ;
+  turbo:subject turbo:object1 ;
+  turbo:predicate turbo:predicate5 ;
+  turbo:object turbo:object5 ;
+  turbo:multiplicity turbo:1-1 ;
+  turbo:referencedInGraph pmbb:someOtherGraph ;
 .
 turbo:object1 a owl:Class .
 turbo:object2 a owl:Class .
+
+turbo:object3 turbo:usesCustomVariableManipulationRule turbo:rule1 .
+turbo:rule1 a turbo:TurboGraphVariableManipulationLogic ;
+  turbo:usesSparql "BIND(obo:OMRSE_00000133 AS ${replacement})" ;
+.

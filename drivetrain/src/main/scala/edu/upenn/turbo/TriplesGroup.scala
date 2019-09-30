@@ -3,6 +3,7 @@ package edu.upenn.turbo
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
+import java.util.LinkedHashSet
 
 class TriplesGroupBuilder extends ProjectwideGlobals
 {
@@ -13,7 +14,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
     val optionalGroups = new ArrayBuffer[TriplesGroup]
     val minusGroups = new ArrayBuffer[TriplesGroup]
     
-    val allGraphsUsed = new HashSet[String]
+    val allGraphsUsed = new LinkedHashSet[String]
     val typesUsed = new HashSet[String]
     
     var variablesUsed: HashSet[String] = null
@@ -32,7 +33,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         else
         {
             requiredGroup.requiredInGroup += graph -> ArrayBuffer(triple)
-            allGraphsUsed += graph
+            allGraphsUsed.add(graph)
         }
     }
 
@@ -64,7 +65,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         else
         {
             minusGroup.requiredInGroup += graph -> ArrayBuffer(triple)
-            allGraphsUsed += graph
+            allGraphsUsed.add(graph)
         }
     }
     
@@ -82,7 +83,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         else
         {
             requiredGroup.optionalInGroup += graph -> ArrayBuffer(triple)
-            allGraphsUsed += graph
+            allGraphsUsed.add(graph)
         }
     }
     
@@ -100,7 +101,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         else
         {
             optionalGroup.requiredInGroup += graph -> ArrayBuffer(triple)
-            allGraphsUsed += graph
+            allGraphsUsed.add(graph)
         }
     }
     
@@ -118,7 +119,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         else
         {
             optionalGroup.optionalInGroup += graph -> ArrayBuffer(triple)
-            allGraphsUsed += graph
+            allGraphsUsed.add(graph)
         }
     }
     
@@ -167,8 +168,10 @@ class TriplesGroupBuilder extends ProjectwideGlobals
     def buildClauseFromTriplesGroup(clauseType: Value): String =
     {
         var graphsAndTriples: HashMap[String, HashMap[String, Boolean]] = new HashMap[String, HashMap[String, Boolean]]
-        for (graph <- allGraphsUsed)
+        val graphsIterator = allGraphsUsed.iterator()
+        while (graphsIterator.hasNext())
         {
+            val graph = graphsIterator.next()
             var useGraphForRequired = false
             if (requiredGroup.requiredInGroup.contains(graph)) useGraphForRequired = true
             if (!useGraphForRequired)

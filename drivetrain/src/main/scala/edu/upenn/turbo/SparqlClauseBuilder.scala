@@ -14,6 +14,11 @@ abstract class SparqlClauseBuilder extends ProjectwideGlobals
 
 class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
+    val triplesGroup = new TriplesGroupBuilder()
+    var varsForProcessInput = new HashSet[String]
+    var valuesBlock: HashMap[String, String] = new HashMap[String, String]
+    var nonDefaultGraphTriples = new ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]
+    
     def setGraphModelConnection(gmCxn: RepositoryConnection)
     {
         this.gmCxn = gmCxn
@@ -21,94 +26,109 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     def addTripleFromRowResult(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], defaultInputGraph: String): HashSet[String] =
     {
-        var varsForProcessInput = new HashSet[String]
-        var valuesBlock: HashMap[String, String] = new HashMap[String, String]
-        val triplesGroup = new TriplesGroupBuilder()
         for (rowResult <- inputs)
         {
             for (key <- requiredInputKeysList) assert (rowResult.contains(key.toString))
             
             var graphForThisRow: String = defaultInputGraph
-            var optionalGroupForThisRow: String = null
-            var minusGroupForThisRow: String = null
-            
-            var subjectAType = false
-            var objectAType = false
-            
-            var objectADescriber = false
-            var subjectADescriber = false
-            
-            val connectionName = rowResult(CONNECTIONNAME.toString).toString
-            
-            var required = true
-            if (rowResult(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/hasOptionalInput") required = false
-            if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
             if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
-            if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
-            if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
-            if (rowResult(OBJECTADESCRIBER.toString) != null) 
-            {
-                objectADescriber = true
-                val valsAsString = getDescriberRangesAsString(rowResult(OBJECT.toString).toString)
-                if (valsAsString.size > 0) valuesBlock += rowResult(OBJECT.toString).toString -> valsAsString
-            }
-            if (rowResult(SUBJECTADESCRIBER.toString) != null) 
-            {
-                subjectADescriber = true
-                val valsAsString = getDescriberRangesAsString(rowResult(SUBJECT.toString).toString)
-                if (valsAsString.size > 0) valuesBlock += rowResult(SUBJECT.toString).toString -> valsAsString
-            }
-            if (rowResult(SUBJECTTYPE.toString) != null) 
-            {
-                subjectAType = true
-                varsForProcessInput += rowResult(SUBJECT.toString).toString
-            }
-            if (rowResult(OBJECTTYPE.toString) != null) 
-            {
-                objectAType = true
-                varsForProcessInput += rowResult(OBJECT.toString).toString
-            }
-            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") 
-            {
-                assert (subjectAType || subjectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
-            }
-            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe") 
-            {
-                assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology" )
-            }
-            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe") 
-            {
-                assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
-            }
-            else
-            {
-                assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
-                assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
-            }
+            if (graphForThisRow != defaultInputGraph) nonDefaultGraphTriples += rowResult
+            else makeNewTripleFromRowResult(rowResult, defaultInputGraph)
             
-            val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
-                                                     subjectAType, objectAType, objectADescriber)
-            if (minusGroupForThisRow != null)
-            {
-                triplesGroup.addTripleToMinusGroup(newTriple, graphForThisRow, minusGroupForThisRow)
-            }
-            else if (required && optionalGroupForThisRow == null)
-            {
-                triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graphForThisRow)
-            }
-            else if (optionalGroupForThisRow != null)
-            {
-                triplesGroup.addToOptionalGroup(newTriple, graphForThisRow, optionalGroupForThisRow, required)
-            }
-            else
-            {
-                triplesGroup.addOptionalTripleToRequiredGroup(newTriple, graphForThisRow)
-            }
         }
+        for (row <- nonDefaultGraphTriples) makeNewTripleFromRowResult(row, defaultInputGraph)
+          
         var valuesBlockAsString = ""
         for ((k,v) <- valuesBlock) valuesBlockAsString += v+"\n"
         clause = valuesBlockAsString + triplesGroup.buildWhereClauseFromTriplesGroup()
         varsForProcessInput
+    }
+    
+    def makeNewTripleFromRowResult(rowResult: HashMap[String, org.eclipse.rdf4j.model.Value], defaultInputGraph: String)
+    {
+        var optionalGroupForThisRow: String = null
+        var minusGroupForThisRow: String = null
+        
+        var subjectAType = false
+        var objectAType = false
+        
+        var objectADescriber = false
+        var subjectADescriber = false
+        
+        var graphForThisRow: String = defaultInputGraph
+        if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
+        
+        val connectionName = rowResult(CONNECTIONNAME.toString).toString
+        
+        var required = true
+        if (rowResult(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/hasOptionalInput") required = false
+        if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
+        if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
+        if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
+        if (rowResult(OBJECTADESCRIBER.toString) != null) 
+        {
+            objectADescriber = true
+            val valsAsString = getDescriberRangesAsString(rowResult(OBJECT.toString).toString)
+            if (valsAsString.size > 0) valuesBlock += rowResult(OBJECT.toString).toString -> valsAsString
+        }
+        if (rowResult(SUBJECTADESCRIBER.toString) != null) 
+        {
+            subjectADescriber = true
+            val valsAsString = getDescriberRangesAsString(rowResult(SUBJECT.toString).toString)
+            if (valsAsString.size > 0) valuesBlock += rowResult(SUBJECT.toString).toString -> valsAsString
+        }
+        if (rowResult(SUBJECTTYPE.toString) != null) 
+        {
+            subjectAType = true
+            varsForProcessInput += rowResult(SUBJECT.toString).toString
+        }
+        if (rowResult(OBJECTTYPE.toString) != null) 
+        {
+            objectAType = true
+            varsForProcessInput += rowResult(OBJECT.toString).toString
+        }
+        if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") 
+        {
+            assert (subjectAType || subjectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
+        }
+        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe") 
+        {
+            assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology" )
+        }
+        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe") 
+        {
+            assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
+        }
+        else
+        {
+            assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
+            assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
+        }
+        val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
+                                                 subjectAType, objectAType, objectADescriber)
+        
+        
+        addNewTripleToGroup(newTriple, minusGroupForThisRow, optionalGroupForThisRow, required, graphForThisRow)
+    }
+    
+    def addNewTripleToGroup(newTriple: Triple, minusGroupForThisRow: String, optionalGroupForThisRow: String, required: Boolean, graphForThisRow: String)
+    {
+        if (minusGroupForThisRow != null)
+        {
+            triplesGroup.addTripleToMinusGroup(newTriple, graphForThisRow, minusGroupForThisRow)
+        }
+        else if (required && optionalGroupForThisRow == null)
+        {
+            triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graphForThisRow)
+        }
+        else if (optionalGroupForThisRow != null)
+        {
+            triplesGroup.addToOptionalGroup(newTriple, graphForThisRow, optionalGroupForThisRow, required)
+        }
+        else
+        {
+            triplesGroup.addOptionalTripleToRequiredGroup(newTriple, graphForThisRow)
+        }
     }
     
     def getDescriberRangesAsString(describer: String): String =
