@@ -19,8 +19,10 @@ ontologies:post_icbo_synthea_omop_cnp_inputs
   ontologies:hasOutput ontologies:procboundStartsEnc ;
   ontologies:hasOutput ontologies:startingTmdAboutProcbound ;
   ontologies:hasOutput ontologies:startingTmdHasMeasVal ;
-
+  ontologies:hasRequiredInput ontologies:miniHceTypeShortcut ;
+  ontologies:hasOutput ontologies:encounterTypingRecipe ;
 .
+  
   
 ontologies:miniHceCridsymShortcut 
   a ontologies:DatatypeConnectionRecipe ;
@@ -48,6 +50,33 @@ ontologies:miniHceEnddateShortcut
   ontologies:predicate <http://api.stardog.com/visit_occurrence#visit_end_date> ;
   ontologies:object ontologies:visit_end_date_DateLiteralValue ;
 .
+
+ontologies:encClassFromValueRule
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql """
+  BIND(IF (${dependent} = 9203, obo:OGMS_0000101, ?unbound) AS ?edEncClass) 
+  BIND(IF (${dependent} = 9201, obo:OGMS_0000100, ?unbound) AS  ?inpatientEncClass) 
+  BIND(IF (${dependent} = 9202, obo:OGMS_0000099, ?unbound) AS ?outpatientEncClass) 
+  bind(coalesce(?edEncClass, ?inpatientEncClass, ?outpatientEncClass, obo:OGMS_0000097) as ${replacement})
+  # BIND(IF (bound(?edEncClass),?edEncClass, ?unbound) as ${replacement}) 
+  # BIND(IF (bound(?inpatientEncClass),?inpatientEncClass, ${replacement}) as ${replacement}) 
+  # BIND(IF (bound(?outpatientEncClass),?outpatientEncClass, ${replacement}) as ${replacement}) 
+  # BIND(IF (bound(${replacement}),${replacement},obo:OGMS_0000097) as ${replacement})
+"""  ;
+.
+
+ontologies:miniHceTypeShortcut 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject <http://api.stardog.com/visit_occurrence> ;
+  ontologies:predicate <http://api.stardog.com/visit_occurrence#visit_concept_id> ;
+  ontologies:object ontologies:visit_type_IntegerLiteralValue ;
+  ontologies:objectRequiredToCreate ontologies:EncounterClassList ;
+.
+
+ontologies:EncounterClassList ontologies:usesCustomVariableManipulationRule ontologies:encClassFromValueRule .
+
 
 # ontologies:regdenFromShorts a ontologies:ObjectConnectionToClassRecipe ;
   # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
