@@ -1,4 +1,5 @@
 <http://api.stardog.com/visit_occurrence> a owl:Class .
+<http://api.stardog.com/person> a owl:Class .
 
 ontologies:cridDenotesHce
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -26,6 +27,52 @@ ontologies:hardcodedRegden_octtr a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:object ontologies:TURBO_0010256 ;
 .
 
+ontologies:person_id_StringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+
+ontologies:person_source_value_StringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+
+ontologies:hardcodedPatientRegden a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000578  ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:object ontologies:TURBO_0010255 ;
+.
+
+
+ontologies:patCridsymbHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject obo:IAO_0000577 ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:object ontologies:person_source_value_StringLiteralValue ;
+.
+
+ontologies:symbolPartOfCridForPatient
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject obo:IAO_0000577 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object obo:IAO_0000578 ;
+.
+
+ontologies:cridDenotesPatient
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject obo:IAO_0000578 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+.
+
+
+
 ontologies:visit_occurrence_id_StringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
 .
@@ -39,6 +86,16 @@ ontologies:cridsymbHasRepresentation
   ontologies:object ontologies:visit_occurrence_id_StringLiteralValue ;
 .
 
+ontologies:patientExpansionSpecification 
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject <http://api.stardog.com/person> ;
+  ontologies:predicate ontologies:TURBO_0010113 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+.
+
+
 ontologies:hceExpansionSpecification
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -47,6 +104,7 @@ ontologies:hceExpansionSpecification
   ontologies:predicate ontologies:TURBO_0010113 ;
   ontologies:object ontologies:encounterToBeTyped ;
 .
+
 
 ontologies:encStartContext a ontologies:TurboGraphContext .
 obo:IAO_0000416 ontologies:hasPossibleContext ontologies:encStartContext .
@@ -58,6 +116,38 @@ obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encEndContext .
 
 
  ontologies:visit_start_date_DateLiteralValue 
+  a ontologies:TurboGraphDateLiteralValue ;
+.
+
+
+ontologies:dobHasMeasVal 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject <http://www.ebi.ac.uk/efo/EFO_0004950> ;
+  ontologies:predicate obo:IAO_0000004 ;
+  ontologies:object ontologies:birth_datetime_DateLiteralValue ;
+.
+
+ontologies:dobAboutSns 
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject <http://www.ebi.ac.uk/efo/EFO_0004950> ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:object obo:UBERON_0035946 ;
+.
+
+ontologies:patientBornOnSns 
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+  ontologies:predicate ontologies:TURBO_0000303 ;
+  ontologies:object obo:UBERON_0035946 ;
+.
+
+ontologies:birth_datetime_DateLiteralValue
   a ontologies:TurboGraphDateLiteralValue ;
 .
 
@@ -158,8 +248,31 @@ ontologies:encounterToBeTyped
   ontologies:range owl:Class ;
 .
 
+ontologies:patientHasRole
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:RO_0000087 ;
+  ontologies:object obo:OBI_0000093 ;
+.
 
+ontologies:encounterRealizesRole
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:encounterSubclassesEnumeration ;
+  ontologies:predicate obo:BFO_0000055 ;
+  ontologies:object obo:OBI_0000093 ;
+.
 
+ontologies:encounterSubclassesEnumeration
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range obo:OGMS_0000099 ;
+  ontologies:range obo:OGMS_0000100 ;
+  ontologies:range obo:OGMS_0000101 ;
+  ontologies:range obo:OGMS_0000097 ;
+.
 
 # ontologies:hardcodedRegden_ocftr a ontologies:ObjectConnectionFromTermRecipe ;
   # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;

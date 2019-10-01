@@ -1,29 +1,108 @@
 <http://api.stardog.com/visit_occurrence> a owl:Class .
+<http://api.stardog.com/person> a owl:Class .
 
 # _ is wildcard 
-ontologies:post_icbo_synthea_omop_cnp_inputs
+ontologies:post_icbo_synthea_omop_cnp_encounters
   a ontologies:TURBO_0010178 ;
   ontologies:hasOutput ontologies:cridDenotesHce ;
   ontologies:hasOutput ontologies:cridsymbHasRepresentation ;
-  ontologies:hasOutput ontologies:hceExpansionSpecification ;
-  ontologies:hasOutput ontologies:symbolPartOfCridForHce ;
-  ontologies:hasRequiredInput ontologies:miniHceCridsymShortcut ;
-  ontologies:hasOutput ontologies:hardcodedRegden_octtr ;
-  ontologies:inputNamedGraph ontologies:omopShortcuts ;
-  ontologies:outputNamedGraph ontologies:omopExpanded ;
-  ontologies:hasRequiredInput ontologies:miniHceEnddateShortcut ;
-  ontologies:hasOutput ontologies:procboundEndsEnc ;
+  ontologies:hasOutput ontologies:encounterTypingRecipe ;
   ontologies:hasOutput ontologies:endingTmdAboutProcbound ;
   ontologies:hasOutput ontologies:endingTmdHasMeasVal ;
-  ontologies:hasRequiredInput ontologies:miniHceStartdateShortcut ;
+  ontologies:hasOutput ontologies:hardcodedRegden_octtr ;
+  ontologies:hasOutput ontologies:hceExpansionSpecification ;
+  ontologies:hasOutput ontologies:procboundEndsEnc ;
   ontologies:hasOutput ontologies:procboundStartsEnc ;
   ontologies:hasOutput ontologies:startingTmdAboutProcbound ;
   ontologies:hasOutput ontologies:startingTmdHasMeasVal ;
+  ontologies:hasOutput ontologies:symbolPartOfCridForHce ;
+  ontologies:hasRequiredInput ontologies:miniHceCridsymShortcut ;
+  ontologies:hasRequiredInput ontologies:miniHceEnddateShortcut ;
+  ontologies:hasRequiredInput ontologies:miniHceStartdateShortcut ;
   ontologies:hasRequiredInput ontologies:miniHceTypeShortcut ;
-  ontologies:hasOutput ontologies:encounterTypingRecipe ;
+  ontologies:inputNamedGraph ontologies:omopShortcuts ;
+  ontologies:outputNamedGraph ontologies:omopExpanded ;
+  ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_participation ;
 .
+
+ontologies:post_icbo_synthea_omop_cnp_patients
+  a ontologies:TURBO_0010178 ;
+  ontologies:hasOutput ontologies:cridDenotesPatient;
+  ontologies:hasOutput ontologies:patCridsymbHasRepresentation ;
+  ontologies:hasOutput ontologies:symbolPartOfCridForPatient ;
+  ontologies:hasOutput ontologies:hardcodedPatientRegden ;
+  ontologies:hasOutput ontologies:dobHasMeasVal ;
+  ontologies:hasOutput ontologies:dobAboutSns ;
+  ontologies:hasOutput ontologies:patientBornOnSns ;
+  ontologies:hasOutput ontologies:patientExpansionSpecification ;
+  ontologies:hasRequiredInput ontologies:miniPatientCridsymShortcut ;
+  ontologies:hasRequiredInput ontologies:patientDobShortcut ;
+  ontologies:inputNamedGraph ontologies:omopShortcuts ;
+  ontologies:outputNamedGraph ontologies:omopExpanded ;
+  ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_encounters ;
+.
+
+
+ontologies:post_icbo_synthea_omop_cnp_participation
+  a ontologies:TURBO_0010178 ;
+  ontologies:hasOutput ontologies:encounterRealizesRole ;
+  ontologies:hasOutput ontologies:patientHasRole;
+  ontologies:hasRequiredInput ontologies:miniEncounterExpansionInp ;
+  ontologies:hasRequiredInput ontologies:miniEncounterPatientID ;
+  ontologies:hasRequiredInput ontologies:miniPatientPkShortcut ;
+  ontologies:inputNamedGraph ontologies:omopShortcuts ;
+  ontologies:outputNamedGraph ontologies:omopExpanded ;
+#  ontologies:hasOutput ontologies:encounterRealizesRole ;
+.
+
+
+ontologies:patientDobShortcut 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject <http://api.stardog.com/person> ;
+  ontologies:predicate <http://api.stardog.com/person#birth_datetime> ;
+  ontologies:object ontologies:birth_datetime_DateLiteralValue ;
+.
+
   
-  
+ontologies:miniPatientCridsymShortcut 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject <http://api.stardog.com/person> ;
+  ontologies:predicate <http://api.stardog.com/person#person_source_value> ;
+  ontologies:object ontologies:person_source_value_StringLiteralValue ;
+.
+
+ontologies:miniPatientPkShortcut 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject <http://api.stardog.com/person> ;
+  ontologies:predicate <http://api.stardog.com/person#person_id> ;
+  ontologies:object ontologies:person_id_StringLiteralValue ;
+.
+
+ontologies:miniEncounterPatientID 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject <http://api.stardog.com/visit_occurrence> ;
+  ontologies:predicate <http://api.stardog.com/visit_occurrence#person_id> ;
+  ontologies:object ontologies:person_id_StringLiteralValue ;
+.
+
+ontologies:miniEncounterExpansionInp 
+  a ontologies:DatatypeConnectionRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject <http://api.stardog.com/visit_occurrence> ;
+  ontologies:predicate ontologiesTURBO_0010113 ;
+  ontologies:object ontologies:encounterSubclassesEnumeration ;
+.
+
 ontologies:miniHceCridsymShortcut 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -86,5 +165,6 @@ ontologies:EncounterClassList ontologies:usesCustomVariableManipulationRule onto
   # ontologies:object ontologies:allowedEncounterRegdenList ;
 # .
 
-# run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_inputs
-# run            http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_inputs
+# run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_encounters
+# run            http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_encounters
+# run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_patients
