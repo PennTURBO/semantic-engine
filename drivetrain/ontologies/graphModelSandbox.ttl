@@ -2,7 +2,7 @@ turbo:myProcess1 a turbo:TURBO_0010178 ;
   turbo:inputNamedGraph pmbb:expanded ;
   turbo:outputNamedGraph pmbb:expanded ;
   turbo:hasRequiredInput turbo:connection1 ;
-  turbo:hasRequiredInput turbo:connection4 ;
+  turbo:hasOptionalInput turbo:connection4 ;
   turbo:hasOutput turbo:connection2 ;
   turbo:hasOutput turbo:connection3 ;
 .

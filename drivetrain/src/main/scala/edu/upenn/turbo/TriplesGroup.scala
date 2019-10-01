@@ -173,7 +173,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         {
             val graph = graphsIterator.next()
             var useGraphForRequired = false
-            if (requiredGroup.requiredInGroup.contains(graph)) useGraphForRequired = true
+            if (requiredGroup.requiredInGroup.contains(graph) || requiredGroup.optionalInGroup.contains(graph)) useGraphForRequired = true
             if (!useGraphForRequired)
             {
               for (optionalGroup <- optionalGroups)
