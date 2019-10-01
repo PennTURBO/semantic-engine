@@ -32,6 +32,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             
             var graphForThisRow: String = defaultInputGraph
             if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
+            if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
             if (graphForThisRow != defaultInputGraph) nonDefaultGraphTriples += rowResult
             else makeNewTripleFromRowResult(rowResult, defaultInputGraph)
             
@@ -57,12 +58,11 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         
         var graphForThisRow: String = defaultInputGraph
         if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
-        
+        if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
         val connectionName = rowResult(CONNECTIONNAME.toString).toString
         
         var required = true
         if (rowResult(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/hasOptionalInput") required = false
-        if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
         if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
         if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
         if (rowResult(OBJECTADESCRIBER.toString) != null) 
