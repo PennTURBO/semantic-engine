@@ -67,7 +67,7 @@ ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000272 ;
   ontologies:predicate obo:IAO_0000039 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:TURBO_0010150 ;
 .
 ontologies:DiastolicBloodPressureValueSpecificationToValue
@@ -99,7 +99,7 @@ ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000272 ;
   ontologies:predicate obo:IAO_0000039 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:TURBO_0010149 ;
 .
 ontologies:SystolicBloodPressureValueSpecificationToValue
@@ -155,7 +155,7 @@ ontologies:alleleToGeneSymbolUri
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:GeneSymbolUriOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:objectRequired ;
   ontologies:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToZygosityIntegerValue
@@ -171,7 +171,7 @@ ontologies:alleleToZygosityUri
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ZygosityUriOfVariousTypes ;
   ontologies:predicate obo:OBI_0001938 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:objectRequired ;
   ontologies:subject obo:OBI_0001352 ;
 .
 ontologies:biobankEncounterDateToBiobankEncounterStart
@@ -253,7 +253,6 @@ ontologies:biobankEncounterSymbolToDataset
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:TURBO_0000534 ;
-  rdfs:label "biobank enc symbol to dataset connection" ;
 .
 ontologies:biobankEncounterSymbolToId
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -358,7 +357,6 @@ ontologies:bmiToDataset
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
   ontologies:subject efo:EFO_0004340 ;
-  rdfs:label "BMI to dataset connection" ;
 .
 ontologies:bmiToHealthcareEncounterDate
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -613,7 +611,7 @@ ontologies:diagnosisToDiagnosisRegistry
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DiagnosisRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0000703 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:objectRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisRegistryStringLiteralValue
@@ -629,7 +627,7 @@ ontologies:diagnosisToIcdTerm
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:IcdTermOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
@@ -645,7 +643,7 @@ ontologies:diagnosisToSnomedTerm
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:SnomedTermOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure
@@ -709,7 +707,7 @@ ontologies:genderIdentityDatumToGenderIdentityDatumType
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:GenderIdentityDatumType ;
   ontologies:predicate rdf:type ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genderIdentityDatumToHomoSapiens
@@ -1069,7 +1067,7 @@ ontologies:lengthMeasurementValueSpecificationToCentimeter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000015 ;
   ontologies:predicate obo:IAO_0000039 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToDataset
@@ -1133,7 +1131,7 @@ ontologies:massMeasurementValueSpecificationToKilogram
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000009 ;
   ontologies:predicate obo:IAO_0000039 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:objectRequired ;
   ontologies:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue
@@ -1189,7 +1187,7 @@ ontologies:prescriptionToDrug
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DrugTermOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:PDRO_0000001 ;
 .
 ontologies:prescriptionToMedicationOrderNameStringLiteralValue
@@ -1229,7 +1227,7 @@ ontologies:raceIdentityDatumToRaceIdentityDatumType
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:RaceIdentityDatumType ;
   ontologies:predicate rdf:type ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:symbolToHomoSapiensId
@@ -1322,11 +1320,9 @@ ontologies:tumorToHomoSapiens
 .
 <http://transformunify.org/ontologies/1-1>
   a ontologies:TurboGraphMultiplicityRule ;
-  rdfs:label "1-1 multiplicity rule" ;
 .
 <http://transformunify.org/ontologies/1-many>
   a ontologies:TurboGraphMultiplicityRule ;
-  rdfs:label "1-many multiplicity rule" ;
 .
 ontologies:BiobankEncounterRegistryOfVariousTypes
   a ontologies:MultiObjectDescriber ;
@@ -1334,7 +1330,6 @@ ontologies:BiobankEncounterRegistryOfVariousTypes
 .
 ontologies:DatatypeConnectionRecipe
   a owl:Class ;
-  rdfs:label "datatype connection recipe" ;
   rdfs:subClassOf ontologies:TurboGraphConnectionRecipe ;
 .
 ontologies:DiagnosisRegistryOfVariousTypes
@@ -1345,11 +1340,9 @@ ontologies:DiagnosisRegistryOfVariousTypes
 .
 ontologies:DrugTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;
-  rdfs:label "drug term of various types" ;
 .
 ontologies:GenderIdentityDatumOfVariousTypes
   a ontologies:MultiObjectDescriber ;
-  rdfs:label "gender identity datum of various types" ;
 .
 ontologies:GenderIdentityDatumType
   a ontologies:MultiObjectDescriber ;
@@ -1382,7 +1375,6 @@ ontologies:MultiObjectDescriber
 .
 ontologies:ObjectConnectionRecipe
   a owl:Class ;
-  rdfs:label "object connection recipe" ;
   rdfs:subClassOf ontologies:TurboGraphConnectionRecipe ;
 .
 ontologies:ObjectConnectionToTermRecipe
@@ -1416,54 +1408,44 @@ ontologies:TumorRegistryDenoterOfVariousTypes
 .
 ontologies:TurboGraphBooleanLiteralValue
   a owl:Class ;
-  rdfs:label "turbo graph boolean literal value" ;
   rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
 .
 ontologies:TurboGraphConnectionRecipe
   a owl:Class ;
-  rdfs:label "connection recipe" ;
 .
 ontologies:TurboGraphDateLiteralValue
   a owl:Class ;
-  rdfs:label "Turbo Graph date literal value" ;
   rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
 .
 ontologies:TurboGraphDoubleLiteralValue
   a owl:Class ;
-  rdfs:label "turbo graph double literal value" ;
   rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
 .
 ontologies:TurboGraphIntegerLiteralValue
   a owl:Class ;
-  rdfs:label "turbo graph integer literal value" ;
   rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
 .
 ontologies:TurboGraphLiteralValue
   a owl:Class ;
-  rdfs:label "Turbo Graph Literal Value" ;
 .
 ontologies:TurboGraphMinusGroup
   a owl:Class ;
 .
 ontologies:TurboGraphMultiplicityRule
   a owl:Class ;
-  rdfs:label "TURBO graph multiplicity rule" ;
 .
 ontologies:TurboGraphOptionalGroup
   a owl:Class ;
 .
 ontologies:TurboGraphStringLiteralValue
   a owl:Class ;
-  rdfs:label "TURBO graph string literal value" ;
   rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
 .
 ontologies:TurboGraphVariableManipulationLogic
   a owl:Class ;
-  rdfs:label "TURBO graph expansion rule logic" ;
 .
 ontologies:TurboNamedGraph
   a owl:Class ;
-  rdfs:label "named graph in turbo repository" ;
   rdfs:subClassOf owl:Thing ;
 .
 ontologies:ZygosityUriOfVariousTypes
@@ -1488,18 +1470,15 @@ ontologies:alleleZygosityIntegerLiteralValue
 .
 ontologies:biobankEncounterDateLiteralValue
   a ontologies:TurboGraphDateLiteralValue ;
-  rdfs:label "biobank encounter date value" ;
 .
 ontologies:biobankEncounterDateStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
-  rdfs:label "biobank encounter date string value" ;
 .
 ontologies:biobankEncounterSymbolStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
 .
 ontologies:bmiDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
-  rdfs:label "bmi double literal value" ;
 .
 ontologies:buildsMinusGroup
   a owl:ObjectProperty ;
@@ -1514,15 +1493,12 @@ ontologies:datasetTitleStringLiteralValue
 .
 ontologies:diagnosisCodingSequenceIntegerLiteralValue
   a ontologies:TurboGraphIntegerLiteralValue ;
-  rdfs:label "diagnosis coding sequence integer literal value" ;
 .
 ontologies:diagnosisRegistryStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
-  rdfs:label "diagnosis registry string value" ;
 .
 ontologies:diagnosisTermSuffixStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
-  rdfs:label "diagnosis term suffix literal string value" ;
 .
 ontologies:diastolicBloodPressureDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
@@ -1533,15 +1509,12 @@ ontologies:hasOriginalVariable
 .
 ontologies:healthcareEncounterDateLiteralValue
   a ontologies:TurboGraphDateLiteralValue ;
-  rdfs:label "healthcare encounter date value" ;
 .
 ontologies:healthcareEncounterDateStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
-  rdfs:label "healthcare encounter date string value" ;
 .
 ontologies:healthcareEncounterSymbolLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
-  rdfs:label "healthcare encounter symbol value" ;
 .
 ontologies:homoSapiensDateOfBirthDateLiteralValue
   a ontologies:TurboGraphDateLiteralValue ;
@@ -1561,47 +1534,37 @@ ontologies:homoSapiensSymbolStringLiteralValue
 ontologies:inputNamedGraph
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TURBO_0010178 ;
-  rdfs:label "input named graph for a turbo process" ;
   rdfs:range ontologies:TurboNamedGraph ;
 .
 ontologies:lengthMeasurementDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
-  rdfs:label "length measurement double literal value" ;
 .
 ontologies:many-1
   a ontologies:TurboGraphMultiplicityRule ;
-  rdfs:label "many-1 multiplicity rule" ;
 .
 ontologies:many-singleton
   a ontologies:TurboGraphMultiplicityRule ;
-  rdfs:label "many-singleton multiplicity rule" ;
 .
 ontologies:many-superSingleton
   a ontologies:TurboGraphMultiplicityRule ;
-  rdfs:label "many-singleton multiplicity rule" ;
 .
 ontologies:massMeasurementDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
-  rdfs:label "mass measurement datum double literal value" ;
 .
 ontologies:medicationOrderNameStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
-  rdfs:label "med order name string literal value" ;
 .
 ontologies:medicationSymbolStringLiteralValue
   a ontologies:TurboGraphStringLiteralValue ;
-  rdfs:label "medication identifier string literal value" ;
 .
 ontologies:multiplicity
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
-  rdfs:label "multiplicity definition for connection recipe" ;
   rdfs:range ontologies:TurboGraphMultiplicityRule ;
 .
 ontologies:object
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
-  rdfs:label "object of connection recipe" ;
   rdfs:range rdfs:Resource ;
 .
 ontologies:objectRequiredToCreate
@@ -1612,19 +1575,16 @@ ontologies:objectRequiredToCreate
 ontologies:optionalInputTo
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
-  rdfs:label "input to an expansion process" ;
   rdfs:range rdfs:Resource ;
 .
 ontologies:outputNamedGraph
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TURBO_0010178 ;
-  rdfs:label "output named graph for a turbo process" ;
   rdfs:range ontologies:TurboNamedGraph ;
 .
 ontologies:outputOf
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
-  rdfs:label "output of an expansion process" ;
   rdfs:range ontologies:TURBO_0010178 ;
   rdfs:range owl:Class ;
 .
@@ -1636,12 +1596,10 @@ ontologies:precedes
 ontologies:predicate
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
-  rdfs:label "predicate of connection recipe" ;
   rdfs:range rdf:Property ;
 .
 ontologies:primaryDiagnosisBooleanLiteralValue
   a ontologies:TurboGraphBooleanLiteralValue ;
-  rdfs:label "diagnosis primary t/f" ;
 .
 ontologies:referencedInGraph
   a owl:ObjectProperty ;
@@ -1654,30 +1612,24 @@ ontologies:removedBy
 ontologies:required
   a owl:DatatypeProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
-  rdfs:label "is connection recipe required in model?" ;
-  rdfs:range xsd:boolean ;
 .
 ontologies:requiredInputTo
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
-  rdfs:label "input to an expansion process" ;
   rdfs:range rdfs:Resource ;
 .
 ontologies:singleton-many
   a ontologies:TurboGraphMultiplicityRule ;
-  rdfs:label "singleton-many multiplicity rule" ;
 .
 ontologies:singleton-singleton
   a ontologies:TurboGraphMultiplicityRule ;
 .
 ontologies:singleton-superSingleton
   a ontologies:TurboGraphMultiplicityRule ;
-  rdfs:label "singleton-superSingleton multiplicity rule" ;
 .
 ontologies:subject
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
-  rdfs:label "subject of connection recipe" ;
   rdfs:range owl:Class ;
 .
 ontologies:subjectRequiredToCreate
@@ -1687,11 +1639,9 @@ ontologies:subjectRequiredToCreate
 .
 ontologies:superSingleton-many
   a ontologies:TurboGraphMultiplicityRule ;
-  rdfs:label "singleton-many multiplicity rule" ;
 .
 ontologies:superSingleton-singleton
   a ontologies:TurboGraphMultiplicityRule ;
-  rdfs:label "superSingleton-singleton multiplicity rule" ;
 .
 ontologies:systolicBloodPressureDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
@@ -1704,14 +1654,14 @@ ontologies:usesCustomVariableManipulationRule
   rdfs:range rdfs:Resource ;
 .
 ontologies:notRequired
-  a turbo:TurboGraphRequirementSpecification ;
+  a ontologies:TurboGraphRequirementSpecification ;
 .
 ontologies:subjectRequired
-  a turbo:TurboGraphRequirementSpecification ;
+  a ontologies:TurboGraphRequirementSpecification ;
 .
 ontologies:objectRequired
-  a turbo:TurboGraphRequirementSpecification ;
+  a ontologies:TurboGraphRequirementSpecification ;
 .
 ontologies:bothRequired
-  a turbo:TurboGraphRequirementSpecification ;
+  a ontologies:TurboGraphRequirementSpecification ;
 .
