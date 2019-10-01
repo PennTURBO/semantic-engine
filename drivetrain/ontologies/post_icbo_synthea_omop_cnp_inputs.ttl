@@ -49,6 +49,7 @@ ontologies:post_icbo_synthea_omop_cnp_participation
   ontologies:hasOutput ontologies:patientHasRole;
   ontologies:hasRequiredInput ontologies:miniEncounterExpansionInp ;
   ontologies:hasRequiredInput ontologies:miniEncounterPatientID ;
+  ontologies:hasRequiredInput ontologies:encounterTypingRecipe ;
   ontologies:hasRequiredInput ontologies:miniPatientPkShortcut ;
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
@@ -77,6 +78,7 @@ ontologies:miniPatientCridsymShortcut
 
 ontologies:miniPatientPkShortcut 
   a ontologies:DatatypeConnectionRecipe ;
+  turbo:referencedInGraph ontologies:omopShortcuts ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ## ontologies:required true ;
   ontologies:subject <http://api.stardog.com/person> ;
@@ -86,6 +88,7 @@ ontologies:miniPatientPkShortcut
 
 ontologies:miniEncounterPatientID 
   a ontologies:DatatypeConnectionRecipe ;
+  turbo:referencedInGraph ontologies:omopShortcuts ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ## ontologies:required true ;
   ontologies:subject <http://api.stardog.com/visit_occurrence> ;
@@ -99,8 +102,8 @@ ontologies:miniEncounterExpansionInp
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ## ontologies:required true ;
   ontologies:subject <http://api.stardog.com/visit_occurrence> ;
-  ontologies:predicate ontologiesTURBO_0010113 ;
-  ontologies:object ontologies:encounterSubclassesEnumeration ;
+  ontologies:predicate ontologies:TURBO_0010113 ;
+  ontologies:object ontologies:encounterToBeTyped ;
 .
 
 ontologies:miniHceCridsymShortcut 

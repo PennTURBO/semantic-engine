@@ -221,10 +221,6 @@ ontologies:visit_type_IntegerLiteralValue
   a ontologies:TurboGraphIntegerLiteralValue ;
 .
 
-ontologies:EncounterClassList
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range owl:Class ;
-.
 
 ontologies:encounterTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -234,18 +230,18 @@ ontologies:encounterTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:object ontologies:EncounterClassList ;
 .
 
-
-
 # represents/holds possible classes 
 ontologies:EncounterClassList
   a ontologies:MultiObjectDescriber ;
-  ontologies:range owl:Class ;
+  ontologies:range obo:OGMS_0000099 ;
+  ontologies:range obo:OGMS_0000100 ;
+  ontologies:range obo:OGMS_0000101 ;
+  ontologies:range obo:OGMS_0000097 ;
 .
 
 # represents individual that is being typed
 ontologies:encounterToBeTyped 
   a ontologies:MultiObjectDescriber ;
-  ontologies:range owl:Class ;
 .
 
 ontologies:patientHasRole
@@ -261,18 +257,11 @@ ontologies:encounterRealizesRole
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
-  ontologies:subject obo:encounterSubclassesEnumeration ;
+  ontologies:subject ontologies:encounterToBeTyped ;
   ontologies:predicate obo:BFO_0000055 ;
   ontologies:object obo:OBI_0000093 ;
 .
 
-ontologies:encounterSubclassesEnumeration
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range obo:OGMS_0000099 ;
-  ontologies:range obo:OGMS_0000100 ;
-  ontologies:range obo:OGMS_0000101 ;
-  ontologies:range obo:OGMS_0000097 ;
-.
 
 # ontologies:hardcodedRegden_ocftr a ontologies:ObjectConnectionFromTermRecipe ;
   # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
