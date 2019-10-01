@@ -33,7 +33,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         this.cxn = cxn
     }
 
-    def validateProcess(cxn: RepositoryConnection, process: String): Boolean =
+    def validateProcess(process: String): Boolean =
     {
        val ask: String = s"""
           ASK {
@@ -41,7 +41,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             <$process> a ?processSuperClass .
           }
           """
-        update.querySparqlBoolean(cxn, ask).get
+        update.querySparqlBoolean(gmCxn, ask).get
     }
     
     def runProcess(process: String): HashMap[String, PatternMatchQuery] =
@@ -54,7 +54,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         var processQueryMap = new HashMap[String, PatternMatchQuery]
         for (process <- processes)
         {
-            if (!validateProcess(gmCxn, process)) logger.info(process + " is not a valid TURBO process")
+            if (!validateProcess(process)) logger.info(process + " is not a valid TURBO process")
             else processQueryMap += process -> createPatternMatchQuery(process)
         }
         for (process <- processes)
@@ -120,7 +120,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     def createPatternMatchQuery(process: String): PatternMatchQuery =
     {
         assert (localUUID != null, "You must set the globalUUID before running any process.")
-        if (!validateProcess(gmCxn, process)) 
+        if (!validateProcess(process)) 
         {
             logger.info(process + " is not a valid TURBO process")
             return null
@@ -360,18 +360,111 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         setGlobalUUID(globalUUID)
         setGraphModelConnection(gmCxn)
         setOutputRepositoryConnection(cxn)
+
+        validateGraphModelTerms()
+        //validateGraphSpecificationAgainstOntology()
       
         // get list of all processes in order
         val orderedProcessList: ArrayBuffer[String] = getAllProcessesInOrder(gmCxn)
 
         validateProcessesAgainstGraphSpecification(orderedProcessList)
-        //validateGraphSpecificationAgainstOntology()
         
         logger.info("Drivetrain will now run the following processes in this order:")
         for (a <- orderedProcessList) logger.info(a)
         
         // run each process
         runProcess(orderedProcessList)
+    }
+
+    def validateGraphModelTerms()
+    {
+        val checkPredicates: String = """
+          Select distinct ?predicate Where
+          {
+              Values ?g {pmbb:dataModel pmbb:graphSpecification}
+              Graph ?g
+              {
+                  ?subject ?predicate ?object .
+                  Filter (?predicate NOT IN (
+                      turbo:subject,
+                      turbo:predicate,
+                      turbo:object,
+                      rdf:type,
+                      turbo:usesCustomVariableManipulationRule,
+                      turbo:usesSparql,
+                      obo:BFO_0000050,
+                      turbo:referencedInGraph,
+                      turbo:required,
+                      turbo:multiplicity,
+                      turbo:inputNamedGraph,
+                      turbo:outputNamedGraph,
+                      turbo:hasOutput,
+                      turbo:hasRequiredInput,
+                      turbo:hasOptionalInput,
+                      turbo:removes,
+                      rdfs:label,
+                      turbo:buildsOptionalGroup,
+                      turbo:buildsMinusGroup,
+                      turbo:precedes,
+                      turbo:subjectRequiredToCreate,
+                      turbo:objectRequiredToCreate,
+                      turbo:subjectUsesContext,
+                      turbo:objectUsesContext,
+                      turbo:hasPossibleContext,
+                      turbo:range,
+                      owl:versionInfo,
+                      owl:imports,
+                      rdfs:subClassOf,
+                      rdfs:domain,
+                      rdfs:range
+                  ))
+              }
+          }
+        """
+        //println(checkPredicates)
+        var firstRes = ""
+        var res = update.querySparqlAndUnpackTuple(gmCxn, checkPredicates, "predicate")
+        if (res.size > 0) firstRes = res(0)
+        assert(firstRes == "", s"Error in graph model: predicate $firstRes is not known in the Acorn language")
+    
+        val checkTypes: String = """
+          Select distinct ?type Where
+          {
+              Values ?g {pmbb:dataModel pmbb:graphSpecification}
+              Graph ?g
+              {
+                  ?subject a ?type .
+                  Filter (?type NOT IN (
+                      turbo:ObjectConnectionToTermRecipe,
+                      turbo:ObjectConnectionToInstanceRecipe,
+                      turbo:ObjectConnectionFromTermRecipe,
+                      turbo:DatatypeConnectionRecipe,
+                      turbo:MultiObjectDescriber,
+                      owl:Class,
+                      turbo:TurboGraphContext,
+                      turbo:TurboGraphMinusGroup,
+                      turbo:TurboGraphOptionalGroup,
+                      turbo:TurboGraphVariableManipulationLogic,
+                      turbo:TurboNamedGraph,
+                      owl:Ontology,
+                      turbo:TURBO_0010178,
+                      owl:ObjectProperty,
+                      owl:DatatypeProperty,
+                      turbo:TurboGraphStringLiteralValue,
+                      turbo:TurboGraphDateLiteralValue,
+                      turbo:TurboGraphMultiplicityRule,
+                      turbo:TurboGraphDoubleLiteralValue,
+                      turbo:TurboGraphIntegerLiteralValue,
+                      turbo:TurboGraphBooleanLiteralValue
+                  ))
+              }
+          }
+        """
+        //println(checkTypes)
+        firstRes = ""
+        res = update.querySparqlAndUnpackTuple(gmCxn, checkTypes, "type")
+        if (res.size > 0) firstRes = res(0)
+        assert(firstRes == "", s"Error in graph model: type $firstRes is not known in the Acorn language")
     }
     
     def validateProcessesAgainstGraphSpecification(processList: ArrayBuffer[String])
