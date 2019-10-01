@@ -633,7 +633,7 @@ ontologies:shortcutDiagnosisToDiagnosisCode
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisTermSuffixStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0004601 ;
-  ontologies:required subjectRequired ;
+  ontologies:required ontologies:subjectRequired ;
   ontologies:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutDiagnosisToExpandedDiagnosis
@@ -687,7 +687,7 @@ ontologies:shortcutHealthcareEncounterToDatasetTitle
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:datasetTitleStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0000643 ;
-  ontologies:required objectRequired ;
+  ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToDateStringValue
