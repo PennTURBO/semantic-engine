@@ -4,6 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
 import java.util.LinkedHashSet
+import java.util.LinkedHashMap
 
 class TriplesGroupBuilder extends ProjectwideGlobals
 {
@@ -167,7 +168,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
     
     def buildClauseFromTriplesGroup(clauseType: Value): String =
     {
-        var graphsAndTriples: HashMap[String, HashMap[String, Boolean]] = new HashMap[String, HashMap[String, Boolean]]
+        var graphsAndTriples: HashMap[String, LinkedHashMap[String, Boolean]] = new HashMap[String, LinkedHashMap[String, Boolean]]
         val graphsIterator = allGraphsUsed.iterator()
         while (graphsIterator.hasNext())
         {
@@ -183,33 +184,52 @@ class TriplesGroupBuilder extends ProjectwideGlobals
             }
             if (useGraphForRequired)
             {
-                if (graphsAndTriples.contains(graph)) graphsAndTriples(graph) += addTriplesToClause(clauseType, requiredGroup, graph) -> false
-                else graphsAndTriples += graph -> HashMap(addTriplesToClause(clauseType, requiredGroup, graph) -> false)
+                if (graphsAndTriples.contains(graph)) graphsAndTriples(graph).put(addTriplesToClause(clauseType, requiredGroup, graph), false)
+                else 
+                {
+                    val newLinkedMap = new LinkedHashMap[String, Boolean]
+                    newLinkedMap.put(addTriplesToClause(clauseType, requiredGroup, graph), false)
+                    graphsAndTriples += graph -> newLinkedMap
+                }
                 for (optionalGroup <- optionalGroups)
                 {
-                    if (graphsAndTriples.contains(graph)) graphsAndTriples(graph) += addTriplesToClause(clauseType, optionalGroup, graph) -> false
-                    else graphsAndTriples += graph -> HashMap(addTriplesToClause(clauseType, optionalGroup, graph) -> false)
+                    if (graphsAndTriples.contains(graph)) graphsAndTriples(graph).put(addTriplesToClause(clauseType, optionalGroup, graph), false)
+                    else 
+                    {
+                        val newLinkedMap = new LinkedHashMap[String, Boolean]
+                        newLinkedMap.put(addTriplesToClause(clauseType, optionalGroup, graph), false)
+                        graphsAndTriples += graph -> newLinkedMap
+                    }
                 }
             }
             var useGraphForMinus = false
             for (minusGroup <- minusGroups)
             {
-                if (minusGroup.requiredInGroup.contains(graph) || minusGroup.optionalInGroup.contains(graph)) useGraphForMinus = true
+                if (minusGroup.requiredInGroup.contains(graph) || minusGroup.optionalInGroup.contains(graph)) 
+                {
+                    assert (clauseType.toString == "WHERE", "Minus triples not allowed outside of WHERE clause")
+                    useGraphForMinus = true
+                }
             }
             if (useGraphForMinus)
             {
                 for (minusGroup <- minusGroups)
                 {
                     // this code makes the assumption that only one minus group will be present per graph. This isn't a sustainable assumption but works for now.
-                    if (graphsAndTriples.contains(graph)) graphsAndTriples(graph) += "MINUS {\n" + addTriplesToClause(clauseType, minusGroup, graph) + "}\n" -> false
-                    else graphsAndTriples += graph -> HashMap(addTriplesToClause(clauseType, minusGroup, graph) -> true)
+                    if (graphsAndTriples.contains(graph)) graphsAndTriples(graph).put("MINUS {\n" + addTriplesToClause(clauseType, minusGroup, graph) + "}\n", false)
+                    else 
+                    {
+                        val newLinkedMap = new LinkedHashMap[String, Boolean]
+                        newLinkedMap.put(addTriplesToClause(clauseType, minusGroup, graph), false)
+                        graphsAndTriples += graph -> newLinkedMap
+                    }
                 }
             }
         }
         createClauseFromGraphsAndTriplesGroup(graphsAndTriples)
     }
     
-    def createClauseFromGraphsAndTriplesGroup(graphsAndTriples: HashMap[String, HashMap[String, Boolean]]): String =
+    def createClauseFromGraphsAndTriplesGroup(graphsAndTriples: HashMap[String, LinkedHashMap[String, Boolean]]): String =
     {
         // this code makes the assumption that only one minus group will be present per graph. This isn't a sustainable assumption but works for now.
         var clause = ""
@@ -217,8 +237,12 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         {
             var intermediateClause = ""
             var useMinus = false
-            for ((group,minus) <- triplesGroups)
+            val triplesGroupsIterator = triplesGroups.entrySet().iterator()
+            while (triplesGroupsIterator.hasNext())
             {
+                val iteratorItem = triplesGroupsIterator.next()
+                val group = iteratorItem.getKey()
+                val minus = iteratorItem.getValue()
                 if (minus) useMinus = true
                 intermediateClause += group
             }
@@ -240,7 +264,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         {
             if (group.groupType == OPTIONAL) 
             {
-                if (clauseType != WHERE) throw new RuntimeException("Optional triples not allowed outside of WHERE clause")
+                assert (clauseType.toString == "WHERE", "Optional triples not allowed outside of WHERE clause")
                 clause += "OPTIONAL {\n"
             }
             if (group.requiredInGroup.contains(graph))

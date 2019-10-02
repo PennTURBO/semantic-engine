@@ -80,7 +80,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                     logger.info("Now running on input graph " + graph)
                     //val localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
                     //run validation on input graph
-                    validateInputData(graph, primaryQuery.rawInputData)
+                    //validateInputData(graph, primaryQuery.rawInputData)
                     primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)

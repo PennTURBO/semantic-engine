@@ -849,7 +849,7 @@ ontologies:shortcutHomoSapiensToDateOfBirthDate
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010086 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToDateOfBirthString
@@ -859,7 +859,7 @@ ontologies:shortcutHomoSapiensToDateOfBirthString
   ontologies:objectRequiredToCreate obo:UBERON_0035946 ;
   ontologies:objectRequiredToCreate efo:EFO_0004950 ;
   ontologies:predicate ontologies:TURBO_0010085 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToExpandedHomoSapiens
@@ -886,7 +886,7 @@ ontologies:shortcutHomoSapiensToGenderIdentityValue
   ontologies:objectRequiredToCreate obo:PATO_0000047 ;
   ontologies:objectRequiredToCreate ontologies:GenderIdentityDatumOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010098 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToRaceIdentityType
@@ -904,7 +904,7 @@ ontologies:shortcutHomoSapiensToRaceIdentityValue
   ontologies:object ontologies:homoSapiensRaceIdentityStringLiteralValue ;
   ontologies:objectRequiredToCreate ontologies:RaceIdentityDatumOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0010100 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutPrescriptionOptionalGroup

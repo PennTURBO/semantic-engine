@@ -227,7 +227,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
     }
     
-    /*test("generated query matched expected query")
+    test("generated query matched expected query")
     {
         var expectedQueryListBuffer = new ArrayBuffer[String]
         for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
@@ -240,7 +240,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
         var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess").getQuery().replaceAll(" ", "").split("\\n")
         helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
-    }*/
+    }
     
     test("participant with all fields")
     {
@@ -484,7 +484,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
     }
     
-    /*test("participant with minimum required for expansion")
+    test("participant with minimum required for expansion")
     {
         val insert: String = """
           INSERT DATA {GRAPH pmbb:Shortcuts_homoSapiensShortcuts {
@@ -1127,5 +1127,5 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           """
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
-    }*/
+    }
 }
