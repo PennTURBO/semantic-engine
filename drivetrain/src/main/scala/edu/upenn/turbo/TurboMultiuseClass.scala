@@ -865,4 +865,28 @@ class TurboMultiuseClass extends Enumeration
         
         typeTriple
     }
+    
+    def getDescriberRangesAsString(cxn: RepositoryConnection, describer: String): String =
+    {
+        val sparqlResults = getDescriberRangesAsList(cxn, describer)
+        if (sparqlResults.size == 0) ""
+        else 
+        {
+            val describerAsVar = convertTypeToSparqlVariable(describer, true)
+            var res = s"VALUES $describerAsVar {"
+            for (item <- sparqlResults) res += "<" + item + ">"
+            res + "}"
+        }
+    }
+    
+    def getDescriberRangesAsList(cxn: RepositoryConnection, describer: String): ArrayBuffer[String] =
+    {
+        val sparql: String = s"""
+          Select * Where
+          {
+              <$describer> turbo:range ?range .
+          }
+          """
+        updater.querySparqlAndUnpackTuple(cxn, sparql, "range")
+    }
 }

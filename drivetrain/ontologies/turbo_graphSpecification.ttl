@@ -215,7 +215,7 @@ ontologies:biobankEncounterIdToBiobankEncounter
   ontologies:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterIdToRegistryDenoter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:BiobankEncounterRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -231,7 +231,7 @@ ontologies:biobankEncounterIdToSymbol
   ontologies:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterRegistryDenoterToId
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionFromTermRecipe ;
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0000533 ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -719,7 +719,7 @@ ontologies:genderIdentityDatumToHomoSapiens
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genomeCridRegistryDenoterToGenomeCrid
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionFromTermRecipe ;
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0000566 ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -743,7 +743,7 @@ ontologies:genomeCridSymbolToSymbolValue
   ontologies:subject ontologies:TURBO_0000568 ;
 .
 ontologies:genomeCridToGenomeCridRegistryDenoter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:GenomeRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -799,7 +799,7 @@ ontologies:healthcareEncounterDateToStringLiteralValue
   ontologies:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterIdToRegistryDenoter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:HealthcareEncounterRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -815,7 +815,7 @@ ontologies:healthcareEncounterIdToSymbol
   ontologies:subject ontologies:TURBO_0000508 ;
 .
 ontologies:healthcareEncounterRegistryDenoterToId
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionFromTermRecipe ;
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0000508 ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -903,7 +903,7 @@ ontologies:healthcareEncounterToPrescription
   ontologies:subject obo:OGMS_0000097 ;
 .
 ontologies:homoSapiensIdToRegistryDenoter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:HomoSapiensRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -927,7 +927,7 @@ ontologies:homoSapiensIdentifierToHomoSapiens
   ontologies:subject ontologies:TURBO_0010092 ;
 .
 ontologies:homoSapiensRegistryDenoterToId
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionFromTermRecipe ;
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0010092 ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -1295,7 +1295,7 @@ ontologies:tumorCridToTumorCridSymbol
   ontologies:subject ontologies:TURBO_0010188 ;
 .
 ontologies:tumorCridToTumorRegistryDenoter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TumorRegistryDenoterOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -1303,7 +1303,7 @@ ontologies:tumorCridToTumorRegistryDenoter
   ontologies:subject ontologies:TURBO_0010188 ;
 .
 ontologies:tumorRegistryDenoterToTumorCrid
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionFromTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010188 ;
   ontologies:predicate obo:BFO_0000050 ;

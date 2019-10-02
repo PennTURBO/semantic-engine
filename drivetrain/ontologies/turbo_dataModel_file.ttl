@@ -830,10 +830,10 @@ ontologies:shortcutHomoSapiensIdentifierToExpandedHomoSapiensIdentifier
 .
 ontologies:shortcutHomoSapiensIdentifierToShortcutHomoSapiens
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
   ontologies:object ontologies:TURBO_0010161 ;
   ontologies:predicate obo:IAO_0000219 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:bothRequired ;
   ontologies:subject ontologies:TURBO_0010168 ;
 .
 ontologies:shortcutHomoSapiensToDatasetTitle
@@ -957,7 +957,7 @@ ontologies:shortcutTumorToExpandedTumor
   ontologies:subject ontologies:TURBO_0010191 ;
 .
 ontologies:shortcutTumorToRegistryDenoter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   obo:BFO_0000050 ontologies:shortcutTumorOptionalGroup ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TumorRegistryDenoterOfVariousTypes ;

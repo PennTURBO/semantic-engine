@@ -683,18 +683,38 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         {   
             if (input(REQUIREMENT.toString) != null && input(REQUIREMENT.toString).toString != "http://transformunify.org/ontologies/notRequired")
             {
-                if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/bothRequired")
+                if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe")
                 {
-                    validateSubjectAgainstObject(graph, input)
-                    validateObjectAgainstSubject(graph, input)
+                    validateTermAgainstSubject(graph, input)
                 }
-                else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/subjectRequired")
+                else if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe")
                 {
-                    validateSubjectAgainstObject(graph, input)
+                    validateTermAgainstObject(graph, input)
                 }
-                else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/objectRequired")
+                else if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/DatatypeConnectionRecipe")
                 {
-                    validateObjectAgainstSubject(graph, input)
+                    validateLiteralAgainstSubject(graph, input)
+                }
+                else if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe")
+                {
+                    if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/bothRequired")
+                    {
+                        validateSubjectAgainstObject(graph, input)
+                        validateObjectAgainstSubject(graph, input)
+                    }
+                    else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/subjectRequired")
+                    {
+                        validateSubjectAgainstObject(graph, input)
+                    }
+                    else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/objectRequired")
+                    {
+                        validateObjectAgainstSubject(graph, input)
+                    }   
+                }
+                else
+                {
+                    val connectionType = input(CONNECTIONRECIPETYPE.toString).toString
+                    throw new RuntimeException(s"Unrecognized connection recipe type $connectionType")
                 }
             }
         }
@@ -702,22 +722,27 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     
     def validateSubjectAgainstObject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
     {
-        val f = cxn.getValueFactory()
-        val subjectAsType = input(SUBJECT.toString)
-        val objectAsType = input(OBJECT.toString)
-        val objectAsVar = helper.convertTypeToSparqlVariable(objectAsType, false)
-        val multiplicity = input(MULTIPLICITY.toString).toString
-        input(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
+        // make a copy so we don't affect the master result list
+        val inputCopy = new HashMap[String, org.eclipse.rdf4j.model.Value]
+        for ((key, value) <- input) inputCopy += key -> value
         
-        input(OBJECTTYPE.toString) = null
-        input(OBJECTADESCRIBER.toString) = f.createLiteral(true)
+        val f = cxn.getValueFactory()
+        val subjectAsType = inputCopy(SUBJECT.toString)
+        val objectAsType = inputCopy(OBJECT.toString)
+        val objectAsVar = helper.convertTypeToSparqlVariable(objectAsType, false)
+        val multiplicity = inputCopy(MULTIPLICITY.toString).toString
+        
+        inputCopy(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
+        inputCopy(OBJECTTYPE.toString) = null
+        inputCopy(OBJECTADESCRIBER.toString) = f.createLiteral(true)
+        
         val objectTypeInput = helper.makeGenericTypeInput(f, objectAsType, graph)
         
         val query = new PatternMatchQuery()
         query.setGraphModelConnection(gmCxn)
         query.setInputGraph(graph)
         
-        query.createWhereClause(ArrayBuffer(input, objectTypeInput))
+        query.createWhereClause(ArrayBuffer(inputCopy, objectTypeInput))
         val whereBlock = query.whereClause
         val checkRequired = s"SELECT * $whereBlock }"
         println(checkRequired)
@@ -729,15 +754,19 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     
     def validateObjectAgainstSubject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
     {
-        val f = cxn.getValueFactory()
-        val subjectAsType = input(SUBJECT.toString)
-        val objectAsType = input(OBJECT.toString)
-        val subjectAsVar = helper.convertTypeToSparqlVariable(subjectAsType, false)
-        val multiplicity = input(MULTIPLICITY.toString).toString
+        // make a copy so we don't affect the master result list
+        val inputCopy = new HashMap[String, org.eclipse.rdf4j.model.Value]
+        for ((key, value) <- input) inputCopy += key -> value
         
-        input(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
-        input(SUBJECTTYPE.toString) = null
-        input(SUBJECTADESCRIBER.toString) = f.createLiteral(true)
+        val f = cxn.getValueFactory()
+        val subjectAsType = inputCopy(SUBJECT.toString)
+        val objectAsType = inputCopy(OBJECT.toString)
+        val subjectAsVar = helper.convertTypeToSparqlVariable(subjectAsType, false)
+        val multiplicity = inputCopy(MULTIPLICITY.toString).toString
+        
+        inputCopy(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
+        inputCopy(SUBJECTTYPE.toString) = null
+        inputCopy(SUBJECTADESCRIBER.toString) = f.createLiteral(true)
         
         val subjectTypeInput = helper.makeGenericTypeInput(f, subjectAsType, graph)
         
@@ -745,7 +774,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         query.setGraphModelConnection(gmCxn)
         query.setInputGraph(graph)
         
-        query.createWhereClause(ArrayBuffer(input, subjectTypeInput))
+        query.createWhereClause(ArrayBuffer(inputCopy, subjectTypeInput))
         val whereBlock = query.whereClause
         val checkRequired = s"SELECT * $whereBlock }"
         println(checkRequired)
@@ -753,5 +782,125 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val res = update.querySparqlAndUnpackTuple(cxn, checkRequired, subjectAsVar)
         if (res.size != 0) firstResult = res(0)
         assert (firstResult == "", s"Input data error: instance $firstResult of type $subjectAsType does not have the required connection to an instance of type $objectAsType in graph $graph") 
+    }
+    
+    def validateTermAgainstSubject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
+    {
+        val describer = input(OBJECT.toString).toString
+        val subject = input(SUBJECT.toString).toString
+        val subjectAsVar = helper.convertTypeToSparqlVariable(subject, true)
+        val predicate = input(PREDICATE.toString).toString
+        val describerRanges = helper.getDescriberRangesAsList(gmCxn, describer)
+        
+        var minusBlock = ""
+        if (describerRanges.size == 0) minusBlock = s"$subjectAsVar <$predicate> <$describer> ."
+        else
+        {
+            minusBlock += "{\n"
+            for (termIndex <- 0 to describerRanges.size - 1) 
+            {
+              val term = describerRanges(termIndex)
+              minusBlock += s"""
+                  {$subjectAsVar <$predicate> <$term> .}\n
+              """
+              if (termIndex != describerRanges.size - 1) minusBlock += "UNION\n"
+            }
+            minusBlock += "}\n"  
+        }
+        
+        val sparql: String = s"""
+          Select * Where
+          {
+              Graph <$graph>
+              {
+                  $subjectAsVar rdf:type <$subject> .
+                  Minus
+                  {
+                      $minusBlock
+                  }
+              }
+          }
+          """
+        println(sparql)
+        var firstResult = ""
+        val res = update.querySparqlAndUnpackTuple(cxn, sparql, "subject")
+        if (res.size != 0) firstResult = res(0)
+        assert (firstResult == "", s"Input data error: instance $firstResult of type $subject does not have the required connection to term $describer in graph $graph") 
+    }
+    
+    def validateTermAgainstObject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
+    {
+        val describer = input(SUBJECT.toString).toString
+        val objectAsType = input(OBJECT.toString).toString
+        val objectAsVar = helper.convertTypeToSparqlVariable(objectAsType, true)
+        val predicate = input(PREDICATE.toString).toString
+        val describerRanges = helper.getDescriberRangesAsList(gmCxn, describer)
+        
+        var minusBlock = ""
+        if (describerRanges.size == 0) minusBlock = s"<$describer> <$predicate> $objectAsVar ."
+        else
+        {
+            minusBlock += "{\n"
+            for (termIndex <- 0 to describerRanges.size - 1) 
+            {
+              val term = describerRanges(termIndex)
+              minusBlock += s"""
+                  {<$term> <$predicate> $objectAsVar .}\n
+              """
+              if (termIndex != describerRanges.size - 1) minusBlock += "UNION\n"
+            }
+            minusBlock += "}\n"  
+        }
+        
+        val sparql: String = s"""
+          Select * Where
+          {
+              Graph <$graph>
+              {
+                  $objectAsVar rdf:type <$objectAsType> .
+                  Minus
+                  {
+                      $minusBlock
+                  }
+              }
+          }
+          """
+        println(sparql)
+        var firstResult = ""
+        val res = update.querySparqlAndUnpackTuple(cxn, sparql, "subject")
+        if (res.size != 0) firstResult = res(0)
+        assert (firstResult == "", s"Input data error: instance $firstResult of type $objectAsType does not have the required connection to term $describer in graph $graph") 
+    }
+    
+    def validateLiteralAgainstSubject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
+    {
+        // make a copy so we don't affect the master result list
+        val inputCopy = new HashMap[String, org.eclipse.rdf4j.model.Value]
+        for ((key, value) <- input) inputCopy += key -> value
+        
+        val f = cxn.getValueFactory()
+        val subjectAsType = inputCopy(SUBJECT.toString)
+        val objectLiteral = inputCopy(OBJECT.toString)
+        val subjectAsVar = helper.convertTypeToSparqlVariable(subjectAsType, false)
+        val multiplicity = inputCopy(MULTIPLICITY.toString).toString
+        
+        inputCopy(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
+        inputCopy(SUBJECTTYPE.toString) = null
+        inputCopy(SUBJECTADESCRIBER.toString) = f.createLiteral(true)
+        
+        val subjectTypeInput = helper.makeGenericTypeInput(f, subjectAsType, graph)
+        
+        val query = new PatternMatchQuery()
+        query.setGraphModelConnection(gmCxn)
+        query.setInputGraph(graph)
+        
+        query.createWhereClause(ArrayBuffer(inputCopy, subjectTypeInput))
+        val whereBlock = query.whereClause
+        val checkRequired = s"SELECT * $whereBlock }"
+        println(checkRequired)
+        var firstResult = ""
+        val res = update.querySparqlAndUnpackTuple(cxn, checkRequired, subjectAsVar)
+        if (res.size != 0) firstResult = res(0)
+        assert (firstResult == "", s"Input data error: instance $firstResult of type $subjectAsType does not have the required connection to literal value $objectLiteral in graph $graph") 
     }
 }
