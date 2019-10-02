@@ -36,7 +36,7 @@ import org.eclipse.rdf4j.model.Model
  * in this class may be used by the Drivetrain test suite as well. The functions are here to be used and prevent repetitive development. 
  **/
 //change name to something more relevant to the methods inside the class
-class TurboMultiuseClass
+class TurboMultiuseClass extends Enumeration
 {
     val sparqlPrefixes = """
 			PREFIX  :     <http://transformunify.org/ontologies/>
@@ -421,9 +421,9 @@ class TurboMultiuseClass
           }
           """
         
-        val inverseList: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, getInversePreds, ArrayBuffer("p", "inverse"))
+        val inverseList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = updater.querySparqlAndUnpackTuple(cxn, getInversePreds, ArrayBuffer("p", "inverse"))
         
-        var inverseMap: HashMap[Value, Value] = new HashMap[Value, Value]
+        var inverseMap: HashMap[org.eclipse.rdf4j.model.Value, org.eclipse.rdf4j.model.Value] = new HashMap[org.eclipse.rdf4j.model.Value, org.eclipse.rdf4j.model.Value]
         var inversePredString: String = ""
         
         for (inverse <- inverseList) 
@@ -448,7 +448,7 @@ class TurboMultiuseClass
           }
           """
               
-        val triplesList: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, getAllTriples, ArrayBuffer("s", "p", "o"))
+        val triplesList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = updater.querySparqlAndUnpackTuple(cxn, getAllTriples, ArrayBuffer("s", "p", "o"))
         
         logger.info("Applying inverses to " + triplesList.size + " triples...")
         
@@ -731,7 +731,7 @@ class TurboMultiuseClass
           """
             Select * FROM <http://www.ontotext.com/implicit> Where {?s ?p ?o .}
           """
-        val result: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, select, Array("s", "p", "o"))
+        val result: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = updater.querySparqlAndUnpackTuple(cxn, select, Array("s", "p", "o"))
         for (row <- result)
         {
             model.add(row(0).asInstanceOf[IRI], row(1).asInstanceOf[IRI], row(2).asInstanceOf[IRI])
@@ -776,7 +776,7 @@ class TurboMultiuseClass
         updater.querySparqlAndUnpackTuple(cxn, query, "dsTitle")
     }
     
-    def convertTypeToSparqlVariable(input: Value, withQuestionMark: Boolean): String =
+    def convertTypeToSparqlVariable(input: org.eclipse.rdf4j.model.Value, withQuestionMark: Boolean): String =
     {
        convertTypeToSparqlVariable(input.toString, withQuestionMark)
     }
@@ -839,5 +839,30 @@ class TurboMultiuseClass
 
         """
         updater.querySparqlBoolean(cxn, ask).get
+    }
+    
+    def makeGenericTypeInput(f: ValueFactory, uri: org.eclipse.rdf4j.model.Value, graph: String): HashMap[String, org.eclipse.rdf4j.model.Value] =
+    {
+        val typeTriple = new HashMap[String, org.eclipse.rdf4j.model.Value]
+        
+        typeTriple(Value("SUBJECT").toString) = uri
+        typeTriple(Value("SUBJECTTYPE").toString) = null
+        typeTriple(Value("OBJECTTYPE").toString) = null
+        typeTriple(Value("GRAPHOFORIGIN").toString) = null
+        typeTriple(Value("GRAPHOFCREATINGPROCESS").toString) = null
+        typeTriple(Value("OBJECT").toString) = uri
+        typeTriple(Value("MINUSGROUP").toString) = null
+        typeTriple(Value("OPTIONALGROUP").toString) = null
+        typeTriple(Value("PREDICATE").toString) = f.createIRI("rdf:type")
+        typeTriple(Value("CONNECTIONRECIPETYPE").toString) = f.createIRI("http://transformunify.org/ontologies/ObjectConnectionToTermRecipe")
+        typeTriple(Value("INPUTTYPE").toString) = f.createIRI("http://transformunify.org/ontologies/requiredInputTo")
+        typeTriple(Value("MULTIPLICITY").toString) = f.createIRI("http://transformunify.org/ontologies/1-1")
+        typeTriple(Value("GRAPH").toString) = f.createIRI(graph)
+        typeTriple(Value("OBJECTADESCRIBER").toString) = null
+        typeTriple(Value("CONNECTIONNAME").toString) = f.createIRI("http://transformunify.org/ontologies/manualTypeTriple")
+        typeTriple(Value("SUBJECTADESCRIBER").toString) = f.createLiteral(true)
+        typeTriple(Value("REQUIREMENT").toString) = null
+        
+        typeTriple
     }
 }

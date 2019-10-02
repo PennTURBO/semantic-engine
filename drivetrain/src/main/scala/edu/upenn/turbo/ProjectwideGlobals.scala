@@ -81,11 +81,12 @@ trait ProjectwideGlobals extends Enumeration
       val SUBJECTDEPENDEE = Value("SUBJECTDEPENDEE")
       val OBJECTDEPENDEE = Value("OBJECTDEPENDEE")
       val CONNECTIONNAME = Value("CONNECTIONNAME")
+      val REQUIREMENT = Value("REQUIREMENT")
       
       val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, 
                                               OPTIONALGROUP, CONNECTIONRECIPETYPE, GRAPHOFCREATINGPROCESS,
                                               MINUSGROUP, GRAPHOFORIGIN, INPUTTYPE, MULTIPLICITY, OBJECTADESCRIBER,
-                                              CONNECTIONNAME, SUBJECTADESCRIBER)
+                                              CONNECTIONNAME, SUBJECTADESCRIBER, REQUIREMENT)
                                               
       val requiredOutputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, CONNECTIONRECIPETYPE,
                                               SUBJECTCONTEXT, OBJECTCONTEXT, MULTIPLICITY, OBJECTRULE, SUBJECTRULE, OBJECTADESCRIBER,

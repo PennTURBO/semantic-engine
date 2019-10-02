@@ -37,8 +37,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     {
        val ask: String = s"""
           ASK {
-            values ?processSuperClass {turbo:TURBO_0001542 turbo:TURBO_0010178}
-            <$process> a ?processSuperClass .
+            <$process> a turbo:TURBO_0010178 .
           }
           """
         update.querySparqlBoolean(gmCxn, ask).get
@@ -79,9 +78,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 for (graph <- inputNamedGraphsList)
                 {
                     logger.info("Now running on input graph " + graph)
-                    /*val localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
+                    //val localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
                     //run validation on input graph
-                    validateInputData(graph, primaryQuery.rawInputData)*/
+                    validateInputData(graph, primaryQuery.rawInputData)
                     primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)
@@ -231,6 +230,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?$OBJECT a owl:Class .
                   BIND (true AS ?$OBJECTTYPE)
+              }
+              Optional
+              {
+                  ?$CONNECTIONNAME turbo:required ?$REQUIREMENT .
               }
          }
          
@@ -676,46 +679,79 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     
     def validateInputData(graph: String, inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
-        val f = cxn.getValueFactory()
         for (input <- inputs)
-        {
-            val subjectAsType = input(SUBJECT.toString)
-            val objectAsType = input(OBJECT.toString)
-            val subjectAsVar = helper.convertTypeToSparqlVariable(subjectAsType, false)
-            
-            val multiplicity = input(MULTIPLICITY.toString).toString
-            if (!(input(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/optionalInputTo"))
+        {   
+            if (input(REQUIREMENT.toString) != null && input(REQUIREMENT.toString).toString != "http://transformunify.org/ontologies/notRequired")
             {
-                val query = new PatternMatchQuery()
-                query.setInputGraph(graph)
-                input(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
-                input(SUBJECTTYPE.toString) = null
-                
-                val typeTriple = new HashMap[String, org.eclipse.rdf4j.model.Value]
-                typeTriple(SUBJECT.toString) = subjectAsType
-                typeTriple(SUBJECTTYPE.toString) = null
-                typeTriple(OBJECTTYPE.toString) = null
-                typeTriple(GRAPHOFORIGIN.toString) = null
-                typeTriple(GRAPHOFCREATINGPROCESS.toString) = null
-                typeTriple(OBJECT.toString) = subjectAsType
-                typeTriple(MINUSGROUP.toString) = null
-                typeTriple(OPTIONALGROUP.toString) = null
-                typeTriple(PREDICATE.toString) = f.createIRI("rdf:type")
-                typeTriple(CONNECTIONRECIPETYPE.toString) = f.createIRI("http://transformunify.org/ontologies/ObjectToClassConnectionRecipe")
-                typeTriple(INPUTTYPE.toString) = f.createIRI("http://transformunify.org/ontologies/requiredInputTo")
-                typeTriple(MULTIPLICITY.toString) = f.createIRI("http://transformunify.org/ontologies/1-1")
-                typeTriple(GRAPH.toString) = f.createIRI(graph)
-                typeTriple(OBJECTADESCRIBER.toString) = null
-                
-                query.createWhereClause(ArrayBuffer(input, typeTriple))
-                val whereBlock = query.whereClause
-                val checkRequired = s"SELECT * $whereBlock }"
-                println(checkRequired)
-                var firstResult = ""
-                val res = update.querySparqlAndUnpackTuple(cxn, checkRequired, subjectAsVar)
-                if (res.size != 0) firstResult = res(0)
-                assert (firstResult == "", s"Input data error: instance $firstResult of type $subjectAsType does not have the required connection to an instance of type $objectAsType in graph $graph") 
+                if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/bothRequired")
+                {
+                    validateSubjectAgainstObject(graph, input)
+                    validateObjectAgainstSubject(graph, input)
+                }
+                else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/subjectRequired")
+                {
+                    validateSubjectAgainstObject(graph, input)
+                }
+                else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/objectRequired")
+                {
+                    validateObjectAgainstSubject(graph, input)
+                }
             }
         }
+    }
+    
+    def validateSubjectAgainstObject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
+    {
+        val f = cxn.getValueFactory()
+        val subjectAsType = input(SUBJECT.toString)
+        val objectAsType = input(OBJECT.toString)
+        val objectAsVar = helper.convertTypeToSparqlVariable(objectAsType, false)
+        val multiplicity = input(MULTIPLICITY.toString).toString
+        input(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
+        
+        input(OBJECTTYPE.toString) = null
+        input(OBJECTADESCRIBER.toString) = f.createLiteral(true)
+        val objectTypeInput = helper.makeGenericTypeInput(f, objectAsType, graph)
+        
+        val query = new PatternMatchQuery()
+        query.setGraphModelConnection(gmCxn)
+        query.setInputGraph(graph)
+        
+        query.createWhereClause(ArrayBuffer(input, objectTypeInput))
+        val whereBlock = query.whereClause
+        val checkRequired = s"SELECT * $whereBlock }"
+        println(checkRequired)
+        var firstResult = ""
+        val res = update.querySparqlAndUnpackTuple(cxn, checkRequired, objectAsVar)
+        if (res.size != 0) firstResult = res(0)
+        assert (firstResult == "", s"Input data error: instance $firstResult of type $objectAsType does not have the required connection to an instance of type $subjectAsType in graph $graph") 
+    }
+    
+    def validateObjectAgainstSubject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
+    {
+        val f = cxn.getValueFactory()
+        val subjectAsType = input(SUBJECT.toString)
+        val objectAsType = input(OBJECT.toString)
+        val subjectAsVar = helper.convertTypeToSparqlVariable(subjectAsType, false)
+        val multiplicity = input(MULTIPLICITY.toString).toString
+        
+        input(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
+        input(SUBJECTTYPE.toString) = null
+        input(SUBJECTADESCRIBER.toString) = f.createLiteral(true)
+        
+        val subjectTypeInput = helper.makeGenericTypeInput(f, subjectAsType, graph)
+        
+        val query = new PatternMatchQuery()
+        query.setGraphModelConnection(gmCxn)
+        query.setInputGraph(graph)
+        
+        query.createWhereClause(ArrayBuffer(input, subjectTypeInput))
+        val whereBlock = query.whereClause
+        val checkRequired = s"SELECT * $whereBlock }"
+        println(checkRequired)
+        var firstResult = ""
+        val res = update.querySparqlAndUnpackTuple(cxn, checkRequired, subjectAsVar)
+        if (res.size != 0) firstResult = res(0)
+        assert (firstResult == "", s"Input data error: instance $firstResult of type $subjectAsType does not have the required connection to an instance of type $objectAsType in graph $graph") 
     }
 }

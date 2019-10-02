@@ -28,7 +28,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     {
         for (rowResult <- inputs)
         {
-            for (key <- requiredInputKeysList) assert (rowResult.contains(key.toString))
+            for (key <- requiredInputKeysList) assert (rowResult.contains(key.toString), s"Input data does not contian required key $key")
             
             var graphForThisRow: String = defaultInputGraph
             if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
