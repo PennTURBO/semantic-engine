@@ -55,8 +55,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
                       RunDrivetrainProcess.validateGraphModelTerms()
                       //RunDrivetrainProcess.validateGraphSpecificationAgainstOntology()
-                      RunDrivetrainProcess.validateProcess(args(1))
-                      RunDrivetrainProcess.validateProcessesAgainstGraphSpecification(ArrayBuffer(args(1)))
                       val query = RunDrivetrainProcess.createPatternMatchQuery(args(1))
                       if (query != null)
                       {
@@ -76,8 +74,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
                   RunDrivetrainProcess.validateGraphModelTerms()
                   //RunDrivetrainProcess.validateGraphSpecificationAgainstOntology()
-                  RunDrivetrainProcess.validateProcess(args(0))
-                  RunDrivetrainProcess.validateProcessesAgainstGraphSpecification(ArrayBuffer(args(0)))
                   RunDrivetrainProcess.runProcess(args(0))
               }
               else logger.info("Ontology loaded in production repo, no further action taken.")

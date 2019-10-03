@@ -455,7 +455,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       turbo:TurboGraphMultiplicityRule,
                       turbo:TurboGraphDoubleLiteralValue,
                       turbo:TurboGraphIntegerLiteralValue,
-                      turbo:TurboGraphBooleanLiteralValue
+                      turbo:TurboGraphBooleanLiteralValue,
+                      turbo:TurboGraphRequirementSpecification
                   ))
               }
           }
