@@ -571,7 +571,7 @@ ontologies:dateOfBirthDatumToDateLiteral
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010096 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToStringLiteral
@@ -595,7 +595,7 @@ ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisTermSuffixStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue
@@ -603,7 +603,7 @@ ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisCodingSequenceIntegerLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010014 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisRegistry
@@ -635,7 +635,7 @@ ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:primaryDiagnosisBooleanLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010013 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToSnomedTerm
@@ -779,7 +779,7 @@ ontologies:healthcareEncounterDateToDateLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:healthcareEncounterDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010096 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterDateToHealthcareEncounterStart
@@ -1195,7 +1195,7 @@ ontologies:prescriptionToMedicationOrderNameStringLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:medicationOrderNameStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:PDRO_0000001 ;
 .
 ontologies:raceIdentityDatumToDataset
@@ -1366,6 +1366,7 @@ ontologies:HomoSapiensRegistryOfVariousTypes
   a ontologies:MultiObjectDescriber ;
   ontologies:range ontologies:TURBO_0000505 ;
   ontologies:range ontologies:TURBO_0010275 ;
+  ontologies:range ontologies:TURBO_0010295 ;
 .
 ontologies:IcdTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;

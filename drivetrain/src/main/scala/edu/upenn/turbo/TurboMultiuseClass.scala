@@ -885,6 +885,7 @@ class TurboMultiuseClass extends Enumeration
           Select * Where
           {
               <$describer> turbo:range ?range .
+              <$describer> a turbo:MultiObjectDescriber .
           }
           """
         updater.querySparqlAndUnpackTuple(cxn, sparql, "range")

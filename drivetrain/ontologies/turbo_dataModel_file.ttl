@@ -528,7 +528,7 @@ ontologies:shortcutBiobankEncounterToBmiValue
   ontologies:object ontologies:bmiDoubleLiteralValue ;
   ontologies:objectRequiredToCreate efo:EFO_0004340 ;
   ontologies:predicate ontologies:TURBO_0000635 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToDatasetTitle
@@ -544,7 +544,7 @@ ontologies:shortcutBiobankEncounterToDateLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:biobankEncounterDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0000625 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToDateStringValue
@@ -554,7 +554,7 @@ ontologies:shortcutBiobankEncounterToDateStringValue
   ontologies:objectRequiredToCreate ontologies:TURBO_0000531 ;
   ontologies:objectRequiredToCreate ontologies:TURBO_0000532 ;
   ontologies:predicate ontologies:TURBO_0000624 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter
@@ -571,7 +571,7 @@ ontologies:shortcutBiobankEncounterToHeightLiteralValue
   ontologies:object ontologies:lengthMeasurementDoubleLiteralValue ;
   ontologies:objectRequiredToCreate ontologies:TURBO_0010138 ;
   ontologies:predicate ontologies:TURBO_0000626 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToRegistry
@@ -612,7 +612,7 @@ ontologies:shortcutBiobankEncounterToWeightLiteralValue
   ontologies:object ontologies:massMeasurementDoubleLiteralValue ;
   ontologies:objectRequiredToCreate obo:OBI_0001929 ;
   ontologies:predicate ontologies:TURBO_0000627 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutDiagnosisOptionalGroup
@@ -624,7 +624,7 @@ ontologies:shortcutDiagnosisToCodingSequence
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisCodingSequenceIntegerLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010014 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutDiagnosisToDiagnosisCode
@@ -633,7 +633,7 @@ ontologies:shortcutDiagnosisToDiagnosisCode
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisTermSuffixStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0004601 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutDiagnosisToExpandedDiagnosis
@@ -650,7 +650,7 @@ ontologies:shortcutDiagnosisToPrimaryDiagnosisBooleanValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:primaryDiagnosisBooleanLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010013 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutDiagnosisToRegistry
@@ -679,7 +679,7 @@ ontologies:shortcutHealthcareEncounterToBmiValue
   ontologies:object ontologies:bmiDoubleLiteralValue ;
   ontologies:objectRequiredToCreate efo:EFO_0004340 ;
   ontologies:predicate ontologies:TURBO_0000655 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToDatasetTitle
@@ -697,7 +697,7 @@ ontologies:shortcutHealthcareEncounterToDateStringValue
   ontologies:objectRequiredToCreate ontologies:TURBO_0000511 ;
   ontologies:objectRequiredToCreate ontologies:TURBO_0000512 ;
   ontologies:predicate ontologies:TURBO_0000644 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToDateValue
@@ -705,7 +705,7 @@ ontologies:shortcutHealthcareEncounterToDateValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:healthcareEncounterDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0000645 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToDiagnosis
@@ -724,7 +724,7 @@ ontologies:shortcutHealthcareEncounterToDiastolicBloodPressureLiteralValue
   ontologies:objectRequiredToCreate obo:HTN_00000000 ;
   ontologies:objectRequiredToCreate ontologies:TURBO_0010150 ;
   ontologies:predicate ontologies:TURBO_0010259 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter
@@ -749,7 +749,7 @@ ontologies:shortcutHealthcareEncounterToHeightValue
   ontologies:object ontologies:lengthMeasurementDoubleLiteralValue ;
   ontologies:objectRequiredToCreate ontologies:TURBO_0010138 ;
   ontologies:predicate ontologies:TURBO_0000646 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToPrescription
@@ -792,7 +792,7 @@ ontologies:shortcutHealthcareEncounterToSystolicBloodPressureLiteralValue
   ontologies:objectRequiredToCreate obo:HTN_00000001 ;
   ontologies:objectRequiredToCreate ontologies:TURBO_0010149 ;
   ontologies:predicate ontologies:TURBO_0010258 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToWeightValue
@@ -801,7 +801,7 @@ ontologies:shortcutHealthcareEncounterToWeightValue
   ontologies:object ontologies:massMeasurementDoubleLiteralValue ;
   ontologies:objectRequiredToCreate obo:OBI_0001929 ;
   ontologies:predicate ontologies:TURBO_0000647 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHomoSapiensIdToRegistry
@@ -933,7 +933,7 @@ ontologies:shortcutPrescriptionToMedicationOrderName
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:medicationOrderNameStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0005611 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010159 ;
 .
 ontologies:shortcutPrescriptionToSymbolValue

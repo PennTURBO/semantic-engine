@@ -261,7 +261,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
               a turbo:TURBO_0010168 ;
               turbo:TURBO_0010282 turbo:TURBO_0000505 ;
-              turbo:TURBO_0010079 "4" ;
+              turbo:TURBO_0010079 '4' ;
               turbo:TURBO_0010084 "part_expand" .
               
               pmbb:scTumorCrid1 a turbo:TURBO_0010191 ;
