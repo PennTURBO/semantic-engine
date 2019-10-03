@@ -1,6 +1,104 @@
 <http://api.stardog.com/visit_occurrence> a owl:Class .
 <http://api.stardog.com/person> a owl:Class .
 
+ontologies:post_icbo_synthea_omop_cnp_patients
+  a ontologies:TURBO_0010178 ;
+  ontologies:hasOutput ontologies:cridDenotesPatient;
+  ontologies:hasOutput ontologies:dobAboutSns ;
+  ontologies:hasOutput ontologies:dobHasMeasVal ;
+  ontologies:hasOutput ontologies:hardcodedPatientRegden ;
+  ontologies:hasOutput ontologies:patCridsymbHasRepresentation ;
+  ontologies:hasOutput ontologies:patientBornOnSns ;
+  ontologies:hasOutput ontologies:patientExpansionSpecification ;
+  ontologies:hasOutput ontologies:symbolPartOfCridForPatient ;
+  ontologies:hasRequiredInput ontologies:miniPatientCridsymShortcut ;
+  ontologies:hasRequiredInput ontologies:patientDobShortcut ;
+  ontologies:inputNamedGraph ontologies:omopShortcuts ;
+  ontologies:outputNamedGraph ontologies:omopExpanded ;
+  ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_encounters ;
+  ontologies:hasOutput ontologies:gidTypingRecipe ;
+  ontologies:hasOutput ontologies:GidAboutPatient ; 
+  ontologies:hasRequiredInput ontologies:patientGidShortcut ;
+  # ontologies:hasRequiredInput ontologies:ontologies:GidHasOmopCode ;
+.
+
+ontologies:patientGidShortcut
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject <http://api.stardog.com/person> ;
+  ontologies:predicate <http://api.stardog.com/person#gender_concept_id> ;
+  ontologies:object ontologies:gender_concept_id_StringLiteralValue ;
+  ontologies:objectRequiredToCreate ontologies:GidClassList ;
+.
+
+# ontologies:GidHasOmopCode
+  # a ontologies:DatatypeConnectionRecipe ;
+  # turbo:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:required true ;
+  # ontologies:subject ontologies:GidClassList ;
+  # ontologies:predicate ontologies:TURBO_0010147 ;
+  # ontologies:object ontologies:gender_concept_id_StringLiteralValue ;
+# .
+
+ontologies:gidClassFromValueRule
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql """
+  BIND(IF (${dependent} = 8532, obo:OMRSE_00000138, ?unbound) AS ?femGidClass) 
+  BIND(IF (${dependent} = 8507, obo:OMRSE_00000141, ?unbound) AS ?maleGidClass) 
+  bind(coalesce(?femGidClass, ?maleGidClass, obo:OMRSE_00000133) as ${replacement})
+"""  ;
+.
+
+# ontologies:encClassFromValueRule
+  # a ontologies:TurboGraphVariableManipulationLogic ;
+  # ontologies:usesSparql """
+  # BIND(IF (${dependent} = 9203, obo:OGMS_0000101, ?unbound) AS ?edEncClass) 
+  # BIND(IF (${dependent} = 9201, obo:OGMS_0000100, ?unbound) AS  ?inpatientEncClass) 
+  # BIND(IF (${dependent} = 9202, obo:OGMS_0000099, ?unbound) AS ?outpatientEncClass) 
+  # bind(coalesce(?edEncClass, ?inpatientEncClass, ?outpatientEncClass, obo:OGMS_0000097) as ${replacement})
+  ##BIND(IF (bound(?edEncClass),?edEncClass, ?unbound) as ${replacement}) 
+  ##BIND(IF (bound(?inpatientEncClass),?inpatientEncClass, ${replacement}) as ${replacement}) 
+  ##BIND(IF (bound(?outpatientEncClass),?outpatientEncClass, ${replacement}) as ${replacement}) 
+  ##BIND(IF (bound(${replacement}),${replacement},obo:OGMS_0000097) as ${replacement})
+# """  ;
+# .
+
+ontologies:encClassFromValueRule
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql """
+  bind(coalesce(
+  IF (${dependent} = 9203, obo:OGMS_0000101, ?unbound),
+  IF (${dependent} = 9201, obo:OGMS_0000100, ?unbound,
+  IF (${dependent} = 9202, obo:OGMS_0000099, ?unbound,
+  obo:OGMS_0000097
+  ) as ${replacement})
+"""  ;
+.
+
+
+ontologies:GidClassList ontologies:usesCustomVariableManipulationRule ontologies:gidClassFromValueRule .
+
+# ontologies:gidClassFromValueRule
+  # a ontologies:TurboGraphVariableManipulationLogic ;
+  # ontologies:usesSparql """
+  # ${replacement} ontologies:TURBO_0010147 ${dependent} .
+  # ${dependent} rdfs:subClassOf* obo:OMRSE_00000133 .
+# """  ;
+# .
+
+# ontologies:miniGidTypeShortcut 
+  # a ontologies:DatatypeConnectionRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:required true ;
+  # ontologies:subject <http://api.stardog.com/person> ;
+  # ontologies:predicate <http://api.stardog.com/person#gender_concept_id> ;
+  # ontologies:object ontologies:gender_concept_id_StringLiteralValue ;
+  # ontologies:objectRequiredToCreate ontologies:GidClassList ;
+# .
+
+
 # _ is wildcard 
 ontologies:post_icbo_synthea_omop_cnp_encounters
   a ontologies:TURBO_0010178 ;
@@ -25,23 +123,6 @@ ontologies:post_icbo_synthea_omop_cnp_encounters
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_participation ;
 .
 
-ontologies:post_icbo_synthea_omop_cnp_patients
-  a ontologies:TURBO_0010178 ;
-  ontologies:hasOutput ontologies:cridDenotesPatient;
-  ontologies:hasOutput ontologies:patCridsymbHasRepresentation ;
-  ontologies:hasOutput ontologies:symbolPartOfCridForPatient ;
-  ontologies:hasOutput ontologies:hardcodedPatientRegden ;
-  ontologies:hasOutput ontologies:dobHasMeasVal ;
-  ontologies:hasOutput ontologies:dobAboutSns ;
-  ontologies:hasOutput ontologies:patientBornOnSns ;
-  ontologies:hasOutput ontologies:patientExpansionSpecification ;
-  ontologies:hasRequiredInput ontologies:miniPatientCridsymShortcut ;
-  ontologies:hasRequiredInput ontologies:patientDobShortcut ;
-  ontologies:inputNamedGraph ontologies:omopShortcuts ;
-  ontologies:outputNamedGraph ontologies:omopExpanded ;
-  ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_encounters ;
-.
-
 
 ontologies:post_icbo_synthea_omop_cnp_participation
   a ontologies:TURBO_0010178 ;
@@ -53,8 +134,18 @@ ontologies:post_icbo_synthea_omop_cnp_participation
   ontologies:hasRequiredInput ontologies:miniPatientPkShortcut ;
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
-#  ontologies:hasOutput ontologies:encounterRealizesRole ;
 .
+
+# ontologies:post_icbo_synthea_omop_cnp_precedence
+  # a ontologies:TURBO_0010178 ;
+  # ontologies:hasOutput ontologies:encounterRealizesRole ;
+  # ontologies:hasOutput ontologies:patientHasRole;
+  # ontologies:hasRequiredInput ontologies:miniEncounterExpansionInp ;
+  # ontologies:hasRequiredInput ontologies:encounterTypingRecipe ;
+  # ontologies:inputNamedGraph ontologies:omopShortcuts ;
+  # ontologies:outputNamedGraph ontologies:omopExpanded ;
+  # ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_encounters ;
+# .
 
 
 ontologies:patientDobShortcut 
@@ -133,20 +224,6 @@ ontologies:miniHceEnddateShortcut
   ontologies:object ontologies:visit_end_date_DateLiteralValue ;
 .
 
-ontologies:encClassFromValueRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """
-  BIND(IF (${dependent} = 9203, obo:OGMS_0000101, ?unbound) AS ?edEncClass) 
-  BIND(IF (${dependent} = 9201, obo:OGMS_0000100, ?unbound) AS  ?inpatientEncClass) 
-  BIND(IF (${dependent} = 9202, obo:OGMS_0000099, ?unbound) AS ?outpatientEncClass) 
-  bind(coalesce(?edEncClass, ?inpatientEncClass, ?outpatientEncClass, obo:OGMS_0000097) as ${replacement})
-  # BIND(IF (bound(?edEncClass),?edEncClass, ?unbound) as ${replacement}) 
-  # BIND(IF (bound(?inpatientEncClass),?inpatientEncClass, ${replacement}) as ${replacement}) 
-  # BIND(IF (bound(?outpatientEncClass),?outpatientEncClass, ${replacement}) as ${replacement}) 
-  # BIND(IF (bound(${replacement}),${replacement},obo:OGMS_0000097) as ${replacement})
-"""  ;
-.
-
 ontologies:miniHceTypeShortcut 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -159,7 +236,6 @@ ontologies:miniHceTypeShortcut
 
 ontologies:EncounterClassList ontologies:usesCustomVariableManipulationRule ontologies:encClassFromValueRule .
 
-
 # ontologies:regdenFromShorts a ontologies:ObjectConnectionToClassRecipe ;
   # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   # ontologies:required true ;
@@ -171,3 +247,5 @@ ontologies:EncounterClassList ontologies:usesCustomVariableManipulationRule onto
 # run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_encounters
 # run            http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_encounters
 # run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_patients
+
+# run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_participation
