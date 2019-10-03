@@ -1,6 +1,43 @@
 <http://api.stardog.com/visit_occurrence> a owl:Class .
 <http://api.stardog.com/person> a owl:Class .
 
+# represents/holds possible classes 
+ontologies:GidClassList
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range obo:OMRSE_00000138 ;
+  ontologies:range obo:OMRSE_00000141 ;
+  ontologies:range obo:OMRSE_00000133 ;
+.
+
+# represents individual that is being typed
+ontologies:GidToBeTyped 
+  a ontologies:MultiObjectDescriber ;
+.
+
+ontologies:gidTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:GidToBeTyped  ;
+  ontologies:predicate rdf:type ;
+  ontologies:object ontologies:GidClassList ;
+.
+
+
+ontologies:GidAboutPatient
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:GidToBeTyped ;
+#  ontologies:subject obo:OMRSE_00000133 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+.
+
+ontologies:gender_concept_id_StringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+
+
 ontologies:cridDenotesHce
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -229,6 +266,7 @@ ontologies:encounterTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:predicate rdf:type ;
   ontologies:object ontologies:EncounterClassList ;
 .
+
 
 # represents/holds possible classes 
 ontologies:EncounterClassList
