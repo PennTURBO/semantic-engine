@@ -312,7 +312,7 @@ class TurboMultiuseClass extends Enumeration
           "New Error Log " + getCurrentTimestamp() + " \n"
           if (process != None) write += "Occurred during process: " + process.get + " \n"
           if (cause != None) write += "Caused by: " + cause.get + " \n"
-          if (variables != None) write += "Variables returned: " + variables.get + " \n"
+          //if (variables != None && variables != "") write += "Variables returned: " + variables.get + " \n"
           if (dataset != None) write += "Error found in dataset: " + dataset.get + " \n"
           if (result != None) write += "Resulting action taken: " + result.get + " \n"
           
@@ -841,31 +841,6 @@ class TurboMultiuseClass extends Enumeration
         updater.querySparqlBoolean(cxn, ask).get
     }
     
-    def makeGenericTypeInput(f: ValueFactory, uri: org.eclipse.rdf4j.model.Value, graph: String): HashMap[String, org.eclipse.rdf4j.model.Value] =
-    {
-        val typeTriple = new HashMap[String, org.eclipse.rdf4j.model.Value]
-        
-        typeTriple(Value("SUBJECT").toString) = uri
-        typeTriple(Value("SUBJECTTYPE").toString) = null
-        typeTriple(Value("OBJECTTYPE").toString) = null
-        typeTriple(Value("GRAPHOFORIGIN").toString) = null
-        typeTriple(Value("GRAPHOFCREATINGPROCESS").toString) = null
-        typeTriple(Value("OBJECT").toString) = uri
-        typeTriple(Value("MINUSGROUP").toString) = null
-        typeTriple(Value("OPTIONALGROUP").toString) = null
-        typeTriple(Value("PREDICATE").toString) = f.createIRI("rdf:type")
-        typeTriple(Value("CONNECTIONRECIPETYPE").toString) = f.createIRI("http://transformunify.org/ontologies/ObjectConnectionToTermRecipe")
-        typeTriple(Value("INPUTTYPE").toString) = f.createIRI("http://transformunify.org/ontologies/requiredInputTo")
-        typeTriple(Value("MULTIPLICITY").toString) = f.createIRI("http://transformunify.org/ontologies/1-1")
-        typeTriple(Value("GRAPH").toString) = f.createIRI(graph)
-        typeTriple(Value("OBJECTADESCRIBER").toString) = null
-        typeTriple(Value("CONNECTIONNAME").toString) = f.createIRI("http://transformunify.org/ontologies/manualTypeTriple")
-        typeTriple(Value("SUBJECTADESCRIBER").toString) = f.createLiteral(true)
-        typeTriple(Value("REQUIREMENT").toString) = null
-        
-        typeTriple
-    }
-    
     def getDescriberRangesAsString(cxn: RepositoryConnection, describer: String): String =
     {
         val sparqlResults = getDescriberRangesAsList(cxn, describer)
@@ -889,5 +864,15 @@ class TurboMultiuseClass extends Enumeration
           }
           """
         updater.querySparqlAndUnpackTuple(cxn, sparql, "range")
+    }
+    
+    def buildFromNamedGraphsClauseFromList(graphs: ArrayBuffer[String]): String =
+    {  
+        var res = ""
+        for (graph <- graphs)
+        {
+            res += s"FROM <$graph>\n"
+        }
+        res
     }
 }

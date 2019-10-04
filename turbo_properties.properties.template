@@ -13,6 +13,11 @@ processNamedGraph = "http://www.itmat.upenn.edu/biobank/processes"
 graphModelFile = turbo_dataModel_file.ttl
 graphSpecificationFile = turbo_graphSpecification.ttl
 
+# dataValidationMode options: None, Log, Stop
+dataValidationMode = Stop
+
+errorLogFile = turbo_errorLog.txt
+
 reinferRepo = true
 loadAdditionalOntologies = true
 bioportalApiKey = yourKey

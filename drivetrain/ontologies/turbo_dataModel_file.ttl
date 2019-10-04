@@ -252,7 +252,6 @@ pmbb:HealthcareEncounterExpansionProcess
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToDateStringValue ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToDateValue ;
   ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDiagnosis ;
-  ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToDiagnosis ;
   ontologies:hasOutput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
   ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToHeightValue ;

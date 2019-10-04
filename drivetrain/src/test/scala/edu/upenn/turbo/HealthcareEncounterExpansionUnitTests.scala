@@ -346,9 +346,6 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        ?TURBO_0010160 <http://transformunify.org/ontologies/TURBO_0004603> ?DiagnosisRegistryOfVariousTypes .
        }
       OPTIONAL {
-       ?TURBO_0010158 <http://purl.obolibrary.org/obo/OBI_0000299> ?TURBO_0010160 .
-       }
-      OPTIONAL {
        ?TURBO_0010160 <http://transformunify.org/ontologies/TURBO_0010014> ?diagnosisCodingSequenceIntegerLiteralValue .
        }
       OPTIONAL {

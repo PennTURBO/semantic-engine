@@ -75,15 +75,18 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $process: no input named graphs found")
             else
             {
+                //run validation on input graph
+                if (dataValidationMode == "stop" || dataValidationMode == "log")
+                {
+                    InputDataValidator.setGraphModelConnection(gmCxn)
+                    InputDataValidator.setOutputRepositoryConnection(cxn)
+                    InputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData)
+                }
                 // for each input named graph, run query with specified named graph
                 for (graph <- inputNamedGraphsList)
                 {
                     logger.info("Now running on input graph " + graph)
                     val localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
-                    //run validation on input graph
-                    InputDataValidator.setGraphModelConnection(gmCxn)
-                    InputDataValidator.setOutputRepositoryConnection(cxn)
-                    InputDataValidator.validateInputData(graph, primaryQuery.rawInputData)
                     primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)

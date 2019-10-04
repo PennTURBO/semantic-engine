@@ -21,8 +21,9 @@ object InputDataValidator extends ProjectwideGlobals
     {
         this.cxn = cxn
     }
-    def validateInputData(graph: String, inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+    def validateInputData(graphs: ArrayBuffer[String], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
+        assert (graphs.size != 0, "Input Validator received a list of 0 named graphs")
         for (input <- inputs)
         {   
             if (input(REQUIREMENT.toString) != null && 
@@ -31,32 +32,33 @@ object InputDataValidator extends ProjectwideGlobals
                 input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/objectRequired"
                 ))
             {
+                val graphsFromNamedClause = helper.buildFromNamedGraphsClauseFromList(graphs)
                 if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe")
                 {
-                    validateTermAgainstSubject(graph, input)
+                    validateTermAgainstSubject(graphsFromNamedClause, input)
                 }
                 else if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe")
                 {
-                    validateTermAgainstObject(graph, input)
+                    validateTermAgainstObject(graphsFromNamedClause, input)
                 }
                 else if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/DatatypeConnectionRecipe")
                 {
-                    validateLiteralAgainstSubject(graph, input)
+                    validateLiteralAgainstSubject(graphsFromNamedClause, input)
                 }
                 else if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe")
                 {
                     if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/bothRequired")
                     {
-                        validateSubjectAgainstObject(graph, input)
-                        validateObjectAgainstSubject(graph, input)
+                        validateSubjectAgainstObject(graphsFromNamedClause, input)
+                        validateObjectAgainstSubject(graphsFromNamedClause, input)
                     }
                     else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/subjectRequired")
                     {
-                        validateObjectAgainstSubject(graph, input)
+                        validateObjectAgainstSubject(graphsFromNamedClause, input)
                     }
                     else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/objectRequired")
                     {
-                        validateSubjectAgainstObject(graph, input)
+                        validateSubjectAgainstObject(graphsFromNamedClause, input)
                     }   
                 }
                 else
@@ -68,71 +70,65 @@ object InputDataValidator extends ProjectwideGlobals
         }
     }
     
-    def validateObjectAgainstSubject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
+    def validateObjectAgainstSubject(graphsFromNamedClause: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
     {
-        // make a copy so we don't affect the master result list
-        val inputCopy = new HashMap[String, org.eclipse.rdf4j.model.Value]
-        for ((key, value) <- input) inputCopy += key -> value
+        val subjectAsType = input(SUBJECT.toString).toString
+        val objectAsType = input(OBJECT.toString).toString
+        val subjectAsVar = helper.convertTypeToSparqlVariable(subjectAsType, true)
+        val objectAsVar = helper.convertTypeToSparqlVariable(objectAsType, true)
+        val predicate = input(PREDICATE.toString).toString
         
-        val f = cxn.getValueFactory()
-        val subjectAsType = inputCopy(SUBJECT.toString)
-        val objectAsType = inputCopy(OBJECT.toString)
-        val objectAsVar = helper.convertTypeToSparqlVariable(objectAsType, false)
-        val multiplicity = inputCopy(MULTIPLICITY.toString).toString
+        val query = s"""
+          Select * 
+          $graphsFromNamedClause
+          Where
+          {
+              $objectAsVar rdf:type <$objectAsType> .
+              Minus
+              {
+                  $subjectAsVar <$predicate> $objectAsVar .
+                  $subjectAsVar rdf:type <$subjectAsType> .
+              }
+          }
+          """
+          
+        println(query)
+        val errorMsg = s"Input data error: instance {res} of type $objectAsType does not have the required connection to an instance of type $subjectAsType in one of the following graphs:\n $graphsFromNamedClause"
+        val res = update.querySparqlAndUnpackTuple(cxn, query, objectAsVar.substring(1))
         
-        inputCopy(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
-        inputCopy(OBJECTTYPE.toString) = null
-        inputCopy(OBJECTADESCRIBER.toString) = f.createLiteral(true)
-        
-        val objectTypeInput = helper.makeGenericTypeInput(f, objectAsType, graph)
-        
-        val query = new PatternMatchQuery()
-        query.setGraphModelConnection(gmCxn)
-        query.setInputGraph(graph)
-        
-        query.createWhereClause(ArrayBuffer(inputCopy, objectTypeInput))
-        val whereBlock = query.whereClause
-        val checkRequired = s"SELECT * $whereBlock }"
-        println(checkRequired)
-        var firstResult = ""
-        val res = update.querySparqlAndUnpackTuple(cxn, checkRequired, objectAsVar)
-        if (res.size != 0) firstResult = res(0)
-        assert (firstResult == "", s"Input data error: instance $firstResult of type $objectAsType does not have the required connection to an instance of type $subjectAsType in graph $graph") 
+        handleErrorReporting(errorMsg, res)
     }
     
-    def validateSubjectAgainstObject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
+    def validateSubjectAgainstObject(graphsFromNamedClause: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
     {
-        // make a copy so we don't affect the master result list
-        val inputCopy = new HashMap[String, org.eclipse.rdf4j.model.Value]
-        for ((key, value) <- input) inputCopy += key -> value
+        val subjectAsType = input(SUBJECT.toString).toString
+        val objectAsType = input(OBJECT.toString).toString
+        val subjectAsVar = helper.convertTypeToSparqlVariable(subjectAsType, true)
+        val objectAsVar = helper.convertTypeToSparqlVariable(objectAsType, true)
+        val predicate = input(PREDICATE.toString).toString
         
-        val f = cxn.getValueFactory()
-        val subjectAsType = inputCopy(SUBJECT.toString)
-        val objectAsType = inputCopy(OBJECT.toString)
-        val subjectAsVar = helper.convertTypeToSparqlVariable(subjectAsType, false)
-        val multiplicity = inputCopy(MULTIPLICITY.toString).toString
-        
-        inputCopy(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
-        inputCopy(SUBJECTTYPE.toString) = null
-        inputCopy(SUBJECTADESCRIBER.toString) = f.createLiteral(true)
-        
-        val subjectTypeInput = helper.makeGenericTypeInput(f, subjectAsType, graph)
-        
-        val query = new PatternMatchQuery()
-        query.setGraphModelConnection(gmCxn)
-        query.setInputGraph(graph)
-        
-        query.createWhereClause(ArrayBuffer(inputCopy, subjectTypeInput))
-        val whereBlock = query.whereClause
-        val checkRequired = s"SELECT * $whereBlock }"
-        println(checkRequired)
-        var firstResult = ""
-        val res = update.querySparqlAndUnpackTuple(cxn, checkRequired, subjectAsVar)
-        if (res.size != 0) firstResult = res(0)
-        assert (firstResult == "", s"Input data error: instance $firstResult of type $subjectAsType does not have the required connection to an instance of type $objectAsType in graph $graph") 
+        val query = s"""
+          Select * 
+          $graphsFromNamedClause
+          Where
+          {
+              $subjectAsVar rdf:type <$subjectAsType> .
+              Minus
+              {
+                  $subjectAsVar <$predicate> $objectAsVar .
+                  $objectAsVar rdf:type <$objectAsType> .
+              }
+          }
+          """
+          
+        println(query)
+        val errorMsg = s"Input data error: instance {res} of type $subjectAsType does not have the required connection to an instance of type $objectAsType in one of the following graphs:\n $graphsFromNamedClause"
+        val res = update.querySparqlAndUnpackTuple(cxn, query, subjectAsVar.substring(1))
+
+        handleErrorReporting(errorMsg, res)
     }
     
-    def validateTermAgainstSubject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
+    def validateTermAgainstSubject(graphsFromNamedClause: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
     {
         val describer = input(OBJECT.toString).toString
         val subject = input(SUBJECT.toString).toString
@@ -166,26 +162,25 @@ object InputDataValidator extends ProjectwideGlobals
         }
         
         val sparql: String = s"""
-          Select * Where
+          Select * 
+          $graphsFromNamedClause
+          Where
           {
-              Graph <$graph>
+              $subjectAsVar rdf:type <$subject> .
+              Minus
               {
-                  $subjectAsVar rdf:type <$subject> .
-                  Minus
-                  {
-                      $minusBlock
-                  }
+                  $minusBlock
               }
           }
           """
         println(sparql)
-        var firstResult = ""
+        val errorMsg = s"Input data error: instance {res} of type $subject does not have the required connection to term $describer in one of the following graphs:\n $graphsFromNamedClause"
         val res = update.querySparqlAndUnpackTuple(cxn, sparql, subjectAsVar.substring(1))
-        if (res.size != 0) firstResult = res(0)
-        assert (firstResult == "", s"Input data error: instance $firstResult of type $subject does not have the required connection to term $describer in graph $graph") 
+
+        handleErrorReporting(errorMsg, res)
     }
     
-    def validateTermAgainstObject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
+    def validateTermAgainstObject(graphsFromNamedClause: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
     {
         val describer = input(SUBJECT.toString).toString
         val objectAsType = input(OBJECT.toString).toString
@@ -219,55 +214,70 @@ object InputDataValidator extends ProjectwideGlobals
         }
         
         val sparql: String = s"""
-          Select * Where
+          Select * 
+          $graphsFromNamedClause
+          Where
           {
-              Graph <$graph>
+              $objectAsVar rdf:type <$objectAsType> .
+              Minus
               {
-                  $objectAsVar rdf:type <$objectAsType> .
-                  Minus
-                  {
-                      $minusBlock
-                  }
+                  $minusBlock
               }
           }
           """
         println(sparql)
-        var firstResult = ""
+        val errorMsg = s"Input data error: instance {res} of type $objectAsType does not have the required connection to term $describer in one of the following graphs:\n $graphsFromNamedClause"
         val res = update.querySparqlAndUnpackTuple(cxn, sparql, objectAsVar.substring(1))
-        if (res.size != 0) firstResult = res(0)
-        assert (firstResult == "", s"Input data error: instance $firstResult of type $objectAsType does not have the required connection to term $describer in graph $graph") 
+
+        handleErrorReporting(errorMsg, res)
     }
     
-    def validateLiteralAgainstSubject(graph: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
+    def validateLiteralAgainstSubject(graphsFromNamedClause: String, input: HashMap[String, org.eclipse.rdf4j.model.Value])
     {
-        // make a copy so we don't affect the master result list
-        val inputCopy = new HashMap[String, org.eclipse.rdf4j.model.Value]
-        for ((key, value) <- input) inputCopy += key -> value
-        
-        val f = cxn.getValueFactory()
-        val subjectAsType = inputCopy(SUBJECT.toString)
-        val objectLiteral = inputCopy(OBJECT.toString)
-        val subjectAsVar = helper.convertTypeToSparqlVariable(subjectAsType, false)
+        val subjectAsType = input(SUBJECT.toString).toString
+        val objectLiteral = input(OBJECT.toString).toString
+        val subjectAsVar = helper.convertTypeToSparqlVariable(subjectAsType, true)
         val objectAsVar = helper.convertTypeToSparqlVariable(objectLiteral, true)
-        val multiplicity = inputCopy(MULTIPLICITY.toString).toString
+        val predicate = input(PREDICATE.toString).toString
         
-        inputCopy(MINUSGROUP.toString) = f.createIRI("http://www.itmat.upenn.edu/biobank/validatorMinusGroup")
-        inputCopy(SUBJECTTYPE.toString) = null
-        inputCopy(SUBJECTADESCRIBER.toString) = f.createLiteral(true)
+        val query = s"""
+          Select * 
+          $graphsFromNamedClause
+          Where
+          {
+              $subjectAsVar rdf:type <$subjectAsType> .
+              Minus
+              {
+                  $subjectAsVar <$predicate> $objectAsVar .
+                  Filter isLiteral($objectAsVar)
+              }
+          }
+          """
+          
+        println(query)
+        val errorMsg = s"Input data error: instance {res} of type $subjectAsType does not have the required connection to literal value $objectLiteral in one of the following graphs:\n $graphsFromNamedClause"
+        val res = update.querySparqlAndUnpackTuple(cxn, query, subjectAsVar.substring(1))
         
-        val subjectTypeInput = helper.makeGenericTypeInput(f, subjectAsType, graph)
-        
-        val query = new PatternMatchQuery()
-        query.setGraphModelConnection(gmCxn)
-        query.setInputGraph(graph)
-        
-        query.createWhereClause(ArrayBuffer(inputCopy, subjectTypeInput))
-        val whereBlock = query.whereClause.split("\\}")(0)
-        val checkRequired = s"SELECT * $whereBlock Filter isLiteral($objectAsVar)\n }}}"
-        println(checkRequired)
-        var firstResult = ""
-        val res = update.querySparqlAndUnpackTuple(cxn, checkRequired, subjectAsVar)
-        if (res.size != 0) firstResult = res(0)
-        assert (firstResult == "", s"Input data error: instance $firstResult of type $subjectAsType does not have the required connection to literal value $objectLiteral in graph $graph") 
+        handleErrorReporting(errorMsg, res)
+    }
+    
+    def handleErrorReporting(errorMsg: String, res: ArrayBuffer[String])
+    {
+        val errorMsgWithInstace = 
+        if (dataValidationMode == "stop")
+        {
+            var firstResult = ""
+            if (res.size != 0) firstResult = res(0)
+            assert (firstResult == "", errorMsg.replaceAll("\\{res\\}", firstResult)) 
+        }
+        else
+        {
+            for (element <- res)
+            {
+                val errorMsgWithReplacement = errorMsg.replaceAll("\\{res\\}", element)
+                logger.info(errorMsgWithReplacement)
+                helper.writeErrorLog("Input Data Validation", errorMsgWithReplacement)   
+            }
+        }
     }
 }
