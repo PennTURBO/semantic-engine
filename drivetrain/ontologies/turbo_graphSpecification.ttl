@@ -215,7 +215,7 @@ ontologies:biobankEncounterIdToBiobankEncounter
   ontologies:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterIdToRegistryDenoter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:BiobankEncounterRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -231,7 +231,7 @@ ontologies:biobankEncounterIdToSymbol
   ontologies:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterRegistryDenoterToId
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionFromTermRecipe ;
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0000533 ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -571,7 +571,7 @@ ontologies:dateOfBirthDatumToDateLiteral
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010096 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToStringLiteral
@@ -595,7 +595,7 @@ ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisTermSuffixStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue
@@ -603,7 +603,7 @@ ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisCodingSequenceIntegerLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010014 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisRegistry
@@ -635,7 +635,7 @@ ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:primaryDiagnosisBooleanLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010013 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToSnomedTerm
@@ -719,7 +719,7 @@ ontologies:genderIdentityDatumToHomoSapiens
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genomeCridRegistryDenoterToGenomeCrid
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionFromTermRecipe ;
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0000566 ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -743,7 +743,7 @@ ontologies:genomeCridSymbolToSymbolValue
   ontologies:subject ontologies:TURBO_0000568 ;
 .
 ontologies:genomeCridToGenomeCridRegistryDenoter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:GenomeRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -779,7 +779,7 @@ ontologies:healthcareEncounterDateToDateLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:healthcareEncounterDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010096 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterDateToHealthcareEncounterStart
@@ -799,7 +799,7 @@ ontologies:healthcareEncounterDateToStringLiteralValue
   ontologies:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterIdToRegistryDenoter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:HealthcareEncounterRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -815,7 +815,7 @@ ontologies:healthcareEncounterIdToSymbol
   ontologies:subject ontologies:TURBO_0000508 ;
 .
 ontologies:healthcareEncounterRegistryDenoterToId
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionFromTermRecipe ;
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0000508 ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -903,7 +903,7 @@ ontologies:healthcareEncounterToPrescription
   ontologies:subject obo:OGMS_0000097 ;
 .
 ontologies:homoSapiensIdToRegistryDenoter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:HomoSapiensRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
@@ -927,7 +927,7 @@ ontologies:homoSapiensIdentifierToHomoSapiens
   ontologies:subject ontologies:TURBO_0010092 ;
 .
 ontologies:homoSapiensRegistryDenoterToId
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a ontologies:ObjectConnectionFromTermRecipe ;
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0010092 ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -1201,7 +1201,7 @@ ontologies:prescriptionToMedicationOrderNameStringLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:medicationOrderNameStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:PDRO_0000001 ;
 .
 ontologies:raceIdentityDatumToDataset
@@ -1303,18 +1303,16 @@ ontologies:tumorCridToTumorCridSymbol
   ontologies:required ontologies:bothRequired ;
   ontologies:subject ontologies:TURBO_0010188 ;
 .
-
-ontologies:endingTmdAboutProcbound 
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+ontologies:tumorCridToTumorRegistryDenoter
+  a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TumorRegistryDenoterOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:bothRequired ;
   ontologies:subject ontologies:TURBO_0010188 ;
 .
-
-ontologies:endingTmdHasMeasVal 
-  a ontologies:DatatypeConnectionRecipe ;
+ontologies:tumorRegistryDenoterToTumorCrid
+  a ontologies:ObjectConnectionFromTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010188 ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -1377,6 +1375,7 @@ ontologies:HomoSapiensRegistryOfVariousTypes
   a ontologies:MultiObjectDescriber ;
   ontologies:range ontologies:TURBO_0000505 ;
   ontologies:range ontologies:TURBO_0010275 ;
+  ontologies:range ontologies:TURBO_0010295 ;
 .
 ontologies:IcdTermOfVariousTypes
   a ontologies:MultiObjectDescriber ;

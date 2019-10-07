@@ -346,9 +346,6 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        ?TURBO_0010160 <http://transformunify.org/ontologies/TURBO_0004603> ?DiagnosisRegistryOfVariousTypes .
        }
       OPTIONAL {
-       ?TURBO_0010158 <http://purl.obolibrary.org/obo/OBI_0000299> ?TURBO_0010160 .
-       }
-      OPTIONAL {
        ?TURBO_0010160 <http://transformunify.org/ontologies/TURBO_0010014> ?diagnosisCodingSequenceIntegerLiteralValue .
        }
       OPTIONAL {
@@ -696,90 +693,6 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           """
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
-    }
-    
-    test("hc encounter without ID")
-    {
-        val insert: String = """
-          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
-          pmbb:hcenc1
-          turbo:TURBO_0000643 "enc_expand.csv" ;
-          a turbo:TURBO_0010158 ;
-          turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000510> .
-          }}
-          """
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
-        
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
-        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
-        
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
-        result.size should be (0)
-    }
-   
-    test("hc encounter without registry")
-    {
-        val insert: String = """
-          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
-          pmbb:hcenc1
-          turbo:TURBO_0000643 "enc_expand.csv" ;
-          a turbo:TURBO_0010158 ;
-          turbo:TURBO_0000648 "20" .
-          }}
-          """
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
-        
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
-        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
-        
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
-        result.size should be (0)
-    }
-    
-    test("hc encounter without dataset")
-    {
-        val insert: String = """
-          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
-          pmbb:hcenc1
-          turbo:TURBO_0000648 "20" ;
-          a turbo:TURBO_0010158 ;
-          turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000510> .
-          }}
-          """
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
-        
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (false)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (false)
-        update.querySparqlBoolean(testCxn, anyProcess).get should be (false)
-        
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
-        result.size should be (0)
     }
     
     test("hc encounter with text but not xsd values and only diag code without reg info")

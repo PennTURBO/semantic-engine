@@ -625,7 +625,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         dnaRes.size should be (1)
     }
 
-        test("double allele expansion - multiple alleles")
+    test("double allele expansion - multiple alleles")
     {
         val insert: String = """
           

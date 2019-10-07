@@ -28,7 +28,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     {
         for (rowResult <- inputs)
         {
-            for (key <- requiredInputKeysList) assert (rowResult.contains(key.toString))
+            for (key <- requiredInputKeysList) assert (rowResult.contains(key.toString), s"Input data does not contian required key $key")
             
             var graphForThisRow: String = defaultInputGraph
             if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
@@ -68,13 +68,13 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         if (rowResult(OBJECTADESCRIBER.toString) != null) 
         {
             objectADescriber = true
-            val valsAsString = getDescriberRangesAsString(rowResult(OBJECT.toString).toString)
+            val valsAsString = helper.getDescriberRangesAsString(gmCxn, rowResult(OBJECT.toString).toString)
             if (valsAsString.size > 0) valuesBlock += rowResult(OBJECT.toString).toString -> valsAsString
         }
         if (rowResult(SUBJECTADESCRIBER.toString) != null) 
         {
             subjectADescriber = true
-            val valsAsString = getDescriberRangesAsString(rowResult(SUBJECT.toString).toString)
+            val valsAsString = helper.getDescriberRangesAsString(gmCxn, rowResult(SUBJECT.toString).toString)
             if (valsAsString.size > 0) valuesBlock += rowResult(SUBJECT.toString).toString -> valsAsString
         }
         if (rowResult(SUBJECTTYPE.toString) != null) 
@@ -128,25 +128,6 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         else
         {
             triplesGroup.addOptionalTripleToRequiredGroup(newTriple, graphForThisRow)
-        }
-    }
-    
-    def getDescriberRangesAsString(describer: String): String =
-    {
-        val sparql: String = s"""
-          Select * Where
-          {
-              <$describer> turbo:range ?range .
-          }
-          """
-        val sparqlResults = update.querySparqlAndUnpackTuple(gmCxn, sparql, "range")
-        if (sparqlResults.size == 0) ""
-        else 
-        {
-            val describerAsVar = helper.convertTypeToSparqlVariable(describer, true)
-            var res = s"VALUES $describerAsVar {"
-            for (item <- sparqlResults) res += "<" + item + ">"
-            res + "}"
         }
     }
 }

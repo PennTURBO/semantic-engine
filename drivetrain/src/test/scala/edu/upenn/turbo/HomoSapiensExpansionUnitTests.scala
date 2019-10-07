@@ -159,7 +159,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
       }
       }
       WHERE {
-      VALUES ?HomoSapiensRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000505><http://transformunify.org/ontologies/TURBO_0010275>}
+      VALUES ?HomoSapiensRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000505><http://transformunify.org/ontologies/TURBO_0010275><http://transformunify.org/ontologies/TURBO_0010295>}
       VALUES ?TumorRegistryDenoterOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0010274>}
       GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
       ?TURBO_0010168 <http://transformunify.org/ontologies/TURBO_0010282> ?HomoSapiensRegistryOfVariousTypes .
@@ -261,7 +261,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               pmbb:crid1 obo:IAO_0000219 pmbb:part1 ;
               a turbo:TURBO_0010168 ;
               turbo:TURBO_0010282 turbo:TURBO_0000505 ;
-              turbo:TURBO_0010079 "4" ;
+              turbo:TURBO_0010079 '4' ;
               turbo:TURBO_0010084 "part_expand" .
               
               pmbb:scTumorCrid1 a turbo:TURBO_0010191 ;

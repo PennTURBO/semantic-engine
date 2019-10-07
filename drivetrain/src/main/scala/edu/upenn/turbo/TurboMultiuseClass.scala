@@ -36,7 +36,7 @@ import org.eclipse.rdf4j.model.Model
  * in this class may be used by the Drivetrain test suite as well. The functions are here to be used and prevent repetitive development. 
  **/
 //change name to something more relevant to the methods inside the class
-class TurboMultiuseClass
+class TurboMultiuseClass extends Enumeration
 {
     val sparqlPrefixes = """
 			PREFIX  :     <http://transformunify.org/ontologies/>
@@ -312,7 +312,7 @@ class TurboMultiuseClass
           "New Error Log " + getCurrentTimestamp() + " \n"
           if (process != None) write += "Occurred during process: " + process.get + " \n"
           if (cause != None) write += "Caused by: " + cause.get + " \n"
-          if (variables != None) write += "Variables returned: " + variables.get + " \n"
+          //if (variables != None && variables != "") write += "Variables returned: " + variables.get + " \n"
           if (dataset != None) write += "Error found in dataset: " + dataset.get + " \n"
           if (result != None) write += "Resulting action taken: " + result.get + " \n"
           
@@ -421,9 +421,9 @@ class TurboMultiuseClass
           }
           """
         
-        val inverseList: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, getInversePreds, ArrayBuffer("p", "inverse"))
+        val inverseList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = updater.querySparqlAndUnpackTuple(cxn, getInversePreds, ArrayBuffer("p", "inverse"))
         
-        var inverseMap: HashMap[Value, Value] = new HashMap[Value, Value]
+        var inverseMap: HashMap[org.eclipse.rdf4j.model.Value, org.eclipse.rdf4j.model.Value] = new HashMap[org.eclipse.rdf4j.model.Value, org.eclipse.rdf4j.model.Value]
         var inversePredString: String = ""
         
         for (inverse <- inverseList) 
@@ -448,7 +448,7 @@ class TurboMultiuseClass
           }
           """
               
-        val triplesList: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, getAllTriples, ArrayBuffer("s", "p", "o"))
+        val triplesList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = updater.querySparqlAndUnpackTuple(cxn, getAllTriples, ArrayBuffer("s", "p", "o"))
         
         logger.info("Applying inverses to " + triplesList.size + " triples...")
         
@@ -731,7 +731,7 @@ class TurboMultiuseClass
           """
             Select * FROM <http://www.ontotext.com/implicit> Where {?s ?p ?o .}
           """
-        val result: ArrayBuffer[ArrayBuffer[Value]] = updater.querySparqlAndUnpackTuple(cxn, select, Array("s", "p", "o"))
+        val result: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = updater.querySparqlAndUnpackTuple(cxn, select, Array("s", "p", "o"))
         for (row <- result)
         {
             model.add(row(0).asInstanceOf[IRI], row(1).asInstanceOf[IRI], row(2).asInstanceOf[IRI])
@@ -776,7 +776,7 @@ class TurboMultiuseClass
         updater.querySparqlAndUnpackTuple(cxn, query, "dsTitle")
     }
     
-    def convertTypeToSparqlVariable(input: Value, withQuestionMark: Boolean): String =
+    def convertTypeToSparqlVariable(input: org.eclipse.rdf4j.model.Value, withQuestionMark: Boolean): String =
     {
        convertTypeToSparqlVariable(input.toString, withQuestionMark)
     }
@@ -839,5 +839,40 @@ class TurboMultiuseClass
 
         """
         updater.querySparqlBoolean(cxn, ask).get
+    }
+    
+    def getDescriberRangesAsString(cxn: RepositoryConnection, describer: String): String =
+    {
+        val sparqlResults = getDescriberRangesAsList(cxn, describer)
+        if (sparqlResults.size == 0) ""
+        else 
+        {
+            val describerAsVar = convertTypeToSparqlVariable(describer, true)
+            var res = s"VALUES $describerAsVar {"
+            for (item <- sparqlResults) res += "<" + item + ">"
+            res + "}"
+        }
+    }
+    
+    def getDescriberRangesAsList(cxn: RepositoryConnection, describer: String): ArrayBuffer[String] =
+    {
+        val sparql: String = s"""
+          Select * Where
+          {
+              <$describer> turbo:range ?range .
+              <$describer> a turbo:MultiObjectDescriber .
+          }
+          """
+        updater.querySparqlAndUnpackTuple(cxn, sparql, "range")
+    }
+    
+    def buildFromNamedGraphsClauseFromList(graphs: ArrayBuffer[String]): String =
+    {  
+        var res = ""
+        for (graph <- graphs)
+        {
+            res += s"FROM <$graph>\n"
+        }
+        res
     }
 }

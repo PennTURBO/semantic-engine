@@ -63,7 +63,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       }
                   }
               }
-              else if (args(0).startsWith("http://transformunify.org/ontologies/"))
+              else if (args(0).startsWith("http://"))
               {
                   //load the TURBO ontology
                   OntologyLoader.addOntologyFromUrl(cxn)
