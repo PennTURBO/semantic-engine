@@ -1,102 +1,31 @@
+# baseURI: https://unnamed/acorn/outputs
+# prefix: outputs
+
+@prefix : <https://unnamed/acorn/post_icbo_synthea_omop_cnp_inputs/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ontologies: <http://transformunify.org/ontologies/> .
+@prefix turbo: <http://transformunify.org/ontologies/> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+
 <http://api.stardog.com/visit_occurrence> a owl:Class .
 <http://api.stardog.com/person> a owl:Class .
-
-# represents/holds possible classes 
-ontologies:GidClassList
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range obo:OMRSE_00000138 ;
-  ontologies:range obo:OMRSE_00000141 ;
-  ontologies:range obo:OMRSE_00000133 ;
-.
-
-# represents individual that is being typed
-ontologies:GidToBeTyped 
-  a ontologies:MultiObjectDescriber ;
-.
-
-ontologies:gidTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:required true ;
-  ontologies:subject ontologies:GidToBeTyped  ;
-  ontologies:predicate rdf:type ;
-  ontologies:object ontologies:GidClassList ;
-.
-
+<http://api.stardog.com/procedure_occurrence> a owl:Class .
+ontologies:syntheaomop_post_icbo a owl:Class .
+ontologies:cdm_synthea10 a owl:Class .
+ontologies:procedure_occurrence a owl:Class .
+ontologies:procedure_source_value a owl:Class .
 
 ontologies:GidAboutPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
   ontologies:subject ontologies:GidToBeTyped ;
-#  ontologies:subject obo:OMRSE_00000133 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:object obo:NCBITaxon_9606 ;
-.
-
-ontologies:gender_concept_id_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
-.
-
-
-ontologies:cridDenotesHce
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject obo:IAO_0000578 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object ontologies:encounterToBeTyped ;
-.
-
-ontologies:symbolPartOfCridForHce
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject obo:IAO_0000577 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object obo:IAO_0000578 ;
-.
-
-ontologies:hardcodedRegden_octtr a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:required true ;
-  ontologies:subject obo:IAO_0000578  ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:object ontologies:TURBO_0010256 ;
-.
-
-ontologies:person_id_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
-.
-
-ontologies:person_source_value_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
-.
-
-ontologies:hardcodedPatientRegden a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:required true ;
-  ontologies:subject obo:IAO_0000578  ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:object ontologies:TURBO_0010255 ;
-.
-
-
-ontologies:patCridsymbHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject obo:IAO_0000577 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:person_source_value_StringLiteralValue ;
-.
-
-ontologies:symbolPartOfCridForPatient
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject obo:IAO_0000577 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object obo:IAO_0000578 ;
 .
 
 ontologies:cridDenotesPatient
@@ -108,54 +37,13 @@ ontologies:cridDenotesPatient
   ontologies:object obo:NCBITaxon_9606 ;
 .
 
-
-
-ontologies:visit_occurrence_id_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
-.
-
-ontologies:cridsymbHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject obo:IAO_0000577 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:visit_occurrence_id_StringLiteralValue ;
-.
-
-ontologies:patientExpansionSpecification 
+ontologies:dobAboutSns 
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject <http://api.stardog.com/person> ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:subject <http://www.ebi.ac.uk/efo/EFO_0004950> ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:object obo:UBERON_0035946 ;
 .
-
-
-ontologies:hceExpansionSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject <http://api.stardog.com/visit_occurrence> ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object ontologies:encounterToBeTyped ;
-.
-
-
-ontologies:encStartContext a ontologies:TurboGraphContext .
-obo:IAO_0000416 ontologies:hasPossibleContext ontologies:encStartContext .
-obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encStartContext .
-
-ontologies:encEndContext a ontologies:TurboGraphContext .
-obo:IAO_0000416 ontologies:hasPossibleContext ontologies:encEndContext .
-obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encEndContext .
-
-
- ontologies:visit_start_date_DateLiteralValue 
-  a ontologies:TurboGraphDateLiteralValue ;
-.
-
 
 ontologies:dobHasMeasVal 
   a ontologies:DatatypeConnectionRecipe ;
@@ -166,71 +54,119 @@ ontologies:dobHasMeasVal
   ontologies:object ontologies:birth_datetime_DateLiteralValue ;
 .
 
-ontologies:dobAboutSns 
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+ontologies:birth_datetime_DateLiteralValue
+  a ontologies:TurboGraphDateLiteralValue ;
+.
+
+ontologies:gidTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject <http://www.ebi.ac.uk/efo/EFO_0004950> ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:object obo:UBERON_0035946 ;
+  ontologies:required true ;
+  ontologies:subject ontologies:GidToBeTyped  ;
+  ontologies:predicate rdf:type ;
+  ontologies:object ontologies:GidClassList ;
+.
+
+# represents individual that is being typed
+ontologies:GidToBeTyped 
+  a ontologies:MultiObjectDescriber ;
+.
+
+ontologies:gender_concept_id_StringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+
+# represents/holds possible classes 
+ontologies:GidClassList
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range obo:OMRSE_00000138 ;
+  ontologies:range obo:OMRSE_00000141 ;
+  ontologies:range obo:OMRSE_00000133 ;
+.
+
+ontologies:hardcodedPatientRegden a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000578  ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:object ontologies:TURBO_0010255 ;
+.
+
+ontologies:patCridsymbHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject obo:IAO_0000577 ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:object ontologies:person_source_value_StringLiteralValue ;
+.
+
+ontologies:person_source_value_StringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
 .
 
 ontologies:patientBornOnSns 
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
   ontologies:subject obo:NCBITaxon_9606 ;
   ontologies:predicate ontologies:TURBO_0000303 ;
   ontologies:object obo:UBERON_0035946 ;
 .
 
-ontologies:birth_datetime_DateLiteralValue
-  a ontologies:TurboGraphDateLiteralValue ;
-.
-
- ontologies:visit_end_date_DateLiteralValue 
-  a ontologies:TurboGraphDateLiteralValue ;
- .
-
-ontologies:procboundStartsEnc
+ontologies:patientExpansionSpecification 
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject obo:BFO_0000035 ;
-  ontologies:predicate obo:RO_0002223 ;
+  ontologies:subject <http://api.stardog.com/person> ;
+  ontologies:predicate ontologies:TURBO_0010113 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+.
+
+ontologies:symbolPartOfCridForPatient
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject obo:IAO_0000577 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object obo:IAO_0000578 ;
+.
+
+
+### encounters
+
+
+ontologies:cridDenotesHce
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject obo:IAO_0000578 ;
+  ontologies:predicate obo:IAO_0000219 ;
   ontologies:object ontologies:encounterToBeTyped ;
-  ontologies:subjectUsesContext ontologies:encStartContext ;
 .
 
-ontologies:startingTmdAboutProcbound 
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:object obo:BFO_0000035 ;
-  ontologies:subjectUsesContext ontologies:encStartContext ;
-  ontologies:objectUsesContext ontologies:encStartContext ;
+# represents individual that is being typed
+ontologies:encounterToBeTyped 
+  a ontologies:MultiObjectDescriber ;
 .
 
-ontologies:startingTmdHasMeasVal 
+ontologies:encCridsymbHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:predicate obo:IAO_0000004 ;
-  ontologies:object ontologies:visit_start_date_DateLiteralValue ;
-  ontologies:subjectUsesContext ontologies:encStartContext ;
+  ontologies:subject obo:IAO_0000577 ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:object ontologies:visit_occurrence_id_StringLiteralValue ;
 .
 
-ontologies:procboundEndsEnc
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+ontologies:encounterTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
-  ontologies:subject obo:BFO_0000035 ;
-  ontologies:predicate obo:RO_0002229 ;
-  ontologies:object ontologies:encounterToBeTyped ;
-  ontologies:subjectUsesContext ontologies:encEndContext ;
+  ontologies:subject ontologies:encounterToBeTyped  ;
+  ontologies:predicate rdf:type ;
+  ontologies:object ontologies:EncounterClassList ;
+.
+
+# represents/holds possible classes 
+ontologies:EncounterClassList
+  a ontologies:MultiObjectDescriber ;
+  ontologies:range obo:OGMS_0000099 ;
+  ontologies:range obo:OGMS_0000100 ;
+  ontologies:range obo:OGMS_0000101 ;
+  ontologies:range obo:OGMS_0000097 ;
 .
 
 ontologies:endingTmdAboutProcbound 
@@ -244,6 +180,10 @@ ontologies:endingTmdAboutProcbound
   ontologies:objectUsesContext ontologies:encEndContext ;
 .
 
+ontologies:encEndContext a ontologies:TurboGraphContext .
+obo:IAO_0000416 ontologies:hasPossibleContext ontologies:encEndContext .
+obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encEndContext .
+
 ontologies:endingTmdHasMeasVal 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -254,32 +194,103 @@ ontologies:endingTmdHasMeasVal
   ontologies:subjectUsesContext ontologies:encEndContext ;
 .
 
+ontologies:visit_end_date_DateLiteralValue 
+  a ontologies:TurboGraphDateLiteralValue ;
+ .
+
+ontologies:hardcodedRegden_octtr a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000578  ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:object ontologies:TURBO_0010256 ;
+.
+
+ontologies:hceExpansionSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject <http://api.stardog.com/visit_occurrence> ;
+  ontologies:predicate ontologies:TURBO_0010113 ;
+  ontologies:object ontologies:encounterToBeTyped ;
+.
+
+ontologies:procboundEndsEnc
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:BFO_0000035 ;
+  ontologies:predicate obo:RO_0002229 ;
+  ontologies:object ontologies:encounterToBeTyped ;
+  ontologies:subjectUsesContext ontologies:encEndContext ;
+.
+
+ontologies:procboundStartsEnc
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject obo:BFO_0000035 ;
+  ontologies:predicate obo:RO_0002223 ;
+  ontologies:object ontologies:encounterToBeTyped ;
+  ontologies:subjectUsesContext ontologies:encStartContext ;
+.
+
+ontologies:encStartContext a ontologies:TurboGraphContext .
+obo:IAO_0000416 ontologies:hasPossibleContext ontologies:encStartContext .
+obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encStartContext .
+
+
+ontologies:startingTmdAboutProcbound 
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject obo:IAO_0000416 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:object obo:BFO_0000035 ;
+  ontologies:subjectUsesContext ontologies:encStartContext ;
+  ontologies:objectUsesContext ontologies:encStartContext ;
+.
+
+ontologies:startingTmdHasMeasVal 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject obo:IAO_0000416 ;
+  ontologies:predicate obo:IAO_0000004 ;
+  ontologies:object ontologies:visit_start_date_DateLiteralValue ;
+  ontologies:subjectUsesContext ontologies:encStartContext ;
+.
+
+ontologies:visit_start_date_DateLiteralValue 
+  a ontologies:TurboGraphDateLiteralValue ;
+.
+
+ontologies:symbolPartOfCridForHce
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject obo:IAO_0000577 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object obo:IAO_0000578 ;
+.
+
+ontologies:visit_occurrence_id_StringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+
+ontologies:visit_type_IntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+
 ontologies:visit_type_IntegerLiteralValue
   a ontologies:TurboGraphIntegerLiteralValue ;
 .
 
 
-ontologies:encounterTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+### encounter participation
+
+ontologies:encounterRealizesRole
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
   ontologies:required true ;
-  ontologies:subject ontologies:encounterToBeTyped  ;
-  ontologies:predicate rdf:type ;
-  ontologies:object ontologies:EncounterClassList ;
-.
-
-
-# represents/holds possible classes 
-ontologies:EncounterClassList
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range obo:OGMS_0000099 ;
-  ontologies:range obo:OGMS_0000100 ;
-  ontologies:range obo:OGMS_0000101 ;
-  ontologies:range obo:OGMS_0000097 ;
-.
-
-# represents individual that is being typed
-ontologies:encounterToBeTyped 
-  a ontologies:MultiObjectDescriber ;
+  ontologies:subject ontologies:encounterToBeTyped ;
+  ontologies:predicate obo:BFO_0000055 ;
+  ontologies:object obo:OBI_0000093 ;
 .
 
 ontologies:patientHasRole
@@ -291,36 +302,168 @@ ontologies:patientHasRole
   ontologies:object obo:OBI_0000093 ;
 .
 
-ontologies:encounterRealizesRole
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:required true ;
-  ontologies:subject ontologies:encounterToBeTyped ;
-  ontologies:predicate obo:BFO_0000055 ;
-  ontologies:object obo:OBI_0000093 ;
+ontologies:person_id_StringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
 .
 
 
-# ontologies:hardcodedRegden_ocftr a ontologies:ObjectConnectionFromTermRecipe ;
+### procedures
+
+ontologies:procCridsymbHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject obo:IAO_0000577 ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:object ontologies:procedure_occurrence_id_IntegerLiteralValue ;
+.
+
+ontologies:procedure_occurrence_id_IntegerLiteralValue 
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+
+ontologies:cridDenotesProcedure
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject obo:IAO_0000578 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:object obo:OGMS_0000096 ;
+.
+
+ontologies:procExpansionSpecification
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject <http://api.stardog.com/procedure_occurrence> ;
+  ontologies:predicate ontologies:TURBO_0010113 ;
+  ontologies:object obo:OGMS_0000096 ;
+.
+
+ontologies:procProvDatabaseAnnotation
+  a ontologies:ObjectConnectionToTermRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:predicate ontologies:database ;
+#  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  ontologies:object ontologies:syntheaomop_post_icbo ;
+.
+
+ontologies:procProvSchemaAnnotation
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:predicate ontologies:schema ;
+#  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  ontologies:object ontologies:cdm_synthea10 ;
+.
+
+
+ontologies:procProvTableAnnotation
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:predicate ontologies:table ;
+#  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  ontologies:object ontologies:procedure_occurrence ;
+.
+
+ontologies:procProvColumnAnnotation
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:predicate ontologies:column ;
+#  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  ontologies:object ontologies:procedure_source_value ;
+.
+
+# ontologies:procProvDatabaseAnnotation
+  # a ontologies:DatatypeConnectionRecipe ;
   # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:required true ;
-  # ontologies:subject obo:IAO_0000578  ;
-  # ontologies:predicate obo:BFO_0000051 ;
-  # ontologies:object ontologies:TURBO_0010256 ;
+  # ontologies:subject ontologies:TURBO_0010401 ;
+  # ontologies:predicate ontologies:database ;
+  # ontologies:object "jdbc:postgresql://localhost:5432/syntheaomop_post_icbo?currentSchema=cdm_synthea10" ;
 # .
 
+ontologies:provenanceAboutProcedure
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:object obo:OGMS_0000096 ;
+.
 
-# ontologies:regdenPartOfCrid
-  # a ontologies:ObjectConnectionToInstanceRecipe ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:required true ;
-  # ontologies:subject ontologies:allowedEncounterRegdenList ;
-  # ontologies:predicate obo:BFO_0000050 ;
-  # ontologies:object obo:IAO_0000578 ;
-# .
+ontologies:symbolPartOfCrid
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject obo:IAO_0000577 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object obo:IAO_0000578 ;
+.
 
-# ontologies:allowedEncounterRegdenList 
-  # a ontologies:MultiObjectDescriber ;
-  # ontologies:range ontologies:TURBO_0010256 ;
-# .
+ontologies:procProvValueAnnotation
+ a ontologies:DatatypeConnectionRecipe ;
+ ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+ ontologies:subject ontologies:TURBO_0010401 ;
+ # ontologies:predicate ontologies:TURBO_0010094 ;
+ ontologies:predicate ontologies:colVal ;
+ ontologies:object ontologies:procedure_source_value_StringLiteralValue ;
+.
+
+ontologies:procedure_source_value_StringLiteralValue 
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+
+ontologies:procMentionedClassList
+  a ontologies:MultiObjectDescriber .
+  
+ontologies:provMentionsSnomed
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:object ontologies:procMentionedClassList ;
+.
+
+ontologies:procedure_visit_occurrence_id_IntegerLiteralValue 
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+
+
+# # ###
+
+ontologies:procRealizesPatientRole
+ a ontologies:ObjectConnectionToInstanceRecipe ;
+ ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+ ontologies:subject obo:OGMS_0000096 ;
+ ontologies:predicate obo:BFO_0000055 ;
+ ontologies:object obo:OBI_0000093 ;
+.
+
+ontologies:procEncounterPlaceholder
+ a ontologies:ObjectConnectionToInstanceRecipe ;
+ ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+ ontologies:subject obo:OGMS_0000096 ;
+ ontologies:predicate obo:BFO_0000050 ;
+ ontologies:object ontologies:encounterToBeTyped ;
+.
+
+# ###
+
+
+# # ontologies:procedure_person_id_IntegerLiteralValue 
+  # # a ontologies:TurboGraphIntegerLiteralValue ;
+# # .
+
+# # # ontologies:regdenPartOfCrid
+  # # # a ontologies:ObjectConnectionToInstanceRecipe ;
+  # # # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # # # ontologies:required true ;
+  # # # ontologies:subject ontologies:allowedEncounterRegdenList ;
+  # # # ontologies:predicate obo:BFO_0000050 ;
+  # # # ontologies:object obo:IAO_0000578 ;
+# # # .
+
+# # # ontologies:allowedEncounterRegdenList 
+  # # # a ontologies:MultiObjectDescriber ;
+  # # # ontologies:range ontologies:TURBO_0010256 ;
+# # # .
 
