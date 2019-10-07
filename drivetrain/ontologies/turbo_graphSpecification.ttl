@@ -32,7 +32,7 @@ ontologies:DNAToHomoSapiens
 .
 ontologies:DatasetToDiastolicBloodPressureMeasurementDatum
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:HTN_00000000 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -40,7 +40,7 @@ ontologies:DatasetToDiastolicBloodPressureMeasurementDatum
 .
 ontologies:DatasetToSystolicBloodPressureMeasurementDatum
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:HTN_00000001 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -48,7 +48,7 @@ ontologies:DatasetToSystolicBloodPressureMeasurementDatum
 .
 ontologies:DiastolicBloodPressureMeasurementDatumToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -80,7 +80,7 @@ ontologies:DiastolicBloodPressureValueSpecificationToValue
 .
 ontologies:SystolicBloodPressureMeasurementDatumToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -112,7 +112,7 @@ ontologies:SystolicBloodPressureValueSpecificationToValue
 .
 ontologies:alleleCridSymbolToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -128,7 +128,7 @@ ontologies:alleleToDNA
 .
 ontologies:alleleToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -184,7 +184,7 @@ ontologies:biobankEncounterDateToBiobankEncounterStart
 .
 ontologies:biobankEncounterDateToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -248,7 +248,7 @@ ontologies:biobankEncounterStartToBiobankEncounter
 .
 ontologies:biobankEncounterSymbolToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -352,7 +352,7 @@ ontologies:bmiToBmiDoubleLiteralValue
 .
 ontologies:bmiToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -416,7 +416,7 @@ ontologies:collectionProcessToSpecimen
 .
 ontologies:datasetToAllele
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:OBI_0001352 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -424,7 +424,7 @@ ontologies:datasetToAllele
 .
 ontologies:datasetToAlleleCridSymbol
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000568 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -432,7 +432,7 @@ ontologies:datasetToAlleleCridSymbol
 .
 ontologies:datasetToBiobankEncounterDate
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000532 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -440,7 +440,7 @@ ontologies:datasetToBiobankEncounterDate
 .
 ontologies:datasetToBiobankEncounterSymbol
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000534 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -448,7 +448,7 @@ ontologies:datasetToBiobankEncounterSymbol
 .
 ontologies:datasetToBmi
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object efo:EFO_0004340 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -456,7 +456,7 @@ ontologies:datasetToBmi
 .
 ontologies:datasetToDatasetTitle
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:singleton-singleton ;
+  ontologies:multiplicity ontologies:1-1 ;
   ontologies:object ontologies:datasetTitleStringLiteralValue ;
   ontologies:predicate dc11:title ;
   ontologies:required ontologies:bothRequired ;
@@ -464,7 +464,7 @@ ontologies:datasetToDatasetTitle
 .
 ontologies:datasetToDateOfBirthDatum
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object efo:EFO_0004950 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -472,7 +472,7 @@ ontologies:datasetToDateOfBirthDatum
 .
 ontologies:datasetToDiagnosis
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:OGMS_0000073 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -480,7 +480,7 @@ ontologies:datasetToDiagnosis
 .
 ontologies:datasetToGenderIdentityDatum
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:GenderIdentityDatumOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -488,7 +488,7 @@ ontologies:datasetToGenderIdentityDatum
 .
 ontologies:datasetToHealthcareEncounterDate
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000512 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -496,7 +496,7 @@ ontologies:datasetToHealthcareEncounterDate
 .
 ontologies:datasetToHealthcareEncounterSymbol
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000509 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -504,7 +504,7 @@ ontologies:datasetToHealthcareEncounterSymbol
 .
 ontologies:datasetToHomoSapiensSymbol
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000504 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -512,7 +512,7 @@ ontologies:datasetToHomoSapiensSymbol
 .
 ontologies:datasetToLengthMeasurementValueSpecification
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0010138 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -520,7 +520,7 @@ ontologies:datasetToLengthMeasurementValueSpecification
 .
 ontologies:datasetToMassMeasurementValueSpecification
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:OBI_0001929 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -528,7 +528,7 @@ ontologies:datasetToMassMeasurementValueSpecification
 .
 ontologies:datasetToMedicationSymbol
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000562 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -536,7 +536,7 @@ ontologies:datasetToMedicationSymbol
 .
 ontologies:datasetToPrescription
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:PDRO_0000001 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -544,7 +544,7 @@ ontologies:datasetToPrescription
 .
 ontologies:datasetToRaceIdentityDatum
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
+  ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:RaceIdentityDatumOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;
@@ -560,7 +560,7 @@ ontologies:dateOfBirthDatumToBirth
 .
 ontologies:dateOfBirthDatumToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -584,7 +584,7 @@ ontologies:dateOfBirthDatumToStringLiteral
 .
 ontologies:diagnosisToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -688,7 +688,7 @@ ontologies:formProcessToSequenceData
 .
 ontologies:genderIdentityDatumToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -768,7 +768,7 @@ ontologies:genomeCridToSpecimen
 .
 ontologies:healthcareEncounterDateToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -832,7 +832,7 @@ ontologies:healthcareEncounterStartToHealthcareEncounter
 .
 ontologies:healthcareEncounterSymbolToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -936,7 +936,7 @@ ontologies:homoSapiensRegistryDenoterToId
 .
 ontologies:homoSapiensSymbolToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -1048,7 +1048,7 @@ ontologies:identifierToPrescription
 .
 ontologies:instantiationToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:superSingleton-singleton ;
+  ontologies:multiplicity ontologies:superSingleton-many ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:OBI_0000293 ;
   ontologies:required ontologies:bothRequired ;
@@ -1072,7 +1072,7 @@ ontologies:lengthMeasurementValueSpecificationToCentimeter
 .
 ontologies:lengthMeasurementValueSpecificationToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -1104,7 +1104,7 @@ ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue
 .
 ontologies:massMeasurementValueSpecificationToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -1144,7 +1144,7 @@ ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue
 .
 ontologies:medicationSymbolToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -1176,7 +1176,7 @@ ontologies:patientRoleToHealthcareEncounter
 .
 ontologies:prescriptionToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -1200,7 +1200,7 @@ ontologies:prescriptionToMedicationOrderNameStringLiteralValue
 .
 ontologies:raceIdentityDatumToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
+  ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -1272,7 +1272,7 @@ ontologies:tumorCridToTumor
 .
 ontologies:tumorCridToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/many-singleton> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
@@ -1280,7 +1280,7 @@ ontologies:tumorCridToDataset
 .
 ontologies:datasetToTumorCrid
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/singleton-many> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:subject obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:required ontologies:subjectRequired ;

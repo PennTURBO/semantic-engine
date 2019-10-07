@@ -208,7 +208,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
       BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
       BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?NCBITaxon_9606","localUUID", str(?TURBO_0010161))))) AS ?NCBITaxon_9606)
       BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010092","localUUID", str(?TURBO_0010168))))) AS ?TURBO_0010092)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?IAO_0000100","localUUID","http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")))) AS ?IAO_0000100)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT(?datasetTitleStringLiteralValue,"localUUID")))) AS ?IAO_0000100)
       }
       """
     
@@ -1037,6 +1037,10 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             ?partSymbol3 turbo:TURBO_0010094 "elaine"^^xsd:string .
             ?partSymb3 obo:BFO_0000050 ?dataset3 .
             ?dataset3 obo:BFO_0000051 ?partSymb3 .
+            
+            filter (?dataset1 != ?dataset2)
+            filter (?dataset2 != ?dataset3)
+            filter (?dataset3 != ?dataset1)
         		
           }}
           """
@@ -1044,7 +1048,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, output).get should be (true)
         val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
-        result.size should be (65)
+        result.size should be (69)
         
         val processMetaMultipleDatasets: String = """
         ASK 

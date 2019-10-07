@@ -448,7 +448,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess")
             assert (1==2)
         }
         catch

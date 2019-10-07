@@ -126,7 +126,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
       BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001573","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001573)
       BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0000257","localUUID", str(?TURBO_0000527))))) AS ?OBI_0000257)
       BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?IAO_0000100","localUUID","http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")))) AS ?IAO_0000100)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT(?datasetTitleStringLiteralValue,"localUUID")))) AS ?IAO_0000100)
       BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0600005","localUUID", str(?TURBO_0000527))))) AS ?OBI_0600005)
       }
       """

@@ -19,6 +19,12 @@ class TriplesGroupBuilder extends ProjectwideGlobals
     val typesUsed = new HashSet[String]
     
     var variablesUsed: HashSet[String] = null
+    var valuesBlock = new HashMap[String, String]
+    
+    def setValuesBlock(valuesBlock: HashMap[String, String])
+    {
+        this.valuesBlock = valuesBlock
+    }
     
     def addRequiredTripleToRequiredGroup(triple: Triple, graph: String)
     {
@@ -300,6 +306,23 @@ class TriplesGroupBuilder extends ProjectwideGlobals
             clause += triple.makeTripleWithVariablesExcludeList(variablesUsed)
         }
         else if (clauseType == INSERT_DATA) clause += triple.makeTriple()
+        
+        if (clauseType == WHERE)
+        {
+            val subjWithoutBrackets = helper.removeAngleBracketsFromString(triple.tripleSubject)
+            val objWithoutBrackets = helper.removeAngleBracketsFromString(triple.tripleObject)
+            
+            if (valuesBlock.contains(subjWithoutBrackets))
+            {
+                clause += valuesBlock(subjWithoutBrackets) + "\n"
+                valuesBlock.remove(subjWithoutBrackets)
+            }
+            if (valuesBlock.contains(objWithoutBrackets))
+            {
+                clause += valuesBlock(objWithoutBrackets) + "\n"
+                valuesBlock.remove(objWithoutBrackets)
+            }   
+        }
         clause
     }
     
