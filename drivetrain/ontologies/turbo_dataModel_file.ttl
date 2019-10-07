@@ -70,7 +70,7 @@ ontologies:RaceIdentityTypeRule
 .
 ontologies:DatasetExpansionRule
   a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(${dependent},\"${localUUID}\")))) AS ${replacement})" ;
+  ontologies:usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(str(${dependent}),\"${localUUID}\")))) AS ${replacement})" ;
 .
 ontologies:RxNormDrugTermMinusGroup
   a ontologies:TurboGraphMinusGroup ;
