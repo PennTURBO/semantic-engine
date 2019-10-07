@@ -341,7 +341,7 @@ ontologies:procProvDatabaseAnnotation
   a ontologies:ObjectConnectionToTermRecipe ;
   # ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
   ontologies:predicate ontologies:database ;
 #  ontologies:object "procedure_occurrence.procedure_source_value" ;
   ontologies:object ontologies:syntheaomop_post_icbo ;
@@ -350,7 +350,7 @@ ontologies:procProvDatabaseAnnotation
 ontologies:procProvSchemaAnnotation
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
   ontologies:predicate ontologies:schema ;
 #  ontologies:object "procedure_occurrence.procedure_source_value" ;
   ontologies:object ontologies:cdm_synthea10 ;
@@ -360,7 +360,7 @@ ontologies:procProvSchemaAnnotation
 ontologies:procProvTableAnnotation
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
   ontologies:predicate ontologies:table ;
 #  ontologies:object "procedure_occurrence.procedure_source_value" ;
   ontologies:object ontologies:procedure_occurrence ;
@@ -369,16 +369,27 @@ ontologies:procProvTableAnnotation
 ontologies:procProvColumnAnnotation
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
   ontologies:predicate ontologies:column ;
 #  ontologies:object "procedure_occurrence.procedure_source_value" ;
   ontologies:object ontologies:procedure_source_value ;
 .
 
+ontologies:procProvValueAnnotation
+ a ontologies:DatatypeConnectionRecipe ;
+ ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+ ontologies:subject ontologies:TURBO_0010404 ;
+ # ontologies:predicate ontologies:TURBO_0010094 ;
+ ontologies:predicate ontologies:colVal ;
+ ontologies:object ontologies:procedure_source_value_StringLiteralValue ;
+.
+
+
+
 # ontologies:procProvDatabaseAnnotation
   # a ontologies:DatatypeConnectionRecipe ;
   # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:subject ontologies:TURBO_0010401 ;
+  # ontologies:subject ontologies:TURBO_0010404 ;
   # ontologies:predicate ontologies:database ;
   # ontologies:object "jdbc:postgresql://localhost:5432/syntheaomop_post_icbo?currentSchema=cdm_synthea10" ;
 # .
@@ -386,7 +397,7 @@ ontologies:procProvColumnAnnotation
 ontologies:provenanceAboutProcedure
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:object obo:OGMS_0000096 ;
 .
@@ -399,14 +410,6 @@ ontologies:symbolPartOfCrid
   ontologies:object obo:IAO_0000578 ;
 .
 
-ontologies:procProvValueAnnotation
- a ontologies:DatatypeConnectionRecipe ;
- ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
- ontologies:subject ontologies:TURBO_0010401 ;
- # ontologies:predicate ontologies:TURBO_0010094 ;
- ontologies:predicate ontologies:colVal ;
- ontologies:object ontologies:procedure_source_value_StringLiteralValue ;
-.
 
 ontologies:procedure_source_value_StringLiteralValue 
   a ontologies:TurboGraphIntegerLiteralValue ;
@@ -418,7 +421,7 @@ ontologies:procMentionedClassList
 ontologies:provMentionsSnomed
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010401 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
   ontologies:predicate obo:IAO_0000142 ;
   ontologies:object ontologies:procMentionedClassList ;
 .

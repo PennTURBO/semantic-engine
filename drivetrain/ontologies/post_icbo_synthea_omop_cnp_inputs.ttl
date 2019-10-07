@@ -300,7 +300,7 @@ ontologies:procExpansionInput
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject <http://api.stardog.com/procedure_occurrence> ;
   ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object obo:OBI_0000011 ;
+  ontologies:object obo:OGMS_0000096 ;
 .
 
 ontologies:patientExpansionInput
