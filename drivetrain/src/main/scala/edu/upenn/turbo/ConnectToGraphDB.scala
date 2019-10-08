@@ -267,7 +267,9 @@ object ConnectToGraphDB extends ProjectwideGlobals
         var requiredProperties: ArrayBuffer[String] = ArrayBuffer("serviceURL",
             "password","username","productionRepository",
             "ontologyURL", "modelRepository", "testingRepository", 
-            "processNamedGraph", "reinferRepo", "loadAdditionalOntologies")
+            "processNamedGraph", "reinferRepo", "loadAdditionalOntologies",
+            "graphModelFile", "graphSpecificationFile", "defaultPrefix",
+            "dataValidationMode", "errorLogFile")
         var a = 0
         while (optToReturn == None && a < requiredProperties.size)
         {

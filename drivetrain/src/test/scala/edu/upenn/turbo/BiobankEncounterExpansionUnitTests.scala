@@ -147,7 +147,6 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
       ?TURBO_0000531 <http://purl.obolibrary.org/obo/RO_0002223> ?TURBO_0000527 .
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010113> ?TURBO_0000527 .
       ?TURBO_0010169 rdf:type <http://transformunify.org/ontologies/TURBO_0010169> .
-      ?EFO_0004340 <http://purl.obolibrary.org/obo/IAO_0000581> ?TURBO_0000532 .
       ?TURBO_0000527 <http://transformunify.org/ontologies/TURBO_0010139> ?TURBO_0010138 .
       ?TURBO_0000527 <http://transformunify.org/ontologies/TURBO_0010139> ?OBI_0001929 .
       ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0010138 .
@@ -184,7 +183,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
       }
       WHERE {
       GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
-      VALUES ?BiobankEncounterRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000535>}
+      VALUES ?BiobankEncounterRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000535><http://transformunify.org/ontologies/TURBO_0010297><http://transformunify.org/ontologies/TURBO_0010298><http://transformunify.org/ontologies/TURBO_0010299>}
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010286> ?BiobankEncounterRegistryOfVariousTypes .
       ?TURBO_0010169 rdf:type <http://transformunify.org/ontologies/TURBO_0010169> .
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0000623> ?datasetTitleStringLiteralValue .
@@ -296,7 +295,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/OBI_0000299", "http://transformunify.org/ontologies/TURBO_0010133",
-            "http://purl.obolibrary.org/obo/IAO_0000581", "http://transformunify.org/ontologies/TURBO_0010113",
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://transformunify.org/ontologies/TURBO_0010094", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -309,8 +308,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010139",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://purl.obolibrary.org/obo/IAO_0000039", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://purl.obolibrary.org/obo/BFO_0000050"
+            "http://purl.obolibrary.org/obo/IAO_0000039", "http://transformunify.org/ontologies/TURBO_0010094"
             
         )
         
@@ -486,7 +484,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
-            "http://transformunify.org/ontologies/TURBO_0010139", "http://purl.obolibrary.org/obo/IAO_0000581",
+            "http://transformunify.org/ontologies/TURBO_0010139", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/BFO_0000051",
@@ -501,7 +499,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000299",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://purl.obolibrary.org/obo/IAO_0000039", "http://transformunify.org/ontologies/TURBO_0010094"   
+            "http://purl.obolibrary.org/obo/IAO_0000039"   
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")

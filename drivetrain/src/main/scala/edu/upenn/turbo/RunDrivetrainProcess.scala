@@ -43,12 +43,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         update.querySparqlBoolean(gmCxn, ask).get
     }
     
-    def runProcess(process: String): HashMap[String, PatternMatchQuery] =
+    def runProcess(process: String, dataValidationMode: String = dataValidationMode): HashMap[String, PatternMatchQuery] =
     {
-        runProcess(ArrayBuffer(process))
+        runProcess(ArrayBuffer(process), dataValidationMode)
     }
         
-    def runProcess(processes: ArrayBuffer[String]): HashMap[String, PatternMatchQuery] =
+    def runProcess(processes: ArrayBuffer[String], dataValidationMode: String): HashMap[String, PatternMatchQuery] =
     {
         var processQueryMap = new HashMap[String, PatternMatchQuery]
         for (process <- processes)
@@ -71,16 +71,16 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             // get list of all named graphs which match pattern specified in inputNamedGraph but without match on where clause
             var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph)
             logger.info("input named graphs size: " + inputNamedGraphsList.size)
-                
             if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $process: no input named graphs found")
             else
             {
+                logger.info(s"Running on validation mode $dataValidationMode")
                 //run validation on input graph
                 if (dataValidationMode == "stop" || dataValidationMode == "log")
                 {
                     InputDataValidator.setGraphModelConnection(gmCxn)
                     InputDataValidator.setOutputRepositoryConnection(cxn)
-                    InputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData)
+                    InputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData, dataValidationMode)
                 }
                 // for each input named graph, run query with specified named graph
                 for (graph <- inputNamedGraphsList)
@@ -382,7 +382,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         for (a <- orderedProcessList) logger.info(a)
         
         // run each process
-        runProcess(orderedProcessList)
+        runProcess(orderedProcessList, dataValidationMode)
     }
 
     def validateGraphModelTerms()
@@ -663,8 +663,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val triplesAdded = metaInfo(TRIPLESADDED)(0)
         val inputNamedGraphsList = metaInfo(INPUTNAMEDGRAPHS)
         
-        val timeMeasDatum = helper.genPmbbIRI()
-        val processBoundary = helper.genPmbbIRI()
+        val timeMeasDatum = helper.genTurboIRI()
+        val processBoundary = helper.genTurboIRI()
         
         helper.validateURI(processNamedGraph)
         var metaTriples = ArrayBuffer(

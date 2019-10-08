@@ -13,6 +13,7 @@ import java.util.UUID
 
 object InputDataValidator extends ProjectwideGlobals
 {
+    var stopRun = false
     def setGraphModelConnection(gmCxn: RepositoryConnection)
     {
         this.gmCxn = gmCxn
@@ -21,8 +22,11 @@ object InputDataValidator extends ProjectwideGlobals
     {
         this.cxn = cxn
     }
-    def validateInputData(graphs: ArrayBuffer[String], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+
+    def validateInputData(graphs: ArrayBuffer[String], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], dataValidationMode: String = dataValidationMode)
     {
+        if (dataValidationMode == "stop") stopRun = true
+        
         assert (graphs.size != 0, "Input Validator received a list of 0 named graphs")
         for (input <- inputs)
         {   
@@ -264,7 +268,7 @@ object InputDataValidator extends ProjectwideGlobals
     def handleErrorReporting(errorMsg: String, res: ArrayBuffer[String])
     {
         val errorMsgWithInstace = 
-        if (dataValidationMode == "stop")
+        if (stopRun)
         {
             var firstResult = ""
             if (res.size != 0) firstResult = res(0)

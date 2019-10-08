@@ -227,7 +227,6 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?TURBO_0000522 rdf:type <http://transformunify.org/ontologies/TURBO_0000522> .
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010113> ?OGMS_0000097 .
       ?TURBO_0010158 rdf:type <http://transformunify.org/ontologies/TURBO_0010158> .
-      ?EFO_0004340 <http://purl.obolibrary.org/obo/IAO_0000581> ?TURBO_0000512 .
       ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0010138 .
       ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?OBI_0001929 .
       ?OGMS_0000097 <http://transformunify.org/ontologies/TURBO_0010139> ?TURBO_0010138 .
@@ -314,11 +313,14 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       OPTIONAL {
        ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010258> ?systolicBloodPressureDoubleLiteralValue .
        }
+      OPTIONAL {
+       ?TURBO_0010158 <http://transformunify.org/ontologies/hcEncToEncTypeCode> ?encounterTypeCodeLiteralValue .
+       }
       }
       BIND(IF (BOUND(?systolicBloodPressureDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?HTN_00000001","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?HTN_00000001)
       BIND(IF (BOUND(?massMeasurementDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001929","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?OBI_0001929)
       BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000509","localUUID", str(?TURBO_0010158))))) AS ?TURBO_0000509)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT(?datasetTitleStringLiteralValue,"localUUID"))))AS?IAO_0000100)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID"))))AS?IAO_0000100)
       BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OGMS_0000097","localUUID", str(?TURBO_0010158))))) AS ?OGMS_0000097)
       BIND(IF (BOUND(?diastolicBloodPressureDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010150","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010150)
       BIND(IF (BOUND(?bmiDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?EFO_0004340","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?EFO_0004340)
@@ -540,6 +542,11 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             turbo:TURBO_0010131 pmbb:part1 ;
             turbo:TURBO_0010259 "80"^^xsd:Float ;
             turbo:TURBO_0010258 "120"^^xsd:Float ;
+            turbo:hcEncToEncTypeCode "inpatient" ;
+            turbo:hcEncToDatabase turbo:PDS ;
+            turbo:hcEncToEncTypeCodeColumnn turbo:enc_type_code ;
+            turbo:hcEncToTable turbo:patient_encounter ;
+            turbo:hcEncToSchema turbo:mdm ;
           
           obo:OBI_0000299 pmbb:diagnosis1 .
           pmbb:diagnosis1 a turbo:TURBO_0010160 ;
@@ -577,7 +584,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000581",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://transformunify.org/ontologies/TURBO_0010139", "http://purl.obolibrary.org/obo/OBI_0000299", 
             "http://purl.obolibrary.org/obo/OBI_0000299", "http://purl.obolibrary.org/obo/BFO_0000051", 
             "http://purl.obolibrary.org/obo/BFO_0000050", "http://purl.obolibrary.org/obo/BFO_0000051", 
@@ -621,7 +628,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://purl.obolibrary.org/obo/BFO_0000051","http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://transformunify.org/ontologies/TURBO_0010113", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            "http://transformunify.org/ontologies/TURBO_0010113"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
@@ -943,7 +950,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://transformunify.org/ontologies/TURBO_0010094", "http://purl.obolibrary.org/obo/BFO_0000050",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010094",
-            "http://purl.obolibrary.org/obo/IAO_0000581", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://transformunify.org/ontologies/TURBO_0010113",
             "http://purl.obolibrary.org/obo/IAO_0000039", "http://transformunify.org/ontologies/TURBO_0010113",
             "http://purl.obolibrary.org/obo/OBI_0000299", "http://transformunify.org/ontologies/TURBO_0010094",
             "http://transformunify.org/ontologies/TURBO_0010139", "http://transformunify.org/ontologies/TURBO_0010094",
@@ -958,7 +965,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://purl.obolibrary.org/obo/BFO_0000051","http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://transformunify.org/ontologies/TURBO_0010113","http://transformunify.org/ontologies/TURBO_0010113"
+            "http://transformunify.org/ontologies/TURBO_0010113"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
@@ -1748,11 +1755,41 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
     
     test("diagnosis not expanded by itself")
     {
-        assert (1==2)
+       val insert = """
+         INSERT DATA {
+         Graph pmbb:Shortcuts_diagnosisShortcuts {
+               pmbb:diagCridSC a turbo:TURBO_0010160 ;
+                      turbo:TURBO_0004602 'ICD-9' ;
+                      turbo:TURBO_0004603 <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
+                      turbo:TURBO_0004601 '401.9' ;
+                      turbo:TURBO_0010013 "true"^^xsd:Boolean ;
+                      turbo:TURBO_0010014 "1"^^xsd:Integer . }}
+         """
+       update.updateSparql(testCxn, insert)
+       
+       RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", "none")
+       
+       val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+       val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+       result.size should be (0)
     }
     
     test("prescription not expanded by itself")
     {
-        assert (1==2)
+        val insert = """
+         INSERT DATA {
+         Graph pmbb:Shortcuts_medicationShortcuts {
+               pmbb:prescription a turbo:TURBO_0010159 ;
+                      turbo:TURBO_0005611 "holistic soil from the ganges" ;
+                      turbo:TURBO_0005612 turbo:someDrug ;
+                      turbo:TURBO_0005601 "3" . }}
+         """
+       update.updateSparql(testCxn, insert)
+       
+       RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", "none")
+       
+       val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+       val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+       result.size should be (0)
     }
 }

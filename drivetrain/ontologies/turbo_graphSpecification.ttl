@@ -307,7 +307,7 @@ ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDat
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:HTN_00000000 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:subjectRequired ;
   ontologies:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureMeasurementProcessToHealthcareEncounter
@@ -323,7 +323,7 @@ ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatu
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:HTN_00000001 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:required ontologies:subjectRequired ;
   ontologies:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureToHomoSapiens
@@ -333,14 +333,6 @@ ontologies:bloodPressureToHomoSapiens
   ontologies:predicate obo:RO_0000052 ;
   ontologies:required ontologies:notRequired ;
   ontologies:subject obo:VSO_0000004 ;
-.
-ontologies:bmiToBiobankEncounterDate
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000532 ;
-  ontologies:predicate obo:IAO_0000581 ;
-  ontologies:required ontologies:notRequired ;
-  ontologies:subject efo:EFO_0004340 ;
 .
 ontologies:bmiToBmiDoubleLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
@@ -356,14 +348,6 @@ ontologies:bmiToDataset
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:required ontologies:objectRequired ;
-  ontologies:subject efo:EFO_0004340 ;
-.
-ontologies:bmiToHealthcareEncounterDate
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000512 ;
-  ontologies:predicate obo:IAO_0000581 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject efo:EFO_0004340 ;
 .
 ontologies:bmiToHomoSapiens
@@ -1327,6 +1311,21 @@ ontologies:tumorToHomoSapiens
 ontologies:BiobankEncounterRegistryOfVariousTypes
   a ontologies:MultiObjectDescriber ;
   ontologies:range ontologies:TURBO_0000535 ;
+  ontologies:range ontologies:TURBO_0010297 ;
+  ontologies:range ontologies:TURBO_0010298 ;
+  ontologies:range ontologies:TURBO_0010299 ;
+.
+ontologies:HealthcareEncounterDatabaseProvenanceTerm
+  a ontologies:MultiObjectDescriber ;
+.
+ontologies:HealthcareEncounterSchemaProvenanceTerm
+  a ontologies:MultiObjectDescriber ;
+.
+ontologies:HealthcareEncounterTypeCodeColumnTerm
+  a ontologies:MultiObjectDescriber ;
+.
+ontologies:HealthcareEncounterTableProvenanceTerm
+  a ontologies:MultiObjectDescriber ;
 .
 ontologies:DatatypeConnectionRecipe
   a owl:Class ;
@@ -1480,6 +1479,9 @@ ontologies:biobankEncounterSymbolStringLiteralValue
 .
 ontologies:bmiDoubleLiteralValue
   a ontologies:TurboGraphDoubleLiteralValue ;
+.
+ontologies:encounterTypeCodeLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
 .
 ontologies:buildsMinusGroup
   a owl:ObjectProperty ;

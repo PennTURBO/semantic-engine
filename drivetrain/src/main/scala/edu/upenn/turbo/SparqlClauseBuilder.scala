@@ -526,7 +526,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (!(usedVariables.contains(singleton)))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
-                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
+                bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
             }
         }
         for (singleton <- outputSuperSingletonClasses)
@@ -534,7 +534,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (!(usedVariables.contains(singleton)))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
-                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\")))) AS ${singletonAsVar})\n"""
+                bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\")))) AS ${singletonAsVar})\n"""
             }
         }
     }
@@ -658,7 +658,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(multiplicityEnforcer)
             }
     
-            bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""   
+            bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""   
         }
     }
     
@@ -682,7 +682,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 dependeeAsVar = helper.convertTypeToSparqlVariable(dependee)
             }
             
-            bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
+            bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
         }
     }
 }
