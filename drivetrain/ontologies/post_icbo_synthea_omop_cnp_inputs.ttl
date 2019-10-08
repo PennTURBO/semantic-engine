@@ -208,6 +208,8 @@ ontologies:post_icbo_synthea_omop_cnp_procedures
   ontologies:hasOutput ontologies:procProvSchemaAnnotation ;
   ontologies:hasOutput ontologies:procProvTableAnnotation ;
   ontologies:hasOutput ontologies:procProvColumnAnnotation ;
+  ontologies:hasOutput ontologies:procProvKeyColAnnotation ;
+  ontologies:hasOutput ontologies:procProvKeyValAnnotation ;
   ontologies:hasOutput ontologies:procProvValueAnnotation ;
   ontologies:hasOutput ontologies:provenanceAboutProcedure ;
   ontologies:hasOutput ontologies:symbolPartOfCrid ;

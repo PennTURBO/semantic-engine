@@ -375,6 +375,25 @@ ontologies:procProvColumnAnnotation
   ontologies:object ontologies:procedure_source_value ;
 .
 
+ontologies:procProvKeyColAnnotation
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+  ontologies:predicate ontologies:keycol ;
+#  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  ontologies:object ontologies:procedure_occurrence_id ;
+.
+
+ontologies:procProvKeyValAnnotation
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+  ontologies:predicate ontologies:keyVal ;
+#  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  ontologies:object ontologies:procedure_occurrence_id_IntegerLiteralValue ;
+.
+
+
 ontologies:procProvValueAnnotation
  a ontologies:DatatypeConnectionRecipe ;
  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
