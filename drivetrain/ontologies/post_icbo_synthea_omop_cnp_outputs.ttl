@@ -37,6 +37,39 @@ ontologies:cridDenotesPatient
   ontologies:object obo:NCBITaxon_9606 ;
 .
 
+ontologies:pkDenotesPatient
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+.
+
+ontologies:patPkSymbPartOfPk
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010271 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object ontologies:TURBO_0010134 ;
+.
+
+ontologies:patPkSymbHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010271 ;
+  ontologies:predicate <http://transformunify.org/ontologies/TURBO_0010094> ;
+  ontologies:object ontologies:person_id_IntegerLiteralValue ;
+.
+
+ontologies:hardcodedPatientSourceden a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:predicate <http://purl.obolibrary.org/obo/BFO_0000051> ;
+  ontologies:object ontologies:TURBO_0010396 ;
+.
+
 ontologies:dobAboutSns 
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -71,8 +104,8 @@ ontologies:GidToBeTyped
   a ontologies:MultiObjectDescriber ;
 .
 
-ontologies:gender_concept_id_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+ontologies:gender_concept_id_IntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
 .
 
 # represents/holds possible classes 
@@ -113,6 +146,7 @@ ontologies:patientBornOnSns
 
 ontologies:patientExpansionSpecification 
   a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject <http://api.stardog.com/person> ;
   ontologies:predicate ontologies:TURBO_0010113 ;
@@ -149,7 +183,7 @@ ontologies:encCridsymbHasRepresentation
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject obo:IAO_0000577 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:visit_occurrence_id_StringLiteralValue ;
+  ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
 .
 
 ontologies:encounterTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
@@ -208,6 +242,7 @@ ontologies:hardcodedRegden_octtr a ontologies:ObjectConnectionToTermRecipe ;
 
 ontologies:hceExpansionSpecification
   a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject <http://api.stardog.com/visit_occurrence> ;
   ontologies:predicate ontologies:TURBO_0010113 ;
@@ -269,8 +304,8 @@ ontologies:symbolPartOfCridForHce
   ontologies:object obo:IAO_0000578 ;
 .
 
-ontologies:visit_occurrence_id_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+ontologies:visit_occurrence_id_IntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
 .
 
 ontologies:visit_type_IntegerLiteralValue
@@ -286,7 +321,8 @@ ontologies:visit_type_IntegerLiteralValue
 
 ontologies:encounterRealizesRole
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
   ontologies:subject ontologies:encounterToBeTyped ;
   ontologies:predicate obo:BFO_0000055 ;
@@ -295,6 +331,7 @@ ontologies:encounterRealizesRole
 
 ontologies:patientHasRole
   a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
   ontologies:subject obo:NCBITaxon_9606 ;
@@ -302,8 +339,8 @@ ontologies:patientHasRole
   ontologies:object obo:OBI_0000093 ;
 .
 
-ontologies:person_id_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+ontologies:person_id_IntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
 .
 
 
@@ -354,8 +391,17 @@ ontologies:cridDenotesProcedure
   ontologies:object ontologies:procedureToBeTyped ;
 .
 
+ontologies:hardcodedProcedureRegden a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000578  ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:object ontologies:TURBO_0010255 ;
+.
+
 ontologies:procExpansionSpecification
   a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject <http://api.stardog.com/procedure_occurrence> ;
   ontologies:predicate ontologies:TURBO_0010113 ;
@@ -456,7 +502,7 @@ ontologies:symbolPartOfCrid
 
 
 ontologies:procedure_source_value_StringLiteralValue 
-  a ontologies:TurboGraphIntegerLiteralValue ;
+  a ontologies:TurboGraphStringLiteralValue ;
 .
 
 ontologies:procMentionedClassList
@@ -477,31 +523,34 @@ ontologies:procedure_visit_occurrence_id_IntegerLiteralValue
 
 ### procedure participation
 
-### procedure participation
-
 ontologies:procRealizesPatientRole
  a ontologies:ObjectConnectionToInstanceRecipe ;
  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
  ontologies:subject ontologies:procedureToBeTyped ;
  ontologies:predicate obo:BFO_0000055 ;
  ontologies:object obo:OBI_0000093 ;
+ 
+ ### procedure parthood
 .
 
-ontologies:procPartOfEnc
- a ontologies:ObjectConnectionToInstanceRecipe ;
- ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
- ontologies:subject ontologies:procedureToBeTyped ;
- ontologies:predicate obo:BFO_0000050 ;
- ontologies:object ontologies:encounterToBeTyped ;
-.
+# ontologies:procPartOfEnc
+ # a ontologies:ObjectConnectionToInstanceRecipe ;
+ # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+ # ontologies:subject ontologies:procedureToBeTyped ;
+ # ontologies:predicate obo:BFO_0000050 ;
+ # ontologies:object ontologies:encounterToBeTyped ;
+# .
+
+# ontologies:procPatientPlaceholder
+ # a ontologies:ObjectConnectionToInstanceRecipe ;
+ # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+ # ontologies:subject ontologies:procedureToBeTyped ;
+ # ontologies:predicate ontologies:placeholder ;
+ # ontologies:object obo:OBI_0000093 ;
+# .
 
 
 ###
-
-
-# # ontologies:procedure_person_id_IntegerLiteralValue 
-  # # a ontologies:TurboGraphIntegerLiteralValue ;
-# # .
 
 # # # ontologies:regdenPartOfCrid
   # # # a ontologies:ObjectConnectionToInstanceRecipe ;
