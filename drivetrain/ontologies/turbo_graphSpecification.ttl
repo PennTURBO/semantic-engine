@@ -886,6 +886,54 @@ ontologies:healthcareEncounterToPrescription
   ontologies:required ontologies:subjectRequired ;
   ontologies:subject obo:OGMS_0000097 ;
 .
+ontologies:provenanceDataItemToHealthcareEncounter
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object obo:OGMS_0000097 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:required ontologies:objectRequired ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+.
+ontologies:provenanceDataItemToDatabaseTerm
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:HealthcareEncounterDatabaseProvenanceTerm ;
+  ontologies:predicate ontologies:database ;
+  ontologies:required ontologies:objectRequired ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+.
+ontologies:provenanceDataItemToEncounterTypeCodeString
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:encounterTypeCodeLiteralValue ;
+  ontologies:predicate ontologies:colVal ;
+  ontologies:required ontologies:objectRequired ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+.
+ontologies:provenanceDataItemToSchemaTerm
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:HealthcareEncounterSchemaProvenanceTerm ;
+  ontologies:predicate ontologies:schema ;
+  ontologies:required ontologies:objectRequired ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+.
+ontologies:provenanceDataItemToTableTerm
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:HealthcareEncounterTableProvenanceTerm ;
+  ontologies:predicate ontologies:table ;
+  ontologies:required ontologies:objectRequired ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+.
+ontologies:provenanceDataItemToColumnTerm
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:HealthcareEncounterTypeCodeColumnTerm ;
+  ontologies:predicate ontologies:column ;
+  ontologies:required ontologies:objectRequired ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+.
 ontologies:homoSapiensIdToRegistryDenoter
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-singleton ;
