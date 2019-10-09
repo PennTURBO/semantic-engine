@@ -101,7 +101,7 @@ object OntologyLoader extends ProjectwideGlobals
         formatting: Map[String, RDFFormat] = Map(ontologyURL -> RDFFormat.RDFXML)) 
     {
         if (formatting.size > 1) throw new RuntimeException ("Formatting map size > 1, internal error occurred.")
-        logger.info("Adding ontology " + ontology)
+        logger.info("Adding ontology " + ontology )
         try
         {
 

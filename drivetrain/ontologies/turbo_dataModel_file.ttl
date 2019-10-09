@@ -68,6 +68,10 @@ ontologies:RaceIdentityTypeRule
   a ontologies:TurboGraphVariableManipulationLogic ;
   ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000098) AS ${replacement})" ;
 .
+ontologies:DatasetExpansionRule
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(str(${dependent}),\"${localUUID}\")))) AS ${replacement})" ;
+.
 ontologies:RxNormDrugTermMinusGroup
   a ontologies:TurboGraphMinusGroup ;
 .
@@ -217,7 +221,6 @@ pmbb:BiobankEncounterExpansionProcess
   ontologies:hasOutput ontologies:biobankEncounterToBMI ;
   ontologies:hasOutput ontologies:biobankEncounterToLengthMeasurementValueSpecification ;
   ontologies:hasOutput ontologies:biobankEncounterToMassMeasurementValueSpecification ;
-  ontologies:hasOutput ontologies:bmiToBiobankEncounterDate ;
   ontologies:hasOutput ontologies:bmiToBmiDoubleLiteralValue ;
   ontologies:hasOutput ontologies:bmiToDataset ;
   ontologies:hasOutput ontologies:datasetToBiobankEncounterDate ;
@@ -235,37 +238,29 @@ pmbb:BiobankEncounterExpansionProcess
   ontologies:hasOutput ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue ;
 .
 pmbb:HealthcareEncounterExpansionProcess
-  ontologies:buildsOptionalGroup ontologies:shortcutDiagnosisOptionalGroup ;
-  ontologies:buildsOptionalGroup ontologies:shortcutPrescriptionOptionalGroup ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:outputNamedGraph pmbb:expanded ;
-  ontologies:precedes pmbb:BiobankEncounterExpansionProcess ;
+  ontologies:precedes pmbb:DiagnosisExpansionProcess ;
+  ontologies:buildsOptionalGroup ontologies:encCodeTypeProvenanceOptionalGroup ;
   a ontologies:TURBO_0010178 ;
-  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToCodingSequence ;
-  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToDiagnosisCode ;
-  ontologies:hasOutput ontologies:shortcutDiagnosisToExpandedDiagnosis ;
-  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToPrimaryDiagnosisBooleanValue ;
-  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToRegistry ;
-  ontologies:hasRequiredInput ontologies:shortcutDiagnosisToRegistryString ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToBmiValue ;
   ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToDateStringValue ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToDateValue ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDiagnosis ;
   ontologies:hasOutput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
   ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToHeightValue ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToPrescription ;
   ontologies:hasOutput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_shortcut ;
   ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToSymbolValue ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToSystolicBloodPressureLiteralValue ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToDiastolicBloodPressureLiteralValue ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToWeightValue ;
-  ontologies:hasOptionalInput ontologies:shortcutPrescriptionToDrugTerm ;
-  ontologies:hasOutput ontologies:shortcutPrescriptionToExpandedPrescription ;
-  ontologies:hasOptionalInput ontologies:shortcutPrescriptionToMedicationOrderName ;
-  ontologies:hasRequiredInput ontologies:shortcutPrescriptionToSymbolValue ;
+  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToEncounterTypeCodeString ;
+  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatabase ;
+  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToEncTypeColumn ;
+  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToSchema ;
+  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToTable ;
   ontologies:hasOutput ontologies:DatasetToDiastolicBloodPressureMeasurementDatum ;
   ontologies:hasOutput ontologies:DatasetToSystolicBloodPressureMeasurementDatum ;
   ontologies:hasOutput ontologies:DiastolicBloodPressureMeasurementDatumToDataset ;
@@ -281,24 +276,12 @@ pmbb:HealthcareEncounterExpansionProcess
   ontologies:hasOutput ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum ;
   ontologies:hasOutput ontologies:bmiToBmiDoubleLiteralValue ;
   ontologies:hasOutput ontologies:bmiToDataset ;
-  ontologies:hasOutput ontologies:bmiToHealthcareEncounterDate ;
   ontologies:hasOutput ontologies:datasetToBmi ;
   ontologies:hasOutput ontologies:datasetToDatasetTitle ;
-  ontologies:hasOutput ontologies:datasetToDiagnosis ;
   ontologies:hasOutput ontologies:datasetToHealthcareEncounterDate ;
   ontologies:hasOutput ontologies:datasetToHealthcareEncounterSymbol ;
   ontologies:hasOutput ontologies:datasetToLengthMeasurementValueSpecification ;
   ontologies:hasOutput ontologies:datasetToMassMeasurementValueSpecification ;
-  ontologies:hasOutput ontologies:datasetToMedicationSymbol ;
-  ontologies:hasOutput ontologies:datasetToPrescription ;
-  ontologies:hasOutput ontologies:diagnosisToDataset ;
-  ontologies:hasOutput ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue ;
-  ontologies:hasOutput ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue ;
-  ontologies:hasOutput ontologies:diagnosisToDiagnosisRegistry ;
-  ontologies:hasOutput ontologies:diagnosisToDiagnosisRegistryStringLiteralValue ;
-  ontologies:hasOutput ontologies:diagnosisToIcdTerm ;
-  ontologies:hasOutput ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue ;
-  ontologies:hasOutput ontologies:diagnosisToSnomedTerm ;
   ontologies:hasOutput ontologies:healthcareEncounterDateToDataset ;
   ontologies:hasOutput ontologies:healthcareEncounterDateToDateLiteralValue ;
   ontologies:hasOutput ontologies:healthcareEncounterDateToHealthcareEncounterStart ;
@@ -312,13 +295,9 @@ pmbb:HealthcareEncounterExpansionProcess
   ontologies:hasOutput ontologies:healthcareEncounterSymbolToSymbolValue ;
   ontologies:hasOutput ontologies:healthcareEncounterToBMI ;
   ontologies:hasOutput ontologies:healthcareEncounterToBloodPressureMeasurementProcess ;
-  ontologies:hasOutput ontologies:healthcareEncounterToDiagnosis ;
   ontologies:hasOutput ontologies:healthcareEncounterToLengthMeasurementValueSpecification ;
   ontologies:hasOutput ontologies:healthcareEncounterToMassValueSpecification ;
-  ontologies:hasOutput ontologies:healthcareEncounterToPrescription ;
   ontologies:hasOutput ontologies:identifierToHealthcareEncounter ;
-  ontologies:hasOutput ontologies:identifierToMedicationSymbol ;
-  ontologies:hasOutput ontologies:identifierToPrescription ;
   ontologies:hasOutput ontologies:instantiationToDataset ;
   ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToCentimeter ;
   ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToDataset ;
@@ -326,13 +305,56 @@ pmbb:HealthcareEncounterExpansionProcess
   ontologies:hasOutput ontologies:massMeasurementValueSpecificationToDataset ;
   ontologies:hasOutput ontologies:massMeasurementValueSpecificationToKilogram ;
   ontologies:hasOutput ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue ;
+.
+pmbb:DiagnosisExpansionProcess
+  a turbo:TURBO_0010178 ;
+  turbo:precedes pmbb:MedicationExpansionProcess ;
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
+  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToCodingSequence ;
+  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToDiagnosisCode ;
+  ontologies:hasOutput ontologies:shortcutDiagnosisToExpandedDiagnosis ;
+  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToPrimaryDiagnosisBooleanValue ;
+  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToRegistry ;
+  ontologies:hasRequiredInput ontologies:shortcutDiagnosisToRegistryString ;
+  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDiagnosis ;
+  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
+  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;
+  ontologies:hasOutput ontologies:diagnosisToDataset ;
+  ontologies:hasOutput ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue ;
+  ontologies:hasOutput ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue ;
+  ontologies:hasOutput ontologies:diagnosisToDiagnosisRegistry ;
+  ontologies:hasOutput ontologies:diagnosisToDiagnosisRegistryStringLiteralValue ;
+  ontologies:hasOutput ontologies:diagnosisToIcdTerm ;
+  ontologies:hasOutput ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue ;
+  ontologies:hasOutput ontologies:diagnosisToSnomedTerm ;
+  ontologies:hasOutput ontologies:healthcareEncounterToDiagnosis ;
+  ontologies:hasOutput ontologies:datasetToDiagnosis ;
+. 
+pmbb:MedicationExpansionProcess
+  a turbo:TURBO_0010178 ;
+  turbo:precedes pmbb:BiobankEncounterExpansionProcess ;
+  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
+  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToPrescription ;
+  ontologies:hasOptionalInput ontologies:shortcutPrescriptionToDrugTerm ;
+  ontologies:hasOutput ontologies:shortcutPrescriptionToExpandedPrescription ;
+  ontologies:hasOptionalInput ontologies:shortcutPrescriptionToMedicationOrderName ;
+  ontologies:hasRequiredInput ontologies:shortcutPrescriptionToSymbolValue ;
+  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
+  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;
+  ontologies:hasOutput ontologies:datasetToMedicationSymbol ;
+  ontologies:hasOutput ontologies:datasetToPrescription ;
   ontologies:hasOutput ontologies:medicationSymbolToDataset ;
   ontologies:hasOutput ontologies:medicationSymbolToMedicationSymbolStringLiteralValue ;
   ontologies:hasOutput ontologies:medicationSymbolToidentifier ;
   ontologies:hasOutput ontologies:prescriptionToDataset ;
   ontologies:hasOutput ontologies:prescriptionToDrug ;
   ontologies:hasOutput ontologies:prescriptionToMedicationOrderNameStringLiteralValue ;
-.
+  ontologies:hasOutput ontologies:identifierToMedicationSymbol ;
+  ontologies:hasOutput ontologies:identifierToPrescription ;
+  ontologies:hasOutput ontologies:healthcareEncounterToPrescription ;
+.  
 pmbb:LossOfFunctionExpansionProcess
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:outputNamedGraph pmbb:expanded ;
@@ -440,6 +462,7 @@ ontologies:shortcutAlleleToDatasetTitle
   ontologies:predicate ontologies:TURBO_0007608 ;
   ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:TURBO_0010144 ;
+  ontologies:objectRequiredToCreate obo:IAO_0000100 ;
 .
 ontologies:shortcutAlleleToExpandedAllele
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -537,6 +560,7 @@ ontologies:shortcutBiobankEncounterToDatasetTitle
   ontologies:predicate ontologies:TURBO_0000623 ;
   ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:TURBO_0010169 ;
+  ontologies:objectRequiredToCreate obo:IAO_0000100 ;
 .
 ontologies:shortcutBiobankEncounterToDateLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
@@ -617,6 +641,9 @@ ontologies:shortcutBiobankEncounterToWeightLiteralValue
 ontologies:shortcutDiagnosisOptionalGroup
   a ontologies:TurboGraphOptionalGroup ;
 .
+ontologies:encCodeTypeProvenanceOptionalGroup
+  a ontologies:TurboGraphOptionalGroup ;
+.
 ontologies:shortcutDiagnosisToCodingSequence
   a ontologies:DatatypeConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutDiagnosisOptionalGroup ;
@@ -681,6 +708,51 @@ ontologies:shortcutHealthcareEncounterToBmiValue
   ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010158 ;
 .
+ontologies:shortcutHealthcareEncounterToEncounterTypeCodeString
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:encounterTypeCodeLiteralValue ;
+  ontologies:predicate ontologies:hcEncToEncTypeCode ;
+  ontologies:required ontologies:notRequired ;
+  ontologies:subject ontologies:TURBO_0010158 ;
+  obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
+.
+ontologies:shortcutHealthcareEncounterToDatabase
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:HealthcareEncounterDatabaseProvenanceTerm ;
+  ontologies:predicate ontologies:hcEncToDatabase ;
+  ontologies:required ontologies:notRequired ;
+  ontologies:subject ontologies:TURBO_0010158 ;
+  obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
+.
+ontologies:shortcutHealthcareEncounterToEncTypeColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:HealthcareEncounterTypeCodeColumnTerm ;
+  ontologies:predicate ontologies:hcEncToEncTypeCodeColumnn ;
+  ontologies:required ontologies:notRequired ;
+  ontologies:subject ontologies:TURBO_0010158 ;
+  obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
+.
+ontologies:shortcutHealthcareEncounterToSchema
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:HealthcareEncounterSchemaProvenanceTerm ;
+  ontologies:predicate ontologies:hcEncToSchema ;
+  ontologies:required ontologies:notRequired ;
+  ontologies:subject ontologies:TURBO_0010158 ;
+  obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
+.
+ontologies:shortcutHealthcareEncounterToTable
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:HealthcareEncounterTableProvenanceTerm ;
+  ontologies:predicate ontologies:hcEncToTable ;
+  ontologies:required ontologies:notRequired ;
+  ontologies:subject ontologies:TURBO_0010158 ;
+  obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
+.
 ontologies:shortcutHealthcareEncounterToDatasetTitle
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -688,6 +760,7 @@ ontologies:shortcutHealthcareEncounterToDatasetTitle
   ontologies:predicate ontologies:TURBO_0000643 ;
   ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:TURBO_0010158 ;
+  ontologies:objectRequiredToCreate obo:IAO_0000100 ;
 .
 ontologies:shortcutHealthcareEncounterToDateStringValue
   a ontologies:DatatypeConnectionRecipe ;
@@ -842,6 +915,7 @@ ontologies:shortcutHomoSapiensToDatasetTitle
   ontologies:predicate ontologies:TURBO_0010084 ;
   ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:TURBO_0010168 ;
+  ontologies:objectRequiredToCreate obo:IAO_0000100 ;
 .
 ontologies:shortcutHomoSapiensToDateOfBirthDate
   a ontologies:DatatypeConnectionRecipe ;
@@ -1015,4 +1089,7 @@ ontologies:IcdTermOfVariousTypes
 .
 ontologies:SnomedTermOfVariousTypes 
   ontologies:usesCustomVariableManipulationRule ontologies:SnomedDiagnosisRegistryRule ;
+.
+obo:IAO_0000100
+  ontologies:usesCustomVariableManipulationRule ontologies:DatasetExpansionRule ;
 .

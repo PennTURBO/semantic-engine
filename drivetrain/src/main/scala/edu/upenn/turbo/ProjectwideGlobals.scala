@@ -30,8 +30,8 @@ trait ProjectwideGlobals extends Enumeration
     var testRepository: Repository = null
 
      //properties from file are global variables
-     val serviceURL = helper.retrievePropertyFromFile("serviceURL")
-     val ontologyURL = helper.retrievePropertyFromFile("ontologyURL")
+     val serviceURL = helper.retrieveUriPropertyFromFile("serviceURL")
+     val ontologyURL = helper.retrieveUriPropertyFromFile("ontologyURL")
      val productionRepository = helper.retrievePropertyFromFile("productionRepository")
      val inputFiles = helper.retrievePropertyFromFile("inputFiles")
      val inputFilesNamedGraphs = helper.retrievePropertyFromFile("inputFilesNamedGraphs")
@@ -39,13 +39,14 @@ trait ProjectwideGlobals extends Enumeration
      val importOntologies = helper.retrievePropertyFromFile("importOntologies")
      val testingRepository = helper.retrievePropertyFromFile("testingRepository")
      val modelRepository = helper.retrievePropertyFromFile("modelRepository")
-     val processNamedGraph = helper.retrievePropertyFromFile("processNamedGraph").replace("\"","")
+     val processNamedGraph = helper.retrieveUriPropertyFromFile("processNamedGraph").replace("\"","")
      val bioportalApiKey = helper.retrievePropertyFromFile("bioportalApiKey")
      val reinferRepo = getBooleanProperty("reinferRepo")
      val loadAdditionalOntologies = getBooleanProperty("loadAdditionalOntologies")
      val graphModelFile = helper.retrievePropertyFromFile("graphModelFile")
      val graphSpecificationFile = helper.retrievePropertyFromFile("graphSpecificationFile")
-     val dataValidationMode = helper.retrievePropertyFromFile("dataValidationMode").toLowerCase()
+     var dataValidationMode = helper.retrievePropertyFromFile("dataValidationMode").toLowerCase()
+     val defaultPrefix = helper.retrieveUriPropertyFromFile("defaultPrefix")
      
      def getBooleanProperty(property: String): Boolean =
      {

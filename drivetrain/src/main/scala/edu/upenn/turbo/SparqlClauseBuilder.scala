@@ -35,13 +35,11 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
             if (graphForThisRow != defaultInputGraph) nonDefaultGraphTriples += rowResult
             else makeNewTripleFromRowResult(rowResult, defaultInputGraph)
-            
         }
         for (row <- nonDefaultGraphTriples) makeNewTripleFromRowResult(row, defaultInputGraph)
-          
-        var valuesBlockAsString = ""
-        for ((k,v) <- valuesBlock) valuesBlockAsString += v+"\n"
-        clause = valuesBlockAsString + triplesGroup.buildWhereClauseFromTriplesGroup()
+        
+        triplesGroup.setValuesBlock(valuesBlock)
+        clause = triplesGroup.buildWhereClauseFromTriplesGroup()
         varsForProcessInput
     }
     
@@ -292,6 +290,11 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (row(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
             if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
             
+            val subjectCustomRule = row(SUBJECTRULE.toString)
+            val objectCustomRule = row (OBJECTRULE.toString)
+            if (subjectCustomRule != null) populateDependenciesAndCustomRuleList(subjectString, subjectCustomRule, row(SUBJECTDEPENDEE.toString))
+            if (objectCustomRule != null) populateDependenciesAndCustomRuleList(objectString, objectCustomRule, row(OBJECTDEPENDEE.toString))
+            
             val discoveryCode = subjectString + objectString
             
             if (discoveredMap.contains(discoveryCode)) assert(discoveredMap(discoveryCode) == row(MULTIPLICITY.toString).toString, s"Error in graph model: There are multiple connections between $subjectString and $objectString with non-matching multiplicities")
@@ -304,7 +307,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") 
                 {
                     handleOneToOneConnection(subjectString, objectString, outputOneToOneConnections)
-                    populateDependenciesAndCustomRuleList(row, subjectString, objectString)
+                    populateDependenciesAndCustomRuleList(subjectString, subjectCustomRule, row(SUBJECTDEPENDEE.toString))
+                    populateDependenciesAndCustomRuleList(objectString, objectCustomRule, row(OBJECTDEPENDEE.toString))
                 }
                 else if (thisMultiplicity == "http://transformunify.org/ontologies/many-singleton")
                 {
@@ -313,6 +317,14 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-many")
                 {
                     outputSingletonClasses += subjectString
+                }
+                else if (thisMultiplicity == "http://transformunify.org/ontologies/superSingleton-many")
+                {
+                    outputSuperSingletonClasses += subjectString
+                }
+                else if (thisMultiplicity == "http://transformunify.org/ontologies/many-superSingleton")
+                {
+                    outputSuperSingletonClasses += objectString
                 }
                   else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-singleton")
                 {
@@ -405,29 +417,15 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
     }
     
-    def populateDependenciesAndCustomRuleList(row: HashMap[String, org.eclipse.rdf4j.model.Value], thisSubject: String, thisObject: String)
+    def populateDependenciesAndCustomRuleList(node: String, customRule: org.eclipse.rdf4j.model.Value, dependent: org.eclipse.rdf4j.model.Value)
     {        
-        val specialSubjectRule = row(SUBJECTRULE.toString)
-        val specialObjectRule = row(OBJECTRULE.toString)
-        
-        val subjectDependent = row(SUBJECTDEPENDEE.toString)
-        val objectDependent = row(OBJECTDEPENDEE.toString)
-        
-        if (!currentGroups.contains(thisSubject)) currentGroups += thisSubject -> HashMap("customRule" -> specialSubjectRule, "dependee" -> subjectDependent)
+        if (!currentGroups.contains(node)) currentGroups += node -> HashMap("customRule" -> customRule, "dependee" -> dependent)
         else 
         {
-            if (currentGroups(thisSubject)("dependee") != null && subjectDependent != null) assert (currentGroups(thisSubject)("dependee") == subjectDependent)
-            if (currentGroups(thisSubject)("customRule") != null && specialSubjectRule != null) assert (currentGroups(thisSubject)("customRule") == specialSubjectRule)
-            if (currentGroups(thisSubject)("dependee") == null) currentGroups(thisSubject)("dependee") = subjectDependent
-            if (currentGroups(thisSubject)("customRule") == null) currentGroups(thisSubject)("customRule") = specialSubjectRule
-        }
-        if (!currentGroups.contains(thisObject)) currentGroups += thisObject -> HashMap("customRule" -> specialObjectRule, "dependee" -> objectDependent)
-        else 
-        {
-            if (currentGroups(thisObject)("dependee") != null && objectDependent != null) assert (currentGroups(thisObject)("dependee") == objectDependent)
-            if (currentGroups(thisObject)("customRule") != null && specialObjectRule != null) assert (currentGroups(thisObject)("customRule") == specialObjectRule)
-            if (currentGroups(thisObject)("dependee") == null) currentGroups(thisObject)("dependee") = objectDependent
-            if (currentGroups(thisObject)("customRule") == null) currentGroups(thisObject)("customRule") = specialObjectRule
+            if (currentGroups(node)("dependee") != null && dependent != null) assert (currentGroups(node)("dependee") == dependent)
+            if (currentGroups(node)("customRule") != null && customRule != null) assert (currentGroups(node)("customRule") == customRule)
+            if (currentGroups(node)("dependee") == null) currentGroups(node)("dependee") = dependent
+            if (currentGroups(node)("customRule") == null) currentGroups(node)("customRule") = customRule
         }
     }
     
@@ -528,7 +526,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (!(usedVariables.contains(singleton)))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
-                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
+                bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
             }
         }
         for (singleton <- outputSuperSingletonClasses)
@@ -536,7 +534,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (!(usedVariables.contains(singleton)))
             {
                 val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
-                bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\")))) AS ${singletonAsVar})\n"""
+                bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\")))) AS ${singletonAsVar})\n"""
             }
         }
     }
@@ -596,7 +594,15 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         {
             if (!(usedVariables.contains(k)))
             {
-                val multiplicityEnforcer = getMultiplicityEnforcer(k)
+                var multiplicityEnforcer = ""
+                // if object uses custom rule which does not require multiplicityEnforcer, bypass search step
+                if (currentGroups(k)("customRule") == null || 
+                    (currentGroups(k)("customRule") != null && 
+                        (currentGroups(k)("customRule").toString().
+                            contains("multiplicityEnforcer"))))
+                {
+                    multiplicityEnforcer = getMultiplicityEnforcer(k)
+                }
                 val connAsVar = helper.convertTypeToSparqlVariable(k)
                 addBindRule(v, localUUID, multiplicityEnforcer, connAsVar)
                 multiplicityCreators.remove(k)
@@ -652,7 +658,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(multiplicityEnforcer)
             }
     
-            bindRules += s"""BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""   
+            bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""   
         }
     }
     
@@ -676,7 +682,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 dependeeAsVar = helper.convertTypeToSparqlVariable(dependee)
             }
             
-            bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
+            bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
         }
     }
 }

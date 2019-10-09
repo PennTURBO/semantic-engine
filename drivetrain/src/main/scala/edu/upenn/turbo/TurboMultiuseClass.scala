@@ -54,7 +54,8 @@ class TurboMultiuseClass extends Enumeration
 			"""
     val logger = LoggerFactory.getLogger(getClass)
     val updater: SparqlUpdater = new SparqlUpdater
-    def ontologyURL = retrievePropertyFromFile("ontologyURL")
+    def ontologyURL = retrieveUriPropertyFromFile("ontologyURL")
+    def defaultPrefix = retrieveUriPropertyFromFile("defaultPrefix")
     
     /**
      * Deletes all triples in the entire database, including all named graphs.
@@ -78,6 +79,11 @@ class TurboMultiuseClass extends Enumeration
          updater.updateSparql(cxn, deleteAll)
      }
     
+    def genTurboIRI(): String =
+    {
+        defaultPrefix + UUID.randomUUID().toString().replaceAll("-", "")
+    }
+    
     /**
      * Parse string URI of input to remove the prefix. It's mostly meant for URI's which are composed of a prefix and then a UUID. If there are '/' characters
      * in the input that are not part of the prefix, this method may not work as expected.
@@ -93,62 +99,6 @@ class TurboMultiuseClass extends Enumeration
             if (someObject.charAt(i) == '/') uuidOfSomeObject = ""
         }
         uuidOfSomeObject
-    }
-    
-    /**
-     * Overloaded method to generate a random UUID with the TURBO prefix. Overload accepts RepositoryConnection object as input.
-     * 
-     * @return an IRI with a new and unique TURBO URI
-     */
-    def genTurboIRI(cxn: RepositoryConnection): IRI =
-    {
-        val f: ValueFactory = cxn.getValueFactory()
-        val newIRI: String = "http://transformunify.org/ontologies/" + UUID.randomUUID().toString().replaceAll("-", "")
-        f.createIRI(newIRI)
-    }
-    
-    /**
-     * Overloaded method to generate a random UUID with the TURBO prefix. Overload accepts ValueFactory object as input.
-     * 
-     * @return an IRI with a new and unique TURBO URI
-     */
-    def genTurboIRI(f: ValueFactory): IRI =
-    {
-        val newIRI: String = "http://transformunify.org/ontologies/" + UUID.randomUUID().toString().replaceAll("-", "")
-        f.createIRI(newIRI)
-    }
-    
-    /**
-     * Overloaded method to generate a random UUID with the PMBB prefix. No database connection necessary because no conversion to IRI is executed.
-     * 
-     * @return a String with a new and unique PMBB URI
-     */
-    def genPmbbIRI(): String =
-    {
-        "http://transformunify.org/ontologies/" + UUID.randomUUID().toString().replaceAll("-", "")
-    }
-    
-    /**
-     * Overloaded method to generate a random UUID with the PMBB prefix. Overload accepts RepositoryConnection object as input.
-     * 
-     * @return an IRI with a new and unique PMBB URI
-     */
-    def genPmbbIRI(cxn: RepositoryConnection): IRI =
-    {
-        val f: ValueFactory = cxn.getValueFactory()
-        val newIRI: String = "http://www.itmat.upenn.edu/biobank/" + UUID.randomUUID().toString().replaceAll("-", "")
-        f.createIRI(newIRI)
-    }
-    
-    /**
-     * Overloaded method to generate a random UUID with the PMBB prefix. Overload accepts RepositoryConnection object as input.
-     * 
-     * @return an IRI with a new and unique PMBB URI
-     */
-    def genPmbbIRI(f: ValueFactory): IRI =
-    {
-        val newIRI: String = "http://www.itmat.upenn.edu/biobank/" + UUID.randomUUID().toString().replaceAll("-", "")
-        f.createIRI(newIRI)
     }
     
     /**
@@ -543,6 +493,14 @@ class TurboMultiuseClass extends Enumeration
          props.getProperty(propertyID)
      }
     
+    def retrieveUriPropertyFromFile(propertyID: String, file: String = "..//turbo_properties.properties"): String =
+    {
+        var property = retrievePropertyFromFile(propertyID, file)
+        assert (property.contains("/") && property.contains(".") && (property.contains("http") || property.contains("www")), s"Invalid URI for property $propertyID")
+        if (propertyID == "defaultPrefix" && !property.endsWith("/")) property += "/"
+        property
+    }
+    
     /**
      * Creates an MD5 representation of a given input string. This is guaranteed to be unique to that string.
      * 
@@ -616,15 +574,18 @@ class TurboMultiuseClass extends Enumeration
     {
         val graphVar = "g"
         var filterClause = "filter "
-        if (graphsPrefix.charAt(graphsPrefix.size-1) == '_') filterClause += s"(strStarts(str(?$graphVar), str(<$graphsPrefix>)))"
-        else filterClause += s"(?$graphVar = <$graphsPrefix>)"
-        val getGraphs: String = s"""
-        select distinct ?$graphVar
-        Where { GRAPH ?$graphVar { ?s ?p ?o . }
-        $filterClause
-        }"""
-        //println(getGraphs)
-        updater.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
+        if (graphsPrefix.charAt(graphsPrefix.size-1) == '_') 
+        {
+            filterClause += s"(strStarts(str(?$graphVar), str(<$graphsPrefix>)))"
+            val getGraphs: String = s"""
+            select distinct ?$graphVar
+            Where { GRAPH ?$graphVar { ?s ?p ?o . }
+            $filterClause
+            }"""
+            //println(getGraphs)
+            updater.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
+        }
+        else ArrayBuffer(graphsPrefix)
     }
     
     //These 2 globals are associated with the two methods below

@@ -48,7 +48,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -76,7 +76,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -105,7 +105,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -134,7 +134,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -162,7 +162,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -186,7 +186,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -214,7 +214,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -241,7 +241,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -274,7 +274,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -308,7 +308,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -341,7 +341,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -368,7 +368,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -395,7 +395,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -422,7 +422,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -448,7 +448,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -475,7 +475,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -503,7 +503,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", "stop")
             assert (1==2)
         }
         catch
@@ -531,7 +531,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         try
         {
-            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", "stop")
             assert (1==2)
         }
         catch

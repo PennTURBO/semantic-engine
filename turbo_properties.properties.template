@@ -8,7 +8,8 @@ modelRepository = Haydens_graph_model
 
 importOntologies = true
 ontologyURL = https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl
-processNamedGraph = "http://www.itmat.upenn.edu/biobank/processes"
+defaultPrefix = http://www.itmat.upenn.edu/biobank/
+processNamedGraph = http://www.itmat.upenn.edu/biobank/processes
 
 graphModelFile = turbo_dataModel_file.ttl
 graphSpecificationFile = turbo_graphSpecification.ttl
