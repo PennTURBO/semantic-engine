@@ -39,6 +39,7 @@ ontologies:cridDenotesPatient
 
 ontologies:pkDenotesPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010134 ;
@@ -48,6 +49,7 @@ ontologies:pkDenotesPatient
 
 ontologies:patPkSymbPartOfPk
   a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject ontologies:TURBO_0010271 ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -56,6 +58,7 @@ ontologies:patPkSymbPartOfPk
 
 ontologies:patPkSymbHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject ontologies:TURBO_0010271 ;
   ontologies:predicate <http://transformunify.org/ontologies/TURBO_0010094> ;
@@ -64,6 +67,7 @@ ontologies:patPkSymbHasRepresentation
 
 ontologies:hardcodedPatientSourceden a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010134 ;
   ontologies:predicate <http://purl.obolibrary.org/obo/BFO_0000051> ;
@@ -92,6 +96,7 @@ ontologies:birth_datetime_DateLiteralValue
 .
 
 ontologies:gidTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
   ontologies:subject ontologies:GidToBeTyped  ;
@@ -165,8 +170,48 @@ ontologies:symbolPartOfCridForPatient
 ### encounters
 
 
+ontologies:pkDenotesHce
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:object ontologies:encounterToBeTyped ;
+.
+
+ontologies:HcePkSymbPartOfPk
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010271 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object ontologies:TURBO_0010134 ;
+.
+
+ontologies:HcePkSymbHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010271 ;
+  ontologies:predicate <http://transformunify.org/ontologies/TURBO_0010094> ;
+  ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
+.
+
+ontologies:hardcodedHceSourceden a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:predicate <http://purl.obolibrary.org/obo/BFO_0000051> ;
+  ontologies:object ontologies:TURBO_0010269 ;
+.
+
+
+
 ontologies:cridDenotesHce
   a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject obo:IAO_0000578 ;
   ontologies:predicate obo:IAO_0000219 ;
@@ -180,13 +225,15 @@ ontologies:encounterToBeTyped
 
 ontologies:encCridsymbHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject obo:IAO_0000577 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
+  ontologies:object ontologies:visit_source_value_StringLiteralValue ;
 .
 
 ontologies:encounterTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
   ontologies:subject ontologies:encounterToBeTyped  ;
@@ -232,7 +279,8 @@ ontologies:visit_end_date_DateLiteralValue
   a ontologies:TurboGraphDateLiteralValue ;
  .
 
-ontologies:hardcodedRegden_octtr a ontologies:ObjectConnectionToTermRecipe ;
+ontologies:hardcodedRegden a ontologies:ObjectConnectionToTermRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000578  ;
@@ -304,6 +352,10 @@ ontologies:symbolPartOfCridForHce
   ontologies:object obo:IAO_0000578 ;
 .
 
+ontologies:visit_source_value_StringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+
 ontologies:visit_occurrence_id_IntegerLiteralValue
   a ontologies:TurboGraphIntegerLiteralValue ;
 .
@@ -347,6 +399,7 @@ ontologies:person_id_IntegerLiteralValue
 ### procedures
 
 ontologies:procedureTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
   ontologies:subject ontologies:procedureToBeTyped  ;
@@ -533,13 +586,13 @@ ontologies:procRealizesPatientRole
  ### procedure parthood
 .
 
-# ontologies:procPartOfEnc
- # a ontologies:ObjectConnectionToInstanceRecipe ;
- # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
- # ontologies:subject ontologies:procedureToBeTyped ;
- # ontologies:predicate obo:BFO_0000050 ;
- # ontologies:object ontologies:encounterToBeTyped ;
-# .
+ontologies:procPartOfEnc
+ a ontologies:ObjectConnectionToInstanceRecipe ;
+ ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+ ontologies:subject ontologies:procedureToBeTyped ;
+ ontologies:predicate obo:BFO_0000050 ;
+ ontologies:object ontologies:encounterToBeTyped ;
+.
 
 # ontologies:procPatientPlaceholder
  # a ontologies:ObjectConnectionToInstanceRecipe ;

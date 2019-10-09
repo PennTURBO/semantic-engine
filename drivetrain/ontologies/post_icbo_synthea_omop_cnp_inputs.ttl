@@ -103,23 +103,36 @@ ontologies:post_icbo_synthea_omop_cnp_encounters
   ontologies:hasOutput ontologies:encounterTypingRecipe ;
   ontologies:hasOutput ontologies:endingTmdAboutProcbound ;
   ontologies:hasOutput ontologies:endingTmdHasMeasVal ;
-  ontologies:hasOutput ontologies:hardcodedRegden_octtr ;
+  ontologies:hasOutput ontologies:hardcodedRegden ;
   ontologies:hasOutput ontologies:hceExpansionSpecification ;
   ontologies:hasOutput ontologies:procboundEndsEnc ;
   ontologies:hasOutput ontologies:procboundStartsEnc ;
   ontologies:hasOutput ontologies:startingTmdAboutProcbound ;
   ontologies:hasOutput ontologies:startingTmdHasMeasVal ;
   ontologies:hasOutput ontologies:symbolPartOfCridForHce ;
+  ontologies:hasOutput ontologies:pkDenotesHce ;
+  ontologies:hasOutput ontologies:HcePkSymbPartOfPk ;
+  ontologies:hasOutput ontologies:HcePkSymbHasRepresentation ;
+  ontologies:hasOutput ontologies:hardcodedHceSourceden ;
   ontologies:hasRequiredInput ontologies:HceCridsymShortcut ;
   ontologies:hasRequiredInput ontologies:HceEnddateShortcut ;
   ontologies:hasRequiredInput ontologies:HceStartdateShortcut ;
   ontologies:hasRequiredInput ontologies:HceTypeShortcut ;
+  ontologies:hasRequiredInput ontologies:HcePksymShortcut ;
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_enc_participation ;
 .
 
 ontologies:HceCridsymShortcut 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject <http://api.stardog.com/visit_occurrence> ;
+  ontologies:predicate <http://api.stardog.com/visit_occurrence#visit_source_value> ;
+  ontologies:object ontologies:visit_source_value_StringLiteralValue ;
+.
+
+ontologies:HcePksymShortcut 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject <http://api.stardog.com/visit_occurrence> ;
@@ -325,20 +338,18 @@ ontologies:procMentionedClassList
 ontologies:post_icbo_synthea_omop_cnp_procedure_participation
   a ontologies:TURBO_0010178 ;
   ontologies:hasRequiredInput ontologies:procedurePatientShortcut ;
-  ontologies:hasRequiredInput ontologies:procExpansionInput ;
-  #
+  ontologies:hasRequiredInput ontologies:procExpansionSpecification ;
   ontologies:hasRequiredInput ontologies:procedureTypingRecipe ;
-  #
-  ontologies:hasRequiredInput ontologies:PatientPkInp ;
-  ontologies:hasRequiredInput ontologies:patientExpansionInput ;
-  ontologies:hasRequiredInput ontologies:patientHasRoleInp ;
+  ontologies:hasRequiredInput ontologies:patientExpansionSpecification ;
+  ontologies:hasRequiredInput ontologies:patientHasRole ;
+  ontologies:hasRequiredInput ontologies:pkDenotesPatient ;
+  ontologies:hasRequiredInput ontologies:patPkSymbPartOfPk ;
+  ontologies:hasRequiredInput ontologies:patPkSymbHasRepresentation ;
+  ontologies:hasRequiredInput ontologies:hardcodedPatientSourceden ;
   ontologies:hasOutput ontologies:procRealizesPatientRole ;
-  #
-  # ontologies:hasOutput ontologies:procPatientPlaceholder ;
-  #
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
-  # ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_procedure_parthood ;
+  ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_procedure_parthood ;
 .
 
 ontologies:procedurePatientShortcut 
@@ -350,54 +361,37 @@ ontologies:procedurePatientShortcut
   ontologies:object ontologies:person_id_IntegerLiteralValue ;
 .
 
-ontologies:procExpansionInput
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  turbo:referencedInGraph ontologies:omopExpanded ;
+ontologies:post_icbo_synthea_omop_cnp_procedure_parthood
+  a ontologies:TURBO_0010178 ;
+  ontologies:hasRequiredInput ontologies:procedureEncounterShortcut ;
+  ontologies:hasRequiredInput ontologies:procExpansionSpecification ;
+  ontologies:hasRequiredInput ontologies:procedureTypingRecipe ;
+  ontologies:hasRequiredInput ontologies:hceExpansionSpecification ;
+  ontologies:hasRequiredInput ontologies:encounterTypingRecipe ;
+  
+  # ontologies:hasRequiredInput ontologies:cridDenotesHce ;
+  # ontologies:hasRequiredInput ontologies:encCridsymbHasRepresentation ;
+  # ontologies:hasRequiredInput ontologies:hardcodedRegden ;
+  # ontologies:hasRequiredInput ontologies:symbolPartOfCridForHce ;
+  
+  ontologies:hasRequiredInput ontologies:pkDenotesHce ;
+  ontologies:hasRequiredInput ontologies:HcePkSymbPartOfPk ;
+  ontologies:hasRequiredInput ontologies:HcePkSymbHasRepresentation ;
+  ontologies:hasRequiredInput ontologies:hardcodedHceSourceden ;
+
+  ontologies:inputNamedGraph ontologies:omopShortcuts ;
+  ontologies:outputNamedGraph ontologies:omopExpanded ;
+  ontologies:hasRequiredInput ontologies:procExpansionInput ;
+  ontologies:hasOutput ontologies:procPartOfEnc ;
+.
+
+ontologies:procedureEncounterShortcut 
+  a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject <http://api.stardog.com/procedure_occurrence> ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object ontologies:procedureToBeTyped ;
+  ontologies:predicate <http://api.stardog.com/procedure_occurrence#visit_occurrence_id> ;
+  ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
 .
-
-ontologies:patientExpansionInput
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  turbo:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject <http://api.stardog.com/person> ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-.
-
-ontologies:patientHasRoleInp
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  turbo:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:RO_0000087 ;
-  ontologies:object obo:OBI_0000093 ;
-.
-
-# ontologies:post_icbo_synthea_omop_cnp_procedure_parthood
-  # a ontologies:TURBO_0010178 ;
-  # ontologies:hasRequiredInput ontologies:procedureTypingRecipe ;
-  # ontologies:inputNamedGraph ontologies:omopShortcuts ;
-  # ontologies:hasRequiredInput ontologies:HceCridsymShortcut ;
-  # ontologies:hasRequiredInput ontologies:encounterTypingRecipe ;
-  # ontologies:hasRequiredInput ontologies:EncounterExpansionInp ;
-  # ontologies:outputNamedGraph ontologies:omopExpanded ;
-  # ontologies:hasRequiredInput ontologies:procedureEncounterShortcut ;
-  # ontologies:hasRequiredInput ontologies:procExpansionInput ;
-  # ontologies:hasOutput ontologies:procPartOfEnc ;
-# .
-
-# ontologies:procedureEncounterShortcut 
-  # a ontologies:DatatypeConnectionRecipe ;
-  # # ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:subject <http://api.stardog.com/procedure_occurrence> ;
-  # ontologies:predicate <http://api.stardog.com/procedure_occurrence#visit_occurrence_id> ;
-  # ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
-# .
 
 
 ###
@@ -462,7 +456,7 @@ ontologies:patientHasRoleInp
   # # # ontologies:object ontologies:allowedEncounterRegdenList ;
 # # # .
 
-# ###
+###
 
 # run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_encounters
 # run            http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_encounters
