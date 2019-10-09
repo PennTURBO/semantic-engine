@@ -201,6 +201,7 @@ ontologies:miniPatientPkShortcut
 
 ontologies:post_icbo_synthea_omop_cnp_procedures
   a ontologies:TURBO_0010178 ;
+  ontologies:hasOutput ontologies:procedureTypingRecipe ;
   ontologies:hasOutput ontologies:procCridsymbHasRepresentation ;
   ontologies:hasOutput ontologies:cridDenotesProcedure ;
   ontologies:hasOutput ontologies:procExpansionSpecification ;
@@ -221,6 +222,19 @@ ontologies:post_icbo_synthea_omop_cnp_procedures
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_procedure_participation ;
 .
 
+ontologies:procedureClassList ontologies:usesCustomVariableManipulationRule ontologies:procClassFromValueRule .
+
+ontologies:procClassFromValueRule
+  a ontologies:TurboGraphVariableManipulationLogic ;
+  ontologies:usesSparql """
+  BIND(IF (${dependent} = "76601001", obo:OBI_0000934, ?unbound) AS ?imInjClass) 
+  BIND(IF (${dependent} = "5880005", obo:OGMS_0000057, ?unbound) AS ?physExamClass) 
+  bind(coalesce(?imInjClass, ?physExamClass, obo:OGMS_0000096) as ${replacement})
+"""  ;
+.
+
+# ontologies:objectRequiredToCreate
+
 ontologies:procedureCridsymShortcut 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -236,6 +250,7 @@ ontologies:procedureSourceValueShortcut
   ontologies:predicate <http://api.stardog.com/procedure_occurrence#procedure_source_value> ;
   ontologies:object ontologies:procedure_source_value_StringLiteralValue ;
   ontologies:objectRequiredToCreate ontologies:procMentionedClassList ;
+  ontologies:objectRequiredToCreate ontologies:procedureClassList ;
 .
 
 ontologies:procMentionedClassFromValueRule
@@ -248,12 +263,11 @@ ontologies:procMentionedClassFromValueRule
 ontologies:procMentionedClassList 
   ontologies:usesCustomVariableManipulationRule ontologies:procMentionedClassFromValueRule .
 
-
-
-# ### procedure participation
+### procedure participation
 
 ontologies:post_icbo_synthea_omop_cnp_procedure_participation
   a ontologies:TURBO_0010178 ;
+  ontologies:hasRequiredInput ontologies:procedureTypingRecipe ;
   ontologies:hasRequiredInput ontologies:procedurePatientShortcut ;
   ontologies:hasRequiredInput ontologies:procExpansionInput ;
   ontologies:hasRequiredInput ontologies:miniPatientPkShortcut ;
@@ -267,6 +281,7 @@ ontologies:post_icbo_synthea_omop_cnp_procedure_participation
 
 ontologies:post_icbo_synthea_omop_cnp_procedure_parthood
   a ontologies:TURBO_0010178 ;
+  ontologies:hasRequiredInput ontologies:procedureTypingRecipe ;
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:hasRequiredInput ontologies:miniHceCridsymShortcut ;
   ontologies:hasRequiredInput ontologies:encounterTypingRecipe ;
@@ -274,7 +289,7 @@ ontologies:post_icbo_synthea_omop_cnp_procedure_parthood
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:hasRequiredInput ontologies:procedureEncounterShortcut ;
   ontologies:hasRequiredInput ontologies:procExpansionInput ;
-  ontologies:hasOutput ontologies:procEncounterPlaceholder ;
+  ontologies:hasOutput ontologies:procPartOfEnc ;
 .
 
 ontologies:procedureEncounterShortcut 
@@ -302,7 +317,7 @@ ontologies:procExpansionInput
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject <http://api.stardog.com/procedure_occurrence> ;
   ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object obo:OGMS_0000096 ;
+  ontologies:object ontologies:procedureToBeTyped ;
 .
 
 ontologies:patientExpansionInput
@@ -324,7 +339,7 @@ ontologies:patientHasRoleInp
 .
 
 
-# ###
+###
 
 
 # # # ontologies:GidHasOmopCode

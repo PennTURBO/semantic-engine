@@ -309,6 +309,31 @@ ontologies:person_id_StringLiteralValue
 
 ### procedures
 
+ontologies:procedureTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:procedureToBeTyped  ;
+  ontologies:predicate rdf:type ;
+  ontologies:object ontologies:procedureClassList ;
+.
+
+# represents/holds possible classes 
+ontologies:procedureClassList
+  a ontologies:MultiObjectDescriber ;
+  # im inj 4295880
+  ontologies:range obo:OBI_0000934 ;
+  # physical exam 4240345
+  ontologies:range obo:OGMS_0000057 ;
+  # generic health care process
+  ontologies:range obo:OGMS_0000096 ;
+.
+
+# represents individual that is being typed
+ontologies:procedureToBeTyped 
+  a ontologies:MultiObjectDescriber ;
+.
+
+
 ontologies:procCridsymbHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -326,7 +351,7 @@ ontologies:cridDenotesProcedure
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject obo:IAO_0000578 ;
   ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object obo:OGMS_0000096 ;
+  ontologies:object ontologies:procedureToBeTyped ;
 .
 
 ontologies:procExpansionSpecification
@@ -334,7 +359,7 @@ ontologies:procExpansionSpecification
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject <http://api.stardog.com/procedure_occurrence> ;
   ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object obo:OGMS_0000096 ;
+  ontologies:object ontologies:procedureToBeTyped ;
 .
 
 ontologies:procProvDatabaseAnnotation
@@ -418,7 +443,7 @@ ontologies:provenanceAboutProcedure
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject ontologies:TURBO_0010404 ;
   ontologies:predicate obo:IAO_0000136 ;
-  ontologies:object obo:OGMS_0000096 ;
+  ontologies:object ontologies:procedureToBeTyped ;
 .
 
 ontologies:symbolPartOfCrid
@@ -450,25 +475,28 @@ ontologies:procedure_visit_occurrence_id_IntegerLiteralValue
 .
 
 
-# # ###
+### procedure participation
+
+### procedure participation
 
 ontologies:procRealizesPatientRole
  a ontologies:ObjectConnectionToInstanceRecipe ;
  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
- ontologies:subject obo:OGMS_0000096 ;
+ ontologies:subject ontologies:procedureToBeTyped ;
  ontologies:predicate obo:BFO_0000055 ;
  ontologies:object obo:OBI_0000093 ;
 .
 
-ontologies:procEncounterPlaceholder
+ontologies:procPartOfEnc
  a ontologies:ObjectConnectionToInstanceRecipe ;
  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
- ontologies:subject obo:OGMS_0000096 ;
+ ontologies:subject ontologies:procedureToBeTyped ;
  ontologies:predicate obo:BFO_0000050 ;
  ontologies:object ontologies:encounterToBeTyped ;
 .
 
-# ###
+
+###
 
 
 # # ontologies:procedure_person_id_IntegerLiteralValue 
