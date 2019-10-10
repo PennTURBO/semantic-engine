@@ -185,29 +185,26 @@ ontologies:encClassFromValueRule
 
 ontologies:post_icbo_synthea_omop_cnp_enc_participation
   a ontologies:TURBO_0010178 ;
+  
+  ontologies:hasRequiredInput ontologies:EncounterPatientID ;
+  ontologies:hasRequiredInput ontologies:hceExpansionSpecification ;
+  ontologies:hasRequiredInput ontologies:encounterTypingRecipe ;
+
+  ontologies:hasRequiredInput ontologies:patientExpansionSpecification ;
+  ontologies:hasRequiredInput ontologies:patientHasRole ;
+  ontologies:hasRequiredInput ontologies:pkDenotesPatient ;
+  ontologies:hasRequiredInput ontologies:patPkSymbPartOfPk ;
+  ontologies:hasRequiredInput ontologies:patPkSymbHasRepresentation ;
+  ontologies:hasRequiredInput ontologies:hardcodedPatientSourceden ;
+
+  # ontologies:hasRequiredInput ontologies:PatientPkInp ;
+  
   ontologies:hasOutput ontologies:encounterRealizesRole ;
   ontologies:hasOutput ontologies:patientHasRole;
-  ontologies:hasRequiredInput ontologies:encounterTypingRecipe ;
-  ontologies:hasRequiredInput ontologies:EncounterExpansionInp ;
-  ontologies:hasRequiredInput ontologies:EncounterPatientID ;
-  # ontologies:hasRequiredInput ontologies:pkDenotesPatientInp ;
-  # ontologies:hasRequiredInput ontologies:patPkSymbPartOfPkInp ;
-  # ontologies:hasRequiredInput ontologies:patPkSymbHasRepresentationInp ;
-  # ontologies:hasRequiredInput ontologies:hardcodedPatientSourcedenInp ;
-  ontologies:hasRequiredInput ontologies:PatientPkInp ;
+  
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_procedures ;
-.
-
-ontologies:EncounterExpansionInp 
-  a ontologies:DatatypeConnectionRecipe ;
-  turbo:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:required true ;
-  ontologies:subject <http://api.stardog.com/visit_occurrence> ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object ontologies:encounterToBeTyped ;
 .
 
 ontologies:EncounterPatientID 
@@ -219,53 +216,24 @@ ontologies:EncounterPatientID
   ontologies:object ontologies:person_id_IntegerLiteralValue ;
 .
 
-# ontologies:pkDenotesPatientInp
-  # a ontologies:ObjectConnectionToInstanceRecipe ;
-  # turbo:referencedInGraph ontologies:omopExpanded ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:subject ontologies:TURBO_0010134 ;
-  # ontologies:predicate obo:IAO_0000219 ;
-  # ontologies:object obo:NCBITaxon_9606 ;
-# .
-
-# ontologies:patPkSymbPartOfPkInp
-  # a ontologies:ObjectConnectionToInstanceRecipe ;
-  # turbo:referencedInGraph ontologies:omopExpanded ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:subject ontologies:TURBO_0010271 ;
-  # ontologies:predicate obo:BFO_0000050 ;
-  # ontologies:object ontologies:TURBO_0010134 ;
-# .
-
-# ontologies:patPkSymbHasRepresentationInp
+# ontologies:EncounterExpansionInp 
   # a ontologies:DatatypeConnectionRecipe ;
   # turbo:referencedInGraph ontologies:omopExpanded ;
   # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:subject ontologies:TURBO_0010271 ;
-  # ontologies:predicate <http://transformunify.org/ontologies/TURBO_0010094> ;
-  # # ontologies:object ontologies:person_id_value_IntegerLiteralValue ;
-  # ontologies:object ontologies:person_id_IntegerLiteralValue
-# .
-
-# ontologies:hardcodedPatientSourcedenInp
-  # a ontologies:ObjectConnectionToTermRecipe ;
-  # turbo:referencedInGraph ontologies:omopExpanded ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   # ontologies:required true ;
-  # ontologies:subject ontologies:TURBO_0010134 ;
-  # ontologies:predicate <http://purl.obolibrary.org/obo/BFO_0000051> ;
-  # ontologies:object ontologies:TURBO_0010396 ;
+  # ontologies:subject <http://api.stardog.com/visit_occurrence> ;
+  # ontologies:predicate ontologies:TURBO_0010113 ;
+  # ontologies:object ontologies:encounterToBeTyped ;
 # .
 
-
-ontologies:PatientPkInp 
-   a ontologies:DatatypeConnectionRecipe ;
-   turbo:referencedInGraph ontologies:omopShortcuts ;
-   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-   ontologies:subject <http://api.stardog.com/person> ;
-   ontologies:predicate <http://api.stardog.com/person#person_id> ;
-   ontologies:object ontologies:person_id_IntegerLiteralValue ;
-.
+# ontologies:PatientPkInp 
+   # a ontologies:DatatypeConnectionRecipe ;
+   # turbo:referencedInGraph ontologies:omopShortcuts ;
+   # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+   # ontologies:subject <http://api.stardog.com/person> ;
+   # ontologies:predicate <http://api.stardog.com/person#person_id> ;
+   # ontologies:object ontologies:person_id_IntegerLiteralValue ;
+# .
 
 
 ### procedures
@@ -368,17 +336,10 @@ ontologies:post_icbo_synthea_omop_cnp_procedure_parthood
   ontologies:hasRequiredInput ontologies:procedureTypingRecipe ;
   ontologies:hasRequiredInput ontologies:hceExpansionSpecification ;
   ontologies:hasRequiredInput ontologies:encounterTypingRecipe ;
-  
-  # ontologies:hasRequiredInput ontologies:cridDenotesHce ;
-  # ontologies:hasRequiredInput ontologies:encCridsymbHasRepresentation ;
-  # ontologies:hasRequiredInput ontologies:hardcodedRegden ;
-  # ontologies:hasRequiredInput ontologies:symbolPartOfCridForHce ;
-  
   ontologies:hasRequiredInput ontologies:pkDenotesHce ;
   ontologies:hasRequiredInput ontologies:HcePkSymbPartOfPk ;
   ontologies:hasRequiredInput ontologies:HcePkSymbHasRepresentation ;
   ontologies:hasRequiredInput ontologies:hardcodedHceSourceden ;
-
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:hasRequiredInput ontologies:procExpansionInput ;
