@@ -91,7 +91,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
         if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") 
         {
-            assert (subjectAType || subjectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
+            assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
         }
         else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe") 
         {
