@@ -13,24 +13,29 @@ class Triple extends ProjectwideGlobals
     var objectAType: Boolean = false
     
     var objectADescriber: Boolean = false
+    var objectALiteral: Boolean = false
     
     var subjectContext: String = ""
     var objectContext: String = ""
     
-    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean = false, objectAType: Boolean = false, objectADescriber: Boolean = false, subjectContext: String = "", objectContext: String = "")
+    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean = false, 
+            objectAType: Boolean = false, objectADescriber: Boolean = false, subjectContext: String = "", 
+            objectContext: String = "", objectALiteral: Boolean = false)
     {
         this
-        setSubject(subject)
-        setPredicate(predicate)
-        setObject(objectVar)
         this.subjectAType = subjectAType
         this.objectAType = objectAType
         this.objectADescriber = objectADescriber
+        this.objectALiteral = objectALiteral
         
         this.subjectContext = helper.convertTypeToSparqlVariable(subjectContext)
         this.objectContext = helper.convertTypeToSparqlVariable(objectContext)
         if (this.subjectContext.size > 1) this.subjectContext = this.subjectContext.substring(1)
         if (this.objectContext.size > 1) this.objectContext = this.objectContext.substring(1)
+        
+        setSubject(subject)
+        setPredicate(predicate)
+        setObject(objectVar)
     }
     
     def setSubject(subject: String)
@@ -57,22 +62,26 @@ class Triple extends ProjectwideGlobals
     
     def setObject(objectVar: String)
     {
-        if (objectVar.charAt(0) == '?')
+        if (objectALiteral) this.tripleObject = objectVar.split("\\^")(0)
+        else
         {
-            //helper.validateVariable(objectVar)
-            this.tripleObject = objectVar
+            if (objectVar.charAt(0) == '?')
+            {
+                //helper.validateVariable(objectVar)
+                this.tripleObject = objectVar
+            }
+            else if (!objectVar.contains(':') || objectVar.contains(' ')) 
+            {
+                if (objectVar.contains("\n")) this.tripleObject = s"'''$objectVar'''"
+                else this.tripleObject = "\"" + objectVar + "\""
+            }
+            else if (objectVar.contains('/')) 
+            {
+                if (objectVar.charAt(0) != '<') this.tripleObject = "<" + objectVar + ">"
+                else this.tripleObject = objectVar
+            }
+            else this.tripleObject = objectVar 
         }
-        else if (!objectVar.contains(':') || objectVar.contains(' ')) 
-        {
-            if (objectVar.contains("\n")) this.tripleObject = s"'''$objectVar'''"
-            else this.tripleObject = "\"" + objectVar + "\""
-        }
-        else if (objectVar.contains('/')) 
-        {
-            if (objectVar.charAt(0) != '<') this.tripleObject = "<" + objectVar + ">"
-            else this.tripleObject = objectVar
-        }
-        else this.tripleObject = objectVar
     }
 
     def getSubjectWithContext(): String =
@@ -97,7 +106,7 @@ class Triple extends ProjectwideGlobals
     def makeTripleWithVariables(): String = 
     {
         var objectAsVar = ""
-        if (!objectADescriber && triplePredicate == "rdf:type")
+        if ((!objectADescriber && triplePredicate == "rdf:type") || objectALiteral)
         {
             objectAsVar = tripleObject   
         }
@@ -127,8 +136,12 @@ class Triple extends ProjectwideGlobals
         if (excludeList.contains(tripleObject.replaceAll("\\<","").replaceAll("\\>",""))) objectForString = tripleObject
         else 
         {
-            objectForString = helper.convertTypeToSparqlVariable(tripleObject)
-            if (objectContext != "") objectForString += s"_$objectContext"
+            if (!objectALiteral) 
+            {
+                objectForString = helper.convertTypeToSparqlVariable(tripleObject)
+                if (objectContext != "") objectForString += s"_$objectContext"
+            }
+            else objectForString = tripleObject
         }
 
         s"$subjectForString $triplePredicate $objectForString .\n"

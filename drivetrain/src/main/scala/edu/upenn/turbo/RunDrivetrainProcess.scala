@@ -241,6 +241,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?$CONNECTIONNAME turbo:required ?$REQUIREMENT .
               }
+              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
          }
          
          """
@@ -354,6 +355,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?$OBJECT a owl:Class .
                   BIND (true AS ?$OBJECTTYPE)
               }
+              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
          }
          
          """

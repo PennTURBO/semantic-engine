@@ -194,6 +194,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
     val healthcareQuery: String = """
       INSERT {
       GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      ?TURBO_0000508 <http://purl.obolibrary.org/obo/BFO_0000051> ?HealthcareEncounterRegistryOfVariousTypes .
+      ?TURBO_0000508 rdf:type <http://transformunify.org/ontologies/TURBO_0000508> .
       ?TURBO_0010138 <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000015> .
       ?TURBO_0010138 rdf:type <http://transformunify.org/ontologies/TURBO_0010138> .
       ?OBI_0001929 <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000009> .
@@ -202,8 +204,12 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?TURBO_0010149 rdf:type <http://transformunify.org/ontologies/TURBO_0010149> .
       ?TURBO_0010150 <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000272> .
       ?TURBO_0010150 rdf:type <http://transformunify.org/ontologies/TURBO_0010150> .
+      ?TURBO_0010404 <http://transformunify.org/ontologies/database> ?HealthcareEncounterDatabaseProvenanceTerm .
+      ?TURBO_0010404 rdf:type <http://transformunify.org/ontologies/TURBO_0010404> .
+      ?TURBO_0010404 <http://transformunify.org/ontologies/schema> ?HealthcareEncounterSchemaProvenanceTerm .
+      ?TURBO_0010404 <http://transformunify.org/ontologies/table> ?HealthcareEncounterTableProvenanceTerm .
+      ?TURBO_0010404 <http://transformunify.org/ontologies/column> ?HealthcareEncounterTypeCodeColumnTerm .
       ?TURBO_0000508 <http://purl.obolibrary.org/obo/IAO_0000219> ?OGMS_0000097 .
-      ?TURBO_0000508 rdf:type <http://transformunify.org/ontologies/TURBO_0000508> .
       ?OGMS_0000097 rdf:type <http://purl.obolibrary.org/obo/OGMS_0000097> .
       ?EFO_0004340 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
       ?EFO_0004340 rdf:type <http://www.ebi.ac.uk/efo/EFO_0004340> .
@@ -216,9 +222,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?TURBO_0000512 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
       ?TURBO_0000512 <http://purl.obolibrary.org/obo/IAO_0000136> ?TURBO_0000511 .
       ?TURBO_0000511 rdf:type <http://transformunify.org/ontologies/TURBO_0000511> .
-      ?TURBO_0000508 <http://purl.obolibrary.org/obo/BFO_0000051> ?HealthcareEncounterRegistryOfVariousTypes .
       ?TURBO_0000508 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0000509 .
-      ?HealthcareEncounterRegistryOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0000508 .
       ?TURBO_0000511 <http://purl.obolibrary.org/obo/RO_0002223> ?OGMS_0000097 .
       ?TURBO_0000509 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
       ?TURBO_0000509 <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0000508 .
@@ -248,6 +252,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?HTN_00000001 .
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010131> ?TURBO_0010161 .
       ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
+      ?TURBO_0010404 <http://purl.obolibrary.org/obo/IAO_0000136> ?OGMS_0000097 .
       ?EFO_0004340 <http://transformunify.org/ontologies/TURBO_0010094> ?bmiDoubleLiteralValue .
       ?IAO_0000100 <http://purl.org/dc/elements/1.1/title> ?datasetTitleStringLiteralValue .
       ?TURBO_0000512 <http://transformunify.org/ontologies/TURBO_0010096> ?healthcareEncounterDateLiteralValue .
@@ -257,20 +262,27 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?OBI_0001929 <http://transformunify.org/ontologies/TURBO_0010094> ?massMeasurementDoubleLiteralValue .
       ?TURBO_0010149 <http://transformunify.org/ontologies/TURBO_0010094> ?systolicBloodPressureDoubleLiteralValue .
       ?TURBO_0010150 <http://transformunify.org/ontologies/TURBO_0010094> ?diastolicBloodPressureDoubleLiteralValue .
+      ?TURBO_0010404 <http://transformunify.org/ontologies/colVal> ?encounterTypeCodeLiteralValue .
+      ?HealthcareEncounterRegistryOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0000508 .
       }
       GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
+      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000508 .
+      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HealthcareEncounterRegistryOfVariousTypes .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010138 .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?OBI_0001929 .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010149 .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010150 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000508 .
+      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010404 .
+      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HealthcareEncounterDatabaseProvenanceTerm .
+      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HealthcareEncounterSchemaProvenanceTerm .
+      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HealthcareEncounterTableProvenanceTerm .
+      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HealthcareEncounterTypeCodeColumnTerm .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?OGMS_0000097 .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?EFO_0004340 .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?IAO_0000100 .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000512 .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000509 .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000511 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HealthcareEncounterRegistryOfVariousTypes .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000522 .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010158 .
       <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?VSO_0000006 .
@@ -282,9 +294,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       }
       }
       WHERE {
-      VALUES ?HealthcareEncounterRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000510><http://transformunify.org/ontologies/TURBO_0010256>}
       GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010110> ?HealthcareEncounterRegistryOfVariousTypes .
+      VALUES ?HealthcareEncounterRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000510><http://transformunify.org/ontologies/TURBO_0010256>}
       ?TURBO_0010158 rdf:type <http://transformunify.org/ontologies/TURBO_0010158> .
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0000643> ?datasetTitleStringLiteralValue .
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0000648> ?healthcareEncounterSymbolLiteralValue .
@@ -314,24 +326,29 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010258> ?systolicBloodPressureDoubleLiteralValue .
        }
       OPTIONAL {
-       ?TURBO_0010158 <http://transformunify.org/ontologies/hcEncToEncTypeCode> ?encounterTypeCodeLiteralValue .
-       }
+      ?TURBO_0010158 <http://transformunify.org/ontologies/hcEncToDatabase> ?HealthcareEncounterDatabaseProvenanceTerm .
+      ?TURBO_0010158 <http://transformunify.org/ontologies/hcEncToEncTypeCodeColumnn> ?HealthcareEncounterTypeCodeColumnTerm .
+      ?TURBO_0010158 <http://transformunify.org/ontologies/hcEncToSchema> ?HealthcareEncounterSchemaProvenanceTerm .
+      ?TURBO_0010158 <http://transformunify.org/ontologies/hcEncToTable> ?HealthcareEncounterTableProvenanceTerm .
+      ?TURBO_0010158 <http://transformunify.org/ontologies/hcEncToEncTypeCode> ?encounterTypeCodeLiteralValue .
       }
+      }
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
+      BIND(IF (BOUND(?bmiDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?EFO_0004340","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?EFO_0004340)
+      BIND(IF (BOUND(?diastolicBloodPressureDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010150","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010150)
+      BIND(IF (BOUND(?systolicBloodPressureDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010149","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010149)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000509","localUUID", str(?TURBO_0010158))))) AS ?TURBO_0000509)
+      BIND(IF (BOUND(?lengthMeasurementDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010138","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010138)
+      BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat("http://www.itmat.upenn.edu/biobank/", SHA256(CONCAT("?VSO_0000006", "localUUID", str(?TURBO_0010158))))), ?unbound) AS ?VSO_0000006)
+      BIND(IF (BOUND(?healthcareEncounterDateStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000512","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0000512)
+      BIND(IF (BOUND(?encounterTypeCodeLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010404","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010404)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000508","localUUID", str(?TURBO_0010158))))) AS ?TURBO_0000508)
+      BIND(IF (BOUND(?healthcareEncounterDateStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000511","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0000511)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OGMS_0000097","localUUID", str(?TURBO_0010158))))) AS ?OGMS_0000097)
       BIND(IF (BOUND(?systolicBloodPressureDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?HTN_00000001","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?HTN_00000001)
       BIND(IF (BOUND(?massMeasurementDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001929","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?OBI_0001929)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000509","localUUID", str(?TURBO_0010158))))) AS ?TURBO_0000509)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID"))))AS?IAO_0000100)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OGMS_0000097","localUUID", str(?TURBO_0010158))))) AS ?OGMS_0000097)
-      BIND(IF (BOUND(?diastolicBloodPressureDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010150","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010150)
-      BIND(IF (BOUND(?bmiDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?EFO_0004340","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?EFO_0004340)
-      BIND(IF (BOUND(?systolicBloodPressureDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010149","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010149)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000508","localUUID", str(?TURBO_0010158))))) AS ?TURBO_0000508)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
-      BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat("http://www.itmat.upenn.edu/biobank/", SHA256(CONCAT("?VSO_0000006", "localUUID", str(?TURBO_0010158))))), ?unbound) AS ?VSO_0000006)
-      BIND(IF (BOUND(?lengthMeasurementDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010138","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010138)
-      BIND(IF (BOUND(?healthcareEncounterDateStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000512","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0000512)
       BIND(IF (BOUND(?diastolicBloodPressureDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?HTN_00000000","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?HTN_00000000)
-      BIND(IF (BOUND(?healthcareEncounterDateStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000511","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0000511)
+      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
       }
       """
     
@@ -628,7 +645,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://purl.obolibrary.org/obo/BFO_0000051","http://purl.obolibrary.org/obo/BFO_0000051",
             "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000050",
             "http://purl.obolibrary.org/obo/BFO_0000050","http://purl.obolibrary.org/obo/BFO_0000051",
-            "http://transformunify.org/ontologies/TURBO_0010113"
+            "http://transformunify.org/ontologies/TURBO_0010113", "http://purl.obolibrary.org/obo/IAO_0000136",
+            "http://transformunify.org/ontologies/database", "http://transformunify.org/ontologies/column",
+            "http://transformunify.org/ontologies/schema", "http://transformunify.org/ontologies/table", 
+            "http://transformunify.org/ontologies/colVal", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
         helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")

@@ -267,7 +267,6 @@ object InputDataValidator extends ProjectwideGlobals
     
     def handleErrorReporting(errorMsg: String, res: ArrayBuffer[String])
     {
-        val errorMsgWithInstace = 
         if (stopRun)
         {
             var firstResult = ""

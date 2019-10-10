@@ -305,6 +305,12 @@ pmbb:HealthcareEncounterExpansionProcess
   ontologies:hasOutput ontologies:massMeasurementValueSpecificationToDataset ;
   ontologies:hasOutput ontologies:massMeasurementValueSpecificationToKilogram ;
   ontologies:hasOutput ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue ;
+  ontologies:hasOutput ontologies:provenanceDataItemToHealthcareEncounter ;
+  ontologies:hasOutput ontologies:provenanceDataItemToDatabaseTerm ;
+  ontologies:hasOutput ontologies:provenanceDataItemToEncounterTypeCodeString ;
+  ontologies:hasOutput ontologies:provenanceDataItemToSchemaTerm ;
+  ontologies:hasOutput ontologies:provenanceDataItemToTableTerm ;
+  ontologies:hasOutput ontologies:provenanceDataItemToColumnTerm ;
 .
 pmbb:DiagnosisExpansionProcess
   a turbo:TURBO_0010178 ;
@@ -716,6 +722,7 @@ ontologies:shortcutHealthcareEncounterToEncounterTypeCodeString
   ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010158 ;
   obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
+  ontologies:objectRequiredToCreate turbo:TURBO_0010404 ;
 .
 ontologies:shortcutHealthcareEncounterToDatabase
   a ontologies:ObjectConnectionToTermRecipe ;
