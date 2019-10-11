@@ -14,7 +14,7 @@
 <http://api.stardog.com/visit_occurrence> a owl:Class .
 <http://api.stardog.com/person> a owl:Class .
 <http://api.stardog.com/procedure_occurrence> a owl:Class .
-<http://api.stardog.com/measurement_id> a owl:Class .
+<http://api.stardog.com/measurement> a owl:Class .
 
 ontologies:syntheaomop_post_icbo a owl:Class .
 ontologies:cdm_synthea10 a owl:Class .
@@ -346,48 +346,43 @@ ontologies:procedureEncounterShortcut
 
 ontologies:post_icbo_synthea_omop_cnp_measurement
   a ontologies:TURBO_0010178 ;
+  ontologies:hasOutput ontologies:MeasExpansionSpecification ;
+  ontologies:hasOutput ontologies:pkDenotesMeas ;
+  ontologies:hasOutput ontologies:MeasPkSymbPartOfPk ;
+  ontologies:hasOutput ontologies:MeasPkSymbHasRepresentation ;
+  ontologies:hasOutput ontologies:hardcodedMeasSourceden ;
+  ontologies:hasOutput ontologies:MeasHasValspec ;
+  ontologies:hasOutput ontologies:ValspecHasSpecVal ;
+  ontologies:hasRequiredInput ontologies:MeasPksymShortcut ;
+  ontologies:hasRequiredInput ontologies:MeasNumValShortcut ;
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
-  # ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_measurement ;
-  ontologies:hasRequiredInput ontologies:XShortcut ;
-  ontologies:hasOutput ontologies:Xoutput ;
+  # ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_procedure_participation ;
 .
 
-# ontologies:post_icbo_synthea_omop_cnp_measurement
-  # a ontologies:TURBO_0010178 ;
-  
-  # # ontologies:hasOutput ontologies:MeasExpansionSpecification ;
-  # # ontologies:hasOutput ontologies:pkDenotesMeas ;
-  # # ontologies:hasOutput ontologies:MeasPkSymbPartOfPk ;
-  # ontologies:hasOutput ontologies:MeasPkSymbHasRepresentation ;
-  # # ontologies:hasOutput ontologies:hardcodedMeasSourceden ;
-  # # ontologies:hasOutput ontologies:MeasExpansionSpecification ;
-  
-  # ontologies:hasRequiredInput ontologies:MeasPksymShortcut ;
-  
-  # ontologies:inputNamedGraph ontologies:omopShortcuts ;
-  # ontologies:outputNamedGraph ontologies:omopExpanded ;
-  # # ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_procedure_participation ;
-# .
+ontologies:MeasNumValShortcut 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject <http://api.stardog.com/measurement> ;
+  ontologies:predicate <http://api.stardog.com/measurement#value_as_number> ;
+  ontologies:object ontologies:value_as_number_IntegerLiteralValue ;
+.
 
-ontologies:XShortcut 
+ontologies:MeasPksymShortcut 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject <http://api.stardog.com/measurement> ;
   ontologies:predicate <http://api.stardog.com/measurement#measurement_id> ;
-  ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
+  ontologies:object ontologies:measurement_id_IntegerLiteralValue ;
 .
 
-
-
-# ontologies:MeasPksymShortcut 
-  # a ontologies:DatatypeConnectionRecipe ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ontologies:subject <http://api.stardog.com/measurement> ;
-  # ontologies:predicate <http://api.stardog.com/measurement#measurement_id> ;
-  # ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
-  # # ontologies:object ontologies:measurement_id_IntegerLiteralValue ;
-# .
+ontologies:MeasPatientShortcut 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject <http://api.stardog.com/measurement> ;
+  ontologies:predicate <http://api.stardog.com/measurement#person_id> ;
+  ontologies:object ontologies:person_id_IntegerLiteralValue ;
+.
 
 
 ###
