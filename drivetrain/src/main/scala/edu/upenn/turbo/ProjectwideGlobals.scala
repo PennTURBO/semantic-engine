@@ -7,6 +7,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection
 import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
 import org.eclipse.rdf4j.rio.RDFFormat
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.mutable.HashMap
 import java.util.UUID
 
 trait ProjectwideGlobals extends Enumeration
