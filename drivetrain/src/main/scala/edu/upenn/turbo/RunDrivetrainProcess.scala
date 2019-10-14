@@ -274,6 +274,27 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?$CONNECTIONNAME turbo:subject ?$SUBJECT .
               ?$CONNECTIONNAME turbo:predicate ?$PREDICATE .
               ?$CONNECTIONNAME turbo:object ?$OBJECT .
+              Optional
+              {
+                  ?$OBJECT a ontologies:MultiObjectDescriber .
+                  BIND (true AS ?$OBJECTADESCRIBER)
+              }
+              Optional
+              {
+                  ?$SUBJECT a ontologies:MultiObjectDescriber .
+                  BIND (true AS ?$SUBJECTADESCRIBER)
+              }
+              Optional
+              {
+                  ?$SUBJECT a owl:Class .
+                  BIND (true AS ?$SUBJECTTYPE)
+              }
+              Optional
+              {
+                  ?$OBJECT a owl:Class .
+                  BIND (true AS ?$OBJECTTYPE)
+              }
+              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
          }
          
          """

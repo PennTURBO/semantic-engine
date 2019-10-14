@@ -13,19 +13,22 @@ class Triple extends ProjectwideGlobals
     var objectAType: Boolean = false
     
     var objectADescriber: Boolean = false
+    var subjectADescriber: Boolean = false
+    
     var objectALiteral: Boolean = false
     
     var subjectContext: String = ""
     var objectContext: String = ""
     
     def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean = false, 
-            objectAType: Boolean = false, objectADescriber: Boolean = false, subjectContext: String = "", 
+            objectAType: Boolean = false, subjectADescriber: Boolean = false, objectADescriber: Boolean = false, subjectContext: String = "", 
             objectContext: String = "", objectALiteral: Boolean = false)
     {
         this
         this.subjectAType = subjectAType
         this.objectAType = objectAType
         this.objectADescriber = objectADescriber
+        this.subjectADescriber = subjectADescriber
         this.objectALiteral = objectALiteral
         
         this.subjectContext = helper.convertTypeToSparqlVariable(subjectContext)
@@ -106,7 +109,7 @@ class Triple extends ProjectwideGlobals
     def makeTripleWithVariables(): String = 
     {
         var objectAsVar = ""
-        if ((!objectADescriber && triplePredicate == "rdf:type") || objectALiteral)
+        if (!objectADescriber && !objectAType || objectALiteral)
         {
             objectAsVar = tripleObject   
         }
@@ -116,8 +119,16 @@ class Triple extends ProjectwideGlobals
             if (objectContext != "") objectAsVar += s"_$objectContext" 
         }
         
-        var subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
-        if (subjectContext != "") subjectAsVar += s"_$subjectContext"
+        var subjectAsVar = ""
+        if (!subjectADescriber && !subjectAType)
+        {
+            subjectAsVar = tripleSubject   
+        }
+        else
+        {
+            subjectAsVar = helper.convertTypeToSparqlVariable(tripleSubject)
+            if (subjectContext != "") subjectAsVar += s"_$subjectContext"   
+        }
         
         s"$subjectAsVar $triplePredicate $objectAsVar .\n"
     }

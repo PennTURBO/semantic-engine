@@ -92,6 +92,8 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") 
         {
             assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
+            //this might be kind of hackish but it's making sure that a URI representing a literal is considered a variable not a static class
+            objectADescriber = true
         }
         else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe") 
         {
@@ -110,7 +112,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             assert (!objectALiteral, s"Found literal object for connection $connectionName of type ObjectConnectionToInstanceRecipe")
         }
         val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
-                                                 subjectAType, objectAType, objectADescriber, "", "", objectALiteral)
+                                                 subjectAType, objectAType, subjectADescriber, objectADescriber, "", "", objectALiteral)
         
         
         addNewTripleToGroup(newTriple, minusGroupForThisRow, optionalGroupForThisRow, required, graphForThisRow)
@@ -205,16 +207,16 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val graph = rowResult(GRAPH.toString).toString
             
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
-                                      subjectAType, objectAType, false, subjectContext, objectContext, objectALiteral)
+                                      subjectAType, objectAType, subjectADescriber, objectADescriber, subjectContext, objectContext, objectALiteral)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
             if (usedVariables.contains(newTriple.getSubjectWithContext()))
             {
-                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false, false, "", subjectContext)
+                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false, false, false, "", subjectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
             }
             if (!objectFromDatatypeConnection && usedVariables.contains(newTriple.getObjectWithContext()) && newTriple.triplePredicate != "rdf:type")
             {
-                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false, false, "", objectContext)
+                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false, false, false, "", objectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
             }
         }
@@ -230,16 +232,36 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
     def addTripleFromRowResult(removals: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], defaultRemovalsGraph: String)
-    {
+    {   
         val triplesGroup = new TriplesGroupBuilder()
         for (rowResult <- removals)
         {
             for (key <- requiredOutputKeysList) assert (rowResult.contains(key.toString))
+            
+            var subjectAType = false
+            var objectAType = false
+            var subjectContext: String = ""
+            var objectContext: String = ""
+            
+            var objectADescriber = false
+            var subjectADescriber = false
+            
+            var objectALiteral = false
+     
+            if (rowResult(OBJECTALITERAL.toString).toString.contains("true")) objectALiteral = true
+            
+            if (rowResult(SUBJECTTYPE.toString) != null) subjectAType = true
+            if (rowResult(OBJECTTYPE.toString) != null) objectAType = true
+            if (rowResult(SUBJECTCONTEXT.toString) != null) subjectContext = rowResult(SUBJECTCONTEXT.toString).toString
+            if (rowResult(OBJECTCONTEXT.toString) != null) objectContext = rowResult(OBJECTCONTEXT.toString).toString
+            if (rowResult(OBJECTADESCRIBER.toString) != null) objectADescriber = true
+            if (rowResult(SUBJECTADESCRIBER.toString) != null) subjectADescriber = true
+        
             assert (!rowResult.contains(OPTIONALGROUP.toString))
             helper.validateURI(defaultRemovalsGraph)
         
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
-                                  false, false, false)
+                                  false, false, true, true, subjectContext, objectContext, objectALiteral)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, defaultRemovalsGraph)
             
             clause = triplesGroup.buildDeleteClauseFromTriplesGroup()
@@ -269,6 +291,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     val manyToOneMultiplicity = "http://transformunify.org/ontologies/many-1"
     val oneToManyMultiplicity = "http://transformunify.org/ontologies/1-many"
     val objToInstRecipe = "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe"
+    val objToTermRecipe = "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe"
+    val objFromTermRecipe = "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe"
     
     def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean]): HashMap[String, Boolean] =
     {   
@@ -316,7 +340,9 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val codePlus = discoveryCode + row(PREDICATE.toString).toString + thisMultiplicity
             if (scannedConnections.contains(connectionName)) assert(scannedConnections(connectionName) == codePlus, s"Error in graph model: recipe $connectionName may have duplicate properties")
             else scannedConnections += connectionName -> codePlus
-            if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe || row(SUBJECTADESCRIBER.toString) != null || row(OBJECTADESCRIBER.toString) != null) 
+            if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe || 
+                row(SUBJECTADESCRIBER.toString) != null && row(CONNECTIONRECIPETYPE.toString).toString == objFromTermRecipe || 
+                row(OBJECTADESCRIBER.toString) != null && row(CONNECTIONRECIPETYPE.toString).toString == objToTermRecipe) 
             {  
                 if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") 
                 {
