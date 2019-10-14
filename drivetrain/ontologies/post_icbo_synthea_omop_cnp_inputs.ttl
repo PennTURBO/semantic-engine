@@ -49,18 +49,18 @@ ontologies:post_icbo_synthea_omop_cnp_patients
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_encounters ;
 .
 
-# ontologies:GidProvenance
-  # a ontologies:TURBO_0010178 ;
-  # ontologies:hasRequiredInput ontologies:GidAboutPatient ;
-  # ontologies:hasRequiredInput ontologies:gidTypingRecipe ;
+ontologies:GidProvenance
+  a ontologies:TURBO_0010178 ;
+  ontologies:hasRequiredInput ontologies:GidAboutPatient ;
+  ontologies:hasRequiredInput ontologies:gidTypingRecipe ;
   # ontologies:hasRequiredInput ontologies:ScoGid ;
-  # # ontologies:hasOutput ontologies:GidKeySymbPartOfKey ;
-  # ontologies:hasOutput ontologies:GidPartOfColumn ;
-  # # ontologies:hasOutput ontologies:KeyDenotesGid ;
-  # ontologies:inputNamedGraph ontologies:omopShortcuts ;
-  # ontologies:outputNamedGraph ontologies:omopExpanded ;
-  # ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_encounters ;
-# .
+  # ontologies:hasOutput ontologies:GidKeySymbPartOfKey ;
+  ontologies:hasOutput ontologies:GidPartOfColumn ;
+  # ontologies:hasOutput ontologies:KeyDenotesGid ;
+  ontologies:inputNamedGraph ontologies:omopShortcuts ;
+  ontologies:outputNamedGraph ontologies:omopExpanded ;
+  ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_encounters ;
+.
 
 # ontologies:ScoGid a ontologies:ObjectConnectionToTermRecipe ;
   # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -413,14 +413,14 @@ ontologies:MULClassHasOmopConceptId
   ontologies:object ontologies:measurement_more_units_IntegerLiteralValue ;
 .
 
-ontologies:MULScoMUL
-  a ontologies:DatatypeConnectionRecipe ;
-  turbo:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:MULClassList ;
-  ontologies:predicate rdfs:subClassOf*  ;
-  ontologies:object obo:IAO_0000003 ;
-.
+# ontologies:MULScoMUL
+  # a ontologies:DatatypeConnectionRecipe ;
+  # turbo:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:subject ontologies:MULClassList ;
+  # ontologies:predicate rdfs:subClassOf*  ;
+  # ontologies:object obo:IAO_0000003 ;
+# .
 
 
 ontologies:MeasNumValShortcut 
