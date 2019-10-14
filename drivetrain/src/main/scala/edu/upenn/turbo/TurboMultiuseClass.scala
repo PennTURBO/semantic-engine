@@ -836,4 +836,18 @@ class TurboMultiuseClass extends Enumeration
         }
         res
     }
+    
+    def getProcessNameAsUri(process: String): String =
+    {
+        val prefixMap = HashMap("turbo" -> "http://transformunify.org/ontologies/", "pmbb" -> "http://www.itmat.upenn.edu/biobank/", 
+                            "ontologies" -> "http://transformunify.org/ontologies/")
+                            
+        var thisProcess = process
+        if (!process.contains("\\/"))
+        {
+            val processSplit = thisProcess.split("\\:")
+            if (prefixMap.contains(processSplit(0))) thisProcess = prefixMap(processSplit(0)) + processSplit(1)
+        }
+        thisProcess
+    }
 }

@@ -63,7 +63,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       }
                   }
               }
-              else if (args(0).startsWith("http://"))
+              else
               {
                   //load the TURBO ontology
                   OntologyLoader.addOntologyFromUrl(cxn)
@@ -74,9 +74,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
                   RunDrivetrainProcess.validateGraphModelTerms()
                   //RunDrivetrainProcess.validateGraphSpecificationAgainstOntology()
-                  RunDrivetrainProcess.runProcess(args(0))
+                  val thisProcess = helper.getProcessNameAsUri(args(0))
+                  RunDrivetrainProcess.runProcess(thisProcess)
               }
-              else logger.info("Ontology loaded in production repo, no further action taken.")
           }
           catch
           {

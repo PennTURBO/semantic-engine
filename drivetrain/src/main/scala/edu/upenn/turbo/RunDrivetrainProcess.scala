@@ -86,12 +86,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 for (graph <- inputNamedGraphsList)
                 {
                     logger.info("Now running on input graph " + graph)
-                    val localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
+                    var localStartingTriplesCount = 0
+                    var localEndingTriplesCount = 0
+                    if (inputNamedGraphsList.size > 1) localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
                     primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)
-                    val localEndingTriplesCount = helper.countTriplesInDatabase(cxn)
-                    if (localStartingTriplesCount != localEndingTriplesCount) processGraphsList += graph
+                    if (inputNamedGraphsList.size > 1) localEndingTriplesCount = helper.countTriplesInDatabase(cxn)
+                    if ((localStartingTriplesCount != localEndingTriplesCount) || (inputNamedGraphsList.size == 1)) processGraphsList += graph
                 }
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
@@ -125,9 +127,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     def createPatternMatchQuery(process: String): PatternMatchQuery =
     {
         assert (localUUID != null, "You must set the globalUUID before running any process.")
-        if (!validateProcess(process)) 
+        var thisProcess = helper.getProcessNameAsUri(process)
+        if (!validateProcess(thisProcess)) 
         {
-            logger.info(process + " is not a valid TURBO process")
+            logger.info(thisProcess + " is not a valid TURBO process")
             return null
         }
         else
@@ -135,9 +138,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             // retrieve connections (inputs, outputs) from model graph
             // the inputs become the "where" block of the SPARQL query
             // the outputs become the "insert" block
-            val inputs = getInputs(process)
-            val outputs = getOutputs(process)
-            val removals = getRemovals(process)
+            val inputs = getInputs(thisProcess)
+            val outputs = getOutputs(thisProcess)
+            val removals = getRemovals(thisProcess)
             
             if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
             if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
@@ -146,7 +149,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             
             // create primary query
             val primaryQuery = new PatternMatchQuery()
-            primaryQuery.setProcess(process)
+            primaryQuery.setProcess(thisProcess)
             primaryQuery.setInputGraph(inputNamedGraph)
             primaryQuery.setInputData(inputs)
             primaryQuery.setGraphModelConnection(gmCxn)
