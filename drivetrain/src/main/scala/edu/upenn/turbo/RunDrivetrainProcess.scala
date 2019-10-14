@@ -86,12 +86,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 for (graph <- inputNamedGraphsList)
                 {
                     logger.info("Now running on input graph " + graph)
-                    val localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
+                    var localStartingTriplesCount = 0
+                    var localEndingTriplesCount = 0
+                    if (inputNamedGraphsList.size > 1) localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
                     primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)
-                    val localEndingTriplesCount = helper.countTriplesInDatabase(cxn)
-                    if (localStartingTriplesCount != localEndingTriplesCount) processGraphsList += graph
+                    if (inputNamedGraphsList.size > 1) localEndingTriplesCount = helper.countTriplesInDatabase(cxn)
+                    if ((localStartingTriplesCount != localEndingTriplesCount) || (inputNamedGraphsList.size == 1)) processGraphsList += graph
                 }
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
