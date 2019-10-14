@@ -27,12 +27,55 @@ ontologies:procedure_source_value a owl:Class .
 
 ontologies:GidAboutPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ; 
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
   ontologies:subject ontologies:GidToBeTyped ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:object obo:NCBITaxon_9606 ;
 .
+
+ontologies:GidHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:GidToBeTyped ;
+  ontologies:predicate <http://transformunify.org/ontologies/TURBO_0010094> ;
+  ontologies:object ontologies:gender_concept_id_IntegerLiteralValue ;
+.
+  
+  # ontologies:KeyDenotesGid
+  # a ontologies:ObjectConnectionToInstanceRecipe ;
+  # turbo:referencedInGraph ontologies:omopExpanded ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ## ontologies:required true ;
+  # ontologies:subject ontologies:TURBO_0010433 ;
+  # ontologies:predicate obo:IAO_0000219 ;
+  # ontologies:object ontologies:GidToBeTyped ;
+  # ontologies:subjectUsesContext ontologies:IndexContext ;
+# .
+
+# ontologies:GidKeySymbPartOfKey
+  # a ontologies:ObjectConnectionToInstanceRecipe ;
+  # turbo:referencedInGraph ontologies:omopExpanded ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:subject obo:IAO_0000028 ;
+  # ontologies:predicate obo:BFO_0000050 ;
+  # ontologies:object ontologies:TURBO_0010433 ;
+  # ontologies:subjectUsesContext ontologies:IndexContext ;
+  # ontologies:objectUsesContext ontologies:IndexContext ;
+# .
+
+# obo:OMRSE_00000133
+
+# ontologies:GidPartOfColumn
+  # a ontologies:ObjectConnectionToInstanceRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
+  # ontologies:required true ;
+  # ontologies:subject ontologies:GidToBeTyped ;
+  # ontologies:predicate obo:BFO_0000050 ;
+  # ontologies:object ontologies:TURBO_0010396 ;
+# .
 
 ontologies:cridDenotesPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -43,49 +86,57 @@ ontologies:cridDenotesPatient
   ontologies:object obo:NCBITaxon_9606 ;
 .
 
-ontologies:pkDenotesPatient
+ontologies:KeyDenotesPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ## ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
-ontologies:patPkSymbPartOfPk
+ontologies:patKeySymbPartOfKey
   a ontologies:ObjectConnectionToInstanceRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject obo:IAO_0000028 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010134 ;
-  ontologies:subjectUsesContext ontologies:pkContext ;
+  ontologies:object ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+  ontologies:objectUsesContext ontologies:KeyContext ;
 .
 
-ontologies:patPkSymbHasRepresentation
+ontologies:patKeySymbHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject obo:IAO_0000028 ;
   ontologies:predicate <http://transformunify.org/ontologies/TURBO_0010094> ;
   ontologies:object ontologies:person_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:pkContext ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
 ontologies:cridContext a ontologies:TurboGraphContext .
 obo:IAO_0000028 ontologies:hasPossibleContext ontologies:cridContext .
 
-ontologies:pkContext a ontologies:TurboGraphContext .
-obo:IAO_0000028 ontologies:hasPossibleContext ontologies:pkContext .
+ontologies:KeyContext a ontologies:TurboGraphContext .
+obo:IAO_0000028 ontologies:hasPossibleContext ontologies:KeyContext .
+ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:KeyContext .
+
+ontologies:IndexContext a ontologies:TurboGraphContext .
+obo:IAO_0000028 ontologies:hasPossibleContext ontologies:IndexContext .
+ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:IndexContext .
 
 ontologies:hardcodedPatientSourceden a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate <http://purl.obolibrary.org/obo/BFO_0000051> ;
   ontologies:object ontologies:TURBO_0010396 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
 ontologies:dobAboutSns 
@@ -186,43 +237,46 @@ ontologies:symbolPartOfCridForPatient
 ### encounters
 
 
-ontologies:pkDenotesHce
+ontologies:KeyDenotesHce
   a ontologies:ObjectConnectionToInstanceRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ## ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object ontologies:encounterToBeTyped ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
-ontologies:HcePkSymbPartOfPk
+ontologies:HceKeySymbPartOfKey
   a ontologies:ObjectConnectionToInstanceRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject obo:IAO_0000028 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010134 ;
-  ontologies:subjectUsesContext ontologies:pkContext ;
+  ontologies:object ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+  ontologies:objectUsesContext ontologies:KeyContext ;
 .
 
-ontologies:HcePkSymbHasRepresentation
+ontologies:HceKeySymbHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject obo:IAO_0000028 ;
   ontologies:predicate <http://transformunify.org/ontologies/TURBO_0010094> ;
   ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:pkContext ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
 ontologies:hardcodedHceSourceden a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate <http://purl.obolibrary.org/obo/BFO_0000051> ;
   ontologies:object ontologies:TURBO_0010269 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
 
@@ -418,26 +472,28 @@ ontologies:person_id_IntegerLiteralValue
 
 ### procedures
 
-ontologies:pkDenotesProc
+ontologies:KeyDenotesProc
   a ontologies:ObjectConnectionToInstanceRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ## ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object ontologies:procedureToBeTyped ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
-ontologies:ProcPkSymbPartOfPk
+ontologies:ProcKeySymbPartOfKey
   a ontologies:ObjectConnectionToInstanceRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject obo:IAO_0000028 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010134 ;
+  ontologies:object ontologies:TURBO_0010433 ;
+  ontologies:objectUsesContext ontologies:KeyContext ;
 .
 
-ontologies:ProcPkSymbHasRepresentation
+ontologies:ProcKeySymbHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -450,9 +506,10 @@ ontologies:hardcodedProcSourceden a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate <http://purl.obolibrary.org/obo/BFO_0000051> ;
   ontologies:object ontologies:TURBO_0010406 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
 
@@ -627,36 +684,30 @@ ontologies:procPartOfEnc
  ontologies:object ontologies:encounterToBeTyped ;
 .
 
-# ontologies:procPatientPlaceholder
- # a ontologies:ObjectConnectionToInstanceRecipe ;
- # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
- # ontologies:subject ontologies:procedureToBeTyped ;
- # ontologies:predicate ontologies:placeholder ;
- # ontologies:object obo:OBI_0000093 ;
-# .
-
 ### measurement
 
-ontologies:pkDenotesMeas
+ontologies:KeyDenotesMeas
   a ontologies:ObjectConnectionToInstanceRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ## ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object obo:IAO_0000109 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
-ontologies:MeasPkSymbPartOfPk
+ontologies:MeasKeySymbPartOfKey
   a ontologies:ObjectConnectionToInstanceRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject obo:IAO_0000028 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010134 ;
+  ontologies:object ontologies:TURBO_0010433 ;
+  ontologies:objectUsesContext ontologies:KeyContext ;
 .
 
-ontologies:MeasPkSymbHasRepresentation
+ontologies:MeasKeySymbHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -669,7 +720,7 @@ ontologies:hardcodedMeasSourceden a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010134 ;
+  ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate <http://purl.obolibrary.org/obo/BFO_0000051> ;
   ontologies:object ontologies:TURBO_0010398 ;
 .
@@ -693,6 +744,16 @@ ontologies:MeasHasValspec
   ontologies:object obo:OBI_0001933 ;
 .
 
+ontologies:MeasValspecPartOfDataset
+  a ontologies:ObjectConnectionToTermRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject obo:OBI_0001933 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object  ontologies:TURBO_0010411 ;
+.
+
 ontologies:ValspecHasSpecVal
   a ontologies:DatatypeConnectionRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
@@ -703,14 +764,111 @@ ontologies:ValspecHasSpecVal
   ontologies:object ontologies:value_as_number_IntegerLiteralValue ;
 .
 
-ontologies:aboutnessplaceholder
+ontologies:MeasTmdAboutProcbound 
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000416 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:object obo:BFO_0000035 ;
+.
+
+ontologies:MeasTmdHasMeasVal 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000416 ;
+  ontologies:predicate obo:IAO_0000004 ;
+  ontologies:object ontologies:measurement_datetime_DateLiteralValue ;
+.
+
+ontologies:measurement_datetime_DateLiteralValue 
+  a ontologies:TurboGraphDateLiteralValue ;
+.
+
+ontologies:procboundStartsMeas
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:BFO_0000035 ;
+  ontologies:predicate obo:RO_0002223 ;
+  ontologies:object obo:IAO_0000109 ;
+.
+
+ontologies:MeasTmdHasMeasVal 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000416 ;
+  ontologies:predicate obo:IAO_0000004 ;
+  ontologies:object ontologies:measurement_datetime_DateLiteralValue ;
+.
+
+###
+
+ontologies:MULTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:MULToBeTyped  ;
+  ontologies:predicate rdf:type ;
+  ontologies:object ontologies:MULClassList ;
+.
+
+ontologies:measurement_more_units_IntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+
+ontologies:MULToBeTyped 
+  a ontologies:MultiObjectDescriber ;
+.
+
+ontologies:MULClassList
+  a ontologies:MultiObjectDescriber ;
+  .
+
+ontologies:MeasHasMUL 
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000109 ;
+  ontologies:predicate obo:IAO_0000039 ;
+  ontologies:object ontologies:MULToBeTyped ;
+.
+
+ontologies:MULpartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:MULToBeTyped ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object ontologies:TURBO_0010423 ;
+.
+
+###
+
+ontologies:MeasPatPlaceholder
   a ontologies:DatatypeConnectionRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ## ontologies:required true ;
   ontologies:subject obo:IAO_0000109 ;
-  ontologies:predicate ontologies:placeholder ;
-  ontologies:object ontologies:person_id_IntegerLiteralValue ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+.
+
+###
+
+# Are all measurements part of an encounter? NO.
+
+ontologies:MeasEncPlaceholder
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject  ontologies:encounterToBeTyped ;
+  ontologies:predicate  obo:OBI_0000299 ;
+  ontologies:object obo:IAO_0000109 ;
 .
 
 
