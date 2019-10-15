@@ -22,7 +22,7 @@ class Triple extends ProjectwideGlobals
     
     def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean = false, 
             objectAType: Boolean = false, subjectADescriber: Boolean = false, objectADescriber: Boolean = false, subjectContext: String = "", 
-            objectContext: String = "", objectALiteral: Boolean = false)
+            objectContext: String = "", objectALiteral: Boolean = false, predicateSuffixOperator: String = "")
     {
         this
         this.subjectAType = subjectAType
@@ -37,7 +37,7 @@ class Triple extends ProjectwideGlobals
         if (this.objectContext.size > 1) this.objectContext = this.objectContext.substring(1)
         
         setSubject(subject)
-        setPredicate(predicate)
+        setPredicate(predicate, predicateSuffixOperator)
         setObject(objectVar)
     }
     
@@ -52,14 +52,17 @@ class Triple extends ProjectwideGlobals
         else this.tripleSubject = subject
     }
     
-    def setPredicate(predicate: String)
+    def setPredicate(predicate: String, suffixOperator: String)
     {
-        if (predicate == "a" || predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") this.triplePredicate = "rdf:type"
+        val allowedOperators = Array("*", "+")
+        var formattedSuffixOperator = suffixOperator.split("\\^")(0).replaceAll("\"", "")
+        if (!allowedOperators.contains(formattedSuffixOperator)) formattedSuffixOperator = ""
+        if (predicate == "a" || predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") this.triplePredicate = "rdf:type" + formattedSuffixOperator
         else
         {
             helper.validateURI(predicate)
-            if (predicate.contains('/')) this.triplePredicate = "<" + predicate + ">"
-            else this.triplePredicate = predicate
+            if (predicate.contains('/')) this.triplePredicate = "<" + predicate + ">" + formattedSuffixOperator
+            else this.triplePredicate = predicate + formattedSuffixOperator
         }
     }
     
