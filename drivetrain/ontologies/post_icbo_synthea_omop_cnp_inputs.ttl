@@ -22,7 +22,7 @@ ontologies:procedure_occurrence a owl:Class .
 ontologies:procedure_source_value a owl:Class .
 
 ontologies:post_icbo_synthea_omop_cnp_patients
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasOutput ontologies:DobPartOfColumn ;
   ontologies:hasOutput ontologies:GidAboutPatient ; 
   ontologies:hasOutput ontologies:GidHasRepresentation ;
@@ -153,7 +153,7 @@ ontologies:patientGidShortcut
 
 # _ is wildcard 
 ontologies:post_icbo_synthea_omop_cnp_encounters
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasOutput ontologies:cridDenotesHce ;
   ontologies:hasOutput ontologies:encCridsymbHasRepresentation ;
   ontologies:hasOutput ontologies:encounterTypingRecipe ;
@@ -170,6 +170,14 @@ ontologies:post_icbo_synthea_omop_cnp_encounters
   ontologies:hasOutput ontologies:HceKeySymbPartOfKey ;
   ontologies:hasOutput ontologies:HceKeySymbHasRepresentation ;
   ontologies:hasOutput ontologies:hardcodedHceSourceden ;
+  ontologies:hasOutput ontologies:VisitIdPartOfColumn ;
+  ontologies:hasOutput ontologies:EndDatePartOfColumn ;
+  ontologies:hasOutput ontologies:KeyDenotesEndDate ;
+  ontologies:hasOutput ontologies:StartDatePartOfColumn ;
+  ontologies:hasOutput ontologies:KeyDenotesStartDate ;
+  ontologies:hasOutput ontologies:KeyDenotesVisitCridSym ;
+  ontologies:hasOutput ontologies:VisitCridSymPartOfColumn ;
+  
   ontologies:hasRequiredInput ontologies:HceCridsymShortcut ;
   ontologies:hasRequiredInput ontologies:HceEnddateShortcut ;
   ontologies:hasRequiredInput ontologies:HceStartdateShortcut ;
@@ -240,7 +248,7 @@ ontologies:encClassFromValueRule
 ### encounter participation
 
 ontologies:post_icbo_synthea_omop_cnp_enc_participation
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasRequiredInput ontologies:EncounterPatientID ;
   ontologies:hasRequiredInput ontologies:hceExpansionSpecification ;
   ontologies:hasRequiredInput ontologies:encounterTypingRecipe ;
@@ -268,7 +276,7 @@ ontologies:EncounterPatientID
 ### procedures
 
 ontologies:post_icbo_synthea_omop_cnp_procedures
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasOutput ontologies:procedureTypingRecipe ;
   ontologies:hasOutput ontologies:procExpansionSpecification ;
   ontologies:hasOutput ontologies:procProvDatabaseAnnotation ;
@@ -333,7 +341,7 @@ ontologies:procMentionedClassList
 ### procedure participation
 
 ontologies:post_icbo_synthea_omop_cnp_procedure_participation
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasRequiredInput ontologies:procedurePatientShortcut ;
   ontologies:hasRequiredInput ontologies:procExpansionSpecification ;
   ontologies:hasRequiredInput ontologies:procedureTypingRecipe ;
@@ -362,7 +370,7 @@ ontologies:procedurePatientShortcut
 ### procedure parthood
 
 ontologies:post_icbo_synthea_omop_cnp_procedure_parthood
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasOutput ontologies:procPartOfEnc ;
   ontologies:hasRequiredInput ontologies:HceKeySymbHasRepresentation ;
   ontologies:hasRequiredInput ontologies:HceKeySymbPartOfKey ;
@@ -390,7 +398,7 @@ ontologies:procedureEncounterShortcut
 ### measurement
 
 ontologies:post_icbo_synthea_omop_cnp_measurement
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasOutput ontologies:MeasExpansionSpecification ;
   ontologies:hasOutput ontologies:MeasHasValspec ;
   ontologies:hasOutput ontologies:MeasKeySymbHasRepresentation ;
@@ -412,7 +420,7 @@ ontologies:post_icbo_synthea_omop_cnp_measurement
 .
 
 ontologies:post_icbo_synthea_omop_cnp_MUL
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasOutput ontologies:MULMoreUnitsOutput ;
   ontologies:hasOutput ontologies:MULTypingRecipe ;
   ontologies:hasOutput ontologies:MULpartOfColumn ;
@@ -478,7 +486,7 @@ ontologies:MeasDatetimeShortcut
 ### measurement aboutness
 
 ontologies:post_icbo_synthea_omop_cnp_measurement_aboutness
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_measurement_parthood ;
   ontologies:hasOutput ontologies:MeasPatPlaceholder ;
   ontologies:hasRequiredInput ontologies:MeasExpansionSpecification ;
@@ -504,7 +512,7 @@ ontologies:MeasPatientShortcut
 ### measurement parthood
 
 ontologies:post_icbo_synthea_omop_cnp_measurement_parthood
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   # ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_procedure_participation ;
   ontologies:hasOutput ontologies:MeasEncPlaceholder ;
   ontologies:hasRequiredInput ontologies:HceKeySymbHasRepresentation ;
@@ -530,7 +538,7 @@ ontologies:MeasEncounterShortcut
 ###
 
 # ontologies:post_icbo_synthea_omop_cnp_precedence
-  # a ontologies:TURBO_0010178 ;
+  # a ontologies:TURBO_0010354 ;
   # ontologies:hasOutput ontologies:encounterRealizesRole ;
   # ontologies:hasOutput ontologies:patientHasRole;
   # ontologies:hasRequiredInput ontologies:EncounterExpansionInp ;
