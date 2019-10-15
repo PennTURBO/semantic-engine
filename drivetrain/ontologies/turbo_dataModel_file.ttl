@@ -89,7 +89,7 @@ ontologies:RxNormDrugTermToTypeDeclaration
 #  ontologies:buildsMinusGroup ontologies:RxNormDrugTermMinusGroup ;
 #  ontologies:inputNamedGraph pmbb:expanded ;
 #  ontologies:outputNamedGraph pmbb:expanded ;
-#  a ontologies:TURBO_0010178 ;
+#  a ontologies:TURBO_0010354 ;
 #  ontologies:hasRequiredInput ontologies:RxNormDrugTermToTypeDeclaration ;
 #  ontologies:hasRequiredInput ontologies:prescriptionToDrug ;
 #  ontologies:removes ontologies:prescriptionToDrug ;
@@ -97,7 +97,7 @@ ontologies:RxNormDrugTermToTypeDeclaration
 pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:outputNamedGraph pmbb:expanded ;
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:removes ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
   ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
 .
@@ -108,7 +108,7 @@ pmbb:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:removes ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
   ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
 .
@@ -133,7 +133,7 @@ pmbb:HomoSapiensExpansionProcess
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes pmbb:HealthcareEncounterExpansionProcess ;
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasRequiredInput ontologies:shortcutHomoSapiensIdToRegistry ;
   ontologies:hasRequiredInput ontologies:shortcutHomoSapiensIdToSymbol ;
   ontologies:hasOutput ontologies:shortcutHomoSapiensIdentifierToExpandedHomoSapiensIdentifier ;
@@ -194,7 +194,7 @@ pmbb:BiobankEncounterExpansionProcess
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes pmbb:HealthcareEncounterEntityLinkingProcess ;
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasOptionalInput ontologies:shortcutBiobankEncounterToBmiValue ;
   ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToDatasetTitle ;
   ontologies:hasOptionalInput ontologies:shortcutBiobankEncounterToDateLiteralValue ;
@@ -242,7 +242,7 @@ pmbb:HealthcareEncounterExpansionProcess
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes pmbb:DiagnosisExpansionProcess ;
   ontologies:buildsOptionalGroup ontologies:encCodeTypeProvenanceOptionalGroup ;
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToBmiValue ;
   ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;
   ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToDateStringValue ;
@@ -313,7 +313,7 @@ pmbb:HealthcareEncounterExpansionProcess
   ontologies:hasOutput ontologies:provenanceDataItemToColumnTerm ;
 .
 pmbb:DiagnosisExpansionProcess
-  a turbo:TURBO_0010178 ;
+  a turbo:TURBO_0010354 ;
   turbo:precedes pmbb:MedicationExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:outputNamedGraph pmbb:expanded ;
@@ -338,7 +338,7 @@ pmbb:DiagnosisExpansionProcess
   ontologies:hasOutput ontologies:datasetToDiagnosis ;
 . 
 pmbb:MedicationExpansionProcess
-  a turbo:TURBO_0010178 ;
+  a turbo:TURBO_0010354 ;
   turbo:precedes pmbb:BiobankEncounterExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:outputNamedGraph pmbb:expanded ;
@@ -365,7 +365,7 @@ pmbb:LossOfFunctionExpansionProcess
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes pmbb:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess ;
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasRequiredInput ontologies:shortcutAlleleToDatasetTitle ;
   ontologies:hasOutput ontologies:shortcutAlleleToExpandedAllele ; 
   ontologies:hasRequiredInput ontologies:shortcutAlleleToGeneSymbol ;
@@ -414,7 +414,7 @@ pmbb:BiobankEncounterEntityLinkingProcess
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes pmbb:LossOfFunctionExpansionProcess ;
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter ;
   ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
   ontologies:hasRequiredInput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
@@ -437,7 +437,7 @@ pmbb:HealthcareEncounterEntityLinkingProcess
   ontologies:inputNamedGraph pmbb:expanded ;
   ontologies:outputNamedGraph pmbb:expanded ;
   ontologies:precedes pmbb:BiobankEncounterEntityLinkingProcess ;
-  a ontologies:TURBO_0010178 ;
+  a ontologies:TURBO_0010354 ;
   ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
   ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
   ontologies:hasRequiredInput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
