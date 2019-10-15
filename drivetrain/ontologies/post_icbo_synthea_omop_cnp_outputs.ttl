@@ -48,6 +48,46 @@ ontologies:KeyDenotesGid
   ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
+ontologies:KeyDenotesDob
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:object <http://www.ebi.ac.uk/efo/EFO_0004950> ;
+.
+
+ontologies:DobPartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject <http://www.ebi.ac.uk/efo/EFO_0004950> ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object ontologies:TURBO_0010443 ;
+.
+
+ontologies:KeyDenotesPatKeySymb
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:object obo:IAO_0000028 ;
+  ontologies:objectUsesContext ontologies:cridContext ;
+.
+
+ontologies:PatKeySymbPartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000028 ;
+  ontologies:subjectUsesContext ontologies:cridContext ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object ontologies:TURBO_0010444 ;
+.
+
 ontologies:KeyDenotesPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
@@ -68,8 +108,6 @@ ontologies:KeyPartOfColumn
   ontologies:object ontologies:TURBO_0010442  ;
   ontologies:subjectUsesContext ontologies:KeyContext ;
 .
-
-
 
 ontologies:RidAboutPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -107,8 +145,6 @@ ontologies:RidTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:predicate rdf:type ;
   ontologies:object ontologies:RidClassList ;
 .
-
-
 
 ontologies:GidAboutPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -160,8 +196,6 @@ ontologies:cridDenotesPatient
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object obo:NCBITaxon_9606 ;
 .
-
-
 
 ontologies:patKeySymbPartOfKey
   a ontologies:ObjectConnectionToInstanceRecipe ;
