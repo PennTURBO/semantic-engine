@@ -26,12 +26,9 @@ ontologies:post_icbo_synthea_omop_cnp_patients
   a ontologies:TURBO_0010178 ;
   ontologies:hasOutput ontologies:GidAboutPatient ; 
   ontologies:hasOutput ontologies:GidHasRepresentation ;
-  # ontologies:hasOutput ontologies:KeyDenotesGid ;
   ontologies:hasOutput ontologies:KeyDenotesPatient ;
-  # ontologies:hasOutput ontologies:KeyDenotesRid ;
   ontologies:hasOutput ontologies:RidAboutPatient ;
   ontologies:hasOutput ontologies:RidHasRepresentation ;
-  # ontologies:hasOutput ontologies:RidPartOfColumn ;
   ontologies:hasOutput ontologies:RidTypingRecipe ;
   ontologies:hasOutput ontologies:cridDenotesPatient;
   ontologies:hasOutput ontologies:dobAboutSns ;
@@ -51,6 +48,12 @@ ontologies:post_icbo_synthea_omop_cnp_patients
   ontologies:hasOutput ontologies:KeyDenotesGid ;
   ontologies:hasOutput ontologies:RidPartOfColumn ;
   ontologies:hasOutput ontologies:KeyDenotesRid ;
+  ontologies:hasOutput ontologies:KeyDenotesPatKeySymb ;
+  ontologies:hasOutput ontologies:PatKeySymbPartOfColumn ;
+  
+  ontologies:hasOutput ontologies:KeyDenotesDob ;
+  ontologies:hasOutput ontologies:DobPartOfColumn ;
+  
   ontologies:hasRequiredInput ontologies:GidOmopConceptIds ;
   ontologies:hasRequiredInput ontologies:PatientCridsymShortcut ;
   ontologies:hasRequiredInput ontologies:PatientKeySymShortcut ;
