@@ -22,13 +22,21 @@ ontologies:procedure_occurrence a owl:Class .
 ontologies:procedure_source_value a owl:Class .
 
 ontologies:post_icbo_synthea_omop_cnp_patients
-  ontologies:hasRequiredInput ontologies:GidScoGid ;
   a ontologies:TURBO_0010178 ;
+  ontologies:hasOutput ontologies:DobPartOfColumn ;
   ontologies:hasOutput ontologies:GidAboutPatient ; 
   ontologies:hasOutput ontologies:GidHasRepresentation ;
+  ontologies:hasOutput ontologies:GidPartOfColumn ;
+  ontologies:hasOutput ontologies:KeyDenotesDob ;
+  ontologies:hasOutput ontologies:KeyDenotesGid ;
+  ontologies:hasOutput ontologies:KeyDenotesPatKeySymb ;
   ontologies:hasOutput ontologies:KeyDenotesPatient ;
+  ontologies:hasOutput ontologies:KeyDenotesRid ;
+  ontologies:hasOutput ontologies:KeyPartOfColumn ;
+  ontologies:hasOutput ontologies:PatKeySymbPartOfColumn ;
   ontologies:hasOutput ontologies:RidAboutPatient ;
   ontologies:hasOutput ontologies:RidHasRepresentation ;
+  ontologies:hasOutput ontologies:RidPartOfColumn ;
   ontologies:hasOutput ontologies:RidTypingRecipe ;
   ontologies:hasOutput ontologies:cridDenotesPatient;
   ontologies:hasOutput ontologies:dobAboutSns ;
@@ -42,19 +50,8 @@ ontologies:post_icbo_synthea_omop_cnp_patients
   ontologies:hasOutput ontologies:patientBornOnSns ;
   ontologies:hasOutput ontologies:patientExpansionSpecification ;
   ontologies:hasOutput ontologies:symbolPartOfCridForPatient ;
-  ontologies:hasOutput ontologies:KeyPartOfColumn ;
-  ontologies:hasOutput ontologies:GidPartOfColumn ;
-  ontologies:hasOutput ontologies:GidPartOfColumn ;
-  ontologies:hasOutput ontologies:KeyDenotesGid ;
-  ontologies:hasOutput ontologies:RidPartOfColumn ;
-  ontologies:hasOutput ontologies:KeyDenotesRid ;
-  ontologies:hasOutput ontologies:KeyDenotesPatKeySymb ;
-  ontologies:hasOutput ontologies:PatKeySymbPartOfColumn ;
-  
-  ontologies:hasOutput ontologies:KeyDenotesDob ;
-  ontologies:hasOutput ontologies:DobPartOfColumn ;
-  
   ontologies:hasRequiredInput ontologies:GidOmopConceptIds ;
+  ontologies:hasRequiredInput ontologies:GidScoGid ;
   ontologies:hasRequiredInput ontologies:PatientCridsymShortcut ;
   ontologies:hasRequiredInput ontologies:PatientKeySymShortcut ;
   ontologies:hasRequiredInput ontologies:PatientRidShortcut ;
@@ -74,7 +71,6 @@ ontologies:post_icbo_synthea_omop_cnp_patients
    # ontologies:predicateSuffix ontologies:star ;
    ontologies:object obo:OMRSE_00000133 ;
  .
-
 
 ontologies:PatientRidShortcut
   a ontologies:DatatypeConnectionRecipe ;
@@ -154,7 +150,6 @@ ontologies:patientGidShortcut
 # .
 
 ### encounters
-
 
 # _ is wildcard 
 ontologies:post_icbo_synthea_omop_cnp_encounters
@@ -438,7 +433,6 @@ ontologies:MeasMoreUnitsShortcut
   ontologies:object ontologies:measurement_more_units_IntegerLiteralValue ;
 .
 
-
 ontologies:MULClassHasOmopConceptId 
   a ontologies:DatatypeConnectionRecipe ;
   turbo:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
@@ -456,7 +450,6 @@ ontologies:MULClassHasOmopConceptId
   # ontologies:predicate rdfs:subClassOf*  ;
   # ontologies:object obo:IAO_0000003 ;
 # .
-
 
 ontologies:MeasNumValShortcut 
   a ontologies:DatatypeConnectionRecipe ;
@@ -499,7 +492,6 @@ ontologies:post_icbo_synthea_omop_cnp_measurement_aboutness
   ontologies:outputNamedGraph ontologies:omopExpanded ;
 .
 
-
 ontologies:MeasPatientShortcut 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
@@ -535,9 +527,7 @@ ontologies:MeasEncounterShortcut
   ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
 .
 
-
 ###
-
 
 # ontologies:post_icbo_synthea_omop_cnp_precedence
   # a ontologies:TURBO_0010178 ;
