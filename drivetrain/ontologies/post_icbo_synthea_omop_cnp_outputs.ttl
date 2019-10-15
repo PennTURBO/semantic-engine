@@ -25,6 +25,91 @@ ontologies:cdm_synthea10 a owl:Class .
 ontologies:procedure_occurrence a owl:Class .
 ontologies:procedure_source_value a owl:Class .
 
+
+ontologies:KeyDenotesRid
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:object ontologies:RidToBeTyped ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+.
+
+ontologies:KeyDenotesGid
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:object ontologies:GidToBeTyped ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+.
+
+ontologies:KeyDenotesPatient
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ## ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+.
+
+ontologies:KeyPartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object ontologies:TURBO_0010442  ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+.
+
+
+
+ontologies:RidAboutPatient
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ; 
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:RidToBeTyped ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+.
+
+ontologies:RidPartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:RidToBeTyped ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object ontologies:TURBO_0010441 ;
+.
+
+ontologies:RidHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:RidToBeTyped ;
+  ontologies:predicate <http://transformunify.org/ontologies/TURBO_0010094> ;
+  ontologies:object ontologies:race_concept_id_IntegerLiteralValue ;
+.
+
+ontologies:RidTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
+  turbo:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject ontologies:RidToBeTyped  ;
+  ontologies:predicate rdf:type ;
+  ontologies:object ontologies:RidClassList ;
+.
+
+
+
 ontologies:GidAboutPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ; 
@@ -44,16 +129,6 @@ ontologies:GidHasRepresentation
   ontologies:object ontologies:gender_concept_id_IntegerLiteralValue ;
 .
   
-  # ontologies:KeyDenotesGid
-  # a ontologies:ObjectConnectionToInstanceRecipe ;
-  # turbo:referencedInGraph ontologies:omopExpanded ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # ## ontologies:required true ;
-  # ontologies:subject ontologies:TURBO_0010433 ;
-  # ontologies:predicate obo:IAO_0000219 ;
-  # ontologies:object ontologies:GidToBeTyped ;
-  # ontologies:subjectUsesContext ontologies:IndexContext ;
-# .
 
 # ontologies:GidKeySymbPartOfKey
   # a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -86,16 +161,7 @@ ontologies:cridDenotesPatient
   ontologies:object obo:NCBITaxon_9606 ;
 .
 
-ontologies:KeyDenotesPatient
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  turbo:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
-.
+
 
 ontologies:patKeySymbPartOfKey
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -178,12 +244,25 @@ ontologies:gender_concept_id_IntegerLiteralValue
   a ontologies:TurboGraphIntegerLiteralValue ;
 .
 
+ontologies:race_concept_id_IntegerLiteralValue  
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+
 # represents/holds possible classes 
 ontologies:GidClassList
   a ontologies:MultiObjectDescriber ;
-  ontologies:range obo:OMRSE_00000138 ;
-  ontologies:range obo:OMRSE_00000141 ;
-  ontologies:range obo:OMRSE_00000133 ;
+  # ontologies:range obo:OMRSE_00000138 ;
+  # ontologies:range obo:OMRSE_00000141 ;
+  # ontologies:range obo:OMRSE_00000133 ;
+.
+
+ontologies:RidToBeTyped 
+  a ontologies:MultiObjectDescriber ;
+.
+
+ontologies:RidClassList
+  a ontologies:MultiObjectDescriber ;
+  # ontologies:range 
 .
 
 ontologies:hardcodedPatientRegden a ontologies:ObjectConnectionToTermRecipe ;

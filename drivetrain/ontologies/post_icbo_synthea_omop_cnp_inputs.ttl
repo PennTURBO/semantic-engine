@@ -22,54 +22,87 @@ ontologies:procedure_occurrence a owl:Class .
 ontologies:procedure_source_value a owl:Class .
 
 ontologies:post_icbo_synthea_omop_cnp_patients
+  # ontologies:hasRequiredInput ontologies:GidScoGid ;
   a ontologies:TURBO_0010178 ;
   ontologies:hasOutput ontologies:GidAboutPatient ; 
+  ontologies:hasOutput ontologies:GidHasRepresentation ;
+  # ontologies:hasOutput ontologies:KeyDenotesGid ;
+  ontologies:hasOutput ontologies:KeyDenotesPatient ;
+  # ontologies:hasOutput ontologies:KeyDenotesRid ;
+  ontologies:hasOutput ontologies:RidAboutPatient ;
+  ontologies:hasOutput ontologies:RidHasRepresentation ;
+  # ontologies:hasOutput ontologies:RidPartOfColumn ;
+  ontologies:hasOutput ontologies:RidTypingRecipe ;
   ontologies:hasOutput ontologies:cridDenotesPatient;
   ontologies:hasOutput ontologies:dobAboutSns ;
   ontologies:hasOutput ontologies:dobHasMeasVal ;
   ontologies:hasOutput ontologies:gidTypingRecipe ;
   ontologies:hasOutput ontologies:hardcodedPatientRegden ;
+  ontologies:hasOutput ontologies:hardcodedPatientSourceden ; 
   ontologies:hasOutput ontologies:patCridsymbHasRepresentation ;
+  ontologies:hasOutput ontologies:patKeySymbHasRepresentation ;
+  ontologies:hasOutput ontologies:patKeySymbPartOfKey ;
   ontologies:hasOutput ontologies:patientBornOnSns ;
   ontologies:hasOutput ontologies:patientExpansionSpecification ;
   ontologies:hasOutput ontologies:symbolPartOfCridForPatient ;
-  ontologies:hasOutput ontologies:KeyDenotesPatient ;
-  ontologies:hasOutput ontologies:patKeySymbPartOfKey ;
-  ontologies:hasOutput ontologies:patKeySymbHasRepresentation ;
-  ontologies:hasOutput ontologies:hardcodedPatientSourceden ;
-  
-  ontologies:hasOutput ontologies:GidHasRepresentation ;
-
+  ontologies:hasOutput ontologies:KeyPartOfColumn ;
+  ontologies:hasOutput ontologies:GidPartOfColumn ;
+  ontologies:hasOutput ontologies:GidPartOfColumn ;
+  ontologies:hasOutput ontologies:KeyDenotesGid ;
+  ontologies:hasOutput ontologies:RidPartOfColumn ;
+  ontologies:hasOutput ontologies:KeyDenotesRid ;
+  # ontologies:hasRequiredInput ontologies:GidScoGid ;
+  ontologies:hasRequiredInput ontologies:GidOmopConceptIds ;
   ontologies:hasRequiredInput ontologies:PatientCridsymShortcut ;
+  ontologies:hasRequiredInput ontologies:PatientKeySymShortcut ;
+  ontologies:hasRequiredInput ontologies:PatientRidShortcut ;
+  ontologies:hasRequiredInput ontologies:RidOmopConceptIds ;
   ontologies:hasRequiredInput ontologies:patientDobShortcut ;
   ontologies:hasRequiredInput ontologies:patientGidShortcut ;
-  ontologies:hasRequiredInput ontologies:PatientKeySymShortcut ;
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_encounters ;
 .
 
-ontologies:GidProvenance
-  a ontologies:TURBO_0010178 ;
-  ontologies:hasRequiredInput ontologies:GidAboutPatient ;
-  ontologies:hasRequiredInput ontologies:gidTypingRecipe ;
-  # ontologies:hasRequiredInput ontologies:ScoGid ;
-  # ontologies:hasOutput ontologies:GidKeySymbPartOfKey ;
-  ontologies:hasOutput ontologies:GidPartOfColumn ;
-  # ontologies:hasOutput ontologies:KeyDenotesGid ;
-  ontologies:inputNamedGraph ontologies:omopShortcuts ;
-  ontologies:outputNamedGraph ontologies:omopExpanded ;
-  ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_encounters ;
-.
-
-# ontologies:ScoGid a ontologies:ObjectConnectionToTermRecipe ;
+# ontologies:GidScoGid a ontologies:ObjectConnectionToTermRecipe ;
   # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   # turbo:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
   # ontologies:subject ontologies:GidClassList ;
   # ontologies:predicate rdfs:subClassOf ;
+  # # ontologies:predicateSuffix ontologies:star ;
   # ontologies:object obo:OMRSE_00000133 ;
 # .
-  
+
+
+ontologies:PatientRidShortcut
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:required true ;
+  ontologies:subject <http://api.stardog.com/person> ;
+  ontologies:predicate <http://api.stardog.com/person#race_concept_id> ;
+  ontologies:object ontologies:race_concept_id_IntegerLiteralValue ;
+  # ontologies:objectRequiredToCreate ontologies:GidClassList ;
+.
+
+ontologies:RidOmopConceptIds 
+  a ontologies:DatatypeConnectionRecipe ;
+  turbo:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  ## ontologies:required true ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:RidClassList ;
+  ontologies:predicate ontologies:TURBO_0010147 ;
+  ontologies:object ontologies:race_concept_id_IntegerLiteralValue ;
+.
+
+ontologies:GidOmopConceptIds 
+  a ontologies:DatatypeConnectionRecipe ;
+  turbo:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  ## ontologies:required true ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:GidClassList ;
+  ontologies:predicate ontologies:TURBO_0010147 ;
+  ontologies:object ontologies:gender_concept_id_IntegerLiteralValue ;
+.
 
 ontologies:PatientCridsymShortcut 
   a ontologies:DatatypeConnectionRecipe ;
@@ -104,19 +137,19 @@ ontologies:patientGidShortcut
   ontologies:subject <http://api.stardog.com/person> ;
   ontologies:predicate <http://api.stardog.com/person#gender_concept_id> ;
   ontologies:object ontologies:gender_concept_id_IntegerLiteralValue ;
-  ontologies:objectRequiredToCreate ontologies:GidClassList ;
+#  ontologies:objectRequiredToCreate ontologies:GidClassList ;
 .
 
-ontologies:GidClassList ontologies:usesCustomVariableManipulationRule ontologies:gidClassFromValueRule .
+# ontologies:GidClassList ontologies:usesCustomVariableManipulationRule ontologies:gidClassFromValueRule .
 
-ontologies:gidClassFromValueRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """
-  BIND(IF (${dependent} = 8532, obo:OMRSE_00000138, ?unbound) AS ?femGidClass) 
-  BIND(IF (${dependent} = 8507, obo:OMRSE_00000141, ?unbound) AS ?maleGidClass) 
-  bind(coalesce(?femGidClass, ?maleGidClass, obo:OMRSE_00000133) as ${replacement})
-"""  ;
-.
+# ontologies:gidClassFromValueRule
+  # a ontologies:TurboGraphVariableManipulationLogic ;
+  # ontologies:usesSparql """
+  # BIND(IF (${dependent} = 8532, obo:OMRSE_00000138, ?unbound) AS ?femGidClass) 
+  # BIND(IF (${dependent} = 8507, obo:OMRSE_00000141, ?unbound) AS ?maleGidClass) 
+  # bind(coalesce(?femGidClass, ?maleGidClass, obo:OMRSE_00000133) as ${replacement})
+# """  ;
+# .
 
 ### encounters
 
@@ -525,16 +558,3 @@ ontologies:MeasEncounterShortcut
 
 ###
 
-# run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_encounters
-# run            http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_encounters
-# run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_patients
-
-# run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_enc_participation
-
-# run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_procedures
-
-# run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_procedure_participation
-
-# run printQuery http://transformunify.org/ontologies/post_icbo_synthea_omop_cnp_MUL
-
-# run printQuery http://transformunify.org/ontologies/GidProvenance
