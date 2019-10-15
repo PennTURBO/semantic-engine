@@ -29,7 +29,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         
         pw.write("""
           
-          ontologies:myProcess1 a ontologies:TURBO_0010178 ;
+          ontologies:myProcess1 a ontologies:TURBO_0010354 ;
               ontologies:inputNamedGraph pmbb:expanded ;
               ontologies:outputNamedGraph pmbb:expanded ; 
               ontologies:hasOutput ontologies:object1ToObject2 ;
@@ -572,7 +572,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                        ontologies:precedes ontologies:myProcess2 .
                    
                    ontologies:myProcess2 ontologies:inputNamedGraph pmbb:expanded ;
-                       a turbo:TURBO_0010178 ;
+                       a turbo:TURBO_0010354 ;
                        ontologies:outputNamedGraph pmbb:expanded ; 
                        ontologies:hasRequiredInput ontologies:object1ToObject4 ;
                        ontologies:removes ontologies:object1ToObject4 .

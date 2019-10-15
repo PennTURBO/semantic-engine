@@ -1584,7 +1584,7 @@ ontologies:homoSapiensSymbolStringLiteralValue
 .
 ontologies:inputNamedGraph
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TURBO_0010178 ;
+  rdfs:domain ontologies:TURBO_0010354 ;
   rdfs:range ontologies:TurboNamedGraph ;
 .
 ontologies:lengthMeasurementDoubleLiteralValue
@@ -1630,19 +1630,19 @@ ontologies:optionalInputTo
 .
 ontologies:outputNamedGraph
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TURBO_0010178 ;
+  rdfs:domain ontologies:TURBO_0010354 ;
   rdfs:range ontologies:TurboNamedGraph ;
 .
 ontologies:outputOf
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TurboGraphConnectionRecipe ;
-  rdfs:range ontologies:TURBO_0010178 ;
+  rdfs:range ontologies:TURBO_0010354 ;
   rdfs:range owl:Class ;
 .
 ontologies:precedes
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TURBO_0010178 ;
-  rdfs:range ontologies:TURBO_0010178 ;
+  rdfs:domain ontologies:TURBO_0010354 ;
+  rdfs:range ontologies:TURBO_0010354 ;
 .
 ontologies:predicate
   a owl:ObjectProperty ;

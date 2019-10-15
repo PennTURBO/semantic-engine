@@ -1,4 +1,4 @@
-turbo:myProcess1 a turbo:TURBO_0010178 ;
+turbo:myProcess1 a turbo:TURBO_0010354 ;
   turbo:inputNamedGraph pmbb:expanded ;
   turbo:outputNamedGraph pmbb:expanded ;
   turbo:hasRequiredInput turbo:connection1 ;

@@ -37,7 +37,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     {
        val ask: String = s"""
           ASK {
-            <$process> a turbo:TURBO_0010178 .
+            <$process> a turbo:TURBO_0010354 .
           }
           """
         update.querySparqlBoolean(gmCxn, ask).get
@@ -490,7 +490,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       turbo:TurboGraphVariableManipulationLogic,
                       turbo:TurboNamedGraph,
                       owl:Ontology,
-                      turbo:TURBO_0010178,
+                      turbo:TURBO_0010354,
                       owl:ObjectProperty,
                       owl:DatatypeProperty,
                       turbo:TurboGraphStringLiteralValue,
@@ -668,11 +668,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
           {
               Graph pmbb:dataModel
               {
-                  ?firstProcess a turbo:TURBO_0010178 .
+                  ?firstProcess a turbo:TURBO_0010354 .
                   Minus
                   {
                       ?someOtherProcess turbo:precedes ?firstProcess .
-                      ?someOtherProcess a turbo:TURBO_0010178 .
+                      ?someOtherProcess a turbo:TURBO_0010354 .
                   }
               }
           }
@@ -684,8 +684,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Graph pmbb:dataModel
               {
                   ?precedingProcess turbo:precedes ?succeedingProcess .
-                  ?precedingProcess a turbo:TURBO_0010178 .
-                  ?succeedingProcess a turbo:TURBO_0010178 .
+                  ?precedingProcess a turbo:TURBO_0010354 .
+                  ?succeedingProcess a turbo:TURBO_0010354 .
               }
           }
         """
