@@ -1,4 +1,4 @@
-ontologies:cridDenotesHce
+ontologies:DNAExtractionProcessToDNAExtract
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001051 ;
@@ -1086,8 +1086,7 @@ ontologies:instantiationToDataset
   ontologies:required ontologies:bothRequired ;
   ontologies:subject ontologies:TURBO_0000522 ;
 .
-
-ontologies:symbolPartOfCridForHce
+ontologies:investigationRoleToBiobankEncounter
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:superSingleton-many ;
   ontologies:object ontologies:TURBO_0000527 ;
@@ -1119,8 +1118,7 @@ ontologies:lengthMeasurementValueSpecificationToHomoSapiens
   ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010138 ;
 .
-
-ontologies:regdenPartOfCrid
+ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:PATO_0000119 ;
@@ -1184,18 +1182,15 @@ ontologies:medicationSymbolToDataset
   ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:TURBO_0000562 ;
 .
-
-ontologies:cridsymbHasRepresentation
+ontologies:medicationSymbolToMedicationSymbolStringLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject obo:IAO_0000577 ;
+  ontologies:object ontologies:medicationSymbolStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:required ontologies:bothRequired ;
   ontologies:subject ontologies:TURBO_0000562 ;
 .
-
-ontologies:hceExpansionSpecification
+ontologies:medicationSymbolToidentifier
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000561 ;
@@ -1211,8 +1206,7 @@ ontologies:patientRoleToHealthcareEncounter
   ontologies:required ontologies:objectRequired ;
   ontologies:subject obo:OBI_0000093 ;
 .
-
-ontologies:procboundStartsEnc
+ontologies:prescriptionToDataset
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
@@ -1244,12 +1238,10 @@ ontologies:raceIdentityDatumToDataset
   ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
-
-ontologies:startingTmdAboutProcbound 
+ontologies:raceIdentityDatumToHomoSapiens
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ## ontologies:required true ;
-  ontologies:subject obo:IAO_0000416 ;
+  ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:required ontologies:objectRequired ;
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
@@ -1286,8 +1278,7 @@ ontologies:systolicBloodPressureMeasurementDatumToBloodPressure
   ontologies:required ontologies:objectRequired ;
   ontologies:subject obo:HTN_00000001 ;
 .
-
-ontologies:startingTmdHasMeasVal 
+ontologies:tumorCridSymbolToSymbolLiteralValue
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:tumorSymbolStringLiteralValue ;
