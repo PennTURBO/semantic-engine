@@ -233,11 +233,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Optional
               {
                   ?$SUBJECT a owl:Class .
+                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionFromTermRecipe)
                   BIND (true AS ?$SUBJECTTYPE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
+                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionToTermRecipe)
                   BIND (true AS ?$OBJECTTYPE)
               }
               Optional
@@ -287,11 +289,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Optional
               {
                   ?$SUBJECT a owl:Class .
+                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionFromTermRecipe)
                   BIND (true AS ?$SUBJECTTYPE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
+                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionToTermRecipe)
                   BIND (true AS ?$OBJECTTYPE)
               }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
@@ -372,11 +376,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Optional
               {
                   ?$SUBJECT a owl:Class .
+                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionFromTermRecipe)
                   BIND (true AS ?$SUBJECTTYPE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
+                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionToTermRecipe)
                   BIND (true AS ?$OBJECTTYPE)
               }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
