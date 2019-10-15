@@ -248,6 +248,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?$CONNECTIONNAME turbo:required ?$REQUIREMENT .
               }
+              Optional
+              {
+                  ?$CONNECTIONNAME ontologies:predicateSuffix ?suffix .
+                  ?suffix a ontologies:PredicateSuffixSymbol .
+                  ?suffix ontologies:usesSparqlOperator ?$SUFFIXOPERATOR .
+              }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
          }
          
@@ -459,7 +465,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       owl:imports,
                       rdfs:subClassOf,
                       rdfs:domain,
-                      rdfs:range
+                      rdfs:range,
+                      turbo:usesSparqlOperator,
+                      turbo:predicateSuffix
                   ))
               }
           }
@@ -499,7 +507,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       turbo:TurboGraphDoubleLiteralValue,
                       turbo:TurboGraphIntegerLiteralValue,
                       turbo:TurboGraphBooleanLiteralValue,
-                      turbo:TurboGraphRequirementSpecification
+                      turbo:TurboGraphRequirementSpecification,
+                      turbo:PredicateSuffixSymbol
                   ))
               }
           }

@@ -55,6 +55,9 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         var subjectADescriber = false
         
         var objectALiteral = false
+        
+        var suffixOperator = ""
+        if (rowResult(SUFFIXOPERATOR.toString) != null) suffixOperator = rowResult(SUFFIXOPERATOR.toString).toString
      
         if (rowResult(OBJECTALITERAL.toString).toString.contains("true")) objectALiteral = true
         
@@ -112,7 +115,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             assert (!objectALiteral, s"Found literal object for connection $connectionName of type ObjectConnectionToInstanceRecipe")
         }
         val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
-                                                 subjectAType, objectAType, subjectADescriber, objectADescriber, "", "", objectALiteral)
+                                                 subjectAType, objectAType, subjectADescriber, objectADescriber, "", "", objectALiteral, suffixOperator)
         
         
         addNewTripleToGroup(newTriple, minusGroupForThisRow, optionalGroupForThisRow, required, graphForThisRow)
