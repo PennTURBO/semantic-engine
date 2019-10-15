@@ -135,6 +135,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         }
         else
         {
+            validateConnectionRecipesInProcess(thisProcess)
+            
             // retrieve connections (inputs, outputs) from model graph
             // the inputs become the "where" block of the SPARQL query
             // the outputs become the "insert" block
@@ -629,6 +631,29 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         firstRes = ""
         if (res.size > 0) firstRes = res(0)
         assert(firstRes == "")
+    }
+    
+    def validateConnectionRecipesInProcess(process: String)
+    {
+        val checkRecipes = s"""
+            Select ?recipe Where
+            {
+                Values ?hasRecipe {ontologies:hasRequiredInput ontologies:hasOptionalInput ontologies:hasOutput}
+                pmbb:HomoSapiensExpansionProcess ?hasRecipe ?recipe .
+                Minus
+                {
+                    ?recipe a ?recipeType .
+                    ?recipe ontologies:subject ?subject .
+                    ?recipe ontologies:predicate ?predicate .
+                    ?recipe ontologies:object ?object .
+                    ?recipe ontologies:multiplicity ?multiplicity .
+                }
+            }
+          """
+        val res = update.querySparqlAndUnpackTuple(gmCxn, checkRecipes, "recipe")
+        var firstRes = ""
+        if (res.size > 0) firstRes = res(0)
+        assert(firstRes == "", s"Process $process references undefined recipe $firstRes")
     }
 
     /**
