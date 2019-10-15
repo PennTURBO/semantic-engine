@@ -22,7 +22,7 @@ ontologies:procedure_occurrence a owl:Class .
 ontologies:procedure_source_value a owl:Class .
 
 ontologies:post_icbo_synthea_omop_cnp_patients
-  # ontologies:hasRequiredInput ontologies:GidScoGid ;
+  ontologies:hasRequiredInput ontologies:GidScoGid ;
   a ontologies:TURBO_0010178 ;
   ontologies:hasOutput ontologies:GidAboutPatient ; 
   ontologies:hasOutput ontologies:GidHasRepresentation ;
@@ -51,7 +51,6 @@ ontologies:post_icbo_synthea_omop_cnp_patients
   ontologies:hasOutput ontologies:KeyDenotesGid ;
   ontologies:hasOutput ontologies:RidPartOfColumn ;
   ontologies:hasOutput ontologies:KeyDenotesRid ;
-  # ontologies:hasRequiredInput ontologies:GidScoGid ;
   ontologies:hasRequiredInput ontologies:GidOmopConceptIds ;
   ontologies:hasRequiredInput ontologies:PatientCridsymShortcut ;
   ontologies:hasRequiredInput ontologies:PatientKeySymShortcut ;
@@ -64,14 +63,14 @@ ontologies:post_icbo_synthea_omop_cnp_patients
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_encounters ;
 .
 
-# ontologies:GidScoGid a ontologies:ObjectConnectionToTermRecipe ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  # turbo:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
-  # ontologies:subject ontologies:GidClassList ;
-  # ontologies:predicate rdfs:subClassOf ;
-  # # ontologies:predicateSuffix ontologies:star ;
-  # ontologies:object obo:OMRSE_00000133 ;
-# .
+ ontologies:GidScoGid a ontologies:ObjectConnectionToTermRecipe ;
+   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+   turbo:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+   ontologies:subject ontologies:GidClassList ;
+   ontologies:predicate rdfs:subClassOf ;
+   # ontologies:predicateSuffix ontologies:star ;
+   ontologies:object obo:OMRSE_00000133 ;
+ .
 
 
 ontologies:PatientRidShortcut
