@@ -144,7 +144,6 @@ ontologies:patientDobShortcut
 # _ is wildcard suffix for graph names
 ontologies:post_icbo_synthea_omop_cnp_encounters
   a ontologies:TURBO_0010354 ;
-  # ontologies:hasOutput ontologies:EncHasMeasVal ;
   ontologies:hasOutput ontologies:EncTypeAxiomDbXrefHasRepresentation ;
   ontologies:hasOutput ontologies:EncTypeAxiomDbXrefPartOfColumn ;
   ontologies:hasOutput ontologies:EncTypeAxiomHasDbXref  ;
@@ -166,7 +165,6 @@ ontologies:post_icbo_synthea_omop_cnp_encounters
   ontologies:hasOutput ontologies:encCridsymbHasRepresentation ;
   ontologies:hasOutput ontologies:encounterTypingRecipe ;
   ontologies:hasOutput ontologies:endingTmdAboutProcbound ;
-  ontologies:hasOutput ontologies:endingTmdHasLiteralMeasVal ;
   ontologies:hasOutput ontologies:endingTmdHasMeasVal ;
   ontologies:hasOutput ontologies:hardcodedHceSourceden ;
   ontologies:hasOutput ontologies:hardcodedRegden ;
@@ -194,7 +192,6 @@ ontologies:HceTypeShortcut
   ontologies:subject <http://api.stardog.com/visit_occurrence> ;
   ontologies:predicate <http://api.stardog.com/visit_occurrence#visit_concept_id> ;
   ontologies:object ontologies:visit_concept_id_IntegerLiteralValue ;
-  # ontologies:objectRequiredToCreate ontologies:EncounterClassList ;
 .
 
 ontologies:EncounterOmopConceptIds 
@@ -298,20 +295,28 @@ ontologies:EncounterPatientID
 ontologies:post_icbo_synthea_omop_cnp_precedence
   a ontologies:TURBO_0010354 ;
   ontologies:hasOutput ontologies:EncPrevencAnnotation ;
+  ontologies:hasOutput ontologies:PrecedenceAxiomDbXrefHasRepresentation ;
+  ontologies:hasOutput ontologies:PrecedenceAxiomDbXrefPartOfColumn ;
+  ontologies:hasOutput ontologies:PrecedenceAxiomHasDbXref ;
+  ontologies:hasOutput ontologies:PrecedenceAxiomProp ;
+  ontologies:hasOutput ontologies:PrecedenceAxiomSource ;
+  ontologies:hasOutput ontologies:PrecedenceAxiomTarget ;
+  ontologies:hasOutput ontologies:PrecedenceAxiomTypingRecipe ;
   ontologies:hasRequiredInput  ontologies:HceTypeShortcut ;
-  ontologies:hasRequiredInput ontologies:KeyDenotesDenoted ;
+  ontologies:hasRequiredInput ontologies:DenotedADenotedsClass ; 
+  ontologies:hasRequiredInput ontologies:DenotedScoHce ; 
   ontologies:hasRequiredInput ontologies:EncounterOmopConceptIds ;
   ontologies:hasRequiredInput ontologies:EncounterPreviousEncValSc ;
   ontologies:hasRequiredInput ontologies:KeyContainerOfPreviousVisitId ;
+  ontologies:hasRequiredInput ontologies:KeyDenotesDenoted ;
   ontologies:hasRequiredInput ontologies:RepresenteeOfPreviousVisitId ;
   ontologies:hasRequiredInput ontologies:encounterTypingRecipe ;
   ontologies:hasRequiredInput ontologies:hceExpansionSpecification ; 
-  ontologies:hasRequiredInput ontologies:DenotedADenotedsClass ; 
-  ontologies:hasRequiredInput ontologies:DenotedScoHce ; 
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_procedures ;
 .
+
 ontologies:EncounterPreviousEncValSc
   a ontologies:DatatypeConnectionRecipe ;
   turbo:referencedInGraph ontologies:omopShortcuts ;
@@ -372,13 +377,6 @@ ontologies:post_icbo_synthea_omop_cnp_procedures
   a ontologies:TURBO_0010354 ;
   ontologies:hasOutput ontologies:procedureTypingRecipe ;
   ontologies:hasOutput ontologies:procExpansionSpecification ;
-  ontologies:hasOutput ontologies:procProvDatabaseAnnotation ;
-  ontologies:hasOutput ontologies:procProvSchemaAnnotation ;
-  ontologies:hasOutput ontologies:procProvTableAnnotation ;
-  ontologies:hasOutput ontologies:procProvColumnAnnotation ;
-  ontologies:hasOutput ontologies:procProvKeyColAnnotation ;
-  ontologies:hasOutput ontologies:procProvKeyValAnnotation ;
-  ontologies:hasOutput ontologies:procProvValueAnnotation ;
   ontologies:hasOutput ontologies:provenanceAboutProcedure ;
   ontologies:hasOutput ontologies:provMentionsSnomed ;
   ontologies:hasOutput ontologies:KeyDenotesProc ;
@@ -460,7 +458,7 @@ ontologies:post_icbo_synthea_omop_cnp_procedure_parthood
   ontologies:hasRequiredInput ontologies:hardcodedHceSourceden ;
   ontologies:hasRequiredInput ontologies:hceExpansionSpecification ;
   ontologies:hasRequiredInput ontologies:KeyDenotesHce ;
-  ontologies:hasRequiredInput ontologies:procExpansionInput ;
+  # ontologies:hasRequiredInput ontologies:procExpansionInput ;
   ontologies:hasRequiredInput ontologies:procExpansionSpecification ;
   ontologies:hasRequiredInput ontologies:procedureEncounterShortcut ;
   ontologies:hasRequiredInput ontologies:procedureTypingRecipe ;
@@ -492,14 +490,14 @@ ontologies:post_icbo_synthea_omop_cnp_measurement
   ontologies:hasRequiredInput ontologies:MeasDatetimeShortcut ;
   ontologies:hasRequiredInput ontologies:MeasNumValShortcut ;
   ontologies:hasRequiredInput ontologies:MeasKeysymShortcut ;
-  ontologies:hasRequiredInput ontologies:MULScoMUL ;
+  # ontologies:hasRequiredInput ontologies:MULScoMUL ;
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_MUL ;
 .
 ontologies:post_icbo_synthea_omop_cnp_MUL
   a ontologies:TURBO_0010354 ;
-  ontologies:hasOutput ontologies:MULMoreUnitsOutput ;
+  # ontologies:hasOutput ontologies:MULMoreUnitsOutput ;
   ontologies:hasOutput ontologies:MULTypingRecipe ;
   ontologies:hasOutput ontologies:MULpartOfColumn ;
   ontologies:hasRequiredInput ontologies:MeasExpansionSpecification ;

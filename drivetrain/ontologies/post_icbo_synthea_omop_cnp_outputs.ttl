@@ -677,9 +677,9 @@ ontologies:EncPrevencAnnotation
   # a ontologies:DatatypeConnectionRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:encounterToBeTyped ;
-  ontologies:predicate rdfs:seeAlso ;
-  ontologies:object ontologies:denoted ;
+  ontologies:subject ontologies:denoted  ;
+  ontologies:predicate obo:RO_0002090 ;
+  ontologies:object ontologies:encounterToBeTyped ;
   # ontologies:predicate rdfs:comment ;
   # ontologies:object ontologies:preceding_visit_occurrence_id_IntegerLiteralValue ;
 .
@@ -689,6 +689,56 @@ ontologies:denoted
   
 ontologies:denotedsClass
   a ontologies:MultiObjectDescriber .
+  
+ontologies:PrecedenceAxiomTypingRecipe
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject owl:Axiom ;
+  ontologies:predicate rdf:type ;
+  ontologies:object owl:Axiom ;
+.
+ontologies:PrecedenceAxiomSource
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject owl:Axiom ;
+  ontologies:predicate owl:annotatedSource ;
+  ontologies:object ontologies:denoted ;
+.
+ontologies:PrecedenceAxiomProp
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject owl:Axiom ;
+  ontologies:predicate owl:annotatedProperty ;
+  ontologies:object obo:RO_0002090 ;
+.
+ontologies:PrecedenceAxiomTarget
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject owl:Axiom ;
+  ontologies:predicate owl:annotatedTarget ;
+  ontologies:object ontologies:encounterToBeTyped ;
+.
+ontologies:PrecedenceAxiomHasDbXref
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject owl:Axiom ;
+  ontologies:predicate <http://www.geneontology.org/formats/oboInOwl#hasDbXref> ;
+  ontologies:object ontologies:TURBO_0010404 ;
+.
+ontologies:PrecedenceAxiomDbXrefHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:object ontologies:preceding_visit_occurrence_id_IntegerLiteralValue ;
+.
+ontologies:PrecedenceAxiomDbXrefPartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:object ontologies:TURBO_0010459 ;
+.
   
 ### procedures
 ontologies:KeyDenotesProc
