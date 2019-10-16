@@ -182,7 +182,7 @@ ontologies:post_icbo_synthea_omop_cnp_encounters
   ontologies:hasOutput ontologies:KeyDenotesVisitCridSym ;
   ontologies:hasOutput ontologies:VisitCridSymPartOfColumn ;
 
-  ontologies:hasRequiredInput ontologies:HceEnddateShortcutRedo ;
+  # ontologies:hasRequiredInput ontologies:HceEnddateShortcutRedo ;
   
   ontologies:hasRequiredInput ontologies:HceCridsymShortcut ;
   ontologies:hasRequiredInput ontologies:HceEnddateShortcut ;
@@ -212,6 +212,7 @@ ontologies:HceKeysymShortcut
 
 ontologies:HceEnddateShortcut 
   a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:subject <http://api.stardog.com/visit_occurrence> ;
   ontologies:predicate <http://api.stardog.com/visit_occurrence#visit_end_date> ;
   ontologies:object ontologies:visit_end_date_DateLiteralValue ;

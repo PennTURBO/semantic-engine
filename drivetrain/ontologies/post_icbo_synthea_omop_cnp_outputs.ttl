@@ -535,7 +535,7 @@ obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encEndContext .
 ontologies:endingTmdHasMeasVal 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:visit_start_date_DateLiteralValue ;
+  ontologies:object ontologies:visit_end_date_DateLiteralValue ;
   ontologies:predicate obo:IAO_0000004 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000416 ;
