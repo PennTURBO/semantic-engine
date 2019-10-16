@@ -33,7 +33,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         this.cxn = cxn
     }
 
-    def validateProcess(process: String): Boolean =
+    def validateProcessSpecification(process: String): Boolean =
     {
        val ask: String = s"""
           ASK {
@@ -43,35 +43,36 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         update.querySparqlBoolean(gmCxn, ask).get
     }
     
-    def runProcess(process: String, dataValidationMode: String = dataValidationMode): HashMap[String, PatternMatchQuery] =
+    def runProcess(processSpecification: String, dataValidationMode: String = dataValidationMode): HashMap[String, PatternMatchQuery] =
     {
-        runProcess(ArrayBuffer(process), dataValidationMode)
+        runProcess(ArrayBuffer(processSpecification), dataValidationMode)
     }
         
-    def runProcess(processes: ArrayBuffer[String], dataValidationMode: String): HashMap[String, PatternMatchQuery] =
+    def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String): HashMap[String, PatternMatchQuery] =
     {
         var processQueryMap = new HashMap[String, PatternMatchQuery]
-        for (process <- processes)
+        for (processSpecification <- processSpecifications)
         {
-            if (!validateProcess(process)) logger.info(process + " is not a valid TURBO process")
-            else processQueryMap += process -> createPatternMatchQuery(process)
+            val updateProcess = helper.genTurboIRI()
+            if (!validateProcessSpecification(processSpecification)) logger.info(processSpecification + " is not a valid TURBO process")
+            else processQueryMap += processSpecification -> createPatternMatchQuery(processSpecification, updateProcess)
         }
-        for (process <- processes)
+        for (processSpecification <- processSpecifications)
         {
             val startTime = System.nanoTime()
             val currDate = Calendar.getInstance().getTime()
             val startingTriplesCount = helper.countTriplesInDatabase(cxn)
             val processGraphsList = new ArrayBuffer[String]
-            logger.info("Starting process: " + process)
+            logger.info("Starting process: " + processSpecification)
            
-            val primaryQuery = processQueryMap(process)
+            val primaryQuery = processQueryMap(processSpecification)
             val genericWhereClause = primaryQuery.whereClause
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
             //var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
             // get list of all named graphs which match pattern specified in inputNamedGraph but without match on where clause
             var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph)
             logger.info("input named graphs size: " + inputNamedGraphsList.size)
-            if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $process: no input named graphs found")
+            if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $processSpecification: no input named graphs found")
             else
             {
                 logger.info(s"Running on validation mode $dataValidationMode")
@@ -102,13 +103,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 val triplesAdded = endingTriplesCount - startingTriplesCount
                 val endTime = System.nanoTime()
                 val runtime: String = ((endTime - startTime)/1000000000.0).toString
-                logger.info("Completed process " + process + " in " + runtime + " seconds")
+                logger.info("Completed process " + processSpecification + " in " + runtime + " seconds")
 
                 // create metadata about process
                 val metaDataQuery = new DataQuery()
                 val metaInfo: HashMap[Value, ArrayBuffer[String]] = HashMap(METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
                                                                 DATE -> ArrayBuffer(currDate.toString), 
-                                                                PROCESS -> ArrayBuffer(process), 
+                                                                PROCESSSPECIFICATION -> ArrayBuffer(processSpecification), 
+                                                                PROCESS -> ArrayBuffer(primaryQuery.process),
                                                                 OUTPUTNAMEDGRAPH -> ArrayBuffer(primaryQuery.defaultOutputGraph, primaryQuery.defaultRemovalsGraph),
                                                                 PROCESSRUNTIME -> ArrayBuffer(runtime),
                                                                 TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
@@ -124,25 +126,25 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         processQueryMap
     }
 
-    def createPatternMatchQuery(process: String): PatternMatchQuery =
+    def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()): PatternMatchQuery =
     {
         assert (localUUID != null, "You must set the globalUUID before running any process.")
-        var thisProcess = helper.getProcessNameAsUri(process)
-        if (!validateProcess(thisProcess)) 
+        var thisProcessSpecification = helper.getProcessNameAsUri(processSpecification)
+        if (!validateProcessSpecification(thisProcessSpecification)) 
         {
-            logger.info(thisProcess + " is not a valid TURBO process")
+            logger.info(thisProcessSpecification + " is not a valid TURBO process")
             return null
         }
         else
         {
-            validateConnectionRecipesInProcess(thisProcess)
+            validateConnectionRecipesInProcess(thisProcessSpecification)
             
             // retrieve connections (inputs, outputs) from model graph
             // the inputs become the "where" block of the SPARQL query
             // the outputs become the "insert" block
-            val inputs = getInputs(thisProcess)
-            val outputs = getOutputs(thisProcess)
-            val removals = getRemovals(thisProcess)
+            val inputs = getInputs(thisProcessSpecification)
+            val outputs = getOutputs(thisProcessSpecification)
+            val removals = getRemovals(thisProcessSpecification)
             
             if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
             if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
@@ -151,7 +153,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             
             // create primary query
             val primaryQuery = new PatternMatchQuery()
-            primaryQuery.setProcess(thisProcess)
+            primaryQuery.setProcessSpecification(thisProcessSpecification)
+            primaryQuery.setProcess(process)
             primaryQuery.setInputGraph(inputNamedGraph)
             primaryQuery.setInputData(inputs)
             primaryQuery.setGraphModelConnection(gmCxn)
@@ -720,7 +723,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     
     def createMetaDataTriples(metaInfo: HashMap[Value, ArrayBuffer[String]]): ArrayBuffer[Triple] =
     {
-        val processVal = metaInfo(PROCESS)(0)
+        val processSpecification = metaInfo(PROCESSSPECIFICATION)(0)
         val currDate = metaInfo(DATE)(0)
         val queryVal = metaInfo(METAQUERY)(0)
         val outputNamedGraph = metaInfo(OUTPUTNAMEDGRAPH)(0)
@@ -728,24 +731,32 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val runtime = metaInfo(PROCESSRUNTIME)(0)
         val triplesAdded = metaInfo(TRIPLESADDED)(0)
         val inputNamedGraphsList = metaInfo(INPUTNAMEDGRAPHS)
+        val updateProcess = metaInfo(PROCESS)(0)
+        
+        val updatePlanUri = helper.genTurboIRI()
         
         val timeMeasDatum = helper.genTurboIRI()
         val processBoundary = helper.genTurboIRI()
         
         helper.validateURI(processNamedGraph)
         var metaTriples = ArrayBuffer(
-             new Triple(processVal, "turbo:TURBO_0010106", queryVal),
-             new Triple(processVal, "turbo:TURBO_0010107", runtime),
-             new Triple(processVal, "turbo:TURBO_0010108", triplesAdded),
-             new Triple(processBoundary, "obo:RO_0002223", processVal),
+             new Triple(processSpecification, "turbo:TURBO_0010106", queryVal),
+             new Triple(updateProcess, "turbo:TURBO_0010107", runtime),
+             new Triple(updateProcess, "turbo:TURBO_0010108", triplesAdded),
+             new Triple(updateProcess, "rdf:type", "turbo:TURBO_0010347"),
+             new Triple(updateProcess, "obo:BFO_0000055", updatePlanUri),
+             new Triple(updatePlanUri, "rdf:type", "turbo:TURBO_0010373"),
+             new Triple(updatePlanUri, "obo:RO_0000059", processSpecification),
+             new Triple(processSpecification, "rdf:type", "turbo:TURBO_0010354"),
+             new Triple(processBoundary, "obo:RO_0002223", updateProcess),
              new Triple(processBoundary, "rdf:type", "obo:BFO_0000035"),
              new Triple(timeMeasDatum, "obo:IAO_0000136", processBoundary),
              new Triple(timeMeasDatum, "rdf:type", "obo:IAO_0000416"),
              new Triple(timeMeasDatum, "turbo:TURBO_0010094", currDate)
         )
-        for (inputGraph <- inputNamedGraphsList) metaTriples += new Triple(processVal, "turbo:TURBO_0010187", inputGraph)
-        if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) metaTriples += new Triple(processVal, "turbo:TURBO_0010186", outputNamedGraph)
-        else if (removalsNamedGraph != null) metaTriples += new Triple(processVal, "turbo:TURBO_0010186", removalsNamedGraph)
+        for (inputGraph <- inputNamedGraphsList) metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", inputGraph)
+        if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", outputNamedGraph)
+        else if (removalsNamedGraph != null) metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", removalsNamedGraph)
         metaTriples
     }
 }

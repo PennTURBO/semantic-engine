@@ -165,18 +165,25 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         { 
           Graph pmbb:processes
           {
-              ?processBoundary obo:RO_0002223 pmbb:HealthcareEncounterExpansionProcess .
+              ?processBoundary obo:RO_0002223 ?updateProcess .
               ?processBoundary a obo:BFO_0000035 .
               ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
               ?timeMeasDatum a obo:IAO_0000416 .
               ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
               
-              pmbb:HealthcareEncounterExpansionProcess 
-                  turbo:TURBO_0010106 ?someQuery ;
+              ?updateProcess
+                  a turbo:TURBO_0010347 ;
                   turbo:TURBO_0010107 ?someRuntime ;
                   turbo:TURBO_0010108 ?someNumberOfTriples;
                   turbo:TURBO_0010186 pmbb:expanded ;
                   turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts ;
+                  obo:BFO_0000055 ?updatePlan .
+              
+              ?updatePlan a turbo:TURBO_0010373 ;
+                  obo:RO_0000059 pmbb:HealthcareEncounterExpansionProcess .
+              
+              pmbb:HealthcareEncounterExpansionProcess a turbo:TURBO_0010354 ;
+                  turbo:TURBO_0010106 ?query .
           }
         }
         """
@@ -661,7 +668,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           { 
             Graph pmbb:processes
             {
-                pmbb:HealthcareEncounterExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   
@@ -715,7 +722,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           { 
             Graph pmbb:processes
             {
-                pmbb:DiagnosisExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:diagnosis1 ;
@@ -745,7 +752,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           { 
             Graph pmbb:processes
             {
-                pmbb:MedicationExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:prescription1 ;

@@ -35,6 +35,7 @@ class PatternMatchQuery extends Query
     var defaultInputGraph: String = null
     var defaultRemovalsGraph: String = null
     
+    var processSpecification: String = null
     var process: String = null
 
     var whereClauseBuilder: WhereClauseBuilder = new WhereClauseBuilder()
@@ -76,6 +77,12 @@ class PatternMatchQuery extends Query
     {
         helper.validateURI(removalsGraph)
         this.defaultRemovalsGraph = removalsGraph
+    }
+    
+    def setProcessSpecification(processSpecification: String)
+    {
+        assert (processSpecification.contains(':'))
+        this.processSpecification = processSpecification
     }
     
     def setProcess(process: String)
@@ -161,7 +168,7 @@ class PatternMatchQuery extends Query
         {
             throw new RuntimeException("Bind clause cannot be built before where clause is built.")
         }
-        for ((k,v) <- bindClauseBuilder.buildBindClause(outputs, inputs, localUUID, process, usedVariables))
+        for ((k,v) <- bindClauseBuilder.buildBindClause(outputs, inputs, localUUID, processSpecification, usedVariables))
         {
             if (!usedVariables.contains(k)) usedVariables += k -> v
         }
