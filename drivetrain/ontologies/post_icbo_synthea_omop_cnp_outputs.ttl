@@ -513,19 +513,49 @@ ontologies:encEndContext a ontologies:TurboGraphContext .
 obo:IAO_0000416 ontologies:hasPossibleContext ontologies:encEndContext .
 obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encEndContext .
 
+# ontologies:endingTmdHasLiteralMeasVal  
+  # a ontologies:DatatypeConnectionRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:object "999" ;
+  # ontologies:predicate obo:IAO_0000004 ;
+  # ontologies:required true ;
+  # ontologies:subject obo:IAO_0000416 ;
+  # ontologies:subjectUsesContext ontologies:encEndContext ;
+# .
+
+# ontologies:EncHasMeasVal 
+  # a ontologies:DatatypeConnectionRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:object ontologies:visit_start_date_DateLiteralValue ;
+  # ontologies:predicate rdfs:comment ;
+  # ontologies:required true ;
+  # ontologies:subject ontologies:encounterToBeTyped ;
+# .
+
 ontologies:endingTmdHasMeasVal 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:visit_start_date_DateLiteralValue ;
+  ontologies:predicate obo:IAO_0000004 ;
   ontologies:required true ;
   ontologies:subject obo:IAO_0000416 ;
-  ontologies:predicate obo:IAO_0000004 ;
-  ontologies:object ontologies:visit_end_date_DateLiteralValue ;
   ontologies:subjectUsesContext ontologies:encEndContext ;
+.
+
+ontologies:startingTmdHasMeasVal 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:object ontologies:visit_start_date_DateLiteralValue ;
+  ontologies:predicate obo:IAO_0000004 ;
+  ontologies:required true ;
+  ontologies:subject obo:IAO_0000416 ;
+  ontologies:subjectUsesContext ontologies:encStartContext ;
 .
 
 ontologies:visit_end_date_DateLiteralValue 
   a ontologies:TurboGraphDateLiteralValue ;
  .
+ 
 
 ontologies:hardcodedRegden a ontologies:ObjectConnectionToTermRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
@@ -579,16 +609,13 @@ ontologies:startingTmdAboutProcbound
   ontologies:objectUsesContext ontologies:encStartContext ;
 .
 
-ontologies:startingTmdHasMeasVal 
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:predicate obo:IAO_0000004 ;
-  ontologies:object ontologies:visit_start_date_DateLiteralValue ;
-  ontologies:subjectUsesContext ontologies:encStartContext ;
-.
+
 
 ontologies:visit_start_date_DateLiteralValue 
+  a ontologies:TurboGraphDateLiteralValue ;
+.
+
+ontologies:endDatePlaceholder 
   a ontologies:TurboGraphDateLiteralValue ;
 .
 
@@ -726,71 +753,71 @@ ontologies:procExpansionSpecification
   ontologies:object ontologies:procedureToBeTyped ;
 .
 
-ontologies:procProvDatabaseAnnotation
-  a ontologies:ObjectConnectionToTermRecipe ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:database ;
-#  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  ontologies:object ontologies:syntheaomop_post_icbo ;
-.
+# ontologies:procProvDatabaseAnnotation
+  # a ontologies:ObjectConnectionToTermRecipe ;
+  # # ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:subject ontologies:TURBO_0010404 ;
+  # ontologies:predicate ontologies:database ;
+# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  # ontologies:object ontologies:syntheaomop_post_icbo ;
+# .
 
-ontologies:procProvSchemaAnnotation
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:schema ;
-#  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  ontologies:object ontologies:cdm_synthea10 ;
-.
-
-
-ontologies:procProvTableAnnotation
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:table ;
-#  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  ontologies:object ontologies:procedure_occurrence ;
-.
-
-ontologies:procProvColumnAnnotation
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:column ;
-#  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  ontologies:object ontologies:procedure_source_value ;
-.
-
-ontologies:procProvKeyColAnnotation
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:keycol ;
-#  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  ontologies:object ontologies:procedure_occurrence_id ;
-.
-
-ontologies:procProvKeyValAnnotation
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:keyVal ;
-#  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  ontologies:object ontologies:procedure_occurrence_id_IntegerLiteralValue ;
-.
+# ontologies:procProvSchemaAnnotation
+  # a ontologies:ObjectConnectionToTermRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:subject ontologies:TURBO_0010404 ;
+  # ontologies:predicate ontologies:schema ;
+# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  # ontologies:object ontologies:cdm_synthea10 ;
+# .
 
 
-ontologies:procProvValueAnnotation
- a ontologies:DatatypeConnectionRecipe ;
- ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
- ontologies:subject ontologies:TURBO_0010404 ;
- # ontologies:predicate ontologies:TURBO_0010094 ;
- ontologies:predicate ontologies:colVal ;
- ontologies:object ontologies:procedure_source_value_StringLiteralValue ;
-.
+# ontologies:procProvTableAnnotation
+  # a ontologies:ObjectConnectionToTermRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:subject ontologies:TURBO_0010404 ;
+  # ontologies:predicate ontologies:table ;
+# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  # ontologies:object ontologies:procedure_occurrence ;
+# .
+
+# ontologies:procProvColumnAnnotation
+  # a ontologies:ObjectConnectionToTermRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:subject ontologies:TURBO_0010404 ;
+  # ontologies:predicate ontologies:column ;
+# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  # ontologies:object ontologies:procedure_source_value ;
+# .
+
+# ontologies:procProvKeyColAnnotation
+  # a ontologies:ObjectConnectionToTermRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:subject ontologies:TURBO_0010404 ;
+  # ontologies:predicate ontologies:keycol ;
+# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  # ontologies:object ontologies:procedure_occurrence_id ;
+# .
+
+# ontologies:procProvKeyValAnnotation
+  # a ontologies:ObjectConnectionToTermRecipe ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  # ontologies:subject ontologies:TURBO_0010404 ;
+  # ontologies:predicate ontologies:keyVal ;
+# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
+  # ontologies:object ontologies:procedure_occurrence_id_IntegerLiteralValue ;
+# .
+
+
+# ontologies:procProvValueAnnotation
+ # a ontologies:DatatypeConnectionRecipe ;
+ # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+ # ontologies:subject ontologies:TURBO_0010404 ;
+ # # ontologies:predicate ontologies:TURBO_0010094 ;
+ # ontologies:predicate ontologies:colVal ;
+ # ontologies:object ontologies:procedure_source_value_StringLiteralValue ;
+# .
 
 
 

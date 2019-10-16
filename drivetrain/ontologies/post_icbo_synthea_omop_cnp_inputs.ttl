@@ -159,6 +159,10 @@ ontologies:post_icbo_synthea_omop_cnp_encounters
   ontologies:hasOutput ontologies:encounterTypingRecipe ;
   ontologies:hasOutput ontologies:endingTmdAboutProcbound ;
   ontologies:hasOutput ontologies:endingTmdHasMeasVal ;
+  
+  ontologies:hasOutput ontologies:endingTmdHasLiteralMeasVal ;
+  ontologies:hasOutput ontologies:EncHasMeasVal ;
+    
   ontologies:hasOutput ontologies:hardcodedRegden ;
   ontologies:hasOutput ontologies:hceExpansionSpecification ;
   ontologies:hasOutput ontologies:procboundEndsEnc ;
@@ -177,6 +181,8 @@ ontologies:post_icbo_synthea_omop_cnp_encounters
   ontologies:hasOutput ontologies:KeyDenotesStartDate ;
   ontologies:hasOutput ontologies:KeyDenotesVisitCridSym ;
   ontologies:hasOutput ontologies:VisitCridSymPartOfColumn ;
+
+  ontologies:hasRequiredInput ontologies:HceEnddateShortcutRedo ;
   
   ontologies:hasRequiredInput ontologies:HceCridsymShortcut ;
   ontologies:hasRequiredInput ontologies:HceEnddateShortcut ;
@@ -210,6 +216,15 @@ ontologies:HceEnddateShortcut
   ontologies:predicate <http://api.stardog.com/visit_occurrence#visit_end_date> ;
   ontologies:object ontologies:visit_end_date_DateLiteralValue ;
 .
+
+
+# ontologies:HceEnddateShortcutRedo 
+  # a ontologies:DatatypeConnectionRecipe ;
+  # ontologies:subject <http://api.stardog.com/visit_occurrence> ;
+  # ontologies:predicate <http://api.stardog.com/visit_occurrence#visit_end_datetime> ;
+  # ontologies:object ontologies:endDatePlaceholder ;
+# .
+
 
 ontologies:HceStartdateShortcut 
   a ontologies:DatatypeConnectionRecipe ;
