@@ -648,7 +648,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             Select ?recipe Where
             {
                 Values ?hasRecipe {ontologies:hasRequiredInput ontologies:hasOptionalInput ontologies:hasOutput}
-                pmbb:HomoSapiensExpansionProcess ?hasRecipe ?recipe .
+                <$process> ?hasRecipe ?recipe .
                 Minus
                 {
                     ?recipe a ?recipeType .
