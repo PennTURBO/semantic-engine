@@ -604,8 +604,8 @@ ontologies:visit_concept_id_IntegerLiteralValue
 
 ontologies:EncRealizesRole
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  # ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
+  # ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:required true ;
   ontologies:subject ontologies:EncToBeTyped ;
   ontologies:predicate obo:BFO_0000055 ;
@@ -656,7 +656,7 @@ ontologies:ParticipationAxiomProp
 ontologies:ParticipationAxiomTarget
   a ontologies:ObjectConnectionToInstanceRecipe ;
   turbo:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+  ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
   ontologies:subject owl:Axiom ;
   ontologies:predicate owl:annotatedTarget ;
   ontologies:object obo:OBI_0000093 ;
