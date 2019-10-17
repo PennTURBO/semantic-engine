@@ -24,8 +24,8 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       }
       INSERT {
       GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
-      <http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess> obo:OBI_0000293 ?TURBO_0010158 .
-      <http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess> obo:OBI_0000293 ?TURBO_0010161 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010158 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010161 .
       }
       }
       WHERE {
@@ -45,8 +45,8 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       }
       INSERT {
       GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
-      <http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess> obo:OBI_0000293 ?TURBO_0010161 .
-      <http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess> obo:OBI_0000293 ?TURBO_0010169 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010161 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010169 .
       }
       }
       WHERE {
@@ -175,16 +175,17 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
     test("generated healthcare encounter cleanup query matched expected query")
     {
         var expectedQueryListBuffer = new ArrayBuffer[String]
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess")
+        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess")
+        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val process = query.process
         for (a <- scHcEncToScPersonCleanupExpectedQuery.replaceAll(" ","").split("\\n"))
         {
-            val replacement = a.substring(0,a.length()-1)
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
             expectedQueryListBuffer += replacement
         }
         var expectedQueryList = expectedQueryListBuffer.toArray
-        
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess")
-        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess").getQuery().replaceAll(" ", "").split("\\n")
-        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
     
     test ("remove SC hc enc to SC person link from expanded graph")
@@ -218,13 +219,13 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         result.size should be (2)
       
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK
           {
-              GRAPH pmbb:processes
+              GRAPH <$processNamedGraph>
               {
-                  pmbb:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess
+                  ?process a turbo:TURBO_0010347 ;
                   
                     obo:OBI_0000293 pmbb:scHcEnc1 ;
                     obo:OBI_0000293 pmbb:scPerson1 ;
@@ -239,16 +240,17 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
     test("generated biobank encounter cleanup query matched expected query")
     {
         var expectedQueryListBuffer = new ArrayBuffer[String]
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
+        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
+        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val process = query.process
         for (a <- scBbEncToScPersonCleanupExpectedQuery.replaceAll(" ","").split("\\n"))
         {
-            val replacement = a.substring(0,a.length()-1)
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
             expectedQueryListBuffer += replacement
         }
         var expectedQueryList = expectedQueryListBuffer.toArray
-        
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
-        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess").getQuery().replaceAll(" ", "").split("\\n")
-        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
     
     test ("remove SC bb enc to SC person link from expanded graph")
@@ -282,13 +284,13 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         result.size should be (2)
       
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK
           {
-              GRAPH pmbb:processes
+              GRAPH <$processNamedGraph>
               {
-                  pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess
+                  ?process a turbo:TURBO_0010347 ;
                   
                     obo:OBI_0000293 pmbb:scBbEnc1 ;
                     obo:OBI_0000293 pmbb:scPerson1 ;

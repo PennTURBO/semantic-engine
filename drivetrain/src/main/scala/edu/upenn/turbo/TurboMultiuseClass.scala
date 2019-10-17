@@ -54,8 +54,10 @@ class TurboMultiuseClass extends Enumeration
 			"""
     val logger = LoggerFactory.getLogger(getClass)
     val updater: SparqlUpdater = new SparqlUpdater
-    def ontologyURL = retrieveUriPropertyFromFile("ontologyURL")
-    def defaultPrefix = retrieveUriPropertyFromFile("defaultPrefix")
+    
+    val ontologyURL = retrieveUriPropertyFromFile("ontologyURL")
+    val defaultPrefix = retrieveUriPropertyFromFile("defaultPrefix")
+    val processNamedGraph = retrieveUriPropertyFromFile("processNamedGraph") 
     
     /**
      * Deletes all triples in the entire database, including all named graphs.
@@ -768,20 +770,27 @@ class TurboMultiuseClass extends Enumeration
         s"""
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                ?processBoundary obo:RO_0002223 <$process> .
+                ?processBoundary obo:RO_0002223 ?updateProcess .
                 ?processBoundary a obo:BFO_0000035 .
                 ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
                 ?timeMeasDatum a obo:IAO_0000416 .
                 ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
                 
-                <$process>
-                    turbo:TURBO_0010106 ?someQuery ;
+                ?updateProcess
+                    a turbo:TURBO_0010347 ;
                     turbo:TURBO_0010107 ?someRuntime ;
                     turbo:TURBO_0010108 ?someNumberOfTriples;
                     turbo:TURBO_0010186 pmbb:expanded ;
                     turbo:TURBO_0010187 pmbb:expanded ;
+                    obo:BFO_0000055 ?updatePlan .
+                
+                ?updatePlan a turbo:TURBO_0010373 ;
+                    obo:RO_0000059 <$process> .
+                
+                <$process> a turbo:TURBO_0010354 ;
+                    turbo:TURBO_0010106 ?query .
             }
           }
           """

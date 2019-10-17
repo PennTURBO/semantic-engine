@@ -288,6 +288,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     var inputOneToManyConnections = new HashMap[String, HashSet[String]]
     var inputSingletonClasses = new HashSet[String]
     var inputSuperSingletonClasses = new HashSet[String]
+    var inputNonInstanceClasses = new HashSet[String]
     
     var process: String = ""
     
@@ -296,12 +297,21 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     val objToInstRecipe = "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe"
     val objToTermRecipe = "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe"
     val objFromTermRecipe = "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe"
+    val datatypeRecipe = "http://transformunify.org/ontologies/DatatypeConnectionRecipe"
     
     def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean]): HashMap[String, Boolean] =
     {   
         this.process = process
         this.usedVariables = usedVariables
         val newUsedVariables = populateConnectionLists(outputs, inputs)
+        
+        /*for ((k,v) <- inputOneToOneConnections)
+        {
+            logger.info("key: " + k)
+            for (a <- v) print("value: " + a + " ")
+            println()
+        }*/
+        
         buildSingletonBindClauses(localUUID)
         buildBaseGroupBindClauses(localUUID)
         assert (multiplicityCreators.size == 0, s"Error in graph model: For process $process, there is not sufficient context to create the following: $multiplicityCreators")
@@ -343,9 +353,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val codePlus = discoveryCode + row(PREDICATE.toString).toString + thisMultiplicity
             if (scannedConnections.contains(connectionName)) assert(scannedConnections(connectionName) == codePlus, s"Error in graph model: recipe $connectionName may have duplicate properties")
             else scannedConnections += connectionName -> codePlus
-            if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe || 
-                row(SUBJECTADESCRIBER.toString) != null && row(CONNECTIONRECIPETYPE.toString).toString == objFromTermRecipe || 
-                row(OBJECTADESCRIBER.toString) != null && row(CONNECTIONRECIPETYPE.toString).toString == objToTermRecipe) 
+            if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe) 
             {  
                 if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") 
                 {
@@ -407,6 +415,16 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 variablesToBind += objectString -> objAType
                 variablesToBind += subjectString -> subjAType
            }
+           else if (row(SUBJECTADESCRIBER.toString) != null && row(CONNECTIONRECIPETYPE.toString).toString == objFromTermRecipe || 
+                row(OBJECTADESCRIBER.toString) != null && row(CONNECTIONRECIPETYPE.toString).toString == objToTermRecipe)
+           {
+              var subjAType = false
+              if (row(SUBJECTTYPE.toString) != null) subjAType = true
+              var objAType = false
+              if (row(OBJECTTYPE.toString) != null) objAType = true
+              variablesToBind += objectString -> objAType
+              variablesToBind += subjectString -> subjAType
+           }
         }
         variablesToBind
     }
@@ -421,43 +439,56 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (scannedConnections.contains(connectionName)) assert(scannedConnections(connectionName) == codePlus, s"Error in graph model: recipe $connectionName may have duplicate properties")
             else scannedConnections += connectionName -> codePlus
             val thisMultiplicity = row(MULTIPLICITY.toString).toString
-            if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") handleOneToOneConnection(row(SUBJECT.toString).toString, row(OBJECT.toString).toString, inputOneToOneConnections)
-            else if (thisMultiplicity == oneToManyMultiplicity)
+            if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe)
             {
-                if (inputOneToManyConnections.contains(row(SUBJECT.toString).toString)) inputOneToManyConnections(row(SUBJECT.toString).toString) += row(OBJECT.toString).toString
-                else inputOneToManyConnections += row(SUBJECT.toString).toString -> HashSet(row(OBJECT.toString).toString)
+                if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") handleOneToOneConnection(row(SUBJECT.toString).toString, row(OBJECT.toString).toString, inputOneToOneConnections)
+                else if (thisMultiplicity == oneToManyMultiplicity)
+                {
+                    if (inputOneToManyConnections.contains(row(SUBJECT.toString).toString)) inputOneToManyConnections(row(SUBJECT.toString).toString) += row(OBJECT.toString).toString
+                    else inputOneToManyConnections += row(SUBJECT.toString).toString -> HashSet(row(OBJECT.toString).toString)
+                }
+                else if (thisMultiplicity == manyToOneMultiplicity)
+                {
+                    if (inputOneToManyConnections.contains(row(OBJECT.toString).toString)) inputOneToManyConnections(row(OBJECT.toString).toString) += row(SUBJECT.toString).toString
+                    else inputOneToManyConnections += row(OBJECT.toString).toString -> HashSet(row(SUBJECT.toString).toString)
+                }
+                else if (thisMultiplicity == "http://transformunify.org/ontologies/many-singleton")
+                {
+                    inputSingletonClasses += row(OBJECT.toString).toString
+                }
+                else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-many")
+                {
+                    inputSingletonClasses += row(SUBJECT.toString).toString
+                }
+                else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-singleton")
+                {
+                    inputSingletonClasses += row(SUBJECT.toString).toString
+                    inputSingletonClasses += row(OBJECT.toString).toString
+                }
+                else if (thisMultiplicity.endsWith("superSingleton"))
+                {
+                    inputSuperSingletonClasses += row(OBJECT.toString).toString
+                }
+                else if (thisMultiplicity.contains("superSingleton"))
+                {
+                    inputSuperSingletonClasses += row(SUBJECT.toString).toString
+                }
+                else
+                {
+                    assert (1==2, s"Error in graph model: Discovered invalid multiplicity $thisMultiplicity")
+                } 
             }
-            else if (thisMultiplicity == manyToOneMultiplicity)
+            else if (row(CONNECTIONRECIPETYPE.toString).toString == objToTermRecipe || row(CONNECTIONRECIPETYPE.toString).toString == datatypeRecipe)
             {
-                if (inputOneToManyConnections.contains(row(OBJECT.toString).toString)) inputOneToManyConnections(row(OBJECT.toString).toString) += row(SUBJECT.toString).toString
-                else inputOneToManyConnections += row(OBJECT.toString).toString -> HashSet(row(SUBJECT.toString).toString)
+                inputNonInstanceClasses += row(SUBJECT.toString).toString
             }
-            else if (thisMultiplicity == "http://transformunify.org/ontologies/many-singleton")
+            else if (row(CONNECTIONRECIPETYPE.toString).toString == objFromTermRecipe)
             {
-                inputSingletonClasses += row(OBJECT.toString).toString
-            }
-            else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-many")
-            {
-                inputSingletonClasses += row(SUBJECT.toString).toString
-            }
-            else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-singleton")
-            {
-                inputSingletonClasses += row(SUBJECT.toString).toString
-                inputSingletonClasses += row(OBJECT.toString).toString
-            }
-            else if (thisMultiplicity.endsWith("superSingleton"))
-            {
-                inputSuperSingletonClasses += row(OBJECT.toString).toString
-            }
-            else if (thisMultiplicity.contains("superSingleton"))
-            {
-                inputSuperSingletonClasses += row(SUBJECT.toString).toString
-            }
-            else
-            {
-                assert (1==2, s"Error in graph model: Discovered invalid multiplicity $thisMultiplicity")
+                inputNonInstanceClasses += row(OBJECT.toString).toString
             }
         }
+        // we don't care about non objectConnectionToInstance recipes if there were objectConnectionToInstanceRecipes present
+        if (inputOneToOneConnections.size != 0 || inputOneToManyConnections.size != 0) inputNonInstanceClasses = new HashSet[String]
     }
     
     def populateDependenciesAndCustomRuleList(node: String, customRule: org.eclipse.rdf4j.model.Value, dependent: org.eclipse.rdf4j.model.Value)
@@ -586,6 +617,12 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     {
         var multiplicityEnforcer = ""
         var enforcerAsUri = ""
+        // this is for if there are no one-to-one or one-to-many connections in the connection lists, it means there is only one possible choice
+        if (inputNonInstanceClasses.size == 1)
+        {
+            enforcerAsUri = inputNonInstanceClasses.iterator.next()
+            multiplicityEnforcer = helper.convertTypeToSparqlVariable(enforcerAsUri)
+        }
         assert (outputOneToOneConnections.contains(changeAgent))
         // if there are no one-many connections that are qualified enforcers in input, you can choose any element from the input as a multiplicity enforcer
         var useAnyQualified = true
@@ -602,16 +639,17 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                     val newEnforcer = helper.convertTypeToSparqlVariable(k)
                     if (multiplicityEnforcer != "")
                     {
-                        assert(inputOneToOneConnections.contains(enforcerAsUri) && inputOneToOneConnections(enforcerAsUri).contains(k),
-                            s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
+                        if(!(inputOneToOneConnections.contains(enforcerAsUri) && inputOneToOneConnections(enforcerAsUri).contains(k)))
+                            useAnyQualified = false
                     }
                     multiplicityEnforcer = newEnforcer
                     enforcerAsUri = k   
                 }
-            }  
+            }
         }
-        if (multiplicityEnforcer == "")
+        if (multiplicityEnforcer == "" || !useAnyQualified)
         {
+            if (!useAnyQualified) multiplicityEnforcer = ""
             for (conn <- outputOneToOneConnections(changeAgent))
             {
                 if (usedVariables.contains(conn) && usedVariables(conn)) 

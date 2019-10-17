@@ -144,16 +144,16 @@ class PatternMatchQuery extends Query
             if (row(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/hasOptionalInput") required = false
             
             var objectResultBool = true
-            if (!required || !objectAType) objectResultBool = false
+            if (!required || !(objectAType || objectADescriber)) objectResultBool = false
             
             var subjectResultBool = true
-            if (!required || !subjectAType) subjectResultBool = false
+            if (!required || !(subjectAType || subjectADescriber)) subjectResultBool = false
             
             val thisObject = row(OBJECT.toString).toString
             val thisSubject = row(SUBJECT.toString).toString
-            
-            if (!(!objectADescriber && !objectAType)) if (!usedVariables.contains(thisObject) || !usedVariables(thisObject)) usedVariables += thisObject -> objectResultBool
-            if (!(!subjectADescriber && !subjectAType)) if (!usedVariables.contains(thisSubject) || !usedVariables(thisSubject)) usedVariables += thisSubject -> subjectResultBool
+
+            if (objectADescriber || objectAType) if (!usedVariables.contains(thisObject) || !usedVariables(thisObject)) usedVariables += thisObject -> objectResultBool
+            if (subjectADescriber || subjectAType) if (!usedVariables.contains(thisSubject) || !usedVariables(thisSubject)) usedVariables += thisSubject -> subjectResultBool
         }
         assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "")
         assert (whereClauseBuilder.clause.contains("GRAPH"))

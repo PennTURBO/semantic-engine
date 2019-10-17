@@ -84,23 +84,30 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }}
       """
     
-    val processMeta: String = """
+    val processMeta: String = s"""
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                ?processBoundary obo:RO_0002223 pmbb:BiobankEncounterExpansionProcess .
+                ?processBoundary obo:RO_0002223 ?updateProcess .
                 ?processBoundary a obo:BFO_0000035 .
                 ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
                 ?timeMeasDatum a obo:IAO_0000416 .
                 ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
                 
-                pmbb:BiobankEncounterExpansionProcess 
-                    turbo:TURBO_0010106 ?someQuery ;
+                ?updateProcess
+                    a turbo:TURBO_0010347 ;
                     turbo:TURBO_0010107 ?someRuntime ;
                     turbo:TURBO_0010108 ?someNumberOfTriples;
                     turbo:TURBO_0010186 pmbb:expanded ;
                     turbo:TURBO_0010187 pmbb:Shortcuts_biobankEncounterShortcuts ;
+                    obo:BFO_0000055 ?updatePlan .
+                
+                ?updatePlan a turbo:TURBO_0010373 ;
+                    obo:RO_0000059 pmbb:BiobankEncounterExpansionProcess .
+                
+                pmbb:BiobankEncounterExpansionProcess a turbo:TURBO_0010354 ;
+                    turbo:TURBO_0010106 ?query .
             }
           }
           """
@@ -108,14 +115,14 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     val anyProcess: String = """
       ASK
       {
-          Graph pmbb:processes
+          Graph <$processNamedGraph>
           {
               ?s ?p ?o .
           }
       }
       """
     
-    val expectedQuery: String = """
+    val expectedQuery: String = s"""
       INSERT {
       GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
       ?TURBO_0010138 <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000015> .
@@ -163,22 +170,22 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
       ?TURBO_0010138 <http://transformunify.org/ontologies/TURBO_0010094> ?lengthMeasurementDoubleLiteralValue .
       ?OBI_0001929 <http://transformunify.org/ontologies/TURBO_0010094> ?massMeasurementDoubleLiteralValue .
       }
-      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010138 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?OBI_0001929 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?EFO_0004340 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?IAO_0000100 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000522 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000533 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000527 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000534 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?BiobankEncounterRegistryOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000532 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000531 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010169 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010161 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> obo:OBI_0000293 ?TURBO_0010161 .
-      <http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess> obo:OBI_0000293 ?TURBO_0010169 .
+      GRAPH <$processNamedGraph> {
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010138 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0001929 .
+      <processURI> turbo:TURBO_0010184 ?EFO_0004340 .
+      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000522 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000533 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000527 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000534 .
+      <processURI> turbo:TURBO_0010184 ?BiobankEncounterRegistryOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000532 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000531 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010169 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010161 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010161 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010169 .
       }
       }
       WHERE {
@@ -241,16 +248,17 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     test("generated query matched expected query")
     {
         var expectedQueryListBuffer = new ArrayBuffer[String]
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
+        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
+        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val process = query.process
         for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
         {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID)
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
             expectedQueryListBuffer += replacement
         }
         var expectedQueryList = expectedQueryListBuffer.toArray
-        
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess")
-        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess").getQuery().replaceAll(" ", "").split("\\n")
-        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
   
     test("bb encounter with all fields")
@@ -316,13 +324,13 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         
         result.size should be (checkPredicates.size)
         
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:BiobankEncounterExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:bbenc1 ;
                   
@@ -400,13 +408,13 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         
         result.size should be (checkPredicates.size)
         
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:BiobankEncounterExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:bbenc1 ;
                   
@@ -506,13 +514,13 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         
         result.size should be (checkPredicates.size)
         
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:BiobankEncounterExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:bbenc1 ;
                   

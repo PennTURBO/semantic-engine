@@ -41,38 +41,45 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           
        }}"""
     
-    val processMeta: String = """
+    val processMeta: String = s"""
         ASK 
-        { 
-          Graph pmbb:processes
-          {
-              ?processBoundary obo:RO_0002223 pmbb:HomoSapiensExpansionProcess .
-              ?processBoundary a obo:BFO_0000035 .
-              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-              ?timeMeasDatum a obo:IAO_0000416 .
-              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-              
-              pmbb:HomoSapiensExpansionProcess 
-                  turbo:TURBO_0010106 ?someQuery ;
-                  turbo:TURBO_0010107 ?someRuntime ;
-                  turbo:TURBO_0010108 ?someNumberOfTriples;
-                  turbo:TURBO_0010186 pmbb:expanded ;
-                  turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts ;
+          { 
+            Graph <$processNamedGraph>
+            {
+                ?processBoundary obo:RO_0002223 ?updateProcess .
+                ?processBoundary a obo:BFO_0000035 .
+                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+                ?timeMeasDatum a obo:IAO_0000416 .
+                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+                
+                ?updateProcess
+                    a turbo:TURBO_0010347 ;
+                    turbo:TURBO_0010107 ?someRuntime ;
+                    turbo:TURBO_0010108 ?someNumberOfTriples;
+                    turbo:TURBO_0010186 pmbb:expanded ;
+                    turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts ;
+                    obo:BFO_0000055 ?updatePlan .
+                
+                ?updatePlan a turbo:TURBO_0010373 ;
+                    obo:RO_0000059 pmbb:HomoSapiensExpansionProcess .
+                
+                pmbb:HomoSapiensExpansionProcess a turbo:TURBO_0010354 ;
+                    turbo:TURBO_0010106 ?query .
+            }
           }
-        }
         """
     
-    val anyProcess: String = """
+    val anyProcess: String = s"""
       ASK
       {
-          Graph pmbb:processes
+          Graph <$processNamedGraph>
           {
               ?s ?p ?o .
           }
       }
       """
     
-    val expectedQuery: String = """
+    val expectedQuery: String = s"""
       INSERT {
       GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
       ?GenderIdentityDatumOfVariousTypes rdf:type ?GenderIdentityDatumType .
@@ -133,29 +140,29 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
       ?IAO_0000100 <http://purl.org/dc/elements/1.1/title> ?datasetTitleStringLiteralValue .
       ?IAO_0000577 <http://transformunify.org/ontologies/TURBO_0010094> ?tumorSymbolStringLiteralValue .
       }
-      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?GenderIdentityDatumOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?RaceIdentityDatumOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010092 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000504 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?HomoSapiensRegistryOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?NCBITaxon_9606 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?PATO_0000047 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?IAO_0000100 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?EFO_0004950 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?UBERON_0035946 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010161 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000522 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010168 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?MONDO_0004992 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010191 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010070 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010188 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?IAO_0000577 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> turbo:TURBO_0010184 ?TumorRegistryDenoterOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> obo:OBI_0000293 ?TURBO_0010191 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> obo:OBI_0000293 ?TURBO_0010161 .
-      <http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess> obo:OBI_0000293 ?TURBO_0010168 .
+      GRAPH <$processNamedGraph> {
+      <processURI> turbo:TURBO_0010184 ?GenderIdentityDatumOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?RaceIdentityDatumOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010092 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000504 .
+      <processURI> turbo:TURBO_0010184 ?HomoSapiensRegistryOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?NCBITaxon_9606 .
+      <processURI> turbo:TURBO_0010184 ?PATO_0000047 .
+      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
+      <processURI> turbo:TURBO_0010184 ?EFO_0004950 .
+      <processURI> turbo:TURBO_0010184 ?UBERON_0035946 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010161 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000522 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010168 .
+      <processURI> turbo:TURBO_0010184 ?MONDO_0004992 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010191 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010070 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010188 .
+      <processURI> turbo:TURBO_0010184 ?IAO_0000577 .
+      <processURI> turbo:TURBO_0010184 ?TumorRegistryDenoterOfVariousTypes .
+      <processURI> obo:OBI_0000293 ?TURBO_0010191 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010161 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010168 .
       }
       }
       WHERE {
@@ -230,16 +237,17 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
     test("generated query matched expected query")
     {
         var expectedQueryListBuffer = new ArrayBuffer[String]
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
+        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val process = query.process
         for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
         {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID)
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
             expectedQueryListBuffer += replacement
         }
         var expectedQueryList = expectedQueryListBuffer.toArray
-        
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
-        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess").getQuery().replaceAll(" ", "").split("\\n")
-        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
     
     test("participant with all fields")
@@ -414,13 +422,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         
         result.size should be (expectedPredicates.size)
         
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:HomoSapiensExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:crid1 ;
                   obo:OBI_0000293 pmbb:part1 ;
@@ -524,13 +532,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         
         result.size should be (expectedPredicates.size) 
         
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:HomoSapiensExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:crid1 ;
                   obo:OBI_0000293 pmbb:part1 ;
@@ -642,13 +650,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         
         result.size should be (expectedPredicates.size)
         
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:HomoSapiensExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:crid1 ;
                   obo:OBI_0000293 pmbb:part1 ;
@@ -865,13 +873,13 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         
         result.size should be (expectedPredicates.size)
         
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:HomoSapiensExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:shortcutCrid1 ;
                   obo:OBI_0000293 pmbb:shortcutCrid2 ;
@@ -1050,37 +1058,44 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         result.size should be (69)
         
-        val processMetaMultipleDatasets: String = """
+        val processMetaMultipleDatasets: String = s"""
         ASK 
-        { 
-          Graph pmbb:processes
-          {
-              ?processBoundary obo:RO_0002223 pmbb:HomoSapiensExpansionProcess .
-              ?processBoundary a obo:BFO_0000035 .
-              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-              ?timeMeasDatum a obo:IAO_0000416 .
-              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-              
-              pmbb:HomoSapiensExpansionProcess 
-                  turbo:TURBO_0010106 ?someQuery ;
-                  turbo:TURBO_0010107 ?someRuntime ;
-                  turbo:TURBO_0010108 ?someNumberOfTriples;
-                  turbo:TURBO_0010186 pmbb:expanded ;
-                  turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts1 ;
-                  turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts2 ;
-                  turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts3 ;
+          { 
+            Graph <$processNamedGraph>
+            {
+                ?processBoundary obo:RO_0002223 ?updateProcess .
+                ?processBoundary a obo:BFO_0000035 .
+                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+                ?timeMeasDatum a obo:IAO_0000416 .
+                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+                
+                ?updateProcess
+                    a turbo:TURBO_0010347 ;
+                    turbo:TURBO_0010107 ?someRuntime ;
+                    turbo:TURBO_0010108 ?someNumberOfTriples;
+                    turbo:TURBO_0010186 pmbb:expanded ;
+                    turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts1 ;
+                    turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts2 ;
+                    turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts3 ;
+                    obo:BFO_0000055 ?updatePlan .
+                
+                ?updatePlan a turbo:TURBO_0010373 ;
+                    obo:RO_0000059 pmbb:HomoSapiensExpansionProcess .
+                
+                pmbb:HomoSapiensExpansionProcess a turbo:TURBO_0010354 ;
+                    turbo:TURBO_0010106 ?query .
+            }
           }
-        }
         """
         update.querySparqlBoolean(testCxn, processMetaMultipleDatasets).get should be (true)
         
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:HomoSapiensExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:shortcutCrid1 ;
                   obo:OBI_0000293 pmbb:shortcutCrid2 ;

@@ -160,10 +160,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         		?encounter a obo:OGMS_0000097 .
            }}"""
     
-    val processMeta: String = """
+    val processMeta: String = s"""
         ASK 
         { 
-          Graph pmbb:processes
+          Graph <$processNamedGraph>
           {
               ?processBoundary obo:RO_0002223 ?updateProcess .
               ?processBoundary a obo:BFO_0000035 .
@@ -188,17 +188,17 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         }
         """
     
-    val anyProcess: String = """
+    val anyProcess: String = s"""
       ASK
       {
-          Graph pmbb:processes
+          Graph <$processNamedGraph>
           {
               ?s ?p ?o .
           }
       }
       """
     
-    val healthcareQuery: String = """
+    val healthcareQuery: String = s"""
       INSERT {
       GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
       ?TURBO_0000508 <http://purl.obolibrary.org/obo/BFO_0000051> ?HealthcareEncounterRegistryOfVariousTypes .
@@ -272,32 +272,32 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?TURBO_0010404 <http://transformunify.org/ontologies/colVal> ?encounterTypeCodeLiteralValue .
       ?HealthcareEncounterRegistryOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0000508 .
       }
-      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000508 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HealthcareEncounterRegistryOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010138 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?OBI_0001929 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010149 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010150 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010404 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HealthcareEncounterDatabaseProvenanceTerm .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HealthcareEncounterSchemaProvenanceTerm .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HealthcareEncounterTableProvenanceTerm .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HealthcareEncounterTypeCodeColumnTerm .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?OGMS_0000097 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?EFO_0004340 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?IAO_0000100 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000512 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000509 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000511 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000522 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010158 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?VSO_0000006 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HTN_00000001 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?HTN_00000000 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010161 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> obo:OBI_0000293 ?TURBO_0010158 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess> obo:OBI_0000293 ?TURBO_0010161 .
+      GRAPH <$processNamedGraph> {
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000508 .
+      <processURI> turbo:TURBO_0010184 ?HealthcareEncounterRegistryOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010138 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0001929 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010149 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010150 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010404 .
+      <processURI> turbo:TURBO_0010184 ?HealthcareEncounterDatabaseProvenanceTerm .
+      <processURI> turbo:TURBO_0010184 ?HealthcareEncounterSchemaProvenanceTerm .
+      <processURI> turbo:TURBO_0010184 ?HealthcareEncounterTableProvenanceTerm .
+      <processURI> turbo:TURBO_0010184 ?HealthcareEncounterTypeCodeColumnTerm .
+      <processURI> turbo:TURBO_0010184 ?OGMS_0000097 .
+      <processURI> turbo:TURBO_0010184 ?EFO_0004340 .
+      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000512 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000509 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000511 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000522 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010158 .
+      <processURI> turbo:TURBO_0010184 ?VSO_0000006 .
+      <processURI> turbo:TURBO_0010184 ?HTN_00000001 .
+      <processURI> turbo:TURBO_0010184 ?HTN_00000000 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010161 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010158 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010161 .
       }
       }
       WHERE {
@@ -379,16 +379,16 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?OGMS_0000073 <http://transformunify.org/ontologies/TURBO_0010013> ?primaryDiagnosisBooleanLiteralValue .
       }
       GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
-      <http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess> turbo:TURBO_0010184 ?OGMS_0000073 .
-      <http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess> turbo:TURBO_0010184 ?IcdTermOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess> turbo:TURBO_0010184 ?SnomedTermOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess> turbo:TURBO_0010184 ?DiagnosisRegistryOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess> turbo:TURBO_0010184 ?IAO_0000100 .
-      <http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess> turbo:TURBO_0010184 ?OGMS_0000097 .
-      <http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010160 .
-      <http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess> obo:OBI_0000293 ?TURBO_0010158 .
-      <http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess> obo:OBI_0000293 ?OGMS_0000097 .
-      <http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess> obo:OBI_0000293 ?TURBO_0010160 .
+      <processURI> turbo:TURBO_0010184 ?OGMS_0000073 .
+      <processURI> turbo:TURBO_0010184 ?IcdTermOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?SnomedTermOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?DiagnosisRegistryOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
+      <processURI> turbo:TURBO_0010184 ?OGMS_0000097 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010160 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010158 .
+      <processURI> obo:OBI_0000293 ?OGMS_0000097 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010160 .
       }
       }
       WHERE {
@@ -449,16 +449,16 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?PDRO_0000001 <http://transformunify.org/ontologies/TURBO_0010094> ?medicationOrderNameStringLiteralValue .
       }
       GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
-      <http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess> turbo:TURBO_0010184 ?PDRO_0000001 .
-      <http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess> turbo:TURBO_0010184 ?DrugTermOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess> turbo:TURBO_0010184 ?IAO_0000100 .
-      <http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess> turbo:TURBO_0010184 ?OGMS_0000097 .
-      <http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000561 .
-      <http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000562 .
-      <http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010159 .
-      <http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess> obo:OBI_0000293 ?TURBO_0010158 .
-      <http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess> obo:OBI_0000293 ?OGMS_0000097 .
-      <http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess> obo:OBI_0000293 ?TURBO_0010159 .
+      <processURI> turbo:TURBO_0010184 ?PDRO_0000001 .
+      <processURI> turbo:TURBO_0010184 ?DrugTermOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
+      <processURI> turbo:TURBO_0010184 ?OGMS_0000097 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000561 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000562 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010159 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010158 .
+      <processURI> obo:OBI_0000293 ?OGMS_0000097 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010159 .
       }
       }
       WHERE {
@@ -506,46 +506,53 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
     test("generated query matched expected query - healthcare expansion")
     {
         var expectedQueryListBuffer = new ArrayBuffer[String]
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
+        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
+        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val process = query.process
         for (a <- healthcareQuery.replaceAll(" ","").split("\\n"))
         {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID)
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
             expectedQueryListBuffer += replacement
         }
         var expectedQueryList = expectedQueryListBuffer.toArray
         
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
-        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess").getQuery().replaceAll(" ", "").split("\\n")
-        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
     
     test("generated query matched expected query - diagnosis expansion")
     {
         var expectedQueryListBuffer = new ArrayBuffer[String]
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess")
+        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess")
+        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val process = query.process
         for (a <- diagnosisQuery.replaceAll(" ","").split("\\n"))
         {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID)
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
             expectedQueryListBuffer += replacement
         }
         var expectedQueryList = expectedQueryListBuffer.toArray
         
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess")
-        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess").getQuery().replaceAll(" ", "").split("\\n")
-        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
     
     test("generated query matched expected query - medications expansion")
     {
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess")
+        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess")
+        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val process = query.process
         var expectedQueryListBuffer = new ArrayBuffer[String]
+        
         for (a <- medicationQuery.replaceAll(" ","").split("\\n"))
         {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID)
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
             expectedQueryListBuffer += replacement
         }
         var expectedQueryList = expectedQueryListBuffer.toArray
         
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess")
-        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess").getQuery().replaceAll(" ", "").split("\\n")
-        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
     
     test("hc encounter with all fields")
@@ -662,11 +669,11 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         result.size should be (checkPredicates.size)
         
-        val healthcareInputsOutputs: String = """
+        val healthcareInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -716,11 +723,11 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        val diagnosisInputsOutputs: String = """
+        val diagnosisInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -746,11 +753,11 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        val medicationsInputsOutputs: String = """
+        val medicationsInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -826,13 +833,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         result.size should be (checkPredicates.size)
         
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:HealthcareEncounterExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   
@@ -999,13 +1006,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         result.size should be (checkPredicates.size)
         
-        val healthcareInputsOutputs: String = """
+        val healthcareInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:HealthcareEncounterExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   
@@ -1052,13 +1059,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        val diagnosisInputsOutputs: String = """
+        val diagnosisInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:DiagnosisExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:diagnosis1 ;
@@ -1079,13 +1086,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        val medicationsInputsOutputs: String = """
+        val medicationsInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:MedicationExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:prescription1 ;
@@ -1188,13 +1195,14 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
          update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
          update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
-        val healthcareInputsOutputs: String = """
+        val healthcareInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
+            
             {
-                pmbb:HealthcareEncounterExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   
@@ -1220,13 +1228,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        val diagnosisInputsOutputs: String = """
+        val diagnosisInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:DiagnosisExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:diagnosis1 ;
@@ -1336,12 +1344,12 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
          update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
          update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
-        val healthcareInputsOutputs: String = """
+        val healthcareInputsOutputs: String = s"""
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:HealthcareEncounterExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   
@@ -1367,13 +1375,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
         """
         
-        val medicationsInputsOutputs: String = """
+        val medicationsInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:MedicationExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:prescription1 ;
@@ -1621,29 +1629,36 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         
-        val processMetaMultipleDatasets: String = """
-        ASK 
-        { 
-          Graph pmbb:processes
-          {
-              ?processBoundary obo:RO_0002223 pmbb:HealthcareEncounterExpansionProcess .
-              ?processBoundary a obo:BFO_0000035 .
-              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-              ?timeMeasDatum a obo:IAO_0000416 .
-              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-              
-              pmbb:HealthcareEncounterExpansionProcess 
-                  turbo:TURBO_0010106 ?someQuery ;
-                  turbo:TURBO_0010107 ?someRuntime ;
-                  turbo:TURBO_0010108 ?someNumberOfTriples;
-                  turbo:TURBO_0010186 pmbb:expanded ;
-                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts ;
-                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts1 ;
-                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts2 ;
-                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts3 ;
-                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts4 ;
+        val processMetaMultipleDatasets: String = s"""
+          ASK 
+          { 
+            Graph <$processNamedGraph>
+            {
+                ?processBoundary obo:RO_0002223 ?updateProcess .
+                ?processBoundary a obo:BFO_0000035 .
+                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+                ?timeMeasDatum a obo:IAO_0000416 .
+                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+                
+                ?updateProcess
+                    a turbo:TURBO_0010347 ;
+                    turbo:TURBO_0010107 ?someRuntime ;
+                    turbo:TURBO_0010108 ?someNumberOfTriples;
+                    turbo:TURBO_0010186 pmbb:expanded ;
+                    turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts ;
+                    turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts1 ;
+                    turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts2 ;
+                    turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts3 ;
+                    turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts4 ;
+                    obo:BFO_0000055 ?updatePlan .
+                
+                ?updatePlan a turbo:TURBO_0010373 ;
+                    obo:RO_0000059 pmbb:HealthcareEncounterExpansionProcess .
+                
+                pmbb:HealthcareEncounterExpansionProcess a turbo:TURBO_0010354 ;
+                    turbo:TURBO_0010106 ?query .
+            }
           }
-        }
         """
         
         update.querySparqlBoolean(testCxn, processMetaMultipleDatasets).get should be (true)
@@ -1661,13 +1676,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, datasetCheck4).get should be (true)
         update.querySparqlBoolean(testCxn, datasetCheck5).get should be (true)
         
-        val healthcareInputsOutputs: String = """
+        val healthcareInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:HealthcareEncounterExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   
@@ -1714,13 +1729,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        val diagnosisInputsOutputs: String = """
+        val diagnosisInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:DiagnosisExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:diagCridSC ;
@@ -1744,13 +1759,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        val medicationsInputsOutputs: String = """
+        val medicationsInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:MedicationExpansionProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:hcenc1 ;
                   obo:OBI_0000293 pmbb:prescription ;

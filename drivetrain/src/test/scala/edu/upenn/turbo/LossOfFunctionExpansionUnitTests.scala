@@ -15,7 +15,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
 
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
-    val expectedQuery: String = """
+    val expectedQuery: String = s"""
       INSERT {
       GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
       ?OBI_0001352 <http://purl.obolibrary.org/obo/IAO_0000142> ?GeneSymbolUriOfVariousTypes .
@@ -66,30 +66,30 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
       ?OBI_0001352 <http://transformunify.org/ontologies/TURBO_0010095> ?alleleZygosityIntegerLiteralValue .
       ?TURBO_0000568 <http://transformunify.org/ontologies/TURBO_0010094> ?alleleGenoIdStringLiteralValue .
       }
-      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0001352 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?GeneSymbolUriOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?ZygosityUriOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000522 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?IAO_0000100 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000568 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0001868 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0200000 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0001573 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0000257 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0001051 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0001479 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?NCBITaxon_9606 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000527 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0600005 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?OBI_0002118 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?GenomeRegistryOfVariousTypes .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?TURBO_0000566 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> turbo:TURBO_0010184 ?TURBO_0010144 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> obo:OBI_0000293 ?NCBITaxon_9606 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> obo:OBI_0000293 ?TURBO_0010144 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> obo:OBI_0000293 ?TURBO_0000527 .
-      <http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess> obo:OBI_0000293 ?TURBO_0010169 .
+      GRAPH <$processNamedGraph> {
+      <processURI> turbo:TURBO_0010184 ?OBI_0001352 .
+      <processURI> turbo:TURBO_0010184 ?GeneSymbolUriOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?ZygosityUriOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000522 .
+      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000568 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0001868 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0200000 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0001573 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0000257 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0001051 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0001479 .
+      <processURI> turbo:TURBO_0010184 ?NCBITaxon_9606 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000527 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0600005 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0002118 .
+      <processURI> turbo:TURBO_0010184 ?GenomeRegistryOfVariousTypes .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0000566 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010144 .
+      <processURI> obo:OBI_0000293 ?NCBITaxon_9606 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010144 .
+      <processURI> obo:OBI_0000293 ?TURBO_0000527 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010169 .
       }
       }
       WHERE {
@@ -151,16 +151,17 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
     test("generated query matched expected query")
     {
         var expectedQueryListBuffer = new ArrayBuffer[String]
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
+        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
+        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val process = query.process
         for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
         {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID)
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
             expectedQueryListBuffer += replacement
         }
         var expectedQueryList = expectedQueryListBuffer.toArray
-        
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
-        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess").getQuery().replaceAll(" ", "").split("\\n")
-        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
   
     test("single allele expansion")
@@ -311,13 +312,13 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         
         tripsResult.size should be (checkPredicates.size)
         
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                pmbb:LossOfFunctionExpansionProcess 
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:allele1 ;
                   obo:OBI_0000293 pmbb:part1 ;
@@ -367,24 +368,31 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
         
-        val processMeta: String = """
+        val processMeta: String = s"""
           
           ASK 
           { 
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
-                ?processBoundary obo:RO_0002223 pmbb:LossOfFunctionExpansionProcess .
+                ?processBoundary obo:RO_0002223 ?updateProcess .
                 ?processBoundary a obo:BFO_0000035 .
                 ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
                 ?timeMeasDatum a obo:IAO_0000416 .
                 ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
                 
-                pmbb:LossOfFunctionExpansionProcess 
-                    turbo:TURBO_0010106 ?someQuery ;
+                ?updateProcess
+                    a turbo:TURBO_0010347 ;
                     turbo:TURBO_0010107 ?someRuntime ;
                     turbo:TURBO_0010108 ?someNumberOfTriples;
                     turbo:TURBO_0010186 pmbb:expanded ;
                     turbo:TURBO_0010187 pmbb:Shortcuts_LofShortcuts ;
+                    obo:BFO_0000055 ?updatePlan .
+                
+                ?updatePlan a turbo:TURBO_0010373 ;
+                    obo:RO_0000059 pmbb:LossOfFunctionExpansionProcess .
+                
+                pmbb:LossOfFunctionExpansionProcess a turbo:TURBO_0010354 ;
+                    turbo:TURBO_0010106 ?query .
             }
           }
           
@@ -393,17 +401,17 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         val countProcessTriples: String = 
-        """
+        s"""
         Select * Where
         {
-            Graph pmbb:processes
+            Graph <$processNamedGraph>
             {
                 ?s ?p ?o .
             }
         }
         """
         val processTriplesResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countProcessTriples, "p")
-        processTriplesResult.size should be (33)
+        processTriplesResult.size should be (38)
     }
 
     test("double allele expansion - multiple biobank encounters")

@@ -16,7 +16,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
     
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
-    val expectedHealthcareQuery: String = """
+    val expectedHealthcareQuery: String = s"""
       INSERT {
       GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
       ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/RO_0000056> ?OGMS_0000097 .
@@ -44,28 +44,28 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       ?HTN_00000001 <http://purl.obolibrary.org/obo/IAO_0000221> ?VSO_0000004 .
       ?HTN_00000001 rdf:type <http://purl.obolibrary.org/obo/HTN_00000001> .
       }
-      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?NCBITaxon_9606 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?OGMS_0000097 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?PATO_0000119 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?PATO_0000128 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?TURBO_0010138 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?OBI_0001929 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?OBI_0000093 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?EFO_0004340 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?VSO_0000004 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?HTN_00000000 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?HTN_00000001 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> obo:OBI_0000293 ?NCBITaxon_9606 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> obo:OBI_0000293 ?HTN_00000000 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> obo:OBI_0000293 ?TURBO_0010158 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> obo:OBI_0000293 ?TURBO_0010138 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> obo:OBI_0000293 ?HTN_00000001 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> obo:OBI_0000293 ?OGMS_0000097 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> obo:OBI_0000293 ?TURBO_0010161 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> obo:OBI_0000293 ?OBI_0001929 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> obo:OBI_0000293 ?EFO_0004340 .
-      <http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess> obo:OBI_0000293 ?VSO_0000006 .
+      GRAPH <$processNamedGraph> {
+      <processURI> turbo:TURBO_0010184 ?NCBITaxon_9606 .
+      <processURI> turbo:TURBO_0010184 ?OGMS_0000097 .
+      <processURI> turbo:TURBO_0010184 ?PATO_0000119 .
+      <processURI> turbo:TURBO_0010184 ?PATO_0000128 .
+      <processURI> turbo:TURBO_0010184 ?TURBO_0010138 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0001929 .
+      <processURI> turbo:TURBO_0010184 ?OBI_0000093 .
+      <processURI> turbo:TURBO_0010184 ?EFO_0004340 .
+      <processURI> turbo:TURBO_0010184 ?VSO_0000004 .
+      <processURI> turbo:TURBO_0010184 ?HTN_00000000 .
+      <processURI> turbo:TURBO_0010184 ?HTN_00000001 .
+      <processURI> obo:OBI_0000293 ?NCBITaxon_9606 .
+      <processURI> obo:OBI_0000293 ?HTN_00000000 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010158 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010138 .
+      <processURI> obo:OBI_0000293 ?HTN_00000001 .
+      <processURI> obo:OBI_0000293 ?OGMS_0000097 .
+      <processURI> obo:OBI_0000293 ?TURBO_0010161 .
+      <processURI> obo:OBI_0000293 ?OBI_0001929 .
+      <processURI> obo:OBI_0000293 ?EFO_0004340 .
+      <processURI> obo:OBI_0000293 ?VSO_0000006 .
       }
       }
       WHERE {
@@ -129,16 +129,17 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
     test("generated query matched expected query - healthcare")
     {
         var expectedQueryListBuffer = new ArrayBuffer[String]
+        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess")
+        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess")
+        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val process = query.process
         for (a <- expectedHealthcareQuery.replaceAll(" ","").split("\\n"))
         {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID)
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
             expectedQueryListBuffer += replacement
         }
         var expectedQueryList = expectedQueryListBuffer.toArray
-        
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess")
-        var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess").getQuery().replaceAll(" ", "").split("\\n")
-        helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
     }
  
     test ("healthcare encounter entity linking - all fields")
@@ -159,13 +160,13 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         update.querySparqlBoolean(testCxn, healthcareEncounterAllFieldsOutput).get should be (true)
         update.querySparqlBoolean(testCxn, processMetaHealthcare).get should be (true)
       
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK
           {
-              GRAPH pmbb:processes
+              GRAPH <$processNamedGraph>
               {
-                  pmbb:HealthcareEncounterEntityLinkingProcess
+                  ?process a turbo:TURBO_0010347 ;
                   
                     obo:OBI_0000293 pmbb:hcenc1 ;
                     obo:OBI_0000293 pmbb:part1 ;
@@ -289,13 +290,13 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         update.querySparqlBoolean(testCxn, noMeasurementsOrDate).get should be (false)
         update.querySparqlBoolean(testCxn, processMetaHealthcare).get should be (true)
       
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
           
           ASK
           {
-              GRAPH pmbb:processes
+              GRAPH <$processNamedGraph>
               {
-                  pmbb:HealthcareEncounterEntityLinkingProcess
+                  ?process a turbo:TURBO_0010347 ;
                   
                     obo:OBI_0000293 pmbb:hcenc1 ;
                     obo:OBI_0000293 pmbb:part1 ;
@@ -344,7 +345,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       
       RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
       
-      val expectedBiobankQuery: String = """
+      val expectedBiobankQuery: String = s"""
         INSERT {
         GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
         ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/RO_0000086> ?PATO_0000119 .
@@ -366,22 +367,22 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         ?EFO_0004340 <http://purl.obolibrary.org/obo/IAO_0000136> ?NCBITaxon_9606 .
         ?EFO_0004340 rdf:type <http://www.ebi.ac.uk/efo/EFO_0004340> .
         }
-        GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?NCBITaxon_9606 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?PATO_0000119 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?OBI_0000097 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?PATO_0000128 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?TURBO_0000527 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?TURBO_0010138 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?OBI_0001929 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> turbo:TURBO_0010184 ?EFO_0004340 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> obo:OBI_0000293 ?NCBITaxon_9606 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> obo:OBI_0000293 ?TURBO_0010138 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> obo:OBI_0000293 ?TURBO_0010161 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> obo:OBI_0000293 ?TURBO_0000527 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> obo:OBI_0000293 ?OBI_0001929 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> obo:OBI_0000293 ?EFO_0004340 .
-        <http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess> obo:OBI_0000293 ?TURBO_0010169 .
+        GRAPH <$processNamedGraph> {
+        <processURI> turbo:TURBO_0010184 ?NCBITaxon_9606 .
+        <processURI> turbo:TURBO_0010184 ?PATO_0000119 .
+        <processURI> turbo:TURBO_0010184 ?OBI_0000097 .
+        <processURI> turbo:TURBO_0010184 ?PATO_0000128 .
+        <processURI> turbo:TURBO_0010184 ?TURBO_0000527 .
+        <processURI> turbo:TURBO_0010184 ?TURBO_0010138 .
+        <processURI> turbo:TURBO_0010184 ?OBI_0001929 .
+        <processURI> turbo:TURBO_0010184 ?EFO_0004340 .
+        <processURI> obo:OBI_0000293 ?NCBITaxon_9606 .
+        <processURI> obo:OBI_0000293 ?TURBO_0010138 .
+        <processURI> obo:OBI_0000293 ?TURBO_0010161 .
+        <processURI> obo:OBI_0000293 ?TURBO_0000527 .
+        <processURI> obo:OBI_0000293 ?OBI_0001929 .
+        <processURI> obo:OBI_0000293 ?EFO_0004340 .
+        <processURI> obo:OBI_0000293 ?TURBO_0010169 .
         }
         }
         WHERE {
@@ -432,16 +433,17 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       test("generated query matched expected query - biobank")
       {
           var expectedQueryListBuffer = new ArrayBuffer[String]
+          val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
+          val query = processQueryMap("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
+          val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+          val process = query.process
           for (a <- expectedBiobankQuery.replaceAll(" ","").split("\\n"))
           {
-              val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID)
+              val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
               expectedQueryListBuffer += replacement
           }
           var expectedQueryList = expectedQueryListBuffer.toArray
-          
-          val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
-          var thisQuery = processQueryMap("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess").getQuery().replaceAll(" ", "").split("\\n")
-          helper.checkStringArraysForEquivalency(thisQuery, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+          helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
       }
       
       test("biobank encounter entity linking - all fields")
@@ -501,13 +503,13 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       update.querySparqlBoolean(testCxn, check).get should be (true)
       update.querySparqlBoolean(testCxn, processMetaBiobank).get should be (true)
           
-      val processInputsOutputs: String = """
+      val processInputsOutputs: String = s"""
         
         ASK
         {
-            GRAPH pmbb:processes
+            GRAPH <$processNamedGraph>
             {
-                pmbb:BiobankEncounterEntityLinkingProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:bbenc1 ;
                   obo:OBI_0000293 pmbb:part1 ;
@@ -618,13 +620,13 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         update.querySparqlBoolean(testCxn, noHeightWeightBmiOrDate).get should be (false)
         update.querySparqlBoolean(testCxn, processMetaBiobank).get should be (true)
         
-        val processInputsOutputs: String = """
+        val processInputsOutputs: String = s"""
         
         ASK
         {
-            GRAPH pmbb:processes
+            GRAPH <$processNamedGraph>
             {
-                pmbb:BiobankEncounterEntityLinkingProcess
+                ?process a turbo:TURBO_0010347 ;
                 
                   obo:OBI_0000293 pmbb:bbenc1 ;
                   obo:OBI_0000293 pmbb:part1 ;
@@ -786,7 +788,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
     }
 }
   
-trait EntityLinkingUnitTestFields
+trait EntityLinkingUnitTestFields extends ProjectwideGlobals
 {
      val homoSapiensTriplesAllFields = """
     
@@ -1317,46 +1319,60 @@ trait EntityLinkingUnitTestFields
           }}
           """
   
-  val processMetaBiobank: String = """
+  val processMetaBiobank: String = s"""
       ASK 
-      { 
-        Graph pmbb:processes
-        {
-            ?processBoundary obo:RO_0002223 pmbb:BiobankEncounterEntityLinkingProcess .
-            ?processBoundary a obo:BFO_0000035 .
-            ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-            ?timeMeasDatum a obo:IAO_0000416 .
-            ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-            
-            pmbb:BiobankEncounterEntityLinkingProcess 
-                turbo:TURBO_0010106 ?someQuery ;
-                turbo:TURBO_0010107 ?someRuntime ;
-                turbo:TURBO_0010108 ?someNumberOfTriples;
-                turbo:TURBO_0010186 pmbb:expanded ;
-                turbo:TURBO_0010187 pmbb:expanded ;
-        }
-      }
+          { 
+            Graph <$processNamedGraph>
+            {
+                ?processBoundary obo:RO_0002223 ?updateProcess .
+                ?processBoundary a obo:BFO_0000035 .
+                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+                ?timeMeasDatum a obo:IAO_0000416 .
+                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+                
+                ?updateProcess
+                    a turbo:TURBO_0010347 ;
+                    turbo:TURBO_0010107 ?someRuntime ;
+                    turbo:TURBO_0010108 ?someNumberOfTriples;
+                    turbo:TURBO_0010186 pmbb:expanded ;
+                    turbo:TURBO_0010187 pmbb:expanded ;
+                    obo:BFO_0000055 ?updatePlan .
+                
+                ?updatePlan a turbo:TURBO_0010373 ;
+                    obo:RO_0000059 pmbb:BiobankEncounterEntityLinkingProcess .
+                
+                pmbb:BiobankEncounterEntityLinkingProcess a turbo:TURBO_0010354 ;
+                    turbo:TURBO_0010106 ?query .
+            }
+          }
       """
       
-      val processMetaHealthcare: String = """
+      val processMetaHealthcare: String = s"""
       ASK 
-      { 
-        Graph pmbb:processes
-        {
-            ?processBoundary obo:RO_0002223 pmbb:HealthcareEncounterEntityLinkingProcess .
-            ?processBoundary a obo:BFO_0000035 .
-            ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-            ?timeMeasDatum a obo:IAO_0000416 .
-            ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-            
-            pmbb:HealthcareEncounterEntityLinkingProcess 
-                turbo:TURBO_0010106 ?someQuery ;
-                turbo:TURBO_0010107 ?someRuntime ;
-                turbo:TURBO_0010108 ?someNumberOfTriples;
-                turbo:TURBO_0010186 pmbb:expanded ;
-                turbo:TURBO_0010187 pmbb:expanded ;
-        }
-      }
+          { 
+            Graph <$processNamedGraph>
+            {
+                ?processBoundary obo:RO_0002223 ?updateProcess .
+                ?processBoundary a obo:BFO_0000035 .
+                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
+                ?timeMeasDatum a obo:IAO_0000416 .
+                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+                
+                ?updateProcess
+                    a turbo:TURBO_0010347 ;
+                    turbo:TURBO_0010107 ?someRuntime ;
+                    turbo:TURBO_0010108 ?someNumberOfTriples;
+                    turbo:TURBO_0010186 pmbb:expanded ;
+                    turbo:TURBO_0010187 pmbb:expanded ;
+                    obo:BFO_0000055 ?updatePlan .
+                
+                ?updatePlan a turbo:TURBO_0010373 ;
+                    obo:RO_0000059 pmbb:HealthcareEncounterEntityLinkingProcess .
+                
+                pmbb:HealthcareEncounterEntityLinkingProcess a turbo:TURBO_0010354 ;
+                    turbo:TURBO_0010106 ?query .
+            }
+          }
       """
 }
     
