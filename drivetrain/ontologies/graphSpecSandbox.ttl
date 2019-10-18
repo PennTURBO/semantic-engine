@@ -11,7 +11,7 @@ turbo:connection4 a turbo:ObjectConnectionToInstanceRecipe ;
   turbo:multiplicity turbo:1-1 ;
 .
 turbo:connection5 a turbo:ObjectConnectionToInstanceRecipe ;
-  turbo:subject turbo:object3 ;
+  turbo:subject turbo:subjectRequired ;
   turbo:predicate turbo:somePredicate ;
   turbo:object turbo:someObject ;
   turbo:multiplicity turbo:1-1 ;

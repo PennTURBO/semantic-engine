@@ -635,12 +635,52 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   }
               }
             """
-            logger.info(findRequiredButUncreatedRecipes)      
+            //logger.info(findRequiredButUncreatedRecipes)      
             var firstRes = ""
             val res = update.querySparqlAndUnpackTuple(gmCxn, findRequiredButUncreatedRecipes, "recipe")
             if (res.size > 0) firstRes = res(0)
-            assert(firstRes == "", s"Error in graph model: connection $firstRes in graph specification is required due to the existence of $singleClass but is not the output of a queued process in the data model")
+            assert(firstRes == "", s"Error in graph model: connection recipe $firstRes in the Graph Specification is required due to the existence of $singleClass but is not the output of a queued process in the Instruction Set")
         }
+        
+        var filterMultipleProcesses = ""
+        if (processList.size > 1)
+        {
+             filterMultipleProcesses = s"""
+                Filter Not Exists
+                {
+                    ?someOtherProcess ontologies:removes ?recipe .
+                }
+                filter (?process != ?someOtherProcess)
+                filter (?someOtherProcess IN ($processListAsString))
+              """
+        }
+        
+        val getOutputsOfAllProcesses = s"""
+          Select ?recipe Where
+          {
+              Graph pmbb:graphSpecification
+              {
+                  Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToTermRecipe 
+                                            turbo:ObjectConnectionToInstanceRecipe
+                                            turbo:DatatypeConnectionRecipe
+                                            turbo:ObjectConnectionFromTermRecipe}
+                  ?recipe a ?CONNECTIONRECIPETYPE .
+              }
+              Minus
+              {
+                  Graph pmbb:dataModel
+                  {
+                      ?process ontologies:hasOutput ?recipe .
+                      $filterMultipleProcesses
+                      filter (?process IN ($processListAsString))
+                  }
+              }
+          }
+          """
+        //println(getOutputsOfAllProcesses)
+        var firstRes = ""
+        val res = update.querySparqlAndUnpackTuple(gmCxn, getOutputsOfAllProcesses, "recipe")
+        for (recipe <- res) logger.info(s"Connection recipe $recipe in the Graph Specification is not the output of a queued process in the Instruction Set, but it is not a required recipe.")
     }
     
     def validateGraphSpecificationAgainstOntology()
