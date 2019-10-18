@@ -11,6 +11,7 @@ import scala.collection.mutable.HashSet
 import scala.collection.mutable.HashMap
 import java.util.UUID
 import java.util.Calendar
+import java.text.SimpleDateFormat
 
 object RunDrivetrainProcess extends ProjectwideGlobals
 {
@@ -60,7 +61,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         for (processSpecification <- processSpecifications)
         {
             val startTime = System.nanoTime()
-            val currDate = Calendar.getInstance().getTime()
+            //val currDate = Calendar.getInstance().getTime()
+            val currDate = new SimpleDateFormat( "yyyy-MM-dd' 'HH:mm:ss" ).format( Calendar.getInstance().getTime())
             val startingTriplesCount = helper.countTriplesInDatabase(cxn)
             val processGraphsList = new ArrayBuffer[String]
             logger.info("Starting process: " + processSpecification)
