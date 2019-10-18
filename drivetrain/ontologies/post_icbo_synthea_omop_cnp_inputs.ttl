@@ -257,18 +257,18 @@ ontologies:EncStartdateShortcut
 
 ontologies:post_icbo_synthea_omop_cnp_enc_participation  
   # ontologies:hasOutput ontologies:EncSeeAlsoKey;
-  # ontologies:hasOutput ontologies:KeyDenotesDbXref ;
-  # ontologies:hasRequiredInput ontologies:EncKeyDenotesEnc ;
   a ontologies:TURBO_0010354 ;
-  ontologies:hasOutput ontologies:EncRealizesRole ;
   ontologies:hasOutput ontologies:EncParticipationAxiomDbXrefHasRepresentation ;
   ontologies:hasOutput ontologies:EncParticipationAxiomDbXrefPartOfColumn ;
   ontologies:hasOutput ontologies:EncParticipationAxiomHasDbXref ;
   ontologies:hasOutput ontologies:EncParticipationAxiomProp ;
   ontologies:hasOutput ontologies:EncParticipationAxiomSource ;
   ontologies:hasOutput ontologies:EncParticipationAxiomTarget ;
+  ontologies:hasOutput ontologies:EncRealizesRole ;
+  ontologies:hasOutput ontologies:KeyDenotesDbXref ;
   ontologies:hasOutput ontologies:PatientHasRole;
   ontologies:hasRequiredInput ontologies:EncExpansionSpecification ;
+  ontologies:hasRequiredInput ontologies:EncKeyDenotesEnc ;
   ontologies:hasRequiredInput ontologies:EncOmopConceptIds ;
   ontologies:hasRequiredInput ontologies:EncPatientID ;
   ontologies:hasRequiredInput ontologies:EncPersonIdShortcut ;
@@ -283,16 +283,16 @@ ontologies:post_icbo_synthea_omop_cnp_enc_participation
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_precedence ;
 .
 
-# ontologies:EncKeyDenotesEnc
-  # a ontologies:ObjectConnectionToInstanceRecipe ;
-  # ontologies:referencedInGraph ontologies:omopExpanded ;
-  # ontologies:multiplicity ontologies:1-1 ;
-  # ## ontologies:required true ;
-  # ontologies:subject ontologies:TURBO_0010433 ;
-  # ontologies:predicate obo:IAO_0000219 ;
-  # ontologies:object ontologies:EncToBeTyped ;
-  # ontologies:subjectUsesContext ontologies:EncKeyContext ;
-# .
+ontologies:EncKeyDenotesEnc
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ## ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:object ontologies:EncToBeTyped ;
+  ontologies:subjectUsesContext ontologies:EncKeyContext ;
+.
 
 ontologies:EncPatientID 
   a ontologies:DatatypeConnectionRecipe ;

@@ -686,16 +686,16 @@ ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:EncPrecedenceA
 
 ### participation Prov
 
-# ontologies:KeyDenotesDbXref
-  # a ontologies:ObjectConnectionToInstanceRecipe ;
-  # ontologies:referencedInGraph ontologies:omopExpanded ;
-  # ontologies:multiplicity ontologies:1-1 ;
-  # ## ontologies:required true ;
-  # ontologies:subject ontologies:TURBO_0010433 ;
-  # ontologies:predicate obo:IAO_0000219 ;
-  # ontologies:object ontologies:TURBO_0010404 ;
-  # ontologies:subjectUsesContext ontologies:EncKeyContext ;
-# .
+ontologies:KeyDenotesDbXref
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ## ontologies:required true ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:subjectUsesContext ontologies:EncKeyContext ;
+.
 
 # ontologies:EncSeeAlsoKey
   # a ontologies:DatatypeConnectionRecipe ;
@@ -707,7 +707,7 @@ ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:EncPrecedenceA
 # .
 
 ontologies:EncKeyContext a ontologies:TurboGraphContext .
-ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:encStartContext .
+ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:EncKeyContext .
 
 
 ### precedence
