@@ -4,6 +4,7 @@ turbo:myProcess1 a turbo:TURBO_0010354 ;
   turbo:hasRequiredInput turbo:connection1 ;
   turbo:hasOutput turbo:connection3 ;
   turbo:hasOutput turbo:connection4 ;
+  turbo:hasOutput turbo:connection5 ;
 .
 turbo:connection1 a turbo:ObjectConnectionToInstanceRecipe ;
   turbo:subject turbo:object1 ;

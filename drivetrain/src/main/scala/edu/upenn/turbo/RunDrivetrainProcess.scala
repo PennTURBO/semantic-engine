@@ -552,67 +552,95 @@ object RunDrivetrainProcess extends ProjectwideGlobals
           Select distinct ?class Where
           {
               {
-                  ?process turbo:hasOutput ?connection .
-                  ?connection a ?connectionType .
-                  ?connection turbo:subject ?class .
+                  Graph pmbb:dataModel
+                  {
+                      ?process turbo:hasOutput ?connection .
+                  }
+                  Graph pmbb:graphSpecification
+                  {
+                      ?connection turbo:subject ?class .
+                      Minus
+                      {
+                          ?connection a turbo:ObjectConnectionFromTermRecipe ;
+                      }
+                  }
                   ?class a owl:Class .
                   filter (?process IN ($processListAsString))
-                  filter (?connectionType != turbo:ObjectConnectionFromTermRecipe)
               }
               UNION
               {
-                  ?process turbo:hasOutput ?connection .
-                  ?connection turbo:object ?class .
-                  ?connection a ?connectionType .
-                  ?class a owl:Class .
-                  filter (?process IN ($processListAsString))
-                  filter (?connectionType != turbo:ObjectConnectionToTermRecipe)
-              }
-          }
-          """
-        logger.info(getSubjectAndObjectOutputs)
-        val allClasses = update.querySparqlAndUnpackTuple(cxn, getSubjectAndObjectOutputs, "class")
-
-        var filterMultipleProcesses = ""
-        if (processList.size > 1)
-        {
-             filterMultipleProcesses = s"""
-                Filter Not Exists
-                {
-                    ?someOtherProcess ontologies:removes ?recipe .
-                }
-                filter (?process != ?someOtherProcess)
-                filter (?someOtherProcess IN ($processListAsString))
-              """
-        }
-        
-        val getOutputsOfAllProcesses = s"""
-          Select ?recipe Where
-          {
-              Graph pmbb:graphSpecification
-              {
-                  Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToTermRecipe 
-                                            turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe
-                                            turbo:ObjectConnectionFromTermRecipe}
-                  ?recipe a ?CONNECTIONRECIPETYPE .
-              }
-              Minus
-              {
                   Graph pmbb:dataModel
                   {
-                      ?process ontologies:hasOutput ?recipe .
-                      $filterMultipleProcesses
-                      filter (?process IN ($processListAsString))
+                      ?process turbo:hasOutput ?connection .
                   }
+                  Graph pmbb:graphSpecification
+                  {
+                      ?connection turbo:object ?class .
+                      Minus
+                      {
+                          ?connection a turbo:ObjectConnectionToTermRecipe ;
+                      }
+                  }
+                  ?class a owl:Class .
+                  filter (?process IN ($processListAsString))
               }
           }
           """
-        //println(getOutputsOfAllProcesses)
-        var firstRes = ""
-        val res = update.querySparqlAndUnpackTuple(gmCxn, getOutputsOfAllProcesses, "recipe")
-        if (res.size > 0) firstRes = res(0)
-        assert(firstRes == "", s"Error in graph model: connection $firstRes in graph specification is not the output of a queued process in the data model")
+        //logger.info(getSubjectAndObjectOutputs)
+        val allClasses = update.querySparqlAndUnpackTuple(gmCxn, getSubjectAndObjectOutputs, "class")
+        
+        for (singleClass <- allClasses)
+        {
+            val findRequiredButUncreatedRecipes = s"""
+              Select ?recipe Where
+              {
+                  {
+                      Graph pmbb:graphSpecification
+                      {
+                          ?recipe turbo:subject <$singleClass> .
+                          ?recipe turbo:required turbo:bothRequired .
+                      }
+                  }
+                  UNION
+                  {
+                      Graph pmbb:graphSpecification
+                      {
+                          ?recipe turbo:subject <$singleClass> .
+                          ?recipe turbo:required turbo:objectRequired .
+                      }
+                  }
+                  UNION
+                  {
+                      Graph pmbb:graphSpecification
+                      {
+                          ?recipe turbo:object <$singleClass> .
+                          ?recipe turbo:required turbo:bothRequired .
+                      }
+                  }
+                  UNION
+                  {
+                      Graph pmbb:graphSpecification
+                      {
+                          ?recipe turbo:object <$singleClass> .
+                          ?recipe turbo:required turbo:subjectRequired .
+                      }
+                  }
+                  MINUS
+                  {
+                      Graph pmbb:dataModel
+                      {
+                          ?process turbo:hasOutput ?recipe .
+                          filter (?process IN ($processListAsString))
+                      }
+                  }
+              }
+            """
+            logger.info(findRequiredButUncreatedRecipes)      
+            var firstRes = ""
+            val res = update.querySparqlAndUnpackTuple(gmCxn, findRequiredButUncreatedRecipes, "recipe")
+            if (res.size > 0) firstRes = res(0)
+            assert(firstRes == "", s"Error in graph model: connection $firstRes in graph specification is required due to the existence of $singleClass but is not the output of a queued process in the data model")
+        }
     }
     
     def validateGraphSpecificationAgainstOntology()

@@ -10,5 +10,14 @@ turbo:connection4 a turbo:ObjectConnectionToInstanceRecipe ;
   turbo:object turbo:object4 ;
   turbo:multiplicity turbo:1-1 ;
 .
+turbo:connection5 a turbo:ObjectConnectionToInstanceRecipe ;
+  turbo:subject turbo:object3 ;
+  turbo:predicate turbo:somePredicate ;
+  turbo:object turbo:someObject ;
+  turbo:multiplicity turbo:1-1 ;
+  turbo:required turbo:objectRequired ;
+.
 turbo:object3 a owl:Class .
 turbo:object4 a owl:Class .
+turbo:someSubject a owl:Class .
+turbo:someObject a owl:Class .
