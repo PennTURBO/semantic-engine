@@ -546,6 +546,32 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         }
         processListAsString = processListAsString.substring(0, processListAsString.size-1)
         assert (processListAsString != "")
+        
+        // first collect list of all subjects and objects used in queued processes
+        val getSubjectAndObjectOutputs = s"""
+          Select distinct ?class Where
+          {
+              {
+                  ?process turbo:hasOutput ?connection .
+                  ?connection a ?connectionType .
+                  ?connection turbo:subject ?class .
+                  ?class a owl:Class .
+                  filter (?process IN ($processListAsString))
+                  filter (?connectionType != turbo:ObjectConnectionFromTermRecipe)
+              }
+              UNION
+              {
+                  ?process turbo:hasOutput ?connection .
+                  ?connection turbo:object ?class .
+                  ?connection a ?connectionType .
+                  ?class a owl:Class .
+                  filter (?process IN ($processListAsString))
+                  filter (?connectionType != turbo:ObjectConnectionToTermRecipe)
+              }
+          }
+          """
+        logger.info(getSubjectAndObjectOutputs)
+        val allClasses = update.querySparqlAndUnpackTuple(cxn, getSubjectAndObjectOutputs, "class")
 
         var filterMultipleProcesses = ""
         if (processList.size > 1)
