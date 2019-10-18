@@ -20,10 +20,6 @@
 <http://api.stardog.com/procedure_occurrence> a owl:Class .
 <http://api.stardog.com/measurement> a owl:Class .
 
-# ontologies:syntheaomop_post_icbo a owl:Class .
-# ontologies:cdm_synthea10 a owl:Class .
-# ontologies:procedure_occurrence a owl:Class .
-
 ontologies:star a ontologies:PredicateSuffixSymbol ;
   ontologies:usesSparqlOperator '*' ;
 .
@@ -147,15 +143,6 @@ ontologies:PatientDobShortcut
   ontologies:object ontologies:birth_datetime_DateLiteralValue ;
 .
 
-# ontologies:GidClassList ontologies:usesCustomVariableManipulationRule ontologies:GidClassFromValueRule .
-# ontologies:GidClassFromValueRule
-  # a ontologies:TurboGraphVariableManipulationLogic ;
-  # ontologies:usesSparql """
-  # BIND(IF (${dependent} = 8532, obo:OMRSE_00000138, ?unbound) AS ?femGidClass) 
-  # BIND(IF (${dependent} = 8507, obo:OMRSE_00000141, ?unbound) AS ?maleGidClass) 
-  # bind(coalesce(?femGidClass, ?maleGidClass, obo:OMRSE_00000133) as ${replacement})
-# """  ;
-# .
 
 ### Encs
 # _ is wildcard suffix for graph names
@@ -179,13 +166,10 @@ ontologies:post_icbo_synthea_omop_cnp_Encs
   ontologies:hasOutput ontologies:HardcodedRegden ;
   ontologies:hasOutput ontologies:KeyDenotesEnc ;
   ontologies:hasOutput ontologies:KeyDenotesEndDate ;
-  
   ontologies:hasOutput ontologies:KeyDenotesStartDate ;
   ontologies:hasOutput ontologies:KeyDenotesVisitCridSym ;
   ontologies:hasOutput ontologies:ProcboundEndsEnc ;
   ontologies:hasOutput ontologies:ProcboundStartsEnc ;
-  
-  
   ontologies:hasOutput ontologies:StartDatePartOfColumn ;
   ontologies:hasOutput ontologies:StartingTmdAboutProcbound ;
   ontologies:hasOutput ontologies:StartingTmdHasMeasVal ;
@@ -275,16 +259,14 @@ ontologies:post_icbo_synthea_omop_cnp_enc_participation
   # ontologies:hasOutput ontologies:EncSeeAlsoKey;
   # ontologies:hasOutput ontologies:KeyDenotesDbXref ;
   # ontologies:hasRequiredInput ontologies:EncKeyDenotesEnc ;
-  ## ontologies:hasOutput ontologies:ParticipationAxiomTypingRecipe ;
-  ## ontologies:hasRequiredInput ontologies:patientExpansionSpecification ;
   a ontologies:TURBO_0010354 ;
   ontologies:hasOutput ontologies:EncRealizesRole ;
-  ontologies:hasOutput ontologies:ParticipationAxiomDbXrefHasRepresentation ;
-  ontologies:hasOutput ontologies:ParticipationAxiomDbXrefPartOfColumn ;
-  ontologies:hasOutput ontologies:ParticipationAxiomHasDbXref ;
-  ontologies:hasOutput ontologies:ParticipationAxiomProp ;
-  ontologies:hasOutput ontologies:ParticipationAxiomSource ;
-  ontologies:hasOutput ontologies:ParticipationAxiomTarget ;
+  ontologies:hasOutput ontologies:EncParticipationAxiomDbXrefHasRepresentation ;
+  ontologies:hasOutput ontologies:EncParticipationAxiomDbXrefPartOfColumn ;
+  ontologies:hasOutput ontologies:EncParticipationAxiomHasDbXref ;
+  ontologies:hasOutput ontologies:EncParticipationAxiomProp ;
+  ontologies:hasOutput ontologies:EncParticipationAxiomSource ;
+  ontologies:hasOutput ontologies:EncParticipationAxiomTarget ;
   ontologies:hasOutput ontologies:PatientHasRole;
   ontologies:hasRequiredInput ontologies:EncExpansionSpecification ;
   ontologies:hasRequiredInput ontologies:EncOmopConceptIds ;
@@ -332,7 +314,6 @@ ontologies:post_icbo_synthea_omop_cnp_precedence
   ontologies:hasOutput ontologies:PrecedenceAxiomProp ;
   ontologies:hasOutput ontologies:PrecedenceAxiomSource ;
   ontologies:hasOutput ontologies:PrecedenceAxiomTarget ;
-  ## ontologies:hasOutput ontologies:PrecedenceAxiomTypingRecipe ;
   ontologies:hasRequiredInput ontologies:EncTypeShortcut ;
   ontologies:hasRequiredInput ontologies:DenotedADenotedsClass ; 
   ontologies:hasRequiredInput ontologies:DenotedScoEnc ; 
@@ -407,19 +388,27 @@ ontologies:DenotedScoEnc
 
 ontologies:post_icbo_synthea_omop_cnp_procedures
   a ontologies:TURBO_0010354 ;
-  
-  ontologies:hasOutput ontologies:KeyDenotesProv ;
-  ontologies:hasOutput ontologies:ProvHasRepresentation ;
-  ontologies:hasOutput ontologies:ProvPartOfCol ;
-  
   ontologies:hasOutput ontologies:HardcodedProcSourceden ;
   ontologies:hasOutput ontologies:KeyDenotesProc ;
+  ontologies:hasOutput ontologies:KeyDenotesProv ;
   ontologies:hasOutput ontologies:ProcExpansionSpecification ;
   ontologies:hasOutput ontologies:ProcKeySymbHasRepresentation ;
+  ontologies:hasOutput ontologies:ProcKeySymbPartOfCol ;
   ontologies:hasOutput ontologies:ProcKeySymbPartOfKey ;
   ontologies:hasOutput ontologies:ProcTypingRecipe ;
   ontologies:hasOutput ontologies:ProvAboutProc ;
+  ontologies:hasOutput ontologies:ProvHasRepresentation ;
   ontologies:hasOutput ontologies:ProvMentionsSnomed ;
+  ontologies:hasOutput ontologies:ProvPartOfCol ;
+  
+  ontologies:hasOutput ontologies:ProcTypeAxiomDbXrefHasRepresentation ;
+  ontologies:hasOutput ontologies:ProcTypeAxiomDbXrefPartOfColumn ;
+  ontologies:hasOutput ontologies:ProcTypeAxiomHasDbXref  ;
+  ontologies:hasOutput ontologies:ProcTypeAxiomProp ;
+  ontologies:hasOutput ontologies:ProcTypeAxiomSource ;
+  ontologies:hasOutput ontologies:ProcTypeAxiomTarget ;
+  
+  
   ontologies:hasRequiredInput ontologies:ProcKeysymShortcut ;
   ontologies:hasRequiredInput ontologies:ProcOmopConceptIds ;  
   ontologies:hasRequiredInput ontologies:ProcSciShortcut ;  
@@ -492,6 +481,15 @@ ontologies:post_icbo_synthea_omop_cnp_procedure_participation
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_procedure_parthood ;
+  
+  ontologies:hasOutput ontologies:ProcParticipationAxiomDbXrefHasRepresentation ;
+  ontologies:hasOutput ontologies:ProcParticipationAxiomDbXrefPartOfColumn ;
+  ontologies:hasOutput ontologies:ProcParticipationAxiomHasDbXref ;
+  ontologies:hasOutput ontologies:ProcParticipationAxiomProp ;
+  ontologies:hasOutput ontologies:ProcParticipationAxiomSource ;
+  ontologies:hasOutput ontologies:ProcParticipationAxiomTarget ;
+  
+  
 .
 ontologies:ProcPatientShortcut 
   a ontologies:DatatypeConnectionRecipe ;
@@ -516,6 +514,13 @@ ontologies:post_icbo_synthea_omop_cnp_procedure_parthood
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_measurement ;
+  ontologies:hasOutput ontologies:ProcParthoodAxiomDbXrefHasRepresentation ;
+  ontologies:hasOutput ontologies:ProcParthoodAxiomDbXrefPartOfColumn ;
+  ontologies:hasOutput ontologies:ProcParthoodAxiomHasDbXref ;
+  ontologies:hasOutput ontologies:ProcParthoodAxiomProp ;
+  ontologies:hasOutput ontologies:ProcParthoodAxiomSource ;
+  ontologies:hasOutput ontologies:ProcParthoodAxiomTarget ;
+
 .
 ontologies:ProcEncShortcut 
   a ontologies:DatatypeConnectionRecipe ;
@@ -687,5 +692,19 @@ ontologies:MeasEncShortcut
   # BIND(IF (${dependent} = "76601001", obo:OBI_0000934, ?unbound) AS ?imInjClass) 
   # BIND(IF (${dependent} = "5880005", obo:OGMS_0000057, ?unbound) AS ?physExamClass) 
   # bind(coalesce(?imInjClass, ?physExamClass, obo:OGMS_0000096) as ${replacement})
+# """  ;
+# .
+
+# ontologies:syntheaomop_post_icbo a owl:Class .
+# ontologies:cdm_synthea10 a owl:Class .
+# ontologies:procedure_occurrence a owl:Class .
+
+# ontologies:GidClassList ontologies:usesCustomVariableManipulationRule ontologies:GidClassFromValueRule .
+# ontologies:GidClassFromValueRule
+  # a ontologies:TurboGraphVariableManipulationLogic ;
+  # ontologies:usesSparql """
+  # BIND(IF (${dependent} = 8532, obo:OMRSE_00000138, ?unbound) AS ?femGidClass) 
+  # BIND(IF (${dependent} = 8507, obo:OMRSE_00000141, ?unbound) AS ?maleGidClass) 
+  # bind(coalesce(?femGidClass, ?maleGidClass, obo:OMRSE_00000133) as ${replacement})
 # """  ;
 # .
