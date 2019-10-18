@@ -657,7 +657,8 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                     val newEnforcer = helper.convertTypeToSparqlVariable(conn)
                     if (multiplicityEnforcer != "")
                     {
-                        assert(inputOneToOneConnections.contains(enforcerAsUri) && inputOneToOneConnections(enforcerAsUri).contains(conn),
+                        assert((inputOneToOneConnections.contains(enforcerAsUri) && inputOneToOneConnections(enforcerAsUri).contains(conn)
+                            || (outputOneToOneConnections.contains(enforcerAsUri) && outputOneToOneConnections(enforcerAsUri).contains(conn))),
                             s"Error in graph model: Multiple possible multiplicity enforcers for $changeAgent in process $process: $multiplicityEnforcer, $newEnforcer")
                     }
                     multiplicityEnforcer = newEnforcer
