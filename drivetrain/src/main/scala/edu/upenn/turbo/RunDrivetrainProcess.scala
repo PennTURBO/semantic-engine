@@ -208,6 +208,18 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               
               Optional
               {
+                  ?$CONNECTIONNAME turbo:subjectUsesContext ?$SUBJECTCONTEXT .
+                  ?$SUBJECT turbo:hasPossibleContext ?$SUBJECTCONTEXT .
+                  ?$SUBJECTCONTEXT a turbo:TurboGraphContext .
+              }
+              Optional
+              {
+                  ?$CONNECTIONNAME turbo:objectUsesContext ?$OBJECTCONTEXT .
+                  ?$OBJECT turbo:hasPossibleContext ?$OBJECTCONTEXT .
+                  ?$OBJECTCONTEXT a turbo:TurboGraphContext .
+              }
+              Optional
+              {
                   ?$CONNECTIONNAME obo:BFO_0000050 ?$OPTIONALGROUP .
                   ?$OPTIONALGROUP a turbo:TurboGraphOptionalGroup .
                   <$process> turbo:buildsOptionalGroup ?$OPTIONALGROUP .

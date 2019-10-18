@@ -149,8 +149,10 @@ class PatternMatchQuery extends Query
             var subjectResultBool = true
             if (!required || !(subjectAType || subjectADescriber)) subjectResultBool = false
             
-            val thisObject = row(OBJECT.toString).toString
-            val thisSubject = row(SUBJECT.toString).toString
+            var thisObject = row(OBJECT.toString).toString
+            var thisSubject = row(SUBJECT.toString).toString
+            /*if (row(SUBJECTCONTEXT.toString) != null) thisSubject += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
+            if (row(OBJECTCONTEXT.toString) != null) thisObject += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)*/
 
             if (objectADescriber || objectAType) if (!usedVariables.contains(thisObject) || !usedVariables(thisObject)) usedVariables += thisObject -> objectResultBool
             if (subjectADescriber || subjectAType) if (!usedVariables.contains(thisSubject) || !usedVariables(thisSubject)) usedVariables += thisSubject -> subjectResultBool
