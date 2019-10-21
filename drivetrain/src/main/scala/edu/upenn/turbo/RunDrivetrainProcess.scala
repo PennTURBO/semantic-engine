@@ -151,7 +151,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
             if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
             
-            val inputNamedGraph = inputs(0)(GRAPH.toString).toString
+            var inputNamedGraph = inputs(0)(GRAPH.toString).toString
             
             // create primary query
             val primaryQuery = new PatternMatchQuery()
@@ -178,6 +178,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 primaryQuery.createDeleteClause(removals)
             }
             primaryQuery.createInsertClause(outputs)
+            assert(!primaryQuery.getQuery().contains("http://turboProperties.org/"), "Could not complete properties term replacement")
             primaryQuery 
         }
     }
@@ -862,9 +863,30 @@ object RunDrivetrainProcess extends ProjectwideGlobals
              new Triple(timeMeasDatum, "rdf:type", "obo:IAO_0000416"),
              new Triple(timeMeasDatum, "turbo:TURBO_0010094", currDate)
         )
-        for (inputGraph <- inputNamedGraphsList) metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", inputGraph)
-        if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", outputNamedGraph)
-        else if (removalsNamedGraph != null) metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", removalsNamedGraph)
+        for (inputGraph <- inputNamedGraphsList) 
+        {
+            if (inputGraph.startsWith("http://turboProperties.org/"))
+            {
+                metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", helper.retrieveUriPropertyFromFile(inputGraph.replace("http://turboProperties.org/","")))
+            }
+            else metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", inputGraph)
+        }
+        if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) 
+        {
+            if (outputNamedGraph.startsWith("http://turboProperties.org/"))
+            {
+                metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", helper.retrieveUriPropertyFromFile(outputNamedGraph.replace("http://turboProperties.org/","")))
+            }
+            else metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", outputNamedGraph)
+        }
+        else if (removalsNamedGraph != null) 
+        {
+            if (removalsNamedGraph.startsWith("http://turboProperties.org/"))
+            {
+                metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", helper.retrieveUriPropertyFromFile(removalsNamedGraph.replace("http://turboProperties.org/","")))
+            }
+            else metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", removalsNamedGraph)
+        }
         metaTriples
     }
 }

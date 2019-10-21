@@ -98,94 +98,6 @@ object ConnectToGraphDB extends ProjectwideGlobals
     }
     
     /**
-     * Handles loading data files into their respective named graphs, as declared in TURBO Properties file. Checks to make sure that 
-     * data files and named graphs are declared properly, then passes information to helper method to complete the data load.
-     */
-    def loadDataFromPropertiesFile(cxn: RepositoryConnection, inputProp: String = inputFiles, ngPrefix: String = "Shortcuts", allInOneGraph: Boolean = false)
-    {
-        val filesToLoadList: HashMap[String, HashMap[String, RDFFormat]] = generateLoadList(inputProp, ngPrefix, allInOneGraph)
-        for ((k,v) <- filesToLoadList)
-        {
-            var namedgraph: String = ""
-            var format: Option[RDFFormat] = None : Option[RDFFormat]
-            for ((a,b) <- v)
-            {
-                namedgraph = a
-                format = Some(v(a))
-            }
-            helper.loadDataFromFile(cxn, k, format.get, namedgraph)
-        }
-        if (importOntologies == "true") OntologyLoader.addOntologyFromUrl(cxn, ontologyURL)
-    }
-    
-    /**
-     * Checks to see whether there is already data in named graph <ontologyURL), and if there is not, inserts the TURBO ontology into the ontology
-     * named graph. Neither of these variables are specified in call to helper.addOntologyFromURL(cxn) because they are default values for named graph
-     * and ontology URL variables in that method.
-     */
-    def loadOntologyFromURLIfNotAlreadyLoaded(cxn: RepositoryConnection, repo: Repository)
-    {
-        val f: ValueFactory = cxn.getValueFactory()
-        val ontoGraphName = f.createIRI(ontologyURL);
-        //check to see if there is already an ontology
-        if (helper.isThereDataInNamedGraph(cxn, ontoGraphName)) logger.info(s"There is already data in named graph <$ontologyURL>")
-        //check to see if 
-        else
-        {
-            OntologyLoader.addOntologyFromUrl(cxn)
-        } 
-    }
-    
-    /**
-     * Reads the files-to-load list and their respective named graphs from the TURBO properties file and checks to make sure that these lists are valid.
-     * If they are, returns a mapping of file names to named graphs/RDF format of the files. 
-     */
-    def generateLoadList(inputProp: String, ngPrefix: String, allInOneGraph: Boolean): HashMap[String, HashMap[String, RDFFormat]] =
-    {
-        val mapToReturn: HashMap[String, HashMap[String, RDFFormat]] = new HashMap[String, HashMap[String, RDFFormat]]
-        
-        val filesToLoad: String = inputProp
-        val namedGraphs: String = inputFilesNamedGraphs
-        val formats: String = inputFilesFormat
-        
-        val ftlList: ArrayBuffer[String] = parseCSVString(filesToLoad)
-        val ngList: ArrayBuffer[String] = generateShortcutNamedGraphsList(ftlList, ngPrefix, allInOneGraph)
-        var formatList: ArrayBuffer[String] = parseCSVString(formats)
-        
-        // If only one format is required, we infer that this is meant to apply to all files.
-        if (formatList.size == 1 && ftlList.size > 1)
-        {
-            for (a <- 1 to ftlList.size - 1) formatList += formatList(0)
-        }
-        
-        if (ftlList.size != ngList.size) 
-        {
-            logger.info("Internal Drivetrain Error: The files to load list and named graphs list are of different sizes.")
-            throw new RuntimeException ("Error in properties file input, check logger message for details.")
-        }
-        if (formatList.size != ftlList.size)
-        {
-            logger.info("Internal Drivetrain Error: The input files format list and files to load list are of different sizes.")
-            throw new RuntimeException ("Error in properties file input, check logger message for details.")
-        }
-        if (formatList.size != ngList.size)
-        {
-            logger.info("Internal Drivetrain Error: The input files format list and named graphs list are of different sizes.")
-            throw new RuntimeException ("Error in properties file input, check logger message for details.")
-        }
-      
-        for (a <- 0 to ftlList.size - 1)
-        {
-            var format: Option[RDFFormat] = None : Option[RDFFormat]
-            //println("format list: " + formatList(a))
-            if (formatList(a) == "TURTLE") format = Some(RDFFormat.TURTLE)
-            if (formatList(a) == "RDFXML") format = Some(RDFFormat.RDFXML)
-            mapToReturn += ftlList(a) -> HashMap(ngList(a) -> format.get)
-        }
-        mapToReturn
-    }
-    
-    /**
      * Used to disconnect Drivetrain from Ontotext Graph DB by closing the relevant RepositoryConnection, RemoteRepositoryManager, and Repository objects.
      * Optionally delete all triples in database before connection close by specifying boolean parameter.
      */
@@ -232,27 +144,6 @@ object ConnectToGraphDB extends ProjectwideGlobals
     }
     
     /**
-     * Helper method called by generateLoadList method. Receives a string and separates values in string into a list based on comma placement in string.
-     */
-    def parseCSVString(a: String): ArrayBuffer[String] = 
-    {
-        val listToReturn: ArrayBuffer[String] = new ArrayBuffer[String]
-        var stringInProgress: String = ""
-        for (char <- a)
-        {
-            if (char != ',') stringInProgress += char
-            else if (char == ',')
-            {
-                listToReturn += stringInProgress
-                stringInProgress = ""
-            }
-        }
-        listToReturn += stringInProgress
-        logger.info("returning this list: " + listToReturn)
-        listToReturn
-    }
-    
-    /**
      * Helper method called by graph connection methods in order to validate properties file. Ensures that all required properties for connection to Graph DB
      * are present in properties file.
      */
@@ -269,7 +160,8 @@ object ConnectToGraphDB extends ProjectwideGlobals
             "ontologyURL", "modelRepository", "testingRepository", 
             "processNamedGraph", "reinferRepo", "loadAdditionalOntologies",
             "graphModelFile", "graphSpecificationFile", "defaultPrefix",
-            "dataValidationMode", "errorLogFile")
+            "dataValidationMode", "errorLogFile", "expandedNamedGraph",
+            "clearGraphsAtStart")
         var a = 0
         while (optToReturn == None && a < requiredProperties.size)
         {
@@ -299,24 +191,5 @@ object ConnectToGraphDB extends ProjectwideGlobals
             a = a + 1
         }
         optToReturn
-    }
-    
-    /**
-     * Receives a list of all files being loaded into the graph. Generates the name of a named graph for each of the files to be loaded into based on
-     * the name of the file.
-     * 
-     * @return a list of strings representing the named graph which each file will be loaded into at that specific index in the input list
-     */
-    def generateShortcutNamedGraphsList(newFiles: ArrayBuffer[String], ngPrefix: String, allInOneGraph: Boolean): ArrayBuffer[String] =
-    {
-        var listToReturn: ArrayBuffer[String] = new ArrayBuffer[String]
-        for (file <- newFiles)
-        {
-            var namedGraph: String = "http://www.itmat.upenn.edu/biobank/" + ngPrefix 
-            if (!allInOneGraph) namedGraph += "_" +
-                java.util.UUID.randomUUID().toString.replaceAll("-","") + "_" + helper.getPostfixfromURI(file).replaceAll(" ", "")
-            listToReturn += namedGraph
-        }
-        listToReturn
     }
 }

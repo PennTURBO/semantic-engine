@@ -16,20 +16,20 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
     
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
-    val scHcEncToScPersonCleanupExpectedQuery: String = """
+    val scHcEncToScPersonCleanupExpectedQuery: String = s"""
       DELETE {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010131> ?TURBO_0010161 .
       }
       }
       INSERT {
-      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
+      GRAPH <$processNamedGraph> {
       <processURI> obo:OBI_0000293 ?TURBO_0010158 .
       <processURI> obo:OBI_0000293 ?TURBO_0010161 .
       }
       }
       WHERE {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010131> ?TURBO_0010161 .
       ?TURBO_0010158 rdf:type <http://transformunify.org/ontologies/TURBO_0010158> .
       ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
@@ -37,20 +37,20 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
        }
     """
     
-    val scBbEncToScPersonCleanupExpectedQuery: String = """
+    val scBbEncToScPersonCleanupExpectedQuery: String = s"""
       DELETE {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010133> ?TURBO_0010161 .
       }
       }
       INSERT {
-      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
+      GRAPH <$processNamedGraph> {
       <processURI> obo:OBI_0000293 ?TURBO_0010161 .
       <processURI> obo:OBI_0000293 ?TURBO_0010169 .
       }
       }
       WHERE {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010133> ?TURBO_0010161 .
       ?TURBO_0010169 rdf:type <http://transformunify.org/ontologies/TURBO_0010169> .
       ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
@@ -193,7 +193,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       val insert = s"""
             INSERT DATA
             {
-            Graph pmbb:expanded {
+            Graph <$expandedNamedGraph> {
                 pmbb:scHcEnc1 turbo:TURBO_0010131 pmbb:scPerson1 .
                 pmbb:scHcEnc1 a turbo:TURBO_0010158 .
                 pmbb:scPerson1 a turbo:TURBO_0010161 .
@@ -203,10 +203,10 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       update.updateSparql(testCxn, insert)
       RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess")
       
-        val check1: String = """
+        val check1: String = s"""
           ASK
           {
-          Graph pmbb:expanded {
+          Graph <$expandedNamedGraph> {
                 pmbb:scHcEnc1 turbo:TURBO_0010131 pmbb:scPerson1 .
               }
           }
@@ -215,7 +215,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         update.querySparqlBoolean(testCxn, check1).get should be (false)
         update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/ShortcutHealthcareEncounterToShortcutPersonCleanupProcess")).get should be (true)
       
-        val count: String = "SELECT * WHERE {Graph pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {Graph <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         result.size should be (2)
       
@@ -258,7 +258,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       val insert = s"""
             INSERT DATA
             {
-            Graph pmbb:expanded {
+            Graph <$expandedNamedGraph> {
                 pmbb:scBbEnc1 turbo:TURBO_0010133 pmbb:scPerson1 .
                 pmbb:scBbEnc1 a turbo:TURBO_0010169 .
                 pmbb:scPerson1 a turbo:TURBO_0010161 .
@@ -268,10 +268,10 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       update.updateSparql(testCxn, insert)
       RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
       
-        val check1: String = """
+        val check1: String = s"""
           ASK
           {
-          Graph pmbb:expanded {
+          Graph <$expandedNamedGraph> {
                 pmbb:scBbEnc1 turbo:TURBO_0010133 pmbb:scPerson1 .
               }
           }
@@ -280,7 +280,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         update.querySparqlBoolean(testCxn, check1).get should be (false)
         update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)
       
-        val count: String = "SELECT * WHERE {Graph pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {Graph <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         result.size should be (2)
       

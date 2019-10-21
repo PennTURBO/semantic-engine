@@ -15,16 +15,16 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
     
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
-    val instantiationAndDataset: String = """
-      ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+    val instantiationAndDataset: String = s"""
+      ASK { GRAPH <$expandedNamedGraph> {
             ?instantiation <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000522 .
         		?instantiation obo:OBI_0000293 ?dataset .
         		?dataset a obo:IAO_0000100 .
         		?dataset dc11:title "enc_expand.csv"^^xsd:string .
        }}"""
     
-    val healthcareEncounterMinimum: String = """
-      ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+    val healthcareEncounterMinimum: String = s"""
+      ASK { GRAPH <$expandedNamedGraph> {
             ?encounter <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:OGMS_0000097 .
         		?encounterCrid <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000508 .
         		?encounterCrid obo:IAO_0000219 ?encounter .
@@ -39,8 +39,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        }}
       """
     
-    val healthcareSymbolAndRegistry: String = """
-      ASK {GRAPH pmbb:expanded {
+    val healthcareSymbolAndRegistry: String = s"""
+      ASK {GRAPH <$expandedNamedGraph> {
           ?encounter a obo:OGMS_0000097 .
           ?encounterCrid a turbo:TURBO_0000508 .
           ?encounterCrid obo:IAO_0000219 ?encounter .
@@ -55,8 +55,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       }}
       """
    
-    val healthcareDiagnosis: String = """
-          ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+    val healthcareDiagnosis: String = s"""
+          ASK { GRAPH <$expandedNamedGraph> {
           
                 ?dataset a obo:IAO_0000100 .
                 ?encounter a obo:OGMS_0000097 .
@@ -74,8 +74,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         	}}
           """
     
-    val healthcareMedications: String = """
-      ask {graph pmbb:expanded {
+    val healthcareMedications: String = s"""
+      ask {graph <$expandedNamedGraph> {
           ?dataset a obo:IAO_0000100 .
           ?encounter a obo:OGMS_0000097 .
           ?encounter obo:OBI_0000299 ?drugPrescript .
@@ -95,8 +95,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       		}}
       """
     
-    val healthcareMeasurements: String = """
-          ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+    val healthcareMeasurements: String = s"""
+          ASK { GRAPH <$expandedNamedGraph> {
           
                 ?encounter obo:OBI_0000299 ?BMI .
                 ?encounter turbo:TURBO_0010139 ?heightDatum .
@@ -146,8 +146,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         	}}
         	"""
     
-    val healthcareEncounterDate: String = """
-          ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+    val healthcareEncounterDate: String = s"""
+          ASK { GRAPH <$expandedNamedGraph> {
             ?encDate <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000512 .
         		?encDate turbo:TURBO_0010095 "15/Jan/2017" .
         		?encDate turbo:TURBO_0010096 "2017-01-15"^^xsd:date .
@@ -160,33 +160,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         		?encounter a obo:OGMS_0000097 .
            }}"""
     
-    val processMeta: String = s"""
-        ASK 
-        { 
-          Graph <$processNamedGraph>
-          {
-              ?processBoundary obo:RO_0002223 ?updateProcess .
-              ?processBoundary a obo:BFO_0000035 .
-              ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-              ?timeMeasDatum a obo:IAO_0000416 .
-              ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-              
-              ?updateProcess
-                  a turbo:TURBO_0010347 ;
-                  turbo:TURBO_0010107 ?someRuntime ;
-                  turbo:TURBO_0010108 ?someNumberOfTriples;
-                  turbo:TURBO_0010186 pmbb:expanded ;
-                  turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts ;
-                  obo:BFO_0000055 ?updatePlan .
-              
-              ?updatePlan a turbo:TURBO_0010373 ;
-                  obo:RO_0000059 pmbb:HealthcareEncounterExpansionProcess .
-              
-              pmbb:HealthcareEncounterExpansionProcess a turbo:TURBO_0010354 ;
-                  turbo:TURBO_0010106 ?query .
-          }
-        }
-        """
+    val processMeta = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess",
+                                                  "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts")
     
     val anyProcess: String = s"""
       ASK
@@ -200,7 +175,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
     
     val healthcareQuery: String = s"""
       INSERT {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?TURBO_0000508 <http://purl.obolibrary.org/obo/BFO_0000051> ?HealthcareEncounterRegistryOfVariousTypes .
       ?TURBO_0000508 rdf:type <http://transformunify.org/ontologies/TURBO_0000508> .
       ?TURBO_0010138 <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000015> .
@@ -359,9 +334,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       }
       """
     
-    val diagnosisQuery = """
+    val diagnosisQuery = s"""
       INSERT {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?OGMS_0000073 <http://purl.obolibrary.org/obo/IAO_0000142> ?IcdTermOfVariousTypes .
       ?OGMS_0000073 rdf:type <http://purl.obolibrary.org/obo/OGMS_0000073> .
       ?OGMS_0000073 <http://purl.obolibrary.org/obo/IAO_0000142> ?SnomedTermOfVariousTypes .
@@ -378,7 +353,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?OGMS_0000073 <http://transformunify.org/ontologies/TURBO_0006515> ?diagnosisRegistryStringLiteralValue .
       ?OGMS_0000073 <http://transformunify.org/ontologies/TURBO_0010013> ?primaryDiagnosisBooleanLiteralValue .
       }
-      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
+      GRAPH <$processNamedGraph> {
       <processURI> turbo:TURBO_0010184 ?OGMS_0000073 .
       <processURI> turbo:TURBO_0010184 ?IcdTermOfVariousTypes .
       <processURI> turbo:TURBO_0010184 ?SnomedTermOfVariousTypes .
@@ -392,7 +367,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       }
       }
       WHERE {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010113> ?OGMS_0000097 .
       ?OGMS_0000097 rdf:type <http://purl.obolibrary.org/obo/OGMS_0000097> .
       }
@@ -426,9 +401,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       }
       """
     
-    val medicationQuery = """
+    val medicationQuery = s"""
       INSERT {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?PDRO_0000001 <http://purl.obolibrary.org/obo/IAO_0000142> ?DrugTermOfVariousTypes .
       ?PDRO_0000001 rdf:type <http://purl.obolibrary.org/obo/PDRO_0000001> .
       ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?PDRO_0000001 .
@@ -448,7 +423,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?TURBO_0000562 <http://transformunify.org/ontologies/TURBO_0010094> ?medicationSymbolStringLiteralValue .
       ?PDRO_0000001 <http://transformunify.org/ontologies/TURBO_0010094> ?medicationOrderNameStringLiteralValue .
       }
-      GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
+      GRAPH <$processNamedGraph> {
       <processURI> turbo:TURBO_0010184 ?PDRO_0000001 .
       <processURI> turbo:TURBO_0010184 ?DrugTermOfVariousTypes .
       <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
@@ -462,7 +437,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       }
       }
       WHERE {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010113> ?OGMS_0000097 .
       ?OGMS_0000097 rdf:type <http://purl.obolibrary.org/obo/OGMS_0000097> .
       }
@@ -610,7 +585,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         
         val checkPredicates = Array (
@@ -701,7 +676,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 pmbb:part1 ;
                   ontologies:TURBO_0010184 ?instantiation .
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OBI_0001929 a obo:OBI_0001929 .
@@ -743,7 +718,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:diagnosis1 ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OGMS_0000097 a obo:OGMS_0000097 .
@@ -773,7 +748,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:prescription1 ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?PDRO_0000001 a obo:PDRO_0000001 .
@@ -814,7 +789,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         
         val checkPredicates = Array (
@@ -853,7 +828,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
                   ontologies:TURBO_0010184 ?instantiation ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?TURBO_0000508 a turbo:TURBO_0000508 .
@@ -924,8 +899,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         		?encounter a obo:OGMS_0000097 .
            }}"""
         
-        val healthcareMedicationsMinimum: String = """
-        ask {graph pmbb:expanded {
+        val healthcareMedicationsMinimum: String = s"""
+        ask {graph <$expandedNamedGraph> {
             ?dataset a obo:IAO_0000100 .
             ?encounter a obo:OGMS_0000097 .
             ?encounter obo:OBI_0000299 ?drugPrescript .
@@ -955,7 +930,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         
         val checkPredicates = Array (
@@ -1037,7 +1012,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
                   ontologies:TURBO_0010184 ?instantiation .
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OBI_0001929 a obo:OBI_0001929 .
@@ -1076,7 +1051,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:diagnosis1 ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OGMS_0000097 a obo:OGMS_0000097 .
@@ -1104,7 +1079,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:prescription1 ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?PDRO_0000001 a obo:PDRO_0000001 .
@@ -1152,10 +1127,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess")
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess")
         
-        val checkDiag: String = """
+        val checkDiag: String = s"""
           Ask
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:OBI_0000299 ?diagnosis1 .
@@ -1177,10 +1152,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         
-        val countDiag: String = """
+        val countDiag: String = s"""
           Select (count (distinct ?diagnosis) as ?diagnosisCount)
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:OBI_0000299 ?diagnosis .
@@ -1216,7 +1191,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
                   ontologies:TURBO_0010184 ?instantiation .
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?TURBO_0000508 a turbo:TURBO_0000508 .
@@ -1249,7 +1224,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:diagnosis1 ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OGMS_0000097 a obo:OGMS_0000097 .
@@ -1293,10 +1268,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess")
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess")
         
-        val checkDiag: String = """
+        val checkDiag: String = s"""
           Ask
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:OBI_0000299 ?prescription1 .
@@ -1324,10 +1299,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         
-        val countDiag: String = """
+        val countDiag: String = s"""
           Select (count (distinct ?prescription) as ?prescriptCount) (count (distinct ?medCrid) as ?medCridCount)
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:OBI_0000299 ?prescription .
@@ -1363,7 +1338,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
                   ontologies:TURBO_0010184 ?instantiation .
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?TURBO_0000508 a turbo:TURBO_0000508 .
@@ -1394,7 +1369,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:prescription1 ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?PDRO_0000001 a obo:PDRO_0000001 .
@@ -1483,10 +1458,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess")
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess")
         
-        val datasetCheck1: String = """
+        val datasetCheck1: String = s"""
           ASK
           {
-              GRAPH pmbb:expanded
+              GRAPH <$expandedNamedGraph>
               {
                   ?encounter a obo:OGMS_0000097 .
                   ?encounterCrid a turbo:TURBO_0000508 .
@@ -1506,10 +1481,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         
-        val datasetCheck2: String = """
+        val datasetCheck2: String = s"""
           ASK
           {
-              GRAPH pmbb:expanded
+              GRAPH <$expandedNamedGraph>
               {
                   ?dataset a obo:IAO_0000100 .
                   ?dataset dc11:title 'diagnosis.csv'^^xsd:string .
@@ -1529,10 +1504,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         
-        val datasetCheck3: String = """
+        val datasetCheck3: String = s"""
           ASK
           {
-              GRAPH pmbb:expanded
+              GRAPH <$expandedNamedGraph>
               {
                   ?dataset a obo:IAO_0000100 .
                   ?dataset dc11:title 'meds.csv'^^xsd:string .
@@ -1554,10 +1529,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         
-        val datasetCheck4: String = """
+        val datasetCheck4: String = s"""
           ASK
           {
-              GRAPH pmbb:expanded
+              GRAPH <$expandedNamedGraph>
               {
                 ?dataset a obo:IAO_0000100 .
                 ?dataset dc11:title 'bmiAndHeightWeight.csv'^^xsd:string .
@@ -1592,10 +1567,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         
-        val datasetCheck5: String = """
+        val datasetCheck5: String = s"""
           ASK
           {
-              GRAPH pmbb:expanded
+              GRAPH <$expandedNamedGraph>
               {
                 ?dataset a obo:IAO_0000100 .
                 ?dataset dc11:title 'date.csv' .
@@ -1613,18 +1588,18 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         
-        val thereShouldOnlyBeOneEncounter: String = """
+        val thereShouldOnlyBeOneEncounter: String = s"""
           Select ?enc Where
           {
-              Graph pmbb:expanded{
+              Graph <$expandedNamedGraph>{
               ?enc a obo:OGMS_0000097 .}
           }
           """
         
-        val thereShouldBeFiveDatasets: String = """
+        val thereShouldBeFiveDatasets: String = s"""
           Select ?dataset Where
           {
-              Graph pmbb:expanded {
+              Graph <$expandedNamedGraph> {
               ?dataset a obo:IAO_0000100 .}
           }
           """
@@ -1644,7 +1619,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                     a turbo:TURBO_0010347 ;
                     turbo:TURBO_0010107 ?someRuntime ;
                     turbo:TURBO_0010108 ?someNumberOfTriples;
-                    turbo:TURBO_0010186 pmbb:expanded ;
+                    turbo:TURBO_0010186 <$expandedNamedGraph> ;
                     turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts ;
                     turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts1 ;
                     turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts2 ;
@@ -1707,7 +1682,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   ontologies:TURBO_0010184 pmbb:hcenc1 ;
                   ontologies:TURBO_0010184 ?instantiation .
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OBI_0001929 a obo:OBI_0001929 .
@@ -1749,7 +1724,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:diagCridSC ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OGMS_0000097 a obo:OGMS_0000097 .
@@ -1779,7 +1754,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:prescription ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?PDRO_0000001 a obo:PDRO_0000001 .
@@ -1811,7 +1786,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        
        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", "none")
        
-       val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+       val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
        result.size should be (0)
     }
@@ -1830,7 +1805,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        
        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", "none")
        
-       val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+       val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
        result.size should be (0)
     }

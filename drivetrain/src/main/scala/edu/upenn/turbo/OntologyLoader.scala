@@ -111,10 +111,8 @@ object OntologyLoader extends ProjectwideGlobals
         
             val OntoBase = "http://transformunify.org/ontologies/"
          
-            //logger.info("At add step...")
             helper.clearNamedGraph(cxn, OntoGraphName.toString)
             cxn.add(OntoUrl, OntoBase, formatting.head._2, OntoGraphName)
-            //logger.info("Finished try block.")
         }
         catch
         {
@@ -134,8 +132,6 @@ object OntologyLoader extends ProjectwideGlobals
                 logger.info("" + c.printStackTrace)
             }
         }
-        //logger.info("Committing transaction...")
-        //logger.info("Committing complete.")
     }
     
     def getBioportalSubmissionInfo(ontology: String): Option[Int] =

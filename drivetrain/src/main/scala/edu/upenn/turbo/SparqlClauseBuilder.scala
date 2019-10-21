@@ -124,6 +124,10 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                                                  subjectAType, objectAType, subjectADescriber, objectADescriber, subjectContext, objectContext, objectALiteral, suffixOperator)
         
         
+        if (graphForThisRow.startsWith("http://turboProperties.org/"))
+        {
+            graphForThisRow = helper.retrieveUriPropertyFromFile(graphForThisRow.replace("http://turboProperties.org/",""))
+        }
         addNewTripleToGroup(newTriple, minusGroupForThisRow, optionalGroupForThisRow, required, graphForThisRow)
     }
     
@@ -213,10 +217,14 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 assert (!objectALiteral, s"Found literal object for connection $connectionName of type ObjectConnectionToInstanceRecipe")
             }
             
-            val graph = rowResult(GRAPH.toString).toString
+            var graph = rowResult(GRAPH.toString).toString
             
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
                                       subjectAType, objectAType, subjectADescriber, objectADescriber, subjectContext, objectContext, objectALiteral)
+            if (graph.startsWith("http://turboProperties.org/"))
+            {
+                graph = helper.retrieveUriPropertyFromFile(graph.replace("http://turboProperties.org/",""))
+            }
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
             if (usedVariables.contains(newTriple.getSubjectWithContext()))
             {
@@ -271,7 +279,11 @@ class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         
             val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
                                   false, false, true, true, subjectContext, objectContext, objectALiteral)
-            triplesGroup.addRequiredTripleToRequiredGroup(newTriple, defaultRemovalsGraph)
+            if (defaultRemovalsGraph.startsWith("http://turboProperties.org/"))
+            {
+                triplesGroup.addRequiredTripleToRequiredGroup(newTriple, helper.retrieveUriPropertyFromFile(defaultRemovalsGraph.replace("http://turboProperties.org/","")))
+            }
+            else triplesGroup.addRequiredTripleToRequiredGroup(newTriple, defaultRemovalsGraph)
             
             clause = triplesGroup.buildDeleteClauseFromTriplesGroup()
         }
