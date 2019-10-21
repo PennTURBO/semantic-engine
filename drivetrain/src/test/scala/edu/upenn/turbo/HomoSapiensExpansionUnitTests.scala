@@ -15,8 +15,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
     
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
-    val instantiationAndDataset: String = """
-      ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+    val instantiationAndDataset: String = s"""
+      ASK { GRAPH <$expandedNamedGraph> {
           
         ?instantiation <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000522 .
     		?instantiation obo:OBI_0000293 ?dataset .
@@ -24,8 +24,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
     		?dataset dc11:title "part_expand" .
        }}"""
     
-    val minimumPartRequirements: String = """
-      ASK { GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+    val minimumPartRequirements: String = s"""
+      ASK { GRAPH <$expandedNamedGraph> {
           
           ?part a obo:NCBITaxon_9606 .
           
@@ -41,33 +41,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           
        }}"""
     
-    val processMeta: String = s"""
-        ASK 
-          { 
-            Graph <$processNamedGraph>
-            {
-                ?processBoundary obo:RO_0002223 ?updateProcess .
-                ?processBoundary a obo:BFO_0000035 .
-                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-                ?timeMeasDatum a obo:IAO_0000416 .
-                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-                
-                ?updateProcess
-                    a turbo:TURBO_0010347 ;
-                    turbo:TURBO_0010107 ?someRuntime ;
-                    turbo:TURBO_0010108 ?someNumberOfTriples;
-                    turbo:TURBO_0010186 pmbb:expanded ;
-                    turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts ;
-                    obo:BFO_0000055 ?updatePlan .
-                
-                ?updatePlan a turbo:TURBO_0010373 ;
-                    obo:RO_0000059 pmbb:HomoSapiensExpansionProcess .
-                
-                pmbb:HomoSapiensExpansionProcess a turbo:TURBO_0010354 ;
-                    turbo:TURBO_0010106 ?query .
-            }
-          }
-        """
+    val processMeta = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", 
+                                                   "http://www.itmat.upenn.edu/biobank/Shortcuts_homoSapiensShortcuts")
     
     val anyProcess: String = s"""
       ASK
@@ -81,7 +56,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
     
     val expectedQuery: String = s"""
       INSERT {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?GenderIdentityDatumOfVariousTypes rdf:type ?GenderIdentityDatumType .
       ?RaceIdentityDatumOfVariousTypes rdf:type ?RaceIdentityDatumType .
       ?TURBO_0010092 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0000504 .
@@ -285,8 +260,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
         
-        val extraFields: String = """
-          ASK {GRAPH pmbb:expanded {
+        val extraFields: String = s"""
+          ASK {GRAPH <$expandedNamedGraph> {
         		
         		?dataset a obo:IAO_0000100 .
         		?part rdf:type obo:NCBITaxon_9606 .
@@ -373,7 +348,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         
         val expectedPredicates = Array (
@@ -459,7 +434,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 pmbb:part1 ;
                   ontologies:TURBO_0010184 ?instantiation ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?UBERON_0035946 a obo:UBERON_0035946 .
                 ?TURBO_0000504 a turbo:TURBO_0000504 .
@@ -510,7 +485,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (true)
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")        
         
         //compare expected predicates to received predicates
@@ -553,7 +528,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 pmbb:part1 ;
                   ontologies:TURBO_0010184 ?instantiation ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?TURBO_0000504 a turbo:TURBO_0000504 .
                 ?TURBO_0010092 a turbo:TURBO_0010092 .
@@ -590,8 +565,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
         
-        val dateNoXsd: String = """
-          ASK {GRAPH pmbb:expanded {
+        val dateNoXsd: String = s"""
+          ASK {GRAPH <$expandedNamedGraph> {
         		?part rdf:type obo:NCBITaxon_9606 .
         		?part turbo:TURBO_0000303 ?birth .
         		?birth rdf:type obo:UBERON_0035946 .
@@ -605,8 +580,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           }}
           """
         
-        val gidNoXsd: String = """
-          ASK {GRAPH pmbb:expanded {
+        val gidNoXsd: String = s"""
+          ASK {GRAPH <$expandedNamedGraph> {
         		?part rdf:type obo:NCBITaxon_9606 .
         		?gid obo:IAO_0000136 ?part .
         		?gid a obo:OMRSE_00000133 .
@@ -621,7 +596,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, gidNoXsd).get should be (true)
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         
         val expectedPredicates = Array (
@@ -676,7 +651,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 pmbb:part1 ;
                   ontologies:TURBO_0010184 ?instantiation ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?UBERON_0035946 a obo:UBERON_0035946 .
                 ?TURBO_0000504 a turbo:TURBO_0000504 .
@@ -732,8 +707,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
     
-        val output: String = """
-          ASK {GRAPH pmbb:expanded {
+        val output: String = s"""
+          ASK {GRAPH <$expandedNamedGraph> {
         	
         		?part a obo:NCBITaxon_9606 .
         		?instantiation a turbo:TURBO_0000522 .
@@ -829,7 +804,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.querySparqlBoolean(testCxn, output).get should be (true)
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         
         val expectedPredicates = Array (
@@ -907,7 +882,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 pmbb:part1 ;
                   ontologies:TURBO_0010184 ?instantiation ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?UBERON_0035946 a obo:UBERON_0035946 .
                 ?PATO_0000047 a obo:PATO_0000047 .
@@ -974,8 +949,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess")
         
-          val output: String = """
-          ASK {GRAPH pmbb:expanded {
+          val output: String = s"""
+          ASK {GRAPH <$expandedNamedGraph> {
         	
         		?part a obo:NCBITaxon_9606 .
         		?instantiation a turbo:TURBO_0000522 .
@@ -1054,7 +1029,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           """
         
         update.querySparqlBoolean(testCxn, output).get should be (true)
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         result.size should be (69)
         
@@ -1073,7 +1048,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                     a turbo:TURBO_0010347 ;
                     turbo:TURBO_0010107 ?someRuntime ;
                     turbo:TURBO_0010108 ?someNumberOfTriples;
-                    turbo:TURBO_0010186 pmbb:expanded ;
+                    turbo:TURBO_0010186 <$expandedNamedGraph> ;
                     turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts1 ;
                     turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts2 ;
                     turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts3 ;
@@ -1123,7 +1098,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 pmbb:part1 ;
                   ontologies:TURBO_0010184 ?instantiation ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?UBERON_0035946 a obo:UBERON_0035946 .
                 ?PATO_0000047 a obo:PATO_0000047 .

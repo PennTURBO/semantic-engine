@@ -87,16 +87,16 @@ ontologies:RxNormDrugTermToTypeDeclaration
 .
 #pmbb:RxNormUrlCleanupProcess
 #  ontologies:buildsMinusGroup ontologies:RxNormDrugTermMinusGroup ;
-#  ontologies:inputNamedGraph pmbb:expanded ;
-#  ontologies:outputNamedGraph pmbb:expanded ;
+#  ontologies:inputNamedGraph properties:expandedNamedGraph ;
+#  ontologies:outputNamedGraph properties:expandedNamedGraph ;
 #  a ontologies:TURBO_0010354 ;
 #  ontologies:hasRequiredInput ontologies:RxNormDrugTermToTypeDeclaration ;
 #  ontologies:hasRequiredInput ontologies:prescriptionToDrug ;
 #  ontologies:removes ontologies:prescriptionToDrug ;
 #.
 pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess
-  ontologies:inputNamedGraph pmbb:expanded ;
-  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:inputNamedGraph properties:expandedNamedGraph ;
+  ontologies:outputNamedGraph properties:expandedNamedGraph ;
   a ontologies:TURBO_0010354 ;
   ontologies:removes ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
   ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
@@ -105,8 +105,8 @@ ontologies:ShortcutGenderIdentityDatumOfVariousTypes
   a ontologies:MultiObjectDescriber ;
 .
 pmbb:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess
-  ontologies:inputNamedGraph pmbb:expanded ;
-  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:inputNamedGraph properties:expandedNamedGraph ;
+  ontologies:outputNamedGraph properties:expandedNamedGraph ;
   ontologies:precedes pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
   a ontologies:TURBO_0010354 ;
   ontologies:removes ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
@@ -131,7 +131,7 @@ ontologies:SnomedDiagnosisRegistryRule
 pmbb:HomoSapiensExpansionProcess
   ontologies:buildsOptionalGroup ontologies:shortcutTumorOptionalGroup ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:outputNamedGraph properties:expandedNamedGraph ;
   ontologies:precedes pmbb:HealthcareEncounterExpansionProcess ;
   a ontologies:TURBO_0010354 ;
   ontologies:hasRequiredInput ontologies:shortcutHomoSapiensIdToRegistry ;
@@ -192,7 +192,7 @@ pmbb:HomoSapiensExpansionProcess
 .
 pmbb:BiobankEncounterExpansionProcess
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:outputNamedGraph properties:expandedNamedGraph ;
   ontologies:precedes pmbb:HealthcareEncounterEntityLinkingProcess ;
   a ontologies:TURBO_0010354 ;
   ontologies:hasOptionalInput ontologies:shortcutBiobankEncounterToBmiValue ;
@@ -239,7 +239,7 @@ pmbb:BiobankEncounterExpansionProcess
 .
 pmbb:HealthcareEncounterExpansionProcess
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:outputNamedGraph properties:expandedNamedGraph ;
   ontologies:precedes pmbb:DiagnosisExpansionProcess ;
   ontologies:buildsOptionalGroup ontologies:encCodeTypeProvenanceOptionalGroup ;
   a ontologies:TURBO_0010354 ;
@@ -316,7 +316,7 @@ pmbb:DiagnosisExpansionProcess
   a turbo:TURBO_0010354 ;
   turbo:precedes pmbb:MedicationExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:outputNamedGraph properties:expandedNamedGraph ;
   ontologies:hasOptionalInput ontologies:shortcutDiagnosisToCodingSequence ;
   ontologies:hasOptionalInput ontologies:shortcutDiagnosisToDiagnosisCode ;
   ontologies:hasOutput ontologies:shortcutDiagnosisToExpandedDiagnosis ;
@@ -341,7 +341,7 @@ pmbb:MedicationExpansionProcess
   a turbo:TURBO_0010354 ;
   turbo:precedes pmbb:BiobankEncounterExpansionProcess ;
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:outputNamedGraph properties:expandedNamedGraph ;
   ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToPrescription ;
   ontologies:hasOptionalInput ontologies:shortcutPrescriptionToDrugTerm ;
   ontologies:hasOutput ontologies:shortcutPrescriptionToExpandedPrescription ;
@@ -363,7 +363,7 @@ pmbb:MedicationExpansionProcess
 .  
 pmbb:LossOfFunctionExpansionProcess
   ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:outputNamedGraph properties:expandedNamedGraph ;
   ontologies:precedes pmbb:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess ;
   a ontologies:TURBO_0010354 ;
   ontologies:hasRequiredInput ontologies:shortcutAlleleToDatasetTitle ;
@@ -411,8 +411,8 @@ pmbb:LossOfFunctionExpansionProcess
   ontologies:hasOutput ontologies:instantiationToDataset ;
 .
 pmbb:BiobankEncounterEntityLinkingProcess
-  ontologies:inputNamedGraph pmbb:expanded ;
-  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:inputNamedGraph properties:expandedNamedGraph ;
+  ontologies:outputNamedGraph properties:expandedNamedGraph ;
   ontologies:precedes pmbb:LossOfFunctionExpansionProcess ;
   a ontologies:TURBO_0010354 ;
   ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter ;
@@ -434,8 +434,8 @@ pmbb:BiobankEncounterEntityLinkingProcess
 .
 pmbb:HealthcareEncounterEntityLinkingProcess
   ontologies:buildsOptionalGroup ontologies:bloodPressureOptionalGroup ;
-  ontologies:inputNamedGraph pmbb:expanded ;
-  ontologies:outputNamedGraph pmbb:expanded ;
+  ontologies:inputNamedGraph properties:expandedNamedGraph ;
+  ontologies:outputNamedGraph properties:expandedNamedGraph ;
   ontologies:precedes pmbb:BiobankEncounterEntityLinkingProcess ;
   a ontologies:TURBO_0010354 ;
   ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
@@ -1057,7 +1057,7 @@ ontologies:shortcutTumorToTumorLiteralValue
 pmbb:Shortcuts_
   a ontologies:TurboNamedGraph ;
 .
-pmbb:expanded
+properties:expandedNamedGraph
   a ontologies:TurboNamedGraph ;
 .
 ontologies:biobankEncounterToMassMeasurementValueSpecification

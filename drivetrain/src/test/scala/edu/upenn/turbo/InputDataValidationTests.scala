@@ -56,7 +56,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/crid2 of type http://transformunify.org/ontologies/TURBO_0010168 does not have the required connection to literal value http://transformunify.org/ontologies/homoSapiensSymbolStringLiteralValue in one of the following graphs:")) 
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -84,7 +84,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/crid2 of type http://transformunify.org/ontologies/TURBO_0010168 does not have the required connection to literal value http://transformunify.org/ontologies/datasetTitleStringLiteralValue in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -113,7 +113,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/crid2 of type http://transformunify.org/ontologies/TURBO_0010168 does not have the required connection to literal value http://transformunify.org/ontologies/datasetTitleStringLiteralValue in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -142,7 +142,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/crid2 of type http://transformunify.org/ontologies/TURBO_0010168 does not have the required connection to term http://transformunify.org/ontologies/HomoSapiensRegistryOfVariousTypes in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -170,7 +170,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/crid2 of type http://transformunify.org/ontologies/TURBO_0010168 does not have the required connection to term http://transformunify.org/ontologies/HomoSapiensRegistryOfVariousTypes in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -194,7 +194,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/part1 of type http://transformunify.org/ontologies/TURBO_0010161 does not have the required connection to an instance of type http://transformunify.org/ontologies/TURBO_0010168 in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -222,7 +222,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/crid1 of type http://transformunify.org/ontologies/TURBO_0010168 does not have the required connection to an instance of type http://transformunify.org/ontologies/TURBO_0010161 in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -249,7 +249,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/tumor1 of type http://transformunify.org/ontologies/TURBO_0010191 does not have the required connection to an instance of type http://transformunify.org/ontologies/TURBO_0010161 in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -282,7 +282,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/tumor1 of type http://transformunify.org/ontologies/TURBO_0010191 does not have the required connection to term http://transformunify.org/ontologies/TumorRegistryDenoterOfVariousTypes in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -316,7 +316,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/tumor1 of type http://transformunify.org/ontologies/TURBO_0010191 does not have the required connection to term http://transformunify.org/ontologies/TumorRegistryDenoterOfVariousTypes in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -349,7 +349,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/tumor1 of type http://transformunify.org/ontologies/TURBO_0010191 does not have the required connection to literal value http://transformunify.org/ontologies/tumorSymbolStringLiteralValue in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -376,7 +376,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/hcenc1 of type http://transformunify.org/ontologies/TURBO_0010158 does not have the required connection to literal value http://transformunify.org/ontologies/healthcareEncounterSymbolLiteralValue in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -403,7 +403,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/hcenc1 of type http://transformunify.org/ontologies/TURBO_0010158 does not have the required connection to term http://transformunify.org/ontologies/HealthcareEncounterRegistryOfVariousTypes in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -430,7 +430,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/hcenc1 of type http://transformunify.org/ontologies/TURBO_0010158 does not have the required connection to literal value http://transformunify.org/ontologies/datasetTitleStringLiteralValue in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph>{?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -456,7 +456,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/diag1 of type http://transformunify.org/ontologies/TURBO_0010160 does not have the required connection to an instance of type http://transformunify.org/ontologies/TURBO_0010158 in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -483,7 +483,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/bbenc1 of type http://transformunify.org/ontologies/TURBO_0010169 does not have the required connection to term http://transformunify.org/ontologies/BiobankEncounterRegistryOfVariousTypes in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -511,7 +511,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/bbenc1 of type http://transformunify.org/ontologies/TURBO_0010169 does not have the required connection to literal value http://transformunify.org/ontologies/biobankEncounterSymbolStringLiteralValue in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }
@@ -539,7 +539,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/bbenc1 of type http://transformunify.org/ontologies/TURBO_0010169 does not have the required connection to literal value http://transformunify.org/ontologies/datasetTitleStringLiteralValue in one of the following graphs:"))
         }
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
     }

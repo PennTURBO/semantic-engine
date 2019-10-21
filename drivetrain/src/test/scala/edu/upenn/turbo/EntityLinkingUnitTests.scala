@@ -18,7 +18,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
     
     val expectedHealthcareQuery: String = s"""
       INSERT {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/RO_0000056> ?OGMS_0000097 .
       ?NCBITaxon_9606 rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
       ?OGMS_0000097 rdf:type <http://purl.obolibrary.org/obo/OGMS_0000097> .
@@ -69,7 +69,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       }
       }
       WHERE {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010113> ?NCBITaxon_9606 .
       ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
       ?NCBITaxon_9606 rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
@@ -148,7 +148,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         val insert = s"""
               INSERT DATA
               {
-              Graph pmbb:expanded {
+              Graph <$expandedNamedGraph> {
                   $healthcareEncounterTriplesAllFields
                   $homoSapiensTriplesAllFields
                 }
@@ -191,7 +191,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                     ontologies:TURBO_0010184 ?HTN_00000001 ;
                     ontologies:TURBO_0010184 ?VSO_0000004 .
               }
-              GRAPH pmbb:expanded
+              GRAPH <$expandedNamedGraph>
               {
                   ?OGMS_0000097 a obo:OGMS_0000097 .
                   ?EFO_0004340 a efo:EFO_0004340 .
@@ -212,7 +212,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
       
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
       
         var expectedPredicates: ArrayBuffer[String] = ArrayBuffer(
@@ -239,7 +239,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       val insert = s"""
             INSERT DATA
             {
-            Graph pmbb:expanded {
+            Graph <$expandedNamedGraph> {
                 $healthcareEncounterTriplesMinimumFields
                 $homoSapiensTriplesMinimumFields
               }
@@ -248,10 +248,10 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       update.updateSparql(testCxn, insert)
       RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess")
         
-        val check: String = """
+        val check: String = s"""
           ASK
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   ?homoSapiens obo:RO_0000056 ?healthcareEncounter .
                   ?homoSapiens obo:RO_0000087 ?puirole .
@@ -307,7 +307,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                     ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
                     ontologies:TURBO_0010184 ?OBI_0000093 ;
               }
-              GRAPH pmbb:expanded
+              GRAPH <$expandedNamedGraph>
               {
                   ?OGMS_0000097 a obo:OGMS_0000097 .
                   ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
@@ -319,7 +319,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         
           update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
       
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
       
         var expectedPredicates: ArrayBuffer[String] = ArrayBuffer(
@@ -347,7 +347,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       
       val expectedBiobankQuery: String = s"""
         INSERT {
-        GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+        GRAPH <$expandedNamedGraph> {
         ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/RO_0000086> ?PATO_0000119 .
         ?NCBITaxon_9606 rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
         ?PATO_0000119 rdf:type <http://purl.obolibrary.org/obo/PATO_0000119> .
@@ -386,7 +386,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         }
         }
         WHERE {
-        GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+        GRAPH <$expandedNamedGraph> {
         ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010113> ?NCBITaxon_9606 .
         ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
         ?NCBITaxon_9606 rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
@@ -452,7 +452,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           val insert = s"""
                 INSERT DATA
                 {
-                Graph pmbb:expanded {
+                Graph <$expandedNamedGraph> {
                     $biobankEncounterTriplesAllFields
                     $homoSapiensTriplesAllFields
                   }
@@ -461,10 +461,10 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
           update.updateSparql(testCxn, insert)
           RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
           
-           val check: String = """
+           val check: String = s"""
             ASK
             {
-            graph pmbb:expanded {
+            graph <$expandedNamedGraph> {
                 ?homoSapiens obo:RO_0000056 ?biobankEncounter .
                 ?homoSapiens obo:RO_0000087 ?puirole .
             		?puirole a obo:OBI_0000097 .
@@ -528,7 +528,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                   ontologies:TURBO_0010184 ?OBI_0000097 ;
                   ontologies:TURBO_0010184 ?PATO_0000128 ;
             }
-            GRAPH pmbb:expanded
+            GRAPH <$expandedNamedGraph>
             {
                 ?TURBO_0000527 a turbo:TURBO_0000527 .
                 ?EFO_0004340 a efo:EFO_0004340 .
@@ -545,7 +545,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
           
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
       
         var expectedPredicates: ArrayBuffer[String] = ArrayBuffer(
@@ -570,7 +570,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         val insert = s"""
               INSERT DATA
               {
-              Graph pmbb:expanded {
+              Graph <$expandedNamedGraph> {
                   $biobankEncounterTriplesMinimumFields
                   $homoSapiensTriplesMinimumFields
                 }
@@ -579,10 +579,10 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
         
-        val check: String = """
+        val check: String = s"""
           ASK
           {
-              graph pmbb:expanded
+              graph <$expandedNamedGraph>
               {
                   ?homoSapiens obo:RO_0000056 ?biobankEncounter .
                   ?homoSapiens obo:RO_0000087 ?puirole .
@@ -637,7 +637,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
                   ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
                   ontologies:TURBO_0010184 ?OBI_0000097 ;
             }
-            GRAPH pmbb:expanded
+            GRAPH <$expandedNamedGraph>
             {
                 ?TURBO_0000527 a turbo:TURBO_0000527 .
                 ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
@@ -649,7 +649,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
         
-        val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
       
         var expectedPredicates: ArrayBuffer[String] = ArrayBuffer(
@@ -697,7 +697,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
         val insert = s"""
               INSERT DATA
               {
-              Graph pmbb:expanded {
+              Graph <$expandedNamedGraph> {
                   $healthcareEncounterTriplesAllFields
                   $biobankEncounterTriplesAllFields
                   $homoSapiensTriplesAllFields
@@ -762,7 +762,7 @@ class HealthcareEncounterEntityLinkingUnitTests extends ProjectwideGlobals with 
       update.querySparqlBoolean(testCxn, processMetaBiobank).get should be (true)
       update.querySparqlBoolean(testCxn, processMetaHealthcare).get should be (true)
         
-      val count: String = "SELECT * WHERE {GRAPH pmbb:expanded {?s ?p ?o .}}"
+      val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
       val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
       
       var expectedPredicates: ArrayBuffer[String] = ArrayBuffer(
@@ -1319,60 +1319,7 @@ trait EntityLinkingUnitTestFields extends ProjectwideGlobals
           }}
           """
   
-  val processMetaBiobank: String = s"""
-      ASK 
-          { 
-            Graph <$processNamedGraph>
-            {
-                ?processBoundary obo:RO_0002223 ?updateProcess .
-                ?processBoundary a obo:BFO_0000035 .
-                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-                ?timeMeasDatum a obo:IAO_0000416 .
-                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-                
-                ?updateProcess
-                    a turbo:TURBO_0010347 ;
-                    turbo:TURBO_0010107 ?someRuntime ;
-                    turbo:TURBO_0010108 ?someNumberOfTriples;
-                    turbo:TURBO_0010186 pmbb:expanded ;
-                    turbo:TURBO_0010187 pmbb:expanded ;
-                    obo:BFO_0000055 ?updatePlan .
-                
-                ?updatePlan a turbo:TURBO_0010373 ;
-                    obo:RO_0000059 pmbb:BiobankEncounterEntityLinkingProcess .
-                
-                pmbb:BiobankEncounterEntityLinkingProcess a turbo:TURBO_0010354 ;
-                    turbo:TURBO_0010106 ?query .
-            }
-          }
-      """
-      
-      val processMetaHealthcare: String = s"""
-      ASK 
-          { 
-            Graph <$processNamedGraph>
-            {
-                ?processBoundary obo:RO_0002223 ?updateProcess .
-                ?processBoundary a obo:BFO_0000035 .
-                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-                ?timeMeasDatum a obo:IAO_0000416 .
-                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-                
-                ?updateProcess
-                    a turbo:TURBO_0010347 ;
-                    turbo:TURBO_0010107 ?someRuntime ;
-                    turbo:TURBO_0010108 ?someNumberOfTriples;
-                    turbo:TURBO_0010186 pmbb:expanded ;
-                    turbo:TURBO_0010187 pmbb:expanded ;
-                    obo:BFO_0000055 ?updatePlan .
-                
-                ?updatePlan a turbo:TURBO_0010373 ;
-                    obo:RO_0000059 pmbb:HealthcareEncounterEntityLinkingProcess .
-                
-                pmbb:HealthcareEncounterEntityLinkingProcess a turbo:TURBO_0010354 ;
-                    turbo:TURBO_0010106 ?query .
-            }
-          }
-      """
+      val processMetaBiobank = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
+      val processMetaHealthcare = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterEntityLinkingProcess")
 }
     

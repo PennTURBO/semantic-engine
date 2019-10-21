@@ -34,10 +34,6 @@ trait ProjectwideGlobals extends Enumeration
      val serviceURL = helper.retrieveUriPropertyFromFile("serviceURL")
      val ontologyURL = helper.retrieveUriPropertyFromFile("ontologyURL")
      val productionRepository = helper.retrievePropertyFromFile("productionRepository")
-     val inputFiles = helper.retrievePropertyFromFile("inputFiles")
-     val inputFilesNamedGraphs = helper.retrievePropertyFromFile("inputFilesNamedGraphs")
-     val inputFilesFormat = helper.retrievePropertyFromFile("inputFilesFormat")
-     val importOntologies = helper.retrievePropertyFromFile("importOntologies")
      val testingRepository = helper.retrievePropertyFromFile("testingRepository")
      val modelRepository = helper.retrievePropertyFromFile("modelRepository")
      val processNamedGraph = helper.retrieveUriPropertyFromFile("processNamedGraph").replace("\"","")
@@ -48,6 +44,8 @@ trait ProjectwideGlobals extends Enumeration
      val graphSpecificationFile = helper.retrievePropertyFromFile("graphSpecificationFile")
      var dataValidationMode = helper.retrievePropertyFromFile("dataValidationMode").toLowerCase()
      val defaultPrefix = helper.retrieveUriPropertyFromFile("defaultPrefix")
+     val expandedNamedGraph = helper.retrieveUriPropertyFromFile("expandedNamedGraph").replace("\"","")
+     val clearGraphsAtStart = getBooleanProperty("clearGraphsAtStart")
      
      def getBooleanProperty(property: String): Boolean =
      {

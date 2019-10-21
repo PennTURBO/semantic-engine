@@ -15,9 +15,13 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
 
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
+    val processMeta = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", 
+                                                  "http://www.itmat.upenn.edu/biobank/Shortcuts_LofShortcuts")
+        
+    
     val expectedQuery: String = s"""
       INSERT {
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?OBI_0001352 <http://purl.obolibrary.org/obo/IAO_0000142> ?GeneSymbolUriOfVariousTypes .
       ?OBI_0001352 rdf:type <http://purl.obolibrary.org/obo/OBI_0001352> .
       ?OBI_0001352 <http://purl.obolibrary.org/obo/OBI_0001938> ?ZygosityUriOfVariousTypes .
@@ -166,11 +170,11 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
   
     test("single allele expansion")
     {
-        val insert: String = """
+        val insert: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   pmbb:part1 a obo:NCBITaxon_9606 .
                   pmbb:part1 obo:RO_0000056 pmbb:bbenc1 .
@@ -201,11 +205,11 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
         
-        val output: String = """
+        val output: String = s"""
           
           ASK
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   ?allele a obo:OBI_0001352 .
                   
@@ -268,10 +272,10 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         update.querySparqlBoolean(testCxn, output).get should be (true)
         
         val countTrips: String = 
-        """
+        s"""
         Select * Where
         {
-            Graph pmbb:expanded
+            Graph <$expandedNamedGraph>
             {
                 ?s ?p ?o .
             }
@@ -346,7 +350,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                   ontologies:TURBO_0010184 <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000068912> ;
                   ontologies:TURBO_0010184 ontologies:TURBO_0000590 ;
             }
-            Graph pmbb:expanded 
+            Graph <$expandedNamedGraph>
             {
                 ?TURBO_0000566 a turbo:TURBO_0000566 .
                 ?OBI_0001868 a obo:OBI_0001868 .
@@ -367,37 +371,6 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           """
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
-        
-        val processMeta: String = s"""
-          
-          ASK 
-          { 
-            Graph <$processNamedGraph>
-            {
-                ?processBoundary obo:RO_0002223 ?updateProcess .
-                ?processBoundary a obo:BFO_0000035 .
-                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-                ?timeMeasDatum a obo:IAO_0000416 .
-                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-                
-                ?updateProcess
-                    a turbo:TURBO_0010347 ;
-                    turbo:TURBO_0010107 ?someRuntime ;
-                    turbo:TURBO_0010108 ?someNumberOfTriples;
-                    turbo:TURBO_0010186 pmbb:expanded ;
-                    turbo:TURBO_0010187 pmbb:Shortcuts_LofShortcuts ;
-                    obo:BFO_0000055 ?updatePlan .
-                
-                ?updatePlan a turbo:TURBO_0010373 ;
-                    obo:RO_0000059 pmbb:LossOfFunctionExpansionProcess .
-                
-                pmbb:LossOfFunctionExpansionProcess a turbo:TURBO_0010354 ;
-                    turbo:TURBO_0010106 ?query .
-            }
-          }
-          
-          """
-        
         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
         
         val countProcessTriples: String = 
@@ -416,11 +389,11 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
 
     test("double allele expansion - multiple biobank encounters")
     {
-        val insert: String = """
+        val insert: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   pmbb:part1 a obo:NCBITaxon_9606 .
                   pmbb:part1 obo:RO_0000056 pmbb:bbenc1 .
@@ -470,11 +443,11 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
         
-        val output: String = """
+        val output: String = s"""
           
           ASK
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   ?allele a obo:OBI_0001352 .
                   
@@ -594,10 +567,10 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         update.querySparqlBoolean(testCxn, output).get should be (true)
         
         val countCollectionProcess: String = 
-        """
+        s"""
         Select * Where
         {
-            Graph pmbb:expanded
+            Graph <$expandedNamedGraph>
             {
                 ?collProc a obo:OBI_0600005 .
             }
@@ -607,10 +580,10 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         collProcRes.size should be (2)
 
         val countAllele: String = 
-        """
+        s"""
         Select * Where
         {
-            Graph pmbb:expanded
+            Graph <$expandedNamedGraph>
             {
                 ?allele a obo:OBI_0001352 .
             }
@@ -620,10 +593,10 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         alleleRes.size should be (2)
 
         val countDNA: String = 
-        """
+        s"""
         Select * Where
         {
-            Graph pmbb:expanded
+            Graph <$expandedNamedGraph>
             {
                 ?dna a obo:OBI_0001868 .
             }
@@ -635,11 +608,11 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
 
     test("double allele expansion - multiple alleles")
     {
-        val insert: String = """
+        val insert: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   pmbb:part1 a obo:NCBITaxon_9606 .
                   pmbb:part1 obo:RO_0000056 pmbb:bbenc1 .
@@ -682,11 +655,11 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         update.updateSparql(testCxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
         
-        val output: String = """
+        val output: String = s"""
           
           ASK
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   ?allele a obo:OBI_0001352 .
                   
@@ -763,10 +736,10 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         update.querySparqlBoolean(testCxn, output).get should be (true)
         
         val countCollectionProcess: String = 
-        """
+        s"""
         Select * Where
         {
-            Graph pmbb:expanded
+            Graph <$expandedNamedGraph>
             {
                 ?collProc a obo:OBI_0600005 .
             }
@@ -776,10 +749,10 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         collProcRes.size should be (1)
 
         val countAllele: String = 
-        """
+        s"""
         Select * Where
         {
-            Graph pmbb:expanded
+            Graph <$expandedNamedGraph>
             {
                 ?allele a obo:OBI_0001352 .
             }

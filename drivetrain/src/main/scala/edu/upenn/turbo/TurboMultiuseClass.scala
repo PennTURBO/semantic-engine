@@ -58,6 +58,7 @@ class TurboMultiuseClass extends Enumeration
     val ontologyURL = retrieveUriPropertyFromFile("ontologyURL")
     val defaultPrefix = retrieveUriPropertyFromFile("defaultPrefix")
     val processNamedGraph = retrieveUriPropertyFromFile("processNamedGraph") 
+    val expandedNamedGraph = retrieveUriPropertyFromFile("expandedNamedGraph")
     
     /**
      * Deletes all triples in the entire database, including all named graphs.
@@ -488,11 +489,13 @@ class TurboMultiuseClass extends Enumeration
      */
     def retrievePropertyFromFile(propertyID: String, file: String = "..//turbo_properties.properties"): String =
      {
-         val input: FileInputStream = new FileInputStream(file)
-         val props: Properties = new Properties()
-         props.load(input)
-         input.close()
-         props.getProperty(propertyID)
+           val input: FileInputStream = new FileInputStream(file)
+           val props: Properties = new Properties()
+           props.load(input)
+           input.close()
+           val property = props.getProperty(propertyID) 
+           assert (property != null, s"Could not find property $propertyID")
+           property
      }
     
     def retrieveUriPropertyFromFile(propertyID: String, file: String = "..//turbo_properties.properties"): String =
@@ -765,9 +768,9 @@ class TurboMultiuseClass extends Enumeration
         for (char <- illegalCharacters) assert(!uri.contains(char), s"The URI $uri contains illegal character $char. Make sure this is actually a URI and not a literal value.")
     }
     
-    def buildProcessMetaQuery(process: String): String =
+    def buildProcessMetaQuery(process: String, inputNamedGraph: String = expandedNamedGraph): String =
     {
-        s"""
+        val str = s"""
           ASK 
           { 
             Graph <$processNamedGraph>
@@ -782,8 +785,8 @@ class TurboMultiuseClass extends Enumeration
                     a turbo:TURBO_0010347 ;
                     turbo:TURBO_0010107 ?someRuntime ;
                     turbo:TURBO_0010108 ?someNumberOfTriples;
-                    turbo:TURBO_0010186 pmbb:expanded ;
-                    turbo:TURBO_0010187 pmbb:expanded ;
+                    turbo:TURBO_0010187 <$inputNamedGraph> ;
+                    turbo:TURBO_0010186 <$expandedNamedGraph> ;
                     obo:BFO_0000055 ?updatePlan .
                 
                 ?updatePlan a turbo:TURBO_0010373 ;
@@ -794,6 +797,8 @@ class TurboMultiuseClass extends Enumeration
             }
           }
           """
+        //logger.info(str)
+        str
     }
 
     def wasThisProcessRun(cxn: RepositoryConnection, process: String): Boolean =

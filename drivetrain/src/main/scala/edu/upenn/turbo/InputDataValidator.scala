@@ -96,7 +96,7 @@ object InputDataValidator extends ProjectwideGlobals
           }
           """
           
-        println(query)
+        //println(query)
         val errorMsg = s"Input data error: instance {res} of type $objectAsType does not have the required connection to an instance of type $subjectAsType in one of the following graphs:\n $graphsFromNamedClause"
         val res = update.querySparqlAndUnpackTuple(cxn, query, objectAsVar.substring(1))
         
@@ -125,7 +125,7 @@ object InputDataValidator extends ProjectwideGlobals
           }
           """
           
-        println(query)
+        //println(query)
         val errorMsg = s"Input data error: instance {res} of type $subjectAsType does not have the required connection to an instance of type $objectAsType in one of the following graphs:\n $graphsFromNamedClause"
         val res = update.querySparqlAndUnpackTuple(cxn, query, subjectAsVar.substring(1))
 
@@ -177,7 +177,7 @@ object InputDataValidator extends ProjectwideGlobals
               }
           }
           """
-        println(sparql)
+        //println(sparql)
         val errorMsg = s"Input data error: instance {res} of type $subject does not have the required connection to term $describer in one of the following graphs:\n $graphsFromNamedClause"
         val res = update.querySparqlAndUnpackTuple(cxn, sparql, subjectAsVar.substring(1))
 
@@ -229,7 +229,7 @@ object InputDataValidator extends ProjectwideGlobals
               }
           }
           """
-        println(sparql)
+        //println(sparql)
         val errorMsg = s"Input data error: instance {res} of type $objectAsType does not have the required connection to term $describer in one of the following graphs:\n $graphsFromNamedClause"
         val res = update.querySparqlAndUnpackTuple(cxn, sparql, objectAsVar.substring(1))
 
@@ -258,7 +258,7 @@ object InputDataValidator extends ProjectwideGlobals
           }
           """
           
-        println(query)
+        //println(query)
         val errorMsg = s"Input data error: instance {res} of type $subjectAsType does not have the required connection to literal value $objectLiteral in one of the following graphs:\n $graphsFromNamedClause"
         val res = update.querySparqlAndUnpackTuple(cxn, query, subjectAsVar.substring(1))
         
