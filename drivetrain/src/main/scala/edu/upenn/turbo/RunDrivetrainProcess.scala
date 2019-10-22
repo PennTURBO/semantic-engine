@@ -264,7 +264,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               Optional
               {
-                  ?$CONNECTIONNAME turbo:required ?$REQUIREMENT .
+                  ?$CONNECTIONNAME turbo:mustExistIf ?$REQUIREMENT .
               }
               Optional
               {
@@ -461,7 +461,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       turbo:usesSparql,
                       obo:BFO_0000050,
                       turbo:referencedInGraph,
-                      turbo:required,
+                      turbo:mustExistIf,
                       turbo:multiplicity,
                       turbo:inputNamedGraph,
                       turbo:outputNamedGraph,
@@ -599,7 +599,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       Graph pmbb:graphSpecification
                       {
                           ?recipe turbo:subject <$singleClass> .
-                          ?recipe turbo:required turbo:bothRequired .
+                          ?recipe turbo:mustExistIf turbo:eitherSubjectOrObjectExists .
                       }
                   }
                   UNION
@@ -607,7 +607,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       Graph pmbb:graphSpecification
                       {
                           ?recipe turbo:subject <$singleClass> .
-                          ?recipe turbo:required turbo:objectRequired .
+                          ?recipe turbo:mustExistIf turbo:subjectExists .
                       }
                   }
                   UNION
@@ -615,7 +615,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       Graph pmbb:graphSpecification
                       {
                           ?recipe turbo:object <$singleClass> .
-                          ?recipe turbo:required turbo:bothRequired .
+                          ?recipe turbo:mustExistIf turbo:eitherSubjectOrObjectExists .
                       }
                   }
                   UNION
@@ -623,7 +623,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       Graph pmbb:graphSpecification
                       {
                           ?recipe turbo:object <$singleClass> .
-                          ?recipe turbo:required turbo:subjectRequired .
+                          ?recipe turbo:mustExistIf turbo:objectExists .
                       }
                   }
                   MINUS

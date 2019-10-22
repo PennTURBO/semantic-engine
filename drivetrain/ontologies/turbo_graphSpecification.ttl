@@ -3,7 +3,7 @@ ontologies:DNAExtractionProcessToDNAExtract
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001051 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0000257 ;
 .
 ontologies:DNAExtractionProcessToSpecimen
@@ -11,7 +11,7 @@ ontologies:DNAExtractionProcessToSpecimen
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001479 ;
   ontologies:predicate obo:OBI_0000293 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0000257 ;
 .
 ontologies:DNAToDNAExtract
@@ -19,7 +19,7 @@ ontologies:DNAToDNAExtract
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OBI_0001051 ;
   ontologies:predicate obo:OBI_0000643 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0001868 ;
 .
 ontologies:DNAToHomoSapiens
@@ -27,7 +27,7 @@ ontologies:DNAToHomoSapiens
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:OGG_0000000014 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OBI_0001868 ;
 .
 ontologies:DatasetToDiastolicBloodPressureMeasurementDatum
@@ -35,7 +35,7 @@ ontologies:DatasetToDiastolicBloodPressureMeasurementDatum
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:HTN_00000000 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:DatasetToSystolicBloodPressureMeasurementDatum
@@ -43,7 +43,7 @@ ontologies:DatasetToSystolicBloodPressureMeasurementDatum
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:HTN_00000001 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:DiastolicBloodPressureMeasurementDatumToDataset
@@ -51,7 +51,7 @@ ontologies:DiastolicBloodPressureMeasurementDatumToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:HTN_00000000 ;
 .
 ontologies:DiastolicBloodPressureMeasurementDatumToValueSpecification
@@ -59,7 +59,7 @@ ontologies:DiastolicBloodPressureMeasurementDatumToValueSpecification
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010150 ;
   ontologies:predicate obo:OBI_0001938 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:HTN_00000000 ;
 .
 ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters
@@ -67,7 +67,7 @@ ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000272 ;
   ontologies:predicate obo:IAO_0000039 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010150 ;
 .
 ontologies:DiastolicBloodPressureValueSpecificationToValue
@@ -75,7 +75,7 @@ ontologies:DiastolicBloodPressureValueSpecificationToValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diastolicBloodPressureDoubleLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0010150 ;
 .
 ontologies:SystolicBloodPressureMeasurementDatumToDataset
@@ -83,7 +83,7 @@ ontologies:SystolicBloodPressureMeasurementDatumToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:HTN_00000001 ;
 .
 ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification
@@ -91,7 +91,7 @@ ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010149 ;
   ontologies:predicate obo:OBI_0001938 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:HTN_00000001 ;
 .
 ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
@@ -99,7 +99,7 @@ ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000272 ;
   ontologies:predicate obo:IAO_0000039 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010149 ;
 .
 ontologies:SystolicBloodPressureValueSpecificationToValue
@@ -107,7 +107,7 @@ ontologies:SystolicBloodPressureValueSpecificationToValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:systolicBloodPressureDoubleLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0010149 ;
 .
 ontologies:alleleCridSymbolToDataset
@@ -115,7 +115,7 @@ ontologies:alleleCridSymbolToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0000568 ;
 .
 ontologies:alleleToDNA
@@ -123,7 +123,7 @@ ontologies:alleleToDNA
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:OBI_0001868 ;
   ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToDataset
@@ -131,7 +131,7 @@ ontologies:alleleToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToGeneSymbolFirstPart
@@ -139,7 +139,7 @@ ontologies:alleleToGeneSymbolFirstPart
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:alleleGeneSymbolFirstPartStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010016 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToGeneSymbolSecondPart
@@ -147,7 +147,7 @@ ontologies:alleleToGeneSymbolSecondPart
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:alleleGeneSymbolSecondPartStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010015 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToGeneSymbolUri
@@ -155,7 +155,7 @@ ontologies:alleleToGeneSymbolUri
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:GeneSymbolUriOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToZygosityIntegerValue
@@ -163,7 +163,7 @@ ontologies:alleleToZygosityIntegerValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:alleleZygosityIntegerLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010095 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToZygosityUri
@@ -171,7 +171,7 @@ ontologies:alleleToZygosityUri
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:ZygosityUriOfVariousTypes ;
   ontologies:predicate obo:OBI_0001938 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OBI_0001352 ;
 .
 ontologies:biobankEncounterDateToBiobankEncounterStart
@@ -179,7 +179,7 @@ ontologies:biobankEncounterDateToBiobankEncounterStart
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000531 ;
   ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterDateToDataset
@@ -187,7 +187,7 @@ ontologies:biobankEncounterDateToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterDateToDateLiteralValue
@@ -195,7 +195,7 @@ ontologies:biobankEncounterDateToDateLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:biobankEncounterDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010096 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterDateToStringLiteralValue
@@ -203,7 +203,7 @@ ontologies:biobankEncounterDateToStringLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:biobankEncounterDateStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010095 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterIdToBiobankEncounter
@@ -211,7 +211,7 @@ ontologies:biobankEncounterIdToBiobankEncounter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000527 ;
   ontologies:predicate obo:IAO_0000219 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterIdToRegistryDenoter
@@ -219,7 +219,7 @@ ontologies:biobankEncounterIdToRegistryDenoter
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:BiobankEncounterRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterIdToSymbol
@@ -227,7 +227,7 @@ ontologies:biobankEncounterIdToSymbol
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000534 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterRegistryDenoterToId
@@ -235,7 +235,7 @@ ontologies:biobankEncounterRegistryDenoterToId
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0000533 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:BiobankEncounterRegistryOfVariousTypes ;
 .
 ontologies:biobankEncounterStartToBiobankEncounter
@@ -243,7 +243,7 @@ ontologies:biobankEncounterStartToBiobankEncounter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000527 ;
   ontologies:predicate obo:RO_0002223 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0000531 ;
 .
 ontologies:biobankEncounterSymbolToDataset
@@ -251,7 +251,7 @@ ontologies:biobankEncounterSymbolToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0000534 ;
 .
 ontologies:biobankEncounterSymbolToId
@@ -259,7 +259,7 @@ ontologies:biobankEncounterSymbolToId
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000533 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000534 ;
 .
 ontologies:biobankEncounterSymbolToSymbolValue
@@ -267,7 +267,7 @@ ontologies:biobankEncounterSymbolToSymbolValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:biobankEncounterSymbolStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000534 ;
 .
 ontologies:biobankEncounterToBMI
@@ -275,7 +275,6 @@ ontologies:biobankEncounterToBMI
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object efo:EFO_0004340 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0000527 ;
 .
 ontologies:biobankEncounterToCollectionProcess
@@ -283,7 +282,7 @@ ontologies:biobankEncounterToCollectionProcess
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0600005 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject ontologies:TURBO_0000527 ;
 .
 ontologies:biobankEncounterToLengthMeasurementValueSpecification
@@ -291,7 +290,6 @@ ontologies:biobankEncounterToLengthMeasurementValueSpecification
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010138 ;
   ontologies:predicate ontologies:TURBO_0010139 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0000527 ;
 .
 ontologies:biobankEncounterToMassMeasurementValueSpecification
@@ -299,7 +297,6 @@ ontologies:biobankEncounterToMassMeasurementValueSpecification
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001929 ;
   ontologies:predicate ontologies:TURBO_0010139 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0000527 ;
 .
 ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum
@@ -307,7 +304,7 @@ ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDat
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:HTN_00000000 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureMeasurementProcessToHealthcareEncounter
@@ -315,7 +312,7 @@ ontologies:bloodPressureMeasurementProcessToHealthcareEncounter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OGMS_0000097 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum
@@ -323,7 +320,7 @@ ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatu
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:HTN_00000001 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureToHomoSapiens
@@ -331,7 +328,6 @@ ontologies:bloodPressureToHomoSapiens
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:RO_0000052 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:VSO_0000004 ;
 .
 ontologies:bmiToBmiDoubleLiteralValue
@@ -339,7 +335,7 @@ ontologies:bmiToBmiDoubleLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:bmiDoubleLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject efo:EFO_0004340 ;
 .
 ontologies:bmiToDataset
@@ -347,7 +343,7 @@ ontologies:bmiToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject efo:EFO_0004340 ;
 .
 ontologies:bmiToHomoSapiens
@@ -355,7 +351,6 @@ ontologies:bmiToHomoSapiens
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject efo:EFO_0004340 ;
 .
 ontologies:cancerToHomoSapiens
@@ -363,7 +358,7 @@ ontologies:cancerToHomoSapiens
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:RO_0000052 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:MONDO_0004992 ;
 .
 ontologies:cancerToTumor
@@ -371,7 +366,7 @@ ontologies:cancerToTumor
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:object ontologies:TURBO_0010070 ;
   ontologies:predicate obo:IDO_0000664 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:MONDO_0004992 ;
 .
 ontologies:collectionProcessToBiobankEncounter
@@ -379,7 +374,7 @@ ontologies:collectionProcessToBiobankEncounter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000527 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OBI_0600005 ;
 .
 ontologies:collectionProcessToHomoSapiens
@@ -387,7 +382,7 @@ ontologies:collectionProcessToHomoSapiens
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:OBI_0000293 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OBI_0600005 ;
 .
 ontologies:collectionProcessToSpecimen
@@ -395,7 +390,7 @@ ontologies:collectionProcessToSpecimen
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001479 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0600005 ;
 .
 ontologies:datasetToAllele
@@ -403,7 +398,7 @@ ontologies:datasetToAllele
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:OBI_0001352 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToAlleleCridSymbol
@@ -411,7 +406,7 @@ ontologies:datasetToAlleleCridSymbol
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000568 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToBiobankEncounterDate
@@ -419,7 +414,7 @@ ontologies:datasetToBiobankEncounterDate
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000532 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToBiobankEncounterSymbol
@@ -427,7 +422,7 @@ ontologies:datasetToBiobankEncounterSymbol
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000534 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToBmi
@@ -435,7 +430,7 @@ ontologies:datasetToBmi
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object efo:EFO_0004340 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToDatasetTitle
@@ -443,7 +438,7 @@ ontologies:datasetToDatasetTitle
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:object ontologies:datasetTitleStringLiteralValue ;
   ontologies:predicate dc11:title ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToDateOfBirthDatum
@@ -451,7 +446,7 @@ ontologies:datasetToDateOfBirthDatum
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object efo:EFO_0004950 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToDiagnosis
@@ -459,7 +454,7 @@ ontologies:datasetToDiagnosis
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:OGMS_0000073 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToGenderIdentityDatum
@@ -467,7 +462,7 @@ ontologies:datasetToGenderIdentityDatum
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:GenderIdentityDatumOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToHealthcareEncounterDate
@@ -475,7 +470,7 @@ ontologies:datasetToHealthcareEncounterDate
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000512 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToHealthcareEncounterSymbol
@@ -483,7 +478,7 @@ ontologies:datasetToHealthcareEncounterSymbol
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000509 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToHomoSapiensSymbol
@@ -491,7 +486,7 @@ ontologies:datasetToHomoSapiensSymbol
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000504 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToLengthMeasurementValueSpecification
@@ -499,7 +494,7 @@ ontologies:datasetToLengthMeasurementValueSpecification
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0010138 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToMassMeasurementValueSpecification
@@ -507,7 +502,7 @@ ontologies:datasetToMassMeasurementValueSpecification
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:OBI_0001929 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToMedicationSymbol
@@ -515,7 +510,7 @@ ontologies:datasetToMedicationSymbol
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:TURBO_0000562 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToPrescription
@@ -523,7 +518,7 @@ ontologies:datasetToPrescription
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object obo:PDRO_0000001 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToRaceIdentityDatum
@@ -531,7 +526,7 @@ ontologies:datasetToRaceIdentityDatum
   ontologies:multiplicity ontologies:1-many ;
   ontologies:object ontologies:RaceIdentityDatumOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:IAO_0000100 ;
 .
 ontologies:dateOfBirthDatumToBirth
@@ -539,7 +534,7 @@ ontologies:dateOfBirthDatumToBirth
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UBERON_0035946 ;
   ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToDataset
@@ -547,7 +542,7 @@ ontologies:dateOfBirthDatumToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToDateLiteral
@@ -555,7 +550,6 @@ ontologies:dateOfBirthDatumToDateLiteral
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010096 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToStringLiteral
@@ -563,7 +557,7 @@ ontologies:dateOfBirthDatumToStringLiteral
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensDateOfBirthStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010095 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject efo:EFO_0004950 ;
 .
 ontologies:diagnosisToDataset
@@ -571,7 +565,7 @@ ontologies:diagnosisToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue
@@ -579,7 +573,6 @@ ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisTermSuffixStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue
@@ -587,7 +580,6 @@ ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisCodingSequenceIntegerLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010014 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisRegistry
@@ -595,7 +587,7 @@ ontologies:diagnosisToDiagnosisRegistry
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DiagnosisRegistryOfVariousTypes ;
   ontologies:predicate ontologies:TURBO_0000703 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisRegistryStringLiteralValue
@@ -603,7 +595,7 @@ ontologies:diagnosisToDiagnosisRegistryStringLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:diagnosisRegistryStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0006515 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToIcdTerm
@@ -611,7 +603,6 @@ ontologies:diagnosisToIcdTerm
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:IcdTermOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
@@ -619,7 +610,6 @@ ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:primaryDiagnosisBooleanLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010013 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToSnomedTerm
@@ -627,7 +617,6 @@ ontologies:diagnosisToSnomedTerm
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:SnomedTermOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000073 ;
 .
 ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure
@@ -635,7 +624,7 @@ ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:VSO_0000004 ;
   ontologies:predicate obo:IAO_0000221 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:HTN_00000000 ;
 .
 ontologies:exomeSequenceProcessToDNAExtract
@@ -643,7 +632,7 @@ ontologies:exomeSequenceProcessToDNAExtract
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001051 ;
   ontologies:predicate obo:OBI_0000293 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0002118 ;
 .
 ontologies:exomeSequenceProcessToSequenceData
@@ -651,7 +640,7 @@ ontologies:exomeSequenceProcessToSequenceData
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001573 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0002118 ;
 .
 ontologies:formProcessToAllele
@@ -659,7 +648,7 @@ ontologies:formProcessToAllele
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OBI_0001352 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0200000 ;
 .
 ontologies:formProcessToSequenceData
@@ -667,7 +656,7 @@ ontologies:formProcessToSequenceData
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001573 ;
   ontologies:predicate obo:OBI_0000293 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0200000 ;
 .
 ontologies:genderIdentityDatumToDataset
@@ -675,7 +664,7 @@ ontologies:genderIdentityDatumToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genderIdentityDatumToGenderIdentityDatumLiteralValue
@@ -683,7 +672,7 @@ ontologies:genderIdentityDatumToGenderIdentityDatumLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensGenderIdentityStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genderIdentityDatumToGenderIdentityDatumType
@@ -691,7 +680,7 @@ ontologies:genderIdentityDatumToGenderIdentityDatumType
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:GenderIdentityDatumType ;
   ontologies:predicate rdf:type ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genderIdentityDatumToHomoSapiens
@@ -699,7 +688,7 @@ ontologies:genderIdentityDatumToHomoSapiens
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genomeCridRegistryDenoterToGenomeCrid
@@ -707,7 +696,7 @@ ontologies:genomeCridRegistryDenoterToGenomeCrid
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0000566 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:GenomeRegistryOfVariousTypes ;
 .
 ontologies:genomeCridSymbolToGenomeCrid
@@ -715,7 +704,7 @@ ontologies:genomeCridSymbolToGenomeCrid
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000566 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000568 ;
 .
 ontologies:genomeCridSymbolToSymbolValue
@@ -723,7 +712,7 @@ ontologies:genomeCridSymbolToSymbolValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:alleleGenoIdStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000568 ;
 .
 ontologies:genomeCridToGenomeCridRegistryDenoter
@@ -731,7 +720,7 @@ ontologies:genomeCridToGenomeCridRegistryDenoter
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:GenomeRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000566 ;
 .
 ontologies:genomeCridToGenomeCridSymbol
@@ -739,7 +728,7 @@ ontologies:genomeCridToGenomeCridSymbol
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000568 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000566 ;
 .
 ontologies:genomeCridToSpecimen
@@ -747,7 +736,7 @@ ontologies:genomeCridToSpecimen
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001479 ;
   ontologies:predicate obo:IAO_0000219 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000566 ;
 .
 ontologies:healthcareEncounterDateToDataset
@@ -755,7 +744,7 @@ ontologies:healthcareEncounterDateToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterDateToDateLiteralValue
@@ -763,7 +752,6 @@ ontologies:healthcareEncounterDateToDateLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:healthcareEncounterDateLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010096 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterDateToHealthcareEncounterStart
@@ -771,7 +759,7 @@ ontologies:healthcareEncounterDateToHealthcareEncounterStart
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000511 ;
   ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterDateToStringLiteralValue
@@ -779,7 +767,7 @@ ontologies:healthcareEncounterDateToStringLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:healthcareEncounterDateStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010095 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterIdToRegistryDenoter
@@ -787,7 +775,7 @@ ontologies:healthcareEncounterIdToRegistryDenoter
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:HealthcareEncounterRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000508 ;
 .
 ontologies:healthcareEncounterIdToSymbol
@@ -795,7 +783,7 @@ ontologies:healthcareEncounterIdToSymbol
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000509 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000508 ;
 .
 ontologies:healthcareEncounterRegistryDenoterToId
@@ -803,7 +791,7 @@ ontologies:healthcareEncounterRegistryDenoterToId
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0000508 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:HealthcareEncounterRegistryOfVariousTypes ;
 .
 ontologies:healthcareEncounterStartToHealthcareEncounter
@@ -811,7 +799,7 @@ ontologies:healthcareEncounterStartToHealthcareEncounter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OGMS_0000097 ;
   ontologies:predicate obo:RO_0002223 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0000511 ;
 .
 ontologies:healthcareEncounterSymbolToDataset
@@ -819,7 +807,7 @@ ontologies:healthcareEncounterSymbolToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0000509 ;
 .
 ontologies:healthcareEncounterSymbolToId
@@ -827,7 +815,7 @@ ontologies:healthcareEncounterSymbolToId
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000508 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000509 ;
 .
 ontologies:healthcareEncounterSymbolToSymbolValue
@@ -835,7 +823,7 @@ ontologies:healthcareEncounterSymbolToSymbolValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:healthcareEncounterSymbolLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000509 ;
 .
 ontologies:healthcareEncounterToBMI
@@ -843,7 +831,6 @@ ontologies:healthcareEncounterToBMI
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object efo:EFO_0004340 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToBloodPressureMeasurementProcess
@@ -851,7 +838,7 @@ ontologies:healthcareEncounterToBloodPressureMeasurementProcess
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:VSO_0000006 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToDiagnosis
@@ -859,7 +846,7 @@ ontologies:healthcareEncounterToDiagnosis
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OGMS_0000073 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToLengthMeasurementValueSpecification
@@ -867,7 +854,6 @@ ontologies:healthcareEncounterToLengthMeasurementValueSpecification
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010138 ;
   ontologies:predicate ontologies:TURBO_0010139 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToMassValueSpecification
@@ -875,7 +861,6 @@ ontologies:healthcareEncounterToMassValueSpecification
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OBI_0001929 ;
   ontologies:predicate ontologies:TURBO_0010139 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToPrescription
@@ -883,7 +868,7 @@ ontologies:healthcareEncounterToPrescription
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:PDRO_0000001 ;
   ontologies:predicate obo:OBI_0000299 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:OGMS_0000097 ;
 .
 ontologies:provenanceDataItemToHealthcareEncounter
@@ -891,7 +876,7 @@ ontologies:provenanceDataItemToHealthcareEncounter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OGMS_0000097 ;
   ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010404 ;
 .
 ontologies:provenanceDataItemToDatabaseTerm
@@ -899,7 +884,7 @@ ontologies:provenanceDataItemToDatabaseTerm
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:HealthcareEncounterDatabaseProvenanceTerm ;
   ontologies:predicate ontologies:database ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010404 ;
 .
 ontologies:provenanceDataItemToEncounterTypeCodeString
@@ -907,7 +892,7 @@ ontologies:provenanceDataItemToEncounterTypeCodeString
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:encounterTypeCodeLiteralValue ;
   ontologies:predicate ontologies:colVal ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010404 ;
 .
 ontologies:provenanceDataItemToSchemaTerm
@@ -915,7 +900,7 @@ ontologies:provenanceDataItemToSchemaTerm
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:HealthcareEncounterSchemaProvenanceTerm ;
   ontologies:predicate ontologies:schema ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010404 ;
 .
 ontologies:provenanceDataItemToTableTerm
@@ -923,7 +908,7 @@ ontologies:provenanceDataItemToTableTerm
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:HealthcareEncounterTableProvenanceTerm ;
   ontologies:predicate ontologies:table ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010404 ;
 .
 ontologies:provenanceDataItemToColumnTerm
@@ -931,7 +916,7 @@ ontologies:provenanceDataItemToColumnTerm
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:HealthcareEncounterTypeCodeColumnTerm ;
   ontologies:predicate ontologies:column ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010404 ;
 .
 ontologies:homoSapiensIdToRegistryDenoter
@@ -939,7 +924,7 @@ ontologies:homoSapiensIdToRegistryDenoter
   ontologies:multiplicity ontologies:many-singleton ;
   ontologies:object ontologies:HomoSapiensRegistryOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0010092 ;
 .
 ontologies:homoSapiensIdToSymbol
@@ -947,7 +932,7 @@ ontologies:homoSapiensIdToSymbol
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000504 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0010092 ;
 .
 ontologies:homoSapiensIdentifierToHomoSapiens
@@ -955,7 +940,7 @@ ontologies:homoSapiensIdentifierToHomoSapiens
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:IAO_0000219 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0010092 ;
 .
 ontologies:homoSapiensRegistryDenoterToId
@@ -963,7 +948,7 @@ ontologies:homoSapiensRegistryDenoterToId
   ontologies:multiplicity ontologies:singleton-many ;
   ontologies:object ontologies:TURBO_0010092 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:HomoSapiensRegistryOfVariousTypes ;
 .
 ontologies:homoSapiensSymbolToDataset
@@ -971,7 +956,7 @@ ontologies:homoSapiensSymbolToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0000504 ;
 .
 ontologies:homoSapiensSymbolToSymbolValue
@@ -979,7 +964,7 @@ ontologies:homoSapiensSymbolToSymbolValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensSymbolStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000504 ;
 .
 ontologies:homoSapiensToBiobankEncounter
@@ -987,7 +972,6 @@ ontologies:homoSapiensToBiobankEncounter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0000527 ;
   ontologies:predicate obo:RO_0000056 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToBiosex
@@ -995,7 +979,7 @@ ontologies:homoSapiensToBiosex
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:PATO_0000047 ;
   ontologies:predicate obo:RO_0000086 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToBirth
@@ -1003,7 +987,7 @@ ontologies:homoSapiensToBirth
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UBERON_0035946 ;
   ontologies:predicate ontologies:TURBO_0000303 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToHealthcareEncounter
@@ -1011,7 +995,6 @@ ontologies:homoSapiensToHealthcareEncounter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object obo:OGMS_0000097 ;
   ontologies:predicate obo:RO_0000056 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToHeight
@@ -1019,7 +1002,7 @@ ontologies:homoSapiensToHeight
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:PATO_0000119 ;
   ontologies:predicate obo:RO_0000086 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToInvestigationRole
@@ -1027,7 +1010,7 @@ ontologies:homoSapiensToInvestigationRole
   ontologies:multiplicity ontologies:many-superSingleton ;
   ontologies:object obo:OBI_0000097 ;
   ontologies:predicate obo:RO_0000087 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToPatientRole
@@ -1035,7 +1018,7 @@ ontologies:homoSapiensToPatientRole
   ontologies:multiplicity ontologies:many-superSingleton ;
   ontologies:object obo:OBI_0000093 ;
   ontologies:predicate obo:RO_0000087 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToTumor
@@ -1043,7 +1026,7 @@ ontologies:homoSapiensToTumor
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:object ontologies:TURBO_0010070 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToWeight
@@ -1051,7 +1034,7 @@ ontologies:homoSapiensToWeight
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:PATO_0000128 ;
   ontologies:predicate obo:RO_0000086 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:NCBITaxon_9606 ;
 .
 ontologies:identifierToHealthcareEncounter
@@ -1059,7 +1042,7 @@ ontologies:identifierToHealthcareEncounter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:OGMS_0000097 ;
   ontologies:predicate obo:IAO_0000219 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000508 ;
 .
 ontologies:identifierToMedicationSymbol
@@ -1067,7 +1050,7 @@ ontologies:identifierToMedicationSymbol
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000562 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000561 ;
 .
 ontologies:identifierToPrescription
@@ -1075,7 +1058,7 @@ ontologies:identifierToPrescription
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:PDRO_0000001 ;
   ontologies:predicate obo:IAO_0000219 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000561 ;
 .
 ontologies:instantiationToDataset
@@ -1083,7 +1066,7 @@ ontologies:instantiationToDataset
   ontologies:multiplicity ontologies:superSingleton-many ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:OBI_0000293 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000522 ;
 .
 ontologies:investigationRoleToBiobankEncounter
@@ -1091,7 +1074,7 @@ ontologies:investigationRoleToBiobankEncounter
   ontologies:multiplicity ontologies:superSingleton-many ;
   ontologies:object ontologies:TURBO_0000527 ;
   ontologies:predicate obo:BFO_0000054 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OBI_0000097 ;
 .
 ontologies:lengthMeasurementValueSpecificationToCentimeter
@@ -1099,7 +1082,7 @@ ontologies:lengthMeasurementValueSpecificationToCentimeter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000015 ;
   ontologies:predicate obo:IAO_0000039 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToDataset
@@ -1107,7 +1090,7 @@ ontologies:lengthMeasurementValueSpecificationToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToHomoSapiens
@@ -1115,7 +1098,6 @@ ontologies:lengthMeasurementValueSpecificationToHomoSapiens
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight
@@ -1123,7 +1105,7 @@ ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:PATO_0000119 ;
   ontologies:predicate obo:IAO_0000221 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue
@@ -1131,7 +1113,7 @@ ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:lengthMeasurementDoubleLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0010138 ;
 .
 ontologies:massMeasurementValueSpecificationToDataset
@@ -1139,7 +1121,7 @@ ontologies:massMeasurementValueSpecificationToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToHomoSapiens
@@ -1147,7 +1129,6 @@ ontologies:massMeasurementValueSpecificationToHomoSapiens
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToHomoSapiensWeight
@@ -1155,7 +1136,7 @@ ontologies:massMeasurementValueSpecificationToHomoSapiensWeight
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:PATO_0000128 ;
   ontologies:predicate obo:IAO_0000221 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToKilogram
@@ -1163,7 +1144,7 @@ ontologies:massMeasurementValueSpecificationToKilogram
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:UO_0000009 ;
   ontologies:predicate obo:IAO_0000039 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue
@@ -1171,7 +1152,7 @@ ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:massMeasurementDoubleLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:OBI_0001929 ;
 .
 ontologies:medicationSymbolToDataset
@@ -1179,7 +1160,7 @@ ontologies:medicationSymbolToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0000562 ;
 .
 ontologies:medicationSymbolToMedicationSymbolStringLiteralValue
@@ -1187,7 +1168,7 @@ ontologies:medicationSymbolToMedicationSymbolStringLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:medicationSymbolStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000562 ;
 .
 ontologies:medicationSymbolToidentifier
@@ -1195,7 +1176,7 @@ ontologies:medicationSymbolToidentifier
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0000561 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000562 ;
 .
 ontologies:patientRoleToHealthcareEncounter
@@ -1203,7 +1184,7 @@ ontologies:patientRoleToHealthcareEncounter
   ontologies:multiplicity ontologies:superSingleton-many ;
   ontologies:object obo:OGMS_0000097 ;
   ontologies:predicate obo:BFO_0000054 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:OBI_0000093 ;
 .
 ontologies:prescriptionToDataset
@@ -1211,7 +1192,7 @@ ontologies:prescriptionToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:PDRO_0000001 ;
 .
 ontologies:prescriptionToDrug
@@ -1219,7 +1200,6 @@ ontologies:prescriptionToDrug
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:DrugTermOfVariousTypes ;
   ontologies:predicate obo:IAO_0000142 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:PDRO_0000001 ;
 .
 ontologies:prescriptionToMedicationOrderNameStringLiteralValue
@@ -1227,7 +1207,6 @@ ontologies:prescriptionToMedicationOrderNameStringLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:medicationOrderNameStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:notRequired ;
   ontologies:subject obo:PDRO_0000001 ;
 .
 ontologies:raceIdentityDatumToDataset
@@ -1235,7 +1214,7 @@ ontologies:raceIdentityDatumToDataset
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:raceIdentityDatumToHomoSapiens
@@ -1243,7 +1222,7 @@ ontologies:raceIdentityDatumToHomoSapiens
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:IAO_0000136 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:raceIdentityDatumToRaceIdentityDatumLiteralValue
@@ -1251,7 +1230,7 @@ ontologies:raceIdentityDatumToRaceIdentityDatumLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:homoSapiensRaceIdentityStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:raceIdentityDatumToRaceIdentityDatumType
@@ -1259,7 +1238,7 @@ ontologies:raceIdentityDatumToRaceIdentityDatumType
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:RaceIdentityDatumType ;
   ontologies:predicate rdf:type ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:symbolToHomoSapiensId
@@ -1267,7 +1246,7 @@ ontologies:symbolToHomoSapiensId
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010092 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0000504 ;
 .
 ontologies:systolicBloodPressureMeasurementDatumToBloodPressure
@@ -1275,7 +1254,7 @@ ontologies:systolicBloodPressureMeasurementDatumToBloodPressure
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:VSO_0000004 ;
   ontologies:predicate obo:IAO_0000221 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject obo:HTN_00000001 ;
 .
 ontologies:tumorCridSymbolToSymbolLiteralValue
@@ -1283,7 +1262,7 @@ ontologies:tumorCridSymbolToSymbolLiteralValue
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:tumorSymbolStringLiteralValue ;
   ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:IAO_0000577 ;
 .
 ontologies:tumorCridSymbolToTumorCrid
@@ -1291,7 +1270,7 @@ ontologies:tumorCridSymbolToTumorCrid
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010188 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject obo:IAO_0000577 ;
 .
 ontologies:tumorCridToTumor
@@ -1299,7 +1278,7 @@ ontologies:tumorCridToTumor
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010070 ;
   ontologies:predicate obo:IAO_0000219 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0010188 ;
 .
 ontologies:tumorCridToDataset
@@ -1307,7 +1286,7 @@ ontologies:tumorCridToDataset
   ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
   ontologies:object obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010188 ;
 .
 ontologies:datasetToTumorCrid
@@ -1315,7 +1294,7 @@ ontologies:datasetToTumorCrid
   ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
   ontologies:subject obo:IAO_0000100 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:subjectRequired ;
+  ontologies:mustExistIf ontologies:objectExists ;
   ontologies:object ontologies:TURBO_0010188 ;
 .
 ontologies:tumorCridToTumorCridSymbol
@@ -1323,7 +1302,7 @@ ontologies:tumorCridToTumorCridSymbol
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object obo:IAO_0000577 ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0010188 ;
 .
 ontologies:tumorCridToTumorRegistryDenoter
@@ -1331,7 +1310,7 @@ ontologies:tumorCridToTumorRegistryDenoter
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TumorRegistryDenoterOfVariousTypes ;
   ontologies:predicate obo:BFO_0000051 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TURBO_0010188 ;
 .
 ontologies:tumorRegistryDenoterToTumorCrid
@@ -1339,7 +1318,7 @@ ontologies:tumorRegistryDenoterToTumorCrid
   ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
   ontologies:object ontologies:TURBO_0010188 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:bothRequired ;
+  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
   ontologies:subject ontologies:TumorRegistryDenoterOfVariousTypes ;
 .
 ontologies:tumorToHomoSapiens
@@ -1347,7 +1326,7 @@ ontologies:tumorToHomoSapiens
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:NCBITaxon_9606 ;
   ontologies:predicate obo:BFO_0000050 ;
-  ontologies:required ontologies:objectRequired ;
+  ontologies:mustExistIf ontologies:subjectExists ;
   ontologies:subject ontologies:TURBO_0010070 ;
 .
 <http://transformunify.org/ontologies/1-1>
@@ -1704,15 +1683,12 @@ ontologies:usesCustomVariableManipulationRule
   a owl:ObjectProperty ;
   rdfs:range rdfs:Resource ;
 .
-ontologies:notRequired
+ontologies:objectExists
   a ontologies:TurboGraphRequirementSpecification ;
 .
-ontologies:subjectRequired
+ontologies:subjectExists
   a ontologies:TurboGraphRequirementSpecification ;
 .
-ontologies:objectRequired
-  a ontologies:TurboGraphRequirementSpecification ;
-.
-ontologies:bothRequired
+ontologies:eitherSubjectOrObjectExists
   a ontologies:TurboGraphRequirementSpecification ;
 .
