@@ -768,9 +768,9 @@ class TurboMultiuseClass extends Enumeration
         for (char <- illegalCharacters) assert(!uri.contains(char), s"The URI $uri contains illegal character $char. Make sure this is actually a URI and not a literal value.")
     }
     
-    def buildProcessMetaQuery(process: String, inputNamedGraph: String = expandedNamedGraph): String =
+    def buildProcessMetaQuery(process: String, inputNamedGraphs: Array[String] = Array(expandedNamedGraph)): String =
     {
-        val str = s"""
+        var str = s"""
           ASK 
           { 
             Graph <$processNamedGraph>
@@ -779,13 +779,12 @@ class TurboMultiuseClass extends Enumeration
                 ?processBoundary a obo:BFO_0000035 .
                 ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
                 ?timeMeasDatum a obo:IAO_0000416 .
-                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+                ?timeMeasDatum obo:IAO_0000004 ?someDateTime .
                 
                 ?updateProcess
                     a turbo:TURBO_0010347 ;
                     turbo:TURBO_0010107 ?someRuntime ;
                     turbo:TURBO_0010108 ?someNumberOfTriples;
-                    turbo:TURBO_0010187 <$inputNamedGraph> ;
                     turbo:TURBO_0010186 <$expandedNamedGraph> ;
                     obo:BFO_0000055 ?updatePlan .
                 
@@ -793,10 +792,15 @@ class TurboMultiuseClass extends Enumeration
                     obo:RO_0000059 <$process> .
                 
                 <$process> a turbo:TURBO_0010354 ;
-                    turbo:TURBO_0010106 ?query .
-            }
-          }
-          """
+                    turbo:TURBO_0010106 ?query . 
+            """
+        
+        for (inputNamedGraph <- inputNamedGraphs)
+        {
+            str += s"?updateProcess turbo:TURBO_0010187 <$inputNamedGraph> .\n"
+        }
+          
+        str += "}}"
         //logger.info(str)
         str
     }

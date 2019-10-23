@@ -62,7 +62,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         {
             val startTime = System.nanoTime()
             //val currDate = Calendar.getInstance().getTime()
-            val currDate = new SimpleDateFormat( "yyyy-MM-dd' 'HH:mm:ss" ).format( Calendar.getInstance().getTime())
+            val currDate = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).format( Calendar.getInstance().getTime())
             val startingTriplesCount = helper.countTriplesInDatabase(cxn)
             val processGraphsList = new ArrayBuffer[String]
             logger.info("Starting process: " + processSpecification)
@@ -860,8 +860,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
              new Triple(processBoundary, "obo:RO_0002223", updateProcess),
              new Triple(processBoundary, "rdf:type", "obo:BFO_0000035"),
              new Triple(timeMeasDatum, "obo:IAO_0000136", processBoundary),
-             new Triple(timeMeasDatum, "rdf:type", "obo:IAO_0000416"),
-             new Triple(timeMeasDatum, "turbo:TURBO_0010094", currDate)
+             new Triple(timeMeasDatum, "rdf:type", "obo:IAO_0000416")
         )
         for (inputGraph <- inputNamedGraphsList) 
         {
@@ -887,6 +886,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             }
             else metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", removalsNamedGraph)
         }
+        
+        //Triple class currently does not support literal datatypes other than strings, so making custom query to insert current date with dateTime format
+        val dateInsert = s"""INSERT DATA {Graph <$processNamedGraph> { <$timeMeasDatum> obo:IAO_0000004 "$currDate"^^xsd:dateTime .}}"""
+        //logger.info(dateInsert)
+        update.updateSparql(cxn, dateInsert)
+        
         metaTriples
     }
 }

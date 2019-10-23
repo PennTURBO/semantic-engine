@@ -161,7 +161,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
            }}"""
     
     val processMeta = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess",
-                                                  "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts")
+                                                  Array("http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts"))
     
     val anyProcess: String = s"""
       ASK
@@ -1604,37 +1604,12 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         
-        val processMetaMultipleDatasets: String = s"""
-          ASK 
-          { 
-            Graph <$processNamedGraph>
-            {
-                ?processBoundary obo:RO_0002223 ?updateProcess .
-                ?processBoundary a obo:BFO_0000035 .
-                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-                ?timeMeasDatum a obo:IAO_0000416 .
-                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-                
-                ?updateProcess
-                    a turbo:TURBO_0010347 ;
-                    turbo:TURBO_0010107 ?someRuntime ;
-                    turbo:TURBO_0010108 ?someNumberOfTriples;
-                    turbo:TURBO_0010186 <$expandedNamedGraph> ;
-                    turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts ;
-                    turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts1 ;
-                    turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts2 ;
-                    turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts3 ;
-                    turbo:TURBO_0010187 pmbb:Shortcuts_healthcareEncounterShortcuts4 ;
-                    obo:BFO_0000055 ?updatePlan .
-                
-                ?updatePlan a turbo:TURBO_0010373 ;
-                    obo:RO_0000059 pmbb:HealthcareEncounterExpansionProcess .
-                
-                pmbb:HealthcareEncounterExpansionProcess a turbo:TURBO_0010354 ;
-                    turbo:TURBO_0010106 ?query .
-            }
-          }
-        """
+        val processMetaMultipleDatasets = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess",
+                                                  Array("http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts",
+                                                      "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts1",
+                                                      "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts2",
+                                                      "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts3",
+                                                      "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts4"))
         
         update.querySparqlBoolean(testCxn, processMetaMultipleDatasets).get should be (true)
         update.querySparqlAndUnpackTuple(testCxn, thereShouldOnlyBeOneEncounter, "enc").size should be (1)
