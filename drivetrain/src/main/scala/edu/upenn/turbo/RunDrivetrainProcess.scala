@@ -69,6 +69,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
            
             val primaryQuery = processQueryMap(processSpecification)
             val genericWhereClause = primaryQuery.whereClause
+            primaryQuery.defaultInputGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(primaryQuery.defaultInputGraph)
+            
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
             //var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
             // get list of all named graphs which match pattern specified in inputNamedGraph but without match on where clause
@@ -864,27 +866,18 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         )
         for (inputGraph <- inputNamedGraphsList) 
         {
-            if (inputGraph.startsWith("http://turboProperties.org/"))
-            {
-                metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", helper.retrieveUriPropertyFromFile(inputGraph.replace("http://turboProperties.org/","")))
-            }
-            else metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", inputGraph)
+            val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(inputGraph)
+            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", graphForThisRow)
         }
         if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) 
         {
-            if (outputNamedGraph.startsWith("http://turboProperties.org/"))
-            {
-                metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", helper.retrieveUriPropertyFromFile(outputNamedGraph.replace("http://turboProperties.org/","")))
-            }
-            else metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", outputNamedGraph)
+            val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(outputNamedGraph)
+            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", graphForThisRow)
         }
         else if (removalsNamedGraph != null) 
         {
-            if (removalsNamedGraph.startsWith("http://turboProperties.org/"))
-            {
-                metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", helper.retrieveUriPropertyFromFile(removalsNamedGraph.replace("http://turboProperties.org/","")))
-            }
-            else metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", removalsNamedGraph)
+            val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(removalsNamedGraph)
+            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", graphForThisRow)
         }
         
         //Triple class currently does not support literal datatypes other than strings, so making custom query to insert current date with dateTime format

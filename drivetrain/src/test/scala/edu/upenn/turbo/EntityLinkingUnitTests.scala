@@ -1232,10 +1232,10 @@ trait EntityLinkingUnitTestFields extends ProjectwideGlobals
           "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/IAO_0000219"
       )
       
-  val healthcareEncounterAllFieldsOutput: String = """
+  val healthcareEncounterAllFieldsOutput: String = s"""
         ASK
         {
-        graph pmbb:expanded {
+        graph <$expandedNamedGraph> {
         
             ?homoSapiens obo:RO_0000056 ?healthcareEncounter .
             ?homoSapiens obo:RO_0000087 ?puirole .
@@ -1280,10 +1280,10 @@ trait EntityLinkingUnitTestFields extends ProjectwideGlobals
         }}
         """
   
-  val biobankEncounterAllFieldsOutput: String = """
+  val biobankEncounterAllFieldsOutput: String = s"""
           ASK
           {
-          graph pmbb:expanded {
+          graph <$expandedNamedGraph> {
               ?homoSapiens obo:RO_0000056 ?biobankEncounter .
               ?homoSapiens obo:RO_0000087 ?puirole .
           		?puirole a obo:OBI_0000097 .
