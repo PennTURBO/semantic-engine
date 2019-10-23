@@ -85,7 +85,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
       """
     
     val processMeta: String = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", 
-                                                          "http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts")
+                                                          Array("http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts"))
     
     val anyProcess: String = """
       ASK

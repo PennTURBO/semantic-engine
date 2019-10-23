@@ -42,7 +42,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
        }}"""
     
     val processMeta = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", 
-                                                   "http://www.itmat.upenn.edu/biobank/Shortcuts_homoSapiensShortcuts")
+                                                   Array("http://www.itmat.upenn.edu/biobank/Shortcuts_homoSapiensShortcuts"))
     
     val anyProcess: String = s"""
       ASK
@@ -1033,37 +1033,11 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         result.size should be (69)
         
-        val processMetaMultipleDatasets: String = s"""
-        ASK 
-          { 
-            Graph <$processNamedGraph>
-            {
-                ?processBoundary obo:RO_0002223 ?updateProcess .
-                ?processBoundary a obo:BFO_0000035 .
-                ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
-                ?timeMeasDatum a obo:IAO_0000416 .
-                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
-                
-                ?updateProcess
-                    a turbo:TURBO_0010347 ;
-                    turbo:TURBO_0010107 ?someRuntime ;
-                    turbo:TURBO_0010108 ?someNumberOfTriples;
-                    turbo:TURBO_0010186 <$expandedNamedGraph> ;
-                    turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts1 ;
-                    turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts2 ;
-                    turbo:TURBO_0010187 pmbb:Shortcuts_homoSapiensShortcuts3 ;
-                    obo:BFO_0000055 ?updatePlan .
-                
-                ?updatePlan a turbo:TURBO_0010373 ;
-                    obo:RO_0000059 pmbb:HomoSapiensExpansionProcess .
-                
-                pmbb:HomoSapiensExpansionProcess a turbo:TURBO_0010354 ;
-                    turbo:TURBO_0010106 ?query .
-            }
-          }
-        """
-        update.querySparqlBoolean(testCxn, processMetaMultipleDatasets).get should be (true)
-        
+        val processMetaMultipleDatasets: String = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", 
+                                                   Array("http://www.itmat.upenn.edu/biobank/Shortcuts_homoSapiensShortcuts1",
+                                                       "http://www.itmat.upenn.edu/biobank/Shortcuts_homoSapiensShortcuts2",
+                                                       "http://www.itmat.upenn.edu/biobank/Shortcuts_homoSapiensShortcuts3"))
+          
         val processInputsOutputs: String = s"""
           
           ASK 
