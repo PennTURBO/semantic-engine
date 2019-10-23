@@ -47,8 +47,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "all") 
               {
                   clearProductionNamedGraphs(cxn)
-                  //load the TURBO ontology
-                  OntologyLoader.addOntologyFromUrl(cxn)
                   runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
               }
               else if (args(0) == "printQuery")
