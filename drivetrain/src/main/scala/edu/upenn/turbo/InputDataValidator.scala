@@ -31,9 +31,9 @@ object InputDataValidator extends ProjectwideGlobals
         for (input <- inputs)
         {   
             if (input(REQUIREMENT.toString) != null && 
-                (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/bothRequired" ||
-                input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/subjectRequired" ||
-                input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/objectRequired"
+                (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/eitherSubjectOrObjectExists" ||
+                input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/objectExists" ||
+                input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/subjectExists"
                 ))
             {
                 val graphsFromNamedClause = helper.buildFromNamedGraphsClauseFromList(graphs)
@@ -51,16 +51,16 @@ object InputDataValidator extends ProjectwideGlobals
                 }
                 else if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe")
                 {
-                    if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/bothRequired")
+                    if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/eitherSubjectOrObjectExists")
                     {
                         validateSubjectAgainstObject(graphsFromNamedClause, input)
                         validateObjectAgainstSubject(graphsFromNamedClause, input)
                     }
-                    else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/subjectRequired")
+                    else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/objectExists")
                     {
                         validateObjectAgainstSubject(graphsFromNamedClause, input)
                     }
-                    else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/objectRequired")
+                    else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/subjectExists")
                     {
                         validateSubjectAgainstObject(graphsFromNamedClause, input)
                     }   

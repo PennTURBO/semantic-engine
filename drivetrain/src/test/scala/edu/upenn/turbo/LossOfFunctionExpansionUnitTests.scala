@@ -16,7 +16,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
     val processMeta = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", 
-                                                  "http://www.itmat.upenn.edu/biobank/Shortcuts_LofShortcuts")
+                                                  Array("http://www.itmat.upenn.edu/biobank/Shortcuts_LofShortcuts"))
         
     
     val expectedQuery: String = s"""

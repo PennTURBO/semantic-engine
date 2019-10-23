@@ -62,13 +62,15 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         {
             val startTime = System.nanoTime()
             //val currDate = Calendar.getInstance().getTime()
-            val currDate = new SimpleDateFormat( "yyyy-MM-dd' 'HH:mm:ss" ).format( Calendar.getInstance().getTime())
+            val currDate = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).format( Calendar.getInstance().getTime())
             val startingTriplesCount = helper.countTriplesInDatabase(cxn)
             val processGraphsList = new ArrayBuffer[String]
             logger.info("Starting process: " + processSpecification)
            
             val primaryQuery = processQueryMap(processSpecification)
             val genericWhereClause = primaryQuery.whereClause
+            primaryQuery.defaultInputGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(primaryQuery.defaultInputGraph)
+            
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
             //var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
             // get list of all named graphs which match pattern specified in inputNamedGraph but without match on where clause
@@ -264,7 +266,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               Optional
               {
-                  ?$CONNECTIONNAME turbo:required ?$REQUIREMENT .
+                  ?$CONNECTIONNAME turbo:mustExistIf ?$REQUIREMENT .
               }
               Optional
               {
@@ -461,7 +463,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       turbo:usesSparql,
                       obo:BFO_0000050,
                       turbo:referencedInGraph,
-                      turbo:required,
+                      turbo:mustExistIf,
                       turbo:multiplicity,
                       turbo:inputNamedGraph,
                       turbo:outputNamedGraph,
@@ -599,7 +601,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       Graph pmbb:graphSpecification
                       {
                           ?recipe turbo:subject <$singleClass> .
-                          ?recipe turbo:required turbo:bothRequired .
+                          ?recipe turbo:mustExistIf turbo:eitherSubjectOrObjectExists .
                       }
                   }
                   UNION
@@ -607,7 +609,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       Graph pmbb:graphSpecification
                       {
                           ?recipe turbo:subject <$singleClass> .
-                          ?recipe turbo:required turbo:objectRequired .
+                          ?recipe turbo:mustExistIf turbo:subjectExists .
                       }
                   }
                   UNION
@@ -615,7 +617,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       Graph pmbb:graphSpecification
                       {
                           ?recipe turbo:object <$singleClass> .
-                          ?recipe turbo:required turbo:bothRequired .
+                          ?recipe turbo:mustExistIf turbo:eitherSubjectOrObjectExists .
                       }
                   }
                   UNION
@@ -623,7 +625,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       Graph pmbb:graphSpecification
                       {
                           ?recipe turbo:object <$singleClass> .
-                          ?recipe turbo:required turbo:subjectRequired .
+                          ?recipe turbo:mustExistIf turbo:objectExists .
                       }
                   }
                   MINUS
@@ -860,33 +862,29 @@ object RunDrivetrainProcess extends ProjectwideGlobals
              new Triple(processBoundary, "obo:RO_0002223", updateProcess),
              new Triple(processBoundary, "rdf:type", "obo:BFO_0000035"),
              new Triple(timeMeasDatum, "obo:IAO_0000136", processBoundary),
-             new Triple(timeMeasDatum, "rdf:type", "obo:IAO_0000416"),
-             new Triple(timeMeasDatum, "turbo:TURBO_0010094", currDate)
+             new Triple(timeMeasDatum, "rdf:type", "obo:IAO_0000416")
         )
         for (inputGraph <- inputNamedGraphsList) 
         {
-            if (inputGraph.startsWith("http://turboProperties.org/"))
-            {
-                metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", helper.retrieveUriPropertyFromFile(inputGraph.replace("http://turboProperties.org/","")))
-            }
-            else metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", inputGraph)
+            val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(inputGraph)
+            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", graphForThisRow)
         }
         if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) 
         {
-            if (outputNamedGraph.startsWith("http://turboProperties.org/"))
-            {
-                metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", helper.retrieveUriPropertyFromFile(outputNamedGraph.replace("http://turboProperties.org/","")))
-            }
-            else metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", outputNamedGraph)
+            val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(outputNamedGraph)
+            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", graphForThisRow)
         }
         else if (removalsNamedGraph != null) 
         {
-            if (removalsNamedGraph.startsWith("http://turboProperties.org/"))
-            {
-                metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", helper.retrieveUriPropertyFromFile(removalsNamedGraph.replace("http://turboProperties.org/","")))
-            }
-            else metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", removalsNamedGraph)
+            val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(removalsNamedGraph)
+            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", graphForThisRow)
         }
+        
+        //Triple class currently does not support literal datatypes other than strings, so making custom query to insert current date with dateTime format
+        val dateInsert = s"""INSERT DATA {Graph <$processNamedGraph> { <$timeMeasDatum> obo:IAO_0000004 "$currDate"^^xsd:dateTime .}}"""
+        //logger.info(dateInsert)
+        update.updateSparql(cxn, dateInsert)
+        
         metaTriples
     }
 }

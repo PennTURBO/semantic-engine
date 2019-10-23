@@ -515,7 +515,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
     }
     
-    test("graph specification contains connection not present as output in data model")
+    test("graph specification contains connection not present as output in instruction set")
     {
         helper.clearNamedGraph(gmCxn, "http://www.itmat.upenn.edu/biobank/graphSpecification")
         val insertDataModel: String = """
@@ -540,15 +540,14 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         try
         {
             RunDrivetrainProcess.runAllDrivetrainProcesses(testCxn, gmCxn)
-            assert (1 == 2)
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: connection http://transformunify.org/ontologies/notPresentConnection in graph specification is not the output of a queued process in the data model")
+            case e: AssertionError => assert(1==2)
         }
     }
     
-    test("graph specification contains connection present but removed as output in data model")
+    test("graph specification contains connection present but removed as output in instruction set")
     {
         helper.clearNamedGraph(gmCxn, "http://www.itmat.upenn.edu/biobank/graphSpecification")
         val insertDataModel: String = """
@@ -585,11 +584,73 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         try
         {
             RunDrivetrainProcess.runAllDrivetrainProcesses(testCxn, gmCxn)
-            assert (1 == 2)
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: connection http://transformunify.org/ontologies/object1ToObject4 in graph specification is not the output of a queued process in the data model")
+            case e: AssertionError => assert(1==2)
+        }
+    }
+    
+    test("instruction set does not create recipe required by graph specification")
+    {
+        helper.clearNamedGraph(gmCxn, "http://www.itmat.upenn.edu/biobank/graphSpecification")
+        helper.clearNamedGraph(gmCxn, "http://www.itmat.upenn.edu/biobank/dataModel")
+        val insertDataModel: String = """
+          
+          INSERT DATA
+          {
+              Graph pmbb:graphSpecification
+              {
+                  ontologies:object1ToObject3
+                    a ontologies:ObjectConnectionToInstanceRecipe ;
+                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+                    ontologies:subject turbo:object1 ;
+                    ontologies:predicate turbo:pred1 ;
+                    ontologies:object turbo:object3 ;
+                    ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
+                  .
+ 
+                  ontologies:object1ToObject4
+                    a ontologies:ObjectConnectionToInstanceRecipe ;
+                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+                    ontologies:subject turbo:object1 ;
+                    ontologies:predicate turbo:pred1 ;
+                    ontologies:object turbo:object4 ;
+                    ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
+                  .
+                  
+                  ontologies:object1 a owl:Class .
+                  ontologies:object2 a owl:Class .
+                  ontologies:object3 a owl:Class .
+                  ontologies:object4 a owl:Class .
+               }
+               
+               Graph pmbb:dataModel
+               {
+                   ontologies:myProcess1 a turbo:TURBO_0010354 ;
+                       ontologies:hasOutput ontologies:object1ToObject4 ;
+                       ontologies:hasRequiredInput ontologies:object1ToObject2 ;
+                   .
+                   ontologies:object1ToObject2 a ontologies:ObjectConnectionToInstanceRecipe ;
+                       ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
+                       ontologies:subject turbo:object1 ;
+                       ontologies:predicate turbo:pred1 ;
+                       ontologies:object turbo:object2 ;
+                       ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
+               }
+           }
+        """
+      
+        update.updateSparql(gmCxn, insertDataModel)
+        
+        try
+        {
+            RunDrivetrainProcess.runAllDrivetrainProcesses(testCxn, gmCxn)
+            assert(1==2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString() == "java.lang.AssertionError: assertion failed: Error in graph model: connection recipe http://transformunify.org/ontologies/object1ToObject3 in the Graph Specification is required due to the existence of http://transformunify.org/ontologies/object1 but is not the output of a queued process in the Instruction Set")
         }
     }
     

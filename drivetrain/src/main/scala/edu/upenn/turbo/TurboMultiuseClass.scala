@@ -53,7 +53,7 @@ class TurboMultiuseClass extends Enumeration
 			PREFIX sys: <http://www.ontotext.com/owlim/system#>
 			"""
     val logger = LoggerFactory.getLogger(getClass)
-    val updater: SparqlUpdater = new SparqlUpdater
+    val update: SparqlUpdater = new SparqlUpdater
     
     val ontologyURL = retrieveUriPropertyFromFile("ontologyURL")
     val defaultPrefix = retrieveUriPropertyFromFile("defaultPrefix")
@@ -79,7 +79,7 @@ class TurboMultiuseClass extends Enumeration
       
          //Clear Graph seems to give better performance than deleting a triple pattern
          val deleteAll: String = "CLEAR GRAPH <" + namedGraph + ">"
-         updater.updateSparql(cxn, deleteAll)
+         update.updateSparql(cxn, deleteAll)
      }
     
     def genTurboIRI(): String =
@@ -193,7 +193,7 @@ class TurboMultiuseClass extends Enumeration
             """
                ADD <"""+fromGraph+"""> TO <"""+toGraph+""">
             """
-        updater.updateSparql(cxn, moveTriples)
+        update.updateSparql(cxn, moveTriples)
     }
     
     /**
@@ -202,7 +202,7 @@ class TurboMultiuseClass extends Enumeration
     def printAllInDatabase(cxn: RepositoryConnection)
     {
         val queryAll: String = "SELECT ?s ?p ?o WHERE {?s ?p ?o .}"
-        val results = updater.querySparqlAndUnpackTuple(cxn, queryAll, Array("s","p","o"))
+        val results = update.querySparqlAndUnpackTuple(cxn, queryAll, Array("s","p","o"))
         logger.info("Number of statements: " + results.size.toString)
         for (result <- results)
         {
@@ -220,7 +220,7 @@ class TurboMultiuseClass extends Enumeration
     def printAllInNamedGraph(cxn: RepositoryConnection, namedGraph: String)
     {
         val queryAll: String = "SELECT ?s ?p ?o WHERE { GRAPH <" + namedGraph + "> {?s ?p ?o .}}"
-        val results = updater.querySparqlAndUnpackTuple(cxn, queryAll, Array("s","p","o"))
+        val results = update.querySparqlAndUnpackTuple(cxn, queryAll, Array("s","p","o"))
         logger.info("Number of statements: " + results.size.toString)
         for (result <- results)
         {
@@ -282,7 +282,7 @@ class TurboMultiuseClass extends Enumeration
     def isThereDataInNamedGraph(cxn: RepositoryConnection, namedGraph: IRI): Boolean =
     {
         val sparql: String = "ASK {GRAPH <" + namedGraph + "> {?s ?p ?o .}}"
-        updater.querySparqlBoolean(cxn, sparql).get
+        update.querySparqlBoolean(cxn, sparql).get
     }
   
   /**
@@ -349,7 +349,7 @@ class TurboMultiuseClass extends Enumeration
         }
         """
             
-      updater.updateSparql(cxn, insert)
+      update.updateSparql(cxn, insert)
   }
   
   /**
@@ -374,7 +374,7 @@ class TurboMultiuseClass extends Enumeration
           }
           """
         
-        val inverseList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = updater.querySparqlAndUnpackTuple(cxn, getInversePreds, ArrayBuffer("p", "inverse"))
+        val inverseList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = update.querySparqlAndUnpackTuple(cxn, getInversePreds, ArrayBuffer("p", "inverse"))
         
         var inverseMap: HashMap[org.eclipse.rdf4j.model.Value, org.eclipse.rdf4j.model.Value] = new HashMap[org.eclipse.rdf4j.model.Value, org.eclipse.rdf4j.model.Value]
         var inversePredString: String = ""
@@ -401,7 +401,7 @@ class TurboMultiuseClass extends Enumeration
           }
           """
               
-        val triplesList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = updater.querySparqlAndUnpackTuple(cxn, getAllTriples, ArrayBuffer("s", "p", "o"))
+        val triplesList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = update.querySparqlAndUnpackTuple(cxn, getAllTriples, ArrayBuffer("s", "p", "o"))
         
         logger.info("Applying inverses to " + triplesList.size + " triples...")
         
@@ -478,7 +478,7 @@ class TurboMultiuseClass extends Enumeration
           }
           """
         
-        updater.updateSparql(cxn, addLabelsToEverything)
+        update.updateSparql(cxn, addLabelsToEverything)
     }
     
     /**
@@ -524,7 +524,7 @@ class TurboMultiuseClass extends Enumeration
      */
     def addStringLabelsToOntology (cxn: RepositoryConnection)
     {
-        val update: String = """
+        val updateQuery: String = """
           Insert 
           {
               Graph <"""+ontologyURL+""">
@@ -543,7 +543,7 @@ class TurboMultiuseClass extends Enumeration
           }
           """
         
-        updater.updateSparql(cxn, update)
+        update.updateSparql(cxn, updateQuery)
     }
     
     /**
@@ -572,7 +572,7 @@ class TurboMultiuseClass extends Enumeration
         $filterClause
         }"""
         //println(getGraphs)
-        updater.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
+        update.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
     }
     
     def generateSimpleNamedGraphsListFromPrefix(cxn: RepositoryConnection, graphsPrefix: String): ArrayBuffer[String] =
@@ -588,9 +588,16 @@ class TurboMultiuseClass extends Enumeration
             $filterClause
             }"""
             //println(getGraphs)
-            updater.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
+            update.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
         }
-        else ArrayBuffer(graphsPrefix)
+        else 
+        {
+            val ask: String = s"ASK {Graph <$graphsPrefix> { ?s ?p ?o .}}"
+            //logger.info(ask)
+            val bool = update.querySparqlBoolean(cxn, ask)
+            if (bool.get) ArrayBuffer(graphsPrefix)
+            else ArrayBuffer()
+        }
     }
     
     //These 2 globals are associated with the two methods below
@@ -697,7 +704,7 @@ class TurboMultiuseClass extends Enumeration
           """
             Select * FROM <http://www.ontotext.com/implicit> Where {?s ?p ?o .}
           """
-        val result: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = updater.querySparqlAndUnpackTuple(cxn, select, Array("s", "p", "o"))
+        val result: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = update.querySparqlAndUnpackTuple(cxn, select, Array("s", "p", "o"))
         for (row <- result)
         {
             model.add(row(0).asInstanceOf[IRI], row(1).asInstanceOf[IRI], row(2).asInstanceOf[IRI])
@@ -713,7 +720,7 @@ class TurboMultiuseClass extends Enumeration
               ?s ?p ?o .
           }
           """
-         updater.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1).toInt
+         update.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1).toInt
     }
     
     def countTriplesInNamedGraph(cxn: RepositoryConnection, namedGraph: String): Int =
@@ -727,7 +734,7 @@ class TurboMultiuseClass extends Enumeration
               }
           }
           """
-         updater.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1).toInt
+         update.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1).toInt
     }
     
     def getDatasetNames(cxn: RepositoryConnection): ArrayBuffer[String] = 
@@ -739,7 +746,7 @@ class TurboMultiuseClass extends Enumeration
               ?ds dc11:title ?dsTitle .
           }
           """
-        updater.querySparqlAndUnpackTuple(cxn, query, "dsTitle")
+        update.querySparqlAndUnpackTuple(cxn, query, "dsTitle")
     }
     
     def convertTypeToSparqlVariable(input: org.eclipse.rdf4j.model.Value, withQuestionMark: Boolean): String =
@@ -768,9 +775,9 @@ class TurboMultiuseClass extends Enumeration
         for (char <- illegalCharacters) assert(!uri.contains(char), s"The URI $uri contains illegal character $char. Make sure this is actually a URI and not a literal value.")
     }
     
-    def buildProcessMetaQuery(process: String, inputNamedGraph: String = expandedNamedGraph): String =
+    def buildProcessMetaQuery(process: String, inputNamedGraphs: Array[String] = Array(expandedNamedGraph)): String =
     {
-        val str = s"""
+        var str = s"""
           ASK 
           { 
             Graph <$processNamedGraph>
@@ -779,13 +786,12 @@ class TurboMultiuseClass extends Enumeration
                 ?processBoundary a obo:BFO_0000035 .
                 ?timeMeasDatum obo:IAO_0000136 ?processBoundary .
                 ?timeMeasDatum a obo:IAO_0000416 .
-                ?timeMeasDatum turbo:TURBO_0010094 ?someDateTime .
+                ?timeMeasDatum obo:IAO_0000004 ?someDateTime .
                 
                 ?updateProcess
                     a turbo:TURBO_0010347 ;
                     turbo:TURBO_0010107 ?someRuntime ;
                     turbo:TURBO_0010108 ?someNumberOfTriples;
-                    turbo:TURBO_0010187 <$inputNamedGraph> ;
                     turbo:TURBO_0010186 <$expandedNamedGraph> ;
                     obo:BFO_0000055 ?updatePlan .
                 
@@ -793,10 +799,15 @@ class TurboMultiuseClass extends Enumeration
                     obo:RO_0000059 <$process> .
                 
                 <$process> a turbo:TURBO_0010354 ;
-                    turbo:TURBO_0010106 ?query .
-            }
-          }
-          """
+                    turbo:TURBO_0010106 ?query . 
+            """
+        
+        for (inputNamedGraph <- inputNamedGraphs)
+        {
+            str += s"?updateProcess turbo:TURBO_0010187 <$inputNamedGraph> .\n"
+        }
+          
+        str += "}}"
         //logger.info(str)
         str
     }
@@ -813,7 +824,7 @@ class TurboMultiuseClass extends Enumeration
           }
 
         """
-        updater.querySparqlBoolean(cxn, ask).get
+        update.querySparqlBoolean(cxn, ask).get
     }
     
     def getDescriberRangesAsString(cxn: RepositoryConnection, describer: String): String =
@@ -838,7 +849,7 @@ class TurboMultiuseClass extends Enumeration
               <$describer> a turbo:MultiObjectDescriber .
           }
           """
-        updater.querySparqlAndUnpackTuple(cxn, sparql, "range")
+        update.querySparqlAndUnpackTuple(cxn, sparql, "range")
     }
     
     def buildFromNamedGraphsClauseFromList(graphs: ArrayBuffer[String]): String =
@@ -863,5 +874,15 @@ class TurboMultiuseClass extends Enumeration
             if (prefixMap.contains(processSplit(0))) thisProcess = prefixMap(processSplit(0)) + processSplit(1)
         }
         thisProcess
+    }
+    
+    def checkAndConvertPropertiesReferenceToNamedGraph(graph: String): String =
+    {
+        var newGraphString = graph
+        if (graph.startsWith("http://turboProperties.org/"))
+        {
+            newGraphString = retrieveUriPropertyFromFile(graph.replace("http://turboProperties.org/",""))
+        }
+        newGraphString
     }
 }
