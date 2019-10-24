@@ -256,6 +256,8 @@ ontologies:EncStartdateShortcut
 
 ontologies:post_icbo_synthea_omop_cnp_enc_participation  
   a ontologies:TURBO_0010354 ;
+  ontologies:hasOutput ontologies:EncKeyDenotesDbXref ;
+  ontologies:hasOutput ontologies:EncKeyDenotesDbXrefProv ;
   ontologies:hasOutput ontologies:EncParticipationAxiomDbXrefHasRepresentation ;
   ontologies:hasOutput ontologies:EncParticipationAxiomDbXrefPartOfColumn ;
   ontologies:hasOutput ontologies:EncParticipationAxiomHasDbXref ;
@@ -263,12 +265,6 @@ ontologies:post_icbo_synthea_omop_cnp_enc_participation
   ontologies:hasOutput ontologies:EncParticipationAxiomSource ;
   ontologies:hasOutput ontologies:EncParticipationAxiomTarget ;
   ontologies:hasOutput ontologies:EncRealizesRole ;
-  ontologies:hasOutput ontologies:EncKeyDenotesDbXref ;
-  
-  ontologies:hasOutput ontologies:EncKeyDenotesDbXrefProv ;
-  
-  ontologies:hasRequiredInput ontologies:PatientHasRole;
-  
   ontologies:hasRequiredInput ontologies:EncExpansionSpecification ;
   ontologies:hasRequiredInput ontologies:EncKeyDenotesEnc ;
   ontologies:hasRequiredInput ontologies:EncOmopConceptIds ;
@@ -280,6 +276,7 @@ ontologies:post_icbo_synthea_omop_cnp_enc_participation
   ontologies:hasRequiredInput ontologies:KeyDenotesPatient ;
   ontologies:hasRequiredInput ontologies:PatKeySymbHasRepresentation ;
   ontologies:hasRequiredInput ontologies:PatKeySymbPartOfKey ;
+  ontologies:hasRequiredInput ontologies:PatientHasRole;
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_precedence ;
@@ -308,26 +305,27 @@ ontologies:EncPatientID
 
 ontologies:post_icbo_synthea_omop_cnp_precedence
   a ontologies:TURBO_0010354 ;
-  ontologies:hasOutput ontologies:PrevencPrecedesEnc ;
+  ontologies:hasOutput ontologies:EncKeyDenotesDbXrefProv ;
   ontologies:hasOutput ontologies:PrecedenceAxiomDbXrefHasRepresentation ;
   ontologies:hasOutput ontologies:PrecedenceAxiomDbXrefPartOfColumn ;
   ontologies:hasOutput ontologies:PrecedenceAxiomHasDbXref ;
   ontologies:hasOutput ontologies:PrecedenceAxiomProp ;
   ontologies:hasOutput ontologies:PrecedenceAxiomSource ;
   ontologies:hasOutput ontologies:PrecedenceAxiomTarget ;
+  ontologies:hasOutput ontologies:PrevencPrecedesEnc ;
   
-  ontologies:hasOutput ontologies:EncKeyDenotesDbXrefProv ;
+  ontologies:hasRequiredInput ontologies:EncKeyDenotesEnc ;
   
-  ontologies:hasRequiredInput ontologies:EncTypeShortcut ;
   ontologies:hasRequiredInput ontologies:DenotedADenotedsClass ; 
   ontologies:hasRequiredInput ontologies:DenotedScoEnc ; 
+  ontologies:hasRequiredInput ontologies:EncExpansionSpecification ; 
   ontologies:hasRequiredInput ontologies:EncOmopConceptIds ;
   ontologies:hasRequiredInput ontologies:EncPreviousEncValSc ;
+  ontologies:hasRequiredInput ontologies:EncTypeShortcut ;
+  ontologies:hasRequiredInput ontologies:EncTypingRecipe ;
   ontologies:hasRequiredInput ontologies:KeyContainerOfPreviousVisitId ;
   ontologies:hasRequiredInput ontologies:KeyDenotesDenoted ;
   ontologies:hasRequiredInput ontologies:RepresenteeOfPreviousVisitId ;
-  ontologies:hasRequiredInput ontologies:EncTypingRecipe ;
-  ontologies:hasRequiredInput ontologies:EncExpansionSpecification ; 
   ontologies:inputNamedGraph ontologies:omopShortcuts ;
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_procedures ;

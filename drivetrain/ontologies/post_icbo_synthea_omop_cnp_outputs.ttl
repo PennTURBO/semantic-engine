@@ -668,10 +668,6 @@ ontologies:ParticipationAxiomContext a ontologies:TurboGraphContext .
 owl:Axiom ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
 ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
 
-ontologies:EncPrecedenceAxiomContext a ontologies:TurboGraphContext .
-owl:Axiom ontologies:hasPossibleContext ontologies:EncPrecedenceAxiomContext .
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:EncPrecedenceAxiomContext .
-
 ### participation Prov
 
 ontologies:EncKeyDenotesDbXref
@@ -690,10 +686,6 @@ ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:EncKeyContext 
 
 ### precedence
 
-ontologies:preceding_visit_occurrence_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
-.
-
 ontologies:PrevencPrecedesEnc
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
@@ -703,13 +695,6 @@ ontologies:PrevencPrecedesEnc
   ontologies:subject ontologies:denoted  ;
 .
 
-ontologies:denoted
-  a ontologies:MultiObjectDescriber .
-  
-ontologies:denotedsClass
-  a ontologies:MultiObjectDescriber .
-
-# axiom to first enc... 1:1
 ontologies:PrecedenceAxiomSource
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
@@ -719,23 +704,20 @@ ontologies:PrecedenceAxiomSource
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
 
-# axiom to subsequent enc... 1:1
-ontologies:PrecedenceAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:EncToBeTyped ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
-.
-
-
-# axiom to precedes prop... many:1
 ontologies:PrecedenceAxiomProp
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
   ontologies:object obo:RO_0002090  ;
   ontologies:predicate owl:annotatedProperty ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
+.
+
+ontologies:PrecedenceAxiomTarget
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:EncToBeTyped ;
+  ontologies:predicate owl:annotatedTarget ;
   ontologies:subject owl:Axiom ;
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
@@ -749,6 +731,7 @@ ontologies:PrecedenceAxiomHasDbXref
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
   ontologies:objectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
+
 ontologies:PrecedenceAxiomDbXrefHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
@@ -757,6 +740,7 @@ ontologies:PrecedenceAxiomDbXrefHasRepresentation
   ontologies:object ontologies:preceding_visit_occurrence_id_IntegerLiteralValue ;
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
+
 ontologies:PrecedenceAxiomDbXrefPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
@@ -765,6 +749,21 @@ ontologies:PrecedenceAxiomDbXrefPartOfColumn
   ontologies:object ontologies:TURBO_0010459 ;
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
+
+ontologies:preceding_visit_occurrence_id_IntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+
+ontologies:denoted
+  a ontologies:MultiObjectDescriber .
+  
+ontologies:denotedsClass
+  a ontologies:MultiObjectDescriber .
+  
+ontologies:EncPrecedenceAxiomContext a ontologies:TurboGraphContext .
+owl:Axiom ontologies:hasPossibleContext ontologies:EncPrecedenceAxiomContext .
+ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:EncPrecedenceAxiomContext .
+
   
 ### Procedures
 
