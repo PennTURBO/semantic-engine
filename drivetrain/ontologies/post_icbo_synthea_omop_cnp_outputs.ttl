@@ -432,7 +432,7 @@ obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encEndContext .
 ontologies:EndingTmdHasMeasVal 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:visit_end_date_DateLiteralValue ;
+  ontologies:object ontologies:visit_end_datetime_DateLiteralValue ;
   ontologies:predicate obo:IAO_0000004 ;
   ontologies:subject obo:IAO_0000416 ;
   ontologies:subjectUsesContext ontologies:encEndContext ;
@@ -440,12 +440,12 @@ ontologies:EndingTmdHasMeasVal
 ontologies:StartingTmdHasMeasVal 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:visit_start_date_DateLiteralValue ;
+  ontologies:object ontologies:visit_start_datetime_DateLiteralValue ;
   ontologies:predicate obo:IAO_0000004 ;
   ontologies:subject obo:IAO_0000416 ;
   ontologies:subjectUsesContext ontologies:encStartContext ;
 .
-ontologies:visit_end_date_DateLiteralValue 
+ontologies:visit_end_datetime_DateLiteralValue 
   a ontologies:TurboGraphDateLiteralValue ;
  .
 ontologies:HardcodedRegden a ontologies:ObjectConnectionToTermRecipe ;
@@ -492,7 +492,7 @@ ontologies:StartingTmdAboutProcbound
   ontologies:subjectUsesContext ontologies:encStartContext ;
   ontologies:objectUsesContext ontologies:encStartContext ;
 .
-ontologies:visit_start_date_DateLiteralValue 
+ontologies:visit_start_datetime_DateLiteralValue 
   a ontologies:TurboGraphDateLiteralValue ;
 .
 ontologies:EndDatePlaceholder 
@@ -554,10 +554,21 @@ ontologies:EncTypeAxiomDbXrefHasRepresentation
 ontologies:EncTypeAxiomDbXrefPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:BFO_0000050 ;
   ontologies:object ontologies:TURBO_0010449 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
 .
+
+ontologies:EncKeyDenotesDbXrefProv
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+.
+
 
 ### Enc participation
 
@@ -643,6 +654,16 @@ ontologies:EncParticipationAxiomDbXrefHasRepresentation
   ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
 .
 
+# ontologies:EncKeyDenotesDbXrefProv
+  # a ontologies:ObjectConnectionToInstanceRecipe ;
+  # ontologies:multiplicity ontologies:1-1 ;
+  # ontologies:object ontologies:TURBO_0010404 ;
+  # ontologies:predicate obo:IAO_0000219 ;
+  # ontologies:referencedInGraph ontologies:omopExpanded ;
+  # ontologies:subject ontologies:TURBO_0010433 ;
+  # ontologies:subjectUsesContext ontologies:KeyContext ;
+# .
+
 ontologies:ParticipationAxiomContext a ontologies:TurboGraphContext .
 owl:Axiom ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
 ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
@@ -675,11 +696,11 @@ ontologies:preceding_visit_occurrence_id_IntegerLiteralValue
 
 ontologies:PrevencPrecedesEnc
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:denoted  ;
-  ontologies:predicate obo:RO_0002090 ;
   ontologies:object ontologies:EncToBeTyped ;
+  ontologies:predicate obo:RO_0002090 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:denoted  ;
 .
 
 ontologies:denoted
@@ -692,18 +713,9 @@ ontologies:denotedsClass
 ontologies:PrecedenceAxiomSource
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedSource ;
   ontologies:object ontologies:denoted ;
-.
-
-# axiom to precedes prop... many:1
-ontologies:PrecedenceAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:predicate owl:annotatedSource ;
   ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:object obo:RO_0002090  ;
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
 
@@ -711,9 +723,20 @@ ontologies:PrecedenceAxiomProp
 ontologies:PrecedenceAxiomTarget
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedTarget ;
   ontologies:object ontologies:EncToBeTyped ;
+  ontologies:predicate owl:annotatedTarget ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
+.
+
+
+# axiom to precedes prop... many:1
+ontologies:PrecedenceAxiomProp
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:RO_0002090  ;
+  ontologies:predicate owl:annotatedProperty ;
+  ontologies:subject owl:Axiom ;
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
 
