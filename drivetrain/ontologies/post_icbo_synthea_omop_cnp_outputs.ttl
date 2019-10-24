@@ -559,7 +559,7 @@ ontologies:EncTypeAxiomDbXrefPartOfColumn
   ontologies:subject ontologies:TURBO_0010404 ;
 .
 
-ontologies:EncKeyDenotesDbXrefProv
+ontologies:EncKeyDenotesTypingDbXrefProv
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:object ontologies:TURBO_0010404 ;
@@ -571,6 +571,17 @@ ontologies:EncKeyDenotesDbXrefProv
 
 
 ### Enc participation
+
+ontologies:HceKeyDenotesProv4Participation
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:objectUsesContext ontologies:ParticipationAxiomContext ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:EncKeyContext ;
+.
 
 ontologies:EncRealizesRole
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -654,32 +665,11 @@ ontologies:EncParticipationAxiomDbXrefHasRepresentation
   ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
 .
 
-# ontologies:EncKeyDenotesDbXrefProv
-  # a ontologies:ObjectConnectionToInstanceRecipe ;
-  # ontologies:multiplicity ontologies:1-1 ;
-  # ontologies:object ontologies:TURBO_0010404 ;
-  # ontologies:predicate obo:IAO_0000219 ;
-  # ontologies:referencedInGraph ontologies:omopExpanded ;
-  # ontologies:subject ontologies:TURBO_0010433 ;
-  # ontologies:subjectUsesContext ontologies:KeyContext ;
-# .
-
 ontologies:ParticipationAxiomContext a ontologies:TurboGraphContext .
 owl:Axiom ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
 ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
 
 ### participation Prov
-
-ontologies:EncKeyDenotesDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:EncKeyContext ;
-  ontologies:objectUsesContext ontologies:ParticipationAxiomContext ;
-.
 
 ontologies:EncKeyContext a ontologies:TurboGraphContext .
 ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:EncKeyContext .
@@ -692,13 +682,13 @@ ontologies:PrevencPrecedesEnc
   ontologies:object ontologies:EncToBeTyped ;
   ontologies:predicate obo:RO_0002090 ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:denoted  ;
+  ontologies:subject ontologies:Prevenc  ;
 .
 
 ontologies:PrecedenceAxiomSource
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:denoted ;
+  ontologies:object ontologies:Prevenc ;
   ontologies:predicate owl:annotatedSource ;
   ontologies:subject owl:Axiom ;
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
@@ -750,14 +740,25 @@ ontologies:PrecedenceAxiomDbXrefPartOfColumn
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
 
+ontologies:HceKeyDenotesProv4Precedence
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:objectUsesContext ontologies:EncPrecedenceAxiomContext ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:EncKeyContext ;
+.
+
 ontologies:preceding_visit_occurrence_id_IntegerLiteralValue
   a ontologies:TurboGraphIntegerLiteralValue ;
 .
 
-ontologies:denoted
+ontologies:Prevenc
   a ontologies:MultiObjectDescriber .
   
-ontologies:denotedsClass
+ontologies:PrevencsClass
   a ontologies:MultiObjectDescriber .
   
 ontologies:EncPrecedenceAxiomContext a ontologies:TurboGraphContext .
