@@ -845,8 +845,8 @@ class TurboMultiuseClass extends Enumeration
         val sparql: String = s"""
           Select * Where
           {
-              <$describer> turbo:range ?range .
-              <$describer> a turbo:MultiObjectDescriber .
+              <$describer> drivetrain:range ?range .
+              <$describer> a drivetrain:MultiObjectDescriber .
           }
           """
         update.querySparqlAndUnpackTuple(cxn, sparql, "range")
@@ -865,7 +865,7 @@ class TurboMultiuseClass extends Enumeration
     def getProcessNameAsUri(process: String): String =
     {
         val prefixMap = HashMap("turbo" -> "http://transformunify.org/ontologies/", "pmbb" -> "http://www.itmat.upenn.edu/biobank/", 
-                            "ontologies" -> "http://transformunify.org/ontologies/")
+                            "ontologies" -> "http://transformunify.org/ontologies/", "drivetrain" -> "https://github.com/PennTURBO/Drivetrain/")
                             
         var thisProcess = process
         if (!process.contains("\\/"))

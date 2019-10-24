@@ -196,83 +196,83 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-              Values ?$CONNECTIONRECIPETYPE {turbo:ObjectConnectionToTermRecipe 
-                                            turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe
-                                            turbo:ObjectConnectionFromTermRecipe}
-              Values ?$INPUTTYPE {turbo:hasRequiredInput turbo:hasOptionalInput}
+              Values ?$CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionToTermRecipe 
+                                            drivetrain:ObjectConnectionToInstanceRecipe
+                                            drivetrain:DatatypeConnectionRecipe
+                                            drivetrain:ObjectConnectionFromTermRecipe}
+              Values ?$INPUTTYPE {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
               <$process> ?$INPUTTYPE ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              <$process> turbo:inputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME turbo:subject ?$SUBJECT .
-              ?$CONNECTIONNAME turbo:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME turbo:object ?$OBJECT .
-              ?$CONNECTIONNAME turbo:multiplicity ?$MULTIPLICITY .
+              <$process> drivetrain:inputNamedGraph ?$GRAPH .
+              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
+              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
+              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
+              ?$CONNECTIONNAME drivetrain:multiplicity ?$MULTIPLICITY .
               
               Optional
               {
-                  ?$CONNECTIONNAME turbo:subjectUsesContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECT turbo:hasPossibleContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECTCONTEXT a turbo:TurboGraphContext .
+                  ?$CONNECTIONNAME drivetrain:subjectUsesContext ?$SUBJECTCONTEXT .
+                  ?$SUBJECT drivetrain:hasPossibleContext ?$SUBJECTCONTEXT .
+                  ?$SUBJECTCONTEXT a drivetrain:TurboGraphContext .
               }
               Optional
               {
-                  ?$CONNECTIONNAME turbo:objectUsesContext ?$OBJECTCONTEXT .
-                  ?$OBJECT turbo:hasPossibleContext ?$OBJECTCONTEXT .
-                  ?$OBJECTCONTEXT a turbo:TurboGraphContext .
+                  ?$CONNECTIONNAME drivetrain:objectUsesContext ?$OBJECTCONTEXT .
+                  ?$OBJECT drivetrain:hasPossibleContext ?$OBJECTCONTEXT .
+                  ?$OBJECTCONTEXT a drivetrain:TurboGraphContext .
               }
               Optional
               {
                   ?$CONNECTIONNAME obo:BFO_0000050 ?$OPTIONALGROUP .
-                  ?$OPTIONALGROUP a turbo:TurboGraphOptionalGroup .
-                  <$process> turbo:buildsOptionalGroup ?$OPTIONALGROUP .
+                  ?$OPTIONALGROUP a drivetrain:TurboGraphOptionalGroup .
+                  <$process> drivetrain:buildsOptionalGroup ?$OPTIONALGROUP .
               }
               Optional
               {
                   ?$CONNECTIONNAME obo:BFO_0000050 ?$MINUSGROUP .
-                  ?$MINUSGROUP a turbo:TurboGraphMinusGroup .
-                  <$process> turbo:buildsMinusGroup ?$MINUSGROUP .
+                  ?$MINUSGROUP a drivetrain:TurboGraphMinusGroup .
+                  <$process> drivetrain:buildsMinusGroup ?$MINUSGROUP .
               }
               Optional
               {
-                  ?creatingProcess turbo:hasOutput ?$CONNECTIONNAME .
-                  ?creatingProcess turbo:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
+                  ?creatingProcess drivetrain:hasOutput ?$CONNECTIONNAME .
+                  ?creatingProcess drivetrain:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
               }
               Optional
               {
-                  ?$CONNECTIONNAME turbo:referencedInGraph ?$GRAPHOFORIGIN .
+                  ?$CONNECTIONNAME drivetrain:referencedInGraph ?$GRAPHOFORIGIN .
               }
               Optional
               {
-                  ?$OBJECT a ontologies:MultiObjectDescriber .
+                  ?$OBJECT a drivetrain:MultiObjectDescriber .
                   BIND (true AS ?$OBJECTADESCRIBER)
               }
               Optional
               {
-                  ?$SUBJECT a ontologies:MultiObjectDescriber .
+                  ?$SUBJECT a drivetrain:MultiObjectDescriber .
                   BIND (true AS ?$SUBJECTADESCRIBER)
               }
               Optional
               {
                   ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionFromTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionFromTermRecipe)
                   BIND (true AS ?$SUBJECTTYPE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionToTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionToTermRecipe)
                   BIND (true AS ?$OBJECTTYPE)
               }
               Optional
               {
-                  ?$CONNECTIONNAME turbo:mustExistIf ?$REQUIREMENT .
+                  ?$CONNECTIONNAME drivetrain:mustExistIf ?$REQUIREMENT .
               }
               Optional
               {
-                  ?$CONNECTIONNAME ontologies:predicateSuffix ?suffix .
-                  ?suffix a ontologies:PredicateSuffixSymbol .
-                  ?suffix ontologies:usesSparqlOperator ?$SUFFIXOPERATOR .
+                  ?$CONNECTIONNAME drivetrain:predicateSuffix ?suffix .
+                  ?suffix a drivetrain:PredicateSuffixSymbol .
+                  ?suffix drivetrain:usesSparqlOperator ?$SUFFIXOPERATOR .
               }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
          }
@@ -293,37 +293,37 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-              Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToTermRecipe 
-                                          turbo:ObjectConnectionToInstanceRecipe
-                                          turbo:DatatypeConnectionRecipe
-                                          turbo:ObjectConnectionFromTermRecipe}
+              Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionToTermRecipe 
+                                          drivetrain:ObjectConnectionToInstanceRecipe
+                                          drivetrain:DatatypeConnectionRecipe
+                                          drivetrain:ObjectConnectionFromTermRecipe}
   
-              <$process> turbo:removes ?$CONNECTIONNAME .
+              <$process> drivetrain:removes ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              <$process> turbo:inputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME turbo:subject ?$SUBJECT .
-              ?$CONNECTIONNAME turbo:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME turbo:object ?$OBJECT .
+              <$process> drivetrain:inputNamedGraph ?$GRAPH .
+              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
+              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
+              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
               Optional
               {
-                  ?$OBJECT a ontologies:MultiObjectDescriber .
+                  ?$OBJECT a drivetrain:MultiObjectDescriber .
                   BIND (true AS ?$OBJECTADESCRIBER)
               }
               Optional
               {
-                  ?$SUBJECT a ontologies:MultiObjectDescriber .
+                  ?$SUBJECT a drivetrain:MultiObjectDescriber .
                   BIND (true AS ?$SUBJECTADESCRIBER)
               }
               Optional
               {
                   ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionFromTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionFromTermRecipe)
                   BIND (true AS ?$SUBJECTTYPE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionToTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionToTermRecipe)
                   BIND (true AS ?$OBJECTTYPE)
               }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
@@ -344,73 +344,73 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          Select $variablesToSelect
          Where
          {
-              Values ?INPUTTO {turbo:hasRequiredInput turbo:hasOptionalInput}
-              Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToTermRecipe 
-                                            turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe
-                                            turbo:ObjectConnectionFromTermRecipe}
-              <$process> turbo:hasOutput ?$CONNECTIONNAME .
+              Values ?INPUTTO {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
+              Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionToTermRecipe 
+                                            drivetrain:ObjectConnectionToInstanceRecipe
+                                            drivetrain:DatatypeConnectionRecipe
+                                            drivetrain:ObjectConnectionFromTermRecipe}
+              <$process> drivetrain:hasOutput ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              <$process> turbo:outputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME turbo:subject ?$SUBJECT .
-              ?$CONNECTIONNAME turbo:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME turbo:object ?$OBJECT .
-              ?$CONNECTIONNAME turbo:multiplicity ?$MULTIPLICITY .
+              <$process> drivetrain:outputNamedGraph ?$GRAPH .
+              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
+              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
+              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
+              ?$CONNECTIONNAME drivetrain:multiplicity ?$MULTIPLICITY .
               
               Optional
               {
-                  ?$CONNECTIONNAME turbo:subjectUsesContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECT turbo:hasPossibleContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECTCONTEXT a turbo:TurboGraphContext .
+                  ?$CONNECTIONNAME drivetrain:subjectUsesContext ?$SUBJECTCONTEXT .
+                  ?$SUBJECT drivetrain:hasPossibleContext ?$SUBJECTCONTEXT .
+                  ?$SUBJECTCONTEXT a drivetrain:TurboGraphContext .
               }
               Optional
               {
-                  ?$CONNECTIONNAME turbo:objectUsesContext ?$OBJECTCONTEXT .
-                  ?$OBJECT turbo:hasPossibleContext ?$OBJECTCONTEXT .
-                  ?$OBJECTCONTEXT a turbo:TurboGraphContext .
+                  ?$CONNECTIONNAME drivetrain:objectUsesContext ?$OBJECTCONTEXT .
+                  ?$OBJECT drivetrain:hasPossibleContext ?$OBJECTCONTEXT .
+                  ?$OBJECTCONTEXT a drivetrain:TurboGraphContext .
               }
               Optional
               {
-                  ?$SUBJECT turbo:usesCustomVariableManipulationRule ?subjectRuleDenoter .
-                  ?subjectRuleDenoter ontologies:usesSparql ?$SUBJECTRULE .
+                  ?$SUBJECT drivetrain:usesCustomVariableManipulationRule ?subjectRuleDenoter .
+                  ?subjectRuleDenoter drivetrain:usesSparql ?$SUBJECTRULE .
               }
               Optional
               {
-                  ?$OBJECT turbo:usesCustomVariableManipulationRule ?objectRuleDenoter .
-                  ?objectRuleDenoter ontologies:usesSparql ?$OBJECTRULE .
+                  ?$OBJECT drivetrain:usesCustomVariableManipulationRule ?objectRuleDenoter .
+                  ?objectRuleDenoter drivetrain:usesSparql ?$OBJECTRULE .
               }
               Optional
               {
-                  ?$SUBJECT a turbo:MultiObjectDescriber .
+                  ?$SUBJECT a drivetrain:MultiObjectDescriber .
                   BIND (true as ?$SUBJECTADESCRIBER)
               }
               Optional
               {
-                  ?$OBJECT a turbo:MultiObjectDescriber .
+                  ?$OBJECT a drivetrain:MultiObjectDescriber .
                   BIND (true as ?$OBJECTADESCRIBER)
               }
               Optional
               {
-                  ?recipe turbo:objectRequiredToCreate ?$OBJECT .
+                  ?recipe drivetrain:objectRequiredToCreate ?$OBJECT .
                   <$process> ?INPUTTO ?recipe .
-                  ?recipe turbo:object ?$OBJECTDEPENDEE .
+                  ?recipe drivetrain:object ?$OBJECTDEPENDEE .
               }
               Optional
               {
-                  ?recipe turbo:objectRequiredToCreate ?$SUBJECT .
+                  ?recipe drivetrain:objectRequiredToCreate ?$SUBJECT .
                   <$process> ?INPUTTO ?recipe .
-                  ?recipe turbo:object ?$SUBJECTDEPENDEE .
+                  ?recipe drivetrain:object ?$SUBJECTDEPENDEE .
               }
               Optional
               {
                   ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionFromTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionFromTermRecipe)
                   BIND (true AS ?$SUBJECTTYPE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != turbo:ObjectConnectionToTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionToTermRecipe)
                   BIND (true AS ?$OBJECTTYPE)
               }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
@@ -455,39 +455,39 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?subject ?predicate ?object .
                   Filter (?predicate NOT IN (
-                      turbo:subject,
-                      turbo:predicate,
-                      turbo:object,
+                      drivetrain:subject,
+                      drivetrain:predicate,
+                      drivetrain:object,
                       rdf:type,
-                      turbo:usesCustomVariableManipulationRule,
-                      turbo:usesSparql,
+                      drivetrain:usesCustomVariableManipulationRule,
+                      drivetrain:usesSparql,
                       obo:BFO_0000050,
-                      turbo:referencedInGraph,
-                      turbo:mustExistIf,
-                      turbo:multiplicity,
-                      turbo:inputNamedGraph,
-                      turbo:outputNamedGraph,
-                      turbo:hasOutput,
-                      turbo:hasRequiredInput,
-                      turbo:hasOptionalInput,
-                      turbo:removes,
+                      drivetrain:referencedInGraph,
+                      drivetrain:mustExistIf,
+                      drivetrain:multiplicity,
+                      drivetrain:inputNamedGraph,
+                      drivetrain:outputNamedGraph,
+                      drivetrain:hasOutput,
+                      drivetrain:hasRequiredInput,
+                      drivetrain:hasOptionalInput,
+                      drivetrain:removes,
                       rdfs:label,
-                      turbo:buildsOptionalGroup,
-                      turbo:buildsMinusGroup,
-                      turbo:precedes,
-                      turbo:subjectRequiredToCreate,
-                      turbo:objectRequiredToCreate,
-                      turbo:subjectUsesContext,
-                      turbo:objectUsesContext,
-                      turbo:hasPossibleContext,
-                      turbo:range,
+                      drivetrain:buildsOptionalGroup,
+                      drivetrain:buildsMinusGroup,
+                      drivetrain:precedes,
+                      drivetrain:subjectRequiredToCreate,
+                      drivetrain:objectRequiredToCreate,
+                      drivetrain:subjectUsesContext,
+                      drivetrain:objectUsesContext,
+                      drivetrain:hasPossibleContext,
+                      drivetrain:range,
                       owl:versionInfo,
                       owl:imports,
                       rdfs:subClassOf,
                       rdfs:domain,
                       rdfs:range,
-                      turbo:usesSparqlOperator,
-                      turbo:predicateSuffix
+                      drivetrain:usesSparqlOperator,
+                      drivetrain:predicateSuffix
                   ))
               }
           }
@@ -506,29 +506,29 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?subject a ?type .
                   Filter (?type NOT IN (
-                      turbo:ObjectConnectionToTermRecipe,
-                      turbo:ObjectConnectionToInstanceRecipe,
-                      turbo:ObjectConnectionFromTermRecipe,
-                      turbo:DatatypeConnectionRecipe,
-                      turbo:MultiObjectDescriber,
+                      drivetrain:ObjectConnectionToTermRecipe,
+                      drivetrain:ObjectConnectionToInstanceRecipe,
+                      drivetrain:ObjectConnectionFromTermRecipe,
+                      drivetrain:DatatypeConnectionRecipe,
+                      drivetrain:MultiObjectDescriber,
                       owl:Class,
-                      turbo:TurboGraphContext,
-                      turbo:TurboGraphMinusGroup,
-                      turbo:TurboGraphOptionalGroup,
-                      turbo:TurboGraphVariableManipulationLogic,
-                      turbo:TurboNamedGraph,
+                      drivetrain:TurboGraphContext,
+                      drivetrain:TurboGraphMinusGroup,
+                      drivetrain:TurboGraphOptionalGroup,
+                      drivetrain:TurboGraphVariableManipulationLogic,
+                      drivetrain:TurboNamedGraph,
                       owl:Ontology,
                       turbo:TURBO_0010354,
                       owl:ObjectProperty,
                       owl:DatatypeProperty,
-                      turbo:TurboGraphStringLiteralValue,
-                      turbo:TurboGraphDateLiteralValue,
-                      turbo:TurboGraphMultiplicityRule,
-                      turbo:TurboGraphDoubleLiteralValue,
-                      turbo:TurboGraphIntegerLiteralValue,
-                      turbo:TurboGraphBooleanLiteralValue,
-                      turbo:TurboGraphRequirementSpecification,
-                      turbo:PredicateSuffixSymbol
+                      drivetrain:TurboGraphStringLiteralValue,
+                      drivetrain:TurboGraphDateLiteralValue,
+                      drivetrain:TurboGraphMultiplicityRule,
+                      drivetrain:TurboGraphDoubleLiteralValue,
+                      drivetrain:TurboGraphIntegerLiteralValue,
+                      drivetrain:TurboGraphBooleanLiteralValue,
+                      drivetrain:TurboGraphRequirementSpecification,
+                      drivetrain:PredicateSuffixSymbol
                   ))
               }
           }
@@ -557,14 +557,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   Graph pmbb:dataModel
                   {
-                      ?process turbo:hasOutput ?connection .
+                      ?process drivetrain:hasOutput ?connection .
                   }
                   Graph pmbb:graphSpecification
                   {
-                      ?connection turbo:subject ?class .
+                      ?connection drivetrain:subject ?class .
                       Minus
                       {
-                          ?connection a turbo:ObjectConnectionFromTermRecipe ;
+                          ?connection a drivetrain:ObjectConnectionFromTermRecipe ;
                       }
                   }
                   ?class a owl:Class .
@@ -574,14 +574,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   Graph pmbb:dataModel
                   {
-                      ?process turbo:hasOutput ?connection .
+                      ?process drivetrain:hasOutput ?connection .
                   }
                   Graph pmbb:graphSpecification
                   {
-                      ?connection turbo:object ?class .
+                      ?connection drivetrain:object ?class .
                       Minus
                       {
-                          ?connection a turbo:ObjectConnectionToTermRecipe ;
+                          ?connection a drivetrain:ObjectConnectionToTermRecipe ;
                       }
                   }
                   ?class a owl:Class .
@@ -600,39 +600,39 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   {
                       Graph pmbb:graphSpecification
                       {
-                          ?recipe turbo:subject <$singleClass> .
-                          ?recipe turbo:mustExistIf turbo:eitherSubjectOrObjectExists .
+                          ?recipe drivetrain:subject <$singleClass> .
+                          ?recipe drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists .
                       }
                   }
                   UNION
                   {
                       Graph pmbb:graphSpecification
                       {
-                          ?recipe turbo:subject <$singleClass> .
-                          ?recipe turbo:mustExistIf turbo:subjectExists .
+                          ?recipe drivetrain:subject <$singleClass> .
+                          ?recipe drivetrain:mustExistIf drivetrain:subjectExists .
                       }
                   }
                   UNION
                   {
                       Graph pmbb:graphSpecification
                       {
-                          ?recipe turbo:object <$singleClass> .
-                          ?recipe turbo:mustExistIf turbo:eitherSubjectOrObjectExists .
+                          ?recipe drivetrain:object <$singleClass> .
+                          ?recipe drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists .
                       }
                   }
                   UNION
                   {
                       Graph pmbb:graphSpecification
                       {
-                          ?recipe turbo:object <$singleClass> .
-                          ?recipe turbo:mustExistIf turbo:objectExists .
+                          ?recipe drivetrain:object <$singleClass> .
+                          ?recipe drivetrain:mustExistIf drivetrain:objectExists .
                       }
                   }
                   MINUS
                   {
                       Graph pmbb:dataModel
                       {
-                          ?process turbo:hasOutput ?recipe .
+                          ?process drivetrain:hasOutput ?recipe .
                           filter (?process IN ($processListAsString))
                       }
                   }
@@ -651,7 +651,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
              filterMultipleProcesses = s"""
                 Filter Not Exists
                 {
-                    ?someOtherProcess ontologies:removes ?recipe .
+                    ?someOtherProcess drivetrain:removes ?recipe .
                 }
                 filter (?process != ?someOtherProcess)
                 filter (?someOtherProcess IN ($processListAsString))
@@ -663,17 +663,17 @@ object RunDrivetrainProcess extends ProjectwideGlobals
           {
               Graph pmbb:graphSpecification
               {
-                  Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionToTermRecipe 
-                                            turbo:ObjectConnectionToInstanceRecipe
-                                            turbo:DatatypeConnectionRecipe
-                                            turbo:ObjectConnectionFromTermRecipe}
+                  Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionToTermRecipe 
+                                            drivetrain:ObjectConnectionToInstanceRecipe
+                                            drivetrain:DatatypeConnectionRecipe
+                                            drivetrain:ObjectConnectionFromTermRecipe}
                   ?recipe a ?CONNECTIONRECIPETYPE .
               }
               Minus
               {
                   Graph pmbb:dataModel
                   {
-                      ?process ontologies:hasOutput ?recipe .
+                      ?process drivetrain:hasOutput ?recipe .
                       $filterMultipleProcesses
                       filter (?process IN ($processListAsString))
                   }
@@ -693,16 +693,16 @@ object RunDrivetrainProcess extends ProjectwideGlobals
           {
               graph pmbb:graphSpecification
               {
-                  Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionFromTermRecipe 
-                                                turbo:ObjectConnectionToInstanceRecipe
-                                                turbo:ObjectConnectionToTermRecipe
+                  Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionFromTermRecipe 
+                                                drivetrain:ObjectConnectionToInstanceRecipe
+                                                drivetrain:ObjectConnectionToTermRecipe
                                                 }
                   ?recipe a ?CONNECTIONRECIPETYPE .
-                  ?recipe turbo:object ?object .
-                  ?recipe turbo:predicate ?predicate .
+                  ?recipe drivetrain:object ?object .
+                  ?recipe drivetrain:predicate ?predicate .
                   minus
                   {
-                      ?object a turbo:MultiObjectDescriber .
+                      ?object a drivetrain:MultiObjectDescriber .
                   }
               }
               graph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl>
@@ -726,17 +726,17 @@ object RunDrivetrainProcess extends ProjectwideGlobals
           {
               graph pmbb:graphSpecification
               {
-                  Values ?CONNECTIONRECIPETYPE {turbo:ObjectConnectionFromTermRecipe 
-                                                turbo:ObjectConnectionToInstanceRecipe
-                                                turbo:ObjectConnectionToTermRecipe
-                                                turbo:DatatypeConnectionRecipe
+                  Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionFromTermRecipe 
+                                                drivetrain:ObjectConnectionToInstanceRecipe
+                                                drivetrain:ObjectConnectionToTermRecipe
+                                                drivetrain:DatatypeConnectionRecipe
                                                 }
                   ?recipe a ?CONNECTIONRECIPETYPE .
-                  ?recipe turbo:subject ?subject .
-                  ?recipe turbo:predicate ?predicate .
+                  ?recipe drivetrain:subject ?subject .
+                  ?recipe drivetrain:predicate ?predicate .
                   minus
                   {
-                      ?subject a turbo:MultiObjectDescriber .
+                      ?subject a drivetrain:MultiObjectDescriber .
                   }
               }
               graph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl>
@@ -761,15 +761,20 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val checkRecipes = s"""
             Select ?recipe Where
             {
-                Values ?hasRecipe {ontologies:hasRequiredInput ontologies:hasOptionalInput ontologies:hasOutput}
+                Values ?hasRecipe {drivetrain:hasRequiredInput drivetrain:hasOptionalInput drivetrain:hasOutput}
                 <$process> ?hasRecipe ?recipe .
                 Minus
                 {
                     ?recipe a ?recipeType .
-                    ?recipe ontologies:subject ?subject .
-                    ?recipe ontologies:predicate ?predicate .
-                    ?recipe ontologies:object ?object .
-                    ?recipe ontologies:multiplicity ?multiplicity .
+                    ?recipe drivetrain:subject ?subject .
+                    ?recipe drivetrain:predicate ?predicate .
+                    ?recipe drivetrain:object ?object .
+                    ?recipe drivetrain:multiplicity ?multiplicity .
+                    
+                    Filter (?recipeType IN (drivetrain:ObjectConnectionToInstanceRecipe,
+                                            drivetrain:ObjectConnectionToTermRecipe,
+                                            drivetrain:ObjectConnectionFromTermRecipe,
+                                            drivetrain:DatatypeConnectionRecipe))
                 }
             }
           """
@@ -794,7 +799,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?firstProcess a turbo:TURBO_0010354 .
                   Minus
                   {
-                      ?someOtherProcess turbo:precedes ?firstProcess .
+                      ?someOtherProcess drivetrain:precedes ?firstProcess .
                       ?someOtherProcess a turbo:TURBO_0010354 .
                   }
               }
@@ -806,7 +811,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
           {
               Graph pmbb:dataModel
               {
-                  ?precedingProcess turbo:precedes ?succeedingProcess .
+                  ?precedingProcess drivetrain:precedes ?succeedingProcess .
                   ?precedingProcess a turbo:TURBO_0010354 .
                   ?succeedingProcess a turbo:TURBO_0010354 .
               }

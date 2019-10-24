@@ -1,21 +1,21 @@
-turbo:connection3 a turbo:ObjectConnectionToInstanceRecipe ;
-  turbo:subject turbo:object3 ;
-  turbo:predicate turbo:predicate2 ;
-  turbo:object turbo:object4 ;
-  turbo:multiplicity turbo:1-1 ;
+turbo:connection3 a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:subject turbo:object3 ;
+  drivetrain:predicate turbo:predicate2 ;
+  drivetrain:object turbo:object4 ;
+  drivetrain:multiplicity drivetrain:1-1 ;
 .
-turbo:connection4 a turbo:ObjectConnectionToInstanceRecipe ;
-  turbo:subject turbo:object3 ;
-  turbo:predicate turbo:predicate3 ;
-  turbo:object turbo:object4 ;
-  turbo:multiplicity turbo:1-1 ;
+turbo:connection4 a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:subject turbo:object3 ;
+  drivetrain:predicate turbo:predicate3 ;
+  drivetrain:object turbo:object4 ;
+  drivetrain:multiplicity drivetrain:1-1 ;
 .
-turbo:connection5 a turbo:ObjectConnectionToInstanceRecipe ;
-  turbo:subject turbo:subjectRequired ;
-  turbo:predicate turbo:somePredicate ;
-  turbo:object turbo:someObject ;
-  turbo:multiplicity turbo:1-1 ;
-  turbo:required turbo:objectRequired ;
+turbo:connection5 a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:subject turbo:someObject ;
+  drivetrain:predicate turbo:somePredicate ;
+  drivetrain:object turbo:someObject ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:required drivetrain:objectRequired ;
 .
 turbo:object3 a owl:Class .
 turbo:object4 a owl:Class .

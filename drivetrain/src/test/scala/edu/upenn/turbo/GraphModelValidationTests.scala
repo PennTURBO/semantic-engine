@@ -30,11 +30,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         pw.write("""
           
           ontologies:myProcess1 a ontologies:TURBO_0010354 ;
-              ontologies:inputNamedGraph pmbb:expanded ;
-              ontologies:outputNamedGraph pmbb:expanded ; 
-              ontologies:hasOutput ontologies:object1ToObject2 ;
-              ontologies:hasRequiredInput ontologies:object1ToObject3 ;
-              ontologies:hasRequiredInput ontologies:object2ToObject3 ;
+              drivetrain:inputNamedGraph pmbb:expanded ;
+              drivetrain:outputNamedGraph pmbb:expanded ; 
+              drivetrain:hasOutput ontologies:object1ToObject2 ;
+              drivetrain:hasRequiredInput ontologies:object1ToObject3 ;
+              drivetrain:hasRequiredInput ontologies:object2ToObject3 ;
           .
               
           turbo:object1 a owl:Class .
@@ -49,27 +49,27 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           turbo:object10 a owl:Class .
               
           ontologies:object1ToObject2
-              a ontologies:ObjectConnectionToInstanceRecipe ;
-              ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-              ontologies:object turbo:object2 ;
-              ontologies:predicate turbo:pred1 ;
-              ontologies:subject turbo:object1 ;
+              a drivetrain:ObjectConnectionToInstanceRecipe ;
+              drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+              drivetrain:object turbo:object2 ;
+              drivetrain:predicate turbo:pred1 ;
+              drivetrain:subject turbo:object1 ;
             .
             
            ontologies:object1ToObject3
-              a ontologies:ObjectConnectionToInstanceRecipe ;
-              ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-              ontologies:object turbo:object3 ;
-              ontologies:predicate turbo:pred2 ;
-              ontologies:subject turbo:object1 ;
+              a drivetrain:ObjectConnectionToInstanceRecipe ;
+              drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+              drivetrain:object turbo:object3 ;
+              drivetrain:predicate turbo:pred2 ;
+              drivetrain:subject turbo:object1 ;
             .
             
           ontologies:object2ToObject3
-              a ontologies:ObjectConnectionToInstanceRecipe ;
-              ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-              ontologies:object turbo:object3 ;
-              ontologies:predicate turbo:pred3 ;
-              ontologies:subject turbo:object2 ;
+              a drivetrain:ObjectConnectionToInstanceRecipe ;
+              drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+              drivetrain:object turbo:object3 ;
+              drivetrain:predicate turbo:pred3 ;
+              drivetrain:subject turbo:object2 ;
             .""")
             
         pw.close()
@@ -120,13 +120,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:dataModel
               {
                   ontologies:object1ToObject2_2
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
-                    ontologies:object turbo:object2 ;
-                    ontologies:predicate turbo:pred5 ;
-                    ontologies:subject turbo:object1 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
+                    drivetrain:object turbo:object2 ;
+                    drivetrain:predicate turbo:pred5 ;
+                    drivetrain:subject turbo:object1 ;
                   .
-                  ontologies:myProcess1 ontologies:hasOutput ontologies:object1ToObject2_2 .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject2_2 .
               }
           }
  
@@ -155,13 +155,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:dataModel
               {
                   ontologies:object1ToObject4
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:predicate turbo:pred1 ;
-                    ontologies:subject turbo:object1 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object1 ;
                   .
-                  ontologies:myProcess1 ontologies:hasOutput ontologies:object1ToObject4 .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 .
                }
            }
         """
@@ -188,13 +188,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:dataModel
               {
                   ontologies:object1ToObject4
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:predicate turbo:pred1 ;
-                    ontologies:subject turbo:object1 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object1 ;
                   .
-                  ontologies:myProcess1 ontologies:hasOutput ontologies:object1ToObject4 .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 .
                }
            }
         """
@@ -221,22 +221,22 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:dataModel
               {
                   ontologies:object1ToObject4
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/many-singleton> ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:predicate turbo:pred1 ;
-                    ontologies:subject turbo:object1 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-singleton> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object1 ;
                   .
                   
                   ontologies:object2ToObject4
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:predicate turbo:pred1 ;
-                    ontologies:subject turbo:object2 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object2 ;
                   .
-                  ontologies:myProcess1 ontologies:hasOutput ontologies:object1ToObject4 .
-                  ontologies:myProcess1 ontologies:hasOutput ontologies:object2ToObject4 .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object2ToObject4 .
                }
            }
         """
@@ -263,31 +263,31 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:dataModel
               {
                   ontologies:object2ToObject4
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:predicate turbo:pred3 ;
-                    ontologies:subject turbo:object2 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred3 ;
+                    drivetrain:subject turbo:object2 ;
                   .
                   
                   ontologies:object2ToObject5
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
-                    ontologies:object turbo:object5 ;
-                    ontologies:predicate turbo:pred1 ;
-                    ontologies:subject turbo:object2 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
+                    drivetrain:object turbo:object5 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object2 ;
                   .
                   
                   ontologies:object4ToObject5
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-                    ontologies:object turbo:object5 ;
-                    ontologies:predicate turbo:pred1 ;
-                    ontologies:subject turbo:object4 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                    drivetrain:object turbo:object5 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object4 ;
                   .
-                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object2ToObject4 .
-                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object2ToObject5 .
-                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object4ToObject5 .
+                  ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4 .
+                  ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject5 .
+                  ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object4ToObject5 .
                }
            }
         """
@@ -332,22 +332,22 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:dataModel
               {
                   ontologies:object2ToObject4_input
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:predicate turbo:pred3 ;
-                    ontologies:subject turbo:object2 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred3 ;
+                    drivetrain:subject turbo:object2 ;
                   .
                   
                   ontologies:object2ToObject4_output
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:predicate turbo:pred4 ;
-                    ontologies:subject turbo:object2 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred4 ;
+                    drivetrain:subject turbo:object2 ;
                   .
-                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object2ToObject4_input .
-                  ontologies:myProcess1 ontologies:hasOutput ontologies:object2ToObject4_output .
+                  ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4_input .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object2ToObject4_output .
                }
            }
         """
@@ -388,22 +388,22 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:dataModel
               {
                   ontologies:object2ToObject4_input
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/many-singleton> ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:predicate turbo:pred3 ;
-                    ontologies:subject turbo:object2 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-singleton> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred3 ;
+                    drivetrain:subject turbo:object2 ;
                   .
                   
                   ontologies:object2ToObject4_output
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:predicate turbo:pred4 ;
-                    ontologies:subject turbo:object2 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred4 ;
+                    drivetrain:subject turbo:object2 ;
                   .
-                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object2ToObject4_input .
-                  ontologies:myProcess1 ontologies:hasOutput ontologies:object2ToObject4_output .
+                  ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4_input .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object2ToObject4_output .
                }
            }
         """
@@ -444,13 +444,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:dataModel
               {
                   ontologies:object2ToObject4_input
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/thisisntamultiplicity> ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:predicate turbo:pred3 ;
-                    ontologies:subject turbo:object2 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/thisisntamultiplicity> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred3 ;
+                    drivetrain:subject turbo:object2 ;
                   .
-                  ontologies:myProcess1 ontologies:hasRequiredInput ontologies:object2ToObject4_input .
+                  ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4_input .
                }
            }
         """
@@ -478,7 +478,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: Discovered invalid multiplicity http://transformunify.org/ontologies/thisisntamultiplicity")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: Discovered invalid multiplicity https://github.com/PennTURBO/Drivetrain/thisisntamultiplicity")
         }
     }
     
@@ -491,13 +491,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:dataModel
               {
                   ontologies:object2ToObject4_output
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/thisisntamultiplicity> ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:predicate turbo:pred3 ;
-                    ontologies:subject turbo:object2 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/thisisntamultiplicity> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred3 ;
+                    drivetrain:subject turbo:object2 ;
                   .
-                  ontologies:myProcess1 ontologies:hasOutput ontologies:object2ToObject4_output .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object2ToObject4_output .
                }
            }
         """
@@ -511,7 +511,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: Discovered invalid multiplicity http://transformunify.org/ontologies/thisisntamultiplicity")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: Discovered invalid multiplicity https://github.com/PennTURBO/Drivetrain/thisisntamultiplicity")
         }
     }
     
@@ -525,11 +525,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:graphSpecification
               {
                   ontologies:notPresentConnection
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-                    ontologies:object turbo:obj1 ;
-                    ontologies:predicate turbo:pred1 ;
-                    ontologies:subject turbo:obj2 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                    drivetrain:object turbo:obj1 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:obj2 ;
                   .
                }
            }
@@ -557,24 +557,24 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:graphSpecification
               {
                   ontologies:object1ToObject4
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-                    ontologies:subject turbo:object1 ;
-                    ontologies:predicate turbo:pred1 ;
-                    ontologies:object turbo:TURBO_0000502 ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                    drivetrain:subject turbo:object1 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:object turbo:TURBO_0000502 ;
                   .
                }
                
                Graph pmbb:dataModel
                {
-                   ontologies:myProcess1 ontologies:hasOutput ontologies:object1ToObject4 ;
-                       ontologies:precedes ontologies:myProcess2 .
+                   ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 ;
+                       drivetrain:precedes ontologies:myProcess2 .
                    
-                   ontologies:myProcess2 ontologies:inputNamedGraph pmbb:expanded ;
+                   ontologies:myProcess2 drivetrain:inputNamedGraph pmbb:expanded ;
                        a turbo:TURBO_0010354 ;
-                       ontologies:outputNamedGraph pmbb:expanded ; 
-                       ontologies:hasRequiredInput ontologies:object1ToObject4 ;
-                       ontologies:removes ontologies:object1ToObject4 .
+                       drivetrain:outputNamedGraph pmbb:expanded ; 
+                       drivetrain:hasRequiredInput ontologies:object1ToObject4 ;
+                       drivetrain:removes ontologies:object1ToObject4 .
                }
            }
         """
@@ -602,21 +602,21 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph pmbb:graphSpecification
               {
                   ontologies:object1ToObject3
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-                    ontologies:subject turbo:object1 ;
-                    ontologies:predicate turbo:pred1 ;
-                    ontologies:object turbo:object3 ;
-                    ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                    drivetrain:subject turbo:object1 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:object turbo:object3 ;
+                    drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
                   .
  
                   ontologies:object1ToObject4
-                    a ontologies:ObjectConnectionToInstanceRecipe ;
-                    ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-                    ontologies:subject turbo:object1 ;
-                    ontologies:predicate turbo:pred1 ;
-                    ontologies:object turbo:object4 ;
-                    ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
+                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                    drivetrain:subject turbo:object1 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
                   .
                   
                   ontologies:object1 a owl:Class .
@@ -628,15 +628,15 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                Graph pmbb:dataModel
                {
                    ontologies:myProcess1 a turbo:TURBO_0010354 ;
-                       ontologies:hasOutput ontologies:object1ToObject4 ;
-                       ontologies:hasRequiredInput ontologies:object1ToObject2 ;
+                       drivetrain:hasOutput ontologies:object1ToObject4 ;
+                       drivetrain:hasRequiredInput ontologies:object1ToObject2 ;
                    .
-                   ontologies:object1ToObject2 a ontologies:ObjectConnectionToInstanceRecipe ;
-                       ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-                       ontologies:subject turbo:object1 ;
-                       ontologies:predicate turbo:pred1 ;
-                       ontologies:object turbo:object2 ;
-                       ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
+                   ontologies:object1ToObject2 a drivetrain:ObjectConnectionToInstanceRecipe ;
+                       drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                       drivetrain:subject turbo:object1 ;
+                       drivetrain:predicate turbo:pred1 ;
+                       drivetrain:object turbo:object2 ;
+                       drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
                }
            }
         """
@@ -662,7 +662,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           {
                Graph pmbb:dataModel
                {
-                   ontologies:object1ToObject3 ontologies:subject ontologies:someSubject .
+                   ontologies:object1ToObject3 drivetrain:subject ontologies:someSubject .
                    ontologies:someSubject a owl:Class .
                }
            }
@@ -689,7 +689,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           {
                Graph pmbb:dataModel
                {
-                   ontologies:object1ToObject2 ontologies:predicate ontologies:somePredicate .
+                   ontologies:object1ToObject2 drivetrain:predicate ontologies:somePredicate .
                }
            }
         """

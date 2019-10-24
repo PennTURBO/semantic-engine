@@ -32,14 +32,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://data.bioontology.org/ontologies/RXNORM/>
-  a ontologies:TurboNamedGraph ;
+  a drivetrain:TurboNamedGraph ;
 .
 <http://haydensgraph_2.org/>
   a owl:Ontology ;
   owl:imports ontologies: ;
 .
 obo:VSO_0000006
-  ontologies:usesCustomVariableManipulationRule ontologies:BloodPressureMeasurementProcessRule ;
+  drivetrain:usesCustomVariableManipulationRule ontologies:BloodPressureMeasurementProcessRule ;
 .
 ontologies:
   a owl:Ontology ;
@@ -47,16 +47,16 @@ ontologies:
   owl:versionInfo "Created with TopBraid Composer" ;
 .
 ontologies:BloodPressureMeasurementProcessRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat(\"http://www.itmat.upenn.edu/biobank/\", SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${multiplicityEnforcer}))))), ?unbound) AS ${replacement})" ;
+  a drivetrain:TurboGraphVariableManipulationLogic ;
+  drivetrain:usesSparql "BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat(\"http://www.itmat.upenn.edu/biobank/\", SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${multiplicityEnforcer}))))), ?unbound) AS ${replacement})" ;
 .
 ontologies:GenderIdentityTypeRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000133) AS ${replacement})" ;
+  a drivetrain:TurboGraphVariableManipulationLogic ;
+  drivetrain:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000133) AS ${replacement})" ;
 .
 ontologies:IcdDiagnosisRegistryRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", ?diagnosisTermSuffixStringLiteralValue)), ?unbound) AS ?icd9term)
+  a drivetrain:TurboGraphVariableManipulationLogic ;
+  drivetrain:usesSparql """BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", ?diagnosisTermSuffixStringLiteralValue)), ?unbound) AS ?icd9term)
 
 BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat(\"http://purl.bioontology.org/ontology/ICD10CM/\", ?diagnosisTermSuffixStringLiteralValue)), ?unbound) AS ?icd10term)
 
@@ -65,954 +65,954 @@ BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ${replace
 BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,${replacement}) as ${replacement})""" ;
 .
 ontologies:RaceIdentityTypeRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000098) AS ${replacement})" ;
+  a drivetrain:TurboGraphVariableManipulationLogic ;
+  drivetrain:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000098) AS ${replacement})" ;
 .
 ontologies:DatasetExpansionRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(str(${dependent}),\"${localUUID}\")))) AS ${replacement})" ;
+  a drivetrain:TurboGraphVariableManipulationLogic ;
+  drivetrain:usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(str(${dependent}),\"${localUUID}\")))) AS ${replacement})" ;
 .
 ontologies:RxNormDrugTermMinusGroup
-  a ontologies:TurboGraphMinusGroup ;
+  a drivetrain:TurboGraphMinusGroup ;
 .
 ontologies:RxNormDrugTermToTypeDeclaration
-  a ontologies:ObjectConnectionToTermRecipe ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
   obo:BFO_0000050 ontologies:RxNormDrugTermMinusGroup ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object owl:Class ;
-  ontologies:predicate rdf:type ;
-  ontologies:referencedInGraph <http://data.bioontology.org/ontologies/RXNORM/> ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:DrugTermOfVariousTypes ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object owl:Class ;
+  drivetrain:predicate rdf:type ;
+  drivetrain:referencedInGraph <http://data.bioontology.org/ontologies/RXNORM/> ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:DrugTermOfVariousTypes ;
 .
 #pmbb:RxNormUrlCleanupProcess
-#  ontologies:buildsMinusGroup ontologies:RxNormDrugTermMinusGroup ;
-#  ontologies:inputNamedGraph properties:expandedNamedGraph ;
-#  ontologies:outputNamedGraph properties:expandedNamedGraph ;
+#  drivetrain:buildsMinusGroup ontologies:RxNormDrugTermMinusGroup ;
+#  drivetrain:inputNamedGraph properties:expandedNamedGraph ;
+#  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
 #  a ontologies:TURBO_0010354 ;
-#  ontologies:hasRequiredInput ontologies:RxNormDrugTermToTypeDeclaration ;
-#  ontologies:hasRequiredInput ontologies:prescriptionToDrug ;
-#  ontologies:removes ontologies:prescriptionToDrug ;
+#  drivetrain:hasRequiredInput ontologies:RxNormDrugTermToTypeDeclaration ;
+#  drivetrain:hasRequiredInput ontologies:prescriptionToDrug ;
+#  drivetrain:removes ontologies:prescriptionToDrug ;
 #.
 pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess
-  ontologies:inputNamedGraph properties:expandedNamedGraph ;
-  ontologies:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:inputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   a ontologies:TURBO_0010354 ;
-  ontologies:removes ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
-  ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
+  drivetrain:removes ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
+  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
 .
 ontologies:ShortcutGenderIdentityDatumOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
 pmbb:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess
-  ontologies:inputNamedGraph properties:expandedNamedGraph ;
-  ontologies:outputNamedGraph properties:expandedNamedGraph ;
-  ontologies:precedes pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
+  drivetrain:inputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:precedes pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
   a ontologies:TURBO_0010354 ;
-  ontologies:removes ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
+  drivetrain:removes ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
 .
 ontologies:ShortcutRaceIdentityDatumOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
 ontologies:ShortcutTumorToShortcutHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
   obo:BFO_0000050 ontologies:shortcutTumorOptionalGroup ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010161 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010191 ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010161 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010191 ;
 .
 ontologies:SnomedDiagnosisRegistryRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql "BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>, uri(concat(\"http://purl.bioontology.org/ontology/SNOMEDCT/\", ?diagnosisTermSuffixStringLiteralValue)), ?unbound) AS ?SnomedTermOfVariousTypes)" ;
+  a drivetrain:TurboGraphVariableManipulationLogic ;
+  drivetrain:usesSparql "BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>, uri(concat(\"http://purl.bioontology.org/ontology/SNOMEDCT/\", ?diagnosisTermSuffixStringLiteralValue)), ?unbound) AS ?SnomedTermOfVariousTypes)" ;
 .
 pmbb:HomoSapiensExpansionProcess
-  ontologies:buildsOptionalGroup ontologies:shortcutTumorOptionalGroup ;
-  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph properties:expandedNamedGraph ;
-  ontologies:precedes pmbb:HealthcareEncounterExpansionProcess ;
+  drivetrain:buildsOptionalGroup ontologies:shortcutTumorOptionalGroup ;
+  drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:precedes pmbb:HealthcareEncounterExpansionProcess ;
   a ontologies:TURBO_0010354 ;
-  ontologies:hasRequiredInput ontologies:shortcutHomoSapiensIdToRegistry ;
-  ontologies:hasRequiredInput ontologies:shortcutHomoSapiensIdToSymbol ;
-  ontologies:hasOutput ontologies:shortcutHomoSapiensIdentifierToExpandedHomoSapiensIdentifier ;
-  ontologies:hasRequiredInput ontologies:shortcutHomoSapiensIdentifierToShortcutHomoSapiens ;
-  ontologies:hasRequiredInput ontologies:shortcutHomoSapiensToDatasetTitle ;
-  ontologies:hasOptionalInput ontologies:shortcutHomoSapiensToDateOfBirthDate ;
-  ontologies:hasOptionalInput ontologies:shortcutHomoSapiensToDateOfBirthString ;
-  ontologies:hasOutput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
-  ontologies:hasOptionalInput ontologies:shortcutHomoSapiensToGenderIdentityType ;
-  ontologies:hasOptionalInput ontologies:shortcutHomoSapiensToGenderIdentityValue ;
-  ontologies:hasOptionalInput ontologies:shortcutHomoSapiensToRaceIdentityType ;
-  ontologies:hasOptionalInput ontologies:shortcutHomoSapiensToRaceIdentityValue ;
-  ontologies:hasOutput ontologies:shortcutTumorToExpandedTumor ;
-  ontologies:hasRequiredInput ontologies:shortcutTumorToRegistryDenoter ;
-  ontologies:hasRequiredInput ontologies:shortcutTumorToTumorLiteralValue ;
-  ontologies:hasRequiredInput ontologies:ShortcutTumorToShortcutHomoSapiens ;
-  ontologies:hasOutput ontologies:cancerToHomoSapiens ;
-  ontologies:hasOutput ontologies:cancerToTumor ;
-  ontologies:hasOutput ontologies:datasetToDatasetTitle ;
-  ontologies:hasOutput ontologies:datasetToDateOfBirthDatum ;
-  ontologies:hasOutput ontologies:datasetToGenderIdentityDatum ;
-  ontologies:hasOutput ontologies:datasetToHomoSapiensSymbol ;
-  ontologies:hasOutput ontologies:datasetToRaceIdentityDatum ;
-  ontologies:hasOutput ontologies:dateOfBirthDatumToBirth ;
-  ontologies:hasOutput ontologies:dateOfBirthDatumToDataset ;
-  ontologies:hasOutput ontologies:dateOfBirthDatumToDateLiteral ;
-  ontologies:hasOutput ontologies:dateOfBirthDatumToStringLiteral ;
-  ontologies:hasOutput ontologies:genderIdentityDatumToDataset ;
-  ontologies:hasOutput ontologies:genderIdentityDatumToGenderIdentityDatumLiteralValue ;
-  ontologies:hasOutput ontologies:genderIdentityDatumToGenderIdentityDatumType ;
-  ontologies:hasOutput ontologies:genderIdentityDatumToHomoSapiens ;
-  ontologies:hasOutput ontologies:homoSapiensIdToRegistryDenoter ;
-  ontologies:hasOutput ontologies:homoSapiensIdToSymbol ;
-  ontologies:hasOutput ontologies:homoSapiensIdentifierToHomoSapiens ;
-  ontologies:hasOutput ontologies:homoSapiensRegistryDenoterToId ;
-  ontologies:hasOutput ontologies:homoSapiensSymbolToDataset ;
-  ontologies:hasOutput ontologies:homoSapiensSymbolToSymbolValue ;
-  ontologies:hasOutput ontologies:homoSapiensToBiosex ;
-  ontologies:hasOutput ontologies:homoSapiensToBirth ;
-  ontologies:hasOutput ontologies:homoSapiensToTumor ;
-  ontologies:hasOutput ontologies:instantiationToDataset ;
-  ontologies:hasOutput ontologies:raceIdentityDatumToDataset ;
-  ontologies:hasOutput ontologies:raceIdentityDatumToHomoSapiens ;
-  ontologies:hasOutput ontologies:raceIdentityDatumToRaceIdentityDatumLiteralValue ;
-  ontologies:hasOutput ontologies:raceIdentityDatumToRaceIdentityDatumType ;
-  ontologies:hasOutput ontologies:symbolToHomoSapiensId ;
-  ontologies:hasOutput ontologies:tumorCridSymbolToSymbolLiteralValue ;
-  ontologies:hasOutput ontologies:tumorCridSymbolToTumorCrid ;
-  ontologies:hasOutput ontologies:tumorCridToTumor ;
-  ontologies:hasOutput ontologies:tumorCridToDataset ;
-  ontologies:hasOutput ontologies:datasetToTumorCrid ;
-  ontologies:hasOutput ontologies:tumorCridToTumorCridSymbol ;
-  ontologies:hasOutput ontologies:tumorCridToTumorRegistryDenoter ;
-  ontologies:hasOutput ontologies:tumorRegistryDenoterToTumorCrid ;
-  ontologies:hasOutput ontologies:tumorToHomoSapiens ;
+  drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensIdToRegistry ;
+  drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensIdToSymbol ;
+  drivetrain:hasOutput ontologies:shortcutHomoSapiensIdentifierToExpandedHomoSapiensIdentifier ;
+  drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensIdentifierToShortcutHomoSapiens ;
+  drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensToDatasetTitle ;
+  drivetrain:hasOptionalInput ontologies:shortcutHomoSapiensToDateOfBirthDate ;
+  drivetrain:hasOptionalInput ontologies:shortcutHomoSapiensToDateOfBirthString ;
+  drivetrain:hasOutput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
+  drivetrain:hasOptionalInput ontologies:shortcutHomoSapiensToGenderIdentityType ;
+  drivetrain:hasOptionalInput ontologies:shortcutHomoSapiensToGenderIdentityValue ;
+  drivetrain:hasOptionalInput ontologies:shortcutHomoSapiensToRaceIdentityType ;
+  drivetrain:hasOptionalInput ontologies:shortcutHomoSapiensToRaceIdentityValue ;
+  drivetrain:hasOutput ontologies:shortcutTumorToExpandedTumor ;
+  drivetrain:hasRequiredInput ontologies:shortcutTumorToRegistryDenoter ;
+  drivetrain:hasRequiredInput ontologies:shortcutTumorToTumorLiteralValue ;
+  drivetrain:hasRequiredInput ontologies:ShortcutTumorToShortcutHomoSapiens ;
+  drivetrain:hasOutput ontologies:cancerToHomoSapiens ;
+  drivetrain:hasOutput ontologies:cancerToTumor ;
+  drivetrain:hasOutput ontologies:datasetToDatasetTitle ;
+  drivetrain:hasOutput ontologies:datasetToDateOfBirthDatum ;
+  drivetrain:hasOutput ontologies:datasetToGenderIdentityDatum ;
+  drivetrain:hasOutput ontologies:datasetToHomoSapiensSymbol ;
+  drivetrain:hasOutput ontologies:datasetToRaceIdentityDatum ;
+  drivetrain:hasOutput ontologies:dateOfBirthDatumToBirth ;
+  drivetrain:hasOutput ontologies:dateOfBirthDatumToDataset ;
+  drivetrain:hasOutput ontologies:dateOfBirthDatumToDateLiteral ;
+  drivetrain:hasOutput ontologies:dateOfBirthDatumToStringLiteral ;
+  drivetrain:hasOutput ontologies:genderIdentityDatumToDataset ;
+  drivetrain:hasOutput ontologies:genderIdentityDatumToGenderIdentityDatumLiteralValue ;
+  drivetrain:hasOutput ontologies:genderIdentityDatumToGenderIdentityDatumType ;
+  drivetrain:hasOutput ontologies:genderIdentityDatumToHomoSapiens ;
+  drivetrain:hasOutput ontologies:homoSapiensIdToRegistryDenoter ;
+  drivetrain:hasOutput ontologies:homoSapiensIdToSymbol ;
+  drivetrain:hasOutput ontologies:homoSapiensIdentifierToHomoSapiens ;
+  drivetrain:hasOutput ontologies:homoSapiensRegistryDenoterToId ;
+  drivetrain:hasOutput ontologies:homoSapiensSymbolToDataset ;
+  drivetrain:hasOutput ontologies:homoSapiensSymbolToSymbolValue ;
+  drivetrain:hasOutput ontologies:homoSapiensToBiosex ;
+  drivetrain:hasOutput ontologies:homoSapiensToBirth ;
+  drivetrain:hasOutput ontologies:homoSapiensToTumor ;
+  drivetrain:hasOutput ontologies:instantiationToDataset ;
+  drivetrain:hasOutput ontologies:raceIdentityDatumToDataset ;
+  drivetrain:hasOutput ontologies:raceIdentityDatumToHomoSapiens ;
+  drivetrain:hasOutput ontologies:raceIdentityDatumToRaceIdentityDatumLiteralValue ;
+  drivetrain:hasOutput ontologies:raceIdentityDatumToRaceIdentityDatumType ;
+  drivetrain:hasOutput ontologies:symbolToHomoSapiensId ;
+  drivetrain:hasOutput ontologies:tumorCridSymbolToSymbolLiteralValue ;
+  drivetrain:hasOutput ontologies:tumorCridSymbolToTumorCrid ;
+  drivetrain:hasOutput ontologies:tumorCridToTumor ;
+  drivetrain:hasOutput ontologies:tumorCridToDataset ;
+  drivetrain:hasOutput ontologies:datasetToTumorCrid ;
+  drivetrain:hasOutput ontologies:tumorCridToTumorCridSymbol ;
+  drivetrain:hasOutput ontologies:tumorCridToTumorRegistryDenoter ;
+  drivetrain:hasOutput ontologies:tumorRegistryDenoterToTumorCrid ;
+  drivetrain:hasOutput ontologies:tumorToHomoSapiens ;
 .
 pmbb:BiobankEncounterExpansionProcess
-  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph properties:expandedNamedGraph ;
-  ontologies:precedes pmbb:HealthcareEncounterEntityLinkingProcess ;
+  drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:precedes pmbb:HealthcareEncounterEntityLinkingProcess ;
   a ontologies:TURBO_0010354 ;
-  ontologies:hasOptionalInput ontologies:shortcutBiobankEncounterToBmiValue ;
-  ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToDatasetTitle ;
-  ontologies:hasOptionalInput ontologies:shortcutBiobankEncounterToDateLiteralValue ;
-  ontologies:hasOptionalInput ontologies:shortcutBiobankEncounterToDateStringValue ;
-  ontologies:hasOutput ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter ;
-  ontologies:hasOptionalInput ontologies:shortcutBiobankEncounterToHeightLiteralValue ;
-  ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToRegistry ;
-  ontologies:hasOutput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
-  ontologies:hasOptionalInput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_shortcut ;
-  ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToSymbolValue ;
-  ontologies:hasOptionalInput ontologies:shortcutBiobankEncounterToWeightLiteralValue ; 
-  ontologies:hasOutput ontologies:biobankEncounterDateToBiobankEncounterStart ;
-  ontologies:hasOutput ontologies:biobankEncounterDateToDataset ;
-  ontologies:hasOutput ontologies:biobankEncounterDateToDateLiteralValue ;
-  ontologies:hasOutput ontologies:biobankEncounterDateToStringLiteralValue ;
-  ontologies:hasOutput ontologies:biobankEncounterIdToBiobankEncounter ;
-  ontologies:hasOutput ontologies:biobankEncounterIdToRegistryDenoter ;
-  ontologies:hasOutput ontologies:biobankEncounterIdToSymbol ;
-  ontologies:hasOutput ontologies:biobankEncounterRegistryDenoterToId ;
-  ontologies:hasOutput ontologies:biobankEncounterStartToBiobankEncounter ;
-  ontologies:hasOutput ontologies:biobankEncounterSymbolToDataset ;
-  ontologies:hasOutput ontologies:biobankEncounterSymbolToId ;
-  ontologies:hasOutput ontologies:biobankEncounterSymbolToSymbolValue ;
-  ontologies:hasOutput ontologies:biobankEncounterToBMI ;
-  ontologies:hasOutput ontologies:biobankEncounterToLengthMeasurementValueSpecification ;
-  ontologies:hasOutput ontologies:biobankEncounterToMassMeasurementValueSpecification ;
-  ontologies:hasOutput ontologies:bmiToBmiDoubleLiteralValue ;
-  ontologies:hasOutput ontologies:bmiToDataset ;
-  ontologies:hasOutput ontologies:datasetToBiobankEncounterDate ;
-  ontologies:hasOutput ontologies:datasetToBiobankEncounterSymbol ;
-  ontologies:hasOutput ontologies:datasetToBmi ;
-  ontologies:hasOutput ontologies:datasetToDatasetTitle ;
-  ontologies:hasOutput ontologies:datasetToLengthMeasurementValueSpecification ;
-  ontologies:hasOutput ontologies:datasetToMassMeasurementValueSpecification ;
-  ontologies:hasOutput ontologies:instantiationToDataset ;
-  ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToCentimeter ;
-  ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToDataset ;
-  ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue ;
-  ontologies:hasOutput ontologies:massMeasurementValueSpecificationToDataset ;
-  ontologies:hasOutput ontologies:massMeasurementValueSpecificationToKilogram ;
-  ontologies:hasOutput ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue ;
+  drivetrain:hasOptionalInput ontologies:shortcutBiobankEncounterToBmiValue ;
+  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToDatasetTitle ;
+  drivetrain:hasOptionalInput ontologies:shortcutBiobankEncounterToDateLiteralValue ;
+  drivetrain:hasOptionalInput ontologies:shortcutBiobankEncounterToDateStringValue ;
+  drivetrain:hasOutput ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter ;
+  drivetrain:hasOptionalInput ontologies:shortcutBiobankEncounterToHeightLiteralValue ;
+  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToRegistry ;
+  drivetrain:hasOutput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
+  drivetrain:hasOptionalInput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_shortcut ;
+  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToSymbolValue ;
+  drivetrain:hasOptionalInput ontologies:shortcutBiobankEncounterToWeightLiteralValue ; 
+  drivetrain:hasOutput ontologies:biobankEncounterDateToBiobankEncounterStart ;
+  drivetrain:hasOutput ontologies:biobankEncounterDateToDataset ;
+  drivetrain:hasOutput ontologies:biobankEncounterDateToDateLiteralValue ;
+  drivetrain:hasOutput ontologies:biobankEncounterDateToStringLiteralValue ;
+  drivetrain:hasOutput ontologies:biobankEncounterIdToBiobankEncounter ;
+  drivetrain:hasOutput ontologies:biobankEncounterIdToRegistryDenoter ;
+  drivetrain:hasOutput ontologies:biobankEncounterIdToSymbol ;
+  drivetrain:hasOutput ontologies:biobankEncounterRegistryDenoterToId ;
+  drivetrain:hasOutput ontologies:biobankEncounterStartToBiobankEncounter ;
+  drivetrain:hasOutput ontologies:biobankEncounterSymbolToDataset ;
+  drivetrain:hasOutput ontologies:biobankEncounterSymbolToId ;
+  drivetrain:hasOutput ontologies:biobankEncounterSymbolToSymbolValue ;
+  drivetrain:hasOutput ontologies:biobankEncounterToBMI ;
+  drivetrain:hasOutput ontologies:biobankEncounterToLengthMeasurementValueSpecification ;
+  drivetrain:hasOutput ontologies:biobankEncounterToMassMeasurementValueSpecification ;
+  drivetrain:hasOutput ontologies:bmiToBmiDoubleLiteralValue ;
+  drivetrain:hasOutput ontologies:bmiToDataset ;
+  drivetrain:hasOutput ontologies:datasetToBiobankEncounterDate ;
+  drivetrain:hasOutput ontologies:datasetToBiobankEncounterSymbol ;
+  drivetrain:hasOutput ontologies:datasetToBmi ;
+  drivetrain:hasOutput ontologies:datasetToDatasetTitle ;
+  drivetrain:hasOutput ontologies:datasetToLengthMeasurementValueSpecification ;
+  drivetrain:hasOutput ontologies:datasetToMassMeasurementValueSpecification ;
+  drivetrain:hasOutput ontologies:instantiationToDataset ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToCentimeter ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToDataset ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToDataset ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToKilogram ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue ;
 .
 pmbb:HealthcareEncounterExpansionProcess
-  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph properties:expandedNamedGraph ;
-  ontologies:precedes pmbb:DiagnosisExpansionProcess ;
-  ontologies:buildsOptionalGroup ontologies:encCodeTypeProvenanceOptionalGroup ;
+  drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:precedes pmbb:DiagnosisExpansionProcess ;
+  drivetrain:buildsOptionalGroup ontologies:encCodeTypeProvenanceOptionalGroup ;
   a ontologies:TURBO_0010354 ;
-  ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToBmiValue ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;
-  ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToDateStringValue ;
-  ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToDateValue ;
-  ontologies:hasOutput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry ;
-  ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToHeightValue ;
-  ontologies:hasOutput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
-  ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_shortcut ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToSymbolValue ;
-  ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToSystolicBloodPressureLiteralValue ;
-  ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToDiastolicBloodPressureLiteralValue ;
-  ontologies:hasOptionalInput ontologies:shortcutHealthcareEncounterToWeightValue ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToEncounterTypeCodeString ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatabase ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToEncTypeColumn ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToSchema ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToTable ;
-  ontologies:hasOutput ontologies:DatasetToDiastolicBloodPressureMeasurementDatum ;
-  ontologies:hasOutput ontologies:DatasetToSystolicBloodPressureMeasurementDatum ;
-  ontologies:hasOutput ontologies:DiastolicBloodPressureMeasurementDatumToDataset ;
-  ontologies:hasOutput ontologies:DiastolicBloodPressureMeasurementDatumToValueSpecification ;
-  ontologies:hasOutput ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters ;
-  ontologies:hasOutput ontologies:DiastolicBloodPressureValueSpecificationToValue ;
-  ontologies:hasOutput ontologies:SystolicBloodPressureMeasurementDatumToDataset ;
-  ontologies:hasOutput ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification ;
-  ontologies:hasOutput ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters ;
-  ontologies:hasOutput ontologies:SystolicBloodPressureValueSpecificationToValue ;
-  ontologies:hasOutput ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum ;
-  ontologies:hasOutput ontologies:bloodPressureMeasurementProcessToHealthcareEncounter ;
-  ontologies:hasOutput ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum ;
-  ontologies:hasOutput ontologies:bmiToBmiDoubleLiteralValue ;
-  ontologies:hasOutput ontologies:bmiToDataset ;
-  ontologies:hasOutput ontologies:datasetToBmi ;
-  ontologies:hasOutput ontologies:datasetToDatasetTitle ;
-  ontologies:hasOutput ontologies:datasetToHealthcareEncounterDate ;
-  ontologies:hasOutput ontologies:datasetToHealthcareEncounterSymbol ;
-  ontologies:hasOutput ontologies:datasetToLengthMeasurementValueSpecification ;
-  ontologies:hasOutput ontologies:datasetToMassMeasurementValueSpecification ;
-  ontologies:hasOutput ontologies:healthcareEncounterDateToDataset ;
-  ontologies:hasOutput ontologies:healthcareEncounterDateToDateLiteralValue ;
-  ontologies:hasOutput ontologies:healthcareEncounterDateToHealthcareEncounterStart ;
-  ontologies:hasOutput ontologies:healthcareEncounterDateToStringLiteralValue ;
-  ontologies:hasOutput ontologies:healthcareEncounterIdToRegistryDenoter ;
-  ontologies:hasOutput ontologies:healthcareEncounterIdToSymbol ;
-  ontologies:hasOutput ontologies:healthcareEncounterRegistryDenoterToId ;
-  ontologies:hasOutput ontologies:healthcareEncounterStartToHealthcareEncounter ;
-  ontologies:hasOutput ontologies:healthcareEncounterSymbolToDataset ;
-  ontologies:hasOutput ontologies:healthcareEncounterSymbolToId ;
-  ontologies:hasOutput ontologies:healthcareEncounterSymbolToSymbolValue ;
-  ontologies:hasOutput ontologies:healthcareEncounterToBMI ;
-  ontologies:hasOutput ontologies:healthcareEncounterToBloodPressureMeasurementProcess ;
-  ontologies:hasOutput ontologies:healthcareEncounterToLengthMeasurementValueSpecification ;
-  ontologies:hasOutput ontologies:healthcareEncounterToMassValueSpecification ;
-  ontologies:hasOutput ontologies:identifierToHealthcareEncounter ;
-  ontologies:hasOutput ontologies:instantiationToDataset ;
-  ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToCentimeter ;
-  ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToDataset ;
-  ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue ;
-  ontologies:hasOutput ontologies:massMeasurementValueSpecificationToDataset ;
-  ontologies:hasOutput ontologies:massMeasurementValueSpecificationToKilogram ;
-  ontologies:hasOutput ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue ;
-  ontologies:hasOutput ontologies:provenanceDataItemToHealthcareEncounter ;
-  ontologies:hasOutput ontologies:provenanceDataItemToDatabaseTerm ;
-  ontologies:hasOutput ontologies:provenanceDataItemToEncounterTypeCodeString ;
-  ontologies:hasOutput ontologies:provenanceDataItemToSchemaTerm ;
-  ontologies:hasOutput ontologies:provenanceDataItemToTableTerm ;
-  ontologies:hasOutput ontologies:provenanceDataItemToColumnTerm ;
+  drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToBmiValue ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;
+  drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToDateStringValue ;
+  drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToDateValue ;
+  drivetrain:hasOutput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry ;
+  drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToHeightValue ;
+  drivetrain:hasOutput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
+  drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_shortcut ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToSymbolValue ;
+  drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToSystolicBloodPressureLiteralValue ;
+  drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToDiastolicBloodPressureLiteralValue ;
+  drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToWeightValue ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToEncounterTypeCodeString ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatabase ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToEncTypeColumn ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToSchema ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToTable ;
+  drivetrain:hasOutput ontologies:DatasetToDiastolicBloodPressureMeasurementDatum ;
+  drivetrain:hasOutput ontologies:DatasetToSystolicBloodPressureMeasurementDatum ;
+  drivetrain:hasOutput ontologies:DiastolicBloodPressureMeasurementDatumToDataset ;
+  drivetrain:hasOutput ontologies:DiastolicBloodPressureMeasurementDatumToValueSpecification ;
+  drivetrain:hasOutput ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters ;
+  drivetrain:hasOutput ontologies:DiastolicBloodPressureValueSpecificationToValue ;
+  drivetrain:hasOutput ontologies:SystolicBloodPressureMeasurementDatumToDataset ;
+  drivetrain:hasOutput ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification ;
+  drivetrain:hasOutput ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters ;
+  drivetrain:hasOutput ontologies:SystolicBloodPressureValueSpecificationToValue ;
+  drivetrain:hasOutput ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum ;
+  drivetrain:hasOutput ontologies:bloodPressureMeasurementProcessToHealthcareEncounter ;
+  drivetrain:hasOutput ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum ;
+  drivetrain:hasOutput ontologies:bmiToBmiDoubleLiteralValue ;
+  drivetrain:hasOutput ontologies:bmiToDataset ;
+  drivetrain:hasOutput ontologies:datasetToBmi ;
+  drivetrain:hasOutput ontologies:datasetToDatasetTitle ;
+  drivetrain:hasOutput ontologies:datasetToHealthcareEncounterDate ;
+  drivetrain:hasOutput ontologies:datasetToHealthcareEncounterSymbol ;
+  drivetrain:hasOutput ontologies:datasetToLengthMeasurementValueSpecification ;
+  drivetrain:hasOutput ontologies:datasetToMassMeasurementValueSpecification ;
+  drivetrain:hasOutput ontologies:healthcareEncounterDateToDataset ;
+  drivetrain:hasOutput ontologies:healthcareEncounterDateToDateLiteralValue ;
+  drivetrain:hasOutput ontologies:healthcareEncounterDateToHealthcareEncounterStart ;
+  drivetrain:hasOutput ontologies:healthcareEncounterDateToStringLiteralValue ;
+  drivetrain:hasOutput ontologies:healthcareEncounterIdToRegistryDenoter ;
+  drivetrain:hasOutput ontologies:healthcareEncounterIdToSymbol ;
+  drivetrain:hasOutput ontologies:healthcareEncounterRegistryDenoterToId ;
+  drivetrain:hasOutput ontologies:healthcareEncounterStartToHealthcareEncounter ;
+  drivetrain:hasOutput ontologies:healthcareEncounterSymbolToDataset ;
+  drivetrain:hasOutput ontologies:healthcareEncounterSymbolToId ;
+  drivetrain:hasOutput ontologies:healthcareEncounterSymbolToSymbolValue ;
+  drivetrain:hasOutput ontologies:healthcareEncounterToBMI ;
+  drivetrain:hasOutput ontologies:healthcareEncounterToBloodPressureMeasurementProcess ;
+  drivetrain:hasOutput ontologies:healthcareEncounterToLengthMeasurementValueSpecification ;
+  drivetrain:hasOutput ontologies:healthcareEncounterToMassValueSpecification ;
+  drivetrain:hasOutput ontologies:identifierToHealthcareEncounter ;
+  drivetrain:hasOutput ontologies:instantiationToDataset ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToCentimeter ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToDataset ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToDataset ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToKilogram ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue ;
+  drivetrain:hasOutput ontologies:provenanceDataItemToHealthcareEncounter ;
+  drivetrain:hasOutput ontologies:provenanceDataItemToDatabaseTerm ;
+  drivetrain:hasOutput ontologies:provenanceDataItemToEncounterTypeCodeString ;
+  drivetrain:hasOutput ontologies:provenanceDataItemToSchemaTerm ;
+  drivetrain:hasOutput ontologies:provenanceDataItemToTableTerm ;
+  drivetrain:hasOutput ontologies:provenanceDataItemToColumnTerm ;
 .
 pmbb:DiagnosisExpansionProcess
   a turbo:TURBO_0010354 ;
-  turbo:precedes pmbb:MedicationExpansionProcess ;
-  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph properties:expandedNamedGraph ;
-  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToCodingSequence ;
-  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToDiagnosisCode ;
-  ontologies:hasOutput ontologies:shortcutDiagnosisToExpandedDiagnosis ;
-  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToPrimaryDiagnosisBooleanValue ;
-  ontologies:hasOptionalInput ontologies:shortcutDiagnosisToRegistry ;
-  ontologies:hasRequiredInput ontologies:shortcutDiagnosisToRegistryString ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDiagnosis ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;
-  ontologies:hasOutput ontologies:diagnosisToDataset ;
-  ontologies:hasOutput ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue ;
-  ontologies:hasOutput ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue ;
-  ontologies:hasOutput ontologies:diagnosisToDiagnosisRegistry ;
-  ontologies:hasOutput ontologies:diagnosisToDiagnosisRegistryStringLiteralValue ;
-  ontologies:hasOutput ontologies:diagnosisToIcdTerm ;
-  ontologies:hasOutput ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue ;
-  ontologies:hasOutput ontologies:diagnosisToSnomedTerm ;
-  ontologies:hasOutput ontologies:healthcareEncounterToDiagnosis ;
-  ontologies:hasOutput ontologies:datasetToDiagnosis ;
+  drivetrain:precedes pmbb:MedicationExpansionProcess ;
+  drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:hasOptionalInput ontologies:shortcutDiagnosisToCodingSequence ;
+  drivetrain:hasOptionalInput ontologies:shortcutDiagnosisToDiagnosisCode ;
+  drivetrain:hasOutput ontologies:shortcutDiagnosisToExpandedDiagnosis ;
+  drivetrain:hasOptionalInput ontologies:shortcutDiagnosisToPrimaryDiagnosisBooleanValue ;
+  drivetrain:hasOptionalInput ontologies:shortcutDiagnosisToRegistry ;
+  drivetrain:hasRequiredInput ontologies:shortcutDiagnosisToRegistryString ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToDiagnosis ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;
+  drivetrain:hasOutput ontologies:diagnosisToDataset ;
+  drivetrain:hasOutput ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue ;
+  drivetrain:hasOutput ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue ;
+  drivetrain:hasOutput ontologies:diagnosisToDiagnosisRegistry ;
+  drivetrain:hasOutput ontologies:diagnosisToDiagnosisRegistryStringLiteralValue ;
+  drivetrain:hasOutput ontologies:diagnosisToIcdTerm ;
+  drivetrain:hasOutput ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue ;
+  drivetrain:hasOutput ontologies:diagnosisToSnomedTerm ;
+  drivetrain:hasOutput ontologies:healthcareEncounterToDiagnosis ;
+  drivetrain:hasOutput ontologies:datasetToDiagnosis ;
 . 
 pmbb:MedicationExpansionProcess
   a turbo:TURBO_0010354 ;
-  turbo:precedes pmbb:BiobankEncounterExpansionProcess ;
-  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph properties:expandedNamedGraph ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToPrescription ;
-  ontologies:hasOptionalInput ontologies:shortcutPrescriptionToDrugTerm ;
-  ontologies:hasOutput ontologies:shortcutPrescriptionToExpandedPrescription ;
-  ontologies:hasOptionalInput ontologies:shortcutPrescriptionToMedicationOrderName ;
-  ontologies:hasRequiredInput ontologies:shortcutPrescriptionToSymbolValue ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;
-  ontologies:hasOutput ontologies:datasetToMedicationSymbol ;
-  ontologies:hasOutput ontologies:datasetToPrescription ;
-  ontologies:hasOutput ontologies:medicationSymbolToDataset ;
-  ontologies:hasOutput ontologies:medicationSymbolToMedicationSymbolStringLiteralValue ;
-  ontologies:hasOutput ontologies:medicationSymbolToidentifier ;
-  ontologies:hasOutput ontologies:prescriptionToDataset ;
-  ontologies:hasOutput ontologies:prescriptionToDrug ;
-  ontologies:hasOutput ontologies:prescriptionToMedicationOrderNameStringLiteralValue ;
-  ontologies:hasOutput ontologies:identifierToMedicationSymbol ;
-  ontologies:hasOutput ontologies:identifierToPrescription ;
-  ontologies:hasOutput ontologies:healthcareEncounterToPrescription ;
+  drivetrain:precedes pmbb:BiobankEncounterExpansionProcess ;
+  drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToPrescription ;
+  drivetrain:hasOptionalInput ontologies:shortcutPrescriptionToDrugTerm ;
+  drivetrain:hasOutput ontologies:shortcutPrescriptionToExpandedPrescription ;
+  drivetrain:hasOptionalInput ontologies:shortcutPrescriptionToMedicationOrderName ;
+  drivetrain:hasRequiredInput ontologies:shortcutPrescriptionToSymbolValue ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;
+  drivetrain:hasOutput ontologies:datasetToMedicationSymbol ;
+  drivetrain:hasOutput ontologies:datasetToPrescription ;
+  drivetrain:hasOutput ontologies:medicationSymbolToDataset ;
+  drivetrain:hasOutput ontologies:medicationSymbolToMedicationSymbolStringLiteralValue ;
+  drivetrain:hasOutput ontologies:medicationSymbolToidentifier ;
+  drivetrain:hasOutput ontologies:prescriptionToDataset ;
+  drivetrain:hasOutput ontologies:prescriptionToDrug ;
+  drivetrain:hasOutput ontologies:prescriptionToMedicationOrderNameStringLiteralValue ;
+  drivetrain:hasOutput ontologies:identifierToMedicationSymbol ;
+  drivetrain:hasOutput ontologies:identifierToPrescription ;
+  drivetrain:hasOutput ontologies:healthcareEncounterToPrescription ;
 .  
 pmbb:LossOfFunctionExpansionProcess
-  ontologies:inputNamedGraph pmbb:Shortcuts_ ;
-  ontologies:outputNamedGraph properties:expandedNamedGraph ;
-  ontologies:precedes pmbb:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess ;
+  drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:precedes pmbb:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess ;
   a ontologies:TURBO_0010354 ;
-  ontologies:hasRequiredInput ontologies:shortcutAlleleToDatasetTitle ;
-  ontologies:hasOutput ontologies:shortcutAlleleToExpandedAllele ; 
-  ontologies:hasRequiredInput ontologies:shortcutAlleleToGeneSymbol ;
-  ontologies:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolFirstPart ;
-  ontologies:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolSecondPart ;
-  ontologies:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolUri ;
-  ontologies:hasRequiredInput ontologies:shortcutAlleleToGenoId ;
-  ontologies:hasRequiredInput ontologies:shortcutAlleleToShortcutAlleleRegistryUri ;
-  ontologies:hasRequiredInput ontologies:shortcutAlleleToShortcutBiobankEncounter ;
-  ontologies:hasRequiredInput ontologies:shortcutAlleleToZygosityIntegerValue ;
-  ontologies:hasRequiredInput ontologies:shortcutAlleleToZygosityValueUri ;
-  ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter ;
-  ontologies:hasRequiredInput ontologies:homoSapiensToBiobankEncounter ;
-  ontologies:hasOutput ontologies:DNAExtractionProcessToDNAExtract ;
-  ontologies:hasOutput ontologies:DNAExtractionProcessToSpecimen ;
-  ontologies:hasOutput ontologies:DNAToDNAExtract ;
-  ontologies:hasOutput ontologies:DNAToHomoSapiens ;
-  ontologies:hasOutput ontologies:alleleCridSymbolToDataset ;
-  ontologies:hasOutput ontologies:alleleToDNA ;
-  ontologies:hasOutput ontologies:alleleToDataset ;
-  ontologies:hasOutput ontologies:alleleToGeneSymbolFirstPart ;
-  ontologies:hasOutput ontologies:alleleToGeneSymbolSecondPart ;
-  ontologies:hasOutput ontologies:alleleToGeneSymbolUri ;
-  ontologies:hasOutput ontologies:alleleToZygosityIntegerValue ;
-  ontologies:hasOutput ontologies:alleleToZygosityUri ;
-  ontologies:hasOutput ontologies:biobankEncounterToCollectionProcess ;
-  ontologies:hasOutput ontologies:collectionProcessToBiobankEncounter ;
-  ontologies:hasOutput ontologies:collectionProcessToHomoSapiens ;
-  ontologies:hasOutput ontologies:collectionProcessToSpecimen ;
-  ontologies:hasOutput ontologies:datasetToAllele ;
-  ontologies:hasOutput ontologies:datasetToAlleleCridSymbol ;
-  ontologies:hasOutput ontologies:datasetToDatasetTitle ;
-  ontologies:hasOutput ontologies:exomeSequenceProcessToDNAExtract ;
-  ontologies:hasOutput ontologies:exomeSequenceProcessToSequenceData ;
-  ontologies:hasOutput ontologies:formProcessToAllele ;
-  ontologies:hasOutput ontologies:formProcessToSequenceData ;
-  ontologies:hasOutput ontologies:genomeCridRegistryDenoterToGenomeCrid ;
-  ontologies:hasOutput ontologies:genomeCridSymbolToGenomeCrid ;
-  ontologies:hasOutput ontologies:genomeCridSymbolToSymbolValue ;
-  ontologies:hasOutput ontologies:genomeCridToGenomeCridRegistryDenoter ;
-  ontologies:hasOutput ontologies:genomeCridToGenomeCridSymbol ;
-  ontologies:hasOutput ontologies:genomeCridToSpecimen ;
-  ontologies:hasOutput ontologies:instantiationToDataset ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToDatasetTitle ;
+  drivetrain:hasOutput ontologies:shortcutAlleleToExpandedAllele ; 
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbol ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolFirstPart ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolSecondPart ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolUri ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGenoId ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToShortcutAlleleRegistryUri ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToShortcutBiobankEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToZygosityIntegerValue ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToZygosityValueUri ;
+  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter ;
+  drivetrain:hasRequiredInput ontologies:homoSapiensToBiobankEncounter ;
+  drivetrain:hasOutput ontologies:DNAExtractionProcessToDNAExtract ;
+  drivetrain:hasOutput ontologies:DNAExtractionProcessToSpecimen ;
+  drivetrain:hasOutput ontologies:DNAToDNAExtract ;
+  drivetrain:hasOutput ontologies:DNAToHomoSapiens ;
+  drivetrain:hasOutput ontologies:alleleCridSymbolToDataset ;
+  drivetrain:hasOutput ontologies:alleleToDNA ;
+  drivetrain:hasOutput ontologies:alleleToDataset ;
+  drivetrain:hasOutput ontologies:alleleToGeneSymbolFirstPart ;
+  drivetrain:hasOutput ontologies:alleleToGeneSymbolSecondPart ;
+  drivetrain:hasOutput ontologies:alleleToGeneSymbolUri ;
+  drivetrain:hasOutput ontologies:alleleToZygosityIntegerValue ;
+  drivetrain:hasOutput ontologies:alleleToZygosityUri ;
+  drivetrain:hasOutput ontologies:biobankEncounterToCollectionProcess ;
+  drivetrain:hasOutput ontologies:collectionProcessToBiobankEncounter ;
+  drivetrain:hasOutput ontologies:collectionProcessToHomoSapiens ;
+  drivetrain:hasOutput ontologies:collectionProcessToSpecimen ;
+  drivetrain:hasOutput ontologies:datasetToAllele ;
+  drivetrain:hasOutput ontologies:datasetToAlleleCridSymbol ;
+  drivetrain:hasOutput ontologies:datasetToDatasetTitle ;
+  drivetrain:hasOutput ontologies:exomeSequenceProcessToDNAExtract ;
+  drivetrain:hasOutput ontologies:exomeSequenceProcessToSequenceData ;
+  drivetrain:hasOutput ontologies:formProcessToAllele ;
+  drivetrain:hasOutput ontologies:formProcessToSequenceData ;
+  drivetrain:hasOutput ontologies:genomeCridRegistryDenoterToGenomeCrid ;
+  drivetrain:hasOutput ontologies:genomeCridSymbolToGenomeCrid ;
+  drivetrain:hasOutput ontologies:genomeCridSymbolToSymbolValue ;
+  drivetrain:hasOutput ontologies:genomeCridToGenomeCridRegistryDenoter ;
+  drivetrain:hasOutput ontologies:genomeCridToGenomeCridSymbol ;
+  drivetrain:hasOutput ontologies:genomeCridToSpecimen ;
+  drivetrain:hasOutput ontologies:instantiationToDataset ;
 .
 pmbb:BiobankEncounterEntityLinkingProcess
-  ontologies:inputNamedGraph properties:expandedNamedGraph ;
-  ontologies:outputNamedGraph properties:expandedNamedGraph ;
-  ontologies:precedes pmbb:LossOfFunctionExpansionProcess ;
+  drivetrain:inputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:precedes pmbb:LossOfFunctionExpansionProcess ;
   a ontologies:TURBO_0010354 ;
-  ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter ;
-  ontologies:hasRequiredInput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
-  ontologies:hasRequiredInput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
-  ontologies:hasOptionalInput ontologies:biobankEncounterToBMI ;
-  ontologies:hasOptionalInput ontologies:biobankEncounterToMassMeasurementValueSpecification ;
-  ontologies:hasOptionalInput ontologies:biobankEncounterToLengthMeasurementValueSpecification ;
-  ontologies:hasOutput ontologies:bmiToHomoSapiens ;
-  ontologies:hasOutput ontologies:homoSapiensToBiobankEncounter ;
-  ontologies:hasOutput ontologies:homoSapiensToHeight ;
-  ontologies:hasOutput ontologies:homoSapiensToInvestigationRole ;
-  ontologies:hasOutput ontologies:homoSapiensToWeight ;
-  ontologies:hasOutput ontologies:investigationRoleToBiobankEncounter ;
-  ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiens ;
-  ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight ;
-  ontologies:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiens ;
-  ontologies:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiensWeight ;
+  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded ;
+  drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
+  drivetrain:hasOptionalInput ontologies:biobankEncounterToBMI ;
+  drivetrain:hasOptionalInput ontologies:biobankEncounterToMassMeasurementValueSpecification ;
+  drivetrain:hasOptionalInput ontologies:biobankEncounterToLengthMeasurementValueSpecification ;
+  drivetrain:hasOutput ontologies:bmiToHomoSapiens ;
+  drivetrain:hasOutput ontologies:homoSapiensToBiobankEncounter ;
+  drivetrain:hasOutput ontologies:homoSapiensToHeight ;
+  drivetrain:hasOutput ontologies:homoSapiensToInvestigationRole ;
+  drivetrain:hasOutput ontologies:homoSapiensToWeight ;
+  drivetrain:hasOutput ontologies:investigationRoleToBiobankEncounter ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiens ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiens ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiensWeight ;
 .
 pmbb:HealthcareEncounterEntityLinkingProcess
-  ontologies:buildsOptionalGroup ontologies:bloodPressureOptionalGroup ;
-  ontologies:inputNamedGraph properties:expandedNamedGraph ;
-  ontologies:outputNamedGraph properties:expandedNamedGraph ;
-  ontologies:precedes pmbb:BiobankEncounterEntityLinkingProcess ;
+  drivetrain:buildsOptionalGroup ontologies:bloodPressureOptionalGroup ;
+  drivetrain:inputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:precedes pmbb:BiobankEncounterEntityLinkingProcess ;
   a ontologies:TURBO_0010354 ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
-  ontologies:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
-  ontologies:hasRequiredInput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
-  ontologies:hasOptionalInput ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum ;
-  ontologies:hasOptionalInput ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum ;
-  ontologies:hasOptionalInput ontologies:healthcareEncounterToBMI ;
-  ontologies:hasRequiredInput ontologies:healthcareEncounterToBloodPressureMeasurementProcess ;
-  ontologies:hasOptionalInput ontologies:healthcareEncounterToLengthMeasurementValueSpecification ;
-  ontologies:hasOptionalInput ontologies:healthcareEncounterToMassValueSpecification ; 
-  ontologies:hasOutput ontologies:bloodPressureToHomoSapiens ;
-  ontologies:hasOutput ontologies:bmiToHomoSapiens ;
-  ontologies:hasOutput ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure ;
-  ontologies:hasOutput ontologies:homoSapiensToHealthcareEncounter ;
-  ontologies:hasOutput ontologies:homoSapiensToHeight ;
-  ontologies:hasOutput ontologies:homoSapiensToPatientRole ;
-  ontologies:hasOutput ontologies:homoSapiensToWeight ;
-  ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiens ;
-  ontologies:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight ;
-  ontologies:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiens ;
-  ontologies:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiensWeight ;
-  ontologies:hasOutput ontologies:patientRoleToHealthcareEncounter ;
-  ontologies:hasOutput ontologies:systolicBloodPressureMeasurementDatumToBloodPressure ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
+  drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
+  drivetrain:hasOptionalInput ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum ;
+  drivetrain:hasOptionalInput ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum ;
+  drivetrain:hasOptionalInput ontologies:healthcareEncounterToBMI ;
+  drivetrain:hasRequiredInput ontologies:healthcareEncounterToBloodPressureMeasurementProcess ;
+  drivetrain:hasOptionalInput ontologies:healthcareEncounterToLengthMeasurementValueSpecification ;
+  drivetrain:hasOptionalInput ontologies:healthcareEncounterToMassValueSpecification ; 
+  drivetrain:hasOutput ontologies:bloodPressureToHomoSapiens ;
+  drivetrain:hasOutput ontologies:bmiToHomoSapiens ;
+  drivetrain:hasOutput ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure ;
+  drivetrain:hasOutput ontologies:homoSapiensToHealthcareEncounter ;
+  drivetrain:hasOutput ontologies:homoSapiensToHeight ;
+  drivetrain:hasOutput ontologies:homoSapiensToPatientRole ;
+  drivetrain:hasOutput ontologies:homoSapiensToWeight ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiens ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiens ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiensWeight ;
+  drivetrain:hasOutput ontologies:patientRoleToHealthcareEncounter ;
+  drivetrain:hasOutput ontologies:systolicBloodPressureMeasurementDatumToBloodPressure ;
 .
 ontologies:shortcutAlleleToDatasetTitle
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:datasetTitleStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0007608 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010144 ;
-  ontologies:objectRequiredToCreate obo:IAO_0000100 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:datasetTitleStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0007608 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010144 ;
+  drivetrain:objectRequiredToCreate obo:IAO_0000100 ;
 .
 ontologies:shortcutAlleleToExpandedAllele
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OBI_0001352 ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0010144 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0001352 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToGeneSymbol
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:alleleGeneSymbolStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0007605 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010144 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:alleleGeneSymbolStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0007605 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToGeneSymbolFirstPart
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:alleleGeneSymbolFirstPartStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010015 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010144 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:alleleGeneSymbolFirstPartStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010015 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToGeneSymbolSecondPart
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:alleleGeneSymbolSecondPartStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010016 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010144 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:alleleGeneSymbolSecondPartStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010016 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToGeneSymbolUri
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:GeneSymbolUriOfVariousTypes ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010144 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:GeneSymbolUriOfVariousTypes ;
+  drivetrain:predicate obo:IAO_0000142 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToGenoId
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:alleleGenoIdStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0007602 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010144 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:alleleGenoIdStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0007602 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToShortcutAlleleRegistryUri
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
-  ontologies:object ontologies:GenomeRegistryOfVariousTypes ;
-  ontologies:predicate ontologies:TURBO_0010285 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010144 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-singleton ;
+  drivetrain:object ontologies:GenomeRegistryOfVariousTypes ;
+  drivetrain:predicate ontologies:TURBO_0010285 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToShortcutBiobankEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010169 ;
-  ontologies:predicate ontologies:TURBO_0010142 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010144 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0010169 ;
+  drivetrain:predicate ontologies:TURBO_0010142 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToZygosityIntegerValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:alleleZygosityIntegerLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010095 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010144 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:alleleZygosityIntegerLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010095 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToZygosityValueUri
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:ZygosityUriOfVariousTypes ;
-  ontologies:predicate ontologies:TURBO_0007607 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010144 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:ZygosityUriOfVariousTypes ;
+  drivetrain:predicate ontologies:TURBO_0007607 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutBiobankEncounterToBmiValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:bmiDoubleLiteralValue ;
-  ontologies:objectRequiredToCreate efo:EFO_0004340 ;
-  ontologies:predicate ontologies:TURBO_0000635 ;
-  ontologies:subject ontologies:TURBO_0010169 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:bmiDoubleLiteralValue ;
+  drivetrain:objectRequiredToCreate efo:EFO_0004340 ;
+  drivetrain:predicate ontologies:TURBO_0000635 ;
+  drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToDatasetTitle
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:datasetTitleStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0000623 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010169 ;
-  ontologies:objectRequiredToCreate obo:IAO_0000100 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:datasetTitleStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0000623 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010169 ;
+  drivetrain:objectRequiredToCreate obo:IAO_0000100 ;
 .
 ontologies:shortcutBiobankEncounterToDateLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:biobankEncounterDateLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0000625 ;
-  ontologies:subject ontologies:TURBO_0010169 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:biobankEncounterDateLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0000625 ;
+  drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToDateStringValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:biobankEncounterDateStringLiteralValue ;
-  ontologies:objectRequiredToCreate ontologies:TURBO_0000531 ;
-  ontologies:objectRequiredToCreate ontologies:TURBO_0000532 ;
-  ontologies:predicate ontologies:TURBO_0000624 ;
-  ontologies:subject ontologies:TURBO_0010169 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:biobankEncounterDateStringLiteralValue ;
+  drivetrain:objectRequiredToCreate ontologies:TURBO_0000531 ;
+  drivetrain:objectRequiredToCreate ontologies:TURBO_0000532 ;
+  drivetrain:predicate ontologies:TURBO_0000624 ;
+  drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0010169 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000527 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToHeightLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:lengthMeasurementDoubleLiteralValue ;
-  ontologies:objectRequiredToCreate ontologies:TURBO_0010138 ;
-  ontologies:predicate ontologies:TURBO_0000626 ;
-  ontologies:subject ontologies:TURBO_0010169 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:lengthMeasurementDoubleLiteralValue ;
+  drivetrain:objectRequiredToCreate ontologies:TURBO_0010138 ;
+  drivetrain:predicate ontologies:TURBO_0000626 ;
+  drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToRegistry
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
-  ontologies:object ontologies:BiobankEncounterRegistryOfVariousTypes ;
-  ontologies:predicate ontologies:TURBO_0010286 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010169 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-singleton ;
+  drivetrain:object ontologies:BiobankEncounterRegistryOfVariousTypes ;
+  drivetrain:predicate ontologies:TURBO_0010286 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_expanded
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010161 ;
-  ontologies:predicate ontologies:TURBO_0010133 ;
-  ontologies:subject ontologies:TURBO_0010169 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010161 ;
+  drivetrain:predicate ontologies:TURBO_0010133 ;
+  drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI_shortcut
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010161 ;
-  ontologies:predicate ontologies:TURBO_0010133 ;
-  ontologies:subject ontologies:TURBO_0010169 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010161 ;
+  drivetrain:predicate ontologies:TURBO_0010133 ;
+  drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToSymbolValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:biobankEncounterSymbolStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0000628 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010169 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:biobankEncounterSymbolStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0000628 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToWeightLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:massMeasurementDoubleLiteralValue ;
-  ontologies:objectRequiredToCreate obo:OBI_0001929 ;
-  ontologies:predicate ontologies:TURBO_0000627 ;
-  ontologies:subject ontologies:TURBO_0010169 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:massMeasurementDoubleLiteralValue ;
+  drivetrain:objectRequiredToCreate obo:OBI_0001929 ;
+  drivetrain:predicate ontologies:TURBO_0000627 ;
+  drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:encCodeTypeProvenanceOptionalGroup
-  a ontologies:TurboGraphOptionalGroup ;
+  a drivetrain:TurboGraphOptionalGroup ;
 .
 ontologies:shortcutDiagnosisToCodingSequence
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:diagnosisCodingSequenceIntegerLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010014 ;
-  ontologies:subject ontologies:TURBO_0010160 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:diagnosisCodingSequenceIntegerLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010014 ;
+  drivetrain:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutDiagnosisToDiagnosisCode
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:diagnosisTermSuffixStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0004601 ;
-  ontologies:subject ontologies:TURBO_0010160 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:diagnosisTermSuffixStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0004601 ;
+  drivetrain:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutDiagnosisToExpandedDiagnosis
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OGMS_0000073 ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0010160 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OGMS_0000073 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutDiagnosisToPrimaryDiagnosisBooleanValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:primaryDiagnosisBooleanLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010013 ;
-  ontologies:subject ontologies:TURBO_0010160 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:primaryDiagnosisBooleanLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010013 ;
+  drivetrain:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutDiagnosisToRegistry
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:DiagnosisRegistryOfVariousTypes ;
-  ontologies:objectRequiredToCreate ontologies:IcdTermOfVariousTypes ;
-  ontologies:objectRequiredToCreate ontologies:SnomedTermOfVariousTypes ;
-  ontologies:predicate ontologies:TURBO_0004603 ;
-  ontologies:subject ontologies:TURBO_0010160 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:DiagnosisRegistryOfVariousTypes ;
+  drivetrain:objectRequiredToCreate ontologies:IcdTermOfVariousTypes ;
+  drivetrain:objectRequiredToCreate ontologies:SnomedTermOfVariousTypes ;
+  drivetrain:predicate ontologies:TURBO_0004603 ;
+  drivetrain:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutDiagnosisToRegistryString
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:diagnosisRegistryStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0004602 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010160 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:diagnosisRegistryStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0004602 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutHealthcareEncounterToBmiValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:bmiDoubleLiteralValue ;
-  ontologies:objectRequiredToCreate efo:EFO_0004340 ;
-  ontologies:predicate ontologies:TURBO_0000655 ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:bmiDoubleLiteralValue ;
+  drivetrain:objectRequiredToCreate efo:EFO_0004340 ;
+  drivetrain:predicate ontologies:TURBO_0000655 ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToEncounterTypeCodeString
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:encounterTypeCodeLiteralValue ;
-  ontologies:predicate ontologies:hcEncToEncTypeCode ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:encounterTypeCodeLiteralValue ;
+  drivetrain:predicate ontologies:hcEncToEncTypeCode ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
   obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
-  ontologies:objectRequiredToCreate turbo:TURBO_0010404 ;
+  drivetrain:objectRequiredToCreate ontologies:TURBO_0010404 ;
 .
 ontologies:shortcutHealthcareEncounterToDatabase
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:HealthcareEncounterDatabaseProvenanceTerm ;
-  ontologies:predicate ontologies:hcEncToDatabase ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:HealthcareEncounterDatabaseProvenanceTerm ;
+  drivetrain:predicate ontologies:hcEncToDatabase ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
   obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
 .
 ontologies:shortcutHealthcareEncounterToEncTypeColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:HealthcareEncounterTypeCodeColumnTerm ;
-  ontologies:predicate ontologies:hcEncToEncTypeCodeColumnn ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:HealthcareEncounterTypeCodeColumnTerm ;
+  drivetrain:predicate ontologies:hcEncToEncTypeCodeColumnn ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
   obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
 .
 ontologies:shortcutHealthcareEncounterToSchema
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:HealthcareEncounterSchemaProvenanceTerm ;
-  ontologies:predicate ontologies:hcEncToSchema ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:HealthcareEncounterSchemaProvenanceTerm ;
+  drivetrain:predicate ontologies:hcEncToSchema ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
   obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
 .
 ontologies:shortcutHealthcareEncounterToTable
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:HealthcareEncounterTableProvenanceTerm ;
-  ontologies:predicate ontologies:hcEncToTable ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:HealthcareEncounterTableProvenanceTerm ;
+  drivetrain:predicate ontologies:hcEncToTable ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
   obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
 .
 ontologies:shortcutHealthcareEncounterToDatasetTitle
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:datasetTitleStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0000643 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010158 ;
-  ontologies:objectRequiredToCreate obo:IAO_0000100 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:datasetTitleStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0000643 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:objectRequiredToCreate obo:IAO_0000100 ;
 .
 ontologies:shortcutHealthcareEncounterToDateStringValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:healthcareEncounterDateStringLiteralValue ;
-  ontologies:objectRequiredToCreate ontologies:TURBO_0000511 ;
-  ontologies:objectRequiredToCreate ontologies:TURBO_0000512 ;
-  ontologies:predicate ontologies:TURBO_0000644 ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:healthcareEncounterDateStringLiteralValue ;
+  drivetrain:objectRequiredToCreate ontologies:TURBO_0000511 ;
+  drivetrain:objectRequiredToCreate ontologies:TURBO_0000512 ;
+  drivetrain:predicate ontologies:TURBO_0000644 ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToDateValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:healthcareEncounterDateLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0000645 ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:healthcareEncounterDateLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0000645 ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToDiagnosis
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object ontologies:TURBO_0010160 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+  drivetrain:object ontologies:TURBO_0010160 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToDiastolicBloodPressureLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:diastolicBloodPressureDoubleLiteralValue ;
-  ontologies:objectRequiredToCreate obo:HTN_00000000 ;
-  ontologies:objectRequiredToCreate ontologies:TURBO_0010150 ;
-  ontologies:predicate ontologies:TURBO_0010259 ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:diastolicBloodPressureDoubleLiteralValue ;
+  drivetrain:objectRequiredToCreate obo:HTN_00000000 ;
+  drivetrain:objectRequiredToCreate ontologies:TURBO_0010150 ;
+  drivetrain:predicate ontologies:TURBO_0010259 ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OGMS_0000097 ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OGMS_0000097 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
-  ontologies:object ontologies:HealthcareEncounterRegistryOfVariousTypes ;
-  ontologies:predicate ontologies:TURBO_0010110 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-singleton ;
+  drivetrain:object ontologies:HealthcareEncounterRegistryOfVariousTypes ;
+  drivetrain:predicate ontologies:TURBO_0010110 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToHeightValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:lengthMeasurementDoubleLiteralValue ;
-  ontologies:objectRequiredToCreate ontologies:TURBO_0010138 ;
-  ontologies:predicate ontologies:TURBO_0000646 ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:lengthMeasurementDoubleLiteralValue ;
+  drivetrain:objectRequiredToCreate ontologies:TURBO_0010138 ;
+  drivetrain:predicate ontologies:TURBO_0000646 ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToPrescription
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object ontologies:TURBO_0010159 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+  drivetrain:object ontologies:TURBO_0010159 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010161 ;
-  ontologies:predicate ontologies:TURBO_0010131 ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010161 ;
+  drivetrain:predicate ontologies:TURBO_0010131 ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_shortcut
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010161 ;
-  ontologies:predicate ontologies:TURBO_0010131 ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010161 ;
+  drivetrain:predicate ontologies:TURBO_0010131 ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToSymbolValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:healthcareEncounterSymbolLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0000648 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:healthcareEncounterSymbolLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0000648 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToSystolicBloodPressureLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:systolicBloodPressureDoubleLiteralValue ;
-  ontologies:objectRequiredToCreate obo:HTN_00000001 ;
-  ontologies:objectRequiredToCreate ontologies:TURBO_0010149 ;
-  ontologies:predicate ontologies:TURBO_0010258 ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:systolicBloodPressureDoubleLiteralValue ;
+  drivetrain:objectRequiredToCreate obo:HTN_00000001 ;
+  drivetrain:objectRequiredToCreate ontologies:TURBO_0010149 ;
+  drivetrain:predicate ontologies:TURBO_0010258 ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToWeightValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:massMeasurementDoubleLiteralValue ;
-  ontologies:objectRequiredToCreate obo:OBI_0001929 ;
-  ontologies:predicate ontologies:TURBO_0000647 ;
-  ontologies:subject ontologies:TURBO_0010158 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:massMeasurementDoubleLiteralValue ;
+  drivetrain:objectRequiredToCreate obo:OBI_0001929 ;
+  drivetrain:predicate ontologies:TURBO_0000647 ;
+  drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHomoSapiensIdToRegistry
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
-  ontologies:object ontologies:HomoSapiensRegistryOfVariousTypes ;
-  ontologies:predicate ontologies:TURBO_0010282 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010168 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-singleton ;
+  drivetrain:object ontologies:HomoSapiensRegistryOfVariousTypes ;
+  drivetrain:predicate ontologies:TURBO_0010282 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010168 ;
 .
 ontologies:shortcutHomoSapiensIdToSymbol
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:homoSapiensSymbolStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010079 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010168 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:homoSapiensSymbolStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010079 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010168 ;
 .
 ontologies:shortcutHomoSapiensIdentifierToExpandedHomoSapiensIdentifier
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010092 ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0010168 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0010092 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0010168 ;
 .
 ontologies:shortcutHomoSapiensIdentifierToShortcutHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
-  ontologies:object ontologies:TURBO_0010161 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010168 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
+  drivetrain:object ontologies:TURBO_0010161 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010168 ;
 .
 ontologies:shortcutHomoSapiensToDatasetTitle
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:datasetTitleStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010084 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010168 ;
-  ontologies:objectRequiredToCreate obo:IAO_0000100 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:datasetTitleStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010084 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010168 ;
+  drivetrain:objectRequiredToCreate obo:IAO_0000100 ;
 .
 ontologies:shortcutHomoSapiensToDateOfBirthDate
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010086 ;
-  ontologies:subject ontologies:TURBO_0010161 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010086 ;
+  drivetrain:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToDateOfBirthString
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:homoSapiensDateOfBirthStringLiteralValue ;
-  ontologies:objectRequiredToCreate obo:UBERON_0035946 ;
-  ontologies:objectRequiredToCreate efo:EFO_0004950 ;
-  ontologies:predicate ontologies:TURBO_0010085 ;
-  ontologies:subject ontologies:TURBO_0010161 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:homoSapiensDateOfBirthStringLiteralValue ;
+  drivetrain:objectRequiredToCreate obo:UBERON_0035946 ;
+  drivetrain:objectRequiredToCreate efo:EFO_0004950 ;
+  drivetrain:predicate ontologies:TURBO_0010085 ;
+  drivetrain:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToExpandedHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0010161 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToGenderIdentityType
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:ShortcutGenderIdentityDatumOfVariousTypes ;
-  ontologies:objectRequiredToCreate ontologies:GenderIdentityDatumType ;
-  ontologies:predicate ontologies:TURBO_0010089 ;
-  ontologies:subject ontologies:TURBO_0010161 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:ShortcutGenderIdentityDatumOfVariousTypes ;
+  drivetrain:objectRequiredToCreate ontologies:GenderIdentityDatumType ;
+  drivetrain:predicate ontologies:TURBO_0010089 ;
+  drivetrain:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToGenderIdentityValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:homoSapiensGenderIdentityStringLiteralValue ;
-  ontologies:objectRequiredToCreate obo:PATO_0000047 ;
-  ontologies:objectRequiredToCreate ontologies:GenderIdentityDatumOfVariousTypes ;
-  ontologies:predicate ontologies:TURBO_0010098 ;
-  ontologies:subject ontologies:TURBO_0010161 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:homoSapiensGenderIdentityStringLiteralValue ;
+  drivetrain:objectRequiredToCreate obo:PATO_0000047 ;
+  drivetrain:objectRequiredToCreate ontologies:GenderIdentityDatumOfVariousTypes ;
+  drivetrain:predicate ontologies:TURBO_0010098 ;
+  drivetrain:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToRaceIdentityType
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:ShortcutRaceIdentityDatumOfVariousTypes ;
-  ontologies:objectRequiredToCreate ontologies:RaceIdentityDatumType ;
-  ontologies:predicate ontologies:TURBO_0010090 ;
-  ontologies:subject ontologies:TURBO_0010161 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:ShortcutRaceIdentityDatumOfVariousTypes ;
+  drivetrain:objectRequiredToCreate ontologies:RaceIdentityDatumType ;
+  drivetrain:predicate ontologies:TURBO_0010090 ;
+  drivetrain:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToRaceIdentityValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:homoSapiensRaceIdentityStringLiteralValue ;
-  ontologies:objectRequiredToCreate ontologies:RaceIdentityDatumOfVariousTypes ;
-  ontologies:predicate ontologies:TURBO_0010100 ;
-  ontologies:subject ontologies:TURBO_0010161 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:homoSapiensRaceIdentityStringLiteralValue ;
+  drivetrain:objectRequiredToCreate ontologies:RaceIdentityDatumOfVariousTypes ;
+  drivetrain:predicate ontologies:TURBO_0010100 ;
+  drivetrain:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutPrescriptionToDrugTerm
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:DrugTermOfVariousTypes ;
-  ontologies:predicate ontologies:TURBO_0005612 ;
-  ontologies:subject ontologies:TURBO_0010159 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:DrugTermOfVariousTypes ;
+  drivetrain:predicate ontologies:TURBO_0005612 ;
+  drivetrain:subject ontologies:TURBO_0010159 ;
 .
 ontologies:shortcutPrescriptionToExpandedPrescription
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:PDRO_0000001 ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0010159 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:PDRO_0000001 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0010159 ;
 .
 ontologies:shortcutPrescriptionToMedicationOrderName
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:medicationOrderNameStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0005611 ;
-  ontologies:subject ontologies:TURBO_0010159 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:medicationOrderNameStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0005611 ;
+  drivetrain:subject ontologies:TURBO_0010159 ;
 .
 ontologies:shortcutPrescriptionToSymbolValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:medicationSymbolStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0005601 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010159 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:medicationSymbolStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0005601 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010159 ;
 .
 ontologies:shortcutTumorOptionalGroup
-  a ontologies:TurboGraphOptionalGroup ;
+  a drivetrain:TurboGraphOptionalGroup ;
 .
 ontologies:shortcutTumorToExpandedTumor
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010070 ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0010191 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0010070 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0010191 ;
 .
 ontologies:shortcutTumorToRegistryDenoter
-  a ontologies:ObjectConnectionToTermRecipe ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
   obo:BFO_0000050 ontologies:shortcutTumorOptionalGroup ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TumorRegistryDenoterOfVariousTypes ;
-  ontologies:predicate ontologies:TURBO_0010277 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010191 ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TumorRegistryDenoterOfVariousTypes ;
+  drivetrain:predicate ontologies:TURBO_0010277 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010191 ;
 .
 ontologies:shortcutTumorToTumorLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
+  a drivetrain:DatatypeConnectionRecipe ;
   obo:BFO_0000050 ontologies:shortcutTumorOptionalGroup ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:tumorSymbolStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010194 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010191 ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:tumorSymbolStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010194 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010191 ;
 .
 pmbb:Shortcuts_
-  a ontologies:TurboNamedGraph ;
+  a drivetrain:TurboNamedGraph ;
 .
 properties:expandedNamedGraph
-  a ontologies:TurboNamedGraph ;
+  a drivetrain:TurboNamedGraph ;
 .
 ontologies:biobankEncounterToMassMeasurementValueSpecification
-  ontologies:objectRequiredToCreate obo:PATO_0000128 ;
+  drivetrain:objectRequiredToCreate obo:PATO_0000128 ;
 .
 ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum
   obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
@@ -1022,32 +1022,32 @@ ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatu
 .
 ontologies:healthcareEncounterToBloodPressureMeasurementProcess
   obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
-  ontologies:objectRequiredToCreate obo:VSO_0000004 ;
+  drivetrain:objectRequiredToCreate obo:VSO_0000004 ;
 .
 ontologies:healthcareEncounterToLengthMeasurementValueSpecification
-  ontologies:objectRequiredToCreate obo:PATO_0000119 ;
+  drivetrain:objectRequiredToCreate obo:PATO_0000119 ;
 .
 ontologies:healthcareEncounterToMassValueSpecification
-  ontologies:objectRequiredToCreate obo:PATO_0000128 ;
+  drivetrain:objectRequiredToCreate obo:PATO_0000128 ;
 .
 ontologies:biobankEncounterToLengthMeasurementValueSpecification
-  ontologies:objectRequiredToCreate obo:PATO_0000119 ;
+  drivetrain:objectRequiredToCreate obo:PATO_0000119 ;
 .
 ontologies:bloodPressureOptionalGroup
-  a ontologies:TurboGraphOptionalGroup ;
+  a drivetrain:TurboGraphOptionalGroup ;
 .
 ontologies:GenderIdentityDatumType
-  ontologies:usesCustomVariableManipulationRule ontologies:GenderIdentityTypeRule ;
+  drivetrain:usesCustomVariableManipulationRule ontologies:GenderIdentityTypeRule ;
 .
 ontologies:RaceIdentityDatumType
-  ontologies:usesCustomVariableManipulationRule ontologies:RaceIdentityTypeRule ;
+  drivetrain:usesCustomVariableManipulationRule ontologies:RaceIdentityTypeRule ;
 .
 ontologies:IcdTermOfVariousTypes 
-  ontologies:usesCustomVariableManipulationRule ontologies:IcdDiagnosisRegistryRule ;
+  drivetrain:usesCustomVariableManipulationRule ontologies:IcdDiagnosisRegistryRule ;
 .
 ontologies:SnomedTermOfVariousTypes 
-  ontologies:usesCustomVariableManipulationRule ontologies:SnomedDiagnosisRegistryRule ;
+  drivetrain:usesCustomVariableManipulationRule ontologies:SnomedDiagnosisRegistryRule ;
 .
 obo:IAO_0000100
-  ontologies:usesCustomVariableManipulationRule ontologies:DatasetExpansionRule ;
+  drivetrain:usesCustomVariableManipulationRule ontologies:DatasetExpansionRule ;
 .
