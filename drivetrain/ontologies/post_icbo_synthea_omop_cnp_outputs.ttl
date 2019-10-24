@@ -26,6 +26,7 @@ ontologies:star a ontologies:PredicateSuffixSymbol ;
 <http://api.stardog.com/person> a owl:Class .
 <http://api.stardog.com/procedure_occurrence> a owl:Class .
 <http://api.stardog.com/measurement> a owl:Class .
+<http://api.stardog.com/condition_occurrence>  a owl:Class .
 
 owl:Axiom a owl:Class .
 ontologies:syntheaomop_post_icbo a owl:Class .
@@ -36,7 +37,6 @@ ontologies:KeyDenotesGid
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object ontologies:GidToBeTyped ;
@@ -46,7 +46,6 @@ ontologies:GidAboutPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ; 
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject ontologies:GidToBeTyped ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:object obo:NCBITaxon_9606 ;
@@ -54,7 +53,6 @@ ontologies:GidAboutPatient
 ontologies:GidHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject ontologies:GidToBeTyped ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:object ontologies:gender_concept_id_IntegerLiteralValue ;
@@ -62,7 +60,6 @@ ontologies:GidHasRepresentation
 ontologies:GidPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject ontologies:GidToBeTyped ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:object ontologies:TURBO_0010431 ;
@@ -70,7 +67,6 @@ ontologies:GidPartOfColumn
 ontologies:GidTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject ontologies:GidToBeTyped  ;
   ontologies:predicate rdf:type ;
   ontologies:object ontologies:GidClassList ;
@@ -91,7 +87,6 @@ ontologies:KeyDenotesRid
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object ontologies:RidToBeTyped ;
@@ -109,7 +104,6 @@ ontologies:KeyDenotesDob
 ontologies:DobPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject efo:EFO_0004950 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:object ontologies:TURBO_0010443 ;
@@ -127,7 +121,6 @@ ontologies:KeyDenotesPatKeySymb
 ontologies:PatKeySymbPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000028 ;
   ontologies:subjectUsesContext ontologies:CridContext ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -137,7 +130,6 @@ ontologies:KeyDenotesPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object obo:NCBITaxon_9606 ;
@@ -146,7 +138,6 @@ ontologies:KeyDenotesPatient
 ontologies:KeyPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:object ontologies:TURBO_0010442  ;
@@ -156,7 +147,6 @@ ontologies:RidAboutPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ; 
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject ontologies:RidToBeTyped ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:object obo:NCBITaxon_9606 ;
@@ -164,7 +154,6 @@ ontologies:RidAboutPatient
 ontologies:RidPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject ontologies:RidToBeTyped ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:object ontologies:TURBO_0010441 ;
@@ -172,7 +161,6 @@ ontologies:RidPartOfColumn
 ontologies:RidHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject ontologies:RidToBeTyped ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:object ontologies:race_concept_id_IntegerLiteralValue ;
@@ -180,7 +168,6 @@ ontologies:RidHasRepresentation
 ontologies:RidTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject ontologies:RidToBeTyped  ;
   ontologies:predicate rdf:type ;
   ontologies:object ontologies:RidClassList ;
@@ -188,7 +175,6 @@ ontologies:RidTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
 ontologies:CridDenotesPatient
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject obo:IAO_0000578 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object obo:NCBITaxon_9606 ;
@@ -220,15 +206,16 @@ ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:KeyContext .
 ontologies:IndexContext a ontologies:TurboGraphContext .
 obo:IAO_0000028 ontologies:hasPossibleContext ontologies:IndexContext .
 ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:IndexContext .
+
 ontologies:HardcodedPatientSourceden a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:object ontologies:TURBO_0010396 ;
   ontologies:subjectUsesContext ontologies:KeyContext ;
 .
+
 ontologies:DobAboutSns 
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
@@ -239,7 +226,6 @@ ontologies:DobAboutSns
 ontologies:DobHasMeasVal 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject efo:EFO_0004950 ;
   ontologies:predicate obo:IAO_0000004 ;
   ontologies:object ontologies:birth_datetime_DateLiteralValue ;
@@ -258,7 +244,6 @@ ontologies:RidClassList
 .
 ontologies:HardcodedPatientRegden a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000578  ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:object ontologies:TURBO_0010255 ;
@@ -303,7 +288,6 @@ ontologies:symbolPartOfCridForPatient
 ontologies:VisitIdPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000028 ;
   ontologies:subjectUsesContext ontologies:KeyContext ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -312,7 +296,6 @@ ontologies:VisitIdPartOfColumn
 ontologies:VisitCridSymPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000028 ;
   ontologies:subjectUsesContext ontologies:CridContext ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -322,7 +305,6 @@ ontologies:KeyDenotesVisitCridSym
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:subjectUsesContext ontologies:KeyContext ;
   ontologies:predicate obo:IAO_0000219 ;
@@ -332,7 +314,6 @@ ontologies:KeyDenotesVisitCridSym
 ontologies:StartDatePartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000416 ;
   ontologies:subjectUsesContext ontologies:encStartContext ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -342,7 +323,6 @@ ontologies:KeyDenotesStartDate
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:subjectUsesContext ontologies:KeyContext ;
   ontologies:predicate obo:IAO_0000219 ;
@@ -352,7 +332,6 @@ ontologies:KeyDenotesStartDate
 ontologies:EndDatePartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000416 ;
   ontologies:subjectUsesContext ontologies:encEndContext ;
   ontologies:predicate obo:BFO_0000050 ;
@@ -362,7 +341,6 @@ ontologies:KeyDenotesEndDate
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:subjectUsesContext ontologies:KeyContext ;
   ontologies:predicate obo:IAO_0000219 ;
@@ -373,7 +351,6 @@ ontologies:KeyDenotesEnc
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object ontologies:EncToBeTyped ;
@@ -401,7 +378,6 @@ ontologies:EncKeySymbHasRepresentation
 ontologies:HardcodedEncSourceden a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:object ontologies:TURBO_0010269 ;
@@ -415,6 +391,7 @@ ontologies:CridDenotesEnc
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object ontologies:EncToBeTyped ;
 .
+
 # represents individual that is being typed
 ontologies:EncToBeTyped 
   a ontologies:MultiObjectDescriber ;
@@ -431,7 +408,6 @@ ontologies:encCridsymbHasRepresentation
 ontologies:EncTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject ontologies:EncToBeTyped  ;
   ontologies:predicate rdf:type ;
   ontologies:object ontologies:EncClassList ;
@@ -440,10 +416,10 @@ ontologies:EncTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
 ontologies:EncClassList
   a ontologies:MultiObjectDescriber ;
 .
+
 ontologies:EndingTmdAboutProcbound 
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000416 ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:object obo:BFO_0000035 ;
@@ -456,28 +432,25 @@ obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encEndContext .
 ontologies:EndingTmdHasMeasVal 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:visit_end_date_DateLiteralValue ;
+  ontologies:object ontologies:visit_end_datetime_DateLiteralValue ;
   ontologies:predicate obo:IAO_0000004 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000416 ;
   ontologies:subjectUsesContext ontologies:encEndContext ;
 .
 ontologies:StartingTmdHasMeasVal 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:visit_start_date_DateLiteralValue ;
+  ontologies:object ontologies:visit_start_datetime_DateLiteralValue ;
   ontologies:predicate obo:IAO_0000004 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000416 ;
   ontologies:subjectUsesContext ontologies:encStartContext ;
 .
-ontologies:visit_end_date_DateLiteralValue 
+ontologies:visit_end_datetime_DateLiteralValue 
   a ontologies:TurboGraphDateLiteralValue ;
  .
 ontologies:HardcodedRegden a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000578  ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:object ontologies:TURBO_0010256 ;
@@ -493,7 +466,6 @@ ontologies:EncExpansionSpecification
 ontologies:ProcboundEndsEnc
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:BFO_0000035 ;
   ontologies:predicate obo:RO_0002229 ;
   ontologies:object ontologies:EncToBeTyped ;
@@ -520,7 +492,7 @@ ontologies:StartingTmdAboutProcbound
   ontologies:subjectUsesContext ontologies:encStartContext ;
   ontologies:objectUsesContext ontologies:encStartContext ;
 .
-ontologies:visit_start_date_DateLiteralValue 
+ontologies:visit_start_datetime_DateLiteralValue 
   a ontologies:TurboGraphDateLiteralValue ;
 .
 ontologies:EndDatePlaceholder 
@@ -582,17 +554,38 @@ ontologies:EncTypeAxiomDbXrefHasRepresentation
 ontologies:EncTypeAxiomDbXrefPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:BFO_0000050 ;
   ontologies:object ontologies:TURBO_0010449 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
 .
 
+ontologies:EncKeyDenotesTypingDbXrefProv
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+.
+
+
 ### Enc participation
+
+ontologies:HceKeyDenotesProv4Participation
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:objectUsesContext ontologies:ParticipationAxiomContext ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:EncKeyContext ;
+.
 
 ontologies:EncRealizesRole
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
-  ontologies:required true ;
   ontologies:subject ontologies:EncToBeTyped ;
   ontologies:predicate obo:BFO_0000055 ;
   ontologies:object obo:OBI_0000093 ;
@@ -602,7 +595,6 @@ ontologies:PatientHasRole
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:NCBITaxon_9606 ;
   ontologies:predicate obo:RO_0000087 ;
   ontologies:object obo:OBI_0000093 ;
@@ -677,74 +669,46 @@ ontologies:ParticipationAxiomContext a ontologies:TurboGraphContext .
 owl:Axiom ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
 ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
 
-ontologies:EncPrecedenceAxiomContext a ontologies:TurboGraphContext .
-owl:Axiom ontologies:hasPossibleContext ontologies:EncPrecedenceAxiomContext .
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:EncPrecedenceAxiomContext .
-
 ### participation Prov
-
-ontologies:EncKeyDenotesDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:EncKeyContext ;
-  ontologies:objectUsesContext ontologies:ParticipationAxiomContext ;
-.
 
 ontologies:EncKeyContext a ontologies:TurboGraphContext .
 ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:EncKeyContext .
 
 ### precedence
 
-ontologies:preceding_visit_occurrence_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
-.
-
 ontologies:PrevencPrecedesEnc
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:denoted  ;
-  ontologies:predicate obo:RO_0002090 ;
   ontologies:object ontologies:EncToBeTyped ;
+  ontologies:predicate obo:RO_0002090 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:Prevenc  ;
 .
 
-ontologies:denoted
-  a ontologies:MultiObjectDescriber .
-  
-ontologies:denotedsClass
-  a ontologies:MultiObjectDescriber .
-
-# axiom to first enc... 1:1
 ontologies:PrecedenceAxiomSource
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
+  ontologies:object ontologies:Prevenc ;
   ontologies:predicate owl:annotatedSource ;
-  ontologies:object ontologies:denoted ;
-.
-
-# axiom to precedes prop... many:1
-ontologies:PrecedenceAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
   ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:object obo:RO_0002090  ;
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
 
-# axiom to subsequent enc... 1:1
+ontologies:PrecedenceAxiomProp
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:RO_0002090  ;
+  ontologies:predicate owl:annotatedProperty ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
+.
+
 ontologies:PrecedenceAxiomTarget
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedTarget ;
   ontologies:object ontologies:EncToBeTyped ;
+  ontologies:predicate owl:annotatedTarget ;
+  ontologies:subject owl:Axiom ;
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
 
@@ -757,6 +721,7 @@ ontologies:PrecedenceAxiomHasDbXref
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
   ontologies:objectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
+
 ontologies:PrecedenceAxiomDbXrefHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
@@ -765,6 +730,7 @@ ontologies:PrecedenceAxiomDbXrefHasRepresentation
   ontologies:object ontologies:preceding_visit_occurrence_id_IntegerLiteralValue ;
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
+
 ontologies:PrecedenceAxiomDbXrefPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:many-1 ;
@@ -773,6 +739,32 @@ ontologies:PrecedenceAxiomDbXrefPartOfColumn
   ontologies:object ontologies:TURBO_0010459 ;
   ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
 .
+
+ontologies:HceKeyDenotesProv4Precedence
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:objectUsesContext ontologies:EncPrecedenceAxiomContext ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:EncKeyContext ;
+.
+
+ontologies:preceding_visit_occurrence_id_IntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+
+ontologies:Prevenc
+  a ontologies:MultiObjectDescriber .
+  
+ontologies:PrevencsClass
+  a ontologies:MultiObjectDescriber .
+  
+ontologies:EncPrecedenceAxiomContext a ontologies:TurboGraphContext .
+owl:Axiom ontologies:hasPossibleContext ontologies:EncPrecedenceAxiomContext .
+ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:EncPrecedenceAxiomContext .
+
   
 ### Procedures
 
@@ -783,7 +775,6 @@ ontologies:KeyDenotesProc
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:subject ontologies:TURBO_0010433 ;
-  # ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
 ontologies:KeyDenotesProv
@@ -793,7 +784,6 @@ ontologies:KeyDenotesProv
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:subject ontologies:TURBO_0010433 ;
-  # ontologies:subjectUsesContext ontologies:KeyContext ;
   ontologies:objectUsesContext ontologies:MentionsContext ;
 .
 
@@ -842,16 +832,13 @@ ontologies:ProcKeySymbPartOfKey
   ontologies:subject obo:IAO_0000028 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:object ontologies:TURBO_0010433 ;
-  # ontologies:objectUsesContext ontologies:KeyContext ;
 .
 
 ontologies:HardcodedProcSourceden a ontologies:ObjectConnectionToTermRecipe ;
-  # ontologies:subjectUsesContext ontologies:KeyContext ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:object ontologies:TURBO_0010407 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433   ;
 .
 
@@ -860,7 +847,6 @@ ontologies:ProcTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:object ontologies:ProcClassList ;
   ontologies:predicate rdf:type ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:required true ;
   ontologies:subject ontologies:ProcToBeTyped  ;
 .
 
@@ -1115,14 +1101,50 @@ ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:ParthoodAxiomC
 
 ### measurement
 
+ontologies:MeasTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:subject ontologies:MeasToBeTyped  ;
+  ontologies:predicate rdf:type ;
+  ontologies:object ontologies:MeasClassList ;
+.
+
+# represents individual that is being typed
+ontologies:MeasToBeTyped 
+  a ontologies:MultiObjectDescriber ;
+.
+
+# represents/holds possible classes 
+ontologies:MeasClassList
+  a ontologies:MultiObjectDescriber ;
+.
+
+ontologies:MeasMentionsCode
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-many ;
+  ontologies:object ontologies:MeasCodeMentionedClassList ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:subject ontologies:MeasToBeTyped ;
+.
+
+ontologies:measurement_source_value_StringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+
+ontologies:measurement_vocabulary_id_StringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+
+ontologies:MeasCodeMentionedClassList
+  a ontologies:MultiObjectDescriber .
+  
 ontologies:KeyDenotesMeas
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object obo:IAO_0000109 ;
+  ontologies:object ontologies:MeasToBeTyped ;
   ontologies:subjectUsesContext ontologies:KeyContext ;
 .
 
@@ -1157,25 +1179,25 @@ ontologies:MeasKeySymbHasRepresentation
 ontologies:HardcodedMeasSourceden a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:BFO_0000051 ;
   ontologies:object ontologies:TURBO_0010398 ;
 .
+
 ontologies:MeasExpansionSpecification
   a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject <http://api.stardog.com/measurement> ;
+  ontologies:object ontologies:MeasToBeTyped ;
   ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object obo:IAO_0000109 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject <http://api.stardog.com/measurement> ;
 .
+
 ontologies:MeasHasValspec
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
-  ontologies:subject obo:IAO_0000109 ;
+  ontologies:subject ontologies:MeasToBeTyped ;
   ontologies:predicate obo:OBI_0001938 ;
   ontologies:object obo:OBI_0001933 ;
 .
@@ -1183,7 +1205,6 @@ ontologies:MeasValspecPartOfQueryResult
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject obo:OBI_0001933 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:object  ontologies:TURBO_0010411 ;
@@ -1193,7 +1214,6 @@ ontologies:KeyDenotesValspec
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object obo:OBI_0001933 ;
@@ -1204,23 +1224,14 @@ ontologies:ValspecHasSpecVal
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject obo:OBI_0001933 ;
   ontologies:predicate obo:OBI_0002135 ;
   ontologies:object ontologies:value_as_number_IntegerLiteralValue ;
 .
-ontologies:MeasTmdAboutProcbound 
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:object obo:BFO_0000035 ;
-.
+
 ontologies:MeasTmdHasMeasVal 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000416 ;
   ontologies:predicate obo:IAO_0000004 ;
   ontologies:object ontologies:measurement_datetime_DateLiteralValue ;
@@ -1230,7 +1241,6 @@ ontologies:KeyDenotesTmd
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object obo:IAO_0000416 ;
@@ -1241,7 +1251,6 @@ ontologies:MeasTmdPartOfQueryResult
   a ontologies:ObjectConnectionToTermRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject obo:IAO_0000416 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:object  ontologies:TURBO_0010484 ;
@@ -1250,30 +1259,179 @@ ontologies:MeasTmdPartOfQueryResult
 ontologies:measurement_datetime_DateLiteralValue 
   a ontologies:TurboGraphDateLiteralValue ;
 .
-ontologies:ProcboundStartsMeas
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
-  ontologies:subject obo:BFO_0000035 ;
-  ontologies:predicate obo:RO_0002223 ;
-  ontologies:object obo:IAO_0000109 ;
-.
+
+# this time stamp modeling may not be exactly right 
+
 ontologies:MeasTmdHasMeasVal 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject obo:IAO_0000416 ;
   ontologies:predicate obo:IAO_0000004 ;
   ontologies:object ontologies:measurement_datetime_DateLiteralValue ;
 .
 
+ontologies:MeasHasTimestamp  
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:subject ontologies:MeasToBeTyped ;
+  ontologies:predicate obo:IAO_0000581 ;
+  ontologies:object obo:IAO_0000416 ;
+.
+
 ontologies:value_as_number_IntegerLiteralValue
   a ontologies:TurboGraphIntegerLiteralValue ;
 .
+
 ontologies:measurement_id_IntegerLiteralValue
   a ontologies:TurboGraphIntegerLiteralValue ;
 .
 
+ontologies:measurement_source_concept_id_IntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+
+ontologies:MeasTypeAxiomSource
+  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:MeasToBeTyped ;
+  ontologies:predicate owl:annotatedSource ;
+  ontologies:subject owl:Axiom ;
+.
+
+ontologies:MeasTypeAxiomProp
+  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object rdf:type ;
+  ontologies:predicate owl:annotatedProperty ;
+  ontologies:subject owl:Axiom ;
+.
+
+# # THIS OBJECT IS NOT BEING TREATED AS A STATIC TERM (when MDs are being exclusively typed as MDs)
+ontologies:MeasTypeAxiomTarget
+  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:MeasClassList ;
+  ontologies:predicate owl:annotatedTarget ;
+  ontologies:subject owl:Axiom ;
+.
+
+ontologies:MeasTypeAxiomHasDbXref
+  ontologies:objectUsesContext ontologies:MeasTypeAxiomContext ;
+  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:predicate oboInOwl:hasDbXref ;
+  ontologies:subject owl:Axiom ;
+.
+
+ontologies:MeasTypeAxiomDbXrefHasRepresentation
+  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:measurement_source_concept_id_IntegerLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+.
+
+ontologies:MeasTypeAxiomDbXrefPartOfColumn
+  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:TURBO_0010488 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+.
+
+ontologies:MeasKeyDenotesProv4MeasType
+  ontologies:objectUsesContext ontologies:MeasTypeAxiomContext ;
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+.
+
+ontologies:MeasTypeAxiomContext a ontologies:TurboGraphContext .
+ontologies:MeasToBeTyped ontologies:hasPossibleContext ontologies:MeasTypeAxiomContext . 
+owl:Axiom ontologies:hasPossibleContext ontologies:MeasTypeAxiomContext . 
+ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:MeasTypeAxiomContext .
+
+ontologies:MeasMentionAxiomSource
+  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:MeasToBeTyped ;
+  ontologies:predicate owl:annotatedSource ;
+  ontologies:subject owl:Axiom ;
+.
+
+ontologies:MeasMentionAxiomProp
+  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:IAO_0000142 ;
+  ontologies:predicate owl:annotatedProperty ;
+  ontologies:subject owl:Axiom ;
+.
+
+ontologies:MeasMentionAxiomTarget
+  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:MeasCodeMentionedClassList ;
+  ontologies:predicate owl:annotatedTarget ;
+  ontologies:subject owl:Axiom ;
+.
+
+ontologies:MeasMentionAxiomHasDbXref
+  ontologies:objectUsesContext ontologies:MeasMentionAxiomContext ;
+  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:predicate oboInOwl:hasDbXref ;
+  ontologies:subject owl:Axiom ;
+.
+
+ontologies:MeasMentionAxiomDbXrefHasRepresentation
+  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:measurement_source_value_StringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+.
+
+ontologies:MeasMentionAxiomDbXrefPartOfColumn
+  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:TURBO_0010487 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+.
+
+ontologies:MeasKeyDenotesProv4Mention
+  ontologies:objectUsesContext ontologies:MeasMentionAxiomContext ;
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+.
+
+ontologies:MeasMentionAxiomContext a ontologies:TurboGraphContext .
+ontologies:MeasToBeTyped ontologies:hasPossibleContext ontologies:MeasMentionAxiomContext . 
+owl:Axiom ontologies:hasPossibleContext ontologies:MeasMentionAxiomContext . 
+ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:MeasMentionAxiomContext .
 
 ### Measurement unit label
 
@@ -1283,8 +1441,7 @@ ontologies:MeasHasMul
   ontologies:object ontologies:MulClassList ;
   ontologies:predicate obo:IAO_0000039 ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
-  # ontologies:required true ;
-  ontologies:subject obo:IAO_0000109  ;
+  ontologies:subject ontologies:MeasToBeTyped  ;
 .
 
 ontologies:MulAxiomSource
@@ -1292,8 +1449,7 @@ ontologies:MulAxiomSource
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:subject owl:Axiom ;
   ontologies:predicate owl:annotatedSource ;
-  ontologies:object obo:IAO_0000109 ;
-  # ontologies:subjectUsesContext ontologies:MulAxiomContext ;
+  ontologies:object ontologies:MeasToBeTyped ;
 .
 
 ontologies:MulAxiomProp
@@ -1302,7 +1458,6 @@ ontologies:MulAxiomProp
   ontologies:subject owl:Axiom ;
   ontologies:predicate owl:annotatedProperty ;
   ontologies:object obo:IAO_0000039 ;
-  # ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
 .
 ontologies:MulAxiomTarget
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -1310,7 +1465,6 @@ ontologies:MulAxiomTarget
   ontologies:subject owl:Axiom ;
   ontologies:predicate owl:annotatedTarget ;
   ontologies:object ontologies:MulClassList ;
-  # ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
 .
 ontologies:MulAxiomHasDbXref
   a ontologies:ObjectConnectionToInstanceRecipe ;
@@ -1318,8 +1472,6 @@ ontologies:MulAxiomHasDbXref
   ontologies:subject owl:Axiom ;
   ontologies:predicate oboInOwl:hasDbXref ;
   ontologies:object ontologies:TURBO_0010404 ;
-  # ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
-  # ontologies:objectUsesContext ontologies:ParthoodAxiomContext ;
 .
 ontologies:MulAxiomDbXrefHasRepresentation
   a ontologies:DatatypeConnectionRecipe ;
@@ -1327,7 +1479,6 @@ ontologies:MulAxiomDbXrefHasRepresentation
   ontologies:subject ontologies:TURBO_0010404 ;
   ontologies:predicate ontologies:TURBO_0010094 ;
   ontologies:object ontologies:measurement_more_units_IntegerLiteralValue ;
-  # ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
 .
 ontologies:MulAxiomDbXrefPartOfColumn
   a ontologies:ObjectConnectionToTermRecipe ;
@@ -1335,25 +1486,17 @@ ontologies:MulAxiomDbXrefPartOfColumn
   ontologies:subject ontologies:TURBO_0010404 ;
   ontologies:predicate obo:BFO_0000050 ;
   ontologies:object ontologies:TURBO_0010423 ;
-  # ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
 .
 
-<http://transformunify.org/ontologies/MeasKeyDenotesProv4Mul>
+ontologies:MeasKeyDenotesProv4Mul
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:object ontologies:TURBO_0010404 ;
-  # ontologies:objectUsesContext ontologies:MulAxiomContext ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:subjectUsesContext ontologies:MeasDenotationContext ;
 .
-
-ontologies:MulAxiomContext a ontologies:TurboGraphContext .
-obo:IAO_0000109 ontologies:hasPossibleContext ontologies:MulAxiomContext . 
-owl:Axiom ontologies:hasPossibleContext ontologies:MulAxiomContext . 
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:MulAxiomContext .
-
 
 ontologies:measurement_more_units_IntegerLiteralValue
   a ontologies:TurboGraphIntegerLiteralValue ;
@@ -1365,15 +1508,13 @@ ontologies:MulClassList
   a ontologies:MultiObjectDescriber ;
 .
   
-
 ### measurement aboutness
 
 ontologies:MeasAboutPat
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:many-1 ;
-  ## ontologies:required true ;
-  ontologies:subject obo:IAO_0000109 ;
+  ontologies:subject ontologies:MeasToBeTyped ;
   ontologies:predicate obo:IAO_0000136 ;
   ontologies:object obo:NCBITaxon_9606 ;
 .
@@ -1383,7 +1524,7 @@ ontologies:MeasAboutnessAxiomSource
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:subject owl:Axiom ;
   ontologies:predicate owl:annotatedSource ;
-  ontologies:object obo:IAO_0000109 ;
+  ontologies:object ontologies:MeasToBeTyped ;
   ontologies:subjectUsesContext ontologies:MeasAboutnessAxiomContext ;
 .
 ontologies:MeasAboutnessAxiomProp
@@ -1439,10 +1580,9 @@ ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:MeasAboutnessA
 
 # Are all measurements part of an Enc? NO.
 ontologies:EncHsoMeas
-  ## ontologies:required true ;
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-many ;
-  ontologies:object obo:IAO_0000109 ;
+  ontologies:object ontologies:MeasToBeTyped ;
   ontologies:predicate  obo:OBI_0000299 ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:subject  ontologies:EncToBeTyped ;
@@ -1469,7 +1609,7 @@ ontologies:MeasParthoodAxiomTarget
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:subject owl:Axiom ;
   ontologies:predicate owl:annotatedTarget ;
-  ontologies:object obo:IAO_0000109 ;
+  ontologies:object ontologies:MeasToBeTyped ;
   ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
 .
 ontologies:MeasParthoodAxiomHasDbXref
@@ -1500,8 +1640,7 @@ ontologies:MeasParthoodAxiomDbXrefPartOfColumn
   ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
 .
 
-<http://transformunify.org/ontologies/MeasKeyDenotesProv4Parthood>
-  # ontologies:objectUsesContext ontologies:MeasDenotationContext ;
+ontologies:MeasKeyDenotesProv4Parthood
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:object ontologies:TURBO_0010404 ;
@@ -1512,8 +1651,7 @@ ontologies:MeasParthoodAxiomDbXrefPartOfColumn
   ontologies:subjectUsesContext ontologies:MeasDenotationContext ;
 .
 
-<http://transformunify.org/ontologies/MeasKeyDenotesProv4Aboutness>
-  # ontologies:objectUsesContext ontologies:MeasDenotationContext ;
+ontologies:MeasKeyDenotesProv4Aboutness
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:object ontologies:TURBO_0010404 ;
@@ -1524,82 +1662,392 @@ ontologies:MeasParthoodAxiomDbXrefPartOfColumn
   ontologies:subjectUsesContext ontologies:MeasDenotationContext ;
 .
 
-
-
 ontologies:MeasDenotationContext a ontologies:TurboGraphContext .
 ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:MeasDenotationContext .
 
-###
-# ontologies:regdenPartOfCrid
-  # a ontologies:ObjectConnectionToInstanceRecipe ;
-  # ontologies:multiplicity ontologies:1-1 ;
-  # ontologies:required true ;
-  # ontologies:subject ontologies:allowedEncRegdenList ;
-  # ontologies:predicate obo:BFO_0000050 ;
-  # ontologies:object obo:IAO_0000578 ;
-# .
-# ontologies:allowedEncRegdenList 
-  # a ontologies:MultiObjectDescriber ;
-  # ontologies:range ontologies:TURBO_0010256 ;
-# .
+### conditions/diagnoses (?)
 
-# ontologies:ProcProvDatabaseAnnotation
-  # a ontologies:ObjectConnectionToTermRecipe ;
-  # # ontologies:multiplicity ontologies:many-1 ;
-  # ontologies:multiplicity ontologies:1-1 ;
-  # ontologies:subject ontologies:TURBO_0010404 ;
-  # ontologies:predicate ontologies:database ;
-# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  # ontologies:object ontologies:syntheaomop_post_icbo ;
-# .
-# ontologies:ProcProvSchemaAnnotation
-  # a ontologies:ObjectConnectionToTermRecipe ;
-  # ontologies:multiplicity ontologies:1-1 ;
-  # ontologies:subject ontologies:TURBO_0010404 ;
-  # ontologies:predicate ontologies:schema ;
-# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  # ontologies:object ontologies:cdm_synthea10 ;
-# .
-# ontologies:ProcProvTableAnnotation
-  # a ontologies:ObjectConnectionToTermRecipe ;
-  # ontologies:multiplicity ontologies:1-1 ;
-  # ontologies:subject ontologies:TURBO_0010404 ;
-  # ontologies:predicate ontologies:table ;
-# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  # ontologies:object ontologies:procedure_occurrence ;
-# .
-# ontologies:ProcProvColumnAnnotation
-  # a ontologies:ObjectConnectionToTermRecipe ;
-  # ontologies:multiplicity ontologies:1-1 ;
-  # ontologies:subject ontologies:TURBO_0010404 ;
-  # ontologies:predicate ontologies:column ;
-# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  # ontologies:object ontologies:procedure_source_value ;
-# .
-# ontologies:ProcProvKeyColAnnotation
-  # a ontologies:ObjectConnectionToTermRecipe ;
-  # ontologies:multiplicity ontologies:1-1 ;
-  # ontologies:subject ontologies:TURBO_0010404 ;
-  # ontologies:predicate ontologies:keycol ;
-# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  # ontologies:object ontologies:procedure_occurrence_id ;
-# .
-# ontologies:ProcProvKeyValAnnotation
-  # a ontologies:ObjectConnectionToTermRecipe ;
-  # ontologies:multiplicity ontologies:1-1 ;
-  # ontologies:subject ontologies:TURBO_0010404 ;
-  # ontologies:predicate ontologies:keyVal ;
-# #  ontologies:object "procedure_occurrence.procedure_source_value" ;
-  # ontologies:object ontologies:procedure_occurrence_id_IntegerLiteralValue ;
-# .
-# ontologies:ProcProvValueAnnotation
- # a ontologies:DatatypeConnectionRecipe ;
- # ontologies:multiplicity ontologies:1-1 ;
- # ontologies:subject ontologies:TURBO_0010404 ;
- # # ontologies:predicate ontologies:TURBO_0010094 ;
- # ontologies:predicate ontologies:colVal ;
- # ontologies:object ontologies:procedure_source_value_StringLiteralValue ;
-# .
+ontologies:DiagExpansion 
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object obo:OGMS_0000073 ;
+  ontologies:predicate ontologies:TURBO_0010113 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject <http://api.stardog.com/condition_occurrence> ;
+.
+
+ontologies:condition_visit_occurrence_id_IntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+
+ontologies:condition_source_value_StringLiteralValue
+  a ontologies:TurboGraphStringLiteralValue ;
+.
+
+ontologies:condition_occurrence_id_IntegerLiteralValue
+  a ontologies:TurboGraphIntegerLiteralValue ;
+.
+
+ontologies:condition_start_datetime_DateLiteralValue
+  a ontologies:TurboGraphDateLiteralValue ;
+.
+
+ontologies:KeyDenotesDiag
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object obo:OGMS_0000073 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+.
+
+ontologies:DiagKeySymbPartOfKey
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010433 ;
+  ontologies:objectUsesContext ontologies:KeyContext ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject obo:IAO_0000028 ;
+.
+
+ontologies:DiagKeySymbPartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010602 ;
+  ontologies:objectUsesContext ontologies:KeyContext ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject obo:IAO_0000028 ;
+.
+
+ontologies:DiagKeySymbHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:condition_occurrence_id_IntegerLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject obo:IAO_0000028 ;
+.
+
+ontologies:HardcodedDiagSourceden a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010510 ;
+  ontologies:predicate obo:BFO_0000051 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+.
+
+ontologies:DiagMentionsSnomed
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:CondMentionedClassList ;
+  ontologies:predicate obo:IAO_0000142 ;
+  ontologies:subject obo:OGMS_0000073 ;
+  ontologies:subjectUsesContext ontologies:MentionsContext ;
+.
+
+ontologies:DiagHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:condition_source_value_StringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject obo:OGMS_0000073 ;
+.
+
+ontologies:DiagPartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:TURBO_0010605 ;
+  ontologies:objectUsesContext ontologies:KeyContext ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject obo:OGMS_0000073 ;
+.
+
+# this time stamp modeling may not be exactly right 
+ontologies:DiagTmdHasMeasVal 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:condition_start_datetime_DateLiteralValue ;
+  ontologies:predicate obo:IAO_0000004 ;
+  ontologies:subject obo:IAO_0000416 ;
+.
+
+ontologies:DiagHasTimestamp  
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object obo:IAO_0000416 ;
+  ontologies:predicate obo:IAO_0000581 ;
+  ontologies:subject obo:OGMS_0000073 ;
+.
+
+ontologies:DiagTmdPartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010604 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:subject obo:IAO_0000416 ;
+.
+
+ontologies:KeyDenotesDiagTmd
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object obo:IAO_0000416 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+.
+
+ontologies:CondMentionedClassList
+  a ontologies:MultiObjectDescriber ;
+.
+
+
+ontologies:DiagMentionAxiomSource
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object obo:OGMS_0000073 ;
+  ontologies:predicate owl:annotatedSource ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+.
+
+ontologies:DiagMentionAxiomProp
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:IAO_0000142 ;
+  ontologies:predicate owl:annotatedProperty ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+.
+
+ontologies:DiagMentionAxiomTarget
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:CondMentionedClassList ;
+  ontologies:predicate owl:annotatedTarget ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+.
+
+ontologies:DiagMentionAxiomHasDbXref
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:objectUsesContext ontologies:DiagMentionAxiomContext ;
+  ontologies:predicate oboInOwl:hasDbXref ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+.
+
+ontologies:DiagMentionAxiomDbXrefHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:condition_source_value_StringLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+.
+
+ontologies:DiagMentionAxiomDbXrefPartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:TURBO_0010605 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+.
+
+ontologies:DiagKeyDenotesProv4Mention
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:objectUsesContext ontologies:DiagMentionAxiomContext ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:KeyContext ;
+.
+
+ontologies:DiagMentionAxiomContext a ontologies:TurboGraphContext .
+obo:OGMS_0000073 ontologies:hasPossibleContext ontologies:DiagMentionAxiomContext . 
+owl:Axiom ontologies:hasPossibleContext ontologies:DiagMentionAxiomContext . 
+ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:DiagMentionAxiomContext .
+
+
+  
+### diag aboutness
+
+ontologies:DiagAboutPat
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate obo:IAO_0000136 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject obo:OGMS_0000073 ;
+.
+
+ontologies:DiagAboutnessAxiomSource
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object obo:OGMS_0000073 ;
+  ontologies:predicate owl:annotatedSource ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+.
+
+ontologies:DiagAboutnessAxiomProp
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:IAO_0000136 ;
+  ontologies:predicate owl:annotatedProperty ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+.
+
+ontologies:DiagAboutnessAxiomTarget
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object obo:NCBITaxon_9606 ;
+  ontologies:predicate owl:annotatedTarget ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+.
+
+ontologies:DiagAboutnessAxiomHasDbXref
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:objectUsesContext ontologies:DiagAboutnessAxiomContext ;
+  ontologies:predicate oboInOwl:hasDbXref ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+.
+
+ontologies:DiagAboutnessAxiomDbXrefHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:person_id_IntegerLiteralValue ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+.
+
+ontologies:DiagAboutnessAxiomDbXrefPartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:TURBO_0010701 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+.
+
+ontologies:DiagKeyDenotesProv4Aboutness
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:objectUsesContext ontologies:DiagAboutnessAxiomContext ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:DiagDenotationContext ;
+.
+
+ontologies:DiagAboutnessAxiomContext a ontologies:TurboGraphContext .
+ontologies:ProcToBeTyped ontologies:hasPossibleContext ontologies:DiagAboutnessAxiomContext . 
+owl:Axiom ontologies:hasPossibleContext ontologies:DiagAboutnessAxiomContext . 
+ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:DiagAboutnessAxiomContext .
+
+ontologies:DiagDenotationContext a ontologies:TurboGraphContext .
+ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:DiagDenotationContext .
+
+### diagnosis parthood
+
+# Are all diagnoses part of an Enc?
+ontologies:EncHsoDiag
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-many ;
+  ontologies:object obo:OGMS_0000073 ;
+  ontologies:predicate  obo:OBI_0000299 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject  ontologies:EncToBeTyped ;
+.
+
+ontologies:DiagParthoodAxiomSource
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:EncToBeTyped ;
+  ontologies:predicate owl:annotatedSource ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+.
+
+ontologies:DiagParthoodAxiomProp
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:subject owl:Axiom ;
+  ontologies:predicate owl:annotatedProperty ;
+  ontologies:object obo:OBI_0000299 ;
+  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+.
+
+ontologies:DiagParthoodAxiomTarget
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object obo:OGMS_0000073 ;
+  ontologies:predicate owl:annotatedTarget ;
+  ontologies:subject owl:Axiom ;
+  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+.
+
+ontologies:DiagParthoodAxiomHasDbXref
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:subject owl:Axiom ;
+  ontologies:predicate oboInOwl:hasDbXref ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+  ontologies:objectUsesContext ontologies:ParthoodAxiomContext ;
+.
+
+ontologies:DiagParthoodAxiomDbXrefHasRepresentation
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+  ontologies:predicate ontologies:TURBO_0010094 ;
+  ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
+  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+.
+
+ontologies:DiagParthoodAxiomDbXrefPartOfColumn
+  a ontologies:ObjectConnectionToTermRecipe ;
+  ontologies:multiplicity ontologies:many-1 ;
+  ontologies:object ontologies:TURBO_0010704 ;
+  ontologies:predicate obo:BFO_0000050 ;
+  ontologies:subject ontologies:TURBO_0010404 ;
+  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+.
+
+ontologies:DiagKeyDenotesProv4Parthood
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:TURBO_0010404 ;
+  ontologies:objectUsesContext ontologies:ParthoodAxiomContext ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:DiagDenotationContext ;
+.
+
+ontologies:DiagDenotationContext a ontologies:TurboGraphContext .
+ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:DiagDenotationContext .
+
+###
+
 # ontologies:ProcProvDatabaseAnnotation
   # a ontologies:DatatypeConnectionRecipe ;
   # ontologies:multiplicity ontologies:1-1 ;
@@ -1608,17 +2056,3 @@ ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:MeasDenotation
   # ontologies:object "jdbc:postgresql://localhost:5432/syntheaomop_post_icbo?currentSchema=cdm_synthea10" ;
 # .
 
-# # represents/holds possible classes 
-# ontologies:ProcClassList
-  # a ontologies:MultiObjectDescriber ;
-  # # # im inj 4295880
-  # # ontologies:range obo:OBI_0000934 ;
-  # # # physical exam 4240345
-  # # ontologies:range obo:OGMS_0000057 ;
-  # # # generic health care Process
-  # # ontologies:range obo:OGMS_0000096 ;
-# .
-
-# ontologies:procedure_visit_occurrence_id_IntegerLiteralValue 
-  # a ontologies:TurboGraphIntegerLiteralValue ;
-# .
