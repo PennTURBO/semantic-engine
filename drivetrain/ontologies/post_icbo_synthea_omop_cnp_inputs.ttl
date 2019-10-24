@@ -78,7 +78,6 @@ ontologies:GidScoGid a ontologies:ObjectConnectionToTermRecipe ;
 ontologies:GidOmopConceptIds 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
-  ## ontologies:required true ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:subject ontologies:GidClassList ;
   ontologies:predicate ontologies:TURBO_0010147 ;
@@ -87,7 +86,6 @@ ontologies:GidOmopConceptIds
 ontologies:PatientGidShortcut
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject <http://api.stardog.com/person> ;
   ontologies:predicate <http://api.stardog.com/person#gender_concept_id> ;
   ontologies:object ontologies:gender_concept_id_IntegerLiteralValue ;
@@ -96,7 +94,6 @@ ontologies:PatientGidShortcut
 ontologies:PatientRidShortcut
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
-  ontologies:required true ;
   ontologies:subject <http://api.stardog.com/person> ;
   ontologies:predicate <http://api.stardog.com/person#race_concept_id> ;
   ontologies:object ontologies:race_concept_id_IntegerLiteralValue ;
@@ -114,7 +111,6 @@ ontologies:RidScoStarRid a ontologies:ObjectConnectionToTermRecipe ;
 ontologies:RidOmopConceptIds 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
-  ## ontologies:required true ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:subject ontologies:RidClassList ;
   ontologies:predicate ontologies:TURBO_0010147 ;
@@ -122,7 +118,6 @@ ontologies:RidOmopConceptIds
 .
 ontologies:PatientCridsymShortcut 
   a ontologies:DatatypeConnectionRecipe ;
-  ## ontologies:required true ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:subject <http://api.stardog.com/person> ;
   ontologies:predicate <http://api.stardog.com/person#person_source_value> ;
@@ -130,7 +125,6 @@ ontologies:PatientCridsymShortcut
 .
 ontologies:PatientKeySymShortcut 
   a ontologies:DatatypeConnectionRecipe ;
-  ontologies:required true ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:subject <http://api.stardog.com/person> ;
   ontologies:predicate <http://api.stardog.com/person#person_id> ;
@@ -211,7 +205,6 @@ ontologies:EncScoStarEnc a ontologies:ObjectConnectionToTermRecipe ;
 ontologies:EncOmopConceptIds 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
-  ## ontologies:required true ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:subject ontologies:EncClassList ;
   ontologies:predicate ontologies:TURBO_0010147 ;
@@ -287,7 +280,6 @@ ontologies:EncKeyDenotesEnc
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:referencedInGraph ontologies:omopExpanded ;
   ontologies:multiplicity ontologies:1-1 ;
-  ## ontologies:required true ;
   ontologies:subject ontologies:TURBO_0010433 ;
   ontologies:predicate obo:IAO_0000219 ;
   ontologies:object ontologies:EncToBeTyped ;
@@ -427,7 +419,6 @@ ontologies:ProcSciShortcut
 ontologies:ProcOmopConceptIds 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
-  ## ontologies:required true ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:subject ontologies:ProcClassList ;
   ontologies:predicate ontologies:TURBO_0010147 ;
@@ -495,26 +486,26 @@ ontologies:ProcPatientShortcut
 ontologies:post_icbo_synthea_omop_cnp_procedure_parthood
   a ontologies:TURBO_0010354 ;
   ontologies:hasOutput ontologies:ProcPartOfEnc ;
-  ontologies:hasRequiredInput ontologies:EncKeySymbHasRepresentation ;
-  ontologies:hasRequiredInput ontologies:EncKeySymbPartOfKey ;
-  ontologies:hasRequiredInput ontologies:EncTypingRecipe ;
-  ontologies:hasRequiredInput ontologies:HardcodedEncSourceden ;
-  ontologies:hasRequiredInput ontologies:EncExpansionSpecification ;
-  ontologies:hasRequiredInput ontologies:KeyDenotesEnc ;
-  ontologies:hasRequiredInput ontologies:ProcExpansionSpecification ;
-  ontologies:hasRequiredInput ontologies:ProcEncShortcut ;
-  ontologies:hasRequiredInput ontologies:ProcTypingRecipe ;
-  ontologies:inputNamedGraph ontologies:omopShortcuts ;
-  ontologies:outputNamedGraph ontologies:omopExpanded ;
-  ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_measurement ;
   ontologies:hasOutput ontologies:ProcParthoodAxiomDbXrefHasRepresentation ;
   ontologies:hasOutput ontologies:ProcParthoodAxiomDbXrefPartOfColumn ;
   ontologies:hasOutput ontologies:ProcParthoodAxiomHasDbXref ;
   ontologies:hasOutput ontologies:ProcParthoodAxiomProp ;
   ontologies:hasOutput ontologies:ProcParthoodAxiomSource ;
   ontologies:hasOutput ontologies:ProcParthoodAxiomTarget ;
-
+  ontologies:hasRequiredInput ontologies:EncExpansionSpecification ;
+  ontologies:hasRequiredInput ontologies:EncKeySymbHasRepresentation ;
+  ontologies:hasRequiredInput ontologies:EncKeySymbPartOfKey ;
+  ontologies:hasRequiredInput ontologies:EncTypingRecipe ;
+  ontologies:hasRequiredInput ontologies:HardcodedEncSourceden ;
+  ontologies:hasRequiredInput ontologies:KeyDenotesEnc ;
+  ontologies:hasRequiredInput ontologies:ProcEncShortcut ;
+  ontologies:hasRequiredInput ontologies:ProcExpansionSpecification ;
+  ontologies:hasRequiredInput ontologies:ProcTypingRecipe ;
+  ontologies:inputNamedGraph ontologies:omopShortcuts ;
+  ontologies:outputNamedGraph ontologies:omopExpanded ;
+  ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_measurement ;
 .
+
 ontologies:ProcEncShortcut 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
@@ -594,7 +585,6 @@ ontologies:MeasConceptShortcut
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:object ontologies:measurement_source_concept_id_IntegerLiteralValue ;
-  # ontologies:objectRequiredToCreate ontologies:MeasCodeMentionedClassList ;
   ontologies:predicate <http://api.stardog.com/measurement#measurement_source_concept_id> ;
   ontologies:subject <http://api.stardog.com/measurement> ;
 .
@@ -613,7 +603,6 @@ ontologies:MeasVocabShortcut
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:object ontologies:measurement_vocabulary_id_StringLiteralValue ;
-  # ontologies:objectRequiredToCreate ontologies:MeasCodeMentionedClassList ;
   ontologies:predicate <http://api.stardog.com/measurement#vocabulary_id> ;
   ontologies:subject <http://api.stardog.com/measurement> ;
 .
@@ -728,6 +717,7 @@ ontologies:post_icbo_synthea_omop_cnp_measurement_aboutness
   ontologies:outputNamedGraph ontologies:omopExpanded ;
   ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_measurement_parthood ;
 .
+
 ontologies:MeasPatientShortcut 
   a ontologies:DatatypeConnectionRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
@@ -772,7 +762,6 @@ ontologies:MeasEncShortcut
 .
 
 ontologies:KeyDenotesMeasInp
-  ## ontologies:required true ;
   a ontologies:ObjectConnectionToInstanceRecipe ;
   ontologies:multiplicity ontologies:1-1 ;
   ontologies:object ontologies:MeasToBeTyped ;
@@ -785,7 +774,7 @@ ontologies:KeyDenotesMeasInp
 ### conditions/diagnoses (?)
 
 ontologies:post_icbo_synthea_omop_cnp_condition_occurrence
-  # ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_encs ;
+  ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_diagnosis_aboutness ;
   a ontologies:TURBO_0010354 ;
   ontologies:hasOutput  ontologies:DiagHasTimestamp ;
   ontologies:hasOutput  ontologies:DiagTmdHasMeasVal ;
@@ -800,6 +789,15 @@ ontologies:post_icbo_synthea_omop_cnp_condition_occurrence
   ontologies:hasOutput ontologies:HardcodedDiagSourceden ;
   ontologies:hasOutput ontologies:KeyDenotesDiag ;
   ontologies:hasOutput ontologies:KeyDenotesDiagTmd ;
+  
+  ontologies:hasOutput ontologies:DiagKeyDenotesProv4Mention ;
+  ontologies:hasOutput ontologies:DiagMentionAxiomDbXrefHasRepresentation ;
+  ontologies:hasOutput ontologies:DiagMentionAxiomDbXrefPartOfColumn ;
+  ontologies:hasOutput ontologies:DiagMentionAxiomHasDbXref ;
+  ontologies:hasOutput ontologies:DiagMentionAxiomProp ;
+  ontologies:hasOutput ontologies:DiagMentionAxiomSource ;
+  ontologies:hasOutput ontologies:DiagMentionAxiomTarget ;
+
   ontologies:hasRequiredInput ontologies:CondCodeShortcut ;
   ontologies:hasRequiredInput ontologies:CondEncounterShortcut ;
   ontologies:hasRequiredInput ontologies:CondKeysymShortcut ;
@@ -849,7 +847,83 @@ ontologies:CondMentionedClassFromValueRule
 .
 ontologies:CondMentionedClassList 
   ontologies:usesCustomVariableManipulationRule ontologies:CondMentionedClassFromValueRule .
+  
+### diag aboutness
 
+ontologies:post_icbo_synthea_omop_cnp_diagnosis_aboutness 
+  a ontologies:TURBO_0010354 ;
+  ontologies:hasOutput ontologies:DiagAboutPat ;
+  ontologies:hasOutput ontologies:DiagAboutnessAxiomDbXrefHasRepresentation ;
+  ontologies:hasOutput ontologies:DiagAboutnessAxiomDbXrefPartOfColumn ;
+  ontologies:hasOutput ontologies:DiagAboutnessAxiomHasDbXref ;
+  ontologies:hasOutput ontologies:DiagAboutnessAxiomProp ;
+  ontologies:hasOutput ontologies:DiagAboutnessAxiomSource ;
+  ontologies:hasOutput ontologies:DiagAboutnessAxiomTarget ;
+  ontologies:hasOutput ontologies:DiagKeyDenotesProv4Aboutness ;
+  ontologies:hasRequiredInput ontologies:DiagExpansion ;
+  ontologies:hasRequiredInput ontologies:DiagPatientShortcut ;
+  ontologies:hasRequiredInput ontologies:HardcodedPatientSourceden ;
+  ontologies:hasRequiredInput ontologies:KeyDenotesDiagInp ;
+  ontologies:hasRequiredInput ontologies:KeyDenotesPatient ;
+  ontologies:hasRequiredInput ontologies:PatKeySymbHasRepresentation ;
+  ontologies:hasRequiredInput ontologies:PatKeySymbPartOfKey ;
+  ontologies:hasRequiredInput ontologies:PatientExpansionSpecification ;
+  ontologies:inputNamedGraph ontologies:omopShortcuts ;
+  ontologies:outputNamedGraph ontologies:omopExpanded ;
+  ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_diagnosis_parthood ;
+.
+
+ontologies:DiagPatientShortcut 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:subject <http://api.stardog.com/condition_occurrence> ;
+  ontologies:predicate <http://api.stardog.com/condition_occurrence#person_id> ;
+  ontologies:object ontologies:person_id_IntegerLiteralValue ;
+.
+
+ontologies:KeyDenotesDiagInp
+  a ontologies:ObjectConnectionToInstanceRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object obo:OGMS_0000073 ;
+  ontologies:predicate obo:IAO_0000219 ;
+  ontologies:referencedInGraph ontologies:omopExpanded ;
+  ontologies:subject ontologies:TURBO_0010433 ;
+  ontologies:subjectUsesContext ontologies:DiagDenotationContext ;
+.
+
+### diag parthood
+
+ontologies:post_icbo_synthea_omop_cnp_diagnosis_parthood
+  a ontologies:TURBO_0010354 ;
+  ontologies:hasOutput ontologies:EncHsoDiag ;
+  ontologies:hasOutput ontologies:DiagKeyDenotesProv4Parthood ; 
+  ontologies:hasOutput ontologies:DiagParthoodAxiomDbXrefHasRepresentation ;
+  ontologies:hasOutput ontologies:DiagParthoodAxiomDbXrefPartOfColumn ;
+  ontologies:hasOutput ontologies:DiagParthoodAxiomHasDbXref ;
+  ontologies:hasOutput ontologies:DiagParthoodAxiomProp ;
+  ontologies:hasOutput ontologies:DiagParthoodAxiomSource ;
+  ontologies:hasOutput ontologies:DiagParthoodAxiomTarget ;
+  ontologies:hasRequiredInput ontologies:EncExpansionSpecification ;
+  ontologies:hasRequiredInput ontologies:EncKeySymbHasRepresentation ;
+  ontologies:hasRequiredInput ontologies:EncKeySymbPartOfKey ;
+  ontologies:hasRequiredInput ontologies:EncTypingRecipe ;
+  ontologies:hasRequiredInput ontologies:HardcodedEncSourceden ;
+  ontologies:hasRequiredInput ontologies:KeyDenotesEnc ;
+  ontologies:hasRequiredInput ontologies:KeyDenotesDiagInp ;
+  ontologies:hasRequiredInput ontologies:DiagEncShortcut ;
+  ontologies:hasRequiredInput ontologies:DiagExpansion ;
+  ontologies:inputNamedGraph ontologies:omopShortcuts ;
+  ontologies:outputNamedGraph ontologies:omopExpanded ;
+  # ontologies:precedes ontologies:post_icbo_synthea_omop_cnp_condition_occurrence ;
+.
+
+ontologies:DiagEncShortcut 
+  a ontologies:DatatypeConnectionRecipe ;
+  ontologies:multiplicity ontologies:1-1 ;
+  ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
+  ontologies:predicate <http://api.stardog.com/condition_occurrence#visit_occurrence_id> ;
+  ontologies:subject <http://api.stardog.com/condition_occurrence> ;
+.
 
 ###
 
