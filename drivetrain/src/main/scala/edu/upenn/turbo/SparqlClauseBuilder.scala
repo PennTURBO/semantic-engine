@@ -73,7 +73,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         val connectionName = rowResult(CONNECTIONNAME.toString).toString
         
         var required = true
-        if (rowResult(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/hasOptionalInput") required = false
+        if (rowResult(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput") required = false
         if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
         if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
         if (rowResult(OBJECTADESCRIBER.toString) != null) 
@@ -98,18 +98,18 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             objectAType = true
             varsForProcessInput += rowResult(OBJECT.toString).toString
         }
-        if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") 
+        if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/DatatypeConnectionRecipe") 
         {
             assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
             //this might be kind of hackish but it's making sure that a URI representing a literal is considered a variable not a static class
             objectADescriber = true
         }
-        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe") 
+        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionToTermRecipe") 
         {
             assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology" )
             assert (!objectALiteral, s"Found literal object for connection $connectionName of type ObjectConnectionToTermRecipe")
         }
-        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe") 
+        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionFromTermRecipe") 
         {
             assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
             assert (!objectALiteral, s"Found literal object for connection $connectionName of type ObjectConnectionFromTermRecipe")
@@ -188,19 +188,19 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             
             var objectFromDatatypeConnection = false
             
-            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/DatatypeConnectionRecipe") 
+            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/DatatypeConnectionRecipe") 
             {
                 assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
                 objectFromDatatypeConnection = true
             }
-            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe") 
+            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionToTermRecipe") 
             {
                 objectAType = false
                 if (!usedVariables.contains(rowResult(OBJECT.toString).toString)) nonVariableClasses += rowResult(OBJECT.toString).toString
                 assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
                 assert (!objectALiteral, s"Found literal object for connection $connectionName of type ObjectConnectionToTermRecipe")
             }
-            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe") 
+            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionFromTermRecipe") 
             {
                 subjectAType = false
                 if (!usedVariables.contains(rowResult(SUBJECT.toString).toString)) nonVariableClasses += rowResult(SUBJECT.toString).toString
@@ -301,20 +301,20 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     var process: String = ""
     
-    val manyToOneMultiplicity = "http://transformunify.org/ontologies/many-1"
-    val oneToManyMultiplicity = "http://transformunify.org/ontologies/1-many"
-    val objToInstRecipe = "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe"
-    val objToTermRecipe = "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe"
-    val objFromTermRecipe = "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe"
-    val datatypeRecipe = "http://transformunify.org/ontologies/DatatypeConnectionRecipe"
+    val manyToOneMultiplicity = "https://github.com/PennTURBO/Drivetrain/many-1"
+    val oneToManyMultiplicity = "https://github.com/PennTURBO/Drivetrain/1-many"
+    val objToInstRecipe = "https://github.com/PennTURBO/Drivetrain/ObjectConnectionToInstanceRecipe"
+    val objToTermRecipe = "https://github.com/PennTURBO/Drivetrain/ObjectConnectionToTermRecipe"
+    val objFromTermRecipe = "https://github.com/PennTURBO/Drivetrain/ObjectConnectionFromTermRecipe"
+    val datatypeRecipe = "https://github.com/PennTURBO/Drivetrain/DatatypeConnectionRecipe"
     
     def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean]): HashMap[String, Boolean] =
     {   
         this.process = process
         this.usedVariables = usedVariables
         val newUsedVariables = populateConnectionLists(outputs, inputs)
-        
-        /*for ((k,v) <- inputOnetoOneConnections)
+
+        /*for ((k,v) <- inputOneToOneConnections)
         {
             logger.info("key: " + k)
             for (a <- v) print("value: " + a + " ")
@@ -369,29 +369,29 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             else scannedConnections += connectionName -> codePlus
             if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe) 
             {  
-                if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") 
+                if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/1-1") 
                 {
                     handleOneToOneConnection(subjectString, objectString, outputOneToOneConnections)
                     populateDependenciesAndCustomRuleList(subjectString, subjectCustomRule, row(SUBJECTDEPENDEE.toString))
                     populateDependenciesAndCustomRuleList(objectString, objectCustomRule, row(OBJECTDEPENDEE.toString))
                 }
-                else if (thisMultiplicity == "http://transformunify.org/ontologies/many-singleton")
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/many-singleton")
                 {
                     outputSingletonClasses += objectString
                 }
-                else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-many")
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-many")
                 {
                     outputSingletonClasses += subjectString
                 }
-                else if (thisMultiplicity == "http://transformunify.org/ontologies/superSingleton-many")
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/superSingleton-many")
                 {
                     outputSuperSingletonClasses += subjectString
                 }
-                else if (thisMultiplicity == "http://transformunify.org/ontologies/many-superSingleton")
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/many-superSingleton")
                 {
                     outputSuperSingletonClasses += objectString
                 }
-                  else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-singleton")
+                  else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-singleton")
                 {
                     outputSingletonClasses += subjectString
                     outputSingletonClasses += objectString
@@ -460,7 +460,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val thisMultiplicity = row(MULTIPLICITY.toString).toString
             if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe)
             {
-                if (thisMultiplicity == "http://transformunify.org/ontologies/1-1") handleOneToOneConnection(subjectString, objectString, inputOneToOneConnections)
+                if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/1-1") handleOneToOneConnection(subjectString, objectString, inputOneToOneConnections)
                 else if (thisMultiplicity == oneToManyMultiplicity)
                 {
                     if (inputOneToManyConnections.contains(subjectString)) inputOneToManyConnections(subjectString) += objectString
@@ -471,15 +471,15 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                     if (inputOneToManyConnections.contains(objectString)) inputOneToManyConnections(objectString) += subjectString
                     else inputOneToManyConnections += objectString -> HashSet(subjectString)
                 }
-                else if (thisMultiplicity == "http://transformunify.org/ontologies/many-singleton")
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/many-singleton")
                 {
                     inputSingletonClasses += objectString
                 }
-                else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-many")
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-many")
                 {
                     inputSingletonClasses += subjectString
                 }
-                else if (thisMultiplicity == "http://transformunify.org/ontologies/singleton-singleton")
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-singleton")
                 {
                     inputSingletonClasses += subjectString
                     inputSingletonClasses += objectString

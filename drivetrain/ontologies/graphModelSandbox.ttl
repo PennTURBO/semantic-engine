@@ -1,22 +1,22 @@
 turbo:myProcess1 a turbo:TURBO_0010354 ;
-  turbo:inputNamedGraph pmbb:expanded ;
-  turbo:outputNamedGraph pmbb:expanded ;
-  turbo:hasRequiredInput turbo:connection1 ;
-  turbo:hasOutput turbo:connection3 ;
-  turbo:hasOutput turbo:connection4 ;
+  drivetrain:inputNamedGraph pmbb:expanded ;
+  drivetrain:outputNamedGraph pmbb:expanded ;
+  drivetrain:hasRequiredInput turbo:connection1 ;
+  drivetrain:hasOutput turbo:connection3 ;
+  drivetrain:hasOutput turbo:connection4 ;
 .
-turbo:connection1 a turbo:ObjectConnectionToInstanceRecipe ;
-  turbo:subject turbo:object1 ;
-  turbo:predicate turbo:predicate1 ;
-  turbo:object turbo:object1 ;
-  turbo:subjectUsesContext turbo:context1 ;
-  turbo:objectUsesContext turbo:context2 ;
-  turbo:multiplicity turbo:1-1 ;
+turbo:connection1 a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:subject turbo:object1 ;
+  drivetrain:predicate turbo:predicate1 ;
+  drivetrain:object turbo:object1 ;
+  drivetrain:subjectUsesContext turbo:context1 ;
+  drivetrain:objectUsesContext turbo:context2 ;
+  drivetrain:multiplicity drivetrain:1-1 ;
 .
 turbo:object1 a owl:Class .
 
-turbo:object1 turbo:hasPossibleContext turbo:context1 .
-turbo:object1 turbo:hasPossibleContext turbo:context2 .
+turbo:object1 drivetrain:hasPossibleContext turbo:context1 .
+turbo:object1 drivetrain:hasPossibleContext turbo:context2 .
 
-turbo:context1 a turbo:TurboGraphContext .
-turbo:context2 a turbo:TurboGraphContext .
+turbo:context1 a drivetrain:TurboGraphContext .
+turbo:context2 a drivetrain:TurboGraphContext .
