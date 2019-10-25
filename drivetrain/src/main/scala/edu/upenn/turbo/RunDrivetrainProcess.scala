@@ -78,14 +78,15 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $processSpecification: no input named graphs found")
             else
             {
-                logger.info(s"Running on validation mode $dataValidationMode")
                 //run validation on input graph
                 if (dataValidationMode == "stop" || dataValidationMode == "log")
                 {
+                    logger.info(s"Running on Input Data Validation Mode $dataValidationMode")
                     InputDataValidator.setGraphModelConnection(gmCxn)
                     InputDataValidator.setOutputRepositoryConnection(cxn)
                     InputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData, dataValidationMode)
                 }
+                else logger.info("Input Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
                 for (graph <- inputNamedGraphsList)
                 {
