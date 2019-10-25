@@ -1440,11 +1440,11 @@ drivetrain:TurboGraphBooleanLiteralValue
 drivetrain:TurboGraphConnectionRecipe
   a owl:Class ;
 .
-drivetrain:TurboGraphIntegerDateValue
+drivetrain:TurboGraphDateLiteralValue
   a owl:Class ;
   rdfs:subClassOf drivetrain:TurboGraphLiteralValue ;
 .
-drivetrain:TurboGraphIntegerDoubleValue
+drivetrain:TurboGraphDoubleLiteralValue
   a owl:Class ;
   rdfs:subClassOf drivetrain:TurboGraphLiteralValue ;
 .
@@ -1496,7 +1496,7 @@ ontologies:alleleZygosityIntegerLiteralValue
   a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 ontologies:biobankEncounterDateLiteralValue
-  a drivetrain:TurboGraphIntegerDateValue ;
+  a drivetrain:TurboGraphDateLiteralValue ;
 .
 ontologies:biobankEncounterDateStringLiteralValue
   a drivetrain:TurboGraphStringLiteralValue ;
@@ -1505,7 +1505,7 @@ ontologies:biobankEncounterSymbolStringLiteralValue
   a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:bmiDoubleLiteralValue
-  a drivetrain:TurboGraphIntegerDoubleValue ;
+  a drivetrain:TurboGraphDoubleLiteralValue ;
 .
 ontologies:encounterTypeCodeLiteralValue
   a drivetrain:TurboGraphStringLiteralValue ;
@@ -1531,14 +1531,14 @@ ontologies:diagnosisTermSuffixStringLiteralValue
   a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:diastolicBloodPressureDoubleLiteralValue
-  a drivetrain:TurboGraphIntegerDoubleValue ;
+  a drivetrain:TurboGraphDoubleLiteralValue ;
 .
 ontologies:hasOriginalVariable
   a owl:ObjectProperty ;
   rdfs:range rdfs:Resource ;
 .
 ontologies:healthcareEncounterDateLiteralValue
-  a drivetrain:TurboGraphIntegerDateValue ;
+  a drivetrain:TurboGraphDateLiteralValue ;
 .
 ontologies:healthcareEncounterDateStringLiteralValue
   a drivetrain:TurboGraphStringLiteralValue ;
@@ -1547,7 +1547,7 @@ ontologies:healthcareEncounterSymbolLiteralValue
   a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:homoSapiensDateOfBirthDateLiteralValue
-  a drivetrain:TurboGraphIntegerDateValue ;
+  a drivetrain:TurboGraphDateLiteralValue ;
 .
 ontologies:homoSapiensDateOfBirthStringLiteralValue
   a drivetrain:TurboGraphStringLiteralValue ;
@@ -1567,7 +1567,7 @@ drivetrain:inputNamedGraph
   rdfs:range drivetrain:TurboNamedGraph ;
 .
 ontologies:lengthMeasurementDoubleLiteralValue
-  a drivetrain:TurboGraphIntegerDoubleValue ;
+  a drivetrain:TurboGraphDoubleLiteralValue ;
 .
 drivetrain:many-1
   a drivetrain:TurboGraphMultiplicityRule ;
@@ -1579,7 +1579,7 @@ drivetrain:many-superSingleton
   a drivetrain:TurboGraphMultiplicityRule ;
 .
 ontologies:massMeasurementDoubleLiteralValue
-  a drivetrain:TurboGraphIntegerDoubleValue ;
+  a drivetrain:TurboGraphDoubleLiteralValue ;
 .
 ontologies:medicationOrderNameStringLiteralValue
   a drivetrain:TurboGraphStringLiteralValue ;
@@ -1674,7 +1674,7 @@ drivetrain:superSingleton-singleton
   a drivetrain:TurboGraphMultiplicityRule ;
 .
 ontologies:systolicBloodPressureDoubleLiteralValue
-  a drivetrain:TurboGraphIntegerDoubleValue ;
+  a drivetrain:TurboGraphDoubleLiteralValue ;
 .
 ontologies:tumorSymbolStringLiteralValue
   a drivetrain:TurboGraphStringLiteralValue ;
