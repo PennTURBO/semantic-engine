@@ -141,7 +141,7 @@ class PatternMatchQuery extends Query
             if (row(SUBJECTADESCRIBER.toString) != null) subjectADescriber = true
             if (row(OBJECTADESCRIBER.toString) != null) objectADescriber = true
             
-            if (row(INPUTTYPE.toString).toString == "http://transformunify.org/ontologies/hasOptionalInput") required = false
+            if (row(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput") required = false
             
             var objectResultBool = true
             if (!required || !(objectAType || objectADescriber)) objectResultBool = false

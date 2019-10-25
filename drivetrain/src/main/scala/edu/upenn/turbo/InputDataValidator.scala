@@ -31,36 +31,36 @@ object InputDataValidator extends ProjectwideGlobals
         for (input <- inputs)
         {   
             if (input(REQUIREMENT.toString) != null && 
-                (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/eitherSubjectOrObjectExists" ||
-                input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/objectExists" ||
-                input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/subjectExists"
+                (input(REQUIREMENT.toString).toString == "https://github.com/PennTURBO/Drivetrain/eitherSubjectOrObjectExists" ||
+                input(REQUIREMENT.toString).toString == "https://github.com/PennTURBO/Drivetrain/objectExists" ||
+                input(REQUIREMENT.toString).toString == "https://github.com/PennTURBO/Drivetrain/subjectExists"
                 ))
             {
                 val graphsFromNamedClause = helper.buildFromNamedGraphsClauseFromList(graphs)
-                if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionToTermRecipe")
+                if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionToTermRecipe")
                 {
                     validateTermAgainstSubject(graphsFromNamedClause, input)
                 }
-                else if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionFromTermRecipe")
+                else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionFromTermRecipe")
                 {
                     validateTermAgainstObject(graphsFromNamedClause, input)
                 }
-                else if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/DatatypeConnectionRecipe")
+                else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/DatatypeConnectionRecipe")
                 {
                     validateLiteralAgainstSubject(graphsFromNamedClause, input)
                 }
-                else if (input(CONNECTIONRECIPETYPE.toString).toString == "http://transformunify.org/ontologies/ObjectConnectionToInstanceRecipe")
+                else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionToInstanceRecipe")
                 {
-                    if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/eitherSubjectOrObjectExists")
+                    if (input(REQUIREMENT.toString).toString == "https://github.com/PennTURBO/Drivetrain/eitherSubjectOrObjectExists")
                     {
                         validateSubjectAgainstObject(graphsFromNamedClause, input)
                         validateObjectAgainstSubject(graphsFromNamedClause, input)
                     }
-                    else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/objectExists")
+                    else if (input(REQUIREMENT.toString).toString == "https://github.com/PennTURBO/Drivetrain/objectExists")
                     {
                         validateObjectAgainstSubject(graphsFromNamedClause, input)
                     }
-                    else if (input(REQUIREMENT.toString).toString == "http://transformunify.org/ontologies/subjectExists")
+                    else if (input(REQUIREMENT.toString).toString == "https://github.com/PennTURBO/Drivetrain/subjectExists")
                     {
                         validateSubjectAgainstObject(graphsFromNamedClause, input)
                     }   

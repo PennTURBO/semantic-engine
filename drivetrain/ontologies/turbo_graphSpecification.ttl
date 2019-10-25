@@ -1,1694 +1,1694 @@
 ontologies:DNAExtractionProcessToDNAExtract
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OBI_0001051 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0000257 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0001051 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0000257 ;
 .
 ontologies:DNAExtractionProcessToSpecimen
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OBI_0001479 ;
-  ontologies:predicate obo:OBI_0000293 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0000257 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0001479 ;
+  drivetrain:predicate obo:OBI_0000293 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0000257 ;
 .
 ontologies:DNAToDNAExtract
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object obo:OBI_0001051 ;
-  ontologies:predicate obo:OBI_0000643 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0001868 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+  drivetrain:object obo:OBI_0001051 ;
+  drivetrain:predicate obo:OBI_0000643 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0001868 ;
 .
 ontologies:DNAToHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:OGG_0000000014 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OBI_0001868 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:OGG_0000000014 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OBI_0001868 ;
 .
 ontologies:DatasetToDiastolicBloodPressureMeasurementDatum
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object obo:HTN_00000000 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object obo:HTN_00000000 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:DatasetToSystolicBloodPressureMeasurementDatum
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object obo:HTN_00000001 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object obo:HTN_00000001 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:DiastolicBloodPressureMeasurementDatumToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:HTN_00000000 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:HTN_00000000 ;
 .
 ontologies:DiastolicBloodPressureMeasurementDatumToValueSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010150 ;
-  ontologies:predicate obo:OBI_0001938 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:HTN_00000000 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0010150 ;
+  drivetrain:predicate obo:OBI_0001938 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:HTN_00000000 ;
 .
 ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:UO_0000272 ;
-  ontologies:predicate obo:IAO_0000039 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010150 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:UO_0000272 ;
+  drivetrain:predicate obo:IAO_0000039 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010150 ;
 .
 ontologies:DiastolicBloodPressureValueSpecificationToValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:diastolicBloodPressureDoubleLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010150 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:diastolicBloodPressureDoubleLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010150 ;
 .
 ontologies:SystolicBloodPressureMeasurementDatumToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:HTN_00000001 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:HTN_00000001 ;
 .
 ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010149 ;
-  ontologies:predicate obo:OBI_0001938 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:HTN_00000001 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0010149 ;
+  drivetrain:predicate obo:OBI_0001938 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:HTN_00000001 ;
 .
 ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:UO_0000272 ;
-  ontologies:predicate obo:IAO_0000039 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010149 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:UO_0000272 ;
+  drivetrain:predicate obo:IAO_0000039 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010149 ;
 .
 ontologies:SystolicBloodPressureValueSpecificationToValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:systolicBloodPressureDoubleLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010149 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:systolicBloodPressureDoubleLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010149 ;
 .
 ontologies:alleleCridSymbolToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0000568 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0000568 ;
 .
 ontologies:alleleToDNA
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:OBI_0001868 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0001352 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:OBI_0001868 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OBI_0001352 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToGeneSymbolFirstPart
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:alleleGeneSymbolFirstPartStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010016 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0001352 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:alleleGeneSymbolFirstPartStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010016 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToGeneSymbolSecondPart
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:alleleGeneSymbolSecondPartStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010015 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0001352 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:alleleGeneSymbolSecondPartStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010015 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToGeneSymbolUri
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:GeneSymbolUriOfVariousTypes ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OBI_0001352 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:GeneSymbolUriOfVariousTypes ;
+  drivetrain:predicate obo:IAO_0000142 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToZygosityIntegerValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:alleleZygosityIntegerLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010095 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0001352 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:alleleZygosityIntegerLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010095 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToZygosityUri
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:ZygosityUriOfVariousTypes ;
-  ontologies:predicate obo:OBI_0001938 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OBI_0001352 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:ZygosityUriOfVariousTypes ;
+  drivetrain:predicate obo:OBI_0001938 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:biobankEncounterDateToBiobankEncounterStart
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000531 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000532 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000531 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterDateToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0000532 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterDateToDateLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:biobankEncounterDateLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010096 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000532 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:biobankEncounterDateLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010096 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterDateToStringLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:biobankEncounterDateStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010095 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000532 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:biobankEncounterDateStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010095 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterIdToBiobankEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000533 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000527 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterIdToRegistryDenoter
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
-  ontologies:object ontologies:BiobankEncounterRegistryOfVariousTypes ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000533 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-singleton ;
+  drivetrain:object ontologies:BiobankEncounterRegistryOfVariousTypes ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterIdToSymbol
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000534 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000533 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000534 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterRegistryDenoterToId
-  a ontologies:ObjectConnectionFromTermRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
-  ontologies:object ontologies:TURBO_0000533 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:BiobankEncounterRegistryOfVariousTypes ;
+  a drivetrain:ObjectConnectionFromTermRecipe ;
+  drivetrain:multiplicity drivetrain:singleton-many ;
+  drivetrain:object ontologies:TURBO_0000533 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:BiobankEncounterRegistryOfVariousTypes ;
 .
 ontologies:biobankEncounterStartToBiobankEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:predicate obo:RO_0002223 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0000531 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000527 ;
+  drivetrain:predicate obo:RO_0002223 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0000531 ;
 .
 ontologies:biobankEncounterSymbolToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0000534 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0000534 ;
 .
 ontologies:biobankEncounterSymbolToId
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000533 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000534 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000533 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000534 ;
 .
 ontologies:biobankEncounterSymbolToSymbolValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:biobankEncounterSymbolStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000534 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:biobankEncounterSymbolStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000534 ;
 .
 ontologies:biobankEncounterToBMI
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object efo:EFO_0004340 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:subject ontologies:TURBO_0000527 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object efo:EFO_0004340 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:subject ontologies:TURBO_0000527 ;
 .
 ontologies:biobankEncounterToCollectionProcess
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OBI_0600005 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0000527 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0600005 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0000527 ;
 .
 ontologies:biobankEncounterToLengthMeasurementValueSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010138 ;
-  ontologies:predicate ontologies:TURBO_0010139 ;
-  ontologies:subject ontologies:TURBO_0000527 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0010138 ;
+  drivetrain:predicate ontologies:TURBO_0010139 ;
+  drivetrain:subject ontologies:TURBO_0000527 ;
 .
 ontologies:biobankEncounterToMassMeasurementValueSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OBI_0001929 ;
-  ontologies:predicate ontologies:TURBO_0010139 ;
-  ontologies:subject ontologies:TURBO_0000527 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0001929 ;
+  drivetrain:predicate ontologies:TURBO_0010139 ;
+  drivetrain:subject ontologies:TURBO_0000527 ;
 .
 ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:HTN_00000000 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:VSO_0000006 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:HTN_00000000 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureMeasurementProcessToHealthcareEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OGMS_0000097 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:VSO_0000006 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OGMS_0000097 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:HTN_00000001 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:VSO_0000006 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:HTN_00000001 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureToHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:RO_0000052 ;
-  ontologies:subject obo:VSO_0000004 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:RO_0000052 ;
+  drivetrain:subject obo:VSO_0000004 ;
 .
 ontologies:bmiToBmiDoubleLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:bmiDoubleLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject efo:EFO_0004340 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:bmiDoubleLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject efo:EFO_0004340 ;
 .
 ontologies:bmiToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject efo:EFO_0004340 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject efo:EFO_0004340 ;
 .
 ontologies:bmiToHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:subject efo:EFO_0004340 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:subject efo:EFO_0004340 ;
 .
 ontologies:cancerToHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:RO_0000052 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:MONDO_0004992 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:RO_0000052 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:MONDO_0004992 ;
 .
 ontologies:cancerToTumor
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010070 ;
-  ontologies:predicate obo:IDO_0000664 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:MONDO_0004992 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010070 ;
+  drivetrain:predicate obo:IDO_0000664 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:MONDO_0004992 ;
 .
 ontologies:collectionProcessToBiobankEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OBI_0600005 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000527 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OBI_0600005 ;
 .
 ontologies:collectionProcessToHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:OBI_0000293 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OBI_0600005 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:OBI_0000293 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OBI_0600005 ;
 .
 ontologies:collectionProcessToSpecimen
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OBI_0001479 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0600005 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0001479 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0600005 ;
 .
 ontologies:datasetToAllele
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object obo:OBI_0001352 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object obo:OBI_0001352 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToAlleleCridSymbol
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:TURBO_0000568 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object ontologies:TURBO_0000568 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToBiobankEncounterDate
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:TURBO_0000532 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object ontologies:TURBO_0000532 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToBiobankEncounterSymbol
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:TURBO_0000534 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object ontologies:TURBO_0000534 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToBmi
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object efo:EFO_0004340 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object efo:EFO_0004340 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToDatasetTitle
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:datasetTitleStringLiteralValue ;
-  ontologies:predicate dc11:title ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:datasetTitleStringLiteralValue ;
+  drivetrain:predicate dc11:title ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToDateOfBirthDatum
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object efo:EFO_0004950 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object efo:EFO_0004950 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToDiagnosis
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object obo:OGMS_0000073 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object obo:OGMS_0000073 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToGenderIdentityDatum
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:GenderIdentityDatumOfVariousTypes ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object ontologies:GenderIdentityDatumOfVariousTypes ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToHealthcareEncounterDate
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:TURBO_0000512 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object ontologies:TURBO_0000512 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToHealthcareEncounterSymbol
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:TURBO_0000509 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object ontologies:TURBO_0000509 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToHomoSapiensSymbol
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:TURBO_0000504 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object ontologies:TURBO_0000504 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToLengthMeasurementValueSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:TURBO_0010138 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object ontologies:TURBO_0010138 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToMassMeasurementValueSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object obo:OBI_0001929 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object obo:OBI_0001929 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToMedicationSymbol
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:TURBO_0000562 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object ontologies:TURBO_0000562 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToPrescription
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object obo:PDRO_0000001 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object obo:PDRO_0000001 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToRaceIdentityDatum
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:RaceIdentityDatumOfVariousTypes ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:IAO_0000100 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object ontologies:RaceIdentityDatumOfVariousTypes ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:dateOfBirthDatumToBirth
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:UBERON_0035946 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject efo:EFO_0004950 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:UBERON_0035946 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject efo:EFO_0004950 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToDateLiteral
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010096 ;
-  ontologies:subject efo:EFO_0004950 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010096 ;
+  drivetrain:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToStringLiteral
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:homoSapiensDateOfBirthStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010095 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject efo:EFO_0004950 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:homoSapiensDateOfBirthStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010095 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject efo:EFO_0004950 ;
 .
 ontologies:diagnosisToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OGMS_0000073 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:diagnosisTermSuffixStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:subject obo:OGMS_0000073 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:diagnosisTermSuffixStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:diagnosisCodingSequenceIntegerLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010014 ;
-  ontologies:subject obo:OGMS_0000073 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:diagnosisCodingSequenceIntegerLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010014 ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisRegistry
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:DiagnosisRegistryOfVariousTypes ;
-  ontologies:predicate ontologies:TURBO_0000703 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OGMS_0000073 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:DiagnosisRegistryOfVariousTypes ;
+  drivetrain:predicate ontologies:TURBO_0000703 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisRegistryStringLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:diagnosisRegistryStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0006515 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OGMS_0000073 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:diagnosisRegistryStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0006515 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToIcdTerm
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:IcdTermOfVariousTypes ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:subject obo:OGMS_0000073 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:IcdTermOfVariousTypes ;
+  drivetrain:predicate obo:IAO_0000142 ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:primaryDiagnosisBooleanLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010013 ;
-  ontologies:subject obo:OGMS_0000073 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:primaryDiagnosisBooleanLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010013 ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToSnomedTerm
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:SnomedTermOfVariousTypes ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:subject obo:OGMS_0000073 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:SnomedTermOfVariousTypes ;
+  drivetrain:predicate obo:IAO_0000142 ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:VSO_0000004 ;
-  ontologies:predicate obo:IAO_0000221 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:HTN_00000000 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:VSO_0000004 ;
+  drivetrain:predicate obo:IAO_0000221 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:HTN_00000000 ;
 .
 ontologies:exomeSequenceProcessToDNAExtract
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OBI_0001051 ;
-  ontologies:predicate obo:OBI_0000293 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0002118 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0001051 ;
+  drivetrain:predicate obo:OBI_0000293 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0002118 ;
 .
 ontologies:exomeSequenceProcessToSequenceData
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OBI_0001573 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0002118 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0001573 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0002118 ;
 .
 ontologies:formProcessToAllele
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object obo:OBI_0001352 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0200000 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+  drivetrain:object obo:OBI_0001352 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0200000 ;
 .
 ontologies:formProcessToSequenceData
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OBI_0001573 ;
-  ontologies:predicate obo:OBI_0000293 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0200000 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0001573 ;
+  drivetrain:predicate obo:OBI_0000293 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0200000 ;
 .
 ontologies:genderIdentityDatumToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genderIdentityDatumToGenderIdentityDatumLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:homoSapiensGenderIdentityStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:homoSapiensGenderIdentityStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genderIdentityDatumToGenderIdentityDatumType
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:GenderIdentityDatumType ;
-  ontologies:predicate rdf:type ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:GenderIdentityDatumType ;
+  drivetrain:predicate rdf:type ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genderIdentityDatumToHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:GenderIdentityDatumOfVariousTypes ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genomeCridRegistryDenoterToGenomeCrid
-  a ontologies:ObjectConnectionFromTermRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
-  ontologies:object ontologies:TURBO_0000566 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:GenomeRegistryOfVariousTypes ;
+  a drivetrain:ObjectConnectionFromTermRecipe ;
+  drivetrain:multiplicity drivetrain:singleton-many ;
+  drivetrain:object ontologies:TURBO_0000566 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:GenomeRegistryOfVariousTypes ;
 .
 ontologies:genomeCridSymbolToGenomeCrid
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000566 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000568 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000566 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000568 ;
 .
 ontologies:genomeCridSymbolToSymbolValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:alleleGenoIdStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000568 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:alleleGenoIdStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000568 ;
 .
 ontologies:genomeCridToGenomeCridRegistryDenoter
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
-  ontologies:object ontologies:GenomeRegistryOfVariousTypes ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000566 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-singleton ;
+  drivetrain:object ontologies:GenomeRegistryOfVariousTypes ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000566 ;
 .
 ontologies:genomeCridToGenomeCridSymbol
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000568 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000566 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000568 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000566 ;
 .
 ontologies:genomeCridToSpecimen
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OBI_0001479 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000566 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0001479 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000566 ;
 .
 ontologies:healthcareEncounterDateToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0000512 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterDateToDateLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:healthcareEncounterDateLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010096 ;
-  ontologies:subject ontologies:TURBO_0000512 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:healthcareEncounterDateLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010096 ;
+  drivetrain:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterDateToHealthcareEncounterStart
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000511 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000512 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000511 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterDateToStringLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:healthcareEncounterDateStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010095 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000512 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:healthcareEncounterDateStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010095 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterIdToRegistryDenoter
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
-  ontologies:object ontologies:HealthcareEncounterRegistryOfVariousTypes ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000508 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-singleton ;
+  drivetrain:object ontologies:HealthcareEncounterRegistryOfVariousTypes ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000508 ;
 .
 ontologies:healthcareEncounterIdToSymbol
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000509 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000508 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000509 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000508 ;
 .
 ontologies:healthcareEncounterRegistryDenoterToId
-  a ontologies:ObjectConnectionFromTermRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
-  ontologies:object ontologies:TURBO_0000508 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:HealthcareEncounterRegistryOfVariousTypes ;
+  a drivetrain:ObjectConnectionFromTermRecipe ;
+  drivetrain:multiplicity drivetrain:singleton-many ;
+  drivetrain:object ontologies:TURBO_0000508 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:HealthcareEncounterRegistryOfVariousTypes ;
 .
 ontologies:healthcareEncounterStartToHealthcareEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OGMS_0000097 ;
-  ontologies:predicate obo:RO_0002223 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0000511 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OGMS_0000097 ;
+  drivetrain:predicate obo:RO_0002223 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0000511 ;
 .
 ontologies:healthcareEncounterSymbolToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0000509 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0000509 ;
 .
 ontologies:healthcareEncounterSymbolToId
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000508 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000509 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000508 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000509 ;
 .
 ontologies:healthcareEncounterSymbolToSymbolValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:healthcareEncounterSymbolLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000509 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:healthcareEncounterSymbolLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000509 ;
 .
 ontologies:healthcareEncounterToBMI
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object efo:EFO_0004340 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:subject obo:OGMS_0000097 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object efo:EFO_0004340 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToBloodPressureMeasurementProcess
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:VSO_0000006 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:OGMS_0000097 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:VSO_0000006 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToDiagnosis
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object obo:OGMS_0000073 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:OGMS_0000097 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+  drivetrain:object obo:OGMS_0000073 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToLengthMeasurementValueSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010138 ;
-  ontologies:predicate ontologies:TURBO_0010139 ;
-  ontologies:subject obo:OGMS_0000097 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0010138 ;
+  drivetrain:predicate ontologies:TURBO_0010139 ;
+  drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToMassValueSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OBI_0001929 ;
-  ontologies:predicate ontologies:TURBO_0010139 ;
-  ontologies:subject obo:OGMS_0000097 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0001929 ;
+  drivetrain:predicate ontologies:TURBO_0010139 ;
+  drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToPrescription
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object obo:PDRO_0000001 ;
-  ontologies:predicate obo:OBI_0000299 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:OGMS_0000097 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+  drivetrain:object obo:PDRO_0000001 ;
+  drivetrain:predicate obo:OBI_0000299 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:provenanceDataItemToHealthcareEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OGMS_0000097 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010404 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OGMS_0000097 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
 .
 ontologies:provenanceDataItemToDatabaseTerm
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:HealthcareEncounterDatabaseProvenanceTerm ;
-  ontologies:predicate ontologies:database ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010404 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:HealthcareEncounterDatabaseProvenanceTerm ;
+  drivetrain:predicate ontologies:database ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
 .
 ontologies:provenanceDataItemToEncounterTypeCodeString
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:encounterTypeCodeLiteralValue ;
-  ontologies:predicate ontologies:colVal ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010404 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:encounterTypeCodeLiteralValue ;
+  drivetrain:predicate ontologies:colVal ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
 .
 ontologies:provenanceDataItemToSchemaTerm
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:HealthcareEncounterSchemaProvenanceTerm ;
-  ontologies:predicate ontologies:schema ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010404 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:HealthcareEncounterSchemaProvenanceTerm ;
+  drivetrain:predicate ontologies:schema ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
 .
 ontologies:provenanceDataItemToTableTerm
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:HealthcareEncounterTableProvenanceTerm ;
-  ontologies:predicate ontologies:table ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010404 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:HealthcareEncounterTableProvenanceTerm ;
+  drivetrain:predicate ontologies:table ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
 .
 ontologies:provenanceDataItemToColumnTerm
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:HealthcareEncounterTypeCodeColumnTerm ;
-  ontologies:predicate ontologies:column ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010404 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:HealthcareEncounterTypeCodeColumnTerm ;
+  drivetrain:predicate ontologies:column ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
 .
 ontologies:homoSapiensIdToRegistryDenoter
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-singleton ;
-  ontologies:object ontologies:HomoSapiensRegistryOfVariousTypes ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010092 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-singleton ;
+  drivetrain:object ontologies:HomoSapiensRegistryOfVariousTypes ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010092 ;
 .
 ontologies:homoSapiensIdToSymbol
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000504 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010092 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000504 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010092 ;
 .
 ontologies:homoSapiensIdentifierToHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010092 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010092 ;
 .
 ontologies:homoSapiensRegistryDenoterToId
-  a ontologies:ObjectConnectionFromTermRecipe ;
-  ontologies:multiplicity ontologies:singleton-many ;
-  ontologies:object ontologies:TURBO_0010092 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:HomoSapiensRegistryOfVariousTypes ;
+  a drivetrain:ObjectConnectionFromTermRecipe ;
+  drivetrain:multiplicity drivetrain:singleton-many ;
+  drivetrain:object ontologies:TURBO_0010092 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:HomoSapiensRegistryOfVariousTypes ;
 .
 ontologies:homoSapiensSymbolToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0000504 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0000504 ;
 .
 ontologies:homoSapiensSymbolToSymbolValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:homoSapiensSymbolStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000504 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:homoSapiensSymbolStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000504 ;
 .
 ontologies:homoSapiensToBiobankEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:predicate obo:RO_0000056 ;
-  ontologies:subject obo:NCBITaxon_9606 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+  drivetrain:object ontologies:TURBO_0000527 ;
+  drivetrain:predicate obo:RO_0000056 ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToBiosex
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:PATO_0000047 ;
-  ontologies:predicate obo:RO_0000086 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:NCBITaxon_9606 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:PATO_0000047 ;
+  drivetrain:predicate obo:RO_0000086 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToBirth
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:UBERON_0035946 ;
-  ontologies:predicate ontologies:TURBO_0000303 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:NCBITaxon_9606 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:UBERON_0035946 ;
+  drivetrain:predicate ontologies:TURBO_0000303 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToHealthcareEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object obo:OGMS_0000097 ;
-  ontologies:predicate obo:RO_0000056 ;
-  ontologies:subject obo:NCBITaxon_9606 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+  drivetrain:object obo:OGMS_0000097 ;
+  drivetrain:predicate obo:RO_0000056 ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToHeight
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:PATO_0000119 ;
-  ontologies:predicate obo:RO_0000086 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:NCBITaxon_9606 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:PATO_0000119 ;
+  drivetrain:predicate obo:RO_0000086 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToInvestigationRole
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-superSingleton ;
-  ontologies:object obo:OBI_0000097 ;
-  ontologies:predicate obo:RO_0000087 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:NCBITaxon_9606 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-superSingleton ;
+  drivetrain:object obo:OBI_0000097 ;
+  drivetrain:predicate obo:RO_0000087 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToPatientRole
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-superSingleton ;
-  ontologies:object obo:OBI_0000093 ;
-  ontologies:predicate obo:RO_0000087 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:NCBITaxon_9606 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-superSingleton ;
+  drivetrain:object obo:OBI_0000093 ;
+  drivetrain:predicate obo:RO_0000087 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToTumor
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:object ontologies:TURBO_0010070 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:NCBITaxon_9606 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+  drivetrain:object ontologies:TURBO_0010070 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToWeight
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:PATO_0000128 ;
-  ontologies:predicate obo:RO_0000086 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:NCBITaxon_9606 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:PATO_0000128 ;
+  drivetrain:predicate obo:RO_0000086 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:identifierToHealthcareEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:OGMS_0000097 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000508 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OGMS_0000097 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000508 ;
 .
 ontologies:identifierToMedicationSymbol
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000562 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000561 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000562 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000561 ;
 .
 ontologies:identifierToPrescription
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:PDRO_0000001 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000561 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:PDRO_0000001 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000561 ;
 .
 ontologies:instantiationToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:superSingleton-many ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:OBI_0000293 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000522 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:superSingleton-many ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:OBI_0000293 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000522 ;
 .
 ontologies:investigationRoleToBiobankEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:superSingleton-many ;
-  ontologies:object ontologies:TURBO_0000527 ;
-  ontologies:predicate obo:BFO_0000054 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OBI_0000097 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:superSingleton-many ;
+  drivetrain:object ontologies:TURBO_0000527 ;
+  drivetrain:predicate obo:BFO_0000054 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OBI_0000097 ;
 .
 ontologies:lengthMeasurementValueSpecificationToCentimeter
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:UO_0000015 ;
-  ontologies:predicate obo:IAO_0000039 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010138 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:UO_0000015 ;
+  drivetrain:predicate obo:IAO_0000039 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010138 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:subject ontologies:TURBO_0010138 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:PATO_0000119 ;
-  ontologies:predicate obo:IAO_0000221 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject ontologies:TURBO_0010138 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:PATO_0000119 ;
+  drivetrain:predicate obo:IAO_0000221 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:lengthMeasurementDoubleLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010138 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:lengthMeasurementDoubleLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010138 ;
 .
 ontologies:massMeasurementValueSpecificationToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OBI_0001929 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:subject obo:OBI_0001929 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToHomoSapiensWeight
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:PATO_0000128 ;
-  ontologies:predicate obo:IAO_0000221 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:subject obo:OBI_0001929 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:PATO_0000128 ;
+  drivetrain:predicate obo:IAO_0000221 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToKilogram
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:UO_0000009 ;
-  ontologies:predicate obo:IAO_0000039 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OBI_0001929 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:UO_0000009 ;
+  drivetrain:predicate obo:IAO_0000039 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:massMeasurementDoubleLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:OBI_0001929 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:massMeasurementDoubleLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0001929 ;
 .
 ontologies:medicationSymbolToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0000562 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0000562 ;
 .
 ontologies:medicationSymbolToMedicationSymbolStringLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:medicationSymbolStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000562 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:medicationSymbolStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000562 ;
 .
 ontologies:medicationSymbolToidentifier
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0000561 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000562 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000561 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000562 ;
 .
 ontologies:patientRoleToHealthcareEncounter
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:superSingleton-many ;
-  ontologies:object obo:OGMS_0000097 ;
-  ontologies:predicate obo:BFO_0000054 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:OBI_0000093 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:superSingleton-many ;
+  drivetrain:object obo:OGMS_0000097 ;
+  drivetrain:predicate obo:BFO_0000054 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:OBI_0000093 ;
 .
 ontologies:prescriptionToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:PDRO_0000001 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:PDRO_0000001 ;
 .
 ontologies:prescriptionToDrug
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:DrugTermOfVariousTypes ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:subject obo:PDRO_0000001 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:DrugTermOfVariousTypes ;
+  drivetrain:predicate obo:IAO_0000142 ;
+  drivetrain:subject obo:PDRO_0000001 ;
 .
 ontologies:prescriptionToMedicationOrderNameStringLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:medicationOrderNameStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:subject obo:PDRO_0000001 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:medicationOrderNameStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:subject obo:PDRO_0000001 ;
 .
 ontologies:raceIdentityDatumToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:raceIdentityDatumToHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:raceIdentityDatumToRaceIdentityDatumLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:homoSapiensRaceIdentityStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:homoSapiensRaceIdentityStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:raceIdentityDatumToRaceIdentityDatumType
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:RaceIdentityDatumType ;
-  ontologies:predicate rdf:type ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:RaceIdentityDatumOfVariousTypes ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:RaceIdentityDatumType ;
+  drivetrain:predicate rdf:type ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:symbolToHomoSapiensId
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010092 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0000504 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0010092 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0000504 ;
 .
 ontologies:systolicBloodPressureMeasurementDatumToBloodPressure
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:VSO_0000004 ;
-  ontologies:predicate obo:IAO_0000221 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject obo:HTN_00000001 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:VSO_0000004 ;
+  drivetrain:predicate obo:IAO_0000221 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject obo:HTN_00000001 ;
 .
 ontologies:tumorCridSymbolToSymbolLiteralValue
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:tumorSymbolStringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:IAO_0000577 ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:tumorSymbolStringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:IAO_0000577 ;
 .
 ontologies:tumorCridSymbolToTumorCrid
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010188 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject obo:IAO_0000577 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0010188 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:IAO_0000577 ;
 .
 ontologies:tumorCridToTumor
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010070 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010188 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0010070 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010188 ;
 .
 ontologies:tumorCridToDataset
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/many-1> ;
-  ontologies:object obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010188 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
+  drivetrain:object obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010188 ;
 .
 ontologies:datasetToTumorCrid
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-many> ;
-  ontologies:subject obo:IAO_0000100 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:objectExists ;
-  ontologies:object ontologies:TURBO_0010188 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+  drivetrain:subject obo:IAO_0000100 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:object ontologies:TURBO_0010188 ;
 .
 ontologies:tumorCridToTumorCridSymbol
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object obo:IAO_0000577 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010188 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:IAO_0000577 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010188 ;
 .
 ontologies:tumorCridToTumorRegistryDenoter
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TumorRegistryDenoterOfVariousTypes ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TURBO_0010188 ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TumorRegistryDenoterOfVariousTypes ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TURBO_0010188 ;
 .
 ontologies:tumorRegistryDenoterToTumorCrid
-  a ontologies:ObjectConnectionFromTermRecipe ;
-  ontologies:multiplicity <http://transformunify.org/ontologies/1-1> ;
-  ontologies:object ontologies:TURBO_0010188 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:eitherSubjectOrObjectExists ;
-  ontologies:subject ontologies:TumorRegistryDenoterOfVariousTypes ;
+  a drivetrain:ObjectConnectionFromTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0010188 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject ontologies:TumorRegistryDenoterOfVariousTypes ;
 .
 ontologies:tumorToHomoSapiens
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:mustExistIf ontologies:subjectExists ;
-  ontologies:subject ontologies:TURBO_0010070 ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:subject ontologies:TURBO_0010070 ;
 .
-<http://transformunify.org/ontologies/1-1>
-  a ontologies:TurboGraphMultiplicityRule ;
+<https://github.com/PennTURBO/Drivetrain/1-1>
+  a drivetrain:TurboGraphMultiplicityRule ;
 .
-<http://transformunify.org/ontologies/1-many>
-  a ontologies:TurboGraphMultiplicityRule ;
+<https://github.com/PennTURBO/Drivetrain/1-many>
+  a drivetrain:TurboGraphMultiplicityRule ;
 .
 ontologies:BiobankEncounterRegistryOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range ontologies:TURBO_0000535 ;
-  ontologies:range ontologies:TURBO_0010297 ;
-  ontologies:range ontologies:TURBO_0010298 ;
-  ontologies:range ontologies:TURBO_0010299 ;
+  a drivetrain:MultiObjectDescriber ;
+  drivetrain:range ontologies:TURBO_0000535 ;
+  drivetrain:range ontologies:TURBO_0010297 ;
+  drivetrain:range ontologies:TURBO_0010298 ;
+  drivetrain:range ontologies:TURBO_0010299 ;
 .
 ontologies:HealthcareEncounterDatabaseProvenanceTerm
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
 ontologies:HealthcareEncounterSchemaProvenanceTerm
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
 ontologies:HealthcareEncounterTypeCodeColumnTerm
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
 ontologies:HealthcareEncounterTableProvenanceTerm
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
-ontologies:DatatypeConnectionRecipe
+drivetrain:DatatypeConnectionRecipe
   a owl:Class ;
-  rdfs:subClassOf ontologies:TurboGraphConnectionRecipe ;
+  rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe ;
 .
 ontologies:DiagnosisRegistryOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range Thesaurus:C53489 ;
-  ontologies:range Thesaurus:C71890 ;
-  ontologies:range Thesaurus:C71892 ;
+  a drivetrain:MultiObjectDescriber ;
+  drivetrain:range Thesaurus:C53489 ;
+  drivetrain:range Thesaurus:C71890 ;
+  drivetrain:range Thesaurus:C71892 ;
 .
 ontologies:DrugTermOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
 ontologies:GenderIdentityDatumOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
 ontologies:GenderIdentityDatumType
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range obo:OMRSE_00000133 ;
-  ontologies:range obo:OMRSE_00000138 ;
-  ontologies:range obo:OMRSE_00000141 ;
+  a drivetrain:MultiObjectDescriber ;
+  drivetrain:range obo:OMRSE_00000133 ;
+  drivetrain:range obo:OMRSE_00000138 ;
+  drivetrain:range obo:OMRSE_00000141 ;
 .
 ontologies:GeneSymbolUriOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
 ontologies:GenomeRegistryOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range ontologies:TURBO_0000567 ;
+  a drivetrain:MultiObjectDescriber ;
+  drivetrain:range ontologies:TURBO_0000567 ;
 .
 ontologies:HealthcareEncounterRegistryOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range ontologies:TURBO_0000510 ;
-  ontologies:range ontologies:TURBO_0010256 ;
+  a drivetrain:MultiObjectDescriber ;
+  drivetrain:range ontologies:TURBO_0000510 ;
+  drivetrain:range ontologies:TURBO_0010256 ;
 .
 ontologies:HomoSapiensRegistryOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range ontologies:TURBO_0000505 ;
-  ontologies:range ontologies:TURBO_0010275 ;
-  ontologies:range ontologies:TURBO_0010295 ;
+  a drivetrain:MultiObjectDescriber ;
+  drivetrain:range ontologies:TURBO_0000505 ;
+  drivetrain:range ontologies:TURBO_0010275 ;
+  drivetrain:range ontologies:TURBO_0010295 ;
 .
 ontologies:IcdTermOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
-ontologies:MultiObjectDescriber
+drivetrain:MultiObjectDescriber
   a owl:Class ;
 .
-ontologies:ObjectConnectionRecipe
+drivetrain:objectConnectionRecipe
   a owl:Class ;
-  rdfs:subClassOf ontologies:TurboGraphConnectionRecipe ;
+  rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe ;
 .
-ontologies:ObjectConnectionToTermRecipe
+drivetrain:ObjectConnectionToTermRecipe
   a owl:Class ;
-  rdfs:subClassOf ontologies:ObjectConnectionRecipe ;
+  rdfs:subClassOf drivetrain:objectConnectionRecipe ;
 .
-ontologies:ObjectConnectionToInstanceRecipe
+drivetrain:ObjectConnectionToInstanceRecipe
   a owl:Class ;
-  rdfs:subClassOf ontologies:ObjectConnectionRecipe ;
+  rdfs:subClassOf drivetrain:objectConnectionRecipe ;
 .
 ontologies:RaceIdentityDatumOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
 ontologies:RaceIdentityDatumType
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range obo:OBI_0000852 ;
-  ontologies:range obo:OMRSE_00000098 ;
-  ontologies:range obo:OMRSE_00000180 ;
-  ontologies:range obo:OMRSE_00000181 ;
-  ontologies:range obo:OMRSE_00000182 ;
-  ontologies:range obo:OMRSE_00000183 ;
-  ontologies:range obo:OMRSE_00000184 ;
-  ontologies:range ontologies:TURBO_0001551 ;
+  a drivetrain:MultiObjectDescriber ;
+  drivetrain:range obo:OBI_0000852 ;
+  drivetrain:range obo:OMRSE_00000098 ;
+  drivetrain:range obo:OMRSE_00000180 ;
+  drivetrain:range obo:OMRSE_00000181 ;
+  drivetrain:range obo:OMRSE_00000182 ;
+  drivetrain:range obo:OMRSE_00000183 ;
+  drivetrain:range obo:OMRSE_00000184 ;
+  drivetrain:range ontologies:TURBO_0001551 ;
 .
 ontologies:SnomedTermOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
+  a drivetrain:MultiObjectDescriber ;
 .
 ontologies:TumorRegistryDenoterOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range ontologies:TURBO_0010274 ;
+  a drivetrain:MultiObjectDescriber ;
+  drivetrain:range ontologies:TURBO_0010274 ;
 .
-ontologies:TurboGraphBooleanLiteralValue
+drivetrain:TurboGraphBooleanLiteralValue
   a owl:Class ;
-  rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
+  rdfs:subClassOf drivetrain:TurboGraphLiteralValue ;
 .
-ontologies:TurboGraphConnectionRecipe
-  a owl:Class ;
-.
-ontologies:TurboGraphDateLiteralValue
-  a owl:Class ;
-  rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
-.
-ontologies:TurboGraphDoubleLiteralValue
-  a owl:Class ;
-  rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
-.
-ontologies:TurboGraphIntegerLiteralValue
-  a owl:Class ;
-  rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
-.
-ontologies:TurboGraphLiteralValue
+drivetrain:TurboGraphConnectionRecipe
   a owl:Class ;
 .
-ontologies:TurboGraphMinusGroup
+drivetrain:TurboGraphIntegerDateValue
+  a owl:Class ;
+  rdfs:subClassOf drivetrain:TurboGraphLiteralValue ;
+.
+drivetrain:TurboGraphIntegerDoubleValue
+  a owl:Class ;
+  rdfs:subClassOf drivetrain:TurboGraphLiteralValue ;
+.
+drivetrain:TurboGraphIntegerLiteralValue
+  a owl:Class ;
+  rdfs:subClassOf drivetrain:TurboGraphLiteralValue ;
+.
+drivetrain:TurboGraphLiteralValue
   a owl:Class ;
 .
-ontologies:TurboGraphMultiplicityRule
+drivetrain:TurboGraphMinusGroup
   a owl:Class ;
 .
-ontologies:TurboGraphOptionalGroup
+drivetrain:TurboGraphMultiplicityRule
   a owl:Class ;
 .
-ontologies:TurboGraphStringLiteralValue
-  a owl:Class ;
-  rdfs:subClassOf ontologies:TurboGraphLiteralValue ;
-.
-ontologies:TurboGraphVariableManipulationLogic
+drivetrain:TurboGraphOptionalGroup
   a owl:Class ;
 .
-ontologies:TurboNamedGraph
+drivetrain:TurboGraphStringLiteralValue
+  a owl:Class ;
+  rdfs:subClassOf drivetrain:TurboGraphLiteralValue ;
+.
+drivetrain:TurboGraphVariableManipulationLogic
+  a owl:Class ;
+.
+drivetrain:TurboNamedGraph
   a owl:Class ;
   rdfs:subClassOf owl:Thing ;
 .
 ontologies:ZygosityUriOfVariousTypes
-  a ontologies:MultiObjectDescriber ;
-  ontologies:range ontologies:TURBO_0000590 ;
-  ontologies:range ontologies:TURBO_0000591 ;
+  a drivetrain:MultiObjectDescriber ;
+  drivetrain:range ontologies:TURBO_0000590 ;
+  drivetrain:range ontologies:TURBO_0000591 ;
 .
 ontologies:alleleGeneSymbolFirstPartStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:alleleGeneSymbolSecondPartStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:alleleGeneSymbolStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:alleleGenoIdStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:alleleZygosityIntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 ontologies:biobankEncounterDateLiteralValue
-  a ontologies:TurboGraphDateLiteralValue ;
+  a drivetrain:TurboGraphIntegerDateValue ;
 .
 ontologies:biobankEncounterDateStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:biobankEncounterSymbolStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:bmiDoubleLiteralValue
-  a ontologies:TurboGraphDoubleLiteralValue ;
+  a drivetrain:TurboGraphIntegerDoubleValue ;
 .
 ontologies:encounterTypeCodeLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
-ontologies:buildsMinusGroup
+drivetrain:buildsMinusGroup
   a owl:ObjectProperty ;
 .
-ontologies:buildsOptionalGroup
+drivetrain:buildsOptionalGroup
   a owl:ObjectProperty ;
   rdfs:domain rdfs:Resource ;
   rdfs:range rdfs:Resource ;
 .
 ontologies:datasetTitleStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:diagnosisCodingSequenceIntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 ontologies:diagnosisRegistryStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:diagnosisTermSuffixStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:diastolicBloodPressureDoubleLiteralValue
-  a ontologies:TurboGraphDoubleLiteralValue ;
+  a drivetrain:TurboGraphIntegerDoubleValue ;
 .
 ontologies:hasOriginalVariable
   a owl:ObjectProperty ;
   rdfs:range rdfs:Resource ;
 .
 ontologies:healthcareEncounterDateLiteralValue
-  a ontologies:TurboGraphDateLiteralValue ;
+  a drivetrain:TurboGraphIntegerDateValue ;
 .
 ontologies:healthcareEncounterDateStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:healthcareEncounterSymbolLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:homoSapiensDateOfBirthDateLiteralValue
-  a ontologies:TurboGraphDateLiteralValue ;
+  a drivetrain:TurboGraphIntegerDateValue ;
 .
 ontologies:homoSapiensDateOfBirthStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:homoSapiensGenderIdentityStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:homoSapiensRaceIdentityStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:homoSapiensSymbolStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
-ontologies:inputNamedGraph
+drivetrain:inputNamedGraph
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TURBO_0010354 ;
-  rdfs:range ontologies:TurboNamedGraph ;
+  rdfs:range drivetrain:TurboNamedGraph ;
 .
 ontologies:lengthMeasurementDoubleLiteralValue
-  a ontologies:TurboGraphDoubleLiteralValue ;
+  a drivetrain:TurboGraphIntegerDoubleValue ;
 .
-ontologies:many-1
-  a ontologies:TurboGraphMultiplicityRule ;
+drivetrain:many-1
+  a drivetrain:TurboGraphMultiplicityRule ;
 .
-ontologies:many-singleton
-  a ontologies:TurboGraphMultiplicityRule ;
+drivetrain:many-singleton
+  a drivetrain:TurboGraphMultiplicityRule ;
 .
-ontologies:many-superSingleton
-  a ontologies:TurboGraphMultiplicityRule ;
+drivetrain:many-superSingleton
+  a drivetrain:TurboGraphMultiplicityRule ;
 .
 ontologies:massMeasurementDoubleLiteralValue
-  a ontologies:TurboGraphDoubleLiteralValue ;
+  a drivetrain:TurboGraphIntegerDoubleValue ;
 .
 ontologies:medicationOrderNameStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:medicationSymbolStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
-ontologies:multiplicity
+drivetrain:multiplicity
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
-  rdfs:range ontologies:TurboGraphMultiplicityRule ;
+  rdfs:domain drivetrain:TurboGraphConnectionRecipe ;
+  rdfs:range drivetrain:TurboGraphMultiplicityRule ;
 .
-ontologies:object
+drivetrain:object
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:domain drivetrain:TurboGraphConnectionRecipe ;
   rdfs:range rdfs:Resource ;
 .
-ontologies:objectRequiredToCreate
+drivetrain:objectRequiredToCreate
   a owl:ObjectProperty ;
   rdfs:domain owl:Class ;
   rdfs:range rdfs:Resource ;
 .
-ontologies:optionalInputTo
+drivetrain:optionalInputTo
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:domain drivetrain:TurboGraphConnectionRecipe ;
   rdfs:range rdfs:Resource ;
 .
-ontologies:outputNamedGraph
+drivetrain:outputNamedGraph
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TURBO_0010354 ;
-  rdfs:range ontologies:TurboNamedGraph ;
+  rdfs:range drivetrain:TurboNamedGraph ;
 .
-ontologies:outputOf
+drivetrain:outputOf
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:domain drivetrain:TurboGraphConnectionRecipe ;
   rdfs:range ontologies:TURBO_0010354 ;
   rdfs:range owl:Class ;
 .
-ontologies:precedes
+drivetrain:precedes
   a owl:ObjectProperty ;
   rdfs:domain ontologies:TURBO_0010354 ;
   rdfs:range ontologies:TURBO_0010354 ;
 .
-ontologies:predicate
+drivetrain:predicate
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:domain drivetrain:TurboGraphConnectionRecipe ;
   rdfs:range rdf:Property ;
 .
 ontologies:primaryDiagnosisBooleanLiteralValue
-  a ontologies:TurboGraphBooleanLiteralValue ;
+  a drivetrain:TurboGraphBooleanLiteralValue ;
 .
-ontologies:referencedInGraph
+drivetrain:referencedInGraph
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:domain drivetrain:TurboGraphConnectionRecipe ;
 .
-ontologies:removedBy
+drivetrain:removedBy
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:domain drivetrain:TurboGraphConnectionRecipe ;
 .
-ontologies:required
+drivetrain:required
   a owl:DatatypeProperty ;
-  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:domain drivetrain:TurboGraphConnectionRecipe ;
 .
-ontologies:requiredInputTo
+drivetrain:requiredInputTo
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:domain drivetrain:TurboGraphConnectionRecipe ;
   rdfs:range rdfs:Resource ;
 .
-ontologies:singleton-many
-  a ontologies:TurboGraphMultiplicityRule ;
+drivetrain:singleton-many
+  a drivetrain:TurboGraphMultiplicityRule ;
 .
-ontologies:singleton-singleton
-  a ontologies:TurboGraphMultiplicityRule ;
+drivetrain:singleton-singleton
+  a drivetrain:TurboGraphMultiplicityRule ;
 .
-ontologies:singleton-superSingleton
-  a ontologies:TurboGraphMultiplicityRule ;
+drivetrain:singleton-superSingleton
+  a drivetrain:TurboGraphMultiplicityRule ;
 .
-ontologies:subject
+drivetrain:subject
   a owl:ObjectProperty ;
-  rdfs:domain ontologies:TurboGraphConnectionRecipe ;
+  rdfs:domain drivetrain:TurboGraphConnectionRecipe ;
   rdfs:range owl:Class ;
 .
-ontologies:subjectRequiredToCreate
+drivetrain:subjectRequiredToCreate
   a owl:ObjectProperty ;
   rdfs:domain owl:Class ;
   rdfs:range rdfs:Resource ;
 .
-ontologies:superSingleton-many
-  a ontologies:TurboGraphMultiplicityRule ;
+drivetrain:superSingleton-many
+  a drivetrain:TurboGraphMultiplicityRule ;
 .
-ontologies:superSingleton-singleton
-  a ontologies:TurboGraphMultiplicityRule ;
+drivetrain:superSingleton-singleton
+  a drivetrain:TurboGraphMultiplicityRule ;
 .
 ontologies:systolicBloodPressureDoubleLiteralValue
-  a ontologies:TurboGraphDoubleLiteralValue ;
+  a drivetrain:TurboGraphIntegerDoubleValue ;
 .
 ontologies:tumorSymbolStringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 ontologies:usesCustomVariableManipulationRule
   a owl:ObjectProperty ;
   rdfs:range rdfs:Resource ;
 .
-ontologies:objectExists
-  a ontologies:TurboGraphRequirementSpecification ;
+drivetrain:objectExists
+  a drivetrain:TurboGraphRequirementSpecification ;
 .
-ontologies:subjectExists
-  a ontologies:TurboGraphRequirementSpecification ;
+drivetrain:subjectExists
+  a drivetrain:TurboGraphRequirementSpecification ;
 .
-ontologies:eitherSubjectOrObjectExists
-  a ontologies:TurboGraphRequirementSpecification ;
+drivetrain:eitherSubjectOrObjectExists
+  a drivetrain:TurboGraphRequirementSpecification ;
 .
