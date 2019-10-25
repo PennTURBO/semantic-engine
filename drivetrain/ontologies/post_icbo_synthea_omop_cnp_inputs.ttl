@@ -70,7 +70,8 @@ drivetrain:post_icbo_synthea_omop_cnp_patients
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_encs ;
 .
 
-drivetrain:GidScoGid a drivetrain:objectConnectionToTermRecipe ;
+drivetrain:GidScoGid 
+   a drivetrain:ObjectConnectionToTermRecipe ;
    drivetrain:multiplicity drivetrain:1-1 ;
    drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
    drivetrain:subject drivetrain:GidClassList ;
@@ -102,7 +103,8 @@ drivetrain:PatientRidShortcut
   drivetrain:object drivetrain:race_concept_id_IntegerLiteralValue ;
 .
 
-drivetrain:RidScoStarRid a drivetrain:objectConnectionToTermRecipe ;
+drivetrain:RidScoStarRid 
+   a drivetrain:ObjectConnectionToTermRecipe ;
    drivetrain:multiplicity drivetrain:1-1 ;
    drivetrain:object obo:OMRSE_00000098 ;
    drivetrain:predicate rdfs:subClassOf ;
@@ -195,7 +197,8 @@ drivetrain:EncTypeShortcut
   drivetrain:object drivetrain:visit_concept_id_IntegerLiteralValue ;
 .
 
-drivetrain:EncScoStarEnc a drivetrain:objectConnectionToTermRecipe ;
+drivetrain:EncScoStarEnc 
+   a drivetrain:ObjectConnectionToTermRecipe ;
    drivetrain:multiplicity drivetrain:1-1 ;
    drivetrain:object obo:OGMS_0000097 ;
    drivetrain:predicate rdfs:subClassOf ;
@@ -279,7 +282,7 @@ drivetrain:post_icbo_synthea_omop_cnp_enc_participation
 .
 
 drivetrain:EncKeyDenotesEnc
-  a drivetrain:objectConnectionToInstanceRecipe ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:referencedInGraph ontologies:omopExpanded ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
@@ -344,7 +347,7 @@ drivetrain:RepresenteeOfPreviousVisitId
 .
 
 drivetrain:KeyContainerOfPreviousVisitId
-  a drivetrain:objectConnectionToInstanceRecipe ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:referencedInGraph ontologies:omopExpanded ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
@@ -353,7 +356,7 @@ drivetrain:KeyContainerOfPreviousVisitId
 .
 
 drivetrain:KeyDenotesPrevenc
-  a drivetrain:objectConnectionToInstanceRecipe ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:referencedInGraph ontologies:omopExpanded ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
@@ -362,7 +365,7 @@ drivetrain:KeyDenotesPrevenc
 .
 
 drivetrain:PrevencAPrevencsClass 
-  a drivetrain:objectConnectionToInstanceRecipe ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:referencedInGraph ontologies:omopExpanded ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:Prevenc ;
@@ -371,7 +374,7 @@ drivetrain:PrevencAPrevencsClass
 .
 
 drivetrain:PrevencScoEnc
-  a drivetrain:objectConnectionToTermRecipe ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
   drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:PrevencsClass ;
@@ -443,34 +446,34 @@ drivetrain:ProcOmopConceptIds
   drivetrain:object drivetrain:procedure_source_concept_id_IntegerLiteralValue ;
 .
 
-ontologies:ProcKeysymShortcut 
+drivetrain:ProcKeysymShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#procedure_occurrence_id> ;
-  drivetrain:object ontologies:procedure_occurrence_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:procedure_occurrence_id_IntegerLiteralValue ;
 .
-ontologies:ProcSourceValueShortcut 
+drivetrain:ProcSourceValueShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#procedure_source_value> ;
-  drivetrain:object ontologies:procedure_source_value_StringLiteralValue ;
-  drivetrain:objectRequiredToCreate ontologies:ProcMentionedClassList ;
+  drivetrain:object drivetrain:procedure_source_value_StringLiteralValue ;
+  drivetrain:objectRequiredToCreate drivetrain:ProcMentionedClassList ;
 .
 
-ontologies:ProcMentionedClassFromValueRule
-  a ontologies:TurboGraphVariableManipulationLogic ;
-  ontologies:usesSparql """
+drivetrain:ProcMentionedClassFromValueRule
+  a drivetrain:TurboGraphVariableManipulationLogic ;
+  drivetrain:usesSparql """
   BIND(uri(concat('http://purl.bioontology.org/ontology/SNOMEDCT/', ${dependent} )) as  ${replacement} )
 """  ;
 .
-ontologies:ProcMentionedClassList 
-  ontologies:usesCustomVariableManipulationRule ontologies:ProcMentionedClassFromValueRule .
+drivetrain:ProcMentionedClassList 
+  drivetrain:usesCustomVariableManipulationRule drivetrain:ProcMentionedClassFromValueRule .
   
 ### Proc participation
 
-ontologies:post_icbo_synthea_omop_cnp_procedure_participation
+drivetrain:post_icbo_synthea_omop_cnp_procedure_participation
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:PatientHasRole ;
   drivetrain:hasOutput drivetrain:ProcKeyDenotesParticipationAxiomDbXref ;
@@ -553,21 +556,28 @@ drivetrain:post_icbo_synthea_omop_cnp_measurement
   drivetrain:hasOutput drivetrain:MeasKeySymbHasRepresentation ;
   drivetrain:hasOutput drivetrain:MeasKeySymbPartOfColumn ;
   drivetrain:hasOutput drivetrain:MeasKeySymbPartOfKey ;
+  
+  drivetrain:hasOutput drivetrain:KeyDenotesMeasMentionAxiomDbXref ;
+  drivetrain:hasOutput drivetrain:KeyDenotesMeasTypeAxiomDbXref ;
+  
   drivetrain:hasOutput drivetrain:MeasMentionAxiomDbXrefHasRepresentation ;
   drivetrain:hasOutput drivetrain:MeasMentionAxiomDbXrefPartOfColumn ;
   drivetrain:hasOutput drivetrain:MeasMentionAxiomHasDbXref ;
   drivetrain:hasOutput drivetrain:MeasMentionAxiomProp ;
   drivetrain:hasOutput drivetrain:MeasMentionAxiomSource ;
   drivetrain:hasOutput drivetrain:MeasMentionAxiomTarget ;
+  
   drivetrain:hasOutput drivetrain:MeasMentionsCode ;
   drivetrain:hasOutput drivetrain:MeasTmdHasMeasVal ;
   drivetrain:hasOutput drivetrain:MeasTmdPartOfQueryResult ;
+  
   drivetrain:hasOutput drivetrain:MeasTypeAxiomDbXrefHasRepresentation ;
   drivetrain:hasOutput drivetrain:MeasTypeAxiomDbXrefPartOfColumn ;
   drivetrain:hasOutput drivetrain:MeasTypeAxiomHasDbXref ;
   drivetrain:hasOutput drivetrain:MeasTypeAxiomProp ;
   drivetrain:hasOutput drivetrain:MeasTypeAxiomSource ;
   drivetrain:hasOutput drivetrain:MeasTypeAxiomTarget ;
+  
   drivetrain:hasOutput drivetrain:MeasTypingRecipe ;
   drivetrain:hasOutput drivetrain:MeasValspecPartOfQueryResult ;
   drivetrain:hasOutput drivetrain:ValspecHasSpecVal ;
@@ -585,7 +595,7 @@ drivetrain:post_icbo_synthea_omop_cnp_measurement
 .
 
 drivetrain:MeasScoMeas
-  a drivetrain:objectConnectionToTermRecipe ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object obo:IAO_0000109 ;
   drivetrain:predicate rdfs:subClassOf  ;
@@ -684,6 +694,7 @@ drivetrain:post_icbo_synthea_omop_cnp_mul
   drivetrain:outputNamedGraph ontologies:omopExpanded ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_measurement_aboutness ;
 .
+
 drivetrain:MeasMoreUnitsShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -702,7 +713,7 @@ drivetrain:MulClassHasOmopConceptId
 .
 
 drivetrain:MulScoMul
-  a drivetrain:objectConnectionToTermRecipe ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object obo:IAO_0000003 ;
   drivetrain:predicate rdfs:subClassOf  ;
@@ -781,7 +792,7 @@ drivetrain:MeasEncShortcut
 .
 
 drivetrain:KeyDenotesMeasInp
-  a drivetrain:objectConnectionToInstanceRecipe ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:MeasToBeTyped ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -898,7 +909,7 @@ drivetrain:DiagPatientShortcut
 .
 
 drivetrain:KeyDenotesDiagInp
-  a drivetrain:objectConnectionToInstanceRecipe ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object obo:OGMS_0000073 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -953,7 +964,7 @@ drivetrain:DiagEncShortcut
 # |581452|Dispensed in Outpatient office|
 # |38000177|Prescription written|
 
-# drivetrain:regdenFromShorts a drivetrain:objectConnectionToClassRecipe ;
+# drivetrain:regdenFromShorts a drivetrain:ObjectConnectionToClassRecipe ;
   # drivetrain:multiplicity drivetrain:1-1 ;
   # drivetrain:required true ;
   # drivetrain:subject ontologies:TURBO_0010158 ;
