@@ -2,6 +2,7 @@
 # prefix: outputs
 
 @prefix : <https://unnamed/acorn/post_icbo_synthea_omop_cnp_inputs/> .
+@prefix drivetrain: <https://github.com/PennTURBO/Drivetrain/> .
 @prefix efo: <http://www.ebi.ac.uk/efo/> .
 @prefix obo: <http://purl.obolibrary.org/obo/> .
 @prefix oboInOwl: <http://www.geneontology.org/formats/oboInOwl#> .
@@ -11,15 +12,15 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sdvg: <http://api.stardog.com/> .
 @prefix turbo: <http://transformunify.org/ontologies/> .
-@prefix turboOnt: <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/> .
+@prefix turboOnt: <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-# ontologies:logTest
-  # a ontologies:ObjectConnectionToInstanceRecipe .
+# drivetrain:logTest
+  # a drivetrain:ObjectConnectionToInstanceRecipe .
   
-ontologies:star a ontologies:PredicateSuffixSymbol ;
-  ontologies:usesSparqlOperator '*' ;
+drivetrain:star a drivetrain:PredicateSuffixSymbol ;
+  drivetrain:usesSparqlOperator '*' ;
 .
   
 <http://api.stardog.com/visit_occurrence> a owl:Class .
@@ -29,2030 +30,2154 @@ ontologies:star a ontologies:PredicateSuffixSymbol ;
 <http://api.stardog.com/condition_occurrence>  a owl:Class .
 
 owl:Axiom a owl:Class .
-ontologies:syntheaomop_post_icbo a owl:Class .
-ontologies:cdm_synthea10 a owl:Class .
-ontologies:procedure_occurrence a owl:Class .
+drivetrain:syntheaomop_post_icbo a owl:Class .
+drivetrain:cdm_synthea10 a owl:Class .
+drivetrain:procedure_occurrence a owl:Class .
 
-ontologies:KeyDenotesGid
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object ontologies:GidToBeTyped ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:KeyDenotesGid
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object drivetrain:GidToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
-ontologies:GidAboutPatient
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ; 
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:GidToBeTyped ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:object obo:NCBITaxon_9606 ;
+drivetrain:GidAboutPatient
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ; 
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:GidToBeTyped ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
 .
-ontologies:GidHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:GidToBeTyped ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:gender_concept_id_IntegerLiteralValue ;
+drivetrain:GidHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:GidToBeTyped ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:gender_concept_id_IntegerLiteralValue ;
 .
-ontologies:GidPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:GidToBeTyped ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010431 ;
+drivetrain:GidPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:GidToBeTyped ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010431 ;
 .
-ontologies:GidTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:GidToBeTyped  ;
-  ontologies:predicate rdf:type ;
-  ontologies:object ontologies:GidClassList ;
+drivetrain:GidTypingRecipe a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:GidToBeTyped  ;
+  drivetrain:predicate rdf:type ;
+  drivetrain:object drivetrain:GidClassList ;
 .
 # represents individual that is being typed
-ontologies:GidToBeTyped 
-  a ontologies:MultiObjectDescriber ;
+drivetrain:GidToBeTyped 
+  a drivetrain:MultiObjectDescriber ;
 .
-ontologies:gender_concept_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:gender_concept_id_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 # represents/holds possible classes 
-ontologies:GidClassList
-  a ontologies:MultiObjectDescriber ;
+drivetrain:GidClassList
+  a drivetrain:MultiObjectDescriber ;
 .
 
-ontologies:KeyDenotesRid
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object ontologies:RidToBeTyped ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:KeyDenotesRid
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object drivetrain:RidToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
-ontologies:KeyDenotesDob
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object efo:EFO_0004950 ;
+drivetrain:KeyDenotesDob
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object efo:EFO_0004950 ;
 .
-ontologies:DobPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject efo:EFO_0004950 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010443 ;
+drivetrain:DobPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject efo:EFO_0004950 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010443 ;
 .
-ontologies:KeyDenotesPatKeySymb
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object obo:IAO_0000028 ;
-  ontologies:objectUsesContext ontologies:CridContext ;
+drivetrain:KeyDenotesPatKeySymb
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object obo:IAO_0000028 ;
+  drivetrain:objectUsesContext drivetrain:CridContext ;
 .
-ontologies:PatKeySymbPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:subjectUsesContext ontologies:CridContext ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010444 ;
+drivetrain:PatKeySymbPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:subjectUsesContext drivetrain:CridContext ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010444 ;
 .
-ontologies:KeyDenotesPatient
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:KeyDenotesPatient
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
-ontologies:KeyPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010442  ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:KeyPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010442  ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
-ontologies:RidAboutPatient
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ; 
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:RidToBeTyped ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:object obo:NCBITaxon_9606 ;
+drivetrain:RidAboutPatient
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ; 
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:RidToBeTyped ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
 .
-ontologies:RidPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:RidToBeTyped ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010441 ;
+drivetrain:RidPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:RidToBeTyped ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010441 ;
 .
-ontologies:RidHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:RidToBeTyped ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:race_concept_id_IntegerLiteralValue ;
+drivetrain:RidHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:RidToBeTyped ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:race_concept_id_IntegerLiteralValue ;
 .
-ontologies:RidTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:RidToBeTyped  ;
-  ontologies:predicate rdf:type ;
-  ontologies:object ontologies:RidClassList ;
+drivetrain:RidTypingRecipe a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:RidToBeTyped  ;
+  drivetrain:predicate rdf:type ;
+  drivetrain:object drivetrain:RidClassList ;
 .
-ontologies:CridDenotesPatient
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000578 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object obo:NCBITaxon_9606 ;
+drivetrain:CridDenotesPatient
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000578 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
 .
-ontologies:PatKeySymbPartOfKey
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
-  ontologies:objectUsesContext ontologies:KeyContext ;
+drivetrain:PatKeySymbPartOfKey
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
+  drivetrain:objectUsesContext drivetrain:KeyContext ;
 .
-ontologies:PatKeySymbHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:person_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:PatKeySymbHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:person_id_IntegerLiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
-ontologies:CridContext a ontologies:TurboGraphContext .
-obo:IAO_0000028 ontologies:hasPossibleContext ontologies:CridContext .
-ontologies:KeyContext a ontologies:TurboGraphContext .
-obo:IAO_0000028 ontologies:hasPossibleContext ontologies:KeyContext .
-ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:KeyContext .
-ontologies:IndexContext a ontologies:TurboGraphContext .
-obo:IAO_0000028 ontologies:hasPossibleContext ontologies:IndexContext .
-ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:IndexContext .
+drivetrain:CridContext a drivetrain:TurboGraphContext .
+obo:IAO_0000028 drivetrain:hasPossibleContext drivetrain:CridContext .
+drivetrain:KeyContext a drivetrain:TurboGraphContext .
+obo:IAO_0000028 drivetrain:hasPossibleContext drivetrain:KeyContext .
+ontologies:TURBO_0010433 drivetrain:hasPossibleContext drivetrain:KeyContext .
+drivetrain:IndexContext a drivetrain:TurboGraphContext .
+obo:IAO_0000028 drivetrain:hasPossibleContext drivetrain:IndexContext .
+ontologies:TURBO_0010433 drivetrain:hasPossibleContext drivetrain:IndexContext .
 
-ontologies:HardcodedPatientSourceden a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:object ontologies:TURBO_0010396 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:HardcodedPatientSourceden a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:object ontologies:TURBO_0010396 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:DobAboutSns 
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject efo:EFO_0004950 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:object obo:UBERON_0035946 ;
+drivetrain:DobAboutSns 
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject efo:EFO_0004950 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:object obo:UBERON_0035946 ;
 .
-ontologies:DobHasMeasVal 
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject efo:EFO_0004950 ;
-  ontologies:predicate obo:IAO_0000004 ;
-  ontologies:object ontologies:birth_datetime_DateLiteralValue ;
+drivetrain:DobHasMeasVal 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject efo:EFO_0004950 ;
+  drivetrain:predicate obo:IAO_0000004 ;
+  drivetrain:object drivetrain:birth_datetime_DateLiteralValue ;
 .
-ontologies:birth_datetime_DateLiteralValue
-  a ontologies:TurboGraphDateLiteralValue ;
+drivetrain:birth_datetime_DateLiteralValue
+  a drivetrain:TurboGraphDateLiteralValue ;
 .
-ontologies:race_concept_id_IntegerLiteralValue  
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:race_concept_id_IntegerLiteralValue  
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
-ontologies:RidToBeTyped 
-  a ontologies:MultiObjectDescriber ;
+drivetrain:RidToBeTyped 
+  a drivetrain:MultiObjectDescriber ;
 .
-ontologies:RidClassList
-  a ontologies:MultiObjectDescriber ;
+drivetrain:RidClassList
+  a drivetrain:MultiObjectDescriber ;
 .
-ontologies:HardcodedPatientRegden a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000578  ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:object ontologies:TURBO_0010255 ;
+drivetrain:HardcodedPatientRegden a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000578  ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:object ontologies:TURBO_0010255 ;
 .
-ontologies:PatCridsymbHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:person_source_value_StringLiteralValue ;
-  ontologies:subjectUsesContext ontologies:CridContext ;
+drivetrain:PatCridsymbHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:person_source_value_StringLiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:CridContext ;
 .
-ontologies:person_source_value_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+drivetrain:person_source_value_StringLiteralValue
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
-ontologies:PatientBornOnSns 
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:NCBITaxon_9606 ;
-  ontologies:predicate ontologies:TURBO_0000303 ;
-  ontologies:object obo:UBERON_0035946 ;
+drivetrain:PatientBornOnSns 
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
+  drivetrain:predicate ontologies:TURBO_0000303 ;
+  drivetrain:object obo:UBERON_0035946 ;
 .
-ontologies:PatientExpansionSpecification 
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject <http://api.stardog.com/person> ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object obo:NCBITaxon_9606 ;
+drivetrain:PatientExpansionSpecification 
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject <http://api.stardog.com/person> ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
 .
-ontologies:symbolPartOfCridForPatient
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object obo:IAO_0000578 ;
-  ontologies:subjectUsesContext ontologies:CridContext ;
+drivetrain:symbolPartOfCridForPatient
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object obo:IAO_0000578 ;
+  drivetrain:subjectUsesContext drivetrain:CridContext ;
 .
 
 ### Encs
 
-ontologies:VisitIdPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010453 ;
+drivetrain:VisitIdPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010453 ;
 .
-ontologies:VisitCridSymPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:subjectUsesContext ontologies:CridContext ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010455 ;
+drivetrain:VisitCridSymPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:subjectUsesContext drivetrain:CridContext ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010455 ;
 .
-ontologies:KeyDenotesVisitCridSym
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object obo:IAO_0000028 ;
-  ontologies:objectUsesContext ontologies:CridContext ;
+drivetrain:KeyDenotesVisitCridSym
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object obo:IAO_0000028 ;
+  drivetrain:objectUsesContext drivetrain:CridContext ;
 .
-ontologies:StartDatePartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:subjectUsesContext ontologies:encStartContext ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010457 ;
+drivetrain:EncStartDatePartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000416 ;
+  drivetrain:subjectUsesContext drivetrain:StartContext ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010457 ;
 .
-ontologies:KeyDenotesStartDate
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object obo:IAO_0000416 ;
-  ontologies:objectUsesContext ontologies:encStartContext ;
+drivetrain:KeyDenotesEncStartDate
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object obo:IAO_0000416 ;
+  drivetrain:objectUsesContext drivetrain:StartContext ;
 .
-ontologies:EndDatePartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:subjectUsesContext ontologies:encEndContext ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010451 ;
+drivetrain:EndDatePartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000416 ;
+  drivetrain:subjectUsesContext drivetrain:encEndContext ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010451 ;
 .
-ontologies:KeyDenotesEndDate
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object obo:IAO_0000416 ;
-  ontologies:objectUsesContext ontologies:encEndContext ;
+drivetrain:KeyDenotesEndDate
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object obo:IAO_0000416 ;
+  drivetrain:objectUsesContext drivetrain:encEndContext ;
 .
-ontologies:KeyDenotesEnc
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object ontologies:EncToBeTyped ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:KeyDenotesEnc
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object drivetrain:EncToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
-ontologies:EncKeySymbPartOfKey
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
-  ontologies:objectUsesContext ontologies:KeyContext ;
+drivetrain:EncKeySymbPartOfKey
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
+  drivetrain:objectUsesContext drivetrain:KeyContext ;
 .
-ontologies:EncKeySymbHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:EncKeySymbHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
-ontologies:HardcodedEncSourceden a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:object ontologies:TURBO_0010269 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:HardcodedEncSourceden a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:object ontologies:TURBO_0010269 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
-ontologies:CridDenotesEnc
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000578 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object ontologies:EncToBeTyped ;
+drivetrain:CridDenotesEnc
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000578 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object drivetrain:EncToBeTyped ;
 .
+
+drivetrain:EncTypingRecipe a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:EncToBeTyped  ;
+  drivetrain:predicate rdf:type ;
+  drivetrain:object drivetrain:EncClassList ;
+.
+
 
 # represents individual that is being typed
-ontologies:EncToBeTyped 
-  a ontologies:MultiObjectDescriber ;
+drivetrain:EncToBeTyped 
+  a drivetrain:MultiObjectDescriber ;
 .
-ontologies:encCridsymbHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:visit_source_value_StringLiteralValue ;
-  ontologies:subjectUsesContext ontologies:CridContext ;
-.
-ontologies:EncTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:EncToBeTyped  ;
-  ontologies:predicate rdf:type ;
-  ontologies:object ontologies:EncClassList ;
+
+drivetrain:encCridsymbHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:visit_source_value_StringLiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:CridContext ;
 .
 # represents/holds possible classes 
-ontologies:EncClassList
-  a ontologies:MultiObjectDescriber ;
+drivetrain:EncClassList
+  a drivetrain:MultiObjectDescriber ;
 .
 
-ontologies:EndingTmdAboutProcbound 
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:object obo:BFO_0000035 ;
-  ontologies:subjectUsesContext ontologies:encEndContext ;
-  ontologies:objectUsesContext ontologies:encEndContext ;
+drivetrain:EndingTmdAboutProcbound 
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000416 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:object obo:BFO_0000035 ;
+  drivetrain:subjectUsesContext drivetrain:encEndContext ;
+  drivetrain:objectUsesContext drivetrain:encEndContext ;
 .
-ontologies:encEndContext a ontologies:TurboGraphContext .
-obo:IAO_0000416 ontologies:hasPossibleContext ontologies:encEndContext .
-obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encEndContext .
-ontologies:EndingTmdHasMeasVal 
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:visit_end_datetime_DateLiteralValue ;
-  ontologies:predicate obo:IAO_0000004 ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:subjectUsesContext ontologies:encEndContext ;
+drivetrain:encEndContext a drivetrain:TurboGraphContext .
+obo:IAO_0000416 drivetrain:hasPossibleContext drivetrain:encEndContext .
+obo:BFO_0000035 drivetrain:hasPossibleContext drivetrain:encEndContext .
+drivetrain:EndingTmdHasMeasVal 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:visit_end_datetime_DateLiteralValue ;
+  drivetrain:predicate obo:IAO_0000004 ;
+  drivetrain:subject obo:IAO_0000416 ;
+  drivetrain:subjectUsesContext drivetrain:encEndContext ;
 .
-ontologies:StartingTmdHasMeasVal 
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:visit_start_datetime_DateLiteralValue ;
-  ontologies:predicate obo:IAO_0000004 ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:subjectUsesContext ontologies:encStartContext ;
-.
-ontologies:visit_end_datetime_DateLiteralValue 
-  a ontologies:TurboGraphDateLiteralValue ;
+
+drivetrain:visit_end_datetime_DateLiteralValue 
+  a drivetrain:TurboGraphDateLiteralValue ;
  .
-ontologies:HardcodedRegden a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000578  ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:object ontologies:TURBO_0010256 ;
+drivetrain:HardcodedRegden a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000578  ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:object ontologies:TURBO_0010256 ;
 .
-ontologies:EncExpansionSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject <http://api.stardog.com/visit_occurrence> ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object ontologies:EncToBeTyped ;
+drivetrain:EncExpansionSpecification
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:object drivetrain:EncToBeTyped ;
 .
-ontologies:ProcboundEndsEnc
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:BFO_0000035 ;
-  ontologies:predicate obo:RO_0002229 ;
-  ontologies:object ontologies:EncToBeTyped ;
-  ontologies:subjectUsesContext ontologies:encEndContext ;
-.
-ontologies:ProcboundStartsEnc
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:BFO_0000035 ;
-  ontologies:predicate obo:RO_0002223 ;
-  ontologies:object ontologies:EncToBeTyped ;
-  ontologies:subjectUsesContext ontologies:encStartContext ;
-.
-ontologies:encStartContext a ontologies:TurboGraphContext .
-obo:IAO_0000416 ontologies:hasPossibleContext ontologies:encStartContext .
-obo:BFO_0000035 ontologies:hasPossibleContext ontologies:encStartContext .
-
-ontologies:StartingTmdAboutProcbound 
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:object obo:BFO_0000035 ;
-  ontologies:subjectUsesContext ontologies:encStartContext ;
-  ontologies:objectUsesContext ontologies:encStartContext ;
-.
-ontologies:visit_start_datetime_DateLiteralValue 
-  a ontologies:TurboGraphDateLiteralValue ;
-.
-ontologies:EndDatePlaceholder 
-  a ontologies:TurboGraphDateLiteralValue ;
-.
-ontologies:symbolPartOfCridForEnc
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object obo:IAO_0000578 ;
-  ontologies:subjectUsesContext ontologies:CridContext ;
-.
-ontologies:visit_source_value_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
-.
-ontologies:visit_occurrence_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
-.
-ontologies:visit_concept_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:ProcboundEndsEnc
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:BFO_0000035 ;
+  drivetrain:predicate obo:RO_0002229 ;
+  drivetrain:object drivetrain:EncToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:encEndContext ;
 .
 
-ontologies:EncTypeAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:object ontologies:EncToBeTyped ;
-.
-ontologies:EncTypeAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:object rdf:type ;
-.
-ontologies:EncTypeAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:object ontologies:EncClassList ;
-.
-ontologies:EncTypeAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:object ontologies:TURBO_0010404 ;
-.
-ontologies:EncTypeAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:visit_concept_id_IntegerLiteralValue ;
-.
-ontologies:EncTypeAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010449 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
+drivetrain:EncStartingTmdHasMeasVal 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:visit_start_datetime_DateLiteralValue ;
+  drivetrain:predicate obo:IAO_0000004 ;
+  drivetrain:subject obo:IAO_0000416 ;
+  drivetrain:subjectUsesContext drivetrain:StartContext ;
 .
 
-ontologies:EncKeyDenotesTypingDbXrefProv
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:StartingTmdAboutProcbound 
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:BFO_0000035 ;
+  drivetrain:objectUsesContext drivetrain:StartContext ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:subject obo:IAO_0000416 ;
+  drivetrain:subjectUsesContext drivetrain:StartContext ;
+.
+
+drivetrain:ProcboundStartsEnc
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:BFO_0000035 ;
+  drivetrain:predicate obo:RO_0002223 ;
+  drivetrain:object drivetrain:EncToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:StartContext ;
+.
+
+drivetrain:StartContext a drivetrain:TurboGraphContext .
+obo:IAO_0000416 drivetrain:hasPossibleContext drivetrain:StartContext .
+obo:BFO_0000035 drivetrain:hasPossibleContext drivetrain:StartContext .
+
+drivetrain:visit_start_datetime_DateLiteralValue 
+  a drivetrain:TurboGraphDateLiteralValue ;
+.
+drivetrain:EndDatePlaceholder 
+  a drivetrain:TurboGraphDateLiteralValue ;
+.
+drivetrain:symbolPartOfCridForEnc
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object obo:IAO_0000578 ;
+  drivetrain:subjectUsesContext drivetrain:CridContext ;
+.
+drivetrain:visit_source_value_StringLiteralValue
+  a drivetrain:TurboGraphStringLiteralValue ;
+.
+drivetrain:visit_occurrence_id_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
+.
+drivetrain:visit_concept_id_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
+.
+
+drivetrain:EncTypeAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:object drivetrain:EncToBeTyped ;
+.
+drivetrain:EncTypeAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:object rdf:type ;
+.
+drivetrain:EncTypeAxiomTarget
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:object drivetrain:EncClassList ;
+.
+drivetrain:EncTypeAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+.
+drivetrain:EncTypeAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:visit_concept_id_IntegerLiteralValue ;
+.
+drivetrain:EncTypeAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010449 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+.
+
+drivetrain:EncKeyDenotesTypingDbXrefProv
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
 
 ### Enc participation
 
-ontologies:HceKeyDenotesProv4Participation
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:objectUsesContext ontologies:ParticipationAxiomContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:EncKeyContext ;
+drivetrain:HceKeyDenotesProv4Participation
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:ParticipationAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:EncKeyContext ;
 .
 
-ontologies:EncRealizesRole
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:EncToBeTyped ;
-  ontologies:predicate obo:BFO_0000055 ;
-  ontologies:object obo:OBI_0000093 ;
+drivetrain:EncRealizesRole
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject drivetrain:EncToBeTyped  ;
+  drivetrain:predicate obo:BFO_0000055 ;
+  drivetrain:object obo:OBI_0000093 ;
 .
 
-ontologies:PatientHasRole
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:RO_0000087 ;
-  ontologies:object obo:OBI_0000093 ;
+drivetrain:PatientHasRole
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:RO_0000087 ;
+  drivetrain:object obo:OBI_0000093 ;
 .
 
-ontologies:person_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:person_id_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
-ontologies:EncParticipationAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:object ontologies:EncToBeTyped ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:EncParticipationAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:object drivetrain:EncToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:EncParticipationAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:object obo:BFO_0000055 ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:EncParticipationAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:object obo:BFO_0000055 ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:EncParticipationAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:object obo:OBI_0000093 ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:EncParticipationAxiomTarget
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:object obo:OBI_0000093 ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:EncParticipationAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
-  ontologies:objectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:EncParticipationAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
+  drivetrain:objectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:EncParticipationAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010447 ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:EncParticipationAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010447 ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:EncParticipationAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:person_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:EncParticipationAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:person_id_IntegerLiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:ParticipationAxiomContext a ontologies:TurboGraphContext .
-owl:Axiom ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
+drivetrain:ParticipationAxiomContext a drivetrain:TurboGraphContext .
+owl:Axiom drivetrain:hasPossibleContext drivetrain:ParticipationAxiomContext .
+ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:ParticipationAxiomContext .
 
 ### participation Prov
 
-ontologies:EncKeyContext a ontologies:TurboGraphContext .
-ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:EncKeyContext .
+drivetrain:EncKeyContext a drivetrain:TurboGraphContext .
+ontologies:TURBO_0010433 drivetrain:hasPossibleContext drivetrain:EncKeyContext .
 
 ### precedence
 
-ontologies:PrevencPrecedesEnc
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:EncToBeTyped ;
-  ontologies:predicate obo:RO_0002090 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:Prevenc  ;
+drivetrain:PrevencPrecedesEnc
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:EncToBeTyped ;
+  drivetrain:predicate obo:RO_0002090 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject drivetrain:Prevenc  ;
 .
 
-ontologies:PrecedenceAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:Prevenc ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
+drivetrain:PrecedenceAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:Prevenc ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:EncPrecedenceAxiomContext ;
 .
 
-ontologies:PrecedenceAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:RO_0002090  ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
+drivetrain:PrecedenceAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:RO_0002090  ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:EncPrecedenceAxiomContext ;
 .
 
-ontologies:PrecedenceAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:EncToBeTyped ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
+drivetrain:PrecedenceAxiomTarget
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:EncToBeTyped ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:EncPrecedenceAxiomContext ;
 .
 
-ontologies:PrecedenceAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
-  ontologies:objectUsesContext ontologies:EncPrecedenceAxiomContext ;
+drivetrain:PrecedenceAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:EncPrecedenceAxiomContext ;
+  drivetrain:objectUsesContext drivetrain:EncPrecedenceAxiomContext ;
 .
 
-ontologies:PrecedenceAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:preceding_visit_occurrence_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
+drivetrain:PrecedenceAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:preceding_visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:EncPrecedenceAxiomContext ;
 .
 
-ontologies:PrecedenceAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010459 ;
-  ontologies:subjectUsesContext ontologies:EncPrecedenceAxiomContext ;
+drivetrain:PrecedenceAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010459 ;
+  drivetrain:subjectUsesContext drivetrain:EncPrecedenceAxiomContext ;
 .
 
-ontologies:HceKeyDenotesProv4Precedence
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:objectUsesContext ontologies:EncPrecedenceAxiomContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:EncKeyContext ;
+drivetrain:HceKeyDenotesProv4Precedence
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:EncPrecedenceAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:EncKeyContext ;
 .
 
-ontologies:preceding_visit_occurrence_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:preceding_visit_occurrence_id_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
-ontologies:Prevenc
-  a ontologies:MultiObjectDescriber .
+drivetrain:Prevenc
+  a drivetrain:MultiObjectDescriber .
   
-ontologies:PrevencsClass
-  a ontologies:MultiObjectDescriber .
+drivetrain:PrevencsClass
+  a drivetrain:MultiObjectDescriber .
   
-ontologies:EncPrecedenceAxiomContext a ontologies:TurboGraphContext .
-owl:Axiom ontologies:hasPossibleContext ontologies:EncPrecedenceAxiomContext .
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:EncPrecedenceAxiomContext .
+drivetrain:EncPrecedenceAxiomContext a drivetrain:TurboGraphContext .
+owl:Axiom drivetrain:hasPossibleContext drivetrain:EncPrecedenceAxiomContext .
+ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:EncPrecedenceAxiomContext .
 
   
 ### Procedures
 
-ontologies:KeyDenotesProc
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:ProcToBeTyped ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
+drivetrain:ProcKeyDenotesTmd
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:IAO_0000416 ;
+  drivetrain:objectUsesContext drivetrain:StartContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
 .
 
-ontologies:KeyDenotesProv
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:objectUsesContext ontologies:MentionsContext ;
+# drivetrain:KeyDenotesProcStartDate
+  # a drivetrain:ObjectConnectionToInstanceRecipe ;
+  # drivetrain:multiplicity drivetrain:1-1 ;
+  # drivetrain:object obo:IAO_0000416 ;
+  # drivetrain:objectUsesContext drivetrain:StartContext ;
+  # drivetrain:predicate obo:IAO_0000219 ;
+  # drivetrain:referencedInGraph ontologies:omopExpanded ;
+  # drivetrain:subject ontologies:TURBO_0010433 ;
+# .
+
+drivetrain:ProcStartingTmdHasMeasVal 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:procedure_datetime_DateLiteralValue ;
+  drivetrain:predicate obo:IAO_0000004 ;
+  drivetrain:subject obo:IAO_0000416 ;
+  drivetrain:subjectUsesContext drivetrain:StartContext ;
 .
 
-ontologies:ProcKeySymbHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:procedure_occurrence_id_IntegerLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject obo:IAO_0000028 ;
+drivetrain:ProcStartDatePartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010457 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:subject obo:IAO_0000416 ;
+  drivetrain:subjectUsesContext drivetrain:StartContext ;
 .
 
-ontologies:ProvHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:procedure_source_value_StringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:MentionsContext ;
+drivetrain:ProcboundStartsProc
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:ProcToBeTyped ;
+  drivetrain:predicate obo:RO_0002223 ;
+  drivetrain:subject obo:BFO_0000035 ;
+  drivetrain:subjectUsesContext drivetrain:StartContext ;
 .
 
-ontologies:ProvPartOfCol
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010470 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:MentionsContext ;
+
+
+drivetrain:ProcKeySymbHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:procedure_occurrence_id_IntegerLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject obo:IAO_0000028 ;
 .
 
-ontologies:ProcKeySymbPartOfCol
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010465 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject obo:IAO_0000028 ;
+drivetrain:ProcKeySymbPartOfCol
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010465 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject obo:IAO_0000028 ;
 .
 
-ontologies:ProcKeySymbPartOfKey
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010433 ;
+drivetrain:ProcKeySymbPartOfKey
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010433 ;
 .
 
-ontologies:HardcodedProcSourceden a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010407 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433   ;
+drivetrain:HardcodedProcSourceden 
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010407 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433   ;
 .
 
-ontologies:ProcTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:ProcClassList ;
-  ontologies:predicate rdf:type ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:ProcToBeTyped  ;
+drivetrain:ProcKeyDenotesProc
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:ProcToBeTyped ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+.
+
+drivetrain:ProcTypingRecipe 
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:ProcClassList ;
+  drivetrain:predicate rdf:type ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject drivetrain:ProcToBeTyped  ;
+.
+
+drivetrain:ProcExpansionSpecification
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:object drivetrain:ProcToBeTyped ;
+.
+
+drivetrain:MentioningProvAboutProc
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:object drivetrain:ProcToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:MentionsContext ;
+.
+
+drivetrain:MentioningProvPartOfCol
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010470 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:MentionsContext ;
+.
+
+drivetrain:MentioningProvHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:procedure_source_value_StringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:MentionsContext ;
+.
+
+drivetrain:MentioningProvMentionsSnomed
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate obo:IAO_0000142 ;
+  drivetrain:object drivetrain:ProcMentionedClassList ;
+  drivetrain:subjectUsesContext drivetrain:MentionsContext ;
+.
+
+drivetrain:ProcKeyDenotesMentioningProv
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:MentionsContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+.
+
+drivetrain:ProcKeyDenotesProcTypeAxiomDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:TypingAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+.
+
+drivetrain:ProcTypeAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:ProcToBeTyped ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:TypingAxiomContext ;
+.
+
+drivetrain:ProcTypeAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object rdf:type ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:TypingAxiomContext ;
+.
+
+drivetrain:ProcTypeAxiomTarget
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object drivetrain:ProcClassList ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:TypingAxiomContext ;
+.
+
+drivetrain:ProcTypeAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:TypingAxiomContext ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:TypingAxiomContext ;
+.
+
+drivetrain:ProcTypeAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:procedure_source_concept_id_IntegerLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:TypingAxiomContext ;
+.
+
+drivetrain:ProcTypeAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010449 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:TypingAxiomContext ;
 .
 
 # represents/holds possible classes 
-ontologies:ProcClassList
-  a ontologies:MultiObjectDescriber ;
+drivetrain:ProcClassList
+  a drivetrain:MultiObjectDescriber ;
 .
 
 # represents individual that is being typed
-ontologies:ProcToBeTyped 
-  a ontologies:MultiObjectDescriber ;
+drivetrain:ProcToBeTyped 
+  a drivetrain:MultiObjectDescriber ;
 .
-ontologies:procedure_occurrence_id_IntegerLiteralValue 
-  a ontologies:TurboGraphIntegerLiteralValue ;
-.
-ontologies:ProcExpansionSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject <http://api.stardog.com/procedure_occurrence> ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:object ontologies:ProcToBeTyped ;
+drivetrain:procedure_occurrence_id_IntegerLiteralValue 
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
-ontologies:ProvAboutProc
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:object ontologies:ProcToBeTyped ;
-  ontologies:subjectUsesContext ontologies:MentionsContext ;
+drivetrain:procedure_source_value_StringLiteralValue 
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 
-ontologies:procedure_source_value_StringLiteralValue 
-  a ontologies:TurboGraphStringLiteralValue ;
+drivetrain:procedure_source_concept_id_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
-ontologies:procedure_source_concept_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:procedure_datetime_DateLiteralValue 
+  a drivetrain:TurboGraphDateLiteralValue ;
 .
 
-ontologies:ProcMentionedClassList
-  a ontologies:MultiObjectDescriber .
-  
-ontologies:ProvMentionsSnomed
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:object ontologies:ProcMentionedClassList ;
-  ontologies:subjectUsesContext ontologies:MentionsContext ;
-.
+drivetrain:ProcMentionedClassList
+  a drivetrain:MultiObjectDescriber .
 
-ontologies:ProcTypeAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:object ontologies:ProcToBeTyped ;
-  ontologies:subjectUsesContext ontologies:TypingAxiomContext ;
-.
-ontologies:ProcTypeAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:object rdf:type ;
-  ontologies:subjectUsesContext ontologies:TypingAxiomContext ;
-.
-ontologies:ProcTypeAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:object ontologies:ProcClassList ;
-  ontologies:subjectUsesContext ontologies:TypingAxiomContext ;
-.
-ontologies:ProcTypeAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:TypingAxiomContext ;
-  ontologies:objectUsesContext ontologies:TypingAxiomContext ;
-.
-ontologies:ProcTypeAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:procedure_source_concept_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:TypingAxiomContext ;
-.
-ontologies:ProcTypeAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010449 ;
-  ontologies:subjectUsesContext ontologies:TypingAxiomContext ;
-.
-
-ontologies:MentionsContext a ontologies:TurboGraphContext .
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:MentionsContext .
+drivetrain:MentionsContext a drivetrain:TurboGraphContext .
+ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:MentionsContext .
 
 ### Proc participation
 
-ontologies:ProcRealizesPatientRole
- a ontologies:ObjectConnectionToInstanceRecipe ;
- ontologies:multiplicity ontologies:1-many ;
- ontologies:subject ontologies:ProcToBeTyped ;
- ontologies:predicate obo:BFO_0000055 ;
- ontologies:object obo:OBI_0000093 ;
+drivetrain:ProcRealizesPatientRole
+ a drivetrain:ObjectConnectionToInstanceRecipe ;
+ drivetrain:multiplicity drivetrain:1-many ;
+ drivetrain:subject drivetrain:ProcToBeTyped ;
+ drivetrain:predicate obo:BFO_0000055 ;
+ drivetrain:object obo:OBI_0000093 ;
 .
 
-ontologies:ProcParticipationAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:object ontologies:ProcToBeTyped ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:ProcParticipationAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:object drivetrain:ProcToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:ProcParticipationAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:object obo:BFO_0000055 ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:ProcParticipationAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:object obo:BFO_0000055 ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:ProcParticipationAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:object obo:OBI_0000093 ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:ProcParticipationAxiomTarget
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:object obo:OBI_0000093 ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:ProcParticipationAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
-  ontologies:objectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:ProcParticipationAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
+  drivetrain:objectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:ProcParticipationAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010464 ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:ProcParticipationAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010464 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:ProcParticipationAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:person_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:ParticipationAxiomContext ;
+drivetrain:ProcParticipationAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:person_id_IntegerLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
-ontologies:ParticipationAxiomContext a ontologies:TurboGraphContext .
-ontologies:ProcToBeTyped ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
-owl:Axiom ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
+drivetrain:ProcKeyDenotesParticipationAxiomDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:ParticipationAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+.
 
-ontologies:TypingAxiomContext a ontologies:TurboGraphContext .
-ontologies:ProcToBeTyped ontologies:hasPossibleContext ontologies:ParticipationAxiomContext . 
-owl:Axiom ontologies:hasPossibleContext ontologies:ParticipationAxiomContext . 
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:ParticipationAxiomContext .
+
+drivetrain:ParticipationAxiomContext a drivetrain:TurboGraphContext .
+drivetrain:ProcToBeTyped drivetrain:hasPossibleContext drivetrain:ParticipationAxiomContext .
+owl:Axiom drivetrain:hasPossibleContext drivetrain:ParticipationAxiomContext .
+ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:ParticipationAxiomContext .
+
+drivetrain:TypingAxiomContext a drivetrain:TurboGraphContext .
+drivetrain:ProcToBeTyped drivetrain:hasPossibleContext drivetrain:ParticipationAxiomContext . 
+owl:Axiom drivetrain:hasPossibleContext drivetrain:ParticipationAxiomContext . 
+ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:ParticipationAxiomContext .
 
 ### Procedure parthood
 
-ontologies:ProcPartOfEnc
- a ontologies:ObjectConnectionToInstanceRecipe ;
- ontologies:multiplicity ontologies:many-1 ;
- ontologies:subject ontologies:ProcToBeTyped ;
- ontologies:predicate obo:BFO_0000050 ;
- ontologies:object ontologies:EncToBeTyped ;
+drivetrain:ProcPartOfEnc
+ a drivetrain:ObjectConnectionToInstanceRecipe ;
+ drivetrain:multiplicity drivetrain:many-1 ;
+ drivetrain:subject drivetrain:ProcToBeTyped ;
+ drivetrain:predicate obo:BFO_0000050 ;
+ drivetrain:object drivetrain:EncToBeTyped ;
 .
 
-ontologies:ProcParthoodAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:object ontologies:ProcToBeTyped ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:ProcParthoodAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:object drivetrain:ProcToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
-ontologies:ProcParthoodAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:object obo:BFO_0000050 ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:ProcParthoodAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:object obo:BFO_0000050 ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
-ontologies:ProcParthoodAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:object ontologies:EncToBeTyped ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:ProcParthoodAxiomTarget
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:object drivetrain:EncToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
-ontologies:ProcParthoodAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
-  ontologies:objectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:ProcParthoodAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
+  drivetrain:objectUsesContext drivetrain:ParthoodAxiomContext ;
 .
-ontologies:ProcParthoodAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:ProcParthoodAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
-ontologies:ProcParthoodAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010466 ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:ProcParthoodAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010466 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
-ontologies:ParthoodAxiomContext a ontologies:TurboGraphContext .
-ontologies:ProcToBeTyped ontologies:hasPossibleContext ontologies:ParthoodAxiomContext . 
-owl:Axiom ontologies:hasPossibleContext ontologies:ParthoodAxiomContext . 
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:ParthoodAxiomContext .
+drivetrain:ProcKeyDenotesParthoodAxiomDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:ParthoodAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+.
+
+drivetrain:ParthoodAxiomContext a drivetrain:TurboGraphContext .
+drivetrain:ProcToBeTyped drivetrain:hasPossibleContext drivetrain:ParthoodAxiomContext . 
+owl:Axiom drivetrain:hasPossibleContext drivetrain:ParthoodAxiomContext . 
+ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:ParthoodAxiomContext .
 
 ### measurement
 
-ontologies:MeasTypingRecipe a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:MeasToBeTyped  ;
-  ontologies:predicate rdf:type ;
-  ontologies:object ontologies:MeasClassList ;
+drivetrain:MeasTypingRecipe a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject drivetrain:MeasToBeTyped  ;
+  drivetrain:predicate rdf:type ;
+  drivetrain:object drivetrain:MeasClassList ;
 .
 
 # represents individual that is being typed
-ontologies:MeasToBeTyped 
-  a ontologies:MultiObjectDescriber ;
+drivetrain:MeasToBeTyped 
+  a drivetrain:MultiObjectDescriber ;
 .
 
 # represents/holds possible classes 
-ontologies:MeasClassList
-  a ontologies:MultiObjectDescriber ;
+drivetrain:MeasClassList
+  a drivetrain:MultiObjectDescriber ;
 .
 
-ontologies:MeasMentionsCode
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:MeasCodeMentionedClassList ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:subject ontologies:MeasToBeTyped ;
+drivetrain:MeasMentionsCode
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object drivetrain:MeasCodeMentionedClassList ;
+  drivetrain:predicate obo:IAO_0000142 ;
+  drivetrain:subject drivetrain:MeasToBeTyped ;
 .
 
-ontologies:measurement_source_value_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+drivetrain:measurement_source_value_StringLiteralValue
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 
-ontologies:measurement_vocabulary_id_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+drivetrain:measurement_vocabulary_id_StringLiteralValue
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 
-ontologies:MeasCodeMentionedClassList
-  a ontologies:MultiObjectDescriber .
+drivetrain:MeasCodeMentionedClassList
+  a drivetrain:MultiObjectDescriber .
   
-ontologies:KeyDenotesMeas
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object ontologies:MeasToBeTyped ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:KeyDenotesMeas
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object drivetrain:MeasToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:MeasKeySymbPartOfKey
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010433 ;
-  ontologies:objectUsesContext ontologies:KeyContext ;
+drivetrain:MeasKeySymbPartOfKey
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010433 ;
+  drivetrain:objectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:MeasKeySymbPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010482 ;
-  ontologies:objectUsesContext ontologies:KeyContext ;
+drivetrain:MeasKeySymbPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010482 ;
+  drivetrain:objectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:MeasKeySymbHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000028 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:measurement_id_IntegerLiteralValue ;
+drivetrain:MeasKeySymbHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:measurement_id_IntegerLiteralValue ;
 .
-ontologies:HardcodedMeasSourceden a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:object ontologies:TURBO_0010398 ;
-.
-
-ontologies:MeasExpansionSpecification
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:MeasToBeTyped ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject <http://api.stardog.com/measurement> ;
+drivetrain:HardcodedMeasSourceden a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:object ontologies:TURBO_0010398 ;
 .
 
-ontologies:MeasHasValspec
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:MeasToBeTyped ;
-  ontologies:predicate obo:OBI_0001938 ;
-  ontologies:object obo:OBI_0001933 ;
-.
-ontologies:MeasValspecPartOfQueryResult
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:OBI_0001933 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object  ontologies:TURBO_0010411 ;
+drivetrain:MeasExpansionSpecification
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:MeasToBeTyped ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject <http://api.stardog.com/measurement> ;
 .
 
-ontologies:KeyDenotesValspec
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object obo:OBI_0001933 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:MeasHasValspec
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:MeasToBeTyped ;
+  drivetrain:predicate obo:OBI_0001938 ;
+  drivetrain:object obo:OBI_0001933 ;
+.
+drivetrain:MeasValspecPartOfQueryResult
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:OBI_0001933 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object  ontologies:TURBO_0010411 ;
 .
 
-ontologies:ValspecHasSpecVal
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:OBI_0001933 ;
-  ontologies:predicate obo:OBI_0002135 ;
-  ontologies:object ontologies:value_as_number_IntegerLiteralValue ;
+drivetrain:KeyDenotesValspec
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object obo:OBI_0001933 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:MeasTmdHasMeasVal 
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:predicate obo:IAO_0000004 ;
-  ontologies:object ontologies:measurement_datetime_DateLiteralValue ;
+drivetrain:ValspecHasSpecVal
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:OBI_0001933 ;
+  drivetrain:predicate obo:OBI_0002135 ;
+  drivetrain:object drivetrain:value_as_number_IntegerLiteralValue ;
 .
 
-ontologies:KeyDenotesTmd
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:object obo:IAO_0000416 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:MeasTmdHasMeasVal 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000416 ;
+  drivetrain:predicate obo:IAO_0000004 ;
+  drivetrain:object drivetrain:measurement_datetime_DateLiteralValue ;
 .
 
-ontologies:MeasTmdPartOfQueryResult
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object  ontologies:TURBO_0010484 ;
+drivetrain:KeyDenotesTmd
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object obo:IAO_0000416 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:measurement_datetime_DateLiteralValue 
-  a ontologies:TurboGraphDateLiteralValue ;
+drivetrain:MeasTmdPartOfQueryResult
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000416 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object  ontologies:TURBO_0010484 ;
+.
+
+drivetrain:measurement_datetime_DateLiteralValue 
+  a drivetrain:TurboGraphDateLiteralValue ;
 .
 
 # this time stamp modeling may not be exactly right 
 
-ontologies:MeasTmdHasMeasVal 
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject obo:IAO_0000416 ;
-  ontologies:predicate obo:IAO_0000004 ;
-  ontologies:object ontologies:measurement_datetime_DateLiteralValue ;
+drivetrain:MeasTmdHasMeasVal 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000416 ;
+  drivetrain:predicate obo:IAO_0000004 ;
+  drivetrain:object drivetrain:measurement_datetime_DateLiteralValue ;
 .
 
-ontologies:MeasHasTimestamp  
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:MeasToBeTyped ;
-  ontologies:predicate obo:IAO_0000581 ;
-  ontologies:object obo:IAO_0000416 ;
+drivetrain:MeasHasTimestamp  
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:MeasToBeTyped ;
+  drivetrain:predicate obo:IAO_0000581 ;
+  drivetrain:object obo:IAO_0000416 ;
 .
 
-ontologies:value_as_number_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:value_as_number_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
-ontologies:measurement_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:measurement_id_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
-ontologies:measurement_source_concept_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:measurement_source_concept_id_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
-ontologies:MeasTypeAxiomSource
-  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:MeasToBeTyped ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:subject owl:Axiom ;
+drivetrain:MeasTypeAxiomSource
+  drivetrain:subjectUsesContext drivetrain:MeasTypeAxiomContext ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:MeasToBeTyped ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:subject owl:Axiom ;
 .
 
-ontologies:MeasTypeAxiomProp
-  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object rdf:type ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:subject owl:Axiom ;
+drivetrain:MeasTypeAxiomProp
+  drivetrain:subjectUsesContext drivetrain:MeasTypeAxiomContext ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object rdf:type ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:subject owl:Axiom ;
 .
 
 # # THIS OBJECT IS NOT BEING TREATED AS A STATIC TERM (when MDs are being exclusively typed as MDs)
-ontologies:MeasTypeAxiomTarget
-  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:MeasClassList ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:subject owl:Axiom ;
+drivetrain:MeasTypeAxiomTarget
+  drivetrain:subjectUsesContext drivetrain:MeasTypeAxiomContext ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object drivetrain:MeasClassList ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:subject owl:Axiom ;
 .
 
-ontologies:MeasTypeAxiomHasDbXref
-  ontologies:objectUsesContext ontologies:MeasTypeAxiomContext ;
-  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:subject owl:Axiom ;
+drivetrain:MeasTypeAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:MeasTypeAxiomContext ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:MeasTypeAxiomContext ;
 .
 
-ontologies:MeasTypeAxiomDbXrefHasRepresentation
-  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:measurement_source_concept_id_IntegerLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
+drivetrain:KeyDenotesMeasTypeAxiomDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:MeasTypeAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:MeasTypeAxiomDbXrefPartOfColumn
-  ontologies:subjectUsesContext ontologies:MeasTypeAxiomContext ;
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010488 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
+
+drivetrain:MeasTypeAxiomDbXrefHasRepresentation
+  drivetrain:subjectUsesContext drivetrain:MeasTypeAxiomContext ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:measurement_source_concept_id_IntegerLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
 .
 
-ontologies:MeasKeyDenotesProv4MeasType
-  ontologies:objectUsesContext ontologies:MeasTypeAxiomContext ;
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:MeasTypeAxiomDbXrefPartOfColumn
+  drivetrain:subjectUsesContext drivetrain:MeasTypeAxiomContext ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010488 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
 .
 
-ontologies:MeasTypeAxiomContext a ontologies:TurboGraphContext .
-ontologies:MeasToBeTyped ontologies:hasPossibleContext ontologies:MeasTypeAxiomContext . 
-owl:Axiom ontologies:hasPossibleContext ontologies:MeasTypeAxiomContext . 
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:MeasTypeAxiomContext .
-
-ontologies:MeasMentionAxiomSource
-  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:MeasToBeTyped ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:subject owl:Axiom ;
+drivetrain:MeasKeyDenotesProv4MeasType
+  drivetrain:objectUsesContext drivetrain:MeasTypeAxiomContext ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:MeasMentionAxiomProp
-  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000142 ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:subject owl:Axiom ;
+drivetrain:MeasTypeAxiomContext a drivetrain:TurboGraphContext .
+drivetrain:MeasToBeTyped drivetrain:hasPossibleContext drivetrain:MeasTypeAxiomContext . 
+owl:Axiom drivetrain:hasPossibleContext drivetrain:MeasTypeAxiomContext . 
+ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:MeasTypeAxiomContext .
+
+drivetrain:MeasMentionAxiomSource
+  drivetrain:subjectUsesContext drivetrain:MeasMentionAxiomContext ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:MeasToBeTyped ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:subject owl:Axiom ;
 .
 
-ontologies:MeasMentionAxiomTarget
-  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:MeasCodeMentionedClassList ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:subject owl:Axiom ;
+drivetrain:MeasMentionAxiomProp
+  drivetrain:subjectUsesContext drivetrain:MeasMentionAxiomContext ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000142 ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:subject owl:Axiom ;
 .
 
-ontologies:MeasMentionAxiomHasDbXref
-  ontologies:objectUsesContext ontologies:MeasMentionAxiomContext ;
-  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:subject owl:Axiom ;
+drivetrain:MeasMentionAxiomTarget
+  drivetrain:subjectUsesContext drivetrain:MeasMentionAxiomContext ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object drivetrain:MeasCodeMentionedClassList ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:subject owl:Axiom ;
 .
 
-ontologies:MeasMentionAxiomDbXrefHasRepresentation
-  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:measurement_source_value_StringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
+drivetrain:MeasMentionAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:MeasMentionAxiomContext ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:MeasMentionAxiomContext ;
 .
 
-ontologies:MeasMentionAxiomDbXrefPartOfColumn
-  ontologies:subjectUsesContext ontologies:MeasMentionAxiomContext ;
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010487 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
+drivetrain:KeyDenotesMeasMentionAxiomDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:MeasMentionAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:MeasKeyDenotesProv4Mention
-  ontologies:objectUsesContext ontologies:MeasMentionAxiomContext ;
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+
+drivetrain:MeasMentionAxiomDbXrefHasRepresentation
+  drivetrain:subjectUsesContext drivetrain:MeasMentionAxiomContext ;
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:measurement_source_value_StringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
 .
 
-ontologies:MeasMentionAxiomContext a ontologies:TurboGraphContext .
-ontologies:MeasToBeTyped ontologies:hasPossibleContext ontologies:MeasMentionAxiomContext . 
-owl:Axiom ontologies:hasPossibleContext ontologies:MeasMentionAxiomContext . 
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:MeasMentionAxiomContext .
+drivetrain:MeasMentionAxiomDbXrefPartOfColumn
+  drivetrain:subjectUsesContext drivetrain:MeasMentionAxiomContext ;
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010487 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+.
+
+drivetrain:MeasKeyDenotesProv4Mention
+  drivetrain:objectUsesContext drivetrain:MeasMentionAxiomContext ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
+.
+
+drivetrain:MeasMentionAxiomContext a drivetrain:TurboGraphContext .
+drivetrain:MeasToBeTyped drivetrain:hasPossibleContext drivetrain:MeasMentionAxiomContext . 
+owl:Axiom drivetrain:hasPossibleContext drivetrain:MeasMentionAxiomContext . 
+ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:MeasMentionAxiomContext .
 
 ### Measurement unit label
 
-ontologies:MeasHasMul
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:MulClassList ;
-  ontologies:predicate obo:IAO_0000039 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:MeasToBeTyped  ;
+drivetrain:MeasHasMul
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object drivetrain:MulClassList ;
+  drivetrain:predicate obo:IAO_0000039 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject drivetrain:MeasToBeTyped  ;
 .
 
-ontologies:MulAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:object ontologies:MeasToBeTyped ;
+drivetrain:MulAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:object drivetrain:MeasToBeTyped ;
 .
 
-ontologies:MulAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:object obo:IAO_0000039 ;
+drivetrain:MulAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:object obo:IAO_0000039 ;
 .
-ontologies:MulAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:object ontologies:MulClassList ;
+drivetrain:MulAxiomTarget
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:object drivetrain:MulClassList ;
 .
-ontologies:MulAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:object ontologies:TURBO_0010404 ;
+drivetrain:MulAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:object ontologies:TURBO_0010404 ;
 .
-ontologies:MulAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:measurement_more_units_IntegerLiteralValue ;
+drivetrain:MulAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:measurement_more_units_IntegerLiteralValue ;
 .
-ontologies:MulAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010423 ;
-.
-
-ontologies:MeasKeyDenotesProv4Mul
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:MeasDenotationContext ;
+drivetrain:MulAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010423 ;
 .
 
-ontologies:measurement_more_units_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:MeasKeyDenotesProv4Mul
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:MeasDenotationContext ;
 .
-ontologies:MulToBeTyped 
-  a ontologies:MultiObjectDescriber ;
+
+drivetrain:measurement_more_units_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
-ontologies:MulClassList
-  a ontologies:MultiObjectDescriber ;
+drivetrain:MulToBeTyped 
+  a drivetrain:MultiObjectDescriber ;
+.
+drivetrain:MulClassList
+  a drivetrain:MultiObjectDescriber ;
 .
   
 ### measurement aboutness
 
-ontologies:MeasAboutPat
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:MeasToBeTyped ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:object obo:NCBITaxon_9606 ;
+drivetrain:MeasAboutPat
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject drivetrain:MeasToBeTyped ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
 .
 
-ontologies:MeasAboutnessAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:object ontologies:MeasToBeTyped ;
-  ontologies:subjectUsesContext ontologies:MeasAboutnessAxiomContext ;
+drivetrain:MeasAboutnessAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:object drivetrain:MeasToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:MeasAboutnessAxiomContext ;
 .
-ontologies:MeasAboutnessAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:object obo:IAO_0000136 ;
-  ontologies:subjectUsesContext ontologies:MeasAboutnessAxiomContext ;
+drivetrain:MeasAboutnessAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:object obo:IAO_0000136 ;
+  drivetrain:subjectUsesContext drivetrain:MeasAboutnessAxiomContext ;
 .
-ontologies:MeasAboutnessAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:subjectUsesContext ontologies:MeasAboutnessAxiomContext ;
+drivetrain:MeasAboutnessAxiomTarget
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:subjectUsesContext drivetrain:MeasAboutnessAxiomContext ;
 .
-ontologies:MeasAboutnessAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:MeasAboutnessAxiomContext ;
-  ontologies:objectUsesContext ontologies:MeasAboutnessAxiomContext ;
-.
-
-ontologies:MeasAboutnessAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:person_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:MeasAboutnessAxiomContext ;
+drivetrain:MeasAboutnessAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:MeasAboutnessAxiomContext ;
+  drivetrain:objectUsesContext drivetrain:MeasAboutnessAxiomContext ;
 .
 
-ontologies:MeasAboutnessAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010483 ;
-  ontologies:subjectUsesContext ontologies:MeasAboutnessAxiomContext ;
+drivetrain:MeasAboutnessAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:person_id_IntegerLiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:MeasAboutnessAxiomContext ;
 .
 
-ontologies:MeasAboutnessAxiomContext a ontologies:TurboGraphContext .
-ontologies:ProcToBeTyped ontologies:hasPossibleContext ontologies:MeasAboutnessAxiomContext . 
-owl:Axiom ontologies:hasPossibleContext ontologies:MeasAboutnessAxiomContext . 
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:MeasAboutnessAxiomContext .
+drivetrain:MeasAboutnessAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010483 ;
+  drivetrain:subjectUsesContext drivetrain:MeasAboutnessAxiomContext ;
+.
+
+drivetrain:MeasAboutnessAxiomContext a drivetrain:TurboGraphContext .
+drivetrain:ProcToBeTyped drivetrain:hasPossibleContext drivetrain:MeasAboutnessAxiomContext . 
+owl:Axiom drivetrain:hasPossibleContext drivetrain:MeasAboutnessAxiomContext . 
+ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:MeasAboutnessAxiomContext .
 
 ### measurement parthood
 
 # Are all measurements part of an Enc? NO.
-ontologies:EncHsoMeas
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object ontologies:MeasToBeTyped ;
-  ontologies:predicate  obo:OBI_0000299 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject  ontologies:EncToBeTyped ;
+drivetrain:EncHsoMeas
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object drivetrain:MeasToBeTyped ;
+  drivetrain:predicate  obo:OBI_0000299 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject  drivetrain:EncToBeTyped ;
 .
 
-ontologies:MeasParthoodAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:object ontologies:EncToBeTyped ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:MeasParthoodAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:object drivetrain:EncToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
-ontologies:MeasParthoodAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:object obo:OBI_0000299 ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:MeasParthoodAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:object obo:OBI_0000299 ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
-ontologies:MeasParthoodAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:object ontologies:MeasToBeTyped ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:MeasParthoodAxiomTarget
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:object drivetrain:MeasToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
-ontologies:MeasParthoodAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
-  ontologies:objectUsesContext ontologies:ParthoodAxiomContext ;
-.
-
-ontologies:MeasParthoodAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:MeasParthoodAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
+  drivetrain:objectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
-ontologies:MeasParthoodAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:object ontologies:TURBO_0010486 ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:MeasParthoodAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
-ontologies:MeasKeyDenotesProv4Parthood
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:objectUsesContext ontologies:ParthoodAxiomContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:MeasDenotationContext ;
+drivetrain:MeasParthoodAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010486 ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
-ontologies:MeasKeyDenotesProv4Aboutness
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:objectUsesContext ontologies:MeasAboutnessAxiomContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:MeasDenotationContext ;
+drivetrain:MeasKeyDenotesProv4Parthood
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:ParthoodAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:MeasDenotationContext ;
 .
 
-ontologies:MeasDenotationContext a ontologies:TurboGraphContext .
-ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:MeasDenotationContext .
+drivetrain:MeasKeyDenotesProv4Aboutness
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:MeasAboutnessAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:MeasDenotationContext ;
+.
+
+drivetrain:MeasDenotationContext a drivetrain:TurboGraphContext .
+ontologies:TURBO_0010433 drivetrain:hasPossibleContext drivetrain:MeasDenotationContext .
 
 ### conditions/diagnoses (?)
 
-ontologies:DiagExpansion 
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object obo:OGMS_0000073 ;
-  ontologies:predicate ontologies:TURBO_0010113 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject <http://api.stardog.com/condition_occurrence> ;
+drivetrain:DiagExpansion 
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:OGMS_0000073 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
 .
 
-ontologies:condition_visit_occurrence_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:condition_visit_occurrence_id_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
-ontologies:condition_source_value_StringLiteralValue
-  a ontologies:TurboGraphStringLiteralValue ;
+drivetrain:condition_source_value_StringLiteralValue
+  a drivetrain:TurboGraphStringLiteralValue ;
 .
 
-ontologies:condition_occurrence_id_IntegerLiteralValue
-  a ontologies:TurboGraphIntegerLiteralValue ;
+drivetrain:condition_occurrence_id_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
-ontologies:condition_start_datetime_DateLiteralValue
-  a ontologies:TurboGraphDateLiteralValue ;
+drivetrain:condition_start_datetime_DateLiteralValue
+  a drivetrain:TurboGraphDateLiteralValue ;
 .
 
-ontologies:KeyDenotesDiag
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object obo:OGMS_0000073 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:KeyDenotesDiag
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:OGMS_0000073 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:DiagKeySymbPartOfKey
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010433 ;
-  ontologies:objectUsesContext ontologies:KeyContext ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject obo:IAO_0000028 ;
+drivetrain:DiagKeySymbPartOfKey
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010433 ;
+  drivetrain:objectUsesContext drivetrain:KeyContext ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject obo:IAO_0000028 ;
 .
 
-ontologies:DiagKeySymbPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010602 ;
-  ontologies:objectUsesContext ontologies:KeyContext ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject obo:IAO_0000028 ;
+drivetrain:DiagKeySymbPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010602 ;
+  drivetrain:objectUsesContext drivetrain:KeyContext ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject obo:IAO_0000028 ;
 .
 
-ontologies:DiagKeySymbHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:condition_occurrence_id_IntegerLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject obo:IAO_0000028 ;
+drivetrain:DiagKeySymbHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:condition_occurrence_id_IntegerLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject obo:IAO_0000028 ;
 .
 
-ontologies:HardcodedDiagSourceden a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010510 ;
-  ontologies:predicate obo:BFO_0000051 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
+drivetrain:HardcodedDiagSourceden a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010510 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
 .
 
-ontologies:DiagMentionsSnomed
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:CondMentionedClassList ;
-  ontologies:predicate obo:IAO_0000142 ;
-  ontologies:subject obo:OGMS_0000073 ;
-  ontologies:subjectUsesContext ontologies:MentionsContext ;
+drivetrain:DiagMentionsSnomed
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:CondMentionedClassList ;
+  drivetrain:predicate obo:IAO_0000142 ;
+  drivetrain:subject obo:OGMS_0000073 ;
+  drivetrain:subjectUsesContext drivetrain:MentionsContext ;
 .
 
-ontologies:DiagHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:condition_source_value_StringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject obo:OGMS_0000073 ;
+drivetrain:DiagHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object drivetrain:condition_source_value_StringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 
-ontologies:DiagPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010605 ;
-  ontologies:objectUsesContext ontologies:KeyContext ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject obo:OGMS_0000073 ;
+drivetrain:DiagPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010605 ;
+  drivetrain:objectUsesContext drivetrain:KeyContext ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 
 # this time stamp modeling may not be exactly right 
-ontologies:DiagTmdHasMeasVal 
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:condition_start_datetime_DateLiteralValue ;
-  ontologies:predicate obo:IAO_0000004 ;
-  ontologies:subject obo:IAO_0000416 ;
+drivetrain:DiagTmdHasMeasVal 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:condition_start_datetime_DateLiteralValue ;
+  drivetrain:predicate obo:IAO_0000004 ;
+  drivetrain:subject obo:IAO_0000416 ;
 .
 
-ontologies:DiagHasTimestamp  
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object obo:IAO_0000416 ;
-  ontologies:predicate obo:IAO_0000581 ;
-  ontologies:subject obo:OGMS_0000073 ;
+drivetrain:DiagHasTimestamp  
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:IAO_0000416 ;
+  drivetrain:predicate obo:IAO_0000581 ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 
-ontologies:DiagTmdPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010604 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:subject obo:IAO_0000416 ;
+drivetrain:DiagTmdPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010604 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:subject obo:IAO_0000416 ;
 .
 
-ontologies:KeyDenotesDiagTmd
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object obo:IAO_0000416 ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:KeyDenotesDiagTmd
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:IAO_0000416 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:CondMentionedClassList
-  a ontologies:MultiObjectDescriber ;
+drivetrain:CondMentionedClassList
+  a drivetrain:MultiObjectDescriber ;
 .
 
 
-ontologies:DiagMentionAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object obo:OGMS_0000073 ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+drivetrain:DiagMentionAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:OGMS_0000073 ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:DiagMentionAxiomContext ;
 .
 
-ontologies:DiagMentionAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000142 ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+drivetrain:DiagMentionAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000142 ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:DiagMentionAxiomContext ;
 .
 
-ontologies:DiagMentionAxiomTarget
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:CondMentionedClassList ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+drivetrain:DiagMentionAxiomTarget
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object drivetrain:CondMentionedClassList ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:DiagMentionAxiomContext ;
 .
 
-ontologies:DiagMentionAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:objectUsesContext ontologies:DiagMentionAxiomContext ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+drivetrain:DiagMentionAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:DiagMentionAxiomContext ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:DiagMentionAxiomContext ;
 .
 
-ontologies:DiagMentionAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:condition_source_value_StringLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+drivetrain:DiagMentionAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:condition_source_value_StringLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:DiagMentionAxiomContext ;
 .
 
-ontologies:DiagMentionAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010605 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:DiagMentionAxiomContext ;
+drivetrain:DiagMentionAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010605 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:DiagMentionAxiomContext ;
 .
 
-ontologies:DiagKeyDenotesProv4Mention
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:objectUsesContext ontologies:DiagMentionAxiomContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:KeyContext ;
+drivetrain:DiagKeyDenotesProv4Mention
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:DiagMentionAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
-ontologies:DiagMentionAxiomContext a ontologies:TurboGraphContext .
-obo:OGMS_0000073 ontologies:hasPossibleContext ontologies:DiagMentionAxiomContext . 
-owl:Axiom ontologies:hasPossibleContext ontologies:DiagMentionAxiomContext . 
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:DiagMentionAxiomContext .
+drivetrain:DiagMentionAxiomContext a drivetrain:TurboGraphContext .
+obo:OGMS_0000073 drivetrain:hasPossibleContext drivetrain:DiagMentionAxiomContext . 
+owl:Axiom drivetrain:hasPossibleContext drivetrain:DiagMentionAxiomContext . 
+ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:DiagMentionAxiomContext .
 
 
   
 ### diag aboutness
 
-ontologies:DiagAboutPat
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate obo:IAO_0000136 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject obo:OGMS_0000073 ;
+drivetrain:DiagAboutPat
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate obo:IAO_0000136 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject obo:OGMS_0000073 ;
 .
 
-ontologies:DiagAboutnessAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object obo:OGMS_0000073 ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+drivetrain:DiagAboutnessAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:OGMS_0000073 ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:DiagAboutnessAxiomContext ;
 .
 
-ontologies:DiagAboutnessAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:IAO_0000136 ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+drivetrain:DiagAboutnessAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:IAO_0000136 ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:DiagAboutnessAxiomContext ;
 .
 
-ontologies:DiagAboutnessAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object obo:NCBITaxon_9606 ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+drivetrain:DiagAboutnessAxiomTarget
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:DiagAboutnessAxiomContext ;
 .
 
-ontologies:DiagAboutnessAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:objectUsesContext ontologies:DiagAboutnessAxiomContext ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+drivetrain:DiagAboutnessAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:DiagAboutnessAxiomContext ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:DiagAboutnessAxiomContext ;
 .
 
-ontologies:DiagAboutnessAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:person_id_IntegerLiteralValue ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+drivetrain:DiagAboutnessAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:person_id_IntegerLiteralValue ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:DiagAboutnessAxiomContext ;
 .
 
-ontologies:DiagAboutnessAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010701 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:DiagAboutnessAxiomContext ;
+drivetrain:DiagAboutnessAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010701 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:DiagAboutnessAxiomContext ;
 .
 
-ontologies:DiagKeyDenotesProv4Aboutness
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:objectUsesContext ontologies:DiagAboutnessAxiomContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:DiagDenotationContext ;
+drivetrain:DiagKeyDenotesProv4Aboutness
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:DiagAboutnessAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:DiagDenotationContext ;
 .
 
-ontologies:DiagAboutnessAxiomContext a ontologies:TurboGraphContext .
-ontologies:ProcToBeTyped ontologies:hasPossibleContext ontologies:DiagAboutnessAxiomContext . 
-owl:Axiom ontologies:hasPossibleContext ontologies:DiagAboutnessAxiomContext . 
-ontologies:TURBO_0010404 ontologies:hasPossibleContext ontologies:DiagAboutnessAxiomContext .
+drivetrain:DiagAboutnessAxiomContext a drivetrain:TurboGraphContext .
+drivetrain:ProcToBeTyped drivetrain:hasPossibleContext drivetrain:DiagAboutnessAxiomContext . 
+owl:Axiom drivetrain:hasPossibleContext drivetrain:DiagAboutnessAxiomContext . 
+ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:DiagAboutnessAxiomContext .
 
-ontologies:DiagDenotationContext a ontologies:TurboGraphContext .
-ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:DiagDenotationContext .
+drivetrain:DiagDenotationContext a drivetrain:TurboGraphContext .
+ontologies:TURBO_0010433 drivetrain:hasPossibleContext drivetrain:DiagDenotationContext .
 
 ### diagnosis parthood
 
 # Are all diagnoses part of an Enc?
-ontologies:EncHsoDiag
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-many ;
-  ontologies:object obo:OGMS_0000073 ;
-  ontologies:predicate  obo:OBI_0000299 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject  ontologies:EncToBeTyped ;
+drivetrain:EncHsoDiag
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-many ;
+  drivetrain:object obo:OGMS_0000073 ;
+  drivetrain:predicate  obo:OBI_0000299 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject  drivetrain:EncToBeTyped ;
 .
 
-ontologies:DiagParthoodAxiomSource
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:EncToBeTyped ;
-  ontologies:predicate owl:annotatedSource ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:DiagParthoodAxiomSource
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object drivetrain:EncToBeTyped ;
+  drivetrain:predicate owl:annotatedSource ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
-ontologies:DiagParthoodAxiomProp
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate owl:annotatedProperty ;
-  ontologies:object obo:OBI_0000299 ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:DiagParthoodAxiomProp
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate owl:annotatedProperty ;
+  drivetrain:object obo:OBI_0000299 ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
-ontologies:DiagParthoodAxiomTarget
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object obo:OGMS_0000073 ;
-  ontologies:predicate owl:annotatedTarget ;
-  ontologies:subject owl:Axiom ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:DiagParthoodAxiomTarget
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:OGMS_0000073 ;
+  drivetrain:predicate owl:annotatedTarget ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
-ontologies:DiagParthoodAxiomHasDbXref
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject owl:Axiom ;
-  ontologies:predicate oboInOwl:hasDbXref ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
-  ontologies:objectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:DiagParthoodAxiomHasDbXref
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject owl:Axiom ;
+  drivetrain:predicate oboInOwl:hasDbXref ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
+  drivetrain:objectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
-ontologies:DiagParthoodAxiomDbXrefHasRepresentation
-  a ontologies:DatatypeConnectionRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:predicate ontologies:TURBO_0010094 ;
-  ontologies:object ontologies:visit_occurrence_id_IntegerLiteralValue ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:DiagParthoodAxiomDbXrefHasRepresentation
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
-ontologies:DiagParthoodAxiomDbXrefPartOfColumn
-  a ontologies:ObjectConnectionToTermRecipe ;
-  ontologies:multiplicity ontologies:many-1 ;
-  ontologies:object ontologies:TURBO_0010704 ;
-  ontologies:predicate obo:BFO_0000050 ;
-  ontologies:subject ontologies:TURBO_0010404 ;
-  ontologies:subjectUsesContext ontologies:ParthoodAxiomContext ;
+drivetrain:DiagParthoodAxiomDbXrefPartOfColumn
+  a drivetrain:ObjectConnectionToTermRecipe ;
+  drivetrain:multiplicity drivetrain:many-1 ;
+  drivetrain:object ontologies:TURBO_0010704 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
-ontologies:DiagKeyDenotesProv4Parthood
-  a ontologies:ObjectConnectionToInstanceRecipe ;
-  ontologies:multiplicity ontologies:1-1 ;
-  ontologies:object ontologies:TURBO_0010404 ;
-  ontologies:objectUsesContext ontologies:ParthoodAxiomContext ;
-  ontologies:predicate obo:IAO_0000219 ;
-  ontologies:referencedInGraph ontologies:omopExpanded ;
-  ontologies:subject ontologies:TURBO_0010433 ;
-  ontologies:subjectUsesContext ontologies:DiagDenotationContext ;
+drivetrain:DiagKeyDenotesProv4Parthood
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object ontologies:TURBO_0010404 ;
+  drivetrain:objectUsesContext drivetrain:ParthoodAxiomContext ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:DiagDenotationContext ;
 .
 
-ontologies:DiagDenotationContext a ontologies:TurboGraphContext .
-ontologies:TURBO_0010433 ontologies:hasPossibleContext ontologies:DiagDenotationContext .
+drivetrain:DiagDenotationContext a drivetrain:TurboGraphContext .
+ontologies:TURBO_0010433 drivetrain:hasPossibleContext drivetrain:DiagDenotationContext .
 
 ###
 
-# ontologies:ProcProvDatabaseAnnotation
-  # a ontologies:DatatypeConnectionRecipe ;
-  # ontologies:multiplicity ontologies:1-1 ;
-  # ontologies:subject ontologies:TURBO_0010404 ;
-  # ontologies:predicate ontologies:database ;
-  # ontologies:object "jdbc:postgresql://localhost:5432/syntheaomop_post_icbo?currentSchema=cdm_synthea10" ;
+# drivetrain:ProcProvDatabaseAnnotation
+  # a drivetrain:DatatypeConnectionRecipe ;
+  # drivetrain:multiplicity drivetrain:1-1 ;
+  # drivetrain:subject ontologies:TURBO_0010404 ;
+  # drivetrain:predicate drivetrain:database ;
+  # drivetrain:object "jdbc:postgresql://localhost:5432/syntheaomop_post_icbo?currentSchema=cdm_synthea10" ;
 # .
 
