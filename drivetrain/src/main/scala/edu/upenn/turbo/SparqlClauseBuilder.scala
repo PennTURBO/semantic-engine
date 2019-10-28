@@ -151,6 +151,11 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 
 class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
+    def setGraphModelConnection(gmCxn: RepositoryConnection)
+    {
+        this.gmCxn = gmCxn
+    }
+    
     def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], process: String, varsForProcessInput: HashSet[String], usedVariables: HashMap[String, Boolean])
     {
         val triplesGroup = new TriplesGroupBuilder()
@@ -176,6 +181,9 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             var subjectADescriber = false
             
             var objectALiteral = false
+            
+            var thisSubject = rowResult(SUBJECT.toString).toString
+            var thisObject = rowResult(OBJECT.toString).toString
      
             if (rowResult(OBJECTALITERAL.toString).toString.contains("true")) objectALiteral = true
             
@@ -183,8 +191,26 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (rowResult(OBJECTTYPE.toString) != null) objectAType = true
             if (rowResult(SUBJECTCONTEXT.toString) != null) subjectContext = rowResult(SUBJECTCONTEXT.toString).toString
             if (rowResult(OBJECTCONTEXT.toString) != null) objectContext = rowResult(OBJECTCONTEXT.toString).toString
-            if (rowResult(OBJECTADESCRIBER.toString) != null) objectADescriber = true
-            if (rowResult(SUBJECTADESCRIBER.toString) != null) subjectADescriber = true
+            if (rowResult(OBJECTADESCRIBER.toString) != null) 
+            {
+                if (!usedVariables.contains(thisObject))
+                {
+                    val ranges = helper.getDescriberRangesAsList(gmCxn, thisObject)
+                    assert (ranges.size == 1, s"MultiObjectDescriber $thisObject is not present as an input and has a range list size that is not 1")
+                    thisObject = ranges(0)
+                }
+                objectADescriber = true
+            }
+            if (rowResult(SUBJECTADESCRIBER.toString) != null)
+            {
+                if (!usedVariables.contains(thisSubject))
+                {
+                    val ranges = helper.getDescriberRangesAsList(gmCxn, thisSubject)
+                    assert (ranges.size == 1, s"MultiObjectDescriber $thisSubject is not present as an input and has a range list size that is not 1")
+                    thisSubject = ranges(0)
+                }
+                subjectADescriber = true
+            }
             
             var objectFromDatatypeConnection = false
             
@@ -196,14 +222,14 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionToTermRecipe") 
             {
                 objectAType = false
-                if (!usedVariables.contains(rowResult(OBJECT.toString).toString)) nonVariableClasses += rowResult(OBJECT.toString).toString
+                if (!usedVariables.contains(thisObject)) nonVariableClasses += thisObject
                 assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
                 assert (!objectALiteral, s"Found literal object for connection $connectionName of type ObjectConnectionToTermRecipe")
             }
             else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionFromTermRecipe") 
             {
                 subjectAType = false
-                if (!usedVariables.contains(rowResult(SUBJECT.toString).toString)) nonVariableClasses += rowResult(SUBJECT.toString).toString
+                if (!usedVariables.contains(thisSubject)) nonVariableClasses += thisSubject
                 assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
                 assert (!objectALiteral, s"Found literal object for connection $connectionName of type ObjectConnectionFromTermRecipe")
             }
@@ -216,18 +242,18 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             
             var graph = rowResult(GRAPH.toString).toString
             
-            val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
+            val newTriple = new Triple(thisSubject, rowResult(PREDICATE.toString).toString, thisObject,
                                       subjectAType, objectAType, subjectADescriber, objectADescriber, subjectContext, objectContext, objectALiteral)
             graph = helper.checkAndConvertPropertiesReferenceToNamedGraph(graph)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
-            if (usedVariables.contains(newTriple.getSubjectWithContext()))
-            {
-                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(SUBJECT.toString).toString, false, false, false, false, "", subjectContext)
+            /*if (usedVariables.contains(newTriple.getSubjectWithContext()) && !subjectADescriber)
+            {*/
+                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", thisSubject, false, false, false, false, "", subjectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
-            }
-            if (!objectFromDatatypeConnection && usedVariables.contains(newTriple.getObjectWithContext()) && newTriple.triplePredicate != "rdf:type")
+            //}
+            if (!objectFromDatatypeConnection /*&& usedVariables.contains(newTriple.getObjectWithContext())*/ && newTriple.triplePredicate != "rdf:type")
             {
-                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", rowResult(OBJECT.toString).toString, false, false, false, false, "", objectContext)
+                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", thisObject, false, false, false, false, "", objectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
             }
         }
@@ -429,16 +455,13 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 variablesToBind += objectString -> objAType
                 variablesToBind += subjectString -> subjAType
            }
-           else if (row(SUBJECTADESCRIBER.toString) != null && row(CONNECTIONRECIPETYPE.toString).toString == objFromTermRecipe || 
-                row(OBJECTADESCRIBER.toString) != null && row(CONNECTIONRECIPETYPE.toString).toString == objToTermRecipe)
+           else 
            {
-              var subjAType = false
-              if (row(SUBJECTTYPE.toString) != null) subjAType = true
-              var objAType = false
-              if (row(OBJECTTYPE.toString) != null) objAType = true
-              variablesToBind += objectString -> objAType
-              variablesToBind += subjectString -> subjAType
-           }
+             if (row(SUBJECTADESCRIBER.toString) != null && row(CONNECTIONRECIPETYPE.toString).toString == objFromTermRecipe 
+                 && subjectCustomRule != null) variablesToBind += subjectString -> false
+             if (row(OBJECTADESCRIBER.toString) != null && row(CONNECTIONRECIPETYPE.toString).toString == objToTermRecipe
+                 && objectCustomRule != null) variablesToBind += objectString -> false
+          }
         }
         variablesToBind
     }
