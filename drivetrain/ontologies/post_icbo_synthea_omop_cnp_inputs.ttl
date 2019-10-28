@@ -546,6 +546,8 @@ drivetrain:post_icbo_synthea_omop_cnp_measurement
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:HardcodedMeasSourceden ;
   drivetrain:hasOutput drivetrain:KeyDenotesMeas ;
+  drivetrain:hasOutput drivetrain:KeyDenotesMeasMentionAxiomDbXref ;
+  drivetrain:hasOutput drivetrain:KeyDenotesMeasTypeAxiomDbXref ;
   drivetrain:hasOutput drivetrain:KeyDenotesTmd ;
   drivetrain:hasOutput drivetrain:KeyDenotesValspec ;
   drivetrain:hasOutput drivetrain:MeasExpansionSpecification ;
@@ -556,28 +558,21 @@ drivetrain:post_icbo_synthea_omop_cnp_measurement
   drivetrain:hasOutput drivetrain:MeasKeySymbHasRepresentation ;
   drivetrain:hasOutput drivetrain:MeasKeySymbPartOfColumn ;
   drivetrain:hasOutput drivetrain:MeasKeySymbPartOfKey ;
-  
-  drivetrain:hasOutput drivetrain:KeyDenotesMeasMentionAxiomDbXref ;
-  drivetrain:hasOutput drivetrain:KeyDenotesMeasTypeAxiomDbXref ;
-  
   drivetrain:hasOutput drivetrain:MeasMentionAxiomDbXrefHasRepresentation ;
   drivetrain:hasOutput drivetrain:MeasMentionAxiomDbXrefPartOfColumn ;
   drivetrain:hasOutput drivetrain:MeasMentionAxiomHasDbXref ;
   drivetrain:hasOutput drivetrain:MeasMentionAxiomProp ;
   drivetrain:hasOutput drivetrain:MeasMentionAxiomSource ;
   drivetrain:hasOutput drivetrain:MeasMentionAxiomTarget ;
-  
   drivetrain:hasOutput drivetrain:MeasMentionsCode ;
   drivetrain:hasOutput drivetrain:MeasTmdHasMeasVal ;
   drivetrain:hasOutput drivetrain:MeasTmdPartOfQueryResult ;
-  
   drivetrain:hasOutput drivetrain:MeasTypeAxiomDbXrefHasRepresentation ;
   drivetrain:hasOutput drivetrain:MeasTypeAxiomDbXrefPartOfColumn ;
   drivetrain:hasOutput drivetrain:MeasTypeAxiomHasDbXref ;
   drivetrain:hasOutput drivetrain:MeasTypeAxiomProp ;
   drivetrain:hasOutput drivetrain:MeasTypeAxiomSource ;
   drivetrain:hasOutput drivetrain:MeasTypeAxiomTarget ;
-  
   drivetrain:hasOutput drivetrain:MeasTypingRecipe ;
   drivetrain:hasOutput drivetrain:MeasValspecPartOfQueryResult ;
   drivetrain:hasOutput drivetrain:ValspecHasSpecVal ;
