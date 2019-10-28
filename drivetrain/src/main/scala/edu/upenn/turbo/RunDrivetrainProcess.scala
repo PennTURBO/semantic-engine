@@ -64,7 +64,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             //val currDate = Calendar.getInstance().getTime()
             val currDate = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).format( Calendar.getInstance().getTime())
             val startingTriplesCount = helper.countTriplesInDatabase(cxn)
-            val processGraphsList = new ArrayBuffer[String]
             logger.info("Starting process: " + processSpecification)
            
             val primaryQuery = processQueryMap(processSpecification)
@@ -79,26 +78,22 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $processSpecification: no input named graphs found")
             else
             {
-                logger.info(s"Running on validation mode $dataValidationMode")
                 //run validation on input graph
                 if (dataValidationMode == "stop" || dataValidationMode == "log")
                 {
+                    logger.info(s"Running on Input Data Validation Mode $dataValidationMode")
                     InputDataValidator.setGraphModelConnection(gmCxn)
                     InputDataValidator.setOutputRepositoryConnection(cxn)
                     InputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData, dataValidationMode)
                 }
+                else logger.info("Input Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
                 for (graph <- inputNamedGraphsList)
                 {
                     logger.info("Now running on input graph " + graph)
-                    var localStartingTriplesCount = 0
-                    var localEndingTriplesCount = 0
-                    if (inputNamedGraphsList.size > 1) localStartingTriplesCount = helper.countTriplesInDatabase(cxn)
                     primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)
-                    if (inputNamedGraphsList.size > 1) localEndingTriplesCount = helper.countTriplesInDatabase(cxn)
-                    if ((localStartingTriplesCount != localEndingTriplesCount) || (inputNamedGraphsList.size == 1)) processGraphsList += graph
                 }
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
@@ -118,7 +113,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                                                                 OUTPUTNAMEDGRAPH -> ArrayBuffer(primaryQuery.defaultOutputGraph, primaryQuery.defaultRemovalsGraph),
                                                                 PROCESSRUNTIME -> ArrayBuffer(runtime),
                                                                 TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
-                                                                INPUTNAMEDGRAPHS -> processGraphsList //inputNamedGraphsList
+                                                                INPUTNAMEDGRAPHS -> inputNamedGraphsList
                                                                 )
                                                                 
                 val metaDataTriples = createMetaDataTriples(metaInfo)

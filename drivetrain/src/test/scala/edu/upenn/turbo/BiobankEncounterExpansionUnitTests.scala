@@ -159,6 +159,8 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
       <processURI> turbo:TURBO_0010184 ?TURBO_0000531 .
       <processURI> turbo:TURBO_0010184 ?TURBO_0010169 .
       <processURI> turbo:TURBO_0010184 ?TURBO_0010161 .
+      <processURI> turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000009> .
+      <processURI> turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000015> .
       <processURI> obo:OBI_0000293 ?TURBO_0010161 .
       <processURI> obo:OBI_0000293 ?TURBO_0010169 .
       }
@@ -319,6 +321,9 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
                   ontologies:TURBO_0010184 ?TURBO_0010138 ;
                   ontologies:TURBO_0010184 ?TURBO_0000527 ;
                   ontologies:TURBO_0010184 ?EFO_0004340 ;
+                  
+                  turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000009> ;
+                  turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000015> ;
                   
                   ontologies:TURBO_0010184 pmbb:bbenc1 ;
                   ontologies:TURBO_0010184 pmbb:part1 ;

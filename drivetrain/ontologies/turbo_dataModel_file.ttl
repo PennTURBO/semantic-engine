@@ -241,7 +241,7 @@ pmbb:HealthcareEncounterExpansionProcess
   drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes pmbb:DiagnosisExpansionProcess ;
-  drivetrain:buildsOptionalGroup ontologies:encCodeTypeProvenanceOptionalGroup ;
+  #drivetrain:buildsOptionalGroup ontologies:encCodeTypeProvenanceOptionalGroup ;
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToBmiValue ;
   drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;
@@ -256,11 +256,6 @@ pmbb:HealthcareEncounterExpansionProcess
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToSystolicBloodPressureLiteralValue ;
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToDiastolicBloodPressureLiteralValue ;
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToWeightValue ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToEncounterTypeCodeString ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatabase ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToEncTypeColumn ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToSchema ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToTable ;
   drivetrain:hasOutput ontologies:DatasetToDiastolicBloodPressureMeasurementDatum ;
   drivetrain:hasOutput ontologies:DatasetToSystolicBloodPressureMeasurementDatum ;
   drivetrain:hasOutput ontologies:DiastolicBloodPressureMeasurementDatumToDataset ;
@@ -305,12 +300,6 @@ pmbb:HealthcareEncounterExpansionProcess
   drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToDataset ;
   drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToKilogram ;
   drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue ;
-  drivetrain:hasOutput ontologies:provenanceDataItemToHealthcareEncounter ;
-  drivetrain:hasOutput ontologies:provenanceDataItemToDatabaseTerm ;
-  drivetrain:hasOutput ontologies:provenanceDataItemToEncounterTypeCodeString ;
-  drivetrain:hasOutput ontologies:provenanceDataItemToSchemaTerm ;
-  drivetrain:hasOutput ontologies:provenanceDataItemToTableTerm ;
-  drivetrain:hasOutput ontologies:provenanceDataItemToColumnTerm ;
 .
 pmbb:DiagnosisExpansionProcess
   a turbo:TURBO_0010354 ;
