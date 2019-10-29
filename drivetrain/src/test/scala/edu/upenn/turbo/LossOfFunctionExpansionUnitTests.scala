@@ -9,7 +9,7 @@ import org.scalatest._
 import java.util.UUID
 import scala.collection.mutable.ArrayBuffer
 
-class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
+class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
 
@@ -99,7 +99,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
       WHERE {
       VALUES ?GenomeRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000567>}
       VALUES ?ZygosityUriOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000590><http://transformunify.org/ontologies/TURBO_0000591>}
-      GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+      GRAPH <$expandedNamedGraph> {
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010113> ?TURBO_0000527 .
       ?TURBO_0000527 rdf:type <http://transformunify.org/ontologies/TURBO_0000527> .
       ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/RO_0000056> ?TURBO_0000527 .
@@ -119,37 +119,41 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
       ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0010015> ?alleleGeneSymbolFirstPartStringLiteralValue .
       ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0010016> ?alleleGeneSymbolSecondPartStringLiteralValue .
       }
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0002118","localUUID", str(?TURBO_0000527))))) AS ?OBI_0002118)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000566","localUUID", str(?TURBO_0000527))))) AS ?TURBO_0000566)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001868","localUUID", str(?NCBITaxon_9606))))) AS ?OBI_0001868)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000568","localUUID", str(?TURBO_0000527))))) AS ?TURBO_0000568)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001479","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001479)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0200000","localUUID", str(?TURBO_0000527))))) AS ?OBI_0200000)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001051","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001051)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001352","localUUID", str(?TURBO_0010144))))) AS ?OBI_0001352)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001573","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001573)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0000257","localUUID", str(?TURBO_0000527))))) AS ?OBI_0000257)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0600005","localUUID", str(?TURBO_0000527))))) AS ?OBI_0600005)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0002118","localUUID", str(?TURBO_0000527))))) AS ?OBI_0002118)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000566","localUUID", str(?TURBO_0000527))))) AS ?TURBO_0000566)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001868","localUUID", str(?NCBITaxon_9606))))) AS ?OBI_0001868)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000568","localUUID", str(?TURBO_0000527))))) AS ?TURBO_0000568)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001479","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001479)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0200000","localUUID", str(?TURBO_0000527))))) AS ?OBI_0200000)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001051","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001051)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001352","localUUID", str(?TURBO_0010144))))) AS ?OBI_0001352)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001573","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001573)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0000257","localUUID", str(?TURBO_0000527))))) AS ?OBI_0000257)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0600005","localUUID", str(?TURBO_0000527))))) AS ?OBI_0600005)
       }
       """
     
-    before
+    override def beforeAll()
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
         testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        testRepoManager = graphDBMaterials.getTestRepoManager()
-        testRepository = graphDBMaterials.getTestRepository()
         helper.deleteAllTriplesInDatabase(testCxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
         RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
     }
-    after
+    
+    override def afterAll()
     {
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+    }
+    
+    before
+    {
+        helper.deleteAllTriplesInDatabase(testCxn)
     }
     
     test("generated query matched expected query")

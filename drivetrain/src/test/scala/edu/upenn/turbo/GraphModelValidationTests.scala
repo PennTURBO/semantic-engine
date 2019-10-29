@@ -11,27 +11,40 @@ import java.util.UUID
 import java.io._
 
 
-class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
+class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = true
     
     val uuid = UUID.randomUUID().toString.replaceAll("-", "")
     RunDrivetrainProcess.setGlobalUUID(uuid)
     
-    var pw: PrintWriter = null
-    var file: File = null
+    override def beforeAll()
+    {
+        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
+        testCxn = graphDBMaterials.getTestConnection()
+        gmCxn = graphDBMaterials.getGmConnection()
+        helper.deleteAllTriplesInDatabase(testCxn)
+        
+        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+    }
+    
+    override def afterAll()
+    {
+        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+    }
     
     before
     {
-        def testModelFile = s"graphModelTestFile_$uuid.ttl"
-        file = new File(s"ontologies//$testModelFile")
-        pw = new PrintWriter(file)
+        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
         
-        pw.write("""
-          
+        
+        val insert = s"""
+        INSERT DATA { Graph <$defaultPrefix""" + s"""instructionSet> {
           ontologies:myProcess1 a ontologies:TURBO_0010354 ;
-              drivetrain:inputNamedGraph pmbb:expanded ;
-              drivetrain:outputNamedGraph pmbb:expanded ; 
+              drivetrain:inputNamedGraph <$expandedNamedGraph> ;
+              drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
               drivetrain:hasOutput ontologies:object1ToObject2 ;
               drivetrain:hasRequiredInput ontologies:object1ToObject3 ;
               drivetrain:hasRequiredInput ontologies:object2ToObject3 ;
@@ -70,23 +83,15 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               drivetrain:object turbo:object3 ;
               drivetrain:predicate turbo:pred3 ;
               drivetrain:subject turbo:object2 ;
-            .""")
+            .}}"""
             
-        pw.close()
-                      
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(testModelFile)
-        testCxn = graphDBMaterials.getTestConnection()
-        gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(testCxn)
+        update.updateSparql(gmCxn, insert)
         
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
-        
-        val insertData: String = """
+        val insertData: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   pmbb:obj1 a turbo:object1 .
                   pmbb:obj2 a turbo:object2 .
@@ -100,11 +105,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           """
         update.updateSparql(testCxn, insertData)
     }
-    after
-    {
-        ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
-        file.delete()
-    }
     
     test("run process normally")
     {
@@ -113,11 +113,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test ("2 output connection recipes - same subject and object, different multiplicity")
     {
-        val insert: String = """
+        val insert: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:dataModel
+              Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object1ToObject2_2
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -148,11 +148,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test ("one output recipe - new 1-many object without multiplicity context")
     {
-        val insert: String = """
+        val insert: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:dataModel
+              Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -181,11 +181,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test ("one output recipe - new many-1 object without multiplicity context")
     {
-        val insert: String = """
+        val insert: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:dataModel
+              Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -214,11 +214,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test ("2 output connection recipes - mixed singleton declaration")
     {
-        val insert: String = """
+        val insert: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:dataModel
+              Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -256,11 +256,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test ("circular multiplicity logic error in input")
     {
-        val insertDataModel: String = """
+        val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:dataModel
+              Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -292,11 +292,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        val insertData: String = """
+        val insertData: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   pmbb:obj4 a turbo:object4 .
                   pmbb:obj5 a turbo:object5 .
@@ -325,11 +325,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test ("multiplicity in input and output do not agree")
     {
-        val insertDataModel: String = """
+        val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:dataModel
+              Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -352,11 +352,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        val insertData: String = """
+        val insertData: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   pmbb:obj2 turbo:pred3 pmbb:obj4 .
                   pmbb:obj4 a turbo:object4 .
@@ -381,11 +381,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test ("element declared as singleton in output and not as a singleton in input")
     {
-        val insertDataModel: String = """
+        val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:dataModel
+              Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -408,11 +408,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        val insertData: String = """
+        val insertData: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   pmbb:obj2 turbo:pred3 pmbb:obj4 .
                   pmbb:obj4 a turbo:object4 .
@@ -437,11 +437,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test ("invalid multiplicity used in input")
     {
-        val insertDataModel: String = """
+        val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:dataModel
+              Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -455,11 +455,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        val insertData: String = """
+        val insertData: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:expanded
+              Graph <$expandedNamedGraph>
               {
                   pmbb:obj2 turbo:pred3 pmbb:obj4 .
                   pmbb:obj4 a turbo:object4 .
@@ -484,11 +484,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test ("invalid multiplicity used in output")
     {
-        val insertDataModel: String = """
+        val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:dataModel
+              Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_output
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -517,12 +517,12 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("graph specification contains connection not present as output in instruction set")
     {
-        helper.clearNamedGraph(gmCxn, "http://www.itmat.upenn.edu/biobank/graphSpecification")
-        val insertDataModel: String = """
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
+        val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:graphSpecification
+              Graph <$defaultPrefix"""+s"""graphSpecification>
               {
                   ontologies:notPresentConnection
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -549,12 +549,12 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("graph specification contains connection present but removed as output in instruction set")
     {
-        helper.clearNamedGraph(gmCxn, "http://www.itmat.upenn.edu/biobank/graphSpecification")
-        val insertDataModel: String = """
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
+        val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:graphSpecification
+              Graph <$defaultPrefix"""+s"""graphSpecification>
               {
                   ontologies:object1ToObject4
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -565,14 +565,14 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   .
                }
                
-               Graph pmbb:dataModel
+               Graph <$defaultPrefix"""+s"""instructionSet>
                {
                    ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 ;
                        drivetrain:precedes ontologies:myProcess2 .
                    
-                   ontologies:myProcess2 drivetrain:inputNamedGraph pmbb:expanded ;
+                   ontologies:myProcess2 drivetrain:inputNamedGraph <$expandedNamedGraph> ;
                        a turbo:TURBO_0010354 ;
-                       drivetrain:outputNamedGraph pmbb:expanded ; 
+                       drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
                        drivetrain:hasRequiredInput ontologies:object1ToObject4 ;
                        drivetrain:removes ontologies:object1ToObject4 .
                }
@@ -593,13 +593,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("instruction set does not create recipe required by graph specification")
     {
-        helper.clearNamedGraph(gmCxn, "http://www.itmat.upenn.edu/biobank/graphSpecification")
-        helper.clearNamedGraph(gmCxn, "http://www.itmat.upenn.edu/biobank/dataModel")
-        val insertDataModel: String = """
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph pmbb:graphSpecification
+              Graph <$defaultPrefix"""+s"""graphSpecification>
               {
                   ontologies:object1ToObject3
                     a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -625,7 +625,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   ontologies:object4 a owl:Class .
                }
                
-               Graph pmbb:dataModel
+               Graph <$defaultPrefix"""+s"""instructionSet>
                {
                    ontologies:myProcess1 a turbo:TURBO_0010354 ;
                        drivetrain:hasOutput ontologies:object1ToObject4 ;
@@ -656,11 +656,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("duplicate property of recipe in input")
     {
-        val insertDataModel: String = """
+        val insertDataModel: String = s"""
           
           INSERT DATA
           {
-               Graph pmbb:dataModel
+               <$defaultPrefix"""+s"""instructionSet>
                {
                    ontologies:object1ToObject3 drivetrain:subject ontologies:someSubject .
                    ontologies:someSubject a owl:Class .
@@ -683,11 +683,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("duplicate property of recipe in output")
     {
-        val insertDataModel: String = """
+        val insertDataModel: String = s"""
           
           INSERT DATA
           {
-               Graph pmbb:dataModel
+               Graph <$defaultPrefix"""+s"""instructionSet>
                {
                    ontologies:object1ToObject2 drivetrain:predicate ontologies:somePredicate .
                }
