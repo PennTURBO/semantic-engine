@@ -99,6 +99,7 @@ class PatternMatchQuery extends Query
     def createInsertClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
         assert (insertClause == "")
+        insertClauseBuilder.setGraphModelConnection(gmCxn)
         if (whereClause == null || whereClause.size == 0 || bindClause == null || bindClause.size == 0) 
         {
             throw new RuntimeException("Insert clause cannot be built before where or bind clauses are built.")
