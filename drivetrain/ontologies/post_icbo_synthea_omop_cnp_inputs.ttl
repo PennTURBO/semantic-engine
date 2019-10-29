@@ -16,11 +16,9 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<http://api.stardog.com/visit_occurrence> a owl:Class .
-<http://api.stardog.com/person> a owl:Class .
-<http://api.stardog.com/procedure_occurrence> a owl:Class .
-<http://api.stardog.com/measurement> a owl:Class .
-<http://api.stardog.com/condition_occurrence>  a owl:Class .
+
+
+
 
 drivetrain:star a drivetrain:PredicateSuffixSymbol ;
   drivetrain:usesSparqlOperator '*' ;
@@ -65,15 +63,15 @@ drivetrain:post_icbo_synthea_omop_cnp_patients
   drivetrain:hasRequiredInput drivetrain:PatientRidShortcut ;
   drivetrain:hasRequiredInput drivetrain:RidOmopConceptIds ;
   drivetrain:hasRequiredInput drivetrain:RidScoStarRid ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_encs ;
 .
 
 drivetrain:GidScoGid 
    a drivetrain:ObjectConnectionToTermRecipe ;
    drivetrain:multiplicity drivetrain:1-1 ;
-   drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+   drivetrain:referencedInGraph properties:ontologyURL ;
    drivetrain:subject drivetrain:GidClassList ;
    drivetrain:predicate rdfs:subClassOf ;
    drivetrain:object obo:OMRSE_00000133 ;
@@ -81,7 +79,7 @@ drivetrain:GidScoGid
 
 drivetrain:GidOmopConceptIds 
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:GidClassList ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
@@ -110,12 +108,12 @@ drivetrain:RidScoStarRid
    drivetrain:predicate rdfs:subClassOf ;
    drivetrain:predicateSuffix drivetrain:star ;
    drivetrain:subject drivetrain:RidClassList ;
-   drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+   drivetrain:referencedInGraph properties:ontologyURL ;
 .
 
 drivetrain:RidOmopConceptIds 
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:RidClassList ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
@@ -184,8 +182,8 @@ drivetrain:post_icbo_synthea_omop_cnp_encs
   drivetrain:hasRequiredInput drivetrain:EncScoStarEnc ;
   drivetrain:hasRequiredInput drivetrain:EncStartdateShortcut ;
   drivetrain:hasRequiredInput drivetrain:EncTypeShortcut ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_enc_participation ;
 .
 
@@ -204,12 +202,12 @@ drivetrain:EncScoStarEnc
    drivetrain:predicate rdfs:subClassOf ;
    drivetrain:predicateSuffix drivetrain:star ;
    drivetrain:subject drivetrain:EncClassList ;
-   drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+   drivetrain:referencedInGraph properties:ontologyURL ;
 .
 
 drivetrain:EncOmopConceptIds 
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:EncClassList ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
@@ -276,14 +274,14 @@ drivetrain:post_icbo_synthea_omop_cnp_enc_participation
   drivetrain:hasRequiredInput drivetrain:PatKeySymbHasRepresentation ;
   drivetrain:hasRequiredInput drivetrain:PatKeySymbPartOfKey ;
   drivetrain:hasRequiredInput drivetrain:PatientHasRole;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_precedence ;
 .
 
 drivetrain:EncKeyDenotesEnc
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -293,7 +291,7 @@ drivetrain:EncKeyDenotesEnc
 
 drivetrain:EncPatientID 
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph ontologies:omopShortcuts ;
+  drivetrain:referencedInGraph properties:shortcutNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#person_id> ;
@@ -323,14 +321,14 @@ drivetrain:post_icbo_synthea_omop_cnp_precedence
   drivetrain:hasRequiredInput drivetrain:PrevencAPrevencsClass ; 
   drivetrain:hasRequiredInput drivetrain:PrevencScoEnc ; 
   drivetrain:hasRequiredInput drivetrain:RepresenteeOfPreviousVisitId ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_procedures ;
 .
 
 drivetrain:EncPreviousEncValSc
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph ontologies:omopShortcuts ;
+  drivetrain:referencedInGraph properties:shortcutNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#preceding_visit_occurrence_id> ;
@@ -339,7 +337,7 @@ drivetrain:EncPreviousEncValSc
 
 drivetrain:RepresenteeOfPreviousVisitId
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -348,7 +346,7 @@ drivetrain:RepresenteeOfPreviousVisitId
 
 drivetrain:KeyContainerOfPreviousVisitId
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -357,7 +355,7 @@ drivetrain:KeyContainerOfPreviousVisitId
 
 drivetrain:KeyDenotesPrevenc
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -366,7 +364,7 @@ drivetrain:KeyDenotesPrevenc
 
 drivetrain:PrevencAPrevencsClass 
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:Prevenc ;
   drivetrain:predicate rdf:type ;
@@ -375,7 +373,7 @@ drivetrain:PrevencAPrevencsClass
 
 drivetrain:PrevencScoEnc
   a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:PrevencsClass ;
   drivetrain:predicate rdfs:subClassOf ;
@@ -416,8 +414,8 @@ drivetrain:post_icbo_synthea_omop_cnp_procedures
   drivetrain:hasRequiredInput drivetrain:ProcOmopConceptIds ;  
   drivetrain:hasRequiredInput drivetrain:ProcSciShortcut ;  
   drivetrain:hasRequiredInput drivetrain:ProcSourceValueShortcut ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_procedure_participation ;
 .
 
@@ -439,7 +437,7 @@ drivetrain:ProcSciShortcut
 
 drivetrain:ProcOmopConceptIds 
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:ProcClassList ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
@@ -494,8 +492,8 @@ drivetrain:post_icbo_synthea_omop_cnp_procedure_participation
   drivetrain:hasRequiredInput drivetrain:ProcKeyDenotesProc ;
   drivetrain:hasRequiredInput drivetrain:ProcPatientShortcut ;
   drivetrain:hasRequiredInput drivetrain:ProcTypingRecipe ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_procedure_parthood ;
 .
 
@@ -528,8 +526,8 @@ drivetrain:post_icbo_synthea_omop_cnp_procedure_parthood
   drivetrain:hasRequiredInput drivetrain:ProcExpansionSpecification ;
   drivetrain:hasRequiredInput drivetrain:ProcKeyDenotesProc ;
   drivetrain:hasRequiredInput drivetrain:ProcTypingRecipe ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_measurement ;
 .
 
@@ -584,8 +582,8 @@ drivetrain:post_icbo_synthea_omop_cnp_measurement
   drivetrain:hasRequiredInput drivetrain:MeasNumValShortcut ;
   drivetrain:hasRequiredInput drivetrain:MeasScoMeas ;
   drivetrain:hasRequiredInput drivetrain:MeasVocabShortcut ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_mul ;
 .
 
@@ -595,7 +593,7 @@ drivetrain:MeasScoMeas
   drivetrain:object obo:IAO_0000109 ;
   drivetrain:predicate rdfs:subClassOf  ;
   drivetrain:predicateSuffix drivetrain:star ;
-  drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:subject drivetrain:MeasClassList ;
 .
 
@@ -604,7 +602,7 @@ drivetrain:MeasClassHasOmopConceptId
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:measurement_source_concept_id_IntegerLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010147  ;
-  drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:subject drivetrain:MeasClassList ;
 .
 
@@ -685,8 +683,8 @@ drivetrain:post_icbo_synthea_omop_cnp_mul
   drivetrain:hasRequiredInput drivetrain:MeasTypingRecipe ;
   drivetrain:hasRequiredInput drivetrain:MulClassHasOmopConceptId ;
   drivetrain:hasRequiredInput drivetrain:MulScoMul ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_measurement_aboutness ;
 .
 
@@ -700,7 +698,7 @@ drivetrain:MeasMoreUnitsShortcut
 
 drivetrain:MulClassHasOmopConceptId 
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:MulClassList ;
   drivetrain:predicate ontologies:TURBO_0010147  ;
@@ -713,7 +711,7 @@ drivetrain:MulScoMul
   drivetrain:object obo:IAO_0000003 ;
   drivetrain:predicate rdfs:subClassOf  ;
   drivetrain:predicateSuffix drivetrain:star ;
-  drivetrain:referencedInGraph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> ;
+  drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:subject drivetrain:MulClassList ;
 .
 
@@ -738,8 +736,8 @@ drivetrain:post_icbo_synthea_omop_cnp_measurement_aboutness
   drivetrain:hasRequiredInput drivetrain:PatKeySymbHasRepresentation ;
   drivetrain:hasRequiredInput drivetrain:PatKeySymbPartOfKey ;
   drivetrain:hasRequiredInput drivetrain:PatientExpansionSpecification ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_measurement_parthood ;
 .
 
@@ -773,8 +771,8 @@ drivetrain:post_icbo_synthea_omop_cnp_measurement_parthood
   drivetrain:hasRequiredInput drivetrain:MeasEncShortcut ;
   drivetrain:hasRequiredInput drivetrain:MeasExpansionSpecification ;
   drivetrain:hasRequiredInput drivetrain:MeasTypingRecipe ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_condition_occurrence ;
 .
 
@@ -791,7 +789,7 @@ drivetrain:KeyDenotesMeasInp
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:MeasToBeTyped ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:MeasDenotationContext ;
 .
@@ -804,16 +802,16 @@ drivetrain:post_icbo_synthea_omop_cnp_condition_occurrence
   drivetrain:hasOutput drivetrain:DiagTmdHasMeasVal ;
   drivetrain:hasOutput drivetrain:DiagExpansion;
   drivetrain:hasOutput drivetrain:DiagHasRepresentation ;
-  drivetrain:hasOutput drivetrain:DiagKeyDenotesProv4Mention ;
+  # drivetrain:hasOutput drivetrain:DiagKeyDenotesProv4Mention ;
   drivetrain:hasOutput drivetrain:DiagKeySymbHasRepresentation ;
   drivetrain:hasOutput drivetrain:DiagKeySymbPartOfColumn ;
   drivetrain:hasOutput drivetrain:DiagKeySymbPartOfKey ;
-  drivetrain:hasOutput drivetrain:DiagMentionAxiomDbXrefHasRepresentation ;
-  drivetrain:hasOutput drivetrain:DiagMentionAxiomDbXrefPartOfColumn ;
-  drivetrain:hasOutput drivetrain:DiagMentionAxiomHasDbXref ;
-  drivetrain:hasOutput drivetrain:DiagMentionAxiomProp ;
-  drivetrain:hasOutput drivetrain:DiagMentionAxiomSource ;
-  drivetrain:hasOutput drivetrain:DiagMentionAxiomTarget ;
+  # drivetrain:hasOutput drivetrain:DiagMentionAxiomDbXrefHasRepresentation ;
+  # drivetrain:hasOutput drivetrain:DiagMentionAxiomDbXrefPartOfColumn ;
+  # drivetrain:hasOutput drivetrain:DiagMentionAxiomHasDbXref ;
+  # drivetrain:hasOutput drivetrain:DiagMentionAxiomProp ;
+  # drivetrain:hasOutput drivetrain:DiagMentionAxiomSource ;
+  # drivetrain:hasOutput drivetrain:DiagMentionAxiomTarget ;
   drivetrain:hasOutput drivetrain:DiagMentionsSnomed ;
   drivetrain:hasOutput drivetrain:DiagPartOfColumn ;
   drivetrain:hasOutput drivetrain:DiagTmdPartOfColumn ;
@@ -824,8 +822,8 @@ drivetrain:post_icbo_synthea_omop_cnp_condition_occurrence
   drivetrain:hasRequiredInput drivetrain:CondEncounterShortcut ;
   drivetrain:hasRequiredInput drivetrain:CondKeysymShortcut ;
   drivetrain:hasRequiredInput drivetrain:CondStartDatetimeShortcut ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_diagnosis_aboutness ;
 .
 drivetrain:CondCodeShortcut 
@@ -867,6 +865,7 @@ drivetrain:CondMentionedClassFromValueRule
   BIND(uri(concat('http://purl.bioontology.org/ontology/SNOMEDCT/', ${dependent} )) as  ${replacement} )
 """  ;
 .
+
 drivetrain:CondMentionedClassList 
   drivetrain:usesCustomVariableManipulationRule drivetrain:CondMentionedClassFromValueRule .
   
@@ -890,8 +889,8 @@ drivetrain:post_icbo_synthea_omop_cnp_diagnosis_aboutness
   drivetrain:hasRequiredInput drivetrain:PatKeySymbHasRepresentation ;
   drivetrain:hasRequiredInput drivetrain:PatKeySymbPartOfKey ;
   drivetrain:hasRequiredInput drivetrain:PatientExpansionSpecification ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_diagnosis_parthood ;
 .
 
@@ -908,7 +907,7 @@ drivetrain:KeyDenotesDiagInp
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object obo:OGMS_0000073 ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph ontologies:omopExpanded ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:DiagDenotationContext ;
 .
@@ -934,9 +933,9 @@ drivetrain:post_icbo_synthea_omop_cnp_diagnosis_parthood
   drivetrain:hasRequiredInput drivetrain:KeyDenotesDiagInp ;
   drivetrain:hasRequiredInput drivetrain:DiagEncShortcut ;
   drivetrain:hasRequiredInput drivetrain:DiagExpansion ;
-  drivetrain:inputNamedGraph ontologies:omopShortcuts ;
-  drivetrain:outputNamedGraph ontologies:omopExpanded ;
-  # drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_condition_occurrence ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_drug_exposure ;
 .
 
 drivetrain:DiagEncShortcut 
@@ -945,6 +944,131 @@ drivetrain:DiagEncShortcut
   drivetrain:object drivetrain:visit_occurrence_id_IntegerLiteralValue ;
   drivetrain:predicate <http://api.stardog.com/condition_occurrence#visit_occurrence_id> ;
   drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
+.
+
+### drug exposure/prescriptions (?)
+drivetrain:post_icbo_synthea_omop_cnp_drug_exposure
+  # drivetrain:hasOutput drivetrain:RxKeyDenotesProv4Mention ;
+  # drivetrain:hasOutput drivetrain:RxMentionAxiomDbXrefHasRepresentation ;
+  # drivetrain:hasOutput drivetrain:RxMentionAxiomDbXrefPartOfColumn ;
+  # drivetrain:hasOutput drivetrain:RxMentionAxiomHasDbXref ;
+  # drivetrain:hasOutput drivetrain:RxMentionAxiomProp ;
+  # drivetrain:hasOutput drivetrain:RxMentionAxiomSource ;
+  # drivetrain:hasOutput drivetrain:RxMentionAxiomTarget ;
+  a ontologies:TURBO_0010354 ;
+  drivetrain:hasOutput drivetrain:HardcodedRxSourceden ; 
+  drivetrain:hasOutput drivetrain:KeyDenotesRx ;
+  drivetrain:hasOutput drivetrain:KeyDenotesRxTmd ;
+  drivetrain:hasOutput drivetrain:RxExpansion;
+  drivetrain:hasOutput drivetrain:RxHasRepresentation ;
+  drivetrain:hasOutput drivetrain:RxHasTimestamp ;
+  drivetrain:hasOutput drivetrain:RxKeySymbHasRepresentation ;
+  drivetrain:hasOutput drivetrain:RxKeySymbPartOfColumn ;
+  drivetrain:hasOutput drivetrain:RxKeySymbPartOfKey ;
+  drivetrain:hasOutput drivetrain:RxMentionsRxNorm ;
+  drivetrain:hasOutput drivetrain:RxPartOfColumn ;
+  drivetrain:hasOutput drivetrain:RxTmdHasMeasVal ;
+  drivetrain:hasOutput drivetrain:RxTmdPartOfColumn ;
+  drivetrain:hasRequiredInput drivetrain:RxKeySymbShortcut ;
+  drivetrain:hasRequiredInput drivetrain:RxSourceValShortcut ;
+  drivetrain:hasRequiredInput drivetrain:RxStartDatetimeShortcut ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_rx_parthood ;
+.
+
+drivetrain:RxColumnTerm
+  a drivetrain:MultiObjectDescriber ;
+  drivetrain:range ontologies:TURBO_0010707 ;
+.
+
+drivetrain:RxSourcedenTerm
+  a drivetrain:MultiObjectDescriber ;
+  drivetrain:range ontologies:TURBO_0010511 ;
+.
+
+drivetrain:RxKeySymbShortcut
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:drug_exposure_id_value_IntegerLiteralValue ;
+  drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_exposure_id> ;
+  drivetrain:subject <http://api.stardog.com/drug_exposure> ;
+.
+
+drivetrain:RxStartDatetimeShortcut 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:drug_exposure_start_datetime_DateLiteralValue ;
+  drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_exposure_start_datetime> ;
+  drivetrain:subject <http://api.stardog.com/drug_exposure> ;
+.
+
+drivetrain:RxSourceValShortcut 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:drug_source_value_StringLiteralValue ;
+  drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_source_value> ;
+  drivetrain:subject <http://api.stardog.com/drug_exposure> ;
+  drivetrain:objectRequiredToCreate drivetrain:RxMentionedClassList ;
+.
+
+drivetrain:RxMentionedClassListFromValueRule
+  a drivetrain:TurboGraphVariableManipulationLogic ;
+  drivetrain:usesSparql """
+  BIND(uri(concat('http://purl.bioontology.org/ontology/RXNORM/', ${dependent} )) as  ${replacement} )
+"""  ;
+.
+
+drivetrain:RxMentionedClassList 
+  drivetrain:usesCustomVariableManipulationRule drivetrain:RxMentionedClassListFromValueRule .
+
+
+
+
+### Rx parthood
+
+drivetrain:post_icbo_synthea_omop_cnp_rx_parthood
+  # drivetrain:hasOutput drivetrain:RxKeyDenotesProv4Parthood ; 
+  
+  # drivetrain:hasOutput drivetrain:RxParthoodAxiomDbXrefHasRepresentation ;
+  # drivetrain:hasOutput drivetrain:RxParthoodAxiomDbXrefPartOfColumn ;
+  # drivetrain:hasOutput drivetrain:RxParthoodAxiomHasDbXref ;
+  # drivetrain:hasOutput drivetrain:RxParthoodAxiomProp ;
+  # drivetrain:hasOutput drivetrain:RxParthoodAxiomSource ;
+  # drivetrain:hasOutput drivetrain:RxParthoodAxiomTarget ;
+  
+  # drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_drug_exposure ;
+  a ontologies:TURBO_0010354 ;
+  drivetrain:hasOutput drivetrain:EncHsoRx ;
+  drivetrain:hasRequiredInput drivetrain:EncExpansionSpecification ;
+  drivetrain:hasRequiredInput drivetrain:EncKeySymbHasRepresentation ;
+  drivetrain:hasRequiredInput drivetrain:EncKeySymbPartOfKey ;
+  drivetrain:hasRequiredInput drivetrain:EncTypingRecipe ;
+  drivetrain:hasRequiredInput drivetrain:HardcodedEncSourceden ;
+  drivetrain:hasRequiredInput drivetrain:KeyDenotesEnc ;
+  drivetrain:hasRequiredInput drivetrain:KeyDenotesRxInp ;
+  drivetrain:hasRequiredInput drivetrain:RxEncShortcut ;
+  drivetrain:hasRequiredInput drivetrain:RxExpansion ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+.
+
+drivetrain:RxEncShortcut 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:predicate <http://api.stardog.com/drug_exposure#visit_occurrence_id> ;
+  drivetrain:subject <http://api.stardog.com/drug_exposure> ;
+.
+
+drivetrain:KeyDenotesRxInp
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:PDRO_0000024 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:RxDenotationContext ;
 .
 
 ###
