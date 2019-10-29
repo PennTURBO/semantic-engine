@@ -423,7 +423,6 @@ drivetrain:PrevencScoEnc
 ### Procs
 
 drivetrain:HealthCareProcedures
-  # drivetrain:hasOutput drivetrain:KeyDenotesProcStartDate ;
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:HardcodedProcSourceden ;
   drivetrain:hasOutput drivetrain:MentioningProvAboutProc ;
@@ -832,7 +831,7 @@ drivetrain:PatientMeasParthood
   drivetrain:hasRequiredInput drivetrain:MeasTypingRecipe ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:condition_occurrence ;
+  drivetrain:precedes drivetrain:Diagnosis ;
 .
 
 drivetrain:MeasEncShortcut 
@@ -854,51 +853,43 @@ drivetrain:KeyDenotesMeasInp
 .
 
 ### conditions/diagnoses (?)
-
-drivetrain:condition_occurrence
-  a ontologies:TURBO_0010354 ;
-  drivetrain:hasOutput drivetrain:DiagHasTimestamp ;
-  drivetrain:hasOutput drivetrain:DiagTmdHasMeasVal ;
-  drivetrain:hasOutput drivetrain:DiagExpansion;
-  drivetrain:hasOutput drivetrain:DiagHasRepresentation ;
-  # drivetrain:hasOutput drivetrain:DiagKeyDenotesProv4Mention ;
-  drivetrain:hasOutput drivetrain:DiagKeySymbHasRepresentation ;
-  drivetrain:hasOutput drivetrain:DiagKeySymbPartOfColumn ;
-  drivetrain:hasOutput drivetrain:DiagKeySymbPartOfKey ;
+ drivetrain:Diagnosis
+# drivetrain:hasOutput drivetrain:DiagKeyDenotesProv4Mention ;
   # drivetrain:hasOutput drivetrain:DiagMentionAxiomDbXrefHasRepresentation ;
   # drivetrain:hasOutput drivetrain:DiagMentionAxiomDbXrefPartOfColumn ;
   # drivetrain:hasOutput drivetrain:DiagMentionAxiomHasDbXref ;
   # drivetrain:hasOutput drivetrain:DiagMentionAxiomProp ;
   # drivetrain:hasOutput drivetrain:DiagMentionAxiomSource ;
   # drivetrain:hasOutput drivetrain:DiagMentionAxiomTarget ;
+  drivetrain:precedes drivetrain:DiagnosisAboutness ;
+  a ontologies:TURBO_0010354 ;
+  drivetrain:hasOutput drivetrain:DiagExpansion;
+  drivetrain:hasOutput drivetrain:DiagHasRepresentation ;
+  drivetrain:hasOutput drivetrain:DiagHasTimestamp ;
+  drivetrain:hasOutput drivetrain:DiagKeySymbHasRepresentation ;
+  drivetrain:hasOutput drivetrain:DiagKeySymbPartOfColumn ;
+  drivetrain:hasOutput drivetrain:DiagKeySymbPartOfKey ;
   drivetrain:hasOutput drivetrain:DiagMentionsSnomed ;
   drivetrain:hasOutput drivetrain:DiagPartOfColumn ;
+  drivetrain:hasOutput drivetrain:DiagTmdHasMeasVal ;
   drivetrain:hasOutput drivetrain:DiagTmdPartOfColumn ;
   drivetrain:hasOutput drivetrain:HardcodedDiagSourceden ;
   drivetrain:hasOutput drivetrain:KeyDenotesDiag ;
   drivetrain:hasOutput drivetrain:KeyDenotesDiagTmd ;
   drivetrain:hasRequiredInput drivetrain:CondCodeShortcut ;
-  drivetrain:hasRequiredInput drivetrain:CondEncounterShortcut ;
   drivetrain:hasRequiredInput drivetrain:CondKeysymShortcut ;
   drivetrain:hasRequiredInput drivetrain:CondStartDatetimeShortcut ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:diagnosis_aboutness ;
 .
+
+
 drivetrain:CondCodeShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:condition_source_value_StringLiteralValue ;
   drivetrain:objectRequiredToCreate drivetrain:CondMentionedClassList ;
   drivetrain:predicate <http://api.stardog.com/condition_occurrence#condition_source_value> ;
-  drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
-.
-
-drivetrain:CondEncounterShortcut 
-  a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:condition_visit_occurrence_id_IntegerLiteralValue ;
-  drivetrain:predicate <http://api.stardog.com/condition_occurrence#visit_occurrence_id> ;
   drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
 .
 
@@ -937,9 +928,9 @@ drivetrain:CondMentionedClassFromValueRule
 drivetrain:CondMentionedClassList 
   drivetrain:usesCustomVariableManipulationRule drivetrain:CondMentionedClassFromValueRule .
   
-### diag aboutness
+# ### diag aboutness
 
-drivetrain:diagnosis_aboutness 
+drivetrain:DiagnosisAboutness 
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:DiagAboutPat ;
   drivetrain:hasOutput drivetrain:DiagAboutnessAxiomDbXrefHasRepresentation ;
@@ -953,13 +944,12 @@ drivetrain:diagnosis_aboutness
   drivetrain:hasRequiredInput drivetrain:DiagPatientShortcut ;
   drivetrain:hasRequiredInput drivetrain:HardcodedPatientSourceden ;
   drivetrain:hasRequiredInput drivetrain:KeyDenotesDiagInp ;
-  drivetrain:hasRequiredInput drivetrain:KeyDenotesPatient ;
+  drivetrain:hasRequiredInput drivetrain:KeyDenotesPatient ;  
   drivetrain:hasRequiredInput drivetrain:PatKeySymbHasRepresentation ;
   drivetrain:hasRequiredInput drivetrain:PatKeySymbPartOfKey ;
-  drivetrain:hasRequiredInput drivetrain:PatientExpansionSpecification ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:diagnosis_parthood ;
+  drivetrain:precedes drivetrain:DiagnosisParthood ;
 .
 
 drivetrain:DiagPatientShortcut 
@@ -980,11 +970,10 @@ drivetrain:KeyDenotesDiagInp
   drivetrain:subjectUsesContext drivetrain:DiagDenotationContext ;
 .
 
-### diag parthood
-
-drivetrain:diagnosis_parthood
+# ### diag parthood
+drivetrain:DiagnosisParthood
+  drivetrain:precedes drivetrain:Prescription ;
   a ontologies:TURBO_0010354 ;
-  drivetrain:hasOutput drivetrain:EncHsoDiag ;
   drivetrain:hasOutput drivetrain:DiagKeyDenotesProv4Parthood ; 
   drivetrain:hasOutput drivetrain:DiagParthoodAxiomDbXrefHasRepresentation ;
   drivetrain:hasOutput drivetrain:DiagParthoodAxiomDbXrefPartOfColumn ;
@@ -992,18 +981,18 @@ drivetrain:diagnosis_parthood
   drivetrain:hasOutput drivetrain:DiagParthoodAxiomProp ;
   drivetrain:hasOutput drivetrain:DiagParthoodAxiomSource ;
   drivetrain:hasOutput drivetrain:DiagParthoodAxiomTarget ;
+  drivetrain:hasOutput drivetrain:EncHsoDiag ;
+  drivetrain:hasRequiredInput drivetrain:DiagEncShortcut ;
+  drivetrain:hasRequiredInput drivetrain:DiagExpansion ;
   drivetrain:hasRequiredInput drivetrain:EncExpansionSpecification ;
   drivetrain:hasRequiredInput drivetrain:EncKeySymbHasRepresentation ;
   drivetrain:hasRequiredInput drivetrain:EncKeySymbPartOfKey ;
   drivetrain:hasRequiredInput drivetrain:EncTypingRecipe ;
   drivetrain:hasRequiredInput drivetrain:HardcodedEncSourceden ;
-  drivetrain:hasRequiredInput drivetrain:KeyDenotesEnc ;
   drivetrain:hasRequiredInput drivetrain:KeyDenotesDiagInp ;
-  drivetrain:hasRequiredInput drivetrain:DiagEncShortcut ;
-  drivetrain:hasRequiredInput drivetrain:DiagExpansion ;
+  drivetrain:hasRequiredInput drivetrain:KeyDenotesEnc ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:drug_exposure ;
 .
 
 drivetrain:DiagEncShortcut 
@@ -1015,14 +1004,8 @@ drivetrain:DiagEncShortcut
 .
 
 ### drug exposure/prescriptions (?)
-drivetrain:drug_exposure
-  # drivetrain:hasOutput drivetrain:RxKeyDenotesProv4Mention ;
-  # drivetrain:hasOutput drivetrain:RxMentionAxiomDbXrefHasRepresentation ;
-  # drivetrain:hasOutput drivetrain:RxMentionAxiomDbXrefPartOfColumn ;
-  # drivetrain:hasOutput drivetrain:RxMentionAxiomHasDbXref ;
-  # drivetrain:hasOutput drivetrain:RxMentionAxiomProp ;
-  # drivetrain:hasOutput drivetrain:RxMentionAxiomSource ;
-  # drivetrain:hasOutput drivetrain:RxMentionAxiomTarget ;
+drivetrain:Prescription
+  drivetrain:precedes drivetrain:RxParthood ;
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:HardcodedRxSourceden ; 
   drivetrain:hasOutput drivetrain:KeyDenotesRx ;
@@ -1040,9 +1023,11 @@ drivetrain:drug_exposure
   drivetrain:hasRequiredInput drivetrain:RxKeySymbShortcut ;
   drivetrain:hasRequiredInput drivetrain:RxSourceValShortcut ;
   drivetrain:hasRequiredInput drivetrain:RxStartDatetimeShortcut ;
+  drivetrain:hasRequiredInput drivetrain:RxWrittenNotDispensedShortcut ;
+  drivetrain:hasRequiredInput drivetrain:WrittenNotDispensedConceptIds ;
+  drivetrain:hasRequiredInput drivetrain:WrittenNotDispensedSco ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:rx_parthood ;
 .
 
 drivetrain:RxExpansion 
@@ -1089,6 +1074,42 @@ drivetrain:RxSourceValShortcut
   drivetrain:objectRequiredToCreate drivetrain:RxMentionedClassList ;
 .
 
+drivetrain:RxWrittenNotDispensedShortcut 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:WrittenNotDispensedLiteral ;
+  # drivetrain:objectRequiredToCreate drivetrain:RxMentionedClassList ;
+  drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_type_concept_id> ;
+  drivetrain:subject <http://api.stardog.com/drug_exposure> ;
+.
+
+drivetrain:WrittenNotDispensedConceptIds 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:WrittenNotDispensedLiteral ;
+  drivetrain:predicate ontologies:TURBO_0010147 ;
+  drivetrain:referencedInGraph properties:ontologyURL ;
+  drivetrain:subject drivetrain:WrittenNotDispensedMOD ;
+.
+
+drivetrain:WrittenNotDispensedSco
+   a drivetrain:ObjectConnectionToTermRecipe ;
+   drivetrain:multiplicity drivetrain:1-1 ;
+   drivetrain:object obo:OBI_0000011 ;
+   drivetrain:predicate rdfs:subClassOf ;
+   drivetrain:referencedInGraph properties:ontologyURL ;
+   drivetrain:subject drivetrain:WrittenNotDispensedMOD ;
+.
+
+drivetrain:WrittenNotDispensedMOD
+  a drivetrain:MultiObjectDescriber ;
+  # drivetrain:range ontologies:TURBO_0010707 ;
+.
+
+drivetrain:WrittenNotDispensedLiteral
+  a drivetrain:TurboGraphIntegerLiteralValue ;
+.
+
 drivetrain:RxMentionedClassListFromValueRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql """
@@ -1102,17 +1123,16 @@ drivetrain:RxMentionedClassList
 
 ### Rx parthood
 
-drivetrain:rx_parthood
-  # drivetrain:hasOutput drivetrain:RxKeyDenotesProv4Parthood ; 
-  # drivetrain:hasOutput drivetrain:RxParthoodAxiomDbXrefHasRepresentation ;
-  # drivetrain:hasOutput drivetrain:RxParthoodAxiomDbXrefPartOfColumn ;
-  # drivetrain:precedes drivetrain:drug_exposure ;
+drivetrain:RxParthood
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:EncHsoRx ;
-  # drivetrain:hasOutput drivetrain:RxParthoodAxiomHasDbXref ;
-  # drivetrain:hasOutput drivetrain:RxParthoodAxiomProp ;
-  # drivetrain:hasOutput drivetrain:RxParthoodAxiomSource ;
-  # drivetrain:hasOutput drivetrain:RxParthoodAxiomTarget ;
+  drivetrain:hasOutput drivetrain:RxKeyDenotesProv4Parthood ; 
+  drivetrain:hasOutput drivetrain:RxParthoodAxiomDbXrefHasRepresentation ;
+  drivetrain:hasOutput drivetrain:RxParthoodAxiomDbXrefPartOfColumn ;
+  drivetrain:hasOutput drivetrain:RxParthoodAxiomHasDbXref ;
+  drivetrain:hasOutput drivetrain:RxParthoodAxiomProp ;
+  drivetrain:hasOutput drivetrain:RxParthoodAxiomSource ;
+  drivetrain:hasOutput drivetrain:RxParthoodAxiomTarget ;
   drivetrain:hasRequiredInput drivetrain:EncExpansionSpecification ;
   drivetrain:hasRequiredInput drivetrain:EncKeySymbHasRepresentation ;
   drivetrain:hasRequiredInput drivetrain:EncKeySymbPartOfKey ;
@@ -1124,6 +1144,7 @@ drivetrain:rx_parthood
   drivetrain:hasRequiredInput drivetrain:RxExpansion ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:precedes drivetrain:RxAboutness ;
 .
 
 drivetrain:RxEncShortcut 
@@ -1143,6 +1164,40 @@ drivetrain:KeyDenotesRxInp
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:RxDenotationContext ;
 .
+
+
+drivetrain:RxAboutness 
+  # drivetrain:precedes drivetrain:RxnosisParthood ;
+  a ontologies:TURBO_0010354 ;
+  drivetrain:hasOutput drivetrain:RxAboutPat ;
+  drivetrain:hasOutput drivetrain:RxAboutnessAxiomDbXrefHasRepresentation ;
+  drivetrain:hasOutput drivetrain:RxAboutnessAxiomDbXrefPartOfColumn ;
+  drivetrain:hasOutput drivetrain:RxAboutnessAxiomHasDbXref ;
+  drivetrain:hasOutput drivetrain:RxAboutnessAxiomProp ;
+  drivetrain:hasOutput drivetrain:RxAboutnessAxiomSource ;
+  drivetrain:hasOutput drivetrain:RxAboutnessAxiomTarget ;
+  drivetrain:hasOutput drivetrain:RxKeyDenotesProv4Aboutness ;
+  drivetrain:hasRequiredInput drivetrain:HardcodedPatientSourceden ;
+  drivetrain:hasRequiredInput drivetrain:KeyDenotesPatient ;  
+  drivetrain:hasRequiredInput drivetrain:KeyDenotesRxInp ;
+  drivetrain:hasRequiredInput drivetrain:PatKeySymbHasRepresentation ;
+  drivetrain:hasRequiredInput drivetrain:PatKeySymbPartOfKey ;
+  drivetrain:hasRequiredInput drivetrain:RxExpansion ;
+  drivetrain:hasRequiredInput drivetrain:RxPatientShortcut ;
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+.
+
+drivetrain:RxPatientShortcut 
+  a drivetrain:DatatypeConnectionRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject <http://api.stardog.com/drug_exposure> ;
+  drivetrain:predicate <http://api.stardog.com/drug_exposure#person_id> ;
+  drivetrain:object drivetrain:person_keysym_LiteralValue ;
+.
+
+
+
 
 ###
 
