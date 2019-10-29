@@ -442,10 +442,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
 
     def validateGraphModelTerms()
     {
-        val checkPredicates: String = """
+        val checkPredicates: String = s"""
           Select distinct ?predicate Where
           {
-              Values ?g {pmbb:dataModel pmbb:graphSpecification}
+              Values ?g {<$defaultPrefix"""+s"""instructionSet> <$defaultPrefix"""+"""graphSpecification>}
               Graph ?g
               {
                   ?subject ?predicate ?object .
@@ -493,10 +493,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         if (res.size > 0) firstRes = res(0)
         assert(firstRes == "", s"Error in graph model: predicate $firstRes is not known in the Acorn language")
     
-        val checkTypes: String = """
+        val checkTypes: String = s"""
           Select distinct ?type Where
           {
-              Values ?g {pmbb:dataModel pmbb:graphSpecification}
+              Values ?g {<$defaultPrefix"""+s"""instructionSet> <$defaultPrefix"""+"""graphSpecification>}
               Graph ?g
               {
                   ?subject a ?type .
@@ -550,11 +550,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
           Select distinct ?class Where
           {
               {
-                  Graph pmbb:dataModel
+                  Graph <$defaultPrefix"""+s"""instructionSet>
                   {
                       ?process drivetrain:hasOutput ?connection .
                   }
-                  Graph pmbb:graphSpecification
+                  Graph <$defaultPrefix"""+s"""graphSpecification>
                   {
                       ?connection drivetrain:subject ?class .
                       Minus
@@ -567,11 +567,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               UNION
               {
-                  Graph pmbb:dataModel
+                  Graph <$defaultPrefix"""+s"""instructionSet>
                   {
                       ?process drivetrain:hasOutput ?connection .
                   }
-                  Graph pmbb:graphSpecification
+                  Graph <$defaultPrefix"""+s"""graphSpecification>
                   {
                       ?connection drivetrain:object ?class .
                       Minus
@@ -593,7 +593,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Select ?recipe Where
               {
                   {
-                      Graph pmbb:graphSpecification
+                      Graph <$defaultPrefix"""+s"""graphSpecification>
                       {
                           ?recipe drivetrain:subject <$singleClass> .
                           ?recipe drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists .
@@ -601,7 +601,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   }
                   UNION
                   {
-                      Graph pmbb:graphSpecification
+                      Graph <$defaultPrefix"""+s"""graphSpecification>
                       {
                           ?recipe drivetrain:subject <$singleClass> .
                           ?recipe drivetrain:mustExistIf drivetrain:subjectExists .
@@ -609,7 +609,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   }
                   UNION
                   {
-                      Graph pmbb:graphSpecification
+                      Graph <$defaultPrefix"""+s"""graphSpecification>
                       {
                           ?recipe drivetrain:object <$singleClass> .
                           ?recipe drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists .
@@ -617,7 +617,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   }
                   UNION
                   {
-                      Graph pmbb:graphSpecification
+                      Graph <$defaultPrefix"""+s"""graphSpecification>
                       {
                           ?recipe drivetrain:object <$singleClass> .
                           ?recipe drivetrain:mustExistIf drivetrain:objectExists .
@@ -625,7 +625,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   }
                   MINUS
                   {
-                      Graph pmbb:dataModel
+                      Graph <$defaultPrefix"""+s"""instructionSet>
                       {
                           ?process drivetrain:hasOutput ?recipe .
                           filter (?process IN ($processListAsString))
@@ -656,7 +656,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val getOutputsOfAllProcesses = s"""
           Select ?recipe Where
           {
-              Graph pmbb:graphSpecification
+              Graph <$defaultPrefix"""+s"""graphSpecification>
               {
                   Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionToTermRecipe 
                                             drivetrain:ObjectConnectionToInstanceRecipe
@@ -666,7 +666,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               Minus
               {
-                  Graph pmbb:dataModel
+                  Graph <$defaultPrefix"""+s"""instructionSet>
                   {
                       ?process drivetrain:hasOutput ?recipe .
                       $filterMultipleProcesses
@@ -678,15 +678,15 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         //println(getOutputsOfAllProcesses)
         var firstRes = ""
         val res = update.querySparqlAndUnpackTuple(gmCxn, getOutputsOfAllProcesses, "recipe")
-        for (recipe <- res) logger.info(s"Connection recipe $recipe in the Graph Specification is not the output of a queued process in the Instruction Set, but it is not a required recipe.")
+        for (recipe <- res) logger.warn(s"Connection recipe $recipe in the Graph Specification is not the output of a queued process in the Instruction Set, but it is not a required recipe.")
     }
     
     def validateGraphSpecificationAgainstOntology()
     {
-        val rangeQuery: String = """
+        val rangeQuery: String = s"""
           select * where
           {
-              graph pmbb:graphSpecification
+              graph <$defaultPrefix"""+s"""graphSpecification>
               {
                   Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionFromTermRecipe 
                                                 drivetrain:ObjectConnectionToInstanceRecipe
@@ -700,7 +700,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       ?object a drivetrain:MultiObjectDescriber .
                   }
               }
-              graph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl>
+              graph <$ontologyURL>
               {
                   ?predicate rdfs:subPropertyOf* ?superPredicate .
                   ?superPredicate rdfs:range ?range .
@@ -716,10 +716,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         if (res.size > 0) firstRes = res(0)
         assert(firstRes == "")
 
-        val domainQuery: String = """
+        val domainQuery: String = s"""
           select * where
           {
-              graph pmbb:graphSpecification
+              graph <$defaultPrefix"""+s"""graphSpecification>
               {
                   Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionFromTermRecipe 
                                                 drivetrain:ObjectConnectionToInstanceRecipe
@@ -734,7 +734,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                       ?subject a drivetrain:MultiObjectDescriber .
                   }
               }
-              graph <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl>
+              graph <$ontologyURL>
               {
                   ?predicate rdfs:subPropertyOf* ?superPredicate .
                   ?superPredicate rdfs:domain ?domain .
@@ -786,10 +786,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
      */
     def getAllProcessesInOrder(gmCxn: RepositoryConnection): ArrayBuffer[String] =
     {
-        val getFirstProcess: String = """
+        val getFirstProcess: String = s"""
           select ?firstProcess where
           {
-              Graph pmbb:dataModel
+              Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ?firstProcess a turbo:TURBO_0010354 .
                   Minus
@@ -801,10 +801,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
           }
         """
         
-        val getProcesses: String = """
+        val getProcesses: String = s"""
           select ?precedingProcess ?succeedingProcess where
           {
-              Graph pmbb:dataModel
+              Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ?precedingProcess drivetrain:precedes ?succeedingProcess .
                   ?precedingProcess a turbo:TURBO_0010354 .

@@ -10,7 +10,7 @@ import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
 
-class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
+class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
     
@@ -58,21 +58,25 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
        }
     """
     
-    before
+    override def beforeAll()
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
         testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        testRepoManager = graphDBMaterials.getTestRepoManager()
-        testRepository = graphDBMaterials.getTestRepository()
         helper.deleteAllTriplesInDatabase(testCxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
         RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
     }
-    after
+    
+    override def afterAll()
     {
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+    }
+    
+    before
+    {
+        helper.deleteAllTriplesInDatabase(testCxn)
     }
     
     /*test ("invalid RxNORM URI removal - valid RxNORN URI")
@@ -80,7 +84,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       val insert = s"""
             INSERT DATA
             {
-            Graph pmbb:expanded {
+            Graph <$expandedNamedGraph> {
                 pmbb:prescription1 obo:IAO_0000142 pmbb:someRxNormDrug .
                 pmbb:prescription1 a obo:PDRO_0000001 .
               }
@@ -93,10 +97,10 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       update.updateSparql(testCxn, insert)
       RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/RxNormUrlCleanupProcess")
       
-        val check: String = """
+        val check: String = s"""
           ASK
           {
-          Graph pmbb:expanded {
+          Graph <$expandedNamedGraph> {
                 pmbb:prescription1 obo:IAO_0000142 pmbb:someRxNormDrug .
                 pmbb:prescription1 a obo:PDRO_0000001 .
               }
@@ -120,7 +124,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       val insert = s"""
             INSERT DATA
             {
-            Graph pmbb:expanded {
+            Graph <$expandedNamedGraph> {
                 pmbb:prescription1 obo:IAO_0000142 pmbb:someRxNormDrug .
                 pmbb:prescription1 a obo:PDRO_0000001 .
               }
@@ -129,19 +133,19 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       update.updateSparql(testCxn, insert)
       RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/RxNormUrlCleanupProcess")
       
-        val check1: String = """
+        val check1: String = s"""
           ASK
           {
-          Graph pmbb:expanded {
+          Graph <$expandedNamedGraph> {
                 pmbb:prescription1 obo:IAO_0000142 pmbb:someRxNormDrug .
               }
           }
           """
         
-        val check2: String = """
+        val check2: String = s"""
           ASK
           {
-          Graph pmbb:expanded {
+          Graph <$expandedNamedGraph> {
                 pmbb:prescription1 a obo:PDRO_0000001 .
               }
           }
@@ -151,7 +155,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         update.querySparqlBoolean(testCxn, check2).get should be (true)
         update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/RxNormUrlCleanupProcess")).get should be (true)
       
-        val count: String = "SELECT * WHERE {Graph pmbb:expanded {?s ?p ?o .}}"
+        val count: String = s"SELECT * WHERE {Graph <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
         result.size should be (1)
       

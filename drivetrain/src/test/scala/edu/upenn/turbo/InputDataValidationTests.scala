@@ -10,15 +10,14 @@ import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 import java.io._
 
-
-class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
+class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = true
     
     val uuid = UUID.randomUUID().toString.replaceAll("-", "")
     RunDrivetrainProcess.setGlobalUUID(uuid)
     
-    before
+    override def beforeAll()
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
         testCxn = graphDBMaterials.getTestConnection()
@@ -28,9 +27,15 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
         RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
     }
-    after
+    
+    override def afterAll()
     {
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+    }
+    
+    before
+    {
+        helper.deleteAllTriplesInDatabase(testCxn)
     }
     
     test("participant without psc")
@@ -356,13 +361,21 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
     
     test("hc encounter without ID")
     {
-        val insert: String = """
+        val insert: String = s"""
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
           a turbo:TURBO_0010158 ;
-          turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000510> .
-          }}
+          turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000510> ;
+          turbo:TURBO_0010131 pmbb:part1 .
+          pmbb:part1 a turbo:TURBO_0010161 .
+          }
+          Graph <$expandedNamedGraph>
+          {
+              pmbb:part1 turbo:TURBO_0010113 pmbb:expandedPart .
+              pmbb:expandedPart a obo:NCBITaxon_9606 .
+          }
+          }
           """
         update.updateSparql(testCxn, insert)
         
@@ -378,17 +391,24 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
-        result.size should be (0)
+        result.size should be (2)
     }
    
     test("hc encounter without registry")
     {
-        val insert: String = """
+        val insert: String = s"""
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000643 "enc_expand.csv" ;
           a turbo:TURBO_0010158 ;
-          turbo:TURBO_0000648 "20" .
+          turbo:TURBO_0000648 "20" ;
+          turbo:TURBO_0010131 pmbb:part1 .
+          pmbb:part1 a turbo:TURBO_0010161 .
+          }
+          Graph <$expandedNamedGraph>
+          {
+              pmbb:part1 turbo:TURBO_0010113 pmbb:expandedPart .
+              pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}
           """
         update.updateSparql(testCxn, insert)
@@ -405,17 +425,24 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
-        result.size should be (0)
+        result.size should be (2)
     }
     
     test("hc encounter without dataset")
     {
-        val insert: String = """
+        val insert: String = s"""
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
           pmbb:hcenc1
           turbo:TURBO_0000648 "20" ;
           a turbo:TURBO_0010158 ;
-          turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000510> .
+          turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000510> ;
+          turbo:TURBO_0010131 pmbb:part1 .
+          pmbb:part1 a turbo:TURBO_0010161 .
+          }
+          Graph <$expandedNamedGraph>
+          {
+              pmbb:part1 turbo:TURBO_0010113 pmbb:expandedPart .
+              pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}
           """
         update.updateSparql(testCxn, insert)
@@ -432,7 +459,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph>{?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
-        result.size should be (0)
+        result.size should be (2)
     }
     
     test("diagnosis without healthcare encounter")
@@ -537,6 +564,34 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         catch
         {
             case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/bbenc1 of type http://transformunify.org/ontologies/TURBO_0010169 does not have the required connection to literal value http://transformunify.org/ontologies/datasetTitleStringLiteralValue in one of the following graphs:"))
+        }
+        
+        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
+        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        result.size should be (0)
+    }
+    
+    test("hc encounter without person")
+    {
+        val insert: String = """
+          INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
+          pmbb:hcenc1
+          turbo:TURBO_0000648 "20" ;
+          a turbo:TURBO_0010158 ;
+          turbo:TURBO_0010110 <http://transformunify.org/ontologies/TURBO_0000510> ;
+          turbo:TURBO_0000643 "enc_expand.csv" .
+          }}
+          """
+        update.updateSparql(testCxn, insert)
+        
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", "stop")
+            assert (1==2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Input data error: instance http://www.itmat.upenn.edu/biobank/hcenc1 of type http://transformunify.org/ontologies/TURBO_0010158 does not have the required connection to an instance of type http://transformunify.org/ontologies/TURBO_0010161 in one of the following graphs:"))
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"

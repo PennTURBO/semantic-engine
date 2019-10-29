@@ -41,6 +41,9 @@
 obo:VSO_0000006
   drivetrain:usesCustomVariableManipulationRule ontologies:BloodPressureMeasurementProcessRule ;
 .
+obo:VSO_0000004
+  drivetrain:usesCustomVariableManipulationRule ontologies:BloodPressureMeasurementProcessRule ;
+.
 ontologies:
   a owl:Ontology ;
   owl:imports ontologies: ;
@@ -48,7 +51,7 @@ ontologies:
 .
 ontologies:BloodPressureMeasurementProcessRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
-  drivetrain:usesSparql "BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat(\"http://www.itmat.upenn.edu/biobank/\", SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${multiplicityEnforcer}))))), ?unbound) AS ${replacement})" ;
+  drivetrain:usesSparql "BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat(\"${defaultPrefix}\", SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${multiplicityEnforcer}))))), ?unbound) AS ${replacement})" ;
 .
 ontologies:GenderIdentityTypeRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
@@ -70,7 +73,7 @@ ontologies:RaceIdentityTypeRule
 .
 ontologies:DatasetExpansionRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
-  drivetrain:usesSparql "BIND(uri(concat(\"http://www.itmat.upenn.edu/biobank/\",SHA256(CONCAT(str(${dependent}),\"${localUUID}\")))) AS ${replacement})" ;
+  drivetrain:usesSparql "BIND(uri(concat(\"${defaultPrefix}\",SHA256(CONCAT(str(${dependent}),\"${localUUID}\")))) AS ${replacement})" ;
 .
 ontologies:RxNormDrugTermMinusGroup
   a drivetrain:TurboGraphMinusGroup ;
@@ -193,7 +196,7 @@ pmbb:HomoSapiensExpansionProcess
 pmbb:BiobankEncounterExpansionProcess
   drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes pmbb:HealthcareEncounterEntityLinkingProcess ;
+  drivetrain:precedes pmbb:BiobankEncounterEntityLinkingProcess ;
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOptionalInput ontologies:shortcutBiobankEncounterToBmiValue ;
   drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToDatasetTitle ;
@@ -250,12 +253,12 @@ pmbb:HealthcareEncounterExpansionProcess
   drivetrain:hasOutput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
   drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry ;
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToHeightValue ;
-  drivetrain:hasOutput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
-  drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_shortcut ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_shortcut ;
   drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToSymbolValue ;
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToSystolicBloodPressureLiteralValue ;
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToDiastolicBloodPressureLiteralValue ;
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToWeightValue ;
+  drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
   drivetrain:hasOutput ontologies:DatasetToDiastolicBloodPressureMeasurementDatum ;
   drivetrain:hasOutput ontologies:DatasetToSystolicBloodPressureMeasurementDatum ;
   drivetrain:hasOutput ontologies:DiastolicBloodPressureMeasurementDatumToDataset ;
@@ -300,6 +303,19 @@ pmbb:HealthcareEncounterExpansionProcess
   drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToDataset ;
   drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToKilogram ;
   drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue ;
+  drivetrain:hasOutput ontologies:bloodPressureToHomoSapiens ;
+  drivetrain:hasOutput ontologies:bmiToHomoSapiens ;
+  drivetrain:hasOutput ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure ;
+  drivetrain:hasOutput ontologies:homoSapiensToHealthcareEncounter ;
+  drivetrain:hasOutput ontologies:homoSapiensToHeight ;
+  drivetrain:hasOutput ontologies:homoSapiensToPatientRole ;
+  drivetrain:hasOutput ontologies:homoSapiensToWeight ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiens ;
+  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiens ;
+  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiensWeight ;
+  drivetrain:hasOutput ontologies:patientRoleToHealthcareEncounter ;
+  drivetrain:hasOutput ontologies:systolicBloodPressureMeasurementDatumToBloodPressure ;
 .
 pmbb:DiagnosisExpansionProcess
   a turbo:TURBO_0010354 ;
@@ -420,35 +436,6 @@ pmbb:BiobankEncounterEntityLinkingProcess
   drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight ;
   drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiens ;
   drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiensWeight ;
-.
-pmbb:HealthcareEncounterEntityLinkingProcess
-  drivetrain:buildsOptionalGroup ontologies:bloodPressureOptionalGroup ;
-  drivetrain:inputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes pmbb:BiobankEncounterEntityLinkingProcess ;
-  a ontologies:TURBO_0010354 ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
-  drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
-  drivetrain:hasOptionalInput ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum ;
-  drivetrain:hasOptionalInput ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum ;
-  drivetrain:hasOptionalInput ontologies:healthcareEncounterToBMI ;
-  drivetrain:hasRequiredInput ontologies:healthcareEncounterToBloodPressureMeasurementProcess ;
-  drivetrain:hasOptionalInput ontologies:healthcareEncounterToLengthMeasurementValueSpecification ;
-  drivetrain:hasOptionalInput ontologies:healthcareEncounterToMassValueSpecification ; 
-  drivetrain:hasOutput ontologies:bloodPressureToHomoSapiens ;
-  drivetrain:hasOutput ontologies:bmiToHomoSapiens ;
-  drivetrain:hasOutput ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure ;
-  drivetrain:hasOutput ontologies:homoSapiensToHealthcareEncounter ;
-  drivetrain:hasOutput ontologies:homoSapiensToHeight ;
-  drivetrain:hasOutput ontologies:homoSapiensToPatientRole ;
-  drivetrain:hasOutput ontologies:homoSapiensToWeight ;
-  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiens ;
-  drivetrain:hasOutput ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight ;
-  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiens ;
-  drivetrain:hasOutput ontologies:massMeasurementValueSpecificationToHomoSapiensWeight ;
-  drivetrain:hasOutput ontologies:patientRoleToHealthcareEncounter ;
-  drivetrain:hasOutput ontologies:systolicBloodPressureMeasurementDatumToBloodPressure ;
 .
 ontologies:shortcutAlleleToDatasetTitle
   a drivetrain:DatatypeConnectionRecipe ;
@@ -789,6 +776,7 @@ ontologies:shortcutHealthcareEncounterToHeightValue
   drivetrain:objectRequiredToCreate ontologies:TURBO_0010138 ;
   drivetrain:predicate ontologies:TURBO_0000646 ;
   drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:objectRequiredToCreate obo:PATO_0000119 ;
 .
 ontologies:shortcutHealthcareEncounterToPrescription
   a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -804,6 +792,7 @@ ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded
   drivetrain:object ontologies:TURBO_0010161 ;
   drivetrain:predicate ontologies:TURBO_0010131 ;
   drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
 .
 ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_shortcut
   a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -811,6 +800,7 @@ ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_shortcut
   drivetrain:object ontologies:TURBO_0010161 ;
   drivetrain:predicate ontologies:TURBO_0010131 ;
   drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:mustExistIf drivetrain:subjectExists ;
 .
 ontologies:shortcutHealthcareEncounterToSymbolValue
   a drivetrain:DatatypeConnectionRecipe ;
@@ -836,6 +826,7 @@ ontologies:shortcutHealthcareEncounterToWeightValue
   drivetrain:objectRequiredToCreate obo:OBI_0001929 ;
   drivetrain:predicate ontologies:TURBO_0000647 ;
   drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:objectRequiredToCreate obo:PATO_0000128 ;
 .
 ontologies:shortcutHomoSapiensIdToRegistry
   a drivetrain:ObjectConnectionToTermRecipe ;
@@ -1003,27 +994,8 @@ properties:expandedNamedGraph
 ontologies:biobankEncounterToMassMeasurementValueSpecification
   drivetrain:objectRequiredToCreate obo:PATO_0000128 ;
 .
-ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum
-  obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
-.
-ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum
-  obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
-.
-ontologies:healthcareEncounterToBloodPressureMeasurementProcess
-  obo:BFO_0000050 ontologies:bloodPressureOptionalGroup ;
-  drivetrain:objectRequiredToCreate obo:VSO_0000004 ;
-.
-ontologies:healthcareEncounterToLengthMeasurementValueSpecification
-  drivetrain:objectRequiredToCreate obo:PATO_0000119 ;
-.
-ontologies:healthcareEncounterToMassValueSpecification
-  drivetrain:objectRequiredToCreate obo:PATO_0000128 ;
-.
 ontologies:biobankEncounterToLengthMeasurementValueSpecification
   drivetrain:objectRequiredToCreate obo:PATO_0000119 ;
-.
-ontologies:bloodPressureOptionalGroup
-  a drivetrain:TurboGraphOptionalGroup ;
 .
 ontologies:GenderIdentityDatumType
   drivetrain:usesCustomVariableManipulationRule ontologies:GenderIdentityTypeRule ;

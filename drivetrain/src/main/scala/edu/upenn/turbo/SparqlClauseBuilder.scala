@@ -759,10 +759,13 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
              customRule = customRule.replaceAll("\\$\\{replacement\\}", connAsVar)
              customRule = customRule.replaceAll("\\$\\{localUUID\\}", localUUID)
              customRule = customRule.replaceAll("\\$\\{multiplicityEnforcer\\}", multiplicityEnforcer)
+             customRule = customRule.replaceAll("\\$\\{defaultPrefix\\}", defaultPrefix)
+             // these assertions may not be valid if a user decides to create a prefix or term with one of these words in it
              assert (!customRule.contains("replacement"))
              assert (!customRule.contains("dependent"), s"No dependent for custom rule was identified, but custom rule requires a dependent. Rule string: $customRule")
              assert (!customRule.contains("localUUID"))
              assert (!customRule.contains("multiplicityEnforcer"))
+             assert (!customRule.contains("defaultPrefix"))
              bindRules += customRule
         }
     }

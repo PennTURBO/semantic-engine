@@ -9,7 +9,7 @@ import org.scalatest._
 import java.util.UUID
 import scala.collection.mutable.ArrayBuffer
 
-class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
+class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
 
@@ -192,34 +192,38 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
        ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0000627> ?massMeasurementDoubleLiteralValue .
        }
       }
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000527","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000527)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000534","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000534)
-      BIND(IF (BOUND(?lengthMeasurementDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010138","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0010138)
-      BIND(IF (BOUND(?massMeasurementDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?OBI_0001929","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?OBI_0001929)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
-      BIND(IF (BOUND(?biobankEncounterDateStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000532","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0000532)
-      BIND(IF (BOUND(?biobankEncounterDateStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000531","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0000531)
-      BIND(IF (BOUND(?bmiDoubleLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?EFO_0004340","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?EFO_0004340)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000533","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000533)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000527","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000527)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000534","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000534)
+      BIND(IF (BOUND(?lengthMeasurementDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0010138","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0010138)
+      BIND(IF (BOUND(?massMeasurementDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001929","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?OBI_0001929)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
+      BIND(IF (BOUND(?biobankEncounterDateStringLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000532","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0000532)
+      BIND(IF (BOUND(?biobankEncounterDateStringLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000531","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0000531)
+      BIND(IF (BOUND(?bmiDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?EFO_0004340","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?EFO_0004340)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000533","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000533)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
       }
       """
     
-    before
+    override def beforeAll()
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
         testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        testRepoManager = graphDBMaterials.getTestRepoManager()
-        testRepository = graphDBMaterials.getTestRepository()
         helper.deleteAllTriplesInDatabase(testCxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
         RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
     }
-    after
+    
+    override def afterAll()
     {
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+    }
+    
+    before
+    {
+        helper.deleteAllTriplesInDatabase(testCxn)
     }
     
     test("generated query matched expected query")
