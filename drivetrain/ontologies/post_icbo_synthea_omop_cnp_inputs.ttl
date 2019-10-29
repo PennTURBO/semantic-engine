@@ -12,19 +12,23 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sdvg: <http://api.stardog.com/> .
 @prefix turbo: <http://transformunify.org/ontologies/> .
-@prefix turboOnt: <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 
-
+<http://api.stardog.com/visit_occurrence> a owl:Class .
+<http://api.stardog.com/person> a owl:Class .
+<http://api.stardog.com/procedure_occurrence> a owl:Class .
+<http://api.stardog.com/measurement> a owl:Class .
+<http://api.stardog.com/condition_occurrence>  a owl:Class .
+<http://api.stardog.com/drug_exposure>  a owl:Class .
 
 
 drivetrain:star a drivetrain:PredicateSuffixSymbol ;
   drivetrain:usesSparqlOperator '*' ;
 .
 
-drivetrain:post_icbo_synthea_omop_cnp_patients
+drivetrain:Patients
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:CridDenotesPatient;
   drivetrain:hasOutput drivetrain:DobAboutSns ;
@@ -65,7 +69,7 @@ drivetrain:post_icbo_synthea_omop_cnp_patients
   drivetrain:hasRequiredInput drivetrain:RidScoStarRid ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_encs ;
+  drivetrain:precedes drivetrain:HealthCareEncounters ;
 .
 
 drivetrain:GidScoGid 
@@ -83,14 +87,18 @@ drivetrain:GidOmopConceptIds
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:GidClassList ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
-  drivetrain:object drivetrain:gender_concept_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:gender_LiteralValue ;
 .
 drivetrain:PatientGidShortcut
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/person> ;
   drivetrain:predicate <http://api.stardog.com/person#gender_concept_id> ;
-  drivetrain:object drivetrain:gender_concept_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:gender_LiteralValue ;
+.
+
+drivetrain:gender_LiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
 drivetrain:PatientRidShortcut
@@ -98,7 +106,11 @@ drivetrain:PatientRidShortcut
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/person> ;
   drivetrain:predicate <http://api.stardog.com/person#race_concept_id> ;
-  drivetrain:object drivetrain:race_concept_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:race_LiteralValue ;
+.
+
+drivetrain:race_LiteralValue  
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
 drivetrain:RidScoStarRid 
@@ -117,22 +129,32 @@ drivetrain:RidOmopConceptIds
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:RidClassList ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
-  drivetrain:object drivetrain:race_concept_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:race_LiteralValue ;
 .
 drivetrain:PatientCridsymShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/person> ;
   drivetrain:predicate <http://api.stardog.com/person#person_source_value> ;
-  drivetrain:object drivetrain:person_source_value_StringLiteralValue ;
+  drivetrain:object drivetrain:person_cridsym_LiteralValue ;
 .
+
+drivetrain:person_cridsym_LiteralValue
+  a drivetrain:TurboGraphStringLiteralValue ;
+.
+
 drivetrain:PatientKeySymShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/person> ;
   drivetrain:predicate <http://api.stardog.com/person#person_id> ;
-  drivetrain:object drivetrain:person_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:person_keysym_LiteralValue ;
 .
+
+drivetrain:person_keysym_LiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
+.
+
 drivetrain:PatientDobShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -141,9 +163,18 @@ drivetrain:PatientDobShortcut
   drivetrain:object drivetrain:birth_datetime_DateLiteralValue ;
 .
 
+drivetrain:PatientExpansionSpecification 
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject <http://api.stardog.com/person> ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:object obo:NCBITaxon_9606 ;
+.
+
 ### Encs
 # _ is wildcard suffix for graph names
-drivetrain:post_icbo_synthea_omop_cnp_encs
+drivetrain:HealthCareEncounters
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:CridDenotesEnc ;
   drivetrain:hasOutput drivetrain:EncExpansionSpecification ;
@@ -184,7 +215,7 @@ drivetrain:post_icbo_synthea_omop_cnp_encs
   drivetrain:hasRequiredInput drivetrain:EncTypeShortcut ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_enc_participation ;
+  drivetrain:precedes drivetrain:HceParticipation ;
 .
 
 drivetrain:EncTypeShortcut 
@@ -219,7 +250,7 @@ drivetrain:EncPersonIdShortcut
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#person_id> ;
-  drivetrain:object drivetrain:person_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:person_keysym_LiteralValue ;
 .
 drivetrain:EncCridsymShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
@@ -250,9 +281,18 @@ drivetrain:EncStartdateShortcut
   drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
 .
 
+drivetrain:EncExpansionSpecification
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:object drivetrain:EncToBeTyped ;
+.
+
 ### Enc participation
 
-drivetrain:post_icbo_synthea_omop_cnp_enc_participation  
+drivetrain:HceParticipation  
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:EncParticipationAxiomDbXrefHasRepresentation ;
   drivetrain:hasOutput drivetrain:EncParticipationAxiomDbXrefPartOfColumn ;
@@ -276,7 +316,7 @@ drivetrain:post_icbo_synthea_omop_cnp_enc_participation
   drivetrain:hasRequiredInput drivetrain:PatientHasRole;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_precedence ;
+  drivetrain:precedes drivetrain:HcePrecedence ;
 .
 
 drivetrain:EncKeyDenotesEnc
@@ -295,12 +335,12 @@ drivetrain:EncPatientID
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#person_id> ;
-  drivetrain:object drivetrain:person_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:person_keysym_LiteralValue ;
 .
 
 ### Enc precedence
 
-drivetrain:post_icbo_synthea_omop_cnp_precedence
+drivetrain:HcePrecedence
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:HceKeyDenotesProv4Precedence ;
   drivetrain:hasOutput drivetrain:PrecedenceAxiomDbXrefHasRepresentation ;
@@ -323,7 +363,7 @@ drivetrain:post_icbo_synthea_omop_cnp_precedence
   drivetrain:hasRequiredInput drivetrain:RepresenteeOfPreviousVisitId ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_procedures ;
+  drivetrain:precedes drivetrain:HealthCareProcedures ;
 .
 
 drivetrain:EncPreviousEncValSc
@@ -382,7 +422,7 @@ drivetrain:PrevencScoEnc
 
 ### Procs
 
-drivetrain:post_icbo_synthea_omop_cnp_procedures
+drivetrain:HealthCareProcedures
   # drivetrain:hasOutput drivetrain:KeyDenotesProcStartDate ;
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:HardcodedProcSourceden ;
@@ -416,7 +456,7 @@ drivetrain:post_icbo_synthea_omop_cnp_procedures
   drivetrain:hasRequiredInput drivetrain:ProcSourceValueShortcut ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_procedure_participation ;
+  drivetrain:precedes drivetrain:HcpParticipation ;
 .
 
 drivetrain:ProcDatetimeShortcut 
@@ -460,6 +500,16 @@ drivetrain:ProcSourceValueShortcut
   drivetrain:objectRequiredToCreate drivetrain:ProcMentionedClassList ;
 .
 
+drivetrain:ProcExpansionSpecification
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:object drivetrain:ProcToBeTyped ;
+.
+
+
 drivetrain:ProcMentionedClassFromValueRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql """
@@ -471,7 +521,7 @@ drivetrain:ProcMentionedClassList
   
 ### Proc participation
 
-drivetrain:post_icbo_synthea_omop_cnp_procedure_participation
+drivetrain:HcpParticipation
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:PatientHasRole ;
   drivetrain:hasOutput drivetrain:ProcKeyDenotesParticipationAxiomDbXref ;
@@ -494,7 +544,7 @@ drivetrain:post_icbo_synthea_omop_cnp_procedure_participation
   drivetrain:hasRequiredInput drivetrain:ProcTypingRecipe ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_procedure_parthood ;
+  drivetrain:precedes drivetrain:HcpParthood ;
 .
 
 drivetrain:ProcPatientShortcut 
@@ -502,11 +552,11 @@ drivetrain:ProcPatientShortcut
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#person_id> ;
-  drivetrain:object drivetrain:person_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:person_keysym_LiteralValue ;
 .
 
 ### Proc parthood
-drivetrain:post_icbo_synthea_omop_cnp_procedure_parthood
+drivetrain:HcpParthood
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:ProcKeyDenotesParthoodAxiomDbXref ;
   drivetrain:hasOutput drivetrain:ProcPartOfEnc ;
@@ -528,7 +578,7 @@ drivetrain:post_icbo_synthea_omop_cnp_procedure_parthood
   drivetrain:hasRequiredInput drivetrain:ProcTypingRecipe ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_measurement ;
+  drivetrain:precedes drivetrain:PatientMeasurements ;
 .
 
 drivetrain:ProcEncShortcut 
@@ -540,7 +590,7 @@ drivetrain:ProcEncShortcut
 .
 ### measurement
 
-drivetrain:post_icbo_synthea_omop_cnp_measurement
+drivetrain:PatientMeasurements
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:HardcodedMeasSourceden ;
   drivetrain:hasOutput drivetrain:KeyDenotesMeas ;
@@ -584,7 +634,7 @@ drivetrain:post_icbo_synthea_omop_cnp_measurement
   drivetrain:hasRequiredInput drivetrain:MeasVocabShortcut ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_mul ;
+  drivetrain:precedes drivetrain:PatientMul ;
 .
 
 drivetrain:MeasScoMeas
@@ -665,9 +715,18 @@ drivetrain:MeasDatetimeShortcut
   drivetrain:object drivetrain:measurement_datetime_DateLiteralValue ;
 .
 
+drivetrain:MeasExpansionSpecification
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object drivetrain:MeasToBeTyped ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
+  drivetrain:subject <http://api.stardog.com/measurement> ;
+.
+
 ### Measurement unit label
 
-drivetrain:post_icbo_synthea_omop_cnp_mul
+drivetrain:PatientMul
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:MeasHasMul ;
   drivetrain:hasOutput drivetrain:MeasKeyDenotesProv4Mul ;
@@ -685,7 +744,7 @@ drivetrain:post_icbo_synthea_omop_cnp_mul
   drivetrain:hasRequiredInput drivetrain:MulScoMul ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_measurement_aboutness ;
+  drivetrain:precedes drivetrain:PatientMeasAboutness ;
 .
 
 drivetrain:MeasMoreUnitsShortcut 
@@ -717,7 +776,7 @@ drivetrain:MulScoMul
 
 ### measurement aboutness
 
-drivetrain:post_icbo_synthea_omop_cnp_measurement_aboutness 
+drivetrain:PatientMeasAboutness 
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:MeasAboutPat ;
   drivetrain:hasOutput drivetrain:MeasAboutnessAxiomDbXrefHasRepresentation ;
@@ -738,7 +797,7 @@ drivetrain:post_icbo_synthea_omop_cnp_measurement_aboutness
   drivetrain:hasRequiredInput drivetrain:PatientExpansionSpecification ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_measurement_parthood ;
+  drivetrain:precedes drivetrain:PatientMeasParthood ;
 .
 
 drivetrain:MeasPatientShortcut 
@@ -746,12 +805,12 @@ drivetrain:MeasPatientShortcut
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
   drivetrain:predicate <http://api.stardog.com/measurement#person_id> ;
-  drivetrain:object drivetrain:person_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:person_keysym_LiteralValue ;
 .
 
 ### measurement parthood
 
-drivetrain:post_icbo_synthea_omop_cnp_measurement_parthood
+drivetrain:PatientMeasParthood
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:EncHsoMeas ;
   drivetrain:hasOutput drivetrain:MeasKeyDenotesProv4Parthood ; 
@@ -773,7 +832,7 @@ drivetrain:post_icbo_synthea_omop_cnp_measurement_parthood
   drivetrain:hasRequiredInput drivetrain:MeasTypingRecipe ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_condition_occurrence ;
+  drivetrain:precedes drivetrain:condition_occurrence ;
 .
 
 drivetrain:MeasEncShortcut 
@@ -796,7 +855,7 @@ drivetrain:KeyDenotesMeasInp
 
 ### conditions/diagnoses (?)
 
-drivetrain:post_icbo_synthea_omop_cnp_condition_occurrence
+drivetrain:condition_occurrence
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:DiagHasTimestamp ;
   drivetrain:hasOutput drivetrain:DiagTmdHasMeasVal ;
@@ -824,7 +883,7 @@ drivetrain:post_icbo_synthea_omop_cnp_condition_occurrence
   drivetrain:hasRequiredInput drivetrain:CondStartDatetimeShortcut ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_diagnosis_aboutness ;
+  drivetrain:precedes drivetrain:diagnosis_aboutness ;
 .
 drivetrain:CondCodeShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
@@ -859,6 +918,15 @@ drivetrain:CondStartDatetimeShortcut
   drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
 .
 
+drivetrain:DiagExpansion 
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:OGMS_0000073 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
+  drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
+.
+
 drivetrain:CondMentionedClassFromValueRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql """
@@ -871,7 +939,7 @@ drivetrain:CondMentionedClassList
   
 ### diag aboutness
 
-drivetrain:post_icbo_synthea_omop_cnp_diagnosis_aboutness 
+drivetrain:diagnosis_aboutness 
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:DiagAboutPat ;
   drivetrain:hasOutput drivetrain:DiagAboutnessAxiomDbXrefHasRepresentation ;
@@ -891,7 +959,7 @@ drivetrain:post_icbo_synthea_omop_cnp_diagnosis_aboutness
   drivetrain:hasRequiredInput drivetrain:PatientExpansionSpecification ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_diagnosis_parthood ;
+  drivetrain:precedes drivetrain:diagnosis_parthood ;
 .
 
 drivetrain:DiagPatientShortcut 
@@ -899,7 +967,7 @@ drivetrain:DiagPatientShortcut
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/condition_occurrence#person_id> ;
-  drivetrain:object drivetrain:person_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:person_keysym_LiteralValue ;
 .
 
 drivetrain:KeyDenotesDiagInp
@@ -914,7 +982,7 @@ drivetrain:KeyDenotesDiagInp
 
 ### diag parthood
 
-drivetrain:post_icbo_synthea_omop_cnp_diagnosis_parthood
+drivetrain:diagnosis_parthood
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:EncHsoDiag ;
   drivetrain:hasOutput drivetrain:DiagKeyDenotesProv4Parthood ; 
@@ -935,7 +1003,7 @@ drivetrain:post_icbo_synthea_omop_cnp_diagnosis_parthood
   drivetrain:hasRequiredInput drivetrain:DiagExpansion ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_drug_exposure ;
+  drivetrain:precedes drivetrain:drug_exposure ;
 .
 
 drivetrain:DiagEncShortcut 
@@ -947,7 +1015,7 @@ drivetrain:DiagEncShortcut
 .
 
 ### drug exposure/prescriptions (?)
-drivetrain:post_icbo_synthea_omop_cnp_drug_exposure
+drivetrain:drug_exposure
   # drivetrain:hasOutput drivetrain:RxKeyDenotesProv4Mention ;
   # drivetrain:hasOutput drivetrain:RxMentionAxiomDbXrefHasRepresentation ;
   # drivetrain:hasOutput drivetrain:RxMentionAxiomDbXrefPartOfColumn ;
@@ -974,7 +1042,16 @@ drivetrain:post_icbo_synthea_omop_cnp_drug_exposure
   drivetrain:hasRequiredInput drivetrain:RxStartDatetimeShortcut ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_rx_parthood ;
+  drivetrain:precedes drivetrain:rx_parthood ;
+.
+
+drivetrain:RxExpansion 
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:PDRO_0000024 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
+  drivetrain:subject <http://api.stardog.com/drug_exposure> ;
 .
 
 drivetrain:RxColumnTerm
@@ -1023,23 +1100,19 @@ drivetrain:RxMentionedClassList
   drivetrain:usesCustomVariableManipulationRule drivetrain:RxMentionedClassListFromValueRule .
 
 
-
-
 ### Rx parthood
 
-drivetrain:post_icbo_synthea_omop_cnp_rx_parthood
+drivetrain:rx_parthood
   # drivetrain:hasOutput drivetrain:RxKeyDenotesProv4Parthood ; 
-  
   # drivetrain:hasOutput drivetrain:RxParthoodAxiomDbXrefHasRepresentation ;
   # drivetrain:hasOutput drivetrain:RxParthoodAxiomDbXrefPartOfColumn ;
+  # drivetrain:precedes drivetrain:drug_exposure ;
+  a ontologies:TURBO_0010354 ;
+  drivetrain:hasOutput drivetrain:EncHsoRx ;
   # drivetrain:hasOutput drivetrain:RxParthoodAxiomHasDbXref ;
   # drivetrain:hasOutput drivetrain:RxParthoodAxiomProp ;
   # drivetrain:hasOutput drivetrain:RxParthoodAxiomSource ;
   # drivetrain:hasOutput drivetrain:RxParthoodAxiomTarget ;
-  
-  # drivetrain:precedes drivetrain:post_icbo_synthea_omop_cnp_drug_exposure ;
-  a ontologies:TURBO_0010354 ;
-  drivetrain:hasOutput drivetrain:EncHsoRx ;
   drivetrain:hasRequiredInput drivetrain:EncExpansionSpecification ;
   drivetrain:hasRequiredInput drivetrain:EncKeySymbHasRepresentation ;
   drivetrain:hasRequiredInput drivetrain:EncKeySymbPartOfKey ;
@@ -1073,27 +1146,13 @@ drivetrain:KeyDenotesRxInp
 
 ###
 
-# |drug_type_concept_id|count|
-# |--------------------|-----|
-# |38000177|8468|
-# |581452|22798|
+# Row Labels | CVX | RxNorm
+# -- | -- | --
+# Dispensed in Outpatient office | 14695 |  
+# Prescription written |   | 8452
 
-# |concept_id|concept_name|
-# |----------|------------|
-# |581452|Dispensed in Outpatient office|
-# |38000177|Prescription written|
 
-# drivetrain:regdenFromShorts a drivetrain:ObjectConnectionToClassRecipe ;
-  # drivetrain:multiplicity drivetrain:1-1 ;
-  # drivetrain:required true ;
-  # drivetrain:subject ontologies:TURBO_0010158 ;
-  # drivetrain:predicate drivetrain:assertedRegden ;
-  # drivetrain:object drivetrain:allowedEncRegdenList ;
-# .
 
-# drivetrain:EncClassList 
-  # drivetrain:usesCustomVariableManipulationRule drivetrain:encClassFromValueRule .
-  
 # drivetrain:encClassFromValueRule
   # a drivetrain:TurboGraphVariableManipulationLogic ;
   # drivetrain:usesSparql """
@@ -1108,8 +1167,6 @@ drivetrain:KeyDenotesRxInp
 # """  ;
 # .
 
-# drivetrain:ProcClassList drivetrain:usesCustomVariableManipulationRule drivetrain:ProcClassFromValueRule .
-
 # drivetrain:ProcClassFromValueRule
   # a drivetrain:TurboGraphVariableManipulationLogic ;
   # drivetrain:usesSparql """
@@ -1119,11 +1176,6 @@ drivetrain:KeyDenotesRxInp
 # """  ;
 # .
 
-# drivetrain:syntheaomop_post_icbo a owl:Class .
-# drivetrain:cdm_synthea10 a owl:Class .
-# drivetrain:procedure_occurrence a owl:Class .
-
-# drivetrain:GidClassList drivetrain:usesCustomVariableManipulationRule drivetrain:GidClassFromValueRule .
 # drivetrain:GidClassFromValueRule
   # a drivetrain:TurboGraphVariableManipulationLogic ;
   # drivetrain:usesSparql """
