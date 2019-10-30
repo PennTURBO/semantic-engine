@@ -11,7 +11,7 @@ ontologyURL = https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/
 defaultPrefix = http://www.itmat.upenn.edu/biobank/
 
 processNamedGraph = http://www.itmat.upenn.edu/biobank/processes
-expandedNameGraph = http://www.itmat.upenn.edu/biobank/expanded
+expandedNamedGraph = http://www.itmat.upenn.edu/biobank/expanded
 clearGraphsAtStart = false
 
 graphModelFile = turbo_dataModel_file.ttl

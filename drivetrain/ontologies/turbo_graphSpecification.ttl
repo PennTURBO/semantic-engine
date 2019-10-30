@@ -871,54 +871,6 @@ ontologies:healthcareEncounterToPrescription
   drivetrain:mustExistIf drivetrain:objectExists ;
   drivetrain:subject obo:OGMS_0000097 ;
 .
-ontologies:provenanceDataItemToHealthcareEncounter
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object obo:OGMS_0000097 ;
-  drivetrain:predicate obo:IAO_0000136 ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
-  drivetrain:subject ontologies:TURBO_0010404 ;
-.
-ontologies:provenanceDataItemToDatabaseTerm
-  a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object ontologies:HealthcareEncounterDatabaseProvenanceTerm ;
-  drivetrain:predicate ontologies:database ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
-  drivetrain:subject ontologies:TURBO_0010404 ;
-.
-ontologies:provenanceDataItemToEncounterTypeCodeString
-  a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object ontologies:encounterTypeCodeLiteralValue ;
-  drivetrain:predicate ontologies:colVal ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
-  drivetrain:subject ontologies:TURBO_0010404 ;
-.
-ontologies:provenanceDataItemToSchemaTerm
-  a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object ontologies:HealthcareEncounterSchemaProvenanceTerm ;
-  drivetrain:predicate ontologies:schema ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
-  drivetrain:subject ontologies:TURBO_0010404 ;
-.
-ontologies:provenanceDataItemToTableTerm
-  a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object ontologies:HealthcareEncounterTableProvenanceTerm ;
-  drivetrain:predicate ontologies:table ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
-  drivetrain:subject ontologies:TURBO_0010404 ;
-.
-ontologies:provenanceDataItemToColumnTerm
-  a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object ontologies:HealthcareEncounterTypeCodeColumnTerm ;
-  drivetrain:predicate ontologies:column ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
-  drivetrain:subject ontologies:TURBO_0010404 ;
-.
 ontologies:homoSapiensIdToRegistryDenoter
   a drivetrain:ObjectConnectionToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-singleton ;
