@@ -107,14 +107,6 @@ pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess
 ontologies:ShortcutGenderIdentityDatumOfVariousTypes
   a drivetrain:MultiObjectDescriber ;
 .
-pmbb:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess
-  drivetrain:inputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
-  a ontologies:TURBO_0010354 ;
-  drivetrain:removes ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded ;
-.
 ontologies:ShortcutRaceIdentityDatumOfVariousTypes
   a drivetrain:MultiObjectDescriber ;
 .
@@ -253,7 +245,7 @@ pmbb:HealthcareEncounterExpansionProcess
   drivetrain:hasOutput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
   drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry ;
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToHeightValue ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_shortcut ;
+  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI ;
   drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToSymbolValue ;
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToSystolicBloodPressureLiteralValue ;
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToDiastolicBloodPressureLiteralValue ;
@@ -369,7 +361,7 @@ pmbb:MedicationExpansionProcess
 pmbb:LossOfFunctionExpansionProcess
   drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes pmbb:ShortcutHealthcareEncounterToShortcutPersonCleanupProcess ;
+  drivetrain:precedes pmbb:ShortcutBiobankEncounterToShortcutPersonCleanupProcess ;
   a ontologies:TURBO_0010354 ;
   drivetrain:hasRequiredInput ontologies:shortcutAlleleToDatasetTitle ;
   drivetrain:hasOutput ontologies:shortcutAlleleToExpandedAllele ; 
@@ -786,15 +778,7 @@ ontologies:shortcutHealthcareEncounterToPrescription
   drivetrain:mustExistIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010158 ;
 .
-ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_expanded
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010161 ;
-  drivetrain:predicate ontologies:TURBO_0010131 ;
-  drivetrain:subject ontologies:TURBO_0010158 ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
-.
-ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI_shortcut
+ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI
   a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object ontologies:TURBO_0010161 ;
