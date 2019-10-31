@@ -219,10 +219,6 @@ drivetrain:DobHasMeasVal
   drivetrain:predicate obo:IAO_0000004 ;
   drivetrain:object drivetrain:birth_datetime_DateLiteralValue ;
 .
-drivetrain:birth_datetime_DateLiteralValue
-  a drivetrain:TurboGraphDateLiteralValue ;
-.
-
 
 drivetrain:RidToBeTyped 
   a drivetrain:MultiObjectDescriber ;
@@ -258,7 +254,7 @@ drivetrain:PatientBornOnSns
 
 
 
-drivetrain:symbolPartOfCridForPatient
+drivetrain:SymbolPartOfCridForPatient
   a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
@@ -269,7 +265,7 @@ drivetrain:symbolPartOfCridForPatient
 
 ### Encs
 
-drivetrain:VisitIdPartOfColumn
+drivetrain:EncIdPartOfColumn
   a drivetrain:ObjectConnectionToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
@@ -277,7 +273,7 @@ drivetrain:VisitIdPartOfColumn
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:object ontologies:TURBO_0010453 ;
 .
-drivetrain:VisitCridSymPartOfColumn
+drivetrain:EncCridSymPartOfColumn
   a drivetrain:ObjectConnectionToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
@@ -285,7 +281,7 @@ drivetrain:VisitCridSymPartOfColumn
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:object ontologies:TURBO_0010455 ;
 .
-drivetrain:KeyDenotesVisitCridSym
+drivetrain:KeyDenotesEncCridSym
   a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -356,7 +352,7 @@ drivetrain:EncKeySymbHasRepresentation
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:object drivetrain:visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
@@ -392,13 +388,13 @@ drivetrain:EncToBeTyped
   a drivetrain:MultiObjectDescriber ;
 .
 
-drivetrain:encCridsymbHasRepresentation
+drivetrain:EncCridsymbHasRepresentation
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:object drivetrain:visit_source_value_StringLiteralValue ;
+  drivetrain:object drivetrain:encounter_cridsym_LiteralValue ;
   drivetrain:subjectUsesContext drivetrain:CridContext ;
 .
 # represents/holds possible classes 
@@ -418,18 +414,17 @@ drivetrain:EndingTmdAboutProcbound
 drivetrain:encEndContext a drivetrain:TurboGraphContext .
 obo:IAO_0000416 drivetrain:hasPossibleContext drivetrain:encEndContext .
 obo:BFO_0000035 drivetrain:hasPossibleContext drivetrain:encEndContext .
+
 drivetrain:EndingTmdHasMeasVal 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:visit_end_datetime_DateLiteralValue ;
+  drivetrain:object drivetrain:encounter_end_datetime_DateLiteralValue ;
   drivetrain:predicate obo:IAO_0000004 ;
   drivetrain:subject obo:IAO_0000416 ;
   drivetrain:subjectUsesContext drivetrain:encEndContext ;
 .
 
-drivetrain:visit_end_datetime_DateLiteralValue 
-  a drivetrain:TurboGraphDateLiteralValue ;
- .
+
  
 drivetrain:HardcodedRegden a drivetrain:ObjectConnectionToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -452,7 +447,7 @@ drivetrain:ProcboundEndsEnc
 drivetrain:EncStartingTmdHasMeasVal 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:visit_start_datetime_DateLiteralValue ;
+  drivetrain:object drivetrain:encounter_start_datetime_DateLiteralValue ;
   drivetrain:predicate obo:IAO_0000004 ;
   drivetrain:subject obo:IAO_0000416 ;
   drivetrain:subjectUsesContext drivetrain:StartContext ;
@@ -481,12 +476,7 @@ drivetrain:StartContext a drivetrain:TurboGraphContext .
 obo:IAO_0000416 drivetrain:hasPossibleContext drivetrain:StartContext .
 obo:BFO_0000035 drivetrain:hasPossibleContext drivetrain:StartContext .
 
-drivetrain:visit_start_datetime_DateLiteralValue 
-  a drivetrain:TurboGraphDateLiteralValue ;
-.
-drivetrain:EndDatePlaceholder 
-  a drivetrain:TurboGraphDateLiteralValue ;
-.
+
 drivetrain:symbolPartOfCridForEnc
   a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -495,15 +485,7 @@ drivetrain:symbolPartOfCridForEnc
   drivetrain:object obo:IAO_0000578 ;
   drivetrain:subjectUsesContext drivetrain:CridContext ;
 .
-drivetrain:visit_source_value_StringLiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
-.
-drivetrain:visit_occurrence_id_IntegerLiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
-.
-drivetrain:visit_concept_id_IntegerLiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
-.
+
 
 drivetrain:EncTypeAxiomSource
   a drivetrain:ObjectConnectionToInstanceRecipe ;
@@ -538,7 +520,7 @@ drivetrain:EncTypeAxiomDbXrefHasRepresentation
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:object drivetrain:visit_concept_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:encounter_type_code_LiteralValue ;
 .
 drivetrain:EncTypeAxiomDbXrefPartOfColumn
   a drivetrain:ObjectConnectionToTermRecipe ;
@@ -714,7 +696,7 @@ drivetrain:PrecedenceAxiomDbXrefHasRepresentation
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:object drivetrain:preceding_visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:preceding_encounter_keysym_LiteralValue ;
   drivetrain:subjectUsesContext drivetrain:EncPrecedenceAxiomContext ;
 .
 
@@ -738,9 +720,6 @@ drivetrain:HceKeyDenotesProv4Precedence
   drivetrain:subjectUsesContext drivetrain:EncKeyContext ;
 .
 
-drivetrain:preceding_visit_occurrence_id_IntegerLiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
-.
 
 drivetrain:Prevenc
   a drivetrain:MultiObjectDescriber .
@@ -1131,7 +1110,7 @@ drivetrain:ProcParthoodAxiomDbXrefHasRepresentation
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:object drivetrain:visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
   drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 drivetrain:ProcParthoodAxiomDbXrefPartOfColumn
@@ -1706,7 +1685,7 @@ drivetrain:MeasParthoodAxiomDbXrefHasRepresentation
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:object drivetrain:visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
   drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
@@ -2086,7 +2065,7 @@ drivetrain:DiagParthoodAxiomDbXrefHasRepresentation
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:object drivetrain:visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
   drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
@@ -2295,7 +2274,7 @@ drivetrain:RxParthoodAxiomHasDbXref
 drivetrain:RxParthoodAxiomDbXrefHasRepresentation
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:visit_occurrence_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
