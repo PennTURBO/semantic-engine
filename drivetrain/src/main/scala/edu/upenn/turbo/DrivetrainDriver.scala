@@ -107,7 +107,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   def updateModel(gmCxn: RepositoryConnection, graphModelFile: String = graphModelFile, graphSpecFile: String = graphSpecificationFile)
   {
       logger.info("Updating graph model using file " + graphModelFile)
-      val graph = "http://www.itmat.upenn.edu/biobank/dataModel"
+      val graph = s"$defaultPrefix" + "instructionSet"
       helper.clearNamedGraph(gmCxn, graph)
       var query = s"INSERT DATA { Graph <$graph> {"
       var prefixes = ""
@@ -132,7 +132,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       update.updateSparql(gmCxn, query)
       
       logger.info("Updating graph specification using file " + graphSpecFile)
-      val graphSpecGraph = "http://www.itmat.upenn.edu/biobank/graphSpecification"
+      val graphSpecGraph = s"$defaultPrefix" + "graphSpecification"
       helper.clearNamedGraph(gmCxn, graphSpecGraph)
       query = s"INSERT DATA { Graph <$graphSpecGraph> {"
       val graphSpecBr = io.Source.fromFile(s"ontologies//$graphSpecFile")

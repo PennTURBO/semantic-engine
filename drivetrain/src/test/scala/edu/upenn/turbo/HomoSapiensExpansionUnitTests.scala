@@ -9,7 +9,7 @@ import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
-class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with Matchers
+class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
     
@@ -175,26 +175,26 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
       ?TURBO_0010191 <http://transformunify.org/ontologies/TURBO_0010194> ?tumorSymbolStringLiteralValue .
       }
       }
-      BIND(IF (BOUND(?homoSapiensGenderIdentityStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?PATO_0000047","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?PATO_0000047)
-      BIND(IF (BOUND(?homoSapiensRaceIdentityStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?RaceIdentityDatumOfVariousTypes","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?RaceIdentityDatumOfVariousTypes)
+      BIND(IF (BOUND(?homoSapiensGenderIdentityStringLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?PATO_0000047","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?PATO_0000047)
+      BIND(IF (BOUND(?homoSapiensRaceIdentityStringLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?RaceIdentityDatumOfVariousTypes","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?RaceIdentityDatumOfVariousTypes)
       BIND(IF(BOUND(?ShortcutGenderIdentityDatumOfVariousTypes), ?ShortcutGenderIdentityDatumOfVariousTypes, obo:OMRSE_00000133) AS ?GenderIdentityDatumType)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?IAO_0000577","localUUID", str(?TURBO_0010191))))) AS ?IAO_0000577)
-      BIND(IF (BOUND(?homoSapiensGenderIdentityStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?GenderIdentityDatumOfVariousTypes","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?GenderIdentityDatumOfVariousTypes)
-      BIND(IF (BOUND(?homoSapiensDateOfBirthStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?UBERON_0035946","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?UBERON_0035946)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010188","localUUID", str(?TURBO_0010191))))) AS ?TURBO_0010188)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000504","localUUID", str(?TURBO_0010168))))) AS ?TURBO_0000504)
-      BIND(IF (BOUND(?homoSapiensDateOfBirthStringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?EFO_0004950","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?EFO_0004950)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?IAO_0000577","localUUID", str(?TURBO_0010191))))) AS ?IAO_0000577)
+      BIND(IF (BOUND(?homoSapiensGenderIdentityStringLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?GenderIdentityDatumOfVariousTypes","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?GenderIdentityDatumOfVariousTypes)
+      BIND(IF (BOUND(?homoSapiensDateOfBirthStringLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?UBERON_0035946","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?UBERON_0035946)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0010188","localUUID", str(?TURBO_0010191))))) AS ?TURBO_0010188)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000504","localUUID", str(?TURBO_0010168))))) AS ?TURBO_0000504)
+      BIND(IF (BOUND(?homoSapiensDateOfBirthStringLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?EFO_0004950","localUUID", str(?TURBO_0010161))))), ?unbound) AS ?EFO_0004950)
       BIND(IF(BOUND(?ShortcutRaceIdentityDatumOfVariousTypes), ?ShortcutRaceIdentityDatumOfVariousTypes, obo:OMRSE_00000098) AS ?RaceIdentityDatumType)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010070","localUUID", str(?TURBO_0010191))))) AS ?TURBO_0010070)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?MONDO_0004992","localUUID", str(?TURBO_0010191))))) AS ?MONDO_0004992)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?NCBITaxon_9606","localUUID", str(?TURBO_0010161))))) AS ?NCBITaxon_9606)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?TURBO_0010092","localUUID", str(?TURBO_0010168))))) AS ?TURBO_0010092)
-      BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0010070","localUUID", str(?TURBO_0010191))))) AS ?TURBO_0010070)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?MONDO_0004992","localUUID", str(?TURBO_0010191))))) AS ?MONDO_0004992)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?NCBITaxon_9606","localUUID", str(?TURBO_0010161))))) AS ?NCBITaxon_9606)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0010092","localUUID", str(?TURBO_0010168))))) AS ?TURBO_0010092)
+      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
       }
       """
     
-    before
+    override def beforeAll()
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
         testCxn = graphDBMaterials.getTestConnection()
@@ -204,9 +204,15 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
         RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
     }
-    after
+    
+    override def afterAll()
     {
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+    }
+    
+    before
+    {
+        helper.deleteAllTriplesInDatabase(testCxn)
     }
     
     test("generated query matched expected query")
