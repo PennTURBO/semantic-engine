@@ -234,9 +234,10 @@ drivetrain:PatCridsymbHasRepresentation
 drivetrain:PatientBornOnSns 
   a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:subject obo:NCBITaxon_9606 ;
-  drivetrain:predicate ontologies:TURBO_0000303 ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
   drivetrain:object obo:UBERON_0035946 ;
+  drivetrain:predicate ontologies:TURBO_0000303 ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
 .
 
 drivetrain:SymbolPartOfCridForPatient
@@ -981,9 +982,10 @@ ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:ParticipationA
 drivetrain:ProcPartOfEnc
  a drivetrain:ObjectConnectionToInstanceRecipe ;
  drivetrain:multiplicity drivetrain:many-1 ;
- drivetrain:subject drivetrain:ProcToBeTyped ;
- drivetrain:predicate obo:BFO_0000050 ;
+ drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists 
  drivetrain:object drivetrain:EncToBeTyped ;
+ drivetrain:predicate obo:BFO_0000050 ;
+ drivetrain:subject drivetrain:ProcToBeTyped ;
 .
 
 drivetrain:ProcParthoodAxiomSource
@@ -1229,7 +1231,6 @@ drivetrain:MeasTypeAxiomProp
   drivetrain:subject owl:Axiom ;
 .
 
-# at some point, this OBJECT was NOT BEING TREATED AS A STATIC TERM (when MDs are being exclusively typed as MDs)
 drivetrain:MeasTypeAxiomTarget
   drivetrain:subjectUsesContext drivetrain:MeasTypeAxiomContext ;
   a drivetrain:ObjectConnectionToTermRecipe ;
