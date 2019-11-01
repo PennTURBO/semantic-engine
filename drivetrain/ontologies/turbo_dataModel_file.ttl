@@ -80,7 +80,7 @@ ontologies:RxNormDrugTermMinusGroup
 .
 ontologies:RxNormDrugTermToTypeDeclaration
   a drivetrain:ObjectConnectionToTermRecipe ;
-  obo:BFO_0000050 ontologies:RxNormDrugTermMinusGroup ;
+  drivetrain:partOf ontologies:RxNormDrugTermMinusGroup ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object owl:Class ;
   drivetrain:predicate rdf:type ;
@@ -112,7 +112,7 @@ ontologies:ShortcutRaceIdentityDatumOfVariousTypes
 .
 ontologies:ShortcutTumorToShortcutHomoSapiens
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  obo:BFO_0000050 ontologies:shortcutTumorOptionalGroup ;
+  drivetrain:partOf ontologies:shortcutTumorOptionalGroup ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object ontologies:TURBO_0010161 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -668,7 +668,7 @@ ontologies:shortcutHealthcareEncounterToEncounterTypeCodeString
   drivetrain:object ontologies:encounterTypeCodeLiteralValue ;
   drivetrain:predicate ontologies:hcEncToEncTypeCode ;
   drivetrain:subject ontologies:TURBO_0010158 ;
-  obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
+  drivetrain:partOf ontologies:encCodeTypeProvenanceOptionalGroup ;
   drivetrain:objectRequiredToCreate ontologies:TURBO_0010404 ;
 .
 ontologies:shortcutHealthcareEncounterToDatabase
@@ -677,7 +677,7 @@ ontologies:shortcutHealthcareEncounterToDatabase
   drivetrain:object ontologies:HealthcareEncounterDatabaseProvenanceTerm ;
   drivetrain:predicate ontologies:hcEncToDatabase ;
   drivetrain:subject ontologies:TURBO_0010158 ;
-  obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
+  drivetrain:partOf ontologies:encCodeTypeProvenanceOptionalGroup ;
 .
 ontologies:shortcutHealthcareEncounterToEncTypeColumn
   a drivetrain:ObjectConnectionToTermRecipe ;
@@ -685,7 +685,7 @@ ontologies:shortcutHealthcareEncounterToEncTypeColumn
   drivetrain:object ontologies:HealthcareEncounterTypeCodeColumnTerm ;
   drivetrain:predicate ontologies:hcEncToEncTypeCodeColumnn ;
   drivetrain:subject ontologies:TURBO_0010158 ;
-  obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
+  drivetrain:partOf ontologies:encCodeTypeProvenanceOptionalGroup ;
 .
 ontologies:shortcutHealthcareEncounterToSchema
   a drivetrain:ObjectConnectionToTermRecipe ;
@@ -693,7 +693,7 @@ ontologies:shortcutHealthcareEncounterToSchema
   drivetrain:object ontologies:HealthcareEncounterSchemaProvenanceTerm ;
   drivetrain:predicate ontologies:hcEncToSchema ;
   drivetrain:subject ontologies:TURBO_0010158 ;
-  obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
+  drivetrain:partOf ontologies:encCodeTypeProvenanceOptionalGroup ;
 .
 ontologies:shortcutHealthcareEncounterToTable
   a drivetrain:ObjectConnectionToTermRecipe ;
@@ -701,7 +701,7 @@ ontologies:shortcutHealthcareEncounterToTable
   drivetrain:object ontologies:HealthcareEncounterTableProvenanceTerm ;
   drivetrain:predicate ontologies:hcEncToTable ;
   drivetrain:subject ontologies:TURBO_0010158 ;
-  obo:BFO_0000050 ontologies:encCodeTypeProvenanceOptionalGroup ;
+  drivetrain:partOf ontologies:encCodeTypeProvenanceOptionalGroup ;
 .
 ontologies:shortcutHealthcareEncounterToDatasetTitle
   a drivetrain:DatatypeConnectionRecipe ;
@@ -953,7 +953,7 @@ ontologies:shortcutTumorToExpandedTumor
 .
 ontologies:shortcutTumorToRegistryDenoter
   a drivetrain:ObjectConnectionToTermRecipe ;
-  obo:BFO_0000050 ontologies:shortcutTumorOptionalGroup ;
+  drivetrain:partOf ontologies:shortcutTumorOptionalGroup ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TumorRegistryDenoterOfVariousTypes ;
   drivetrain:predicate ontologies:TURBO_0010277 ;
@@ -962,7 +962,7 @@ ontologies:shortcutTumorToRegistryDenoter
 .
 ontologies:shortcutTumorToTumorLiteralValue
   a drivetrain:DatatypeConnectionRecipe ;
-  obo:BFO_0000050 ontologies:shortcutTumorOptionalGroup ;
+  drivetrain:partOf ontologies:shortcutTumorOptionalGroup ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:tumorSymbolStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010194 ;

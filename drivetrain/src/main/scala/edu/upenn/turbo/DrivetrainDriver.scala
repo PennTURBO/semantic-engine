@@ -57,7 +57,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       RunDrivetrainProcess.setGlobalUUID(globalUUID)
                       RunDrivetrainProcess.setGraphModelConnection(gmCxn)
                       RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-                      RunDrivetrainProcess.validateGraphModelTerms()
+                      GraphModelValidator.validateGraphModelTerms()
                       //RunDrivetrainProcess.validateGraphSpecificationAgainstOntology()
                       val query = RunDrivetrainProcess.createPatternMatchQuery(args(1))
                       if (query != null)
@@ -71,24 +71,18 @@ object DrivetrainDriver extends ProjectwideGlobals {
               {
                   RunDrivetrainProcess.setGraphModelConnection(gmCxn)
                   RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-                  if (RunDrivetrainProcess.validateProcessSpecification(helper.getProcessNameAsUri(args(0))))
-                  {
-                      //load the TURBO ontology
-                      OntologyLoader.addOntologyFromUrl(cxn)
-                      clearProductionNamedGraphs(cxn)
-                      
-                      logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
-                      RunDrivetrainProcess.setGlobalUUID(globalUUID)
-                      RunDrivetrainProcess.validateGraphModelTerms()
-                      //RunDrivetrainProcess.validateGraphSpecificationAgainstOntology()
-                      val thisProcess = helper.getProcessNameAsUri(args(0))
-                      RunDrivetrainProcess.runProcess(thisProcess)   
-                  }
-                  else 
-                  {
-                      val arg = args(0)
-                      logger.info(s"Did not recognize command line argument $arg")
-                  }
+                  GraphModelValidator.validateProcessSpecification(helper.getProcessNameAsUri(args(0)))
+                  
+                  //load the TURBO ontology
+                  OntologyLoader.addOntologyFromUrl(cxn)
+                  clearProductionNamedGraphs(cxn)
+                  
+                  logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
+                  RunDrivetrainProcess.setGlobalUUID(globalUUID)
+                  GraphModelValidator.validateGraphModelTerms()
+                  //RunDrivetrainProcess.validateGraphSpecificationAgainstOntology()
+                  val thisProcess = helper.getProcessNameAsUri(args(0))
+                  RunDrivetrainProcess.runProcess(thisProcess)   
               }
           }
           catch

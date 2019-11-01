@@ -370,8 +370,6 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     def populateOutputs(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]): HashMap[String, Boolean] =
     {
         var variablesToBind = new HashMap[String,Boolean]
-        var discoveredMap = new HashMap[String, String]
-        var scannedConnections = new HashMap[String, String]
         for (row <- outputs)
         {
             val connectionName = row(CONNECTIONNAME.toString).toString
@@ -386,13 +384,6 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (subjectCustomRule != null) populateDependenciesAndCustomRuleList(subjectString, subjectCustomRule, row(SUBJECTDEPENDEE.toString))
             if (objectCustomRule != null) populateDependenciesAndCustomRuleList(objectString, objectCustomRule, row(OBJECTDEPENDEE.toString))
             
-            val discoveryCode = subjectString + objectString
-            
-            if (discoveredMap.contains(discoveryCode)) assert(discoveredMap(discoveryCode) == row(MULTIPLICITY.toString).toString, s"Error in graph model: There are multiple connections between $subjectString and $objectString with non-matching multiplicities")
-            else discoveredMap += discoveryCode -> row(MULTIPLICITY.toString).toString
-            val codePlus = discoveryCode + row(PREDICATE.toString).toString + thisMultiplicity
-            if (scannedConnections.contains(connectionName)) assert(scannedConnections(connectionName) == codePlus, s"Error in graph model: recipe $connectionName may have duplicate properties")
-            else scannedConnections += connectionName -> codePlus
             if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe) 
             {  
                 if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/1-1") 
@@ -468,7 +459,6 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     def populateInputs(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
-        var scannedConnections = new HashMap[String, String]
         for (row <- inputs)
         {
             var subjectString = row(SUBJECT.toString).toString
@@ -477,9 +467,6 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
             
             val connectionName = row(CONNECTIONNAME.toString).toString
-            val codePlus = subjectString + row(PREDICATE.toString).toString + objectString + row(MULTIPLICITY.toString).toString
-            if (scannedConnections.contains(connectionName)) assert(scannedConnections(connectionName) == codePlus, s"Error in graph model: recipe $connectionName may have duplicate properties")
-            else scannedConnections += connectionName -> codePlus
             val thisMultiplicity = row(MULTIPLICITY.toString).toString
             if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe)
             {

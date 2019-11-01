@@ -61,7 +61,7 @@ class SparqlUpdater
       PREFIX snomed: <http://purl.bioontology.org/ontology/SNOMEDCT/>
       PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
       PREFIX Thesaurus: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
-      PREFIX properties: <http://turboProperties.org/>
+      PREFIX properties: <https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/>
       PREFIX drivetrain: <https://github.com/PennTURBO/Drivetrain/>
 			"""
     

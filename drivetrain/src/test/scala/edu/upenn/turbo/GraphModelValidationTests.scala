@@ -38,7 +38,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     {
         helper.deleteAllTriplesInDatabase(testCxn)
         helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
-        
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
         
         val insert = s"""
         INSERT DATA { Graph <$defaultPrefix""" + s"""instructionSet> {
@@ -517,7 +517,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("graph specification contains connection not present as output in instruction set")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
         val insertDataModel: String = s"""
           
           INSERT DATA
@@ -549,7 +548,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("graph specification contains connection present but removed as output in instruction set")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
         val insertDataModel: String = s"""
           
           INSERT DATA
@@ -593,7 +591,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("instruction set does not create recipe required by graph specification")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
         helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
         val insertDataModel: String = s"""
           
@@ -734,6 +731,32 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         catch
         {
             case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: recipe http://transformunify.org/ontologies/object1ToObject2 may have duplicate properties")
+        }
+    }
+    
+    test("process has multiple input graphs")
+    {
+        val insertDataModel: String = s"""
+          
+          INSERT DATA
+          {
+               Graph <$defaultPrefix"""+s"""instructionSet>
+               {
+                   ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:someOtherNamedGraph .
+               }
+           }
+        """
+      
+        update.updateSparql(gmCxn, insertDataModel)
+        
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Process http://transformunify.org/ontologies/myProcess1 has duplicate properties")
         }
     }
 }
