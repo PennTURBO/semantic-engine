@@ -2,6 +2,9 @@
 # prefix: inputs
 
 @prefix : <https://unnamed/acorn/post_icbo_synthea_omop_cnp_inputs/> .
+@prefix properties: <http://turboProperties.org/> .
+@prefix turbo: <http://transformunify.org/ontologies/> .
+
 @prefix drivetrain: <https://github.com/PennTURBO/Drivetrain/> .
 @prefix efo: <http://www.ebi.ac.uk/efo/> .
 @prefix obo: <http://purl.obolibrary.org/obo/> .
@@ -11,7 +14,6 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix sdvg: <http://api.stardog.com/> .
-@prefix turbo: <http://transformunify.org/ontologies/> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -1246,6 +1248,308 @@ drivetrain:RxPatientShortcut
   drivetrain:predicate <http://api.stardog.com/drug_exposure#person_id> ;
   drivetrain:object drivetrain:person_keysym_LiteralValue ;
 .
+
+
+###
+
+
+drivetrain:CridDenotesEnc drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:DiagAboutPat drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:DiagHasRepresentation drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:DiagKeyDenotesProv4Aboutness drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:DiagKeyDenotesProv4Parthood drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:DiagKeySymbHasRepresentation drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:DiagKeySymbPartOfColumn drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:DiagKeySymbPartOfKey drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:DiagPartOfColumn drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncCridsymbHasRepresentation drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncHsoDiag drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncHsoMeas drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncHsoRx drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncKeyDenotesTypingDbXrefProv drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncKeySymbHasRepresentation drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncKeySymbPartOfKey drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncParticipationAxiomDbXrefHasRepresentation
+  drivetrain:referencedInGraph properties:expandedNamedGraph .
+
+drivetrain:EncParticipationAxiomDbXrefPartOfColumn
+  drivetrain:referencedInGraph properties:expandedNamedGraph .
+
+drivetrain:EncParticipationAxiomHasDbXref drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncParticipationAxiomProp drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncParticipationAxiomSource drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncParticipationAxiomTarget drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:EncTypingRecipe drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:GidAboutPatient drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:GidTypingRecipe drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:HardcodedDiagSourceden drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:HardcodedEncSourceden drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:HardcodedMeasSourceden drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:HardcodedPatientSourceden drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:HardcodedProcSourceden drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:HardcodedRegden drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:HardcodedRxSourceden drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:HceKeyDenotesProv4Participation drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:HceKeyDenotesProv4Precedence drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesDiag drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesDiagTmd drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesDob drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesEnc drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesEncCridSym drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesEncStartDate drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesEndDate drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesGid drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesMeas drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesMeasMentionAxiomDbXref drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesMeasTypeAxiomDbXref drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesPatKeySymb drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesPatient drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesRid drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesRx drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesRxTmd drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesTmd drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:KeyDenotesValspec drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasAboutPat drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasHasMul drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasHasValspec drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasKeyDenotesProv4Aboutness drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasKeyDenotesProv4MeasType drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasKeyDenotesProv4Mention drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasKeyDenotesProv4Mul drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasKeyDenotesProv4Parthood drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasKeySymbHasRepresentation drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasKeySymbPartOfColumn drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasKeySymbPartOfKey drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasTmdPartOfQueryResult drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasTypingRecipe drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MeasValspecPartOfQueryResult drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MentioningProvHasRepresentation drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:MentioningProvPartOfCol drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:PatKeySymbHasRepresentation drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:PatKeySymbPartOfKey drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:PatientHasRole drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:PrevencPrecedesEnc drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcKeyDenotesMentioningProv drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcKeyDenotesParthoodAxiomDbXref drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcKeyDenotesParticipationAxiomDbXref drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcKeyDenotesProc drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcKeyDenotesProcTypeAxiomDbXref drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcKeyDenotesTmd drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcKeySymbHasRepresentation drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcKeySymbPartOfCol drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcKeySymbPartOfKey drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcParticipationAxiomDbXrefHasRepresentation
+  drivetrain:referencedInGraph properties:expandedNamedGraph .
+
+drivetrain:ProcParticipationAxiomDbXrefPartOfColumn
+  drivetrain:referencedInGraph properties:expandedNamedGraph .
+
+drivetrain:ProcParticipationAxiomHasDbXref drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcParticipationAxiomProp drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcParticipationAxiomSource drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcParticipationAxiomTarget drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ProcTypingRecipe drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:RidAboutPatient drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:RidTypingRecipe drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:RxAboutPat drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:RxHasRepresentation drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:RxKeyDenotesProv4Aboutness drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:RxKeyDenotesProv4Parthood drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:RxKeySymbHasRepresentation drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:RxKeySymbPartOfColumn drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:RxKeySymbPartOfKey drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:RxPartOfColumn drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
+drivetrain:ValspecHasSpecVal drivetrain:referencedInGraph
+    properties:expandedNamedGraph .
+
 
 
 

@@ -2,6 +2,9 @@
 # prefix: outputs
 
 @prefix : <https://unnamed/acorn/post_icbo_synthea_omop_cnp_inputs/> .
+@prefix properties: <http://turboProperties.org/> .
+@prefix turbo: <http://transformunify.org/ontologies/> .
+
 @prefix drivetrain: <https://github.com/PennTURBO/Drivetrain/> .
 @prefix efo: <http://www.ebi.ac.uk/efo/> .
 @prefix obo: <http://purl.obolibrary.org/obo/> .
@@ -10,7 +13,7 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix turbo: <http://transformunify.org/ontologies/> .
+@prefix sdvg: <http://api.stardog.com/> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
@@ -25,7 +28,6 @@ owl:Axiom a owl:Class .
 
 drivetrain:KeyDenotesGid
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -34,7 +36,6 @@ drivetrain:KeyDenotesGid
 .
 drivetrain:GidAboutPatient
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ; 
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:GidToBeTyped ;
   drivetrain:predicate obo:IAO_0000136 ;
@@ -55,7 +56,6 @@ drivetrain:GidPartOfColumn
   drivetrain:object ontologies:TURBO_0010431 ;
 .
 drivetrain:GidTypingRecipe a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:GidToBeTyped  ;
   drivetrain:predicate rdf:type ;
@@ -73,7 +73,6 @@ drivetrain:GidClassList
 
 drivetrain:KeyDenotesRid
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -82,7 +81,6 @@ drivetrain:KeyDenotesRid
 .
 drivetrain:KeyDenotesDob
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
@@ -98,7 +96,6 @@ drivetrain:DobPartOfColumn
 .
 drivetrain:KeyDenotesPatKeySymb
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
@@ -116,7 +113,6 @@ drivetrain:PatKeySymbPartOfColumn
 .
 drivetrain:KeyDenotesPatient
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -133,7 +129,6 @@ drivetrain:KeyPartOfColumn
 .
 drivetrain:RidAboutPatient
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ; 
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:RidToBeTyped ;
   drivetrain:predicate obo:IAO_0000136 ;
@@ -154,7 +149,6 @@ drivetrain:RidHasRepresentation
   drivetrain:object drivetrain:race_LiteralValue ;
 .
 drivetrain:RidTypingRecipe a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:RidToBeTyped  ;
   drivetrain:predicate rdf:type ;
@@ -169,7 +163,6 @@ drivetrain:CridDenotesPatient
 .
 drivetrain:PatKeySymbPartOfKey
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -179,7 +172,6 @@ drivetrain:PatKeySymbPartOfKey
 .
 drivetrain:PatKeySymbHasRepresentation
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -200,7 +192,6 @@ drivetrain:HardcodedPatientSourceden
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010396 ;
   drivetrain:predicate obo:BFO_0000051 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -283,7 +274,6 @@ drivetrain:EncCridSymPartOfColumn
 .
 drivetrain:KeyDenotesEncCridSym
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
@@ -301,7 +291,6 @@ drivetrain:EncStartDatePartOfColumn
 .
 drivetrain:KeyDenotesEncStartDate
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
@@ -319,7 +308,6 @@ drivetrain:EndDatePartOfColumn
 .
 drivetrain:KeyDenotesEndDate
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
@@ -329,7 +317,6 @@ drivetrain:KeyDenotesEndDate
 .
 drivetrain:KeyDenotesEnc
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -338,7 +325,6 @@ drivetrain:KeyDenotesEnc
 .
 drivetrain:EncKeySymbPartOfKey
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -348,7 +334,6 @@ drivetrain:EncKeySymbPartOfKey
 .
 drivetrain:EncKeySymbHasRepresentation
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -360,14 +345,12 @@ drivetrain:HardcodedEncSourceden a drivetrain:ObjectConnectionToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010269 ;
   drivetrain:predicate obo:BFO_0000051 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
 drivetrain:CridDenotesEnc
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000578 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -375,7 +358,6 @@ drivetrain:CridDenotesEnc
 .
 
 drivetrain:EncTypingRecipe a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:EncToBeTyped  ;
   drivetrain:predicate rdf:type ;
@@ -390,7 +372,6 @@ drivetrain:EncToBeTyped
 
 drivetrain:EncCridsymbHasRepresentation
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -430,7 +411,6 @@ drivetrain:HardcodedRegden a drivetrain:ObjectConnectionToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010256 ;
   drivetrain:predicate obo:BFO_0000051 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:IAO_0000578  ;
 .
 
@@ -535,7 +515,6 @@ drivetrain:EncKeyDenotesTypingDbXrefProv
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -549,7 +528,6 @@ drivetrain:HceKeyDenotesProv4Participation
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:ParticipationAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:EncKeyContext ;
 .
@@ -564,7 +542,6 @@ drivetrain:EncRealizesRole
 
 drivetrain:PatientHasRole
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:RO_0000087 ;
@@ -575,7 +552,6 @@ drivetrain:PatientHasRole
 
 drivetrain:EncParticipationAxiomSource
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedSource ;
@@ -585,7 +561,6 @@ drivetrain:EncParticipationAxiomSource
 
 drivetrain:EncParticipationAxiomProp
   a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedProperty ;
@@ -595,7 +570,6 @@ drivetrain:EncParticipationAxiomProp
 
 drivetrain:EncParticipationAxiomTarget
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedTarget ;
@@ -605,7 +579,6 @@ drivetrain:EncParticipationAxiomTarget
 
 drivetrain:EncParticipationAxiomHasDbXref
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate oboInOwl:hasDbXref ;
@@ -616,7 +589,6 @@ drivetrain:EncParticipationAxiomHasDbXref
 
 drivetrain:EncParticipationAxiomDbXrefPartOfColumn
   a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -626,7 +598,6 @@ drivetrain:EncParticipationAxiomDbXrefPartOfColumn
 
 drivetrain:EncParticipationAxiomDbXrefHasRepresentation
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -650,7 +621,6 @@ drivetrain:PrevencPrecedesEnc
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:EncToBeTyped ;
   drivetrain:predicate obo:RO_0002090 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject drivetrain:Prevenc  ;
 .
 
@@ -715,7 +685,6 @@ drivetrain:HceKeyDenotesProv4Precedence
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:EncPrecedenceAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:EncKeyContext ;
 .
@@ -740,7 +709,6 @@ drivetrain:ProcKeyDenotesTmd
   drivetrain:object obo:IAO_0000416 ;
   drivetrain:objectUsesContext drivetrain:StartContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
 .
 
@@ -776,7 +744,6 @@ drivetrain:ProcKeySymbHasRepresentation
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:procedure_occurrence_id_IntegerLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:IAO_0000028 ;
 .
 
@@ -785,13 +752,11 @@ drivetrain:ProcKeySymbPartOfCol
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010465 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:IAO_0000028 ;
 .
 
 drivetrain:ProcKeySymbPartOfKey
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -803,7 +768,6 @@ drivetrain:HardcodedProcSourceden
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010407 ;
   drivetrain:predicate obo:BFO_0000051 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433   ;
 .
 
@@ -812,7 +776,6 @@ drivetrain:ProcKeyDenotesProc
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:ProcToBeTyped ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
 .
 
@@ -821,7 +784,6 @@ drivetrain:ProcTypingRecipe
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:ProcClassList ;
   drivetrain:predicate rdf:type ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject drivetrain:ProcToBeTyped  ;
 .
 
@@ -840,7 +802,6 @@ drivetrain:MentioningProvPartOfCol
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010470 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:MentionsContext ;
 .
@@ -850,7 +811,6 @@ drivetrain:MentioningProvHasRepresentation
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:procedure_source_value_StringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:MentionsContext ;
 .
@@ -870,7 +830,6 @@ drivetrain:ProcKeyDenotesMentioningProv
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:MentionsContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
 .
 
@@ -880,7 +839,6 @@ drivetrain:ProcKeyDenotesProcTypeAxiomDbXref
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:TypingAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
 .
 
@@ -982,7 +940,6 @@ drivetrain:ProcRealizesPatientRole
 
 drivetrain:ProcParticipationAxiomSource
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedSource ;
@@ -992,7 +949,6 @@ drivetrain:ProcParticipationAxiomSource
 
 drivetrain:ProcParticipationAxiomProp
   a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedProperty ;
@@ -1002,7 +958,6 @@ drivetrain:ProcParticipationAxiomProp
 
 drivetrain:ProcParticipationAxiomTarget
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedTarget ;
@@ -1012,7 +967,6 @@ drivetrain:ProcParticipationAxiomTarget
 
 drivetrain:ProcParticipationAxiomHasDbXref
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate oboInOwl:hasDbXref ;
@@ -1026,7 +980,6 @@ drivetrain:ProcParticipationAxiomDbXrefPartOfColumn
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object ontologies:TURBO_0010464 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
@@ -1036,7 +989,6 @@ drivetrain:ProcParticipationAxiomDbXrefHasRepresentation
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:person_keysym_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
@@ -1047,7 +999,6 @@ drivetrain:ProcKeyDenotesParticipationAxiomDbXref
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:ParticipationAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
 .
 
@@ -1128,7 +1079,6 @@ drivetrain:ProcKeyDenotesParthoodAxiomDbXref
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:ParthoodAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
 .
 
@@ -1140,7 +1090,6 @@ ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:ParthoodAxiomC
 ### measurement
 
 drivetrain:MeasTypingRecipe a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject drivetrain:MeasToBeTyped  ;
   drivetrain:predicate rdf:type ;
@@ -1178,7 +1127,6 @@ drivetrain:MeasCodeMentionedClassList
   
 drivetrain:KeyDenotesMeas
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -1192,13 +1140,11 @@ drivetrain:MeasKeySymbPartOfKey
   drivetrain:object ontologies:TURBO_0010433 ;
   drivetrain:objectUsesContext drivetrain:KeyContext ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:IAO_0000028 ;
 .
 
 drivetrain:MeasKeySymbPartOfColumn
   a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1208,7 +1154,6 @@ drivetrain:MeasKeySymbPartOfColumn
 
 drivetrain:MeasKeySymbHasRepresentation
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -1220,7 +1165,6 @@ drivetrain:HardcodedMeasSourceden
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010398 ;
   drivetrain:predicate obo:BFO_0000051 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -1229,7 +1173,6 @@ drivetrain:HardcodedMeasSourceden
 
 drivetrain:MeasHasValspec
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:MeasToBeTyped ;
   drivetrain:predicate obo:OBI_0001938 ;
@@ -1237,7 +1180,6 @@ drivetrain:MeasHasValspec
 .
 drivetrain:MeasValspecPartOfQueryResult
   a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:OBI_0001933 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1246,7 +1188,6 @@ drivetrain:MeasValspecPartOfQueryResult
 
 drivetrain:KeyDenotesValspec
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -1256,7 +1197,6 @@ drivetrain:KeyDenotesValspec
 
 drivetrain:ValspecHasSpecVal
   a drivetrain:DatatypeConnectionRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:OBI_0001933 ;
   drivetrain:predicate obo:OBI_0002135 ;
@@ -1273,7 +1213,6 @@ drivetrain:MeasTmdHasMeasVal
 
 drivetrain:KeyDenotesTmd
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -1283,7 +1222,6 @@ drivetrain:KeyDenotesTmd
 
 drivetrain:MeasTmdPartOfQueryResult
   a drivetrain:ObjectConnectionToTermRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:IAO_0000416 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1368,7 +1306,6 @@ drivetrain:KeyDenotesMeasTypeAxiomDbXref
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:MeasTypeAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -1398,7 +1335,6 @@ drivetrain:MeasKeyDenotesProv4MeasType
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -1451,7 +1387,6 @@ drivetrain:KeyDenotesMeasMentionAxiomDbXref
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:MeasMentionAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -1481,7 +1416,6 @@ drivetrain:MeasKeyDenotesProv4Mention
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -1498,7 +1432,6 @@ drivetrain:MeasHasMul
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object drivetrain:MulClassList ;
   drivetrain:predicate obo:IAO_0000039 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject drivetrain:MeasToBeTyped  ;
 .
 
@@ -1551,7 +1484,6 @@ drivetrain:MeasKeyDenotesProv4Mul
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:MeasDenotationContext ;
 .
@@ -1570,7 +1502,6 @@ drivetrain:MulClassList
 
 drivetrain:MeasAboutPat
   a drivetrain:ObjectConnectionToInstanceRecipe ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject drivetrain:MeasToBeTyped ;
   drivetrain:predicate obo:IAO_0000136 ;
@@ -1642,7 +1573,6 @@ drivetrain:EncHsoMeas
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object drivetrain:MeasToBeTyped ;
   drivetrain:predicate  obo:OBI_0000299 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject  drivetrain:EncToBeTyped ;
 .
 
@@ -1704,7 +1634,6 @@ drivetrain:MeasKeyDenotesProv4Parthood
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:ParthoodAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:MeasDenotationContext ;
 .
@@ -1715,7 +1644,6 @@ drivetrain:MeasKeyDenotesProv4Aboutness
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:MeasAboutnessAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:MeasDenotationContext ;
 .
@@ -1742,7 +1670,6 @@ drivetrain:KeyDenotesDiag
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object obo:OGMS_0000073 ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -1753,7 +1680,6 @@ drivetrain:DiagKeySymbPartOfKey
   drivetrain:object ontologies:TURBO_0010433 ;
   drivetrain:objectUsesContext drivetrain:KeyContext ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:IAO_0000028 ;
 .
 
@@ -1763,7 +1689,6 @@ drivetrain:DiagKeySymbPartOfColumn
   drivetrain:object ontologies:TURBO_0010602 ;
   drivetrain:objectUsesContext drivetrain:KeyContext ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:IAO_0000028 ;
 .
 
@@ -1772,7 +1697,6 @@ drivetrain:DiagKeySymbHasRepresentation
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:condition_occurrence_id_IntegerLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:IAO_0000028 ;
 .
 
@@ -1780,7 +1704,6 @@ drivetrain:HardcodedDiagSourceden a drivetrain:ObjectConnectionToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010510 ;
   drivetrain:predicate obo:BFO_0000051 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -1799,7 +1722,6 @@ drivetrain:DiagHasRepresentation
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object drivetrain:condition_source_value_StringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:OGMS_0000073 ;
 .
 
@@ -1809,7 +1731,6 @@ drivetrain:DiagPartOfColumn
   drivetrain:object ontologies:TURBO_0010605 ;
   drivetrain:objectUsesContext drivetrain:KeyContext ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:OGMS_0000073 ;
 .
 
@@ -1843,7 +1764,6 @@ drivetrain:KeyDenotesDiagTmd
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object obo:IAO_0000416 ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -1932,7 +1852,6 @@ drivetrain:DiagAboutPat
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:IAO_0000136 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:OGMS_0000073 ;
 .
 
@@ -1998,7 +1917,6 @@ drivetrain:DiagKeyDenotesProv4Aboutness
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:DiagAboutnessAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:DiagDenotationContext ;
 .
@@ -2019,7 +1937,6 @@ drivetrain:EncHsoDiag
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object obo:OGMS_0000073 ;
   drivetrain:predicate  obo:OBI_0000299 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject  drivetrain:EncToBeTyped ;
 .
 
@@ -2084,7 +2001,6 @@ drivetrain:DiagKeyDenotesProv4Parthood
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:ParthoodAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:DiagDenotationContext ;
 .
@@ -2095,7 +2011,6 @@ drivetrain:KeyDenotesRx
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object obo:PDRO_0000024 ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -2106,7 +2021,6 @@ drivetrain:RxKeySymbPartOfKey
   drivetrain:object ontologies:TURBO_0010433 ;
   drivetrain:objectUsesContext drivetrain:KeyContext ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:IAO_0000028 ;
 .
 
@@ -2116,7 +2030,6 @@ drivetrain:RxKeySymbPartOfColumn
   drivetrain:object ontologies:TURBO_0010705 ;
   drivetrain:objectUsesContext drivetrain:KeyContext ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:IAO_0000028 ;
 .
 
@@ -2125,7 +2038,6 @@ drivetrain:RxKeySymbHasRepresentation
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:drug_exposure_id_value_IntegerLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:IAO_0000028 ; 
 .
 
@@ -2135,7 +2047,6 @@ drivetrain:HardcodedRxSourceden
   # drivetrain:object ontologies:TURBO_0010511 ;
   drivetrain:object drivetrain:RxSourcedenTerm ;
   drivetrain:predicate obo:BFO_0000051 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -2170,7 +2081,6 @@ drivetrain:KeyDenotesRxTmd
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object obo:IAO_0000416 ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
@@ -2180,7 +2090,6 @@ drivetrain:RxPartOfColumn
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object drivetrain:RxColumnTerm ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:PDRO_0000024 ;
 .
 
@@ -2189,7 +2098,6 @@ drivetrain:RxHasRepresentation
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object drivetrain:drug_source_value_StringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:PDRO_0000024 ;
 .
 
@@ -2230,7 +2138,6 @@ drivetrain:EncHsoRx
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object obo:PDRO_0000024 ;
   drivetrain:predicate  obo:OBI_0000299 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject  drivetrain:EncToBeTyped ;
 .
 
@@ -2295,7 +2202,6 @@ drivetrain:RxKeyDenotesProv4Parthood
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:ParthoodAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:RxDenotationContext ;
 .
@@ -2310,7 +2216,6 @@ drivetrain:RxAboutPat
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:IAO_0000136 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject obo:PDRO_0000024 ;
 .
 
@@ -2375,7 +2280,6 @@ drivetrain:RxKeyDenotesProv4Aboutness
   drivetrain:object ontologies:TURBO_0010404 ;
   drivetrain:objectUsesContext drivetrain:RxAboutnessAxiomContext ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:RxDenotationContext ;
 .
