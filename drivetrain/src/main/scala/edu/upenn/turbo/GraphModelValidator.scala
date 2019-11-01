@@ -59,7 +59,7 @@ object GraphModelValidator extends ProjectwideGlobals
     
     def validateGraphSpecificationAgainstOntology()
     {
-        val rangeQuery: String = s"""
+        /*val rangeQuery: String = s"""
           select * where
           {
               graph <$defaultPrefix"""+s"""graphSpecification>
@@ -124,7 +124,7 @@ object GraphModelValidator extends ProjectwideGlobals
         res = update.querySparqlAndUnpackTuple(gmCxn, domainQuery, "recipe")
         firstRes = ""
         if (res.size > 0) firstRes = res(0)
-        assert(firstRes == "")
+        assert(firstRes == "")*/
     }
     
     def validateConnectionRecipesInProcess(process: String)
