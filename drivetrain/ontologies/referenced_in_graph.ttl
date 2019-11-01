@@ -1,0 +1,297 @@
+
+<https://github.com/PennTURBO/Drivetrain/CridDenotesEnc> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/DiagAboutPat> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/DiagHasRepresentation> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/DiagKeyDenotesProv4Aboutness> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/DiagKeyDenotesProv4Parthood> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/DiagKeySymbHasRepresentation> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/DiagKeySymbPartOfColumn> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/DiagKeySymbPartOfKey> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/DiagPartOfColumn> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncCridsymbHasRepresentation> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncHsoDiag> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncHsoMeas> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncHsoRx> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncKeyDenotesTypingDbXrefProv> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncKeySymbHasRepresentation> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncKeySymbPartOfKey> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncParticipationAxiomDbXrefHasRepresentation>
+  <https://github.com/PennTURBO/Drivetrain/referencedInGraph> <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncParticipationAxiomDbXrefPartOfColumn>
+  <https://github.com/PennTURBO/Drivetrain/referencedInGraph> <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncParticipationAxiomHasDbXref> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncParticipationAxiomProp> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncParticipationAxiomSource> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncParticipationAxiomTarget> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/EncTypingRecipe> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/GidAboutPatient> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/GidTypingRecipe> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/HardcodedDiagSourceden> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/HardcodedEncSourceden> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/HardcodedMeasSourceden> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/HardcodedPatientSourceden> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/HardcodedProcSourceden> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/HardcodedRegden> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/HardcodedRxSourceden> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/HceKeyDenotesProv4Participation> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/HceKeyDenotesProv4Precedence> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesDiag> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesDiagTmd> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesDob> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesEnc> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesEncCridSym> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesEncStartDate> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesEndDate> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesGid> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesMeas> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesMeasMentionAxiomDbXref> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesMeasTypeAxiomDbXref> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesPatKeySymb> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesPatient> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesRid> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesRx> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesRxTmd> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesTmd> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/KeyDenotesValspec> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasAboutPat> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasHasMul> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasHasValspec> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasKeyDenotesProv4Aboutness> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasKeyDenotesProv4MeasType> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasKeyDenotesProv4Mention> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasKeyDenotesProv4Mul> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasKeyDenotesProv4Parthood> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasKeySymbHasRepresentation> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasKeySymbPartOfColumn> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasKeySymbPartOfKey> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasTmdPartOfQueryResult> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasTypingRecipe> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MeasValspecPartOfQueryResult> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MentioningProvHasRepresentation> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/MentioningProvPartOfCol> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/PatKeySymbHasRepresentation> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/PatKeySymbPartOfKey> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/PatientHasRole> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/PrevencPrecedesEnc> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcKeyDenotesMentioningProv> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcKeyDenotesParthoodAxiomDbXref> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcKeyDenotesParticipationAxiomDbXref> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcKeyDenotesProc> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcKeyDenotesProcTypeAxiomDbXref> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcKeyDenotesTmd> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcKeySymbHasRepresentation> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcKeySymbPartOfCol> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcKeySymbPartOfKey> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcParticipationAxiomDbXrefHasRepresentation>
+  <https://github.com/PennTURBO/Drivetrain/referencedInGraph> <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcParticipationAxiomDbXrefPartOfColumn>
+  <https://github.com/PennTURBO/Drivetrain/referencedInGraph> <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcParticipationAxiomHasDbXref> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcParticipationAxiomProp> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcParticipationAxiomSource> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcParticipationAxiomTarget> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ProcTypingRecipe> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/RidAboutPatient> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/RidTypingRecipe> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/RxAboutPat> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/RxHasRepresentation> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/RxKeyDenotesProv4Aboutness> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/RxKeyDenotesProv4Parthood> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/RxKeySymbHasRepresentation> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/RxKeySymbPartOfColumn> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/RxKeySymbPartOfKey> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/RxPartOfColumn> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .
+
+<https://github.com/PennTURBO/Drivetrain/ValspecHasSpecVal> <https://github.com/PennTURBO/Drivetrain/referencedInGraph>
+    <http://turboProperties.org/expandedNamedGraph> .

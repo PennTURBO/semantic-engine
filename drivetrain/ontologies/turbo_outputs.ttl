@@ -234,7 +234,7 @@ drivetrain:PatCridsymbHasRepresentation
 drivetrain:PatientBornOnSns 
   a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  # drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExistIf drivetrain:objectExists ;
   drivetrain:object obo:UBERON_0035946 ;
   drivetrain:predicate ontologies:TURBO_0000303 ;
   drivetrain:subject obo:NCBITaxon_9606 ;
@@ -982,7 +982,7 @@ ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:ParticipationA
 drivetrain:ProcPartOfEnc
  a drivetrain:ObjectConnectionToInstanceRecipe ;
  drivetrain:multiplicity drivetrain:many-1 ;
- # drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+ drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
  drivetrain:object drivetrain:EncToBeTyped ;
  drivetrain:predicate obo:BFO_0000050 ;
  drivetrain:subject drivetrain:ProcToBeTyped ;
