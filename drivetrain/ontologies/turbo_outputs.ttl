@@ -1229,7 +1229,6 @@ drivetrain:MeasTypeAxiomProp
   drivetrain:subject owl:Axiom ;
 .
 
-# at some point, this OBJECT was NOT BEING TREATED AS A STATIC TERM (when MDs are being exclusively typed as MDs)
 drivetrain:MeasTypeAxiomTarget
   drivetrain:subjectUsesContext drivetrain:MeasTypeAxiomContext ;
   a drivetrain:ObjectConnectionToTermRecipe ;
