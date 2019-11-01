@@ -724,7 +724,7 @@ drivetrain:ProcboundStartsProc
 drivetrain:ProcKeySymbHasRepresentation
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:hce_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:proc_id_IntegerLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
   drivetrain:subject obo:IAO_0000028 ;
 .
@@ -2132,4 +2132,5 @@ owl:Axiom drivetrain:hasPossibleContext drivetrain:RxAboutnessAxiomContext .
 ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:RxAboutnessAxiomContext .
 
 ###
+
 

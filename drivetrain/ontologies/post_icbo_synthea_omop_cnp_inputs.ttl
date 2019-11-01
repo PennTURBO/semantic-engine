@@ -32,6 +32,10 @@ drivetrain:star a drivetrain:PredicateSuffixSymbol ;
 
 drivetrain:Patients
   a ontologies:TURBO_0010354 ;
+  drivetrain:hasOptionalInput drivetrain:PatientCridsymShortcut ;
+  drivetrain:hasOptionalInput drivetrain:PatientDobShortcut ;
+  drivetrain:hasOptionalInput drivetrain:PatientGidShortcut ;
+  drivetrain:hasOptionalInput drivetrain:PatientRidShortcut ;
   drivetrain:hasOutput drivetrain:CridDenotesPatient;
   drivetrain:hasOutput drivetrain:DobAboutSns ;
   drivetrain:hasOutput drivetrain:DobHasMeasVal ;
@@ -62,11 +66,7 @@ drivetrain:Patients
   drivetrain:hasOutput drivetrain:SymbolPartOfCridForPatient ;
   drivetrain:hasRequiredInput drivetrain:GidOmopConceptIds ;
   drivetrain:hasRequiredInput drivetrain:GidScoGid ;
-  drivetrain:hasOptionalInput drivetrain:PatientCridsymShortcut ;
-  drivetrain:hasOptionalInput drivetrain:PatientDobShortcut ;
-  drivetrain:hasOptionalInput drivetrain:PatientGidShortcut ;
   drivetrain:hasRequiredInput drivetrain:PatientKeySymShortcut ;
-  drivetrain:hasOptionalInput drivetrain:PatientRidShortcut ;
   drivetrain:hasRequiredInput drivetrain:RidOmopConceptIds ;
   drivetrain:hasRequiredInput drivetrain:RidScoStarRid ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
@@ -390,8 +390,8 @@ drivetrain:HcePrecedence
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:HealthCareProcedures ;
+  # drivetrain:precedes drivetrain:PatientMeasurements ;  
 .
-
 
 drivetrain:preceding_encounter_keysym_LiteralValue
   a drivetrain:TurboGraphIntegerLiteralValue ;
@@ -453,9 +453,8 @@ drivetrain:PrevencScoEnc
 
 drivetrain:PrevencsClass
   a drivetrain:MultiObjectDescriber .
-  
-  
-  drivetrain:hce_id_IntegerLiteralValue 
+
+drivetrain:hce_id_IntegerLiteralValue 
   a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
@@ -510,6 +509,10 @@ drivetrain:HealthCareProcedures
   drivetrain:precedes drivetrain:HcpParticipation ;
 .
 
+drivetrain:proc_id_IntegerLiteralValue 
+  a drivetrain:TurboGraphIntegerLiteralValue ;
+.
+
 drivetrain:ProcDatetimeShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -538,10 +541,11 @@ drivetrain:ProcOmopConceptIds
 drivetrain:ProcKeysymShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
+  drivetrain:object drivetrain:proc_id_IntegerLiteralValue ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#procedure_occurrence_id> ;
-  drivetrain:object drivetrain:hce_id_IntegerLiteralValue ;
+  drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
 .
+
 drivetrain:ProcSourceValueShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -639,6 +643,7 @@ drivetrain:ProcEncShortcut
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#visit_occurrence_id> ;
   drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
 .
+
 ### measurement
 
 drivetrain:PatientMeasurements
@@ -749,7 +754,6 @@ drivetrain:MeasCodeMentionedClassListFromValueRule
   BIND(coalesce(?LoincMention, ?SnomedMention, uuid()) as ${replacement})
 """  ;
 .
-
 
 drivetrain:MeasCodeMentionedClassList 
   drivetrain:usesCustomVariableManipulationRule drivetrain:MeasCodeMentionedClassListFromValueRule .
