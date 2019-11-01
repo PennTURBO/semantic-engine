@@ -17,7 +17,7 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-
+# these classes are present in Stardog's direct mapping of OMOP tables, but not in the TURBO ontology
 <http://api.stardog.com/visit_occurrence> a owl:Class .
 <http://api.stardog.com/person> a owl:Class .
 <http://api.stardog.com/procedure_occurrence> a owl:Class .
@@ -180,7 +180,7 @@ drivetrain:PatientExpansionSpecification
 .
 
 ### Encs
-# _ is wildcard suffix for graph names
+
 drivetrain:HealthCareEncounters
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:CridDenotesEnc ;
@@ -228,10 +228,6 @@ drivetrain:HealthCareEncounters
 drivetrain:encounter_start_datetime_DateLiteralValue 
   a drivetrain:TurboGraphDateLiteralValue ;
 .
-
-# drivetrain:EndDatePlaceholder 
-  # a drivetrain:TurboGraphDateLiteralValue ;
-# .
 
 drivetrain:encounter_cridsym_LiteralValue
   a drivetrain:TurboGraphStringLiteralValue ;
@@ -455,6 +451,27 @@ drivetrain:PrevencScoEnc
   drivetrain:subject drivetrain:PrevencsClass ;
 .
 
+drivetrain:PrevencsClass
+  a drivetrain:MultiObjectDescriber .
+  
+  
+  drivetrain:hce_id_IntegerLiteralValue 
+  a drivetrain:TurboGraphIntegerLiteralValue ;
+.
+
+drivetrain:procedure_cridsym_LiteralValue 
+  a drivetrain:TurboGraphStringLiteralValue ;
+.
+
+drivetrain:procedure_type_LiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
+.
+
+drivetrain:procedure_datetime_DateLiteralValue 
+  a drivetrain:TurboGraphDateLiteralValue ;
+.
+
+
 ### Procs
 
 drivetrain:HealthCareProcedures
@@ -506,7 +523,7 @@ drivetrain:ProcSciShortcut
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#procedure_source_concept_id> ;
-  drivetrain:object drivetrain:procedure_source_concept_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:procedure_type_LiteralValue ;
 .
 
 drivetrain:ProcOmopConceptIds 
@@ -515,7 +532,7 @@ drivetrain:ProcOmopConceptIds
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:ProcClassList ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
-  drivetrain:object drivetrain:procedure_source_concept_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:procedure_type_LiteralValue ;
 .
 
 drivetrain:ProcKeysymShortcut 
@@ -523,14 +540,14 @@ drivetrain:ProcKeysymShortcut
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#procedure_occurrence_id> ;
-  drivetrain:object drivetrain:procedure_occurrence_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:hce_id_IntegerLiteralValue ;
 .
 drivetrain:ProcSourceValueShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#procedure_source_value> ;
-  drivetrain:object drivetrain:procedure_source_value_StringLiteralValue ;
+  drivetrain:object drivetrain:procedure_cridsym_LiteralValue ;
   drivetrain:objectRequiredToCreate drivetrain:ProcMentionedClassList ;
 .
 
@@ -669,10 +686,7 @@ drivetrain:PatientMeasurements
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:PatientMul ;
-  
-    # drivetrain:precedes drivetrain:PatientMeasAboutness ;
-	
-	
+
 .
 
 drivetrain:MeasScoMeas
@@ -705,7 +719,7 @@ drivetrain:MeasConceptShortcut
 drivetrain:MeasCodeShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:measurement_source_value_StringLiteralValue ;
+  drivetrain:object drivetrain:measurement_type_LiteralValue ;
   drivetrain:objectRequiredToCreate drivetrain:MeasCodeMentionedClassList ;
   drivetrain:predicate <http://api.stardog.com/measurement#measurement_source_value> ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
@@ -714,7 +728,7 @@ drivetrain:MeasCodeShortcut
 drivetrain:MeasVocabShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:measurement_vocabulary_id_StringLiteralValue ;
+  drivetrain:object drivetrain:measurement_vocabulary_id_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/measurement#vocabulary_id> ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
 .
@@ -724,11 +738,11 @@ drivetrain:MeasVocabShortcut
 drivetrain:MeasCodeMentionedClassListFromValueRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql """
-  BIND(IF(?measurement_vocabulary_id_StringLiteralValue = 'LOINC', 
+  BIND(IF(?measurement_vocabulary_id_LiteralValue = 'LOINC', 
     uri(concat('http://purl.bioontology.org/ontology/LNC/', ${dependent} )),
 	?unbound) 
 	AS ?LoincMention)
-  BIND(IF(?measurement_vocabulary_id_StringLiteralValue = 'SNOMED', 
+  BIND(IF(?measurement_vocabulary_id_LiteralValue = 'SNOMED', 
     uri(concat('http://purl.bioontology.org/ontology/SNOMED/', ${dependent} )),
 	?unbound) 
 	AS ?SnomedMention)	
@@ -772,7 +786,16 @@ drivetrain:MeasExpansionSpecification
   drivetrain:subject <http://api.stardog.com/measurement> ;
 .
 
-### Measurement unit label
+drivetrain:measurement_type_LiteralValue
+  a drivetrain:TurboGraphStringLiteralValue ;
+.
+
+drivetrain:measurement_vocabulary_id_LiteralValue
+  a drivetrain:TurboGraphStringLiteralValue ;
+.
+
+
+### Measurement unit label... sco input leads to never-ending update
 
 drivetrain:PatientMul
   a ontologies:TURBO_0010354 ;
@@ -784,15 +807,12 @@ drivetrain:PatientMul
   drivetrain:hasOutput drivetrain:MulAxiomProp ;
   drivetrain:hasOutput drivetrain:MulAxiomSource ;
   drivetrain:hasOutput drivetrain:MulAxiomTarget ;
-  
   drivetrain:hasRequiredInput drivetrain:KeyDenotesMeasInp ;
   drivetrain:hasRequiredInput drivetrain:MeasExpansionSpecification ;
   drivetrain:hasRequiredInput drivetrain:MeasMoreUnitsShortcut ;
   drivetrain:hasRequiredInput drivetrain:MulClassHasOmopConceptId ;
   
-  # drivetrain:hasRequiredInput drivetrain:MulScoMul ;
-  
-  # drivetrain:hasRequiredInput drivetrain:MeasTypingRecipe ;
+  # drivetrain:hasRequiredInput drivetrain:MulScoMul 
   
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
@@ -804,7 +824,7 @@ drivetrain:MeasMoreUnitsShortcut
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
   drivetrain:predicate <http://api.stardog.com/measurement#more_units> ;
-  drivetrain:object drivetrain:measurement_more_units_IntegerLiteralValue ;
+  drivetrain:object drivetrain:measurement_units_LiteralValue ;
 .
 
 drivetrain:MulClassHasOmopConceptId 
@@ -813,7 +833,7 @@ drivetrain:MulClassHasOmopConceptId
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:MulClassList ;
   drivetrain:predicate ontologies:TURBO_0010147  ;
-  drivetrain:object drivetrain:measurement_more_units_IntegerLiteralValue ;
+  drivetrain:object drivetrain:measurement_units_LiteralValue ;
 .
 
 drivetrain:MulScoMul
@@ -824,6 +844,14 @@ drivetrain:MulScoMul
   drivetrain:predicateSuffix drivetrain:star ;
   drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:subject drivetrain:MulClassList ;
+.
+
+drivetrain:MulToBeTyped 
+  a drivetrain:MultiObjectDescriber ;
+.
+
+drivetrain:measurement_units_LiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
 .
 
 ### measurement aboutness
@@ -907,13 +935,6 @@ drivetrain:KeyDenotesMeasInp
 
 ### conditions/diagnoses (?)
  drivetrain:Diagnosis
-# drivetrain:hasOutput drivetrain:DiagKeyDenotesProv4Mention ;
-  # drivetrain:hasOutput drivetrain:DiagMentionAxiomDbXrefHasRepresentation ;
-  # drivetrain:hasOutput drivetrain:DiagMentionAxiomDbXrefPartOfColumn ;
-  # drivetrain:hasOutput drivetrain:DiagMentionAxiomHasDbXref ;
-  # drivetrain:hasOutput drivetrain:DiagMentionAxiomProp ;
-  # drivetrain:hasOutput drivetrain:DiagMentionAxiomSource ;
-  # drivetrain:hasOutput drivetrain:DiagMentionAxiomTarget ;
   drivetrain:precedes drivetrain:DiagnosisAboutness ;
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:DiagExpansion;
@@ -940,7 +961,7 @@ drivetrain:KeyDenotesMeasInp
 drivetrain:CondCodeShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:condition_source_value_StringLiteralValue ;
+  drivetrain:object drivetrain:condition_type_LiteralValue ;
   drivetrain:objectRequiredToCreate drivetrain:CondMentionedClassList ;
   drivetrain:predicate <http://api.stardog.com/condition_occurrence#condition_source_value> ;
   drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
@@ -980,6 +1001,18 @@ drivetrain:CondMentionedClassFromValueRule
 
 drivetrain:CondMentionedClassList 
   drivetrain:usesCustomVariableManipulationRule drivetrain:CondMentionedClassFromValueRule .
+  
+drivetrain:condition_type_LiteralValue
+  a drivetrain:TurboGraphStringLiteralValue ;
+.
+
+drivetrain:condition_occurrence_id_IntegerLiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
+.
+
+drivetrain:condition_start_datetime_DateLiteralValue
+  a drivetrain:TurboGraphDateLiteralValue ;
+.
   
 # ### diag aboutness
 
@@ -1057,6 +1090,12 @@ drivetrain:DiagEncShortcut
 .
 
 ### drug exposure/prescriptions (?)
+
+# Row Labels | CVX | RxNorm
+# -- | -- | --
+# Dispensed in Outpatient office | 14695 |  
+# Prescription written |   | 8452
+
 drivetrain:Prescription
   drivetrain:precedes drivetrain:RxParthood ;
   a ontologies:TURBO_0010354 ;
@@ -1105,7 +1144,7 @@ drivetrain:RxSourcedenTerm
 drivetrain:RxKeySymbShortcut
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:drug_exposure_id_value_IntegerLiteralValue ;
+  drivetrain:object drivetrain:prescription_id_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_exposure_id> ;
   drivetrain:subject <http://api.stardog.com/drug_exposure> ;
 .
@@ -1113,7 +1152,7 @@ drivetrain:RxKeySymbShortcut
 drivetrain:RxStartDatetimeShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:drug_exposure_start_datetime_DateLiteralValue ;
+  drivetrain:object drivetrain:prescription_start_datetime_DateLiteralValue ;
   drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_exposure_start_datetime> ;
   drivetrain:subject <http://api.stardog.com/drug_exposure> ;
 .
@@ -1121,7 +1160,7 @@ drivetrain:RxStartDatetimeShortcut
 drivetrain:RxSourceValShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:drug_source_value_StringLiteralValue ;
+  drivetrain:object drivetrain:drug_code_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_source_value> ;
   drivetrain:subject <http://api.stardog.com/drug_exposure> ;
   drivetrain:objectRequiredToCreate drivetrain:RxMentionedClassList ;
@@ -1131,7 +1170,6 @@ drivetrain:RxWrittenNotDispensedShortcut
   a drivetrain:DatatypeConnectionRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:WrittenNotDispensedLiteral ;
-  # drivetrain:objectRequiredToCreate drivetrain:RxMentionedClassList ;
   drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_type_concept_id> ;
   drivetrain:subject <http://api.stardog.com/drug_exposure> ;
 .
@@ -1156,7 +1194,6 @@ drivetrain:WrittenNotDispensedSco
 
 drivetrain:WrittenNotDispensedMOD
   a drivetrain:MultiObjectDescriber ;
-  # drivetrain:range ontologies:TURBO_0010707 ;
 .
 
 drivetrain:WrittenNotDispensedLiteral
@@ -1172,6 +1209,18 @@ drivetrain:RxMentionedClassListFromValueRule
 
 drivetrain:RxMentionedClassList 
   drivetrain:usesCustomVariableManipulationRule drivetrain:RxMentionedClassListFromValueRule .
+  
+drivetrain:prescription_id_LiteralValue
+  a drivetrain:TurboGraphIntegerLiteralValue ;
+.
+
+drivetrain:prescription_start_datetime_DateLiteralValue
+  a drivetrain:TurboGraphDateLiteralValue ;
+.
+
+drivetrain:drug_code_LiteralValue
+  a drivetrain:TurboGraphStringLiteralValue ;
+.
 
 
 ### Rx parthood
@@ -1220,7 +1269,7 @@ drivetrain:KeyDenotesRxInp
 
 
 drivetrain:RxAboutness 
-  # drivetrain:precedes drivetrain:RxnosisParthood ;
+  # drivetrain:precedes drivetrain:SOMETHING ;
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:RxAboutPat ;
   drivetrain:hasOutput drivetrain:RxAboutnessAxiomDbXrefHasRepresentation ;
@@ -1550,47 +1599,7 @@ drivetrain:RxPartOfColumn drivetrain:referencedInGraph
 drivetrain:ValspecHasSpecVal drivetrain:referencedInGraph
     properties:expandedNamedGraph .
 
-
-
-
-
 ###
 
-# Row Labels | CVX | RxNorm
-# -- | -- | --
-# Dispensed in Outpatient office | 14695 |  
-# Prescription written |   | 8452
 
 
-
-# drivetrain:encClassFromValueRule
-  # a drivetrain:TurboGraphVariableManipulationLogic ;
-  # drivetrain:usesSparql """
-  # BIND(IF (${dependent} = 9203, obo:OGMS_0000101, ?unbound) AS ?edEncClass) 
-  # BIND(IF (${dependent} = 9201, obo:OGMS_0000100, ?unbound) AS  ?inpatientEncClass) 
-  # BIND(IF (${dependent} = 9202, obo:OGMS_0000099, ?unbound) AS ?outpatientEncClass) 
-  # bind(coalesce(?edEncClass, ?inpatientEncClass, ?outpatientEncClass, obo:OGMS_0000097) as ${replacement})
-  # #BIND(IF (bound(?edEncClass),?edEncClass, ?unbound) as ${replacement}) 
-  # #BIND(IF (bound(?inpatientEncClass),?inpatientEncClass, ${replacement}) as ${replacement}) 
-  # #BIND(IF (bound(?outpatientEncClass),?outpatientEncClass, ${replacement}) as ${replacement}) 
-  # #BIND(IF (bound(${replacement}),${replacement},obo:OGMS_0000097) as ${replacement})
-# """  ;
-# .
-
-# drivetrain:ProcClassFromValueRule
-  # a drivetrain:TurboGraphVariableManipulationLogic ;
-  # drivetrain:usesSparql """
-  # BIND(IF (${dependent} = "76601001", obo:OBI_0000934, ?unbound) AS ?imInjClass) 
-  # BIND(IF (${dependent} = "5880005", obo:OGMS_0000057, ?unbound) AS ?physExamClass) 
-  # bind(coalesce(?imInjClass, ?physExamClass, obo:OGMS_0000096) as ${replacement})
-# """  ;
-# .
-
-# drivetrain:GidClassFromValueRule
-  # a drivetrain:TurboGraphVariableManipulationLogic ;
-  # drivetrain:usesSparql """
-  # BIND(IF (${dependent} = 8532, obo:OMRSE_00000138, ?unbound) AS ?femGidClass) 
-  # BIND(IF (${dependent} = 8507, obo:OMRSE_00000141, ?unbound) AS ?maleGidClass) 
-  # bind(coalesce(?femGidClass, ?maleGidClass, obo:OMRSE_00000133) as ${replacement})
-# """  ;
-# .
