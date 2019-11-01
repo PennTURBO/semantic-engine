@@ -654,7 +654,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
     }
     
-    test("duplicate property of recipe in input")
+    test("duplicate subject property of recipe in input")
     {
         val insertDataModel: String = s"""
           
@@ -681,7 +681,37 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
     }
     
-    test("duplicate property of recipe in output")
+    test("duplicate referencedInGraph property of recipe in input")
+    {
+        val insertDataModel: String = s"""
+          
+          INSERT DATA
+          {
+               <$defaultPrefix"""+s"""instructionSet>
+               {
+                   ontologies:object1ToObject3 drivetrain:referencedInGraph pmbb:namedGraph1 .
+                   ontologies:object1ToObject3 drivetrain:referencedInGraph pmbb:namedGraph2 .
+                   ontologies:someSubject a owl:Class .
+                   pmbb:namedGraph1 a drivetrain:TurboNamedGraph .
+                   pmbb:namedGraph2 a drivetrain:TurboNamedGraph .
+               }
+           }
+        """
+      
+        update.updateSparql(gmCxn, insertDataModel)
+        
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: recipe http://transformunify.org/ontologies/object1ToObject3 may have duplicate properties")
+        }
+    }
+    
+    test("duplicate predicate property of recipe in output")
     {
         val insertDataModel: String = s"""
           

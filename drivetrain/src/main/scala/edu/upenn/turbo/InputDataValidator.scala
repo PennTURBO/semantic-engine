@@ -278,7 +278,7 @@ object InputDataValidator extends ProjectwideGlobals
             for (element <- res)
             {
                 val errorMsgWithReplacement = errorMsg.replaceAll("\\{res\\}", element)
-                logger.info(errorMsgWithReplacement)
+                logger.info("\t"+errorMsgWithReplacement)
                 helper.writeErrorLog("Input Data Validation", errorMsgWithReplacement)   
             }
         }

@@ -74,23 +74,23 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             //var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
             // get list of all named graphs which match pattern specified in inputNamedGraph but without match on where clause
             var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph)
-            logger.info("input named graphs size: " + inputNamedGraphsList.size)
-            if (inputNamedGraphsList.size == 0) logger.info(s"Cannot run process $processSpecification: no input named graphs found")
+            logger.info("\tinput named graphs size: " + inputNamedGraphsList.size)
+            if (inputNamedGraphsList.size == 0) logger.info(s"\tCannot run process $processSpecification: no input named graphs found")
             else
             {
                 //run validation on input graph
                 if (dataValidationMode == "stop" || dataValidationMode == "log")
                 {
-                    logger.info(s"Running on Input Data Validation Mode $dataValidationMode")
+                    logger.info(s"\tRunning on Input Data Validation Mode $dataValidationMode")
                     InputDataValidator.setGraphModelConnection(gmCxn)
                     InputDataValidator.setOutputRepositoryConnection(cxn)
                     InputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData, dataValidationMode)
                 }
-                else logger.info("Input Data Validation turned off for this instantiation")
+                else logger.info("\tInput Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
                 for (graph <- inputNamedGraphsList)
                 {
-                    logger.info("Now running on input graph " + graph)
+                    logger.info("\tNow running on input graph " + graph)
                     primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
                     //logger.info(primaryQuery.getQuery())
                     primaryQuery.runQuery(cxn)
