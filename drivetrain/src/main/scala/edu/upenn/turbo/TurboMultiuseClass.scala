@@ -801,9 +801,9 @@ class TurboMultiuseClass extends Enumeration
     def checkAndConvertPropertiesReferenceToNamedGraph(graph: String): String =
     {
         var newGraphString = graph
-        if (graph.startsWith("http://turboProperties.org/"))
+        if (graph.startsWith("https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/"))
         {
-            newGraphString = retrieveUriPropertyFromFile(graph.replace("http://turboProperties.org/",""))
+            newGraphString = retrieveUriPropertyFromFile(graph.replace("https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/",""))
         }
         newGraphString
     }
