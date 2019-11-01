@@ -522,6 +522,32 @@ class TurboMultiuseClass extends Enumeration
         }
     }
     
+    def checkOrderedStringArraysForEquivalency(arr1: Array[String], arr2: Array[String]): Boolean =
+    {
+        var boolToReturn = true
+        val newArr1 = new ArrayBuffer[String]
+        val newArr2 = new ArrayBuffer[String]
+        for (a <- arr1) if (a.length() != 0) newArr1 += a
+        for (a <- arr2) if (a.length() != 0) newArr2 += a
+        if (newArr1.size != newArr2.size) 
+        {
+            logger.info("arrays are not the same size")
+            boolToReturn = false
+        }
+        else
+        {
+            for (a <- 0 to newArr1.size - 1)
+            {
+                if (newArr1(a) != newArr2(a)) 
+                {
+                   logger.info("Found mismatch: " + newArr1(a) + " and " + newArr2(a)) 
+                   boolToReturn = false
+                }
+            }
+        }
+        boolToReturn
+    }
+    
     //These 2 globals are associated with the two methods below
     private var nonMatchesArr1: ArrayBuffer[String] = new ArrayBuffer[String]
     private var nonMatchesArr2: ArrayBuffer[String] = new ArrayBuffer[String]

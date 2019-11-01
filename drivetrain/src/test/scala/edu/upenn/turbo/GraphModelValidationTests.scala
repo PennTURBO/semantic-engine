@@ -8,8 +8,6 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
-import java.io._
-
 
 class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {

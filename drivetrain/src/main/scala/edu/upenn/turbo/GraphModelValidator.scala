@@ -22,7 +22,7 @@ object GraphModelValidator extends ProjectwideGlobals
           """
         //logger.info(select)
         val res = update.querySparqlAndUnpackTuple(gmCxn, select, Array("inputNamedGraph", "outputNamedGraph"))
-        assert (res.size == 1, (if (res.size == 0) s"Process $process does not exist" else s"Process $process has duplicate properties"))
+        assert (res.size == 1, (if (res.size == 0) s"Process $process does not exist, ensure required input and output graphs are present" else s"Process $process has duplicate properties"))
     }
     
     def validateAcornResults(results: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])

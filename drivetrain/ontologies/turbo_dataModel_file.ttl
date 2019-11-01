@@ -236,7 +236,6 @@ pmbb:HealthcareEncounterExpansionProcess
   drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes pmbb:DiagnosisExpansionProcess ;
-  #drivetrain:buildsOptionalGroup ontologies:encCodeTypeProvenanceOptionalGroup ;
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToBmiValue ;
   drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToDatasetTitle ;

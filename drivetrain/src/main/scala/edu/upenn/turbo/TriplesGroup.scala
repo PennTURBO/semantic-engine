@@ -175,7 +175,9 @@ class TriplesGroupBuilder extends ProjectwideGlobals
     def buildClauseFromTriplesGroup(clauseType: Value): String =
     {
         var graphsAndTriples: HashMap[String, LinkedHashMap[String, Boolean]] = new HashMap[String, LinkedHashMap[String, Boolean]]
+        var graphsAndTriplesForOptionalGroupsWithMultipleGraphs: HashMap[String, HashMap[String, LinkedHashMap[String, Boolean]]] = new HashMap[String, HashMap[String, LinkedHashMap[String, Boolean]]]
         val graphsIterator = allGraphsUsed.iterator()
+        var optGroupsWithMultipleNamedGraphs = new HashSet[TriplesGroup]
         while (graphsIterator.hasNext())
         {
             val graph = graphsIterator.next()
@@ -199,12 +201,36 @@ class TriplesGroupBuilder extends ProjectwideGlobals
                 }
                 for (optionalGroup <- optionalGroups)
                 {
-                    if (graphsAndTriples.contains(graph)) graphsAndTriples(graph).put(addTriplesToClause(clauseType, optionalGroup, graph), false)
-                    else 
+                    var thisGraph = optionalGroup.requiredInGroup.head._1
+                    var useThisGroupHere = true
+                    for ((k,v) <- optionalGroup.requiredInGroup)
                     {
-                        val newLinkedMap = new LinkedHashMap[String, Boolean]
-                        newLinkedMap.put(addTriplesToClause(clauseType, optionalGroup, graph), false)
-                        graphsAndTriples += graph -> newLinkedMap
+                        if (k != thisGraph) 
+                        {
+                            optGroupsWithMultipleNamedGraphs += optionalGroup
+                            useThisGroupHere = false
+                        }
+                    }
+                    if (useThisGroupHere)
+                    {
+                        for ((k,v) <- optionalGroup.optionalInGroup)
+                        {
+                            if (k != thisGraph) 
+                            {
+                                optGroupsWithMultipleNamedGraphs += optionalGroup
+                                useThisGroupHere = false
+                            }
+                        }
+                    }
+                    if (useThisGroupHere)
+                    {
+                        if (graphsAndTriples.contains(graph)) graphsAndTriples(graph).put(addTriplesToClause(clauseType, optionalGroup, graph), false)
+                        else 
+                        {
+                            val newLinkedMap = new LinkedHashMap[String, Boolean]
+                            newLinkedMap.put(addTriplesToClause(clauseType, optionalGroup, graph), false)
+                            graphsAndTriples += graph -> newLinkedMap
+                        } 
                     }
                 }
             }
@@ -232,7 +258,51 @@ class TriplesGroupBuilder extends ProjectwideGlobals
                 }
             }
         }
-        createClauseFromGraphsAndTriplesGroup(graphsAndTriples)
+        for (optionalGroup <- optGroupsWithMultipleNamedGraphs)
+        {
+            val graphsUsed = new HashSet[String]
+            for ((k,v) <- optionalGroup.requiredInGroup) graphsUsed += k
+            for ((k,v) <- optionalGroup.optionalInGroup) graphsUsed += k
+            val graphMap = new HashMap[String, LinkedHashMap[String, Boolean]]
+            for (graph <- graphsUsed)
+            {
+                optionalGroup.changeGroupType(REQUIRED)
+                val newLinkedMap = new LinkedHashMap[String, Boolean]
+                logger.info("calling add triples for group " + graph)
+                newLinkedMap.put(addTriplesToClause(clauseType, optionalGroup, graph), false)
+                graphMap += graph -> newLinkedMap
+            }
+            graphsAndTriplesForOptionalGroupsWithMultipleGraphs += optionalGroup.groupName -> graphMap
+        }
+        var mainClause = createClauseFromGraphsAndTriplesGroup(graphsAndTriples)
+        for ((optGroup, optGraphsAndTriples) <- graphsAndTriplesForOptionalGroupsWithMultipleGraphs)
+        {
+            mainClause += "OPTIONAL {\n"
+            mainClause += createOptionalClauseForMultipleNamedGraphs(optGraphsAndTriples)
+            mainClause += "}\n"
+        }
+        mainClause
+    }
+    
+    def createOptionalClauseForMultipleNamedGraphs(graphsAndTriples: HashMap[String, LinkedHashMap[String, Boolean]]): String =
+    {
+        var clause = ""
+        for ((graph,triplesGroups) <- graphsAndTriples)
+        {
+            var intermediateClause = ""
+            val triplesGroupsIterator = triplesGroups.entrySet().iterator()
+            while (triplesGroupsIterator.hasNext())
+            {
+                val iteratorItem = triplesGroupsIterator.next()
+                val group = iteratorItem.getKey()
+                val minus = iteratorItem.getValue()
+                intermediateClause += group
+            }
+            clause += s"GRAPH <$graph> {\n"
+            clause += intermediateClause
+            clause += "}\n"
+        }
+        clause
     }
     
     def createClauseFromGraphsAndTriplesGroup(graphsAndTriples: HashMap[String, LinkedHashMap[String, Boolean]]): String =
@@ -252,11 +322,14 @@ class TriplesGroupBuilder extends ProjectwideGlobals
                 if (minus) useMinus = true
                 intermediateClause += group
             }
-            if (useMinus) clause += "MINUS {\n"
-            clause += s"GRAPH <$graph> {\n"
-            clause += intermediateClause
-            clause += "}\n"
-            if (useMinus) clause += "}\n"
+            if (intermediateClause != "")
+            {
+                if (useMinus) clause += "MINUS {\n"
+                clause += s"GRAPH <$graph> {\n"
+                clause += intermediateClause
+                clause += "}\n"
+                if (useMinus) clause += "}\n"   
+            }
         }
         clause
     }
@@ -348,6 +421,11 @@ class TriplesGroup extends ProjectwideGlobals
     def this(groupType: Object)
     { 
         this()
+        this.groupType = groupType.asInstanceOf[Value]
+    }
+    
+    def changeGroupType(groupType: Object)
+    {
         this.groupType = groupType.asInstanceOf[Value]
     }
     

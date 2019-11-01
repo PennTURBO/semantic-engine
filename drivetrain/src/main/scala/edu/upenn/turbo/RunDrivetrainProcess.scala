@@ -43,6 +43,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
     def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String): HashMap[String, PatternMatchQuery] =
     {
+        GraphModelValidator.validateGraphModelTerms()
+        GraphModelValidator.validateGraphSpecificationAgainstOntology()
+        
         var processQueryMap = new HashMap[String, PatternMatchQuery]
         for (processSpecification <- processSpecifications)
         {
@@ -412,13 +415,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         setGlobalUUID(globalUUID)
         setGraphModelConnection(gmCxn)
         setOutputRepositoryConnection(cxn)
-
-        GraphModelValidator.validateGraphModelTerms()
-        GraphModelValidator.validateGraphSpecificationAgainstOntology()
       
         // get list of all processes in order
         val orderedProcessList: ArrayBuffer[String] = getAllProcessesInOrder(gmCxn)
-
+        
         GraphModelValidator.validateProcessesAgainstGraphSpecification(orderedProcessList)
         
         logger.info("Drivetrain will now run the following processes in this order:")
