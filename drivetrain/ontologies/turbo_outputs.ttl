@@ -1305,11 +1305,11 @@ drivetrain:MeasTmdHasMeasVal
 .
 
 drivetrain:MeasHasTimestamp  
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:subject drivetrain:MeasToBeTyped ;
-  drivetrain:predicate obo:IAO_0000581 ;
   drivetrain:object obo:IAO_0000416 ;
+  drivetrain:predicate obo:IAO_0000581 ;
+  drivetrain:subject drivetrain:MeasToBeTyped ;
 .
 
 drivetrain:value_as_number_IntegerLiteralValue
@@ -1569,7 +1569,7 @@ drivetrain:MulClassList
 ### measurement aboutness
 
 drivetrain:MeasAboutPat
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject drivetrain:MeasToBeTyped ;

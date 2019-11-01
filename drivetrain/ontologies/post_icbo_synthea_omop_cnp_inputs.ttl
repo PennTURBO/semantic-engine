@@ -60,11 +60,11 @@ drivetrain:Patients
   drivetrain:hasOutput drivetrain:SymbolPartOfCridForPatient ;
   drivetrain:hasRequiredInput drivetrain:GidOmopConceptIds ;
   drivetrain:hasRequiredInput drivetrain:GidScoGid ;
-  drivetrain:hasRequiredInput drivetrain:PatientCridsymShortcut ;
-  drivetrain:hasRequiredInput drivetrain:PatientDobShortcut ;
-  drivetrain:hasRequiredInput drivetrain:PatientGidShortcut ;
+  drivetrain:hasOptionalInput drivetrain:PatientCridsymShortcut ;
+  drivetrain:hasOptionalInput drivetrain:PatientDobShortcut ;
+  drivetrain:hasOptionalInput drivetrain:PatientGidShortcut ;
   drivetrain:hasRequiredInput drivetrain:PatientKeySymShortcut ;
-  drivetrain:hasRequiredInput drivetrain:PatientRidShortcut ;
+  drivetrain:hasOptionalInput drivetrain:PatientRidShortcut ;
   drivetrain:hasRequiredInput drivetrain:RidOmopConceptIds ;
   drivetrain:hasRequiredInput drivetrain:RidScoStarRid ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
@@ -666,9 +666,9 @@ drivetrain:PatientMeasurements
   drivetrain:hasRequiredInput drivetrain:MeasVocabShortcut ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  # drivetrain:precedes drivetrain:PatientMul ;
+  drivetrain:precedes drivetrain:PatientMul ;
   
-    drivetrain:precedes drivetrain:PatientMeasAboutness ;
+    # drivetrain:precedes drivetrain:PatientMeasAboutness ;
 	
 	
 .
@@ -772,29 +772,30 @@ drivetrain:MeasExpansionSpecification
 
 ### Measurement unit label
 
-# drivetrain:PatientMul
-  # a ontologies:TURBO_0010354 ;
-  # drivetrain:hasOutput drivetrain:MeasHasMul ;
-  # drivetrain:hasOutput drivetrain:MeasKeyDenotesProv4Mul ;
-  # drivetrain:hasOutput drivetrain:MulAxiomDbXrefHasRepresentation ;
-  # drivetrain:hasOutput drivetrain:MulAxiomDbXrefPartOfColumn ;
-  # drivetrain:hasOutput drivetrain:MulAxiomHasDbXref ;
-  # drivetrain:hasOutput drivetrain:MulAxiomProp ;
-  # drivetrain:hasOutput drivetrain:MulAxiomSource ;
-  # drivetrain:hasOutput drivetrain:MulAxiomTarget ;
+drivetrain:PatientMul
+  a ontologies:TURBO_0010354 ;
+  drivetrain:hasOutput drivetrain:MeasHasMul ;
+  drivetrain:hasOutput drivetrain:MeasKeyDenotesProv4Mul ;
+  drivetrain:hasOutput drivetrain:MulAxiomDbXrefHasRepresentation ;
+  drivetrain:hasOutput drivetrain:MulAxiomDbXrefPartOfColumn ;
+  drivetrain:hasOutput drivetrain:MulAxiomHasDbXref ;
+  drivetrain:hasOutput drivetrain:MulAxiomProp ;
+  drivetrain:hasOutput drivetrain:MulAxiomSource ;
+  drivetrain:hasOutput drivetrain:MulAxiomTarget ;
   
-  # drivetrain:hasRequiredInput drivetrain:KeyDenotesMeasInp ;
-  # drivetrain:hasRequiredInput drivetrain:MeasExpansionSpecification ;
-  # drivetrain:hasRequiredInput drivetrain:MeasMoreUnitsShortcut ;
-  # drivetrain:hasRequiredInput drivetrain:MulClassHasOmopConceptId ;
+  drivetrain:hasRequiredInput drivetrain:KeyDenotesMeasInp ;
+  drivetrain:hasRequiredInput drivetrain:MeasExpansionSpecification ;
+  drivetrain:hasRequiredInput drivetrain:MeasMoreUnitsShortcut ;
+  drivetrain:hasRequiredInput drivetrain:MulClassHasOmopConceptId ;
+  
   # drivetrain:hasRequiredInput drivetrain:MulScoMul ;
   
-  # # drivetrain:hasRequiredInput drivetrain:MeasTypingRecipe ;
+  # drivetrain:hasRequiredInput drivetrain:MeasTypingRecipe ;
   
-  # drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
-  # drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  # drivetrain:precedes drivetrain:PatientMeasAboutness ;
-# .
+  drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  drivetrain:precedes drivetrain:PatientMeasAboutness ;
+.
 
 drivetrain:MeasMoreUnitsShortcut 
   a drivetrain:DatatypeConnectionRecipe ;
