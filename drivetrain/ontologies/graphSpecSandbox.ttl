@@ -1,16 +1,16 @@
-turbo:connection3 a drivetrain:ObjectConnectionToInstanceRecipe ;
+turbo:connection3 a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:subject turbo:object3 ;
   drivetrain:predicate turbo:predicate2 ;
   drivetrain:object turbo:object4 ;
   drivetrain:multiplicity drivetrain:1-1 ;
 .
-turbo:connection4 a drivetrain:ObjectConnectionToInstanceRecipe ;
+turbo:connection4 a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:subject turbo:object3 ;
   drivetrain:predicate turbo:predicate3 ;
   drivetrain:object turbo:object4 ;
   drivetrain:multiplicity drivetrain:1-1 ;
 .
-turbo:connection5 a drivetrain:ObjectConnectionToInstanceRecipe ;
+turbo:connection5 a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:subject turbo:someObject ;
   drivetrain:predicate turbo:somePredicate ;
   drivetrain:object turbo:someObject ;

@@ -55,26 +55,26 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection4 .
                     pmbb:myProcess1 drivetrain:buildsOptionalGroup pmbb:optionalGroup1 .
                     
-                    pmbb:connection1 a drivetrain:ObjectConnectionToInstanceRecipe .
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
                     pmbb:connection1 drivetrain:multiplicity drivetrain:1-1 .
                     pmbb:connection1 drivetrain:subject pmbb:class1 .
                     pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection1 drivetrain:object pmbb:class2 .
                     
-                    pmbb:connection2 a drivetrain:ObjectConnectionToInstanceRecipe .
+                    pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
                     pmbb:connection2 drivetrain:multiplicity drivetrain:1-1 .
                     pmbb:connection2 drivetrain:subject pmbb:class1 .
                     pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
                     pmbb:connection2 drivetrain:object pmbb:class3 .
                     
-                    pmbb:connection3 a drivetrain:ObjectConnectionToInstanceRecipe .
+                    pmbb:connection3 a drivetrain:InstanceToInstanceRecipe .
                     pmbb:connection3 drivetrain:multiplicity drivetrain:1-1 .
                     pmbb:connection3 drivetrain:subject pmbb:class2 .
                     pmbb:connection3 drivetrain:predicate pmbb:predicate3 .
                     pmbb:connection3 drivetrain:object pmbb:class3 .
                     pmbb:connection3 drivetrain:partOf pmbb:optionalGroup1 .
                     
-                    pmbb:connection4 a drivetrain:ObjectConnectionToInstanceRecipe .
+                    pmbb:connection4 a drivetrain:InstanceToInstanceRecipe .
                     pmbb:connection4 drivetrain:multiplicity drivetrain:1-1 .
                     pmbb:connection4 drivetrain:subject pmbb:class1 .
                     pmbb:connection4 drivetrain:predicate pmbb:predicate4 .
@@ -93,14 +93,13 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
           """
           update.updateSparql(gmCxn, insert)
 
-          val expectedQuery = """
-            INSERT {
-            GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+          val expectedQuery = s"""INSERT {
+            GRAPH <$expandedNamedGraph> {
             ?class1 <http://www.itmat.upenn.edu/biobank/predicate1> ?class2 .
             ?class1 rdf:type <http://www.itmat.upenn.edu/biobank/class1> .
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
-            GRAPH <http://www.itmat.upenn.edu/biobank/processes> {
+            GRAPH <$processNamedGraph> {
             <processURI> turbo:TURBO_0010184 ?class1 .
             <processURI> turbo:TURBO_0010184 ?class2 .
             <processURI> obo:OBI_0000293 ?class3 .
@@ -120,13 +119,13 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?class2 <http://www.itmat.upenn.edu/biobank/predicate3> ?class3 .
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
-            GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+            GRAPH <$expandedNamedGraph> {
             ?class1 <http://www.itmat.upenn.edu/biobank/predicate4> ?class4 .
             ?class4 rdf:type <http://www.itmat.upenn.edu/biobank/class4> .
             }
             }
              }
-         """
+             """
           
          checkQueriesForEquivalency("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) 
     }
@@ -143,7 +142,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         {
             if (a.length() != 0)
             {
-                val replacement = a/*.substring(0,a.length()-1)*/.replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
+                val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
                 expectedQueryListBuffer += replacement 
             }
         }

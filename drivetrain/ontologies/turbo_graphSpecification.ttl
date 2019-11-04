@@ -1,5 +1,5 @@
 ontologies:DNAExtractionProcessToDNAExtract
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OBI_0001051 ;
   drivetrain:predicate obo:OBI_0000299 ;
@@ -7,7 +7,7 @@ ontologies:DNAExtractionProcessToDNAExtract
   drivetrain:subject obo:OBI_0000257 ;
 .
 ontologies:DNAExtractionProcessToSpecimen
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OBI_0001479 ;
   drivetrain:predicate obo:OBI_0000293 ;
@@ -15,7 +15,7 @@ ontologies:DNAExtractionProcessToSpecimen
   drivetrain:subject obo:OBI_0000257 ;
 .
 ontologies:DNAToDNAExtract
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object obo:OBI_0001051 ;
   drivetrain:predicate obo:OBI_0000643 ;
@@ -23,7 +23,7 @@ ontologies:DNAToDNAExtract
   drivetrain:subject obo:OBI_0001868 ;
 .
 ontologies:DNAToHomoSapiens
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:OGG_0000000014 ;
@@ -31,7 +31,7 @@ ontologies:DNAToHomoSapiens
   drivetrain:subject obo:OBI_0001868 ;
 .
 ontologies:DatasetToDiastolicBloodPressureMeasurementDatum
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object obo:HTN_00000000 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -39,7 +39,7 @@ ontologies:DatasetToDiastolicBloodPressureMeasurementDatum
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:DatasetToSystolicBloodPressureMeasurementDatum
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object obo:HTN_00000001 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -47,7 +47,7 @@ ontologies:DatasetToSystolicBloodPressureMeasurementDatum
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:DiastolicBloodPressureMeasurementDatumToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -55,7 +55,7 @@ ontologies:DiastolicBloodPressureMeasurementDatumToDataset
   drivetrain:subject obo:HTN_00000000 ;
 .
 ontologies:DiastolicBloodPressureMeasurementDatumToValueSpecification
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0010150 ;
   drivetrain:predicate obo:OBI_0001938 ;
@@ -63,7 +63,7 @@ ontologies:DiastolicBloodPressureMeasurementDatumToValueSpecification
   drivetrain:subject obo:HTN_00000000 ;
 .
 ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:UO_0000272 ;
   drivetrain:predicate obo:IAO_0000039 ;
@@ -71,7 +71,7 @@ ontologies:DiastolicBloodPressureValueSpecificationToMercuryMillimeters
   drivetrain:subject ontologies:TURBO_0010150 ;
 .
 ontologies:DiastolicBloodPressureValueSpecificationToValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:diastolicBloodPressureDoubleLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -79,7 +79,7 @@ ontologies:DiastolicBloodPressureValueSpecificationToValue
   drivetrain:subject ontologies:TURBO_0010150 ;
 .
 ontologies:SystolicBloodPressureMeasurementDatumToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -87,7 +87,7 @@ ontologies:SystolicBloodPressureMeasurementDatumToDataset
   drivetrain:subject obo:HTN_00000001 ;
 .
 ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0010149 ;
   drivetrain:predicate obo:OBI_0001938 ;
@@ -95,7 +95,7 @@ ontologies:SystolicBloodPressureMeasurementDatumToValueSpecification
   drivetrain:subject obo:HTN_00000001 ;
 .
 ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:UO_0000272 ;
   drivetrain:predicate obo:IAO_0000039 ;
@@ -103,7 +103,7 @@ ontologies:SystolicBloodPressureValueSpecificationToMercuryMillimeters
   drivetrain:subject ontologies:TURBO_0010149 ;
 .
 ontologies:SystolicBloodPressureValueSpecificationToValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:systolicBloodPressureDoubleLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -111,7 +111,7 @@ ontologies:SystolicBloodPressureValueSpecificationToValue
   drivetrain:subject ontologies:TURBO_0010149 ;
 .
 ontologies:alleleCridSymbolToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -119,7 +119,7 @@ ontologies:alleleCridSymbolToDataset
   drivetrain:subject ontologies:TURBO_0000568 ;
 .
 ontologies:alleleToDNA
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:OBI_0001868 ;
   drivetrain:predicate obo:IAO_0000136 ;
@@ -127,7 +127,7 @@ ontologies:alleleToDNA
   drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -135,7 +135,7 @@ ontologies:alleleToDataset
   drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToGeneSymbolFirstPart
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:alleleGeneSymbolFirstPartStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010016 ;
@@ -143,7 +143,7 @@ ontologies:alleleToGeneSymbolFirstPart
   drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToGeneSymbolSecondPart
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:alleleGeneSymbolSecondPartStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010015 ;
@@ -151,7 +151,7 @@ ontologies:alleleToGeneSymbolSecondPart
   drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToGeneSymbolUri
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:GeneSymbolUriOfVariousTypes ;
   drivetrain:predicate obo:IAO_0000142 ;
@@ -159,7 +159,7 @@ ontologies:alleleToGeneSymbolUri
   drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToZygosityIntegerValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:alleleZygosityIntegerLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010095 ;
@@ -167,7 +167,7 @@ ontologies:alleleToZygosityIntegerValue
   drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:alleleToZygosityUri
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:ZygosityUriOfVariousTypes ;
   drivetrain:predicate obo:OBI_0001938 ;
@@ -175,7 +175,7 @@ ontologies:alleleToZygosityUri
   drivetrain:subject obo:OBI_0001352 ;
 .
 ontologies:biobankEncounterDateToBiobankEncounterStart
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000531 ;
   drivetrain:predicate obo:IAO_0000136 ;
@@ -183,7 +183,7 @@ ontologies:biobankEncounterDateToBiobankEncounterStart
   drivetrain:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterDateToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -191,7 +191,7 @@ ontologies:biobankEncounterDateToDataset
   drivetrain:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterDateToDateLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:biobankEncounterDateLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010096 ;
@@ -199,7 +199,7 @@ ontologies:biobankEncounterDateToDateLiteralValue
   drivetrain:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterDateToStringLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:biobankEncounterDateStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010095 ;
@@ -207,7 +207,7 @@ ontologies:biobankEncounterDateToStringLiteralValue
   drivetrain:subject ontologies:TURBO_0000532 ;
 .
 ontologies:biobankEncounterIdToBiobankEncounter
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000527 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -215,7 +215,7 @@ ontologies:biobankEncounterIdToBiobankEncounter
   drivetrain:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterIdToRegistryDenoter
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-singleton ;
   drivetrain:object ontologies:BiobankEncounterRegistryOfVariousTypes ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -223,7 +223,7 @@ ontologies:biobankEncounterIdToRegistryDenoter
   drivetrain:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterIdToSymbol
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000534 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -231,7 +231,7 @@ ontologies:biobankEncounterIdToSymbol
   drivetrain:subject ontologies:TURBO_0000533 ;
 .
 ontologies:biobankEncounterRegistryDenoterToId
-  a drivetrain:ObjectConnectionFromTermRecipe ;
+  a drivetrain:TermToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:singleton-many ;
   drivetrain:object ontologies:TURBO_0000533 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -239,7 +239,7 @@ ontologies:biobankEncounterRegistryDenoterToId
   drivetrain:subject ontologies:BiobankEncounterRegistryOfVariousTypes ;
 .
 ontologies:biobankEncounterStartToBiobankEncounter
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000527 ;
   drivetrain:predicate obo:RO_0002223 ;
@@ -247,7 +247,7 @@ ontologies:biobankEncounterStartToBiobankEncounter
   drivetrain:subject ontologies:TURBO_0000531 ;
 .
 ontologies:biobankEncounterSymbolToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -255,7 +255,7 @@ ontologies:biobankEncounterSymbolToDataset
   drivetrain:subject ontologies:TURBO_0000534 ;
 .
 ontologies:biobankEncounterSymbolToId
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000533 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -263,7 +263,7 @@ ontologies:biobankEncounterSymbolToId
   drivetrain:subject ontologies:TURBO_0000534 ;
 .
 ontologies:biobankEncounterSymbolToSymbolValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:biobankEncounterSymbolStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -271,14 +271,14 @@ ontologies:biobankEncounterSymbolToSymbolValue
   drivetrain:subject ontologies:TURBO_0000534 ;
 .
 ontologies:biobankEncounterToBMI
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object efo:EFO_0004340 ;
   drivetrain:predicate obo:OBI_0000299 ;
   drivetrain:subject ontologies:TURBO_0000527 ;
 .
 ontologies:biobankEncounterToCollectionProcess
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OBI_0600005 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -286,21 +286,21 @@ ontologies:biobankEncounterToCollectionProcess
   drivetrain:subject ontologies:TURBO_0000527 ;
 .
 ontologies:biobankEncounterToLengthMeasurementValueSpecification
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0010138 ;
   drivetrain:predicate ontologies:TURBO_0010139 ;
   drivetrain:subject ontologies:TURBO_0000527 ;
 .
 ontologies:biobankEncounterToMassMeasurementValueSpecification
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OBI_0001929 ;
   drivetrain:predicate ontologies:TURBO_0010139 ;
   drivetrain:subject ontologies:TURBO_0000527 ;
 .
 ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDatum
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:HTN_00000000 ;
   drivetrain:predicate obo:OBI_0000299 ;
@@ -308,7 +308,7 @@ ontologies:bloodPressureMeasurementProcessToDiastolicBloodPressureMeasurementDat
   drivetrain:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureMeasurementProcessToHealthcareEncounter
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OGMS_0000097 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -316,7 +316,7 @@ ontologies:bloodPressureMeasurementProcessToHealthcareEncounter
   drivetrain:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatum
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:HTN_00000001 ;
   drivetrain:predicate obo:OBI_0000299 ;
@@ -324,14 +324,14 @@ ontologies:bloodPressureMeasurementProcessToSystolicBloodPressureMeasurementDatu
   drivetrain:subject obo:VSO_0000006 ;
 .
 ontologies:bloodPressureToHomoSapiens
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:RO_0000052 ;
   drivetrain:subject obo:VSO_0000004 ;
 .
 ontologies:bmiToBmiDoubleLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:bmiDoubleLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -339,7 +339,7 @@ ontologies:bmiToBmiDoubleLiteralValue
   drivetrain:subject efo:EFO_0004340 ;
 .
 ontologies:bmiToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -347,14 +347,14 @@ ontologies:bmiToDataset
   drivetrain:subject efo:EFO_0004340 ;
 .
 ontologies:bmiToHomoSapiens
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:IAO_0000136 ;
   drivetrain:subject efo:EFO_0004340 ;
 .
 ontologies:cancerToHomoSapiens
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:RO_0000052 ;
@@ -362,7 +362,7 @@ ontologies:cancerToHomoSapiens
   drivetrain:subject obo:MONDO_0004992 ;
 .
 ontologies:cancerToTumor
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010070 ;
   drivetrain:predicate obo:IDO_0000664 ;
@@ -370,7 +370,7 @@ ontologies:cancerToTumor
   drivetrain:subject obo:MONDO_0004992 ;
 .
 ontologies:collectionProcessToBiobankEncounter
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000527 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -378,7 +378,7 @@ ontologies:collectionProcessToBiobankEncounter
   drivetrain:subject obo:OBI_0600005 ;
 .
 ontologies:collectionProcessToHomoSapiens
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:OBI_0000293 ;
@@ -386,7 +386,7 @@ ontologies:collectionProcessToHomoSapiens
   drivetrain:subject obo:OBI_0600005 ;
 .
 ontologies:collectionProcessToSpecimen
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OBI_0001479 ;
   drivetrain:predicate obo:OBI_0000299 ;
@@ -394,7 +394,7 @@ ontologies:collectionProcessToSpecimen
   drivetrain:subject obo:OBI_0600005 ;
 .
 ontologies:datasetToAllele
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object obo:OBI_0001352 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -402,7 +402,7 @@ ontologies:datasetToAllele
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToAlleleCridSymbol
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object ontologies:TURBO_0000568 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -410,7 +410,7 @@ ontologies:datasetToAlleleCridSymbol
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToBiobankEncounterDate
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object ontologies:TURBO_0000532 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -418,7 +418,7 @@ ontologies:datasetToBiobankEncounterDate
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToBiobankEncounterSymbol
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object ontologies:TURBO_0000534 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -426,7 +426,7 @@ ontologies:datasetToBiobankEncounterSymbol
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToBmi
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object efo:EFO_0004340 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -434,7 +434,7 @@ ontologies:datasetToBmi
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToDatasetTitle
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object ontologies:datasetTitleStringLiteralValue ;
   drivetrain:predicate dc11:title ;
@@ -442,7 +442,7 @@ ontologies:datasetToDatasetTitle
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToDateOfBirthDatum
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object efo:EFO_0004950 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -450,7 +450,7 @@ ontologies:datasetToDateOfBirthDatum
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToDiagnosis
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object obo:OGMS_0000073 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -458,7 +458,7 @@ ontologies:datasetToDiagnosis
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToGenderIdentityDatum
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object ontologies:GenderIdentityDatumOfVariousTypes ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -466,7 +466,7 @@ ontologies:datasetToGenderIdentityDatum
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToHealthcareEncounterDate
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object ontologies:TURBO_0000512 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -474,7 +474,7 @@ ontologies:datasetToHealthcareEncounterDate
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToHealthcareEncounterSymbol
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object ontologies:TURBO_0000509 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -482,7 +482,7 @@ ontologies:datasetToHealthcareEncounterSymbol
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToHomoSapiensSymbol
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object ontologies:TURBO_0000504 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -490,7 +490,7 @@ ontologies:datasetToHomoSapiensSymbol
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToLengthMeasurementValueSpecification
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object ontologies:TURBO_0010138 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -498,7 +498,7 @@ ontologies:datasetToLengthMeasurementValueSpecification
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToMassMeasurementValueSpecification
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object obo:OBI_0001929 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -506,7 +506,7 @@ ontologies:datasetToMassMeasurementValueSpecification
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToMedicationSymbol
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object ontologies:TURBO_0000562 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -514,7 +514,7 @@ ontologies:datasetToMedicationSymbol
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToPrescription
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object obo:PDRO_0000001 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -522,7 +522,7 @@ ontologies:datasetToPrescription
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:datasetToRaceIdentityDatum
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-many ;
   drivetrain:object ontologies:RaceIdentityDatumOfVariousTypes ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -530,7 +530,7 @@ ontologies:datasetToRaceIdentityDatum
   drivetrain:subject obo:IAO_0000100 ;
 .
 ontologies:dateOfBirthDatumToBirth
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:UBERON_0035946 ;
   drivetrain:predicate obo:IAO_0000136 ;
@@ -538,7 +538,7 @@ ontologies:dateOfBirthDatumToBirth
   drivetrain:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -546,14 +546,14 @@ ontologies:dateOfBirthDatumToDataset
   drivetrain:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToDateLiteral
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:homoSapiensDateOfBirthDateLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010096 ;
   drivetrain:subject efo:EFO_0004950 ;
 .
 ontologies:dateOfBirthDatumToStringLiteral
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:homoSapiensDateOfBirthStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010095 ;
@@ -561,7 +561,7 @@ ontologies:dateOfBirthDatumToStringLiteral
   drivetrain:subject efo:EFO_0004950 ;
 .
 ontologies:diagnosisToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -569,21 +569,21 @@ ontologies:diagnosisToDataset
   drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisCodeSuffixLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:diagnosisTermSuffixStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
   drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisCodingSequenceLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:diagnosisCodingSequenceIntegerLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010014 ;
   drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisRegistry
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:DiagnosisRegistryOfVariousTypes ;
   drivetrain:predicate ontologies:TURBO_0000703 ;
@@ -591,7 +591,7 @@ ontologies:diagnosisToDiagnosisRegistry
   drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToDiagnosisRegistryStringLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:diagnosisRegistryStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0006515 ;
@@ -599,28 +599,28 @@ ontologies:diagnosisToDiagnosisRegistryStringLiteralValue
   drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToIcdTerm
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:IcdTermOfVariousTypes ;
   drivetrain:predicate obo:IAO_0000142 ;
   drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToPrimaryDiagnosisBooleanLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:primaryDiagnosisBooleanLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010013 ;
   drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diagnosisToSnomedTerm
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:SnomedTermOfVariousTypes ;
   drivetrain:predicate obo:IAO_0000142 ;
   drivetrain:subject obo:OGMS_0000073 ;
 .
 ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:VSO_0000004 ;
   drivetrain:predicate obo:IAO_0000221 ;
@@ -628,7 +628,7 @@ ontologies:diastolicBloodPressureMeasurementDatumToBloodPressure
   drivetrain:subject obo:HTN_00000000 ;
 .
 ontologies:exomeSequenceProcessToDNAExtract
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OBI_0001051 ;
   drivetrain:predicate obo:OBI_0000293 ;
@@ -636,7 +636,7 @@ ontologies:exomeSequenceProcessToDNAExtract
   drivetrain:subject obo:OBI_0002118 ;
 .
 ontologies:exomeSequenceProcessToSequenceData
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OBI_0001573 ;
   drivetrain:predicate obo:OBI_0000299 ;
@@ -644,7 +644,7 @@ ontologies:exomeSequenceProcessToSequenceData
   drivetrain:subject obo:OBI_0002118 ;
 .
 ontologies:formProcessToAllele
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object obo:OBI_0001352 ;
   drivetrain:predicate obo:OBI_0000299 ;
@@ -652,7 +652,7 @@ ontologies:formProcessToAllele
   drivetrain:subject obo:OBI_0200000 ;
 .
 ontologies:formProcessToSequenceData
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OBI_0001573 ;
   drivetrain:predicate obo:OBI_0000293 ;
@@ -660,7 +660,7 @@ ontologies:formProcessToSequenceData
   drivetrain:subject obo:OBI_0200000 ;
 .
 ontologies:genderIdentityDatumToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -668,7 +668,7 @@ ontologies:genderIdentityDatumToDataset
   drivetrain:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genderIdentityDatumToGenderIdentityDatumLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:homoSapiensGenderIdentityStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -676,7 +676,7 @@ ontologies:genderIdentityDatumToGenderIdentityDatumLiteralValue
   drivetrain:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genderIdentityDatumToGenderIdentityDatumType
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:GenderIdentityDatumType ;
   drivetrain:predicate rdf:type ;
@@ -684,7 +684,7 @@ ontologies:genderIdentityDatumToGenderIdentityDatumType
   drivetrain:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genderIdentityDatumToHomoSapiens
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:IAO_0000136 ;
@@ -692,7 +692,7 @@ ontologies:genderIdentityDatumToHomoSapiens
   drivetrain:subject ontologies:GenderIdentityDatumOfVariousTypes ;
 .
 ontologies:genomeCridRegistryDenoterToGenomeCrid
-  a drivetrain:ObjectConnectionFromTermRecipe ;
+  a drivetrain:TermToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:singleton-many ;
   drivetrain:object ontologies:TURBO_0000566 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -700,7 +700,7 @@ ontologies:genomeCridRegistryDenoterToGenomeCrid
   drivetrain:subject ontologies:GenomeRegistryOfVariousTypes ;
 .
 ontologies:genomeCridSymbolToGenomeCrid
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000566 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -708,7 +708,7 @@ ontologies:genomeCridSymbolToGenomeCrid
   drivetrain:subject ontologies:TURBO_0000568 ;
 .
 ontologies:genomeCridSymbolToSymbolValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:alleleGenoIdStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -716,7 +716,7 @@ ontologies:genomeCridSymbolToSymbolValue
   drivetrain:subject ontologies:TURBO_0000568 ;
 .
 ontologies:genomeCridToGenomeCridRegistryDenoter
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-singleton ;
   drivetrain:object ontologies:GenomeRegistryOfVariousTypes ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -724,7 +724,7 @@ ontologies:genomeCridToGenomeCridRegistryDenoter
   drivetrain:subject ontologies:TURBO_0000566 ;
 .
 ontologies:genomeCridToGenomeCridSymbol
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000568 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -732,7 +732,7 @@ ontologies:genomeCridToGenomeCridSymbol
   drivetrain:subject ontologies:TURBO_0000566 ;
 .
 ontologies:genomeCridToSpecimen
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OBI_0001479 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -740,7 +740,7 @@ ontologies:genomeCridToSpecimen
   drivetrain:subject ontologies:TURBO_0000566 ;
 .
 ontologies:healthcareEncounterDateToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -748,14 +748,14 @@ ontologies:healthcareEncounterDateToDataset
   drivetrain:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterDateToDateLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:healthcareEncounterDateLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010096 ;
   drivetrain:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterDateToHealthcareEncounterStart
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000511 ;
   drivetrain:predicate obo:IAO_0000136 ;
@@ -763,7 +763,7 @@ ontologies:healthcareEncounterDateToHealthcareEncounterStart
   drivetrain:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterDateToStringLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:healthcareEncounterDateStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010095 ;
@@ -771,7 +771,7 @@ ontologies:healthcareEncounterDateToStringLiteralValue
   drivetrain:subject ontologies:TURBO_0000512 ;
 .
 ontologies:healthcareEncounterIdToRegistryDenoter
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-singleton ;
   drivetrain:object ontologies:HealthcareEncounterRegistryOfVariousTypes ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -779,7 +779,7 @@ ontologies:healthcareEncounterIdToRegistryDenoter
   drivetrain:subject ontologies:TURBO_0000508 ;
 .
 ontologies:healthcareEncounterIdToSymbol
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000509 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -787,7 +787,7 @@ ontologies:healthcareEncounterIdToSymbol
   drivetrain:subject ontologies:TURBO_0000508 ;
 .
 ontologies:healthcareEncounterRegistryDenoterToId
-  a drivetrain:ObjectConnectionFromTermRecipe ;
+  a drivetrain:TermToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:singleton-many ;
   drivetrain:object ontologies:TURBO_0000508 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -795,7 +795,7 @@ ontologies:healthcareEncounterRegistryDenoterToId
   drivetrain:subject ontologies:HealthcareEncounterRegistryOfVariousTypes ;
 .
 ontologies:healthcareEncounterStartToHealthcareEncounter
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OGMS_0000097 ;
   drivetrain:predicate obo:RO_0002223 ;
@@ -803,7 +803,7 @@ ontologies:healthcareEncounterStartToHealthcareEncounter
   drivetrain:subject ontologies:TURBO_0000511 ;
 .
 ontologies:healthcareEncounterSymbolToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -811,7 +811,7 @@ ontologies:healthcareEncounterSymbolToDataset
   drivetrain:subject ontologies:TURBO_0000509 ;
 .
 ontologies:healthcareEncounterSymbolToId
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000508 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -819,7 +819,7 @@ ontologies:healthcareEncounterSymbolToId
   drivetrain:subject ontologies:TURBO_0000509 ;
 .
 ontologies:healthcareEncounterSymbolToSymbolValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:healthcareEncounterSymbolLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -827,14 +827,14 @@ ontologies:healthcareEncounterSymbolToSymbolValue
   drivetrain:subject ontologies:TURBO_0000509 ;
 .
 ontologies:healthcareEncounterToBMI
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object efo:EFO_0004340 ;
   drivetrain:predicate obo:OBI_0000299 ;
   drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToBloodPressureMeasurementProcess
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:VSO_0000006 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -842,7 +842,7 @@ ontologies:healthcareEncounterToBloodPressureMeasurementProcess
   drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToDiagnosis
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object obo:OGMS_0000073 ;
   drivetrain:predicate obo:OBI_0000299 ;
@@ -850,21 +850,21 @@ ontologies:healthcareEncounterToDiagnosis
   drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToLengthMeasurementValueSpecification
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0010138 ;
   drivetrain:predicate ontologies:TURBO_0010139 ;
   drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToMassValueSpecification
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OBI_0001929 ;
   drivetrain:predicate ontologies:TURBO_0010139 ;
   drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:healthcareEncounterToPrescription
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object obo:PDRO_0000001 ;
   drivetrain:predicate obo:OBI_0000299 ;
@@ -872,7 +872,7 @@ ontologies:healthcareEncounterToPrescription
   drivetrain:subject obo:OGMS_0000097 ;
 .
 ontologies:homoSapiensIdToRegistryDenoter
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-singleton ;
   drivetrain:object ontologies:HomoSapiensRegistryOfVariousTypes ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -880,7 +880,7 @@ ontologies:homoSapiensIdToRegistryDenoter
   drivetrain:subject ontologies:TURBO_0010092 ;
 .
 ontologies:homoSapiensIdToSymbol
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000504 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -888,7 +888,7 @@ ontologies:homoSapiensIdToSymbol
   drivetrain:subject ontologies:TURBO_0010092 ;
 .
 ontologies:homoSapiensIdentifierToHomoSapiens
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -896,7 +896,7 @@ ontologies:homoSapiensIdentifierToHomoSapiens
   drivetrain:subject ontologies:TURBO_0010092 ;
 .
 ontologies:homoSapiensRegistryDenoterToId
-  a drivetrain:ObjectConnectionFromTermRecipe ;
+  a drivetrain:TermToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:singleton-many ;
   drivetrain:object ontologies:TURBO_0010092 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -904,7 +904,7 @@ ontologies:homoSapiensRegistryDenoterToId
   drivetrain:subject ontologies:HomoSapiensRegistryOfVariousTypes ;
 .
 ontologies:homoSapiensSymbolToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -912,7 +912,7 @@ ontologies:homoSapiensSymbolToDataset
   drivetrain:subject ontologies:TURBO_0000504 ;
 .
 ontologies:homoSapiensSymbolToSymbolValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:homoSapiensSymbolStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -920,14 +920,14 @@ ontologies:homoSapiensSymbolToSymbolValue
   drivetrain:subject ontologies:TURBO_0000504 ;
 .
 ontologies:homoSapiensToBiobankEncounter
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object ontologies:TURBO_0000527 ;
   drivetrain:predicate obo:RO_0000056 ;
   drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToBiosex
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:PATO_0000047 ;
   drivetrain:predicate obo:RO_0000086 ;
@@ -935,7 +935,7 @@ ontologies:homoSapiensToBiosex
   drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToBirth
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:UBERON_0035946 ;
   drivetrain:predicate ontologies:TURBO_0000303 ;
@@ -943,14 +943,14 @@ ontologies:homoSapiensToBirth
   drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToHealthcareEncounter
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object obo:OGMS_0000097 ;
   drivetrain:predicate obo:RO_0000056 ;
   drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToHeight
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:PATO_0000119 ;
   drivetrain:predicate obo:RO_0000086 ;
@@ -958,7 +958,7 @@ ontologies:homoSapiensToHeight
   drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToInvestigationRole
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-superSingleton ;
   drivetrain:object obo:OBI_0000097 ;
   drivetrain:predicate obo:RO_0000087 ;
@@ -966,7 +966,7 @@ ontologies:homoSapiensToInvestigationRole
   drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToPatientRole
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-superSingleton ;
   drivetrain:object obo:OBI_0000093 ;
   drivetrain:predicate obo:RO_0000087 ;
@@ -974,7 +974,7 @@ ontologies:homoSapiensToPatientRole
   drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToTumor
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object ontologies:TURBO_0010070 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -982,7 +982,7 @@ ontologies:homoSapiensToTumor
   drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:homoSapiensToWeight
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:PATO_0000128 ;
   drivetrain:predicate obo:RO_0000086 ;
@@ -990,7 +990,7 @@ ontologies:homoSapiensToWeight
   drivetrain:subject obo:NCBITaxon_9606 ;
 .
 ontologies:identifierToHealthcareEncounter
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OGMS_0000097 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -998,7 +998,7 @@ ontologies:identifierToHealthcareEncounter
   drivetrain:subject ontologies:TURBO_0000508 ;
 .
 ontologies:identifierToMedicationSymbol
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000562 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -1006,7 +1006,7 @@ ontologies:identifierToMedicationSymbol
   drivetrain:subject ontologies:TURBO_0000561 ;
 .
 ontologies:identifierToPrescription
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:PDRO_0000001 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -1014,7 +1014,7 @@ ontologies:identifierToPrescription
   drivetrain:subject ontologies:TURBO_0000561 ;
 .
 ontologies:instantiationToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:superSingleton-many ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:OBI_0000293 ;
@@ -1022,7 +1022,7 @@ ontologies:instantiationToDataset
   drivetrain:subject ontologies:TURBO_0000522 ;
 .
 ontologies:investigationRoleToBiobankEncounter
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:superSingleton-many ;
   drivetrain:object ontologies:TURBO_0000527 ;
   drivetrain:predicate obo:BFO_0000054 ;
@@ -1030,7 +1030,7 @@ ontologies:investigationRoleToBiobankEncounter
   drivetrain:subject obo:OBI_0000097 ;
 .
 ontologies:lengthMeasurementValueSpecificationToCentimeter
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:UO_0000015 ;
   drivetrain:predicate obo:IAO_0000039 ;
@@ -1038,7 +1038,7 @@ ontologies:lengthMeasurementValueSpecificationToCentimeter
   drivetrain:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1046,14 +1046,14 @@ ontologies:lengthMeasurementValueSpecificationToDataset
   drivetrain:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToHomoSapiens
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:IAO_0000136 ;
   drivetrain:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:PATO_0000119 ;
   drivetrain:predicate obo:IAO_0000221 ;
@@ -1061,7 +1061,7 @@ ontologies:lengthMeasurementValueSpecificationToHomoSapiensHeight
   drivetrain:subject ontologies:TURBO_0010138 ;
 .
 ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:lengthMeasurementDoubleLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -1069,7 +1069,7 @@ ontologies:lengthMeasurementValueSpecificationToLengthMeasurementLiteralValue
   drivetrain:subject ontologies:TURBO_0010138 ;
 .
 ontologies:massMeasurementValueSpecificationToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1077,14 +1077,14 @@ ontologies:massMeasurementValueSpecificationToDataset
   drivetrain:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToHomoSapiens
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:IAO_0000136 ;
   drivetrain:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToHomoSapiensWeight
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:PATO_0000128 ;
   drivetrain:predicate obo:IAO_0000221 ;
@@ -1092,7 +1092,7 @@ ontologies:massMeasurementValueSpecificationToHomoSapiensWeight
   drivetrain:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToKilogram
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:UO_0000009 ;
   drivetrain:predicate obo:IAO_0000039 ;
@@ -1100,7 +1100,7 @@ ontologies:massMeasurementValueSpecificationToKilogram
   drivetrain:subject obo:OBI_0001929 ;
 .
 ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:massMeasurementDoubleLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -1108,7 +1108,7 @@ ontologies:massMeasurementValueSpecificationToMassMeasurementLiteralValue
   drivetrain:subject obo:OBI_0001929 ;
 .
 ontologies:medicationSymbolToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1116,7 +1116,7 @@ ontologies:medicationSymbolToDataset
   drivetrain:subject ontologies:TURBO_0000562 ;
 .
 ontologies:medicationSymbolToMedicationSymbolStringLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:medicationSymbolStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -1124,7 +1124,7 @@ ontologies:medicationSymbolToMedicationSymbolStringLiteralValue
   drivetrain:subject ontologies:TURBO_0000562 ;
 .
 ontologies:medicationSymbolToidentifier
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000561 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1132,7 +1132,7 @@ ontologies:medicationSymbolToidentifier
   drivetrain:subject ontologies:TURBO_0000562 ;
 .
 ontologies:patientRoleToHealthcareEncounter
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:superSingleton-many ;
   drivetrain:object obo:OGMS_0000097 ;
   drivetrain:predicate obo:BFO_0000054 ;
@@ -1140,7 +1140,7 @@ ontologies:patientRoleToHealthcareEncounter
   drivetrain:subject obo:OBI_0000093 ;
 .
 ontologies:prescriptionToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1148,21 +1148,21 @@ ontologies:prescriptionToDataset
   drivetrain:subject obo:PDRO_0000001 ;
 .
 ontologies:prescriptionToDrug
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:DrugTermOfVariousTypes ;
   drivetrain:predicate obo:IAO_0000142 ;
   drivetrain:subject obo:PDRO_0000001 ;
 .
 ontologies:prescriptionToMedicationOrderNameStringLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:medicationOrderNameStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
   drivetrain:subject obo:PDRO_0000001 ;
 .
 ontologies:raceIdentityDatumToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1170,7 +1170,7 @@ ontologies:raceIdentityDatumToDataset
   drivetrain:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:raceIdentityDatumToHomoSapiens
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:IAO_0000136 ;
@@ -1178,7 +1178,7 @@ ontologies:raceIdentityDatumToHomoSapiens
   drivetrain:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:raceIdentityDatumToRaceIdentityDatumLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:homoSapiensRaceIdentityStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -1186,7 +1186,7 @@ ontologies:raceIdentityDatumToRaceIdentityDatumLiteralValue
   drivetrain:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:raceIdentityDatumToRaceIdentityDatumType
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:RaceIdentityDatumType ;
   drivetrain:predicate rdf:type ;
@@ -1194,7 +1194,7 @@ ontologies:raceIdentityDatumToRaceIdentityDatumType
   drivetrain:subject ontologies:RaceIdentityDatumOfVariousTypes ;
 .
 ontologies:symbolToHomoSapiensId
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0010092 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1202,7 +1202,7 @@ ontologies:symbolToHomoSapiensId
   drivetrain:subject ontologies:TURBO_0000504 ;
 .
 ontologies:systolicBloodPressureMeasurementDatumToBloodPressure
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:VSO_0000004 ;
   drivetrain:predicate obo:IAO_0000221 ;
@@ -1210,7 +1210,7 @@ ontologies:systolicBloodPressureMeasurementDatumToBloodPressure
   drivetrain:subject obo:HTN_00000001 ;
 .
 ontologies:tumorCridSymbolToSymbolLiteralValue
-  a drivetrain:DatatypeConnectionRecipe ;
+  a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:tumorSymbolStringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
@@ -1218,7 +1218,7 @@ ontologies:tumorCridSymbolToSymbolLiteralValue
   drivetrain:subject obo:IAO_0000577 ;
 .
 ontologies:tumorCridSymbolToTumorCrid
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0010188 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1226,7 +1226,7 @@ ontologies:tumorCridSymbolToTumorCrid
   drivetrain:subject obo:IAO_0000577 ;
 .
 ontologies:tumorCridToTumor
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0010070 ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -1234,7 +1234,7 @@ ontologies:tumorCridToTumor
   drivetrain:subject ontologies:TURBO_0010188 ;
 .
 ontologies:tumorCridToDataset
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
   drivetrain:object obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1242,7 +1242,7 @@ ontologies:tumorCridToDataset
   drivetrain:subject ontologies:TURBO_0010188 ;
 .
 ontologies:datasetToTumorCrid
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:subject obo:IAO_0000100 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -1250,7 +1250,7 @@ ontologies:datasetToTumorCrid
   drivetrain:object ontologies:TURBO_0010188 ;
 .
 ontologies:tumorCridToTumorCridSymbol
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:IAO_0000577 ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -1258,7 +1258,7 @@ ontologies:tumorCridToTumorCridSymbol
   drivetrain:subject ontologies:TURBO_0010188 ;
 .
 ontologies:tumorCridToTumorRegistryDenoter
-  a drivetrain:ObjectConnectionToTermRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TumorRegistryDenoterOfVariousTypes ;
   drivetrain:predicate obo:BFO_0000051 ;
@@ -1266,7 +1266,7 @@ ontologies:tumorCridToTumorRegistryDenoter
   drivetrain:subject ontologies:TURBO_0010188 ;
 .
 ontologies:tumorRegistryDenoterToTumorCrid
-  a drivetrain:ObjectConnectionFromTermRecipe ;
+  a drivetrain:TermToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0010188 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1274,7 +1274,7 @@ ontologies:tumorRegistryDenoterToTumorCrid
   drivetrain:subject ontologies:TumorRegistryDenoterOfVariousTypes ;
 .
 ontologies:tumorToHomoSapiens
-  a drivetrain:ObjectConnectionToInstanceRecipe ;
+  a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:BFO_0000050 ;
@@ -1306,7 +1306,7 @@ ontologies:HealthcareEncounterTypeCodeColumnTerm
 ontologies:HealthcareEncounterTableProvenanceTerm
   a drivetrain:MultiObjectDescriber ;
 .
-drivetrain:DatatypeConnectionRecipe
+drivetrain:InstanceToLiteralRecipe
   a owl:Class ;
   rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe ;
 .
@@ -1352,17 +1352,25 @@ ontologies:IcdTermOfVariousTypes
 drivetrain:MultiObjectDescriber
   a owl:Class ;
 .
-drivetrain:objectConnectionRecipe
+drivetrain:ObjectConnectionRecipe
   a owl:Class ;
   rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe ;
 .
-drivetrain:ObjectConnectionToTermRecipe
+drivetrain:InstanceToTermRecipe
   a owl:Class ;
-  rdfs:subClassOf drivetrain:objectConnectionRecipe ;
+  rdfs:subClassOf drivetrain:ObjectConnectionRecipe ;
 .
-drivetrain:ObjectConnectionToInstanceRecipe
+drivetrain:TermToInstanceRecipe
   a owl:Class ;
-  rdfs:subClassOf drivetrain:objectConnectionRecipe ;
+  rdfs:subClassOf drivetrain:ObjectConnectionRecipe ;
+.
+drivetrain:InstanceToLiteralRecipe
+  a owl:Class ;
+  rdfs:subClassOf drivetrain:ObjectConnectionRecipe ;
+.
+drivetrain:InstanceToInstanceRecipe
+  a owl:Class ;
+  rdfs:subClassOf drivetrain:ObjectConnectionRecipe ;
 .
 ontologies:RaceIdentityDatumOfVariousTypes
   a drivetrain:MultiObjectDescriber ;

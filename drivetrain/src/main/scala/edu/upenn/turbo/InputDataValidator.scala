@@ -37,19 +37,19 @@ object InputDataValidator extends ProjectwideGlobals
                 ))
             {
                 val graphsFromNamedClause = helper.buildFromNamedGraphsClauseFromList(graphs)
-                if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionToTermRecipe")
+                if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe")
                 {
                     validateTermAgainstSubject(graphsFromNamedClause, input)
                 }
-                else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionFromTermRecipe")
+                else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe")
                 {
                     validateTermAgainstObject(graphsFromNamedClause, input)
                 }
-                else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/DatatypeConnectionRecipe")
+                else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe")
                 {
                     validateLiteralAgainstSubject(graphsFromNamedClause, input)
                 }
-                else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/ObjectConnectionToInstanceRecipe")
+                else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
                 {
                     if (input(REQUIREMENT.toString).toString == "https://github.com/PennTURBO/Drivetrain/eitherSubjectOrObjectExists")
                     {
