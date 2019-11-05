@@ -297,7 +297,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
   
               <$process> drivetrain:removes ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              <$process> drivetrain:inputNamedGraph ?$GRAPH .
+              <$process> drivetrain:outputNamedGraph ?$GRAPH .
               ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
               ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
               ?$CONNECTIONNAME drivetrain:object ?$OBJECT .

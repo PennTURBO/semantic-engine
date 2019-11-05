@@ -494,54 +494,17 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
     
     test("generated query matched expected query - healthcare expansion")
     {
-        var expectedQueryListBuffer = new ArrayBuffer[String]
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
-        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess")
-        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
-        val process = query.process
-        for (a <- healthcareQuery.replaceAll(" ","").split("\\n"))
-        {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
-            expectedQueryListBuffer += replacement
-        }
-        var expectedQueryList = expectedQueryListBuffer.toArray
-        
-        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", healthcareQuery) should be (true) 
     }
     
     test("generated query matched expected query - diagnosis expansion")
     {
-        var expectedQueryListBuffer = new ArrayBuffer[String]
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess")
-        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess")
-        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
-        val process = query.process
-        for (a <- diagnosisQuery.replaceAll(" ","").split("\\n"))
-        {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
-            expectedQueryListBuffer += replacement
-        }
-        var expectedQueryList = expectedQueryListBuffer.toArray
-        
-        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", diagnosisQuery) should be (true) 
     }
     
     test("generated query matched expected query - medications expansion")
     {
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess")
-        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess")
-        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
-        val process = query.process
-        var expectedQueryListBuffer = new ArrayBuffer[String]
-        
-        for (a <- medicationQuery.replaceAll(" ","").split("\\n"))
-        {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
-            expectedQueryListBuffer += replacement
-        }
-        var expectedQueryList = expectedQueryListBuffer.toArray
-        
-        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", medicationQuery) should be (true) 
     }
     
     test("hc encounter with all fields")

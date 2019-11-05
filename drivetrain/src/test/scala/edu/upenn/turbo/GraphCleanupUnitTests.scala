@@ -16,7 +16,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
     
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
-    val scBbEncToScPersonCleanupExpectedQuery: String = s"""
+    val expectedQuery: String = s"""
       DELETE {
       GRAPH <$expandedNamedGraph> {
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010133> ?TURBO_0010161 .
@@ -60,18 +60,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
   
     test("generated biobank encounter cleanup query matched expected query")
     {
-        var expectedQueryListBuffer = new ArrayBuffer[String]
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
-        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
-        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
-        val process = query.process
-        for (a <- scBbEncToScPersonCleanupExpectedQuery.replaceAll(" ","").split("\\n"))
-        {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
-            expectedQueryListBuffer += replacement
-        }
-        var expectedQueryList = expectedQueryListBuffer.toArray
-        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess", expectedQuery) should be (true) 
     }
     
     test ("remove SC bb enc to SC person link from expanded graph")

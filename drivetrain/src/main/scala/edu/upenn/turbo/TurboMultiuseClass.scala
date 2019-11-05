@@ -841,4 +841,23 @@ class TurboMultiuseClass extends Enumeration with Matchers
         }
         newGraphString
     }
+    
+    def checkGeneratedQueryAgainstMatchedQuery(processSpec: String, expectedQuery: String, printQuery: Boolean = false): Boolean =
+    {
+        var expectedQueryListBuffer = new ArrayBuffer[String]
+        val processQueryMap = RunDrivetrainProcess.runProcess(processSpec)
+        val query = processQueryMap(processSpec)
+        if (printQuery) logger.info(query.getQuery())
+        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val process = query.process
+        for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
+        {
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
+            expectedQueryListBuffer += replacement
+        }
+        var expectedQueryList = expectedQueryListBuffer.toArray
+        val boolAsString = checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String]
+        if (boolAsString == "true") true
+        else false
+    }
 }

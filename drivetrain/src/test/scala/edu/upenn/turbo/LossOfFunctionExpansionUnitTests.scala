@@ -158,18 +158,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
     
     test("generated query matched expected query")
     {
-        var expectedQueryListBuffer = new ArrayBuffer[String]
-        val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
-        val query = processQueryMap("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess")
-        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
-        val process = query.process
-        for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
-        {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
-            expectedQueryListBuffer += replacement
-        }
-        var expectedQueryList = expectedQueryListBuffer.toArray
-        helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+        helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", expectedQuery) should be (true) 
     }
   
     test("single allele expansion")
