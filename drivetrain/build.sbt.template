@@ -30,7 +30,7 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.1.5" % "runtime",
   "org.eclipse.rdf4j" % "rdf4j-runtime" % "2.2.2",
   "org.scalactic" %% "scalactic" % "3.0.1",
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.1",
   "commons-logging" % "commons-logging" % "1.2",
   "org.ddahl" %% "rscala" % "2.5.3",
   "org.json4s" %% "json4s-jackson" % "3.6.0"
