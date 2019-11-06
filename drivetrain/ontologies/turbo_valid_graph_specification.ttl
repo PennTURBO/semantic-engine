@@ -450,7 +450,6 @@ drivetrain:StartContext a drivetrain:TurboGraphContext .
 obo:IAO_0000416 drivetrain:hasPossibleContext drivetrain:StartContext .
 obo:BFO_0000035 drivetrain:hasPossibleContext drivetrain:StartContext .
 
-
 drivetrain:symbolPartOfCridForEnc
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -511,7 +510,6 @@ drivetrain:EncKeyDenotesTypingDbXrefProv
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
-
 
 ### HCE participation
 
@@ -1978,7 +1976,6 @@ drivetrain:RxSourcedenTerm
   a drivetrain:MultiObjectDescriber ;
 .
 
-
 ### Rx parthood
 
 drivetrain:EncHsoRx
@@ -2135,6 +2132,39 @@ drivetrain:RxKeyDenotesProv4Aboutness
 drivetrain:RxAboutnessAxiomContext a drivetrain:TurboGraphContext .
 owl:Axiom drivetrain:hasPossibleContext drivetrain:RxAboutnessAxiomContext . 
 ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:RxAboutnessAxiomContext .
+
+###
+
+drivetrain:WrittenNotDispensedLiteral a drivetrain:TurboGraphLiteralValue .
+drivetrain:birth_datetime_DateLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:condition_occurrence_id_IntegerLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:condition_start_datetime_DateLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:condition_type_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:drug_code_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:encounter_cridsym_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:encounter_end_datetime_DateLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:encounter_keysym_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:encounter_start_datetime_DateLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:encounter_type_code_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:gender_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:hce_id_IntegerLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:measurement_datetime_DateLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:measurement_id_IntegerLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:measurement_source_concept_id_IntegerLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:measurement_type_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:measurement_units_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:measurement_vocabulary_id_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:person_cridsym_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:person_keysym_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:preceding_encounter_keysym_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:prescription_id_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:prescription_start_datetime_DateLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:proc_id_IntegerLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:procedure_cridsym_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:procedure_datetime_DateLiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:procedure_type_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:race_LiteralValue a drivetrain:TurboGraphLiteralValue .
+drivetrain:value_as_number_IntegerLiteralValue a drivetrain:TurboGraphLiteralValue .
 
 ###
 
