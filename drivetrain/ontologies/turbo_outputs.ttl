@@ -1,7 +1,7 @@
 # baseURI: https://unnamed/acorn/outputs
 # prefix: outputs
 
-@prefix : <https://unnamed/acorn/post_icbo_synthea_omop_cnp_inputs/> .
+#@prefix : <https://unnamed/acorn/post_icbo_synthea_omop_cnp_inputs/> .
 @prefix properties: <http://turboProperties.org/> .
 @prefix turbo: <http://transformunify.org/ontologies/> .
 
@@ -797,7 +797,7 @@ drivetrain:MentioningProvHasRepresentation
   drivetrain:subjectUsesContext drivetrain:MentionsContext ;
 .
 
-drivetrain:MentioningProvMentionsSnomed
+drivetrain:MentioningProvMentionsCode
   a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
@@ -1637,7 +1637,7 @@ drivetrain:HardcodedDiagSourceden a drivetrain:ObjectConnectionToTermRecipe ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
-drivetrain:DiagMentionsSnomed
+drivetrain:DiagMentionsCode
   a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:CondMentionedClassList ;
@@ -1957,7 +1957,7 @@ drivetrain:RxHasRepresentation
   drivetrain:subject obo:PDRO_0000024 ;
 .
 
-drivetrain:RxMentionsRxNorm
+drivetrain:RxMentionsCode
   a drivetrain:ObjectConnectionToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:RxMentionedClassList ;

@@ -34,7 +34,12 @@ drivetrain:Patients
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOptionalInput drivetrain:PatientCridsymShortcut ;
   drivetrain:hasOptionalInput drivetrain:PatientDobShortcut ;
+  
   drivetrain:hasOptionalInput drivetrain:PatientGidShortcut ;
+  
+  drivetrain:hasRequiredInput drivetrain:GidOmopConceptIds ;
+  drivetrain:hasRequiredInput drivetrain:GidScoGid ;
+  
   drivetrain:hasOptionalInput drivetrain:PatientRidShortcut ;
   drivetrain:hasOutput drivetrain:CridDenotesPatient;
   drivetrain:hasOutput drivetrain:DobAboutSns ;
@@ -64,8 +69,7 @@ drivetrain:Patients
   drivetrain:hasOutput drivetrain:RidPartOfColumn ;
   drivetrain:hasOutput drivetrain:RidTypingRecipe ;
   drivetrain:hasOutput drivetrain:SymbolPartOfCridForPatient ;
-  drivetrain:hasRequiredInput drivetrain:GidOmopConceptIds ;
-  drivetrain:hasRequiredInput drivetrain:GidScoGid ;
+
   drivetrain:hasRequiredInput drivetrain:PatientKeySymShortcut ;
   drivetrain:hasRequiredInput drivetrain:RidOmopConceptIds ;
   drivetrain:hasRequiredInput drivetrain:RidScoStarRid ;
@@ -213,13 +217,18 @@ drivetrain:HealthCareEncounters
   drivetrain:hasOutput drivetrain:EncIdPartOfColumn ;
   drivetrain:hasOutput drivetrain:EncCridsymbHasRepresentation ;
   drivetrain:hasOutput drivetrain:symbolPartOfCridForEnc ;
-  drivetrain:hasRequiredInput drivetrain:EncCridsymShortcut ;
-  drivetrain:hasRequiredInput drivetrain:EncEnddateShortcut ;
+  
   drivetrain:hasRequiredInput drivetrain:EncKeysymShortcut ;
+  drivetrain:hasRequiredInput drivetrain:EncCridsymShortcut ;
+  
+  drivetrain:hasRequiredInput drivetrain:EncStartdateShortcut ;
+  drivetrain:hasRequiredInput drivetrain:EncEnddateShortcut ;
+  
+  drivetrain:hasRequiredInput drivetrain:EncTypeShortcut ;
+  
   drivetrain:hasRequiredInput drivetrain:EncOmopConceptIds ;
   drivetrain:hasRequiredInput drivetrain:EncScoStarEnc ;
-  drivetrain:hasRequiredInput drivetrain:EncStartdateShortcut ;
-  drivetrain:hasRequiredInput drivetrain:EncTypeShortcut ;
+
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:HceParticipation ;
@@ -478,7 +487,7 @@ drivetrain:HealthCareProcedures
   drivetrain:hasOutput drivetrain:HardcodedProcSourceden ;
   drivetrain:hasOutput drivetrain:MentioningProvAboutProc ;
   drivetrain:hasOutput drivetrain:MentioningProvHasRepresentation ;
-  drivetrain:hasOutput drivetrain:MentioningProvMentionsSnomed ;
+  drivetrain:hasOutput drivetrain:MentioningProvMentionsCode ;
   drivetrain:hasOutput drivetrain:MentioningProvPartOfCol ;
   drivetrain:hasOutput drivetrain:ProcExpansionSpecification ;
   drivetrain:hasOutput drivetrain:ProcKeyDenotesMentioningProv ;
@@ -947,7 +956,7 @@ drivetrain:KeyDenotesMeasInp
   drivetrain:hasOutput drivetrain:DiagKeySymbHasRepresentation ;
   drivetrain:hasOutput drivetrain:DiagKeySymbPartOfColumn ;
   drivetrain:hasOutput drivetrain:DiagKeySymbPartOfKey ;
-  drivetrain:hasOutput drivetrain:DiagMentionsSnomed ;
+  drivetrain:hasOutput drivetrain:DiagMentionsCode ;
   drivetrain:hasOutput drivetrain:DiagPartOfColumn ;
   drivetrain:hasOutput drivetrain:DiagTmdHasMeasVal ;
   drivetrain:hasOutput drivetrain:DiagTmdPartOfColumn ;
@@ -1112,7 +1121,7 @@ drivetrain:Prescription
   drivetrain:hasOutput drivetrain:RxKeySymbHasRepresentation ;
   drivetrain:hasOutput drivetrain:RxKeySymbPartOfColumn ;
   drivetrain:hasOutput drivetrain:RxKeySymbPartOfKey ;
-  drivetrain:hasOutput drivetrain:RxMentionsRxNorm ;
+  drivetrain:hasOutput drivetrain:RxMentionsCode ;
   drivetrain:hasOutput drivetrain:RxPartOfColumn ;
   drivetrain:hasOutput drivetrain:RxTmdHasMeasVal ;
   drivetrain:hasOutput drivetrain:RxTmdPartOfColumn ;
