@@ -20,7 +20,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
       
       RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
       
-      val expectedBiobankQuery: String = s"""
+      val expectedQuery: String = s"""
         INSERT {
         GRAPH <$expandedNamedGraph> {
         ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/RO_0000086> ?PATO_0000119 .
@@ -111,18 +111,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
       
       test("generated query matched expected query - biobank")
       {
-          var expectedQueryListBuffer = new ArrayBuffer[String]
-          val processQueryMap = RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
-          val query = processQueryMap("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
-          val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
-          val process = query.process
-          for (a <- expectedBiobankQuery.replaceAll(" ","").split("\\n"))
-          {
-              val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
-              expectedQueryListBuffer += replacement
-          }
-          var expectedQueryList = expectedQueryListBuffer.toArray
-          helper.checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String] should be ("true")
+          helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", expectedQuery) should be (true) 
       }
       
       test("biobank encounter entity linking - all fields")

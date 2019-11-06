@@ -8,8 +8,6 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
-import java.io._
-
 
 class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
@@ -62,7 +60,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           turbo:object10 a owl:Class .
               
           ontologies:object1ToObject2
-              a drivetrain:ObjectConnectionToInstanceRecipe ;
+              a drivetrain:InstanceToInstanceRecipe ;
               drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
               drivetrain:object turbo:object2 ;
               drivetrain:predicate turbo:pred1 ;
@@ -70,7 +68,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
             .
             
            ontologies:object1ToObject3
-              a drivetrain:ObjectConnectionToInstanceRecipe ;
+              a drivetrain:InstanceToInstanceRecipe ;
               drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
               drivetrain:object turbo:object3 ;
               drivetrain:predicate turbo:pred2 ;
@@ -78,7 +76,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
             .
             
           ontologies:object2ToObject3
-              a drivetrain:ObjectConnectionToInstanceRecipe ;
+              a drivetrain:InstanceToInstanceRecipe ;
               drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
               drivetrain:object turbo:object3 ;
               drivetrain:predicate turbo:pred3 ;
@@ -120,7 +118,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object1ToObject2_2
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
                     drivetrain:object turbo:object2 ;
                     drivetrain:predicate turbo:pred5 ;
@@ -155,7 +153,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
                     drivetrain:object turbo:object4 ;
                     drivetrain:predicate turbo:pred1 ;
@@ -188,7 +186,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
                     drivetrain:object turbo:object4 ;
                     drivetrain:predicate turbo:pred1 ;
@@ -221,7 +219,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-singleton> ;
                     drivetrain:object turbo:object4 ;
                     drivetrain:predicate turbo:pred1 ;
@@ -229,7 +227,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   .
                   
                   ontologies:object2ToObject4
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
                     drivetrain:object turbo:object4 ;
                     drivetrain:predicate turbo:pred1 ;
@@ -263,7 +261,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
                     drivetrain:object turbo:object4 ;
                     drivetrain:predicate turbo:pred3 ;
@@ -271,7 +269,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   .
                   
                   ontologies:object2ToObject5
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
                     drivetrain:object turbo:object5 ;
                     drivetrain:predicate turbo:pred1 ;
@@ -279,7 +277,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   .
                   
                   ontologies:object4ToObject5
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
                     drivetrain:object turbo:object5 ;
                     drivetrain:predicate turbo:pred1 ;
@@ -332,7 +330,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
                     drivetrain:object turbo:object4 ;
                     drivetrain:predicate turbo:pred3 ;
@@ -340,7 +338,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   .
                   
                   ontologies:object2ToObject4_output
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
                     drivetrain:object turbo:object4 ;
                     drivetrain:predicate turbo:pred4 ;
@@ -388,7 +386,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-singleton> ;
                     drivetrain:object turbo:object4 ;
                     drivetrain:predicate turbo:pred3 ;
@@ -396,7 +394,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   .
                   
                   ontologies:object2ToObject4_output
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
                     drivetrain:object turbo:object4 ;
                     drivetrain:predicate turbo:pred4 ;
@@ -444,7 +442,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/thisisntamultiplicity> ;
                     drivetrain:object turbo:object4 ;
                     drivetrain:predicate turbo:pred3 ;
@@ -491,7 +489,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_output
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/thisisntamultiplicity> ;
                     drivetrain:object turbo:object4 ;
                     drivetrain:predicate turbo:pred3 ;
@@ -524,7 +522,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""graphSpecification>
               {
                   ontologies:notPresentConnection
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
                     drivetrain:object turbo:obj1 ;
                     drivetrain:predicate turbo:pred1 ;
@@ -555,7 +553,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""graphSpecification>
               {
                   ontologies:object1ToObject4
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
                     drivetrain:subject turbo:object1 ;
                     drivetrain:predicate turbo:pred1 ;
@@ -599,7 +597,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               Graph <$defaultPrefix"""+s"""graphSpecification>
               {
                   ontologies:object1ToObject3
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
                     drivetrain:subject turbo:object1 ;
                     drivetrain:predicate turbo:pred1 ;
@@ -608,7 +606,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   .
  
                   ontologies:object1ToObject4
-                    a drivetrain:ObjectConnectionToInstanceRecipe ;
+                    a drivetrain:InstanceToInstanceRecipe ;
                     drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
                     drivetrain:subject turbo:object1 ;
                     drivetrain:predicate turbo:pred1 ;
@@ -628,7 +626,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                        drivetrain:hasOutput ontologies:object1ToObject4 ;
                        drivetrain:hasRequiredInput ontologies:object1ToObject2 ;
                    .
-                   ontologies:object1ToObject2 a drivetrain:ObjectConnectionToInstanceRecipe ;
+                   ontologies:object1ToObject2 a drivetrain:InstanceToInstanceRecipe ;
                        drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
                        drivetrain:subject turbo:object1 ;
                        drivetrain:predicate turbo:pred1 ;
@@ -757,6 +755,54 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         catch
         {
             case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Process http://transformunify.org/ontologies/myProcess1 has duplicate properties")
+        }
+    }
+    
+    test("datatype connection has class instance object")  
+    {
+       val insert = s"""INSERT DATA { Graph <$defaultPrefix""" + s"""instructionSet> {
+          ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4 .
+          ontologies:object2ToObject4 a drivetrain:InstanceToLiteralRecipe .
+          ontologies:object2ToObject4 drivetrain:subject turbo:object2 .
+          ontologies:object2ToObject4 drivetrain:predicate turbo:predicate4 .
+          ontologies:object2ToObject4 drivetrain:object turbo:object4 .
+          ontologies:object2ToObject4 drivetrain:multiplicity drivetrain:1-1 .
+          }}"""
+       update.updateSparql(gmCxn, insert)
+       
+       try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The object of connection http://transformunify.org/ontologies/object2ToObject4 is not a literal, but the connection is a datatype connection.")
+        }
+    }
+    
+    test("datatype connection has describer object")  
+    {
+       val insert = s"""INSERT DATA { Graph <$defaultPrefix""" + s"""instructionSet> {
+          ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4 .
+          ontologies:object2ToObject4 a drivetrain:InstanceToLiteralRecipe .
+          ontologies:object2ToObject4 drivetrain:subject turbo:object2 .
+          ontologies:object2ToObject4 drivetrain:predicate turbo:predicate4 .
+          ontologies:object2ToObject4 drivetrain:object turbo:describer1 .
+          ontologies:object2ToObject4 drivetrain:multiplicity drivetrain:1-1 .
+          
+          turbo:describer1 a drivetrain:MultiObjectDescriber .
+          }}"""
+       update.updateSparql(gmCxn, insert)
+       
+       try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The object of connection http://transformunify.org/ontologies/object2ToObject4 is not a literal, but the connection is a datatype connection.")
         }
     }
 }

@@ -43,6 +43,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
     def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String): HashMap[String, PatternMatchQuery] =
     {
+        GraphModelValidator.validateGraphModelTerms()
+        GraphModelValidator.validateGraphSpecificationAgainstOntology()
+        
         var processQueryMap = new HashMap[String, PatternMatchQuery]
         for (processSpecification <- processSpecifications)
         {
@@ -178,10 +181,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-              Values ?$CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionToTermRecipe 
-                                            drivetrain:ObjectConnectionToInstanceRecipe
-                                            drivetrain:DatatypeConnectionRecipe
-                                            drivetrain:ObjectConnectionFromTermRecipe}
+              Values ?$CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
+                                            drivetrain:InstanceToInstanceRecipe
+                                            drivetrain:InstanceToLiteralRecipe
+                                            drivetrain:TermToInstanceRecipe}
               Values ?$INPUTTYPE {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
               <$process> ?$INPUTTYPE ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
@@ -238,13 +241,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Optional
               {
                   ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionFromTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
                   BIND (true AS ?$SUBJECTTYPE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionToTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
                   BIND (true AS ?$OBJECTTYPE)
               }
               Optional
@@ -257,7 +260,18 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                   ?suffix a drivetrain:PredicateSuffixSymbol .
                   ?suffix drivetrain:usesSparqlOperator ?$SUFFIXOPERATOR .
               }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
+              Optional
+              {
+                  Values ?graphLiteral {drivetrain:TurboGraphStringLiteralValue
+                                        drivetrain:TurboGraphDateLiteralValue
+                                        drivetrain:TurboGraphLiteralValue
+                                        drivetrain:TurboGraphDoubleLiteralValue
+                                        drivetrain:TurboGraphIntegerLiteralValue
+                                        drivetrain:TurboGraphBooleanLiteralValue}
+                  ?$OBJECT a ?graphLiteral .
+                  BIND (true AS ?$OBJECTALITERAL)
+              }
+              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
          }
          
          """
@@ -276,14 +290,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-              Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionToTermRecipe 
-                                          drivetrain:ObjectConnectionToInstanceRecipe
-                                          drivetrain:DatatypeConnectionRecipe
-                                          drivetrain:ObjectConnectionFromTermRecipe}
+              Values ?CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
+                                          drivetrain:InstanceToInstanceRecipe
+                                          drivetrain:InstanceToLiteralRecipe
+                                          drivetrain:TermToInstanceRecipe}
   
               <$process> drivetrain:removes ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              <$process> drivetrain:inputNamedGraph ?$GRAPH .
+              <$process> drivetrain:outputNamedGraph ?$GRAPH .
               ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
               ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
               ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
@@ -300,16 +314,16 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Optional
               {
                   ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionFromTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
                   BIND (true AS ?$SUBJECTTYPE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionToTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
                   BIND (true AS ?$OBJECTTYPE)
               }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
+              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
          }
          
          """
@@ -328,10 +342,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          Where
          {
               Values ?INPUTTO {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
-              Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionToTermRecipe 
-                                            drivetrain:ObjectConnectionToInstanceRecipe
-                                            drivetrain:DatatypeConnectionRecipe
-                                            drivetrain:ObjectConnectionFromTermRecipe}
+              Values ?CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
+                                            drivetrain:InstanceToInstanceRecipe
+                                            drivetrain:InstanceToLiteralRecipe
+                                            drivetrain:TermToInstanceRecipe}
               <$process> drivetrain:hasOutput ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
               <$process> drivetrain:outputNamedGraph ?$GRAPH .
@@ -387,16 +401,27 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Optional
               {
                   ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionFromTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
                   BIND (true AS ?$SUBJECTTYPE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:ObjectConnectionToTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
                   BIND (true AS ?$OBJECTTYPE)
               }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERAL)
+              Optional
+              {
+                  Values ?graphLiteral {drivetrain:TurboGraphStringLiteralValue
+                                        drivetrain:TurboGraphDateLiteralValue
+                                        drivetrain:TurboGraphLiteralValue
+                                        drivetrain:TurboGraphDoubleLiteralValue
+                                        drivetrain:TurboGraphIntegerLiteralValue
+                                        drivetrain:TurboGraphBooleanLiteralValue}
+                  ?$OBJECT a ?graphLiteral .
+                  BIND (true AS ?$OBJECTALITERAL)
+              }
+              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
          }
          
          """
@@ -412,13 +437,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         setGlobalUUID(globalUUID)
         setGraphModelConnection(gmCxn)
         setOutputRepositoryConnection(cxn)
-
-        GraphModelValidator.validateGraphModelTerms()
-        GraphModelValidator.validateGraphSpecificationAgainstOntology()
       
         // get list of all processes in order
         val orderedProcessList: ArrayBuffer[String] = getAllProcessesInOrder(gmCxn)
-
+        
         GraphModelValidator.validateProcessesAgainstGraphSpecification(orderedProcessList)
         
         logger.info("Drivetrain will now run the following processes in this order:")

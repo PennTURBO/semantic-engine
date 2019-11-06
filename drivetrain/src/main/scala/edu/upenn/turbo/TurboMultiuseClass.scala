@@ -30,13 +30,14 @@ import java.io.BufferedInputStream
 import java.io.InputStream
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
 import org.eclipse.rdf4j.model.Model
+import org.scalatest._
 
 /**
  * The TurboMultiuseClass contains methods whose functionality is repeatedly used by some component of the Drivetrain application. A few of the methods
  * in this class may be used by the Drivetrain test suite as well. The functions are here to be used and prevent repetitive development. 
  **/
 //change name to something more relevant to the methods inside the class
-class TurboMultiuseClass extends Enumeration
+class TurboMultiuseClass extends Enumeration with Matchers
 {
     val sparqlPrefixes = """
 			PREFIX  :     <http://transformunify.org/ontologies/>
@@ -522,6 +523,39 @@ class TurboMultiuseClass extends Enumeration
         }
     }
     
+    def checkOrderedStringArraysForEquivalency(arr1: Array[String], arr2: Array[String]): Boolean =
+    {
+        var boolToReturn = true
+        val newArr1 = new ArrayBuffer[String]
+        val newArr2 = new ArrayBuffer[String]
+        for (a <- arr1) if (a.length() != 0) newArr1 += a
+        for (a <- arr2) if (a.length() != 0) newArr2 += a
+        if (newArr1.size != newArr2.size) 
+        {
+            logger.info("arrays are not the same size")
+            checkStringArraysForEquivalency(arr1, arr2)
+            boolToReturn = false
+        }
+        else
+        {
+            for (a <- 0 to newArr1.size - 1)
+            {
+                try
+                { 
+                    newArr1(a) should be (newArr2(a))   
+                }
+                catch
+                {
+                    case e: AssertionError => {
+                      logger.info(e.toString) 
+                      boolToReturn = false
+                    }
+                }
+            }
+        }
+        boolToReturn
+    }
+    
     //These 2 globals are associated with the two methods below
     private var nonMatchesArr1: ArrayBuffer[String] = new ArrayBuffer[String]
     private var nonMatchesArr2: ArrayBuffer[String] = new ArrayBuffer[String]
@@ -806,5 +840,24 @@ class TurboMultiuseClass extends Enumeration
             newGraphString = retrieveUriPropertyFromFile(graph.replace("https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/",""))
         }
         newGraphString
+    }
+    
+    def checkGeneratedQueryAgainstMatchedQuery(processSpec: String, expectedQuery: String, printQuery: Boolean = false): Boolean =
+    {
+        var expectedQueryListBuffer = new ArrayBuffer[String]
+        val processQueryMap = RunDrivetrainProcess.runProcess(processSpec)
+        val query = processQueryMap(processSpec)
+        if (printQuery) logger.info(query.getQuery())
+        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val process = query.process
+        for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
+        {
+            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
+            expectedQueryListBuffer += replacement
+        }
+        var expectedQueryList = expectedQueryListBuffer.toArray
+        val boolAsString = checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String]
+        if (boolAsString == "true") true
+        else false
     }
 }

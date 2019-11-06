@@ -102,7 +102,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   {
       logger.info("Updating graph model using file " + graphModelFile)
       val graph = s"$defaultPrefix" + "instructionSet"
-      helper.clearNamedGraph(gmCxn, graph)
+      helper.deleteAllTriplesInDatabase(gmCxn)
       var query = s"INSERT DATA { Graph <$graph> {"
       var prefixes = ""
       val br = io.Source.fromFile(s"ontologies//$graphModelFile")
@@ -127,7 +127,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
       
       logger.info("Updating graph specification using file " + graphSpecFile)
       val graphSpecGraph = s"$defaultPrefix" + "graphSpecification"
-      helper.clearNamedGraph(gmCxn, graphSpecGraph)
       query = s"INSERT DATA { Graph <$graphSpecGraph> {"
       val graphSpecBr = io.Source.fromFile(s"ontologies//$graphSpecFile")
       for (line <- graphSpecBr.getLines())

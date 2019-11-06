@@ -22,7 +22,7 @@ object GraphModelValidator extends ProjectwideGlobals
           """
         //logger.info(select)
         val res = update.querySparqlAndUnpackTuple(gmCxn, select, Array("inputNamedGraph", "outputNamedGraph"))
-        assert (res.size == 1, (if (res.size == 0) s"Process $process does not exist" else s"Process $process has duplicate properties"))
+        assert (res.size == 1, (if (res.size == 0) s"Process $process does not exist, ensure required input and output graphs are present" else s"Process $process has duplicate properties"))
     }
     
     def validateAcornResults(results: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
@@ -64,9 +64,9 @@ object GraphModelValidator extends ProjectwideGlobals
           {
               graph <$defaultPrefix"""+s"""graphSpecification>
               {
-                  Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionFromTermRecipe 
-                                                drivetrain:ObjectConnectionToInstanceRecipe
-                                                drivetrain:ObjectConnectionToTermRecipe
+                  Values ?CONNECTIONRECIPETYPE {drivetrain:TermToInstanceRecipe 
+                                                drivetrain:InstanceToInstanceRecipe
+                                                drivetrain:InstanceToTermRecipe
                                                 }
                   ?recipe a ?CONNECTIONRECIPETYPE .
                   ?recipe drivetrain:object ?object .
@@ -97,10 +97,10 @@ object GraphModelValidator extends ProjectwideGlobals
           {
               graph <$defaultPrefix"""+s"""graphSpecification>
               {
-                  Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionFromTermRecipe 
-                                                drivetrain:ObjectConnectionToInstanceRecipe
-                                                drivetrain:ObjectConnectionToTermRecipe
-                                                drivetrain:DatatypeConnectionRecipe
+                  Values ?CONNECTIONRECIPETYPE {drivetrain:TermToInstanceRecipe 
+                                                drivetrain:InstanceToInstanceRecipe
+                                                drivetrain:InstanceToTermRecipe
+                                                drivetrain:InstanceToLiteralRecipe
                                                 }
                   ?recipe a ?CONNECTIONRECIPETYPE .
                   ?recipe drivetrain:subject ?subject .
@@ -142,10 +142,10 @@ object GraphModelValidator extends ProjectwideGlobals
                     ?recipe drivetrain:object ?object .
                     ?recipe drivetrain:multiplicity ?multiplicity .
                     
-                    Filter (?recipeType IN (drivetrain:ObjectConnectionToInstanceRecipe,
-                                            drivetrain:ObjectConnectionToTermRecipe,
-                                            drivetrain:ObjectConnectionFromTermRecipe,
-                                            drivetrain:DatatypeConnectionRecipe))
+                    Filter (?recipeType IN (drivetrain:InstanceToInstanceRecipe,
+                                            drivetrain:InstanceToTermRecipe,
+                                            drivetrain:TermToInstanceRecipe,
+                                            drivetrain:InstanceToLiteralRecipe))
                 }
             }
           """
@@ -239,10 +239,10 @@ object GraphModelValidator extends ProjectwideGlobals
               {
                   ?subject a ?type .
                   Filter (?type NOT IN (
-                      drivetrain:ObjectConnectionToTermRecipe,
-                      drivetrain:ObjectConnectionToInstanceRecipe,
-                      drivetrain:ObjectConnectionFromTermRecipe,
-                      drivetrain:DatatypeConnectionRecipe,
+                      drivetrain:InstanceToTermRecipe,
+                      drivetrain:InstanceToInstanceRecipe,
+                      drivetrain:TermToInstanceRecipe,
+                      drivetrain:InstanceToLiteralRecipe,
                       drivetrain:MultiObjectDescriber,
                       owl:Class,
                       drivetrain:TurboGraphContext,
@@ -256,11 +256,12 @@ object GraphModelValidator extends ProjectwideGlobals
                       owl:DatatypeProperty,
                       drivetrain:TurboGraphStringLiteralValue,
                       drivetrain:TurboGraphDateLiteralValue,
-                      drivetrain:TurboGraphMultiplicityRule,
+                      drivetrain:TurboGraphLiteralValue,
                       drivetrain:TurboGraphDoubleLiteralValue,
                       drivetrain:TurboGraphIntegerLiteralValue,
                       drivetrain:TurboGraphBooleanLiteralValue,
                       drivetrain:TurboGraphRequirementSpecification,
+                      drivetrain:TurboGraphMultiplicityRule,
                       drivetrain:PredicateSuffixSymbol
                   ))
               }
@@ -344,7 +345,7 @@ object GraphModelValidator extends ProjectwideGlobals
                       ?connection drivetrain:subject ?class .
                       Minus
                       {
-                          ?connection a drivetrain:ObjectConnectionFromTermRecipe ;
+                          ?connection a drivetrain:TermToInstanceRecipe ;
                       }
                   }
                   ?class a owl:Class .
@@ -361,7 +362,7 @@ object GraphModelValidator extends ProjectwideGlobals
                       ?connection drivetrain:object ?class .
                       Minus
                       {
-                          ?connection a drivetrain:ObjectConnectionToTermRecipe ;
+                          ?connection a drivetrain:InstanceToTermRecipe ;
                       }
                   }
                   ?class a owl:Class .
@@ -393,10 +394,10 @@ object GraphModelValidator extends ProjectwideGlobals
           {
               Graph <$defaultPrefix"""+s"""graphSpecification>
               {
-                  Values ?CONNECTIONRECIPETYPE {drivetrain:ObjectConnectionToTermRecipe 
-                                            drivetrain:ObjectConnectionToInstanceRecipe
-                                            drivetrain:DatatypeConnectionRecipe
-                                            drivetrain:ObjectConnectionFromTermRecipe}
+                  Values ?CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
+                                            drivetrain:InstanceToInstanceRecipe
+                                            drivetrain:InstanceToLiteralRecipe
+                                            drivetrain:TermToInstanceRecipe}
                   ?recipe a ?CONNECTIONRECIPETYPE .
               }
               Minus
