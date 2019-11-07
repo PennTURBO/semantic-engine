@@ -198,7 +198,7 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (rowResult(OBJECTCONTEXT.toString) != null) objectContext = rowResult(OBJECTCONTEXT.toString).toString
             if (rowResult(OBJECTADESCRIBER.toString) != null) 
             {
-                if (!usedVariables.contains(thisObject))
+                if (!usedVariables.contains(thisObject) && rowResult(OBJECTRULE.toString) == null)
                 {
                     val ranges = helper.getDescriberRangesAsList(gmCxn, thisObject)
                     assert (ranges.size == 1, s"MultiObjectDescriber $thisObject is not present as an input and has a range list size that is not 1")
@@ -206,7 +206,7 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 }
                 objectADescriber = true
             }
-            if (rowResult(SUBJECTADESCRIBER.toString) != null)
+            if (rowResult(SUBJECTADESCRIBER.toString) != null && rowResult(SUBJECTRULE.toString) == null)
             {
                 if (!usedVariables.contains(thisSubject))
                 {
@@ -684,7 +684,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
         if (multiplicityEnforcer == "" || !useAnyQualified)
         {
-            if (!useAnyQualified) multiplicityEnforcer = ""
+            multiplicityEnforcer = ""
             for (conn <- outputOneToOneConnections(changeAgent))
             {
                 if (usedVariables.contains(conn) && usedVariables(conn)) 
