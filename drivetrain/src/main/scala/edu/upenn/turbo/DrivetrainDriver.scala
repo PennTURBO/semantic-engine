@@ -58,7 +58,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       RunDrivetrainProcess.setGraphModelConnection(gmCxn)
                       RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
                       GraphModelValidator.validateGraphModelTerms()
-                      //RunDrivetrainProcess.validateGraphSpecificationAgainstOntology()
+                      GraphModelValidator.validateGraphSpecificationAgainstOntology()
                       val query = RunDrivetrainProcess.createPatternMatchQuery(args(1))
                       if (query != null)
                       {
@@ -80,7 +80,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
                   RunDrivetrainProcess.setGlobalUUID(globalUUID)
                   GraphModelValidator.validateGraphModelTerms()
-                  //RunDrivetrainProcess.validateGraphSpecificationAgainstOntology()
+                  GraphModelValidator.validateGraphSpecificationAgainstOntology()
                   val thisProcess = helper.getProcessNameAsUri(args(0))
                   RunDrivetrainProcess.runProcess(thisProcess)   
               }

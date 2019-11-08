@@ -1003,6 +1003,7 @@ drivetrain:tumorCridHasPartTumorCridSymbol
   drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject obo:IAO_0000578 ;
   drivetrain:subjectUsesContext drivetrain:TumorCridContext ;
+  drivetrain:objectUsesContext drivetrain:TumorCridContext ;
 .
 drivetrain:tumorCridHasPartRegDen
   a drivetrain:InstanceToTermRecipe ;
@@ -1325,6 +1326,7 @@ drivetrain:ZygosityClassList
   drivetrain:range ontologies:TURBO_0000591 ;
 .
 drivetrain:GenomeRegistryClassList a drivetrain:MultiObjectDescriber.
+drivetrain:LossOfFunctionCridContext a drivetrain:TurboGraphContext .
 
 ### health care procedure participation
 
@@ -2134,7 +2136,6 @@ drivetrain:diagnosisHasRegistryString
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:diagnosis_RegistryStringLiteral ;
   drivetrain:predicate ontologies:TURBO_0006515 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject obo:OGMS_0000073 ;
 .
 drivetrain:DiagPartOfColumn
@@ -2666,6 +2667,17 @@ drivetrain:encounter_start_datetime_StringLiteralValue a drivetrain:TurboGraphSt
 drivetrain:diagnosis_CodingSequence a drivetrain:TurboGraphIntegerLiteralValue .
 drivetrain:diagnosis_PrimaryBoolean a drivetrain:TurboGraphBooleanLiteralValue .
 drivetrain:diagnosis_RegistryStringLiteral a drivetrain:TurboGraphStringLiteralValue .
+
+drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
+drivetrain:1-many a drivetrain:TurboGraphMultiplicityRule .
+drivetrain:many-1 a drivetrain:TurboGraphMultiplicityRule .
+drivetrain:many-singleton a drivetrain:TurboGraphMultiplicityRule .
+drivetrain:singleton-many a drivetrain:TurboGraphMultiplicityRule .
+
+drivetrain:eitherSubjectOrObjectExists a drivetrain:TurboGraphRequirementSpecification .
+drivetrain:subjectExists a drivetrain:TurboGraphRequirementSpecification .
+drivetrain:objectExists a drivetrain:TurboGraphRequirementSpecification .
+
 ###
 
 
