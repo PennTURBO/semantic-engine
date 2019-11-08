@@ -145,9 +145,6 @@ pmbb:BiobankEncounterExpansionProcess
   drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToSymbolValue ;
   drivetrain:hasOutput ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter ;
   drivetrain:hasOutput ontologies:shortcutMeasurementToExpandedMeasurement ;
-  drivetrain:hasOutput drivetrain:biobankEncounterDateIsAboutBiobankEncounterStart ;
-  drivetrain:hasOutput drivetrain:biobankEncounterDateHasDateRepresentation ;
-  drivetrain:hasOutput drivetrain:biobankEncounterDateHasStringRepresentation ;
   drivetrain:hasOutput drivetrain:biobankEncounterCridDenotesBiobankEncounter ;
   drivetrain:hasOutput drivetrain:biobankEncounterCridHasPartRegDen ;
   drivetrain:hasOutput drivetrain:biobankEncounterCridHasPartSymbol ;
@@ -163,6 +160,12 @@ pmbb:BiobankEncounterExpansionProcess
   drivetrain:hasOutput drivetrain:MeasHasValspec ;
   drivetrain:hasOutput drivetrain:ValspecHasSpecVal ;
   drivetrain:hasOutput drivetrain:MeasHasMul ;
+  drivetrain:hasOutput drivetrain:EncStartDatePartOfColumn ;
+  drivetrain:hasOutput drivetrain:KeyDenotesEncStartDate ;
+  drivetrain:hasOutput drivetrain:EncStartingTmdHasMeasVal ;
+  drivetrain:hasOutput drivetrain:EncStartingTmdHasRawStringVal ;
+  drivetrain:hasOutput drivetrain:StartingTmdAboutProcbound ;
+  drivetrain:hasOutput drivetrain:ProcboundStartsBiobankEnc ;
 .
 pmbb:HealthcareEncounterExpansionProcess
   drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
@@ -249,8 +252,6 @@ pmbb:MedicationExpansionProcess
   drivetrain:hasOptionalInput ontologies:shortcutPrescriptionToDrugTerm ;
   drivetrain:hasOptionalInput ontologies:shortcutPrescriptionToMedicationOrderName ;
   drivetrain:hasRequiredInput ontologies:shortcutPrescriptionToSymbolValue ;
-  drivetrain:hasRequiredInput ontologies:shortcutPrescriptionToRegistry ;
-  drivetrain:hasRequiredInput ontologies:shortcutPrescriptionToColumnName ;
   drivetrain:hasOutput ontologies:shortcutPrescriptionToExpandedPrescription ;
   drivetrain:hasOutput drivetrain:KeyDenotesRx ;
   drivetrain:hasOutput drivetrain:RxKeySymbPartOfKey ;
@@ -438,14 +439,14 @@ drivetrain:BiobankEncounterMeasurementsOptionalGroup
 ontologies:shortcutBiobankEncounterToDateLiteralValue
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object drivetrain:biobankEncDate_DateLiteralValue ;
+  drivetrain:object drivetrain:encounter_start_datetime_DateLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0000625 ;
   drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToDateStringValue
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object drivetrain:biobankEncDate_StringLiteralValue ;
+  drivetrain:object drivetrain:encounter_start_datetime_StringLiteralValue ;
   drivetrain:objectRequiredToCreate ontologies:TURBO_0000531 ;
   drivetrain:objectRequiredToCreate ontologies:TURBO_0000532 ;
   drivetrain:predicate ontologies:TURBO_0000624 ;
@@ -496,7 +497,7 @@ ontologies:encCodeTypeProvenanceOptionalGroup
 ontologies:shortcutDiagnosisToPrimaryKey
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object drivetrain:condition_occurrence_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:condition_occurrence_id_StringLiteralValue ;
   drivetrain:predicate drivetrain:scDiag2PrimaryKey ;
   drivetrain:subject ontologies:TURBO_0010160 ;
 .
@@ -706,22 +707,6 @@ ontologies:shortcutHomoSapiensToRaceIdentityValue
   drivetrain:predicate ontologies:TURBO_0010100 ;
   drivetrain:subject ontologies:TURBO_0010161 ;
 .
-ontologies:shortcutPrescriptionToRegistry
-  a drivetrain:InstanceToTermRecipe ;
-  drivetrain:multiplicity drivetrain:1-1;
-  drivetrain:subject ontologies:TURBO_0010159 ;
-  drivetrain:predicate drivetrain:scPrescription2Registry ;
-  drivetrain:object drivetrain:RxSourcedenTerm ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
-.
-ontologies:shortcutPrescriptionToColumnName
-  a drivetrain:InstanceToTermRecipe ;
-  drivetrain:multiplicity drivetrain:1-1;
-  drivetrain:subject ontologies:TURBO_0010159 ;
-  drivetrain:predicate drivetrain:scPrescription2ColumnName ;
-  drivetrain:object drivetrain:RxColumnTerm ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
-.
 ontologies:shortcutPrescriptionToDrugTerm
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
@@ -876,4 +861,13 @@ drivetrain:diagnosisRegDen
 .
 drivetrain:condition_type_LiteralValue 
   a drivetrain:TurboGraphStringLiteralValue 
+.
+drivetrain:DiagColumnTerm
+  drivetrain:range drivetrain:DiagnosisColumnPlaceholder ;
+.
+drivetrain:RxColumnTerm
+  drivetrain:range drivetrain:MedicationColumnPlaceholder ;
+.
+drivetrain:RxSourcedenTerm
+  drivetrain:range drivetrain:MedicationRegistryPlaceholder ;
 .

@@ -50,7 +50,7 @@ drivetrain:GidPartOfColumn
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:GidToBeTyped ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010431 ;
+  drivetrain:object drivetrain:GidColumnTerm ;
 .
 drivetrain:GidTypingRecipe a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -64,6 +64,10 @@ drivetrain:GidToBeTyped
 .
 
 drivetrain:GidClassList
+  a drivetrain:MultiObjectDescriber ;
+.
+
+drivetrain:GidColumnTerm
   a drivetrain:MultiObjectDescriber ;
 .
 
@@ -88,7 +92,10 @@ drivetrain:DobPartOfColumn
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject efo:EFO_0004950 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010443 ;
+  drivetrain:object drivetrain:dobColumnTerm ;
+.
+drivetrain:dobColumnTerm
+  a drivetrain:MultiObjectDescriber ;
 .
 drivetrain:KeyDenotesPatKeySymb
   a drivetrain:InstanceToInstanceRecipe ;
@@ -1019,29 +1026,13 @@ drivetrain:TumorRegistryClassList a drivetrain:MultiObjectDescriber .
 
 ### biobank encounters
 
-drivetrain:biobankEncounterDateIsAboutBiobankEncounterStart
+drivetrain:ProcboundStartsBiobankEnc
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object ontologies:TURBO_0000531 ;
-  drivetrain:predicate obo:IAO_0000136 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject ontologies:TURBO_0000532 ;
-.
-drivetrain:biobankEncounterDateHasDateRepresentation
-  a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object drivetrain:biobankEncDate_DateLiteralValue ;
-  drivetrain:predicate ontologies:TURBO_0010096 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject ontologies:TURBO_0000532 ;
-.
-drivetrain:biobankEncounterDateHasStringRepresentation
-  a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object drivetrain:biobankEncDate_StringLiteralValue ;
-  drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject ontologies:TURBO_0000532 ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:BFO_0000035 ;
+  drivetrain:predicate obo:RO_0002223 ;
+  drivetrain:object turbo:TURBO_0000527 ;
+  drivetrain:subjectUsesContext drivetrain:StartContext ;
 .
 drivetrain:biobankEncounterCridDenotesBiobankEncounter
   a drivetrain:InstanceToInstanceRecipe ;
@@ -2061,8 +2052,7 @@ drivetrain:DiagKeySymbPartOfKey
 drivetrain:DiagKeySymbPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object ontologies:TURBO_0010602 ;
-  drivetrain:objectUsesContext drivetrain:KeyContext ;
+  drivetrain:object drivetrain:DiagColumnTerm ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
@@ -2071,7 +2061,7 @@ drivetrain:DiagKeySymbPartOfColumn
 drivetrain:DiagKeySymbHasRepresentation
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:condition_occurrence_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:condition_occurrence_id_StringLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
@@ -2150,12 +2140,14 @@ drivetrain:diagnosisHasRegistryString
 drivetrain:DiagPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010605 ;
+  drivetrain:object drivetrain:DiagColumnTerm ;
   drivetrain:objectUsesContext drivetrain:KeyContext ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:OGMS_0000073 ;
 .
-
+drivetrain:DiagColumnTerm
+  a drivetrain:MultiObjectDescriber ;
+.
 drivetrain:DiagTmdHasMeasVal 
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -2379,8 +2371,7 @@ drivetrain:RxKeySymbPartOfKey
 drivetrain:RxKeySymbPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object ontologies:TURBO_0010705 ;
-  drivetrain:objectUsesContext drivetrain:KeyContext ;
+  drivetrain:object drivetrain:RxColumnTerm ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
@@ -2634,7 +2625,7 @@ ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:RxAboutnessAxi
 drivetrain:WrittenNotDispensedLiteral a drivetrain:TurboGraphLiteralValue .
 drivetrain:birth_datetime_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
 drivetrain:birth_datetime_StringLiteralValue a drivetrain:TurboGraphStringLiteralValue .
-drivetrain:condition_occurrence_id_IntegerLiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
+drivetrain:condition_occurrence_id_StringLiteralValue a drivetrain:TurboGraphStringLiteralValue .
 drivetrain:condition_start_datetime_DateLiteralValue a drivetrain:TurboGraphLiteralValue .
 drivetrain:condition_type_LiteralValue a drivetrain:TurboGraphLiteralValue .
 drivetrain:drug_code_LiteralValue a drivetrain:TurboGraphStringLiteralValue .
@@ -2654,7 +2645,7 @@ drivetrain:measurement_vocabulary_id_LiteralValue a drivetrain:TurboGraphLiteral
 drivetrain:person_cridsym_LiteralValue a drivetrain:TurboGraphLiteralValue .
 drivetrain:person_keysym_LiteralValue a drivetrain:TurboGraphLiteralValue .
 drivetrain:preceding_encounter_keysym_LiteralValue a drivetrain:TurboGraphLiteralValue .
-drivetrain:prescription_id_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
+drivetrain:prescription_id_LiteralValue a drivetrain:TurboGraphStringLiteralValue .
 drivetrain:prescription_start_datetime_DateLiteralValue a drivetrain:TurboGraphLiteralValue .
 drivetrain:proc_id_IntegerLiteralValue a drivetrain:TurboGraphLiteralValue .
 drivetrain:procedure_cridsym_LiteralValue a drivetrain:TurboGraphLiteralValue .
@@ -2664,8 +2655,6 @@ drivetrain:race_LiteralValue a drivetrain:TurboGraphLiteralValue .
 drivetrain:value_as_number_LiteralValue a drivetrain:TurboGraphLiteralValue .
 drivetrain:tumor_LiteralValue a drivetrain:TurboGraphLiteralValue .
 drivetrain:biobankEnc_LiteralValue a drivetrain:TurboGraphLiteralValue .
-drivetrain:biobankEncDate_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
-drivetrain:biobankEncDate_StringLiteralValue a drivetrain:TurboGraphStringLiteralValue .
 drivetrain:biobankEnc_BmiLiteralValue a drivetrain:TurboGraphDoubleLiteralValue .
 drivetrain:biobankEnc_lengthMeasLiteralValue a drivetrain:TurboGraphDoubleLiteralValue .
 drivetrain:biobankEnc_massMeasLiteralValue a drivetrain:TurboGraphDoubleLiteralValue .
