@@ -727,8 +727,8 @@ class TurboMultiuseClass extends Enumeration with Matchers
     {
         val requiredCharacters: ArrayBuffer[Char] = ArrayBuffer(':')
         val illegalCharacters: ArrayBuffer[Char] = ArrayBuffer('<', '>', '"')
-        for (char <- requiredCharacters) assert(uri.contains(char), s"The URI $uri is missing required character $char. Make sure this is actually a URI and not a literal value.")
-        for (char <- illegalCharacters) assert(!uri.contains(char), s"The URI $uri contains illegal character $char. Make sure this is actually a URI and not a literal value.")
+        for (char <- requiredCharacters) assert(uri.contains(char), s"The URI $uri is missing required character $char. Make sure this is actually a URI.")
+        for (char <- illegalCharacters) assert(!uri.contains(char), s"The URI $uri contains illegal character $char. Make sure this is actually a URI.")
     }
     
     def buildProcessMetaQuery(process: String, inputNamedGraphs: Array[String] = Array(expandedNamedGraph)): String =

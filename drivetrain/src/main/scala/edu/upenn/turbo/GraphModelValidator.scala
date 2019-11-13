@@ -67,6 +67,8 @@ object GraphModelValidator extends ProjectwideGlobals
     
     def validateProcessSpecification(process: String)
     {
+       helper.validateURI(process)
+       
        val select: String = s"""
           Select * Where {
             <$process> a turbo:TURBO_0010354 .

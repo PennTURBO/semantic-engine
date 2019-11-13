@@ -569,7 +569,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             {
                  val invalidConnectionName = inputOneToManyConnections(connection)(k)
                  var connList1 = ""
-                 for ((entity, connName) <- v) connList1 += entity+"\n"
+                 for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
                  var connList2 = ""
                  for ((entity, connName) <- inputOneToManyConnections(connection)) connList2 += entity+"\n"
                  assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName.\n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")
@@ -578,7 +578,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             {
                 val invalidConnectionName = outputOneToManyConnections(connection)(k)
                 var connList1 = ""
-                for ((entity, connName) <- v) connList1 += entity+"\n"
+                for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
                 var connList2 = ""
                 for ((entity, connName) <- outputOneToManyConnections(connection)) connList2 += entity+"\n"
                 assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName. \n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")

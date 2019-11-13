@@ -385,7 +385,6 @@ ontologies:shortcutBiobankEncounterToShortcutMeasurement
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object drivetrain:shortcutMeasurement ;
   drivetrain:predicate drivetrain:scBbEnc2ScMeas ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010169 ;
   drivetrain:partOf drivetrain:BiobankEncounterMeasurementsOptionalGroup ;
 .
@@ -394,7 +393,6 @@ ontologies:shortcutHealthcareEncounterToShortcutMeasurement
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object drivetrain:shortcutMeasurement ;
   drivetrain:predicate drivetrain:scHcEnc2ScMeas ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010158 ;
   drivetrain:partOf drivetrain:HealthcareEncounterMeasurementsOptionalGroup ;
 .
@@ -551,7 +549,7 @@ ontologies:shortcutHealthcareEncounterToEncounterType
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:EncClassList ;
-  drivetrain:predicate ontologies:scHcEnc2EncType ;
+  drivetrain:predicate drivetrain:scHcEnc2EncType ;
   drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToDateStringValue
@@ -862,12 +860,7 @@ drivetrain:diagnosisRegDen
 drivetrain:condition_type_LiteralValue 
   a drivetrain:TurboGraphStringLiteralValue 
 .
-drivetrain:DiagColumnTerm
-  drivetrain:range drivetrain:DiagnosisColumnPlaceholder ;
-.
-drivetrain:RxColumnTerm
-  drivetrain:range drivetrain:MedicationColumnPlaceholder ;
-.
 drivetrain:RxSourcedenTerm
   drivetrain:range drivetrain:MedicationRegistryPlaceholder ;
 .
+drivetrain:MedicationRegistryPlaceholder a owl:Class .
