@@ -777,7 +777,7 @@ drivetrain:MeasNumValShortcut
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
   drivetrain:predicate <http://api.stardog.com/measurement#value_as_number> ;
-  drivetrain:object drivetrain:value_as_number_IntegerLiteralValue ;
+  drivetrain:object drivetrain:value_as_number_LiteralValue ;
 .
 drivetrain:MeasKeysymShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
@@ -1647,9 +1647,40 @@ drivetrain:procedure_cridsym_LiteralValue a drivetrain:TurboGraphStringLiteralVa
 drivetrain:procedure_datetime_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
 drivetrain:procedure_type_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
 drivetrain:race_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:value_as_number_IntegerLiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
+drivetrain:value_as_number_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
 
 ###
 
+drivetrain:DiagAboutnessAxiomDbXref_person_id_column drivetrain:range turbo:TURBO_0010701 .
+drivetrain:DiagParthoodAxiomDbXref_visit_occurrence_id_column drivetrain:range turbo:TURBO_0010704 .
+drivetrain:DiagTmd_condition_start_datetime_column drivetrain:range turbo:TURBO_0010604 .
+drivetrain:EncCridSym_visit_source_value_column drivetrain:range turbo:TURBO_0010455 .
+drivetrain:EncId_visit_occurrence_id_column drivetrain:range turbo:TURBO_0010453 .
+drivetrain:EncParticipationAxiomDbXref_person_id_column drivetrain:range turbo:TURBO_0010447 .
+drivetrain:EncStartDate_visit_start_date_column drivetrain:range turbo:TURBO_0010457 .
+drivetrain:EncTypeAxiomDbXref_visit_concept_id_column drivetrain:range turbo:TURBO_0010449 .
+drivetrain:EndDate_visit_end_date_column drivetrain:range turbo:TURBO_0010451 .
+drivetrain:Key_person_id_column drivetrain:range turbo:TURBO_0010442 .
+drivetrain:MeasAboutnessAxiomDbXref_person_id_column drivetrain:range turbo:TURBO_0010483 .
+drivetrain:MeasKeySymb_measurement_id_column drivetrain:range turbo:TURBO_0010482 .
+drivetrain:MeasMentionAxiomDbXref_measurement_source_value_column drivetrain:range turbo:TURBO_0010487 .
+drivetrain:MeasParthoodAxiomDbXref_visit_occurrence_id_column drivetrain:range turbo:TURBO_0010486 .
+drivetrain:MeasTmdPartOfQueryResult_measurement_datetime_column drivetrain:range turbo:TURBO_0010484 .
+drivetrain:MeasTypeAxiomDbXref_measurement_source_concept_id_column drivetrain:range turbo:TURBO_0010488 .
+drivetrain:MeasValspecPartOfQueryResult_value_as_number_column drivetrain:range turbo:TURBO_0010411 .
+drivetrain:MentioningProvPartOfCol_procedure_source_value_column drivetrain:range turbo:TURBO_0010470 .
+drivetrain:MulAxiomDbXref_data_column drivetrain:range turbo:TURBO_0010423 .
+drivetrain:PatKeySymb_person_source_value_column drivetrain:range turbo:TURBO_0010444 .
+drivetrain:PrecedenceAxiomDbXref_preceding_visit_occurrence_id_column drivetrain:range turbo:TURBO_0010459 .
+drivetrain:ProcKeySymbPartOfCol_procedure_occurrence_id_column drivetrain:range turbo:TURBO_0010465 .
+drivetrain:ProcParthoodAxiomDbXref_visit_occurrence_id_column drivetrain:range turbo:TURBO_0010466 .
+drivetrain:ProcParticipationAxiomDbXref_person_id_column drivetrain:range turbo:TURBO_0010464 .
+drivetrain:ProcStartDate_procedure_date_column drivetrain:range turbo:TURBO_0010472 .
+drivetrain:ProcTypeAxiomDbXref_procedure_source_concept_id drivetrain:range turbo:TURBO_0010469 .
+drivetrain:Rid_race_concept_id_column drivetrain:range turbo:TURBO_0010441 .
+drivetrain:RxAboutnessAxiomDbXref_person_id_column drivetrain:range turbo:TURBO_0010702 .
+drivetrain:RxParthoodAxiomDbXref_visit_occurrence_id_column drivetrain:range turbo:TURBO_0010703 .
+drivetrain:RxTmd_drug_exposure_start_datetime_column drivetrain:range turbo:TURBO_0010706 .
 
+###
 
