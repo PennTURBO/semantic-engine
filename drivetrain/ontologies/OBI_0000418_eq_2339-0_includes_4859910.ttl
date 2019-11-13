@@ -3,15 +3,18 @@ prefix obo: <http://purl.obolibrary.org/obo/>
 prefix LNC: <http://purl.bioontology.org/ontology/LNC/>
 prefix efo: <http://www.ebi.ac.uk/efo/>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
 
-<file:///OBI_0000418_eq_2339-0_includes_4859910.ttl> a owl:Ontology ;
-    owl:imports <http://purl.obolibrary.org/obo/obi.owl> ;
-	rdfs:seeAlso <https://raw.githubusercontent.com/obi-ontology/obi/v2019-08-06/obi.owl> .
+<file:///OBI_0000418_eq_2339-0_includes_4859910.ttl>
+  a owl:Ontology ;
+  owl:imports <http://purl.obolibrary.org/obo/obi.owl> ;
+  rdfs:seeAlso <https://raw.githubusercontent.com/obi-ontology/obi/v2019-08-06/obi.owl> .
 
-<http://example.com/resource/specCollTr> a <http://purl.obolibrary.org/obo/BFO_0000038> ;
-    rdfs:comment "model LOINC time as the duration of specimen collection?" ,
-	"make a 1DTR with infinitesimally small extent for LOINC Pt?" ,
-	"<http://example.com/resource/Pt> rdfs:subClassOf <http://purl.obolibrary.org/obo/BFO_0000038>" .
+<http://example.com/resource/specCollTr>
+  a <http://purl.obolibrary.org/obo/BFO_0000038> ;
+  rdfs:comment "model LOINC time as the duration of specimen collection?", 
+  "make a 1DTR with infinitesimally small extent for LOINC Pt? omit duration modelling in LOINC Pt case?", 
+  "<http://example.com/resource/Pt> rdfs:subClassOf <http://purl.obolibrary.org/obo/BFO_0000038>" .
 
 <http://example.com/resource/assay>
   a <http://purl.obolibrary.org/obo/OBI_0000418> ;
@@ -19,55 +22,52 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
   obo:OBI_0000299 <http://example.com/resource/assayResult> ;
   obo:BFO_0000055 <http://example.com/resource/evaluantRole>, <http://example.com/resource/measurandRole> ;
   rdfs:seeAlso <http://purl.bioontology.org/ontology/LNC/2339-0> ;
-  rdfs:comment "LOINC asserts that the blood, not the person, is the system." ,
-  "Is there any material processing between the specimen collection and the assay?",
-  "LOINC method -> material processing, OR instrument or technique?" ,
-  "assay can't mention code. LOINC is about questions not answers, so not attaching LOINC code to datum." ,
-  "obo:OBI_0000418 is asserted to be  subclass of (realizes some (evaluant role and (role of some blood serum specimen))) and (has_specified_input some (blood serum specimen and (has role some evaluant role))) ; and (realizes some (analyte role and (inheres in some glucose))) and (has_specified_input some glucose), but LNC:2339-0 takes blood as its system, not serum. And how should 'some glucose?' be instantiated as an RDF resource?" ,
-  "measuring glucose concentration in blood serum assay =  obo:OBI_0000418" , 
-  "glucometer =  obo:OBI_0000795 ... how do instruments participate in assays?" , 
-  "glucose in solution =  obo:OBI_0100086" ,
-  "add directives/specifications, esp. for reflecting LOINC optional method" .
-  
+  rdfs:comment "LOINC asserts that the blood, not the person, is the system.", 
+  "Is there any material processing between the specimen collection and the assay?", 
+  "LOINC method -> material processing, OR instrument or technique?", 
+  "assay can't mention code. LOINC is about questions not answers, so not attaching LOINC code to datum.", 
+  "obo:OBI_0000418 is asserted to be  subclass of: (realizes some (evaluant role and (role of some blood serum specimen))) and (has_specified_input some (blood serum specimen and (has role some evaluant role))) ; and (realizes some (analyte role and (inheres in some glucose))) and (has_specified_input some glucose). However, LNC:2339-0 takes blood as its system, not serum. And how should 'some glucose?' be instantiated as an RDF resource?", 
+  "measuring glucose concentration in blood serum assay =  obo:OBI_0000418", 
+  "glucometer =  obo:OBI_0000795 ... how do instruments participate in assays?", 
+  "glucose in solution =  obo:OBI_0100086", "add directives/specifications, esp. for reflecting LOINC optional method" .
 
 <http://example.com/resource/samplePrep>
-  a <http://purl.obolibrary.org/obo/OBI_0000094> ;
-  obo:OBI_0000299 <http://example.com/resource/preparedSpecimen>  ;
-  obo:OBI_0000293  <http://example.com/resource/bloodSpec> ;
+  a obo:OBI_0000094 ;
+  obo:OBI_0000299 <http://example.com/resource/preparedSpecimen> ;
+  obo:OBI_0000293 <http://example.com/resource/bloodSpec> ;
   rdfs:comment "what if there is NO sample prep?" .
-  
-<http://example.com/resource/preparedSpecimen> a <http://purl.obolibrary.org/obo/OBI_0000047> .
-  
 
+<http://example.com/resource/preparedSpecimen> a obo:OBI_0000047 .
 obo:BFO_0000155 rdfs:label "occupies temporal region" .
-
 <http://example.com/resource/assayResult>
   a obo:IAO_0000032 ;
   obo:IAO_0000136 <http://example.com/resource/concentrationQuality> ;
   obo:IAO_0000039 <http://www.ebi.ac.uk/efo/EFO_0004374> .
 
-<http://www.ebi.ac.uk/efo/EFO_0004374> rdfs:subClassOf obo:UO_0000051 ;
-    rdfs:label "mg/dL" .
-	
-<http://example.com/resource/concentrationQuality> a obo:PATO_0000033 ;
-    obo:RO_0000052 <http://example.com/resource/bloodSpec> ;
-	rdfs:comment "does the concentration also inhere in the measureand?" .
+<http://www.ebi.ac.uk/efo/EFO_0004374>
+  rdfs:subClassOf obo:UO_0000051 ;
+  rdfs:label "mg/dL" .
+
+<http://example.com/resource/concentrationQuality>
+  a obo:PATO_0000033 ;
+  obo:RO_0000052 <http://example.com/resource/bloodSpec> ;
+  rdfs:comment "does the concentration also inhere in the measureand?" .
 
 <http://example.com/resource/specColl>
   a obo:OBI_0600005 ;
   obo:OBI_0000299 <http://example.com/resource/bloodSpec> ;
   obo:OBI_0000293 <http://example.com/resource/patient> ;
   obo:BFO_0000155 <http://example.com/resource/specCollTr> .
-  
+
 <http://example.com/resource/bloodSpec>
   a obo:OBI_0000655 ;
   obo:RO_0000087 <http://example.com/resource/evaluantRole> .
 
 <http://example.com/resource/evaluantRole> a obo:OBI_0000067 .
-
-<http://example.com/resource/measurandRole> a obo:OBI_0002444 ;
-    obo:RO_0000052 obo:CHEBI_17234 ;
-	rdfs:comment "what if there is no glucose in the blood? do we want to assert that some glucose is part of the blood?" ,
-	"class obo:CHEBI_17234 is being OWL2-punned as an instance here." .
+<http://example.com/resource/measurandRole>
+  a obo:OBI_0002444 ;
+  obo:RO_0000052 obo:CHEBI_17234 ;
+  rdfs:comment "what if there is no glucose in the blood? do we want to assert that some glucose is part of the blood?", 
+  "class obo:CHEBI_17234 is being OWL2-punned as an instance here." .
 
 <http://example.com/resource/patient> a obo:NCBITaxon_9606 .

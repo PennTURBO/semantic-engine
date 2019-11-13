@@ -106,14 +106,16 @@ drivetrain:KeyDenotesPatKeySymb
   drivetrain:object obo:IAO_0000028 ;
   drivetrain:objectUsesContext drivetrain:PatientCridContext ;
 .
+
 drivetrain:PatKeySymbPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
+  # drivetrain:object ontologies:TURBO_0010444 ;
+  drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:subjectUsesContext drivetrain:PatientCridContext ;
-  drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010444 ;
 .
+
 drivetrain:KeyDenotesPatient
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -122,14 +124,16 @@ drivetrain:KeyDenotesPatient
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
+
 drivetrain:KeyPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:subject ontologies:TURBO_0010433 ;
+  # drivetrain:object ontologies:TURBO_0010442  ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010442  ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
+
 drivetrain:RidAboutPatient
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -137,13 +141,15 @@ drivetrain:RidAboutPatient
   drivetrain:predicate obo:IAO_0000136 ;
   drivetrain:object obo:NCBITaxon_9606 ;
 .
+
 drivetrain:RidPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:subject drivetrain:RidToBeTyped ;
+  # drivetrain:object ontologies:TURBO_0010441 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010441 ;
+  drivetrain:subject drivetrain:RidToBeTyped ;
 .
+
 drivetrain:RidHasRepresentation
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -292,19 +298,21 @@ drivetrain:SymbolPartOfCridForPatient
 drivetrain:EncIdPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
+  # drivetrain:object ontologies:TURBO_0010453 ;
+  drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
-  drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010453 ;
 .
+
 drivetrain:EncCridSymPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
+  # drivetrain:object ontologies:TURBO_0010455 ;
+  drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:subjectUsesContext drivetrain:HealthcareEncounterCridContext ;
-  drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010455 ;
 .
+
 drivetrain:KeyDenotesEncCridSym
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -317,11 +325,12 @@ drivetrain:KeyDenotesEncCridSym
 drivetrain:EncStartDatePartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
+  # drivetrain:object ontologies:TURBO_0010457 ;
+  drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000416 ;
   drivetrain:subjectUsesContext drivetrain:StartContext ;
-  drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010457 ;
 .
+
 drivetrain:KeyDenotesEncStartDate
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -331,14 +340,16 @@ drivetrain:KeyDenotesEncStartDate
   drivetrain:object obo:IAO_0000416 ;
   drivetrain:objectUsesContext drivetrain:StartContext ;
 .
+
 drivetrain:EndDatePartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
+  # drivetrain:object ontologies:TURBO_0010451 ;
+  drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000416 ;
   drivetrain:subjectUsesContext drivetrain:encEndContext ;
-  drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010451 ;
 .
+
 drivetrain:KeyDenotesEndDate
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -544,7 +555,7 @@ drivetrain:EncTypeAxiomDbXrefHasRepresentation
 drivetrain:EncTypeAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010449 ;
+  # drivetrain:object ontologies:TURBO_0010449 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
 .
@@ -626,9 +637,9 @@ drivetrain:EncParticipationAxiomHasDbXref
 drivetrain:EncParticipationAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:subject ontologies:TURBO_0010404 ;
+  # drivetrain:object ontologies:TURBO_0010447 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010447 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
@@ -709,9 +720,9 @@ drivetrain:PrecedenceAxiomDbXrefHasRepresentation
 drivetrain:PrecedenceAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:subject ontologies:TURBO_0010404 ;
+  # drivetrain:object ontologies:TURBO_0010459 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010459 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:EncPrecedenceAxiomContext ;
 .
 
@@ -756,7 +767,7 @@ drivetrain:ProcStartingTmdHasMeasVal
 drivetrain:ProcStartDatePartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object ontologies:TURBO_0010472 ;
+  # drivetrain:object ontologies:TURBO_0010472 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000416 ;
   drivetrain:subjectUsesContext drivetrain:StartContext ;
@@ -782,7 +793,7 @@ drivetrain:ProcKeySymbHasRepresentation
 drivetrain:ProcKeySymbPartOfCol
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object ontologies:TURBO_0010465 ;
+  # drivetrain:object ontologies:TURBO_0010465 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000028 ;
 .
@@ -831,7 +842,7 @@ drivetrain:MentioningProvAboutProc
 drivetrain:MentioningProvPartOfCol
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object ontologies:TURBO_0010470 ;
+  # drivetrain:object ontologies:TURBO_0010470 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:MentionsContext ;
@@ -922,7 +933,7 @@ drivetrain:ProcTypeAxiomDbXrefHasRepresentation
 drivetrain:ProcTypeAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010469 ;
+  # drivetrain:object ontologies:TURBO_0010469 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:TypingAxiomContext ;
@@ -1378,7 +1389,7 @@ drivetrain:ProcParticipationAxiomHasDbXref
 drivetrain:ProcParticipationAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010464 ;
+  # drivetrain:object ontologies:TURBO_0010464 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
@@ -1464,10 +1475,11 @@ drivetrain:ProcParthoodAxiomDbXrefHasRepresentation
   drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
   drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
+
 drivetrain:ProcParthoodAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010466 ;
+  # drivetrain:object ontologies:TURBO_0010466 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
@@ -1536,10 +1548,10 @@ drivetrain:MeasKeySymbPartOfKey
 drivetrain:MeasKeySymbPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:subject obo:IAO_0000028 ;
-  drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010482 ;
+  # drivetrain:object ontologies:TURBO_0010482 ;
   drivetrain:objectUsesContext drivetrain:KeyContext ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:subject obo:IAO_0000028 ;
 .
 
 drivetrain:MeasKeySymbHasRepresentation
@@ -1569,9 +1581,9 @@ drivetrain:MeasHasValspec
 drivetrain:MeasValspecPartOfQueryResult
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:subject obo:OBI_0001933 ;
+  # drivetrain:object  ontologies:TURBO_0010411 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object  ontologies:TURBO_0010411 ;
+  drivetrain:subject obo:OBI_0001933 ;
 .
 
 drivetrain:KeyDenotesValspec
@@ -1611,9 +1623,9 @@ drivetrain:KeyDenotesTmd
 drivetrain:MeasTmdPartOfQueryResult
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:subject obo:IAO_0000416 ;
+  # drivetrain:object  ontologies:TURBO_0010484 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object  ontologies:TURBO_0010484 ;
+  drivetrain:subject obo:IAO_0000416 ;
 .
 
 drivetrain:measurement_datetime_DateLiteralValue 
@@ -1700,12 +1712,12 @@ drivetrain:MeasTypeAxiomDbXrefHasRepresentation
 .
 
 drivetrain:MeasTypeAxiomDbXrefPartOfColumn
-  drivetrain:subjectUsesContext drivetrain:MeasTypeAxiomContext ;
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010488 ;
+  # drivetrain:object ontologies:TURBO_0010488 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:MeasTypeAxiomContext ;
 .
 
 drivetrain:MeasKeyDenotesProv4MeasType
@@ -1780,12 +1792,12 @@ drivetrain:MeasMentionAxiomDbXrefHasRepresentation
 .
 
 drivetrain:MeasMentionAxiomDbXrefPartOfColumn
-  drivetrain:subjectUsesContext drivetrain:MeasMentionAxiomContext ;
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010487 ;
+  # drivetrain:object ontologies:TURBO_0010487 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
+  drivetrain:subjectUsesContext drivetrain:MeasMentionAxiomContext ;
 .
 
 drivetrain:MeasKeyDenotesProv4Mention
@@ -1849,12 +1861,13 @@ drivetrain:MulAxiomDbXrefHasRepresentation
   drivetrain:predicate ontologies:TURBO_0010094 ;
   drivetrain:object drivetrain:measurement_units_LiteralValue ;
 .
+
 drivetrain:MulAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:subject ontologies:TURBO_0010404 ;
+  # drivetrain:object ontologies:TURBO_0010423 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010423 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
 .
 
 drivetrain:MeasKeyDenotesProv4Mul
@@ -1926,9 +1939,9 @@ drivetrain:MeasAboutnessAxiomDbXrefHasRepresentation
 drivetrain:MeasAboutnessAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:subject ontologies:TURBO_0010404 ;
+  # drivetrain:object ontologies:TURBO_0010483 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010483 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:MeasAboutnessAxiomContext ;
 .
 
@@ -2001,9 +2014,9 @@ drivetrain:MeasParthoodAxiomDbXrefHasRepresentation
 drivetrain:MeasParthoodAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:subject ontologies:TURBO_0010404 ;
+  # drivetrain:object ontologies:TURBO_0010486 ;
   drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:object ontologies:TURBO_0010486 ;
+  drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
 .
 
@@ -2168,7 +2181,7 @@ drivetrain:DiagHasTimestamp
 drivetrain:DiagTmdPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object ontologies:TURBO_0010604 ;
+  # drivetrain:object ontologies:TURBO_0010604 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000416 ;
 .
@@ -2250,7 +2263,7 @@ drivetrain:DiagAboutnessAxiomDbXrefHasRepresentation
 drivetrain:DiagAboutnessAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010701 ;
+  # drivetrain:object ontologies:TURBO_0010701 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:DiagAboutnessAxiomContext ;
@@ -2333,7 +2346,7 @@ drivetrain:DiagParthoodAxiomDbXrefHasRepresentation
 drivetrain:DiagParthoodAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010704 ;
+  # drivetrain:object ontologies:TURBO_0010704 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
@@ -2415,7 +2428,7 @@ drivetrain:RxHasTimestamp
 drivetrain:RxTmdPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object ontologies:TURBO_0010706 ;
+  # drivetrain:object ontologies:TURBO_0010706 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000416 ;
 .
@@ -2523,7 +2536,7 @@ drivetrain:RxParthoodAxiomDbXrefHasRepresentation
 drivetrain:RxParthoodAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010703 ;
+  # drivetrain:object ontologies:TURBO_0010703 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:ParthoodAxiomContext ;
@@ -2601,7 +2614,7 @@ drivetrain:RxAboutnessAxiomDbXrefHasRepresentation
 drivetrain:RxAboutnessAxiomDbXrefPartOfColumn
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010702 ;
+  # drivetrain:object ontologies:TURBO_0010702 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:subjectUsesContext drivetrain:RxAboutnessAxiomContext ;
@@ -2680,4 +2693,69 @@ drivetrain:objectExists a drivetrain:TurboGraphRequirementSpecification .
 
 ###
 
+drivetrain:DiagAboutnessAxiomDbXref_person_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:DiagParthoodAxiomDbXref_visit_occurrence_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:DiagTmd_condition_start_datetime_column a drivetrain:MultiObjectDescriber .
+drivetrain:EncCridSym_visit_source_value_column a drivetrain:MultiObjectDescriber .
+drivetrain:EncId_visit_occurrence_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:EncParticipationAxiomDbXref_person_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:EncStartDate_visit_start_date_column a drivetrain:MultiObjectDescriber .
+drivetrain:EncTypeAxiomDbXref_visit_concept_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:EndDate_visit_end_date_column a drivetrain:MultiObjectDescriber .
+drivetrain:Key_person_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:MeasAboutnessAxiomDbXref_person_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:MeasKeySymb_measurement_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:MeasMentionAxiomDbXref_measurement_source_value_column a drivetrain:MultiObjectDescriber .
+drivetrain:MeasParthoodAxiomDbXref_visit_occurrence_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:MeasTmdPartOfQueryResult_measurement_datetime_column a drivetrain:MultiObjectDescriber .
+drivetrain:MeasTypeAxiomDbXref_measurement_source_concept_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:MeasValspecPartOfQueryResult_value_as_number_column a drivetrain:MultiObjectDescriber .
+drivetrain:MentioningProvPartOfCol_procedure_source_value_column a drivetrain:MultiObjectDescriber .
+drivetrain:MulAxiomDbXref_data_column a drivetrain:MultiObjectDescriber .
+drivetrain:PatKeySymb_person_source_value_column a drivetrain:MultiObjectDescriber .
+drivetrain:PrecedenceAxiomDbXref_preceding_visit_occurrence_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:ProcKeySymbPartOfCol_procedure_occurrence_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:ProcParthoodAxiomDbXref_visit_occurrence_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:ProcParticipationAxiomDbXref_person_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:ProcStartDate_procedure_date_column a drivetrain:MultiObjectDescriber .
+drivetrain:ProcTypeAxiomDbXref_procedure_source_concept_id a drivetrain:MultiObjectDescriber .
+drivetrain:Rid_race_concept_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:RxAboutnessAxiomDbXref_person_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:RxParthoodAxiomDbXref_visit_occurrence_id_column a drivetrain:MultiObjectDescriber .
+drivetrain:RxTmd_drug_exposure_start_datetime_column a drivetrain:MultiObjectDescriber .
+
+###
+
+drivetrain:DiagAboutnessAxiomDbXrefPartOfColumn drivetrain:object drivetrain:DiagAboutnessAxiomDbXref_person_id_column .
+drivetrain:DiagParthoodAxiomDbXrefPartOfColumn drivetrain:object drivetrain:DiagParthoodAxiomDbXref_visit_occurrence_id_column .
+drivetrain:DiagTmdPartOfColumn drivetrain:object drivetrain:DiagTmd_condition_start_datetime_column .
+drivetrain:EncCridSymPartOfColumn drivetrain:object drivetrain:EncCridSym_visit_source_value_column .
+drivetrain:EncIdPartOfColumn drivetrain:object drivetrain:EncId_visit_occurrence_id_column .
+drivetrain:EncParticipationAxiomDbXrefPartOfColumn drivetrain:object drivetrain:EncParticipationAxiomDbXref_person_id_column .
+drivetrain:EncStartDatePartOfColumn drivetrain:object drivetrain:EncStartDate_visit_start_date_column .
+drivetrain:EncTypeAxiomDbXrefPartOfColumn drivetrain:object drivetrain:EncTypeAxiomDbXref_visit_concept_id_column .
+drivetrain:EndDatePartOfColumn drivetrain:object drivetrain:EndDate_visit_end_date_column .
+drivetrain:KeyPartOfColumn drivetrain:object drivetrain:Key_person_id_column .
+drivetrain:MeasAboutnessAxiomDbXrefPartOfColumn drivetrain:object drivetrain:MeasAboutnessAxiomDbXref_person_id_column .
+drivetrain:MeasKeySymbPartOfColumn drivetrain:object drivetrain:MeasKeySymb_measurement_id_column .
+drivetrain:MeasMentionAxiomDbXrefPartOfColumn drivetrain:object drivetrain:MeasMentionAxiomDbXref_measurement_source_value_column .
+drivetrain:MeasParthoodAxiomDbXrefPartOfColumn drivetrain:object drivetrain:MeasParthoodAxiomDbXref_visit_occurrence_id_column .
+drivetrain:MeasTmdPartOfQueryResult drivetrain:object drivetrain:MeasTmdPartOfQueryResult_measurement_datetime_column .
+drivetrain:MeasTypeAxiomDbXrefPartOfColumn drivetrain:object drivetrain:MeasTypeAxiomDbXref_measurement_source_concept_id_column .
+drivetrain:MeasValspecPartOfQueryResult drivetrain:object drivetrain:MeasValspecPartOfQueryResult_value_as_number_column .
+drivetrain:MentioningProvPartOfCol drivetrain:object drivetrain:MentioningProvPartOfCol_procedure_source_value_column .
+drivetrain:MulAxiomDbXrefPartOfColumn drivetrain:object drivetrain:MulAxiomDbXref_data_column .
+drivetrain:PatKeySymbPartOfColumn drivetrain:object drivetrain:PatKeySymb_person_source_value_column .
+drivetrain:PrecedenceAxiomDbXrefPartOfColumn drivetrain:object drivetrain:PrecedenceAxiomDbXref_preceding_visit_occurrence_id_column .
+drivetrain:ProcKeySymbPartOfCol drivetrain:object drivetrain:ProcKeySymbPartOfCol_procedure_occurrence_id_column .
+drivetrain:ProcParthoodAxiomDbXrefPartOfColumn drivetrain:object drivetrain:ProcParthoodAxiomDbXref_visit_occurrence_id_column .
+drivetrain:ProcParticipationAxiomDbXrefPartOfColumn drivetrain:object drivetrain:ProcParticipationAxiomDbXref_person_id_column .
+drivetrain:ProcStartDatePartOfColumn drivetrain:object drivetrain:ProcStartDate_procedure_date_column .
+drivetrain:ProcTypeAxiomDbXrefPartOfColumn drivetrain:object drivetrain:ProcTypeAxiomDbXref_procedure_source_concept_id .
+drivetrain:RidPartOfColumn drivetrain:object drivetrain:Rid_race_concept_id_column .
+drivetrain:RxAboutnessAxiomDbXrefPartOfColumn drivetrain:object drivetrain:RxAboutnessAxiomDbXref_person_id_column .
+drivetrain:RxParthoodAxiomDbXrefPartOfColumn drivetrain:object drivetrain:RxParthoodAxiomDbXref_visit_occurrence_id_column .
+drivetrain:RxTmdPartOfColumn drivetrain:object drivetrain:RxTmd_drug_exposure_start_datetime_column .
+
+###
 
