@@ -50,7 +50,6 @@ class SparqlUpdater
 			PREFIX  ontologies: <http://transformunify.org/ontologies/>
 			PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>
 			PREFIX  nci:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
-			PREFIX graphBuilder: <http://graphBuilder.org/>
 			PREFIX pmbb: <http://www.itmat.upenn.edu/biobank/>
 			PREFIX sys: <http://www.ontotext.com/owlim/system#>
 			PREFIX efo: <http://www.ebi.ac.uk/efo/>
