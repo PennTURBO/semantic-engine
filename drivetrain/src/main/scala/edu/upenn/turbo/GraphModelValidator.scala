@@ -144,7 +144,7 @@ object GraphModelValidator extends ProjectwideGlobals
         var res = update.querySparqlAndUnpackTuple(gmCxn, rangeQuery, "recipe")
         var firstRes = ""
         if (res.size > 0) firstRes = res(0)
-        assert(firstRes == "")
+        assert(firstRes == "", s"The object of recipe $firstRes is not within the range allowed by its predicate")
 
         val domainQuery: String = s"""
           select * where
@@ -178,7 +178,7 @@ object GraphModelValidator extends ProjectwideGlobals
         res = update.querySparqlAndUnpackTuple(gmCxn, domainQuery, "recipe")
         firstRes = ""
         if (res.size > 0) firstRes = res(0)
-        assert(firstRes == "")
+        assert(firstRes == "", s"The subject of recipe $firstRes is not within the range allowed by its predicate")
     }
     
     def validateConnectionRecipesInProcess(process: String)
