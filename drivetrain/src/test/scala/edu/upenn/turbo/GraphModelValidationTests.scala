@@ -11,7 +11,7 @@ import java.util.UUID
 
 class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
-    val clearTestingRepositoryAfterRun: Boolean = true
+    val clearTestingRepositoryAfterRun: Boolean = false
     
     val uuid = UUID.randomUUID().toString.replaceAll("-", "")
     RunDrivetrainProcess.setGlobalUUID(uuid)
@@ -58,6 +58,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           turbo:object8 a owl:Class .
           turbo:object9 a owl:Class .
           turbo:object10 a owl:Class .
+          
+          drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
               
           ontologies:object1ToObject2
               a drivetrain:InstanceToInstanceRecipe ;
@@ -125,6 +127,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     drivetrain:subject turbo:object1 ;
                   .
                   ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject2_2 .
+                  drivetrain:many-1 a drivetrain:TurboGraphMultiplicityRule .
               }
           }
  
@@ -160,6 +163,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     drivetrain:subject turbo:object1 ;
                   .
                   ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 .
+                  
+                  drivetrain:1-many a drivetrain:TurboGraphMultiplicityRule .
                }
            }
         """
@@ -193,6 +198,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     drivetrain:subject turbo:object1 ;
                   .
                   ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 .
+                  
+                  drivetrain:many-1 a drivetrain:TurboGraphMultiplicityRule .
                }
            }
         """
@@ -235,6 +242,9 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   .
                   ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 .
                   ontologies:myProcess1 drivetrain:hasOutput ontologies:object2ToObject4 .
+                  
+                  drivetrain:many-1 a drivetrain:TurboGraphMultiplicityRule .
+                  drivetrain:many-singleton a drivetrain:TurboGraphMultiplicityRule .
                }
            }
         """
@@ -286,6 +296,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4 .
                   ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject5 .
                   ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object4ToObject5 .
+                  
+                  drivetrain:many-1 a drivetrain:TurboGraphMultiplicityRule .
                }
            }
         """
@@ -346,6 +358,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   .
                   ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4_input .
                   ontologies:myProcess1 drivetrain:hasOutput ontologies:object2ToObject4_output .
+                  
+                  drivetrain:1-many a drivetrain:TurboGraphMultiplicityRule .
                }
            }
         """
@@ -402,6 +416,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   .
                   ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4_input .
                   ontologies:myProcess1 drivetrain:hasOutput ontologies:object2ToObject4_output .
+                  
+                  drivetrain:many-singleton a drivetrain:TurboGraphMultiplicityRule .
                }
            }
         """
@@ -476,7 +492,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: Discovered invalid multiplicity https://github.com/PennTURBO/Drivetrain/thisisntamultiplicity")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: https://github.com/PennTURBO/Drivetrain/thisisntamultiplicity does not have a type")
         }
     }
     
@@ -509,7 +525,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: Discovered invalid multiplicity https://github.com/PennTURBO/Drivetrain/thisisntamultiplicity")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: https://github.com/PennTURBO/Drivetrain/thisisntamultiplicity does not have a type")
         }
     }
     
@@ -618,6 +634,9 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   ontologies:object2 a owl:Class .
                   ontologies:object3 a owl:Class .
                   ontologies:object4 a owl:Class .
+                  
+                  drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
+                  drivetrain:eitherSubjectOrObjectExists a drivetrain:TurboGraphRequirementSpecification .
                }
                
                Graph <$defaultPrefix"""+s"""instructionSet>
@@ -625,13 +644,14 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                    ontologies:myProcess1 a turbo:TURBO_0010354 ;
                        drivetrain:hasOutput ontologies:object1ToObject4 ;
                        drivetrain:hasRequiredInput ontologies:object1ToObject2 ;
+                       drivetrain:inputNamedGraph <$expandedNamedGraph> ;
+                       drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
                    .
                    ontologies:object1ToObject2 a drivetrain:InstanceToInstanceRecipe ;
                        drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
                        drivetrain:subject turbo:object1 ;
                        drivetrain:predicate turbo:pred1 ;
                        drivetrain:object turbo:object2 ;
-                       drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
                }
            }
         """
@@ -646,6 +666,79 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         catch
         {
             case e: AssertionError => assert(e.toString() == "java.lang.AssertionError: assertion failed: Error in graph model: connection recipe http://transformunify.org/ontologies/object1ToObject3 in the Graph Specification is required due to the existence of http://transformunify.org/ontologies/object1 but is not the output of a queued process in the Instruction Set")
+        }
+    }
+    
+    test("instruction set does not create recipe not required by graph spec due to context")
+    {
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        val insertDataModel: String = s"""
+          
+          INSERT DATA
+          {
+              Graph <$defaultPrefix"""+s"""graphSpecification>
+              {
+                  ontologies:object1ToObject3
+                    a drivetrain:InstanceToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                    drivetrain:subject turbo:object1 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:object turbo:object3 ;
+                    drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+                    drivetrain:subjectUsesContext drivetrain:context1 ;
+                  .
+ 
+                  ontologies:object1ToObject4
+                    a drivetrain:InstanceToInstanceRecipe ;
+                    drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                    drivetrain:subject turbo:object1 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+                    drivetrain:subjectUsesContext drivetrain:context2 ;
+                  .
+                  
+                  ontologies:object1 a owl:Class ;
+                    drivetrain:hasPossibleContext drivetrain:context1 ;
+                    drivetrain:hasPossibleContext drivetrain:context2 ;
+                  .
+                  ontologies:object2 a owl:Class .
+                  ontologies:object3 a owl:Class .
+                  ontologies:object4 a owl:Class .
+                  
+                  drivetrain:context1 a drivetrain:TurboGraphContext .
+                  drivetrain:context2 a drivetrain:TurboGraphContext .
+                  
+                  drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
+                  drivetrain:eitherSubjectOrObjectExists a drivetrain:TurboGraphRequirementSpecification .
+               }
+               
+               Graph <$defaultPrefix"""+s"""instructionSet>
+               {
+                   ontologies:myProcess1 a turbo:TURBO_0010354 ;
+                       drivetrain:hasOutput ontologies:object1ToObject4 ;
+                       drivetrain:hasRequiredInput ontologies:object1ToObject2 ;
+                       drivetrain:inputNamedGraph <$expandedNamedGraph> ;
+                       drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
+                   .
+                   ontologies:object1ToObject2 a drivetrain:InstanceToInstanceRecipe ;
+                       drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+                       drivetrain:subject turbo:object1 ;
+                       drivetrain:predicate turbo:pred1 ;
+                       drivetrain:object turbo:object2 ;
+               }
+           }
+        """
+      
+        update.updateSparql(gmCxn, insertDataModel)
+        
+        try
+        {
+            RunDrivetrainProcess.runAllDrivetrainProcesses(testCxn, gmCxn)
+        }
+        catch
+        {
+            case e: AssertionError => assert(1==2, e.toString())
         }
     }
     

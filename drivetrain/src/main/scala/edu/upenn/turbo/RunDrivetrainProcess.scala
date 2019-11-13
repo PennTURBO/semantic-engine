@@ -43,6 +43,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
     def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String): HashMap[String, PatternMatchQuery] =
     {
+        GraphModelValidator.checkAllSubjectsAndObjectsHaveType()
         GraphModelValidator.validateGraphModelTerms()
         GraphModelValidator.validateGraphSpecificationAgainstOntology()
         

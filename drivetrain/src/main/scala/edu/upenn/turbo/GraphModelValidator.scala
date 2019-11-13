@@ -11,6 +11,60 @@ object GraphModelValidator extends ProjectwideGlobals
         this.gmCxn = gmCxn
     }
     
+    def checkAllSubjectsAndObjectsHaveType()
+    {
+        val checkSubjects = s"""
+          Select ?s
+          where
+          {
+              Values ?graph { <$defaultPrefix""" + s"""instructionSet> <$defaultPrefix""" + s"""instructionSet>}
+              Graph ?graph
+              {
+                  ?s ?p ?o .
+              }
+              Minus
+              {
+                  ?s a ?stype .
+              }
+              filter (?p != rdf:type)
+          }
+          """
+        //logger.info(checkSubjects)  
+        
+        val checkObjects = s"""
+          Select ?o
+          where
+          {
+              Values ?graph { <$defaultPrefix""" + s"""instructionSet> <$defaultPrefix""" + s"""instructionSet>}
+              Graph ?graph
+              {
+                  ?s ?p ?o .
+              }
+              Minus
+              {
+                  ?o a ?stype .
+              }
+              filter (?p != rdf:type)
+              filter (?p != drivetrain:predicate)
+              filter (?p != drivetrain:inputNamedGraph)
+              filter (?p != drivetrain:outputNamedGraph)
+              filter (?p != drivetrain:referencedInGraph)
+              filter (!isLiteral(?o))
+          }
+          """
+          //logger.info(checkObjects)
+          
+          val subjectRes = update.querySparqlAndUnpackTuple(gmCxn, checkSubjects, "s")
+          var firstRes = ""
+          if (subjectRes.size != 0) firstRes = subjectRes(0)
+          assert (firstRes == "", s"Error in graph model: $firstRes does not have a type")
+          
+          val objectRes = update.querySparqlAndUnpackTuple(gmCxn, checkObjects, "o")
+          firstRes = ""
+          if (objectRes.size != 0) firstRes = objectRes(0)
+          assert (firstRes == "", s"Error in graph model: $firstRes does not have a type")
+    }
+    
     def validateProcessSpecification(process: String)
     {
        val select: String = s"""
@@ -59,7 +113,7 @@ object GraphModelValidator extends ProjectwideGlobals
     
     def validateGraphSpecificationAgainstOntology()
     {
-        /*val rangeQuery: String = s"""
+        val rangeQuery: String = s"""
           select * where
           {
               graph <$defaultPrefix"""+s"""graphSpecification>
@@ -124,7 +178,7 @@ object GraphModelValidator extends ProjectwideGlobals
         res = update.querySparqlAndUnpackTuple(gmCxn, domainQuery, "recipe")
         firstRes = ""
         if (res.size > 0) firstRes = res(0)
-        assert(firstRes == "")*/
+        assert(firstRes == "")
     }
     
     def validateConnectionRecipesInProcess(process: String)
@@ -276,7 +330,7 @@ object GraphModelValidator extends ProjectwideGlobals
     
     def findRequiredAndUnqueuedRecipes(processListAsString: String)
     {   
-        for (singleClass <- getAllSubjectsAndObjectsInQueuedRecipes(processListAsString))
+        for (singleClass <- getAllSubjectsAndObjectsInQueuedRecipesWithContext(processListAsString))
         {
             val findRequiredButUncreatedRecipes = s"""
               Select ?recipe Where
@@ -284,32 +338,68 @@ object GraphModelValidator extends ProjectwideGlobals
                   {
                       Graph <$defaultPrefix"""+s"""graphSpecification>
                       {
-                          ?recipe drivetrain:subject <$singleClass> .
+                          ?recipe drivetrain:subject ?subject .
                           ?recipe drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists .
+                          Optional 
+                          {
+                              ?recipe drivetrain:subjectUsesContext ?context .
+                              ?context a drivetrain:TurboGraphContext .
+                              ?subject drivetrain:hasPossibleContext ?context .
+                          }
+                          Bind(If(Bound(?context), ?context, "") as ?contextOrBlank)
+                          Bind(Concat(str(?subject), "__", str(?contextOrBlank)) as ?classWithContext)
+                          filter (?classWithContext = $singleClass)
                       }
                   }
                   UNION
                   {
                       Graph <$defaultPrefix"""+s"""graphSpecification>
                       {
-                          ?recipe drivetrain:subject <$singleClass> .
+                          ?recipe drivetrain:subject ?subject .
                           ?recipe drivetrain:mustExistIf drivetrain:subjectExists .
+                          Optional 
+                          {
+                              ?recipe drivetrain:subjectUsesContext ?context .
+                              ?context a drivetrain:TurboGraphContext .
+                              ?subject drivetrain:hasPossibleContext ?context .
+                          }
+                          Bind(If(Bound(?context), ?context, "") as ?contextOrBlank)
+                          Bind(Concat(str(?subject), "__", str(?contextOrBlank)) as ?classWithContext)
+                          filter (?classWithContext = $singleClass)
                       }
                   }
                   UNION
                   {
                       Graph <$defaultPrefix"""+s"""graphSpecification>
                       {
-                          ?recipe drivetrain:object <$singleClass> .
+                          ?recipe drivetrain:object ?object .
                           ?recipe drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists .
+                          Optional 
+                          {
+                              ?recipe drivetrain:objectUsesContext ?context .
+                              ?context a drivetrain:TurboGraphContext .
+                              ?object drivetrain:hasPossibleContext ?context .
+                          }
+                          Bind(If(Bound(?context), ?context, "") as ?contextOrBlank)
+                          Bind(Concat(str(?object), "__", str(?contextOrBlank)) as ?classWithContext)
+                          filter (?classWithContext = $singleClass)
                       }
                   }
                   UNION
                   {
                       Graph <$defaultPrefix"""+s"""graphSpecification>
                       {
-                          ?recipe drivetrain:object <$singleClass> .
+                          ?recipe drivetrain:object ?object .
                           ?recipe drivetrain:mustExistIf drivetrain:objectExists .
+                          Optional 
+                          {
+                              ?recipe drivetrain:objectUsesContext ?context .
+                              ?context a drivetrain:TurboGraphContext .
+                              ?object drivetrain:hasPossibleContext ?context .
+                          }
+                          Bind(If(Bound(?context), ?context, "") as ?contextOrBlank)
+                          Bind(Concat(str(?object), "__", str(?contextOrBlank)) as ?classWithContext)
+                          filter (?classWithContext = $singleClass)
                       }
                   }
                   MINUS
@@ -326,14 +416,19 @@ object GraphModelValidator extends ProjectwideGlobals
             var firstRes = ""
             val res = update.querySparqlAndUnpackTuple(gmCxn, findRequiredButUncreatedRecipes, "recipe")
             if (res.size > 0) firstRes = res(0)
-            assert(firstRes == "", s"Error in graph model: connection recipe $firstRes in the Graph Specification is required due to the existence of $singleClass but is not the output of a queued process in the Instruction Set")
+            val singleClassCleaned = helper.removeQuotesFromString(singleClass.split("\\^")(0)).split(("__"))
+            val singleClassCleaned1 = singleClassCleaned(0)
+            var errMsg = s"Error in graph model: connection recipe $firstRes in the Graph Specification is required due to the existence of $singleClassCleaned1 "
+            if (singleClassCleaned.size > 1) errMsg += "with context " + singleClassCleaned(1) + " "
+            errMsg += "but is not the output of a queued process in the Instruction Set"
+            assert(firstRes == "", errMsg)
         }
     }
     
-    def getAllSubjectsAndObjectsInQueuedRecipes(processListAsString: String): ArrayBuffer[String] =
+    def getAllSubjectsAndObjectsInQueuedRecipesWithContext(processListAsString: String): ArrayBuffer[String] =
     {
         val getSubjectAndObjectOutputs = s"""
-          Select distinct ?class Where
+          Select distinct ?classWithContext Where
           {
               {
                   Graph <$defaultPrefix"""+s"""instructionSet>
@@ -348,6 +443,14 @@ object GraphModelValidator extends ProjectwideGlobals
                           ?connection a drivetrain:TermToInstanceRecipe ;
                       }
                   }
+                  Optional 
+                  {
+                      ?connection drivetrain:subjectUsesContext ?context .
+                      ?context a drivetrain:TurboGraphContext .
+                      ?class drivetrain:hasPossibleContext ?context .
+                  }
+                  Bind(If(Bound(?context), ?context, "") as ?contextOrBlank)
+                  Bind(Concat(str(?class), "__", str(?contextOrBlank)) as ?classWithContext)
                   ?class a owl:Class .
                   filter (?process IN ($processListAsString))
               }
@@ -365,13 +468,21 @@ object GraphModelValidator extends ProjectwideGlobals
                           ?connection a drivetrain:InstanceToTermRecipe ;
                       }
                   }
+                  Optional 
+                  {
+                      ?connection drivetrain:objectUsesContext ?context .
+                      ?context a drivetrain:TurboGraphContext .
+                      ?class drivetrain:hasPossibleContext ?context .
+                  }
+                  Bind(If(Bound(?context), ?context, "") as ?contextOrBlank)
+                  Bind(Concat(str(?class), "__", str(?contextOrBlank)) as ?classWithContext)
                   ?class a owl:Class .
                   filter (?process IN ($processListAsString))
               }
           }
           """
         //logger.info(getSubjectAndObjectOutputs)
-        update.querySparqlAndUnpackTuple(gmCxn, getSubjectAndObjectOutputs, "class")
+        update.querySparqlAndUnpackTuple(gmCxn, getSubjectAndObjectOutputs, "classWithContext")
     }
     
     def findQueuedAndUnrequiredRecipes(processList: ArrayBuffer[String], processListAsString: String)
