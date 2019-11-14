@@ -26,6 +26,9 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
         RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
         OntologyLoader.addOntologyFromUrl(gmCxn)
+        
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
     }
     
     override def afterAll()
@@ -82,6 +85,8 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:class2 a owl:Class .
                     pmbb:class3 a owl:Class .
                     pmbb:class4 a owl:Class .
+                    
+                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
                 }
             }
           """
@@ -165,6 +170,8 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:class2 a owl:Class .
                     pmbb:class3 a owl:Class .
                     pmbb:class4 a owl:Class .
+                    
+                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
                 }
             }
           """
@@ -256,6 +263,8 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:class2 a owl:Class .
                     pmbb:class3 a owl:Class .
                     pmbb:class4 a owl:Class .
+                    
+                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
                 }
             }
           """
@@ -348,6 +357,8 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:class2 a owl:Class .
                     pmbb:class3 a owl:Class .
                     pmbb:class4 a owl:Class .
+                    
+                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
                 }
             }
           """
@@ -438,6 +449,8 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:class2 a owl:Class .
                     pmbb:class3 a owl:Class .
                     pmbb:class4 a owl:Class .
+                    
+                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
                 }
             }
           """

@@ -861,6 +861,6 @@ drivetrain:condition_type_LiteralValue
   a drivetrain:TurboGraphStringLiteralValue 
 .
 drivetrain:RxSourcedenTerm
-  drivetrain:range drivetrain:MedicationRegistryPlaceholder ;
+  drivetrain:range ontologies:TURBO_0010714 ;
 .
 drivetrain:MedicationRegistryPlaceholder a owl:Class .

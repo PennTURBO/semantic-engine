@@ -469,6 +469,9 @@ class TurboMultiuseClass extends Enumeration with Matchers
         update.updateSparql(cxn, updateQuery)
     }
     
+    //stores queries completed from generate named graphs methods
+    val completedQueriesMap = new HashMap[String, ArrayBuffer[String]]
+    
     /**
      * Generates list of all Shortcut named graphs by issuing a Sparql command to retrieve all named graphs which start with "Shortcuts"
      * 
@@ -495,7 +498,13 @@ class TurboMultiuseClass extends Enumeration with Matchers
         $filterClause
         }"""
         //println(getGraphs)
-        update.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
+        if (completedQueriesMap.contains(getGraphs)) completedQueriesMap(getGraphs)
+        else 
+        {
+            val res = update.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
+            completedQueriesMap += getGraphs -> res
+            res
+        }
     }
     
     def generateSimpleNamedGraphsListFromPrefix(cxn: RepositoryConnection, graphsPrefix: String): ArrayBuffer[String] =
@@ -511,7 +520,13 @@ class TurboMultiuseClass extends Enumeration with Matchers
             $filterClause
             }"""
             //println(getGraphs)
-            update.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
+            if (completedQueriesMap.contains(getGraphs)) completedQueriesMap(getGraphs)
+            else 
+            {
+                val res = update.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
+                completedQueriesMap += getGraphs -> res
+                res
+            }
         }
         else 
         {

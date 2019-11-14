@@ -329,7 +329,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: for process http://transformunify.org/ontologies/myProcess1, the multiplicity of http://transformunify.org/ontologies/object2 has not been defined consistently.")
+            case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Error in graph model: for process http://transformunify.org/ontologies/myProcess1, the multiplicity of http://transformunify.org/ontologies/object2 has not been defined consistently"))
         }
     }
     
@@ -387,7 +387,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: for process http://transformunify.org/ontologies/myProcess1, the multiplicity of http://transformunify.org/ontologies/object4 has not been defined consistently.")
+            case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Error in graph model: for process http://transformunify.org/ontologies/myProcess1, the multiplicity of http://transformunify.org/ontologies/object4 has not been defined consistently"))
         }
     }
     

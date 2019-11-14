@@ -117,7 +117,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
             assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToInstanceRecipe")
         }
-        else
+        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
         {
             assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
             assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
@@ -239,7 +239,7 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
                 assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToInstanceRecipe")
             }
-            else
+            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
             {
                 assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
                 assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
@@ -516,10 +516,12 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             else if (row(CONNECTIONRECIPETYPE.toString).toString == objToTermRecipe || row(CONNECTIONRECIPETYPE.toString).toString == datatypeRecipe)
             {
                 inputNonInstanceClasses += subjectString
+                logger.info("added " + subjectString)
             }
             else if (row(CONNECTIONRECIPETYPE.toString).toString == objFromTermRecipe)
             {
                 inputNonInstanceClasses += objectString
+                logger.info("added " + objectString)
             }
         }
         // we don't care about non-InstanceToInstanceRecipes if there were InstanceToInstanceRecipes present
