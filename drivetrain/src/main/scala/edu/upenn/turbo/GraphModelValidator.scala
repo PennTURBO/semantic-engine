@@ -11,56 +11,118 @@ object GraphModelValidator extends ProjectwideGlobals
         this.gmCxn = gmCxn
     }
     
-    def checkAllSubjectsAndObjectsHaveType()
+    def checkAcornFilesForMissingTypes()
     {
         val checkSubjects = s"""
           Select ?s
           where
           {
-              Values ?graph { <$defaultPrefix""" + s"""instructionSet> <$defaultPrefix""" + s"""instructionSet>}
-              Graph ?graph
+              Values ?graphList { <$defaultPrefix""" + s"""instructionSet> 
+                                   <$defaultPrefix""" + s"""graphSpecification>
+                                   <$defaultPrefix""" + s"""acornOntology>}
+              Graph ?graphList
               {
                   ?s ?p ?o .
               }
               Minus
               {
-                  ?s a ?stype .
+                  Graph ?g
+                  {
+                      ?s a ?type .
+                  }
               }
-              filter (?p != rdf:type)
+              filter (?s != owl:Class)
           }
           """
         //logger.info(checkSubjects)  
+                              
+        val checkPredicates = s"""
+          Select ?p
+          where
+          {
+              Values ?graphList { <$defaultPrefix""" + s"""instructionSet> 
+                                  <$defaultPrefix""" + s"""graphSpecification>
+                                  <$defaultPrefix""" + s"""acornOntology>}
+              Graph ?graphList
+              {
+                  ?s ?p ?o .
+              }
+              Minus
+              {
+                  Graph ?g
+                  {
+                      ?p a ?type .
+                  }
+              }
+              filter (?p != rdfs:subClassOf)
+          }
+          """
+        //logger.info(checkPredicates)
         
         val checkObjects = s"""
           Select ?o
           where
           {
-              Values ?graph { <$defaultPrefix""" + s"""instructionSet> <$defaultPrefix""" + s"""instructionSet>}
-              Graph ?graph
               {
-                  ?s ?p ?o .
+                  Values ?graphList { <$defaultPrefix""" + s"""instructionSet> 
+                                      <$defaultPrefix""" + s"""acornOntology>}
+                  Graph ?graphList
+                  {
+                      ?s ?p ?o .
+                  }
+                  Minus
+                  {
+                      Graph ?g
+                      {
+                          ?o a ?type .
+                      }
+                  }
+                  filter (?p != drivetrain:inputNamedGraph)
+                  filter (?p != drivetrain:outputNamedGraph)
+                  filter (?p != drivetrain:referencedInGraph)
+                  filter (!isLiteral(?o))
+                  filter (?o != owl:Class)
+                  filter (?p != drivetrain:predicate)
+                  filter (?o != rdf:Property)
               }
-              Minus
+              UNION
               {
-                  ?o a ?stype .
+                  Values ?graphList { <$defaultPrefix""" + s"""graphSpecification> 
+                                      <$defaultPrefix""" + s"""acornOntology>}
+                  Graph ?graphList
+                  {
+                      ?s ?p ?o .
+                  }
+                  Minus
+                  {
+                      Graph ?g
+                      {
+                          ?o a ?type .
+                      }
+                  }
+                  filter (?p != drivetrain:inputNamedGraph)
+                  filter (?p != drivetrain:outputNamedGraph)
+                  filter (?p != drivetrain:referencedInGraph)
+                  filter (!isLiteral(?o))
+                  filter (?o != owl:Class)
+                  filter (?o != rdf:Property)
               }
-              filter (?p != rdf:type)
-              filter (?p != drivetrain:predicate)
-              filter (?p != drivetrain:inputNamedGraph)
-              filter (?p != drivetrain:outputNamedGraph)
-              filter (?p != drivetrain:referencedInGraph)
-              filter (!isLiteral(?o))
+              
           }
           """
           //logger.info(checkObjects)
+                                      
+          var firstRes = ""
           
           val subjectRes = update.querySparqlAndUnpackTuple(gmCxn, checkSubjects, "s")
-          var firstRes = ""
           if (subjectRes.size != 0) firstRes = subjectRes(0)
           assert (firstRes == "", s"Error in graph model: $firstRes does not have a type")
           
+          val predRes = update.querySparqlAndUnpackTuple(gmCxn, checkPredicates, "p")
+          if (predRes.size != 0) firstRes = predRes(0)
+          assert (firstRes == "", s"Error in graph model: $firstRes does not have a type")
+          
           val objectRes = update.querySparqlAndUnpackTuple(gmCxn, checkObjects, "o")
-          firstRes = ""
           if (objectRes.size != 0) firstRes = objectRes(0)
           assert (firstRes == "", s"Error in graph model: $firstRes does not have a type")
     }
@@ -233,113 +295,6 @@ object GraphModelValidator extends ProjectwideGlobals
         
         findRequiredAndUnqueuedRecipes(processListAsString)
         findQueuedAndUnrequiredRecipes(processList, processListAsString)
-    }
-    
-    def validateGraphModelTerms()
-    {
-        validatePredicates()
-        validateTypes()
-    }
-    
-    def validatePredicates()
-    {
-        val checkPredicates: String = s"""
-          Select distinct ?predicate Where
-          {
-              Values ?g {<$defaultPrefix"""+s"""instructionSet> <$defaultPrefix"""+"""graphSpecification>}
-              Graph ?g
-              {
-                  ?subject ?predicate ?object .
-                  Filter (?predicate NOT IN (
-                      drivetrain:subject,
-                      drivetrain:predicate,
-                      drivetrain:object,
-                      rdf:type,
-                      drivetrain:usesCustomVariableManipulationRule,
-                      drivetrain:usesSparql,
-                      drivetrain:partOf,
-                      drivetrain:referencedInGraph,
-                      drivetrain:mustExistIf,
-                      drivetrain:multiplicity,
-                      drivetrain:inputNamedGraph,
-                      drivetrain:outputNamedGraph,
-                      drivetrain:hasOutput,
-                      drivetrain:hasRequiredInput,
-                      drivetrain:hasOptionalInput,
-                      drivetrain:removes,
-                      rdfs:label,
-                      drivetrain:buildsOptionalGroup,
-                      drivetrain:buildsMinusGroup,
-                      drivetrain:precedes,
-                      drivetrain:subjectRequiredToCreate,
-                      drivetrain:objectRequiredToCreate,
-                      drivetrain:subjectUsesContext,
-                      drivetrain:objectUsesContext,
-                      drivetrain:hasPossibleContext,
-                      drivetrain:range,
-                      owl:versionInfo,
-                      owl:imports,
-                      rdfs:subClassOf,
-                      rdfs:domain,
-                      rdfs:range,
-                      drivetrain:usesSparqlOperator,
-                      drivetrain:predicateSuffix
-                  ))
-              }
-          }
-        """
-        //println(checkPredicates)
-        var firstRes = ""
-        var res = update.querySparqlAndUnpackTuple(gmCxn, checkPredicates, "predicate")
-        if (res.size > 0) firstRes = res(0)
-        assert(firstRes == "", s"Error in graph model: predicate $firstRes is not known in the Acorn language")
-    }
-    
-    def validateTypes()
-    {
-        val checkTypes: String = s"""
-          Select distinct ?type Where
-          {
-              Values ?g {<$defaultPrefix"""+s"""instructionSet> <$defaultPrefix"""+"""graphSpecification>}
-              Graph ?g
-              {
-                  ?subject a ?type .
-                  Filter (?type NOT IN (
-                      drivetrain:InstanceToTermRecipe,
-                      drivetrain:InstanceToInstanceRecipe,
-                      drivetrain:TermToInstanceRecipe,
-                      drivetrain:InstanceToLiteralRecipe,
-                      drivetrain:TermToTermRecipe,
-                      drivetrain:TermToLiteralRecipe,
-                      drivetrain:MultiObjectDescriber,
-                      owl:Class,
-                      drivetrain:TurboGraphContext,
-                      drivetrain:TurboGraphMinusGroup,
-                      drivetrain:TurboGraphOptionalGroup,
-                      drivetrain:TurboGraphVariableManipulationLogic,
-                      drivetrain:TurboNamedGraph,
-                      owl:Ontology,
-                      turbo:TURBO_0010354,
-                      owl:ObjectProperty,
-                      owl:DatatypeProperty,
-                      drivetrain:TurboGraphStringLiteralValue,
-                      drivetrain:TurboGraphDateLiteralValue,
-                      drivetrain:TurboGraphLiteralValue,
-                      drivetrain:TurboGraphDoubleLiteralValue,
-                      drivetrain:TurboGraphIntegerLiteralValue,
-                      drivetrain:TurboGraphBooleanLiteralValue,
-                      drivetrain:TurboGraphRequirementSpecification,
-                      drivetrain:TurboGraphMultiplicityRule,
-                      drivetrain:PredicateSuffixSymbol
-                  ))
-              }
-          }
-        """
-        //println(checkTypes)
-        var firstRes = ""
-        var res = update.querySparqlAndUnpackTuple(gmCxn, checkTypes, "type")
-        if (res.size > 0) firstRes = res(0)
-        assert(firstRes == "", s"Error in graph model: type $firstRes is not known in the Acorn language")
     }
     
     def findRequiredAndUnqueuedRecipes(processListAsString: String)

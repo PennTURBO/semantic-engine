@@ -34,15 +34,6 @@
 <http://data.bioontology.org/ontologies/RXNORM/>
   a drivetrain:TurboNamedGraph ;
 .
-<http://haydensgraph_2.org/>
-  a owl:Ontology ;
-  owl:imports ontologies: ;
-.
-ontologies:
-  a owl:Ontology ;
-  owl:imports ontologies: ;
-  owl:versionInfo "Created with TopBraid Composer" ;
-.
 ontologies:GenderIdentityTypeRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000133) AS ${replacement})" ;
@@ -71,7 +62,7 @@ ontologies:shortcutTumorToShortcutHomoSapiens
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object ontologies:TURBO_0010161 ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:mustExecuteIf drivetrain:subjectExists ;
   drivetrain:subject ontologies:TURBO_0010191 ;
 .
 ontologies:SnomedDiagnosisRegistryRule
@@ -313,7 +304,7 @@ ontologies:shortcutAlleleToExpandedAllele
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OBI_0001352 ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToGeneSymbol
@@ -321,7 +312,7 @@ ontologies:shortcutAlleleToGeneSymbol
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:alleleSymbol_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0007605 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToGeneSymbolFirstPart
@@ -329,7 +320,7 @@ ontologies:shortcutAlleleToGeneSymbolFirstPart
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:allelePrefix_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010015 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToGeneSymbolSecondPart
@@ -337,7 +328,7 @@ ontologies:shortcutAlleleToGeneSymbolSecondPart
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:alleleSuffix_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010016 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToGeneSymbolUri
@@ -345,7 +336,7 @@ ontologies:shortcutAlleleToGeneSymbolUri
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:GeneSymbolClassList ;
   drivetrain:predicate obo:IAO_0000142 ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:mustExecuteIf drivetrain:subjectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToShortcutAlleleRegistryUri
@@ -353,7 +344,7 @@ ontologies:shortcutAlleleToShortcutAlleleRegistryUri
   drivetrain:multiplicity drivetrain:many-singleton ;
   drivetrain:object drivetrain:GenomeRegistryClassList ;
   drivetrain:predicate ontologies:TURBO_0010285 ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:mustExecuteIf drivetrain:subjectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToShortcutBiobankEncounter
@@ -361,7 +352,7 @@ ontologies:shortcutAlleleToShortcutBiobankEncounter
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0010169 ;
   drivetrain:predicate ontologies:TURBO_0010142 ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:mustExecuteIf drivetrain:subjectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToZygosityIntegerValue
@@ -369,7 +360,7 @@ ontologies:shortcutAlleleToZygosityIntegerValue
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:zygosity_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010095 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutAlleleToZygosityValueUri
@@ -377,7 +368,7 @@ ontologies:shortcutAlleleToZygosityValueUri
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:ZygosityClassList ;
   drivetrain:predicate ontologies:TURBO_0007607 ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:mustExecuteIf drivetrain:subjectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
 .
 ontologies:shortcutBiobankEncounterToShortcutMeasurement
@@ -401,7 +392,7 @@ ontologies:shortcutMeasurementToShortcutMeasType
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:MeasClassList ;
   drivetrain:predicate drivetrain:scMeasHasType ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject drivetrain:shortcutMeasurement ;
   drivetrain:partOf drivetrain:BiobankEncounterMeasurementsOptionalGroup ;
   drivetrain:partOf drivetrain:HealthcareEncounterMeasurementsOptionalGroup ;
@@ -413,7 +404,7 @@ ontologies:shortcutMeasurementToValue
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:value_as_number_LiteralValue ;
   drivetrain:predicate drivetrain:scMeasHasValue ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject drivetrain:shortcutMeasurement ;
   drivetrain:partOf drivetrain:BiobankEncounterMeasurementsOptionalGroup ;
   drivetrain:partOf drivetrain:HealthcareEncounterMeasurementsOptionalGroup ;
@@ -423,7 +414,7 @@ ontologies:shortcutMeasurementToUnitLabel
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:MulClassList ;
   drivetrain:predicate drivetrain:scMeasHasUnitLabel ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject drivetrain:shortcutMeasurement ;
   drivetrain:partOf drivetrain:BiobankEncounterMeasurementsOptionalGroup ;
   drivetrain:partOf drivetrain:HealthcareEncounterMeasurementsOptionalGroup ;
@@ -455,7 +446,7 @@ ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0000527 ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutMeasurementToExpandedMeasurement
@@ -463,7 +454,7 @@ ontologies:shortcutMeasurementToExpandedMeasurement
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:MeasToBeTyped ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject drivetrain:shortcutMeasurement ;
 .
 ontologies:shortcutBiobankEncounterToRegistry
@@ -471,7 +462,7 @@ ontologies:shortcutBiobankEncounterToRegistry
   drivetrain:multiplicity drivetrain:many-singleton ;
   drivetrain:object drivetrain:BiobankEncRegDenClassList ;
   drivetrain:predicate ontologies:TURBO_0010286 ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:mustExecuteIf drivetrain:subjectExists ;
   drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI
@@ -486,7 +477,7 @@ ontologies:shortcutBiobankEncounterToSymbolValue
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:biobankEnc_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0000628 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:encCodeTypeProvenanceOptionalGroup
@@ -518,7 +509,7 @@ ontologies:shortcutDiagnosisToExpandedDiagnosis
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:OGMS_0000073 ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutDiagnosisToPrimaryDiagnosisBooleanValue
@@ -542,7 +533,7 @@ ontologies:shortcutDiagnosisToRegistryString
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:diagnosis_RegistryStringLiteral ;
   drivetrain:predicate ontologies:TURBO_0004602 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010160 ;
 .
 ontologies:shortcutHealthcareEncounterToEncounterType
@@ -573,7 +564,7 @@ ontologies:shortcutHealthcareEncounterToDiagnosis
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object ontologies:TURBO_0010160 ;
   drivetrain:predicate obo:OBI_0000299 ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter
@@ -581,7 +572,7 @@ ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:EncToBeTyped ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry
@@ -589,7 +580,7 @@ ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry
   drivetrain:multiplicity drivetrain:many-singleton ;
   drivetrain:object drivetrain:HealthcareEncounterRegDen ;
   drivetrain:predicate ontologies:TURBO_0010110 ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:mustExecuteIf drivetrain:subjectExists ;
   drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToPrescription
@@ -597,7 +588,7 @@ ontologies:shortcutHealthcareEncounterToPrescription
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object ontologies:TURBO_0010159 ;
   drivetrain:predicate obo:OBI_0000299 ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI
@@ -606,14 +597,14 @@ ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI
   drivetrain:object ontologies:TURBO_0010161 ;
   drivetrain:predicate ontologies:TURBO_0010131 ;
   drivetrain:subject ontologies:TURBO_0010158 ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:mustExecuteIf drivetrain:subjectExists ;
 .
 ontologies:shortcutHealthcareEncounterToSymbolValue
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0000648 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010158 ;
 .
 ontologies:shortcutHomoSapiensIdToRegistry
@@ -621,7 +612,7 @@ ontologies:shortcutHomoSapiensIdToRegistry
   drivetrain:multiplicity drivetrain:many-singleton ;
   drivetrain:object drivetrain:PatientRegden ;
   drivetrain:predicate ontologies:TURBO_0010282 ;
-  drivetrain:mustExistIf drivetrain:subjectExists ;
+  drivetrain:mustExecuteIf drivetrain:subjectExists ;
   drivetrain:subject ontologies:TURBO_0010168 ;
 .
 ontologies:shortcutHomoSapiensIdToSymbol
@@ -629,7 +620,7 @@ ontologies:shortcutHomoSapiensIdToSymbol
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:person_cridsym_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010079 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010168 ;
 .
 ontologies:shortcutHomoSapiensIdentifierToExpandedHomoSapiensIdentifier
@@ -637,7 +628,7 @@ ontologies:shortcutHomoSapiensIdentifierToExpandedHomoSapiensIdentifier
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:IAO_0000578 ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010168 ;
   drivetrain:objectUsesContext drivetrain:PatientCridContext ;
 .
@@ -646,7 +637,7 @@ ontologies:shortcutHomoSapiensIdentifierToShortcutHomoSapiens
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
   drivetrain:object ontologies:TURBO_0010161 ;
   drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010168 ;
 .
 ontologies:shortcutHomoSapiensToDateOfBirthDate
@@ -670,7 +661,7 @@ ontologies:shortcutHomoSapiensToExpandedHomoSapiens
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:NCBITaxon_9606 ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010161 ;
 .
 ontologies:shortcutHomoSapiensToGenderIdentityType
@@ -717,7 +708,7 @@ ontologies:shortcutPrescriptionToExpandedPrescription
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object obo:PDRO_0000024 ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010159 ;
 .
 ontologies:shortcutPrescriptionToMedicationOrderName
@@ -732,7 +723,7 @@ ontologies:shortcutPrescriptionToSymbolValue
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:prescription_id_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0005601 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010159 ;
 .
 ontologies:shortcutTumorOptionalGroup
@@ -743,7 +734,7 @@ ontologies:shortcutTumorToExpandedTumor
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object ontologies:TURBO_0010070 ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
-  drivetrain:mustExistIf drivetrain:objectExists ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject ontologies:TURBO_0010191 ;
 .
 ontologies:shortcutTumorToRegistryDenoter
@@ -752,7 +743,7 @@ ontologies:shortcutTumorToRegistryDenoter
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:TumorRegistryClassList ;
   drivetrain:predicate ontologies:TURBO_0010277 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010191 ;
 .
 ontologies:shortcutTumorToTumorLiteralValue
@@ -761,7 +752,7 @@ ontologies:shortcutTumorToTumorLiteralValue
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:tumor_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010194 ;
-  drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010191 ;
 .
 pmbb:Shortcuts_
@@ -777,7 +768,7 @@ drivetrain:GidClassList
   drivetrain:usesCustomVariableManipulationRule ontologies:GenderIdentityTypeRule ;
 .
 drivetrain:ShortcutGidClassList
-  a drivetrain:MultiObjectDescriber ;
+  a drivetrain:ClassResourceList ;
 .
 drivetrain:RidClassList
   drivetrain:range obo:OBI_0000852 ;
@@ -791,7 +782,7 @@ drivetrain:RidClassList
   drivetrain:usesCustomVariableManipulationRule ontologies:RaceIdentityTypeRule ;
 .
 drivetrain:ShortcutRidClassList
-  a drivetrain:MultiObjectDescriber ;
+  a drivetrain:ClassResourceList ;
 .
 drivetrain:PatientRegden 
   drivetrain:range ontologies:TURBO_0000505 ;
@@ -808,25 +799,25 @@ obo:IAO_0000100
   drivetrain:usesCustomVariableManipulationRule ontologies:DatasetExpansionRule ;
 .
 drivetrain:gender_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 drivetrain:race_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 drivetrain:person_cridsym_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 drivetrain:tumor_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 ontologies:homoSapiensDateOfBirthStringLiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 drivetrain:TumorRegistryClassList 
   drivetrain:range ontologies:TURBO_0010274 ;
 .
 drivetrain:biobankEnc_LiteralValue 
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 drivetrain:BiobankEncRegDenClassList
   drivetrain:range ontologies:TURBO_0000535 ;
@@ -838,10 +829,10 @@ drivetrain:GenomeRegistryClassList
   drivetrain:range ontologies:TURBO_0000567 ;
 .
 drivetrain:alleleSymbol_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 drivetrain:value_as_number_LiteralValue
-  a drivetrain:TurboGraphDoubleLiteralValue ;
+  a drivetrain:DoubleLiteralResourceList ;
 .
 drivetrain:HealthcareEncounterRegDen
   drivetrain:range ontologies:TURBO_0000510 ;
@@ -851,14 +842,14 @@ drivetrain:EncClassList
   drivetrain:range obo:OGMS_0000097 ;
 .
 drivetrain:encounter_keysym_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 drivetrain:diagnosisRegDen
   drivetrain:range <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
   drivetrain:range <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892> ;
 .
 drivetrain:condition_type_LiteralValue 
-  a drivetrain:TurboGraphStringLiteralValue 
+  a drivetrain:StringLiteralResourceList 
 .
 drivetrain:RxSourcedenTerm
   drivetrain:range ontologies:TURBO_0010714 ;

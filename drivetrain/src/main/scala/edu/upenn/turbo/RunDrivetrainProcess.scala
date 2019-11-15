@@ -43,8 +43,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
     def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String): HashMap[String, PatternMatchQuery] =
     {
-        GraphModelValidator.checkAllSubjectsAndObjectsHaveType()
-        GraphModelValidator.validateGraphModelTerms()
+        GraphModelValidator.checkAcornFilesForMissingTypes()
         GraphModelValidator.validateGraphSpecificationAgainstOntology()
         
         var processQueryMap = new HashMap[String, PatternMatchQuery]
@@ -234,12 +233,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               Optional
               {
-                  ?$OBJECT a drivetrain:MultiObjectDescriber .
+                  ?$OBJECT a drivetrain:ClassResourceList .
                   BIND (true AS ?$OBJECTADESCRIBER)
               }
               Optional
               {
-                  ?$SUBJECT a drivetrain:MultiObjectDescriber .
+                  ?$SUBJECT a drivetrain:ClassResourceList .
                   BIND (true AS ?$SUBJECTADESCRIBER)
               }
               Optional
@@ -312,12 +311,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
               Optional
               {
-                  ?$OBJECT a drivetrain:MultiObjectDescriber .
+                  ?$OBJECT a drivetrain:ClassResourceList .
                   BIND (true AS ?$OBJECTADESCRIBER)
               }
               Optional
               {
-                  ?$SUBJECT a drivetrain:MultiObjectDescriber .
+                  ?$SUBJECT a drivetrain:ClassResourceList .
                   BIND (true AS ?$SUBJECTADESCRIBER)
               }
               Optional
@@ -392,12 +391,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               Optional
               {
-                  ?$SUBJECT a drivetrain:MultiObjectDescriber .
+                  ?$SUBJECT a drivetrain:ClassResourceList .
                   BIND (true as ?$SUBJECTADESCRIBER)
               }
               Optional
               {
-                  ?$OBJECT a drivetrain:MultiObjectDescriber .
+                  ?$OBJECT a drivetrain:ClassResourceList .
                   BIND (true as ?$OBJECTADESCRIBER)
               }
               Optional
