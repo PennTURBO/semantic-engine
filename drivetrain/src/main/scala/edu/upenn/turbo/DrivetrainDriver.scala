@@ -57,7 +57,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       RunDrivetrainProcess.setGlobalUUID(globalUUID)
                       RunDrivetrainProcess.setGraphModelConnection(gmCxn)
                       RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-                      GraphModelValidator.validateGraphModelTerms()
+                      GraphModelValidator.checkAcornFilesForMissingTypes()
                       GraphModelValidator.validateGraphSpecificationAgainstOntology()
                       val query = RunDrivetrainProcess.createPatternMatchQuery(args(1))
                       if (query != null)
@@ -79,7 +79,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   
                   logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
                   RunDrivetrainProcess.setGlobalUUID(globalUUID)
-                  GraphModelValidator.validateGraphModelTerms()
+                  GraphModelValidator.checkAcornFilesForMissingTypes()
                   GraphModelValidator.validateGraphSpecificationAgainstOntology()
                   val thisProcess = helper.getProcessNameAsUri(args(0))
                   RunDrivetrainProcess.runProcess(thisProcess)   
@@ -98,7 +98,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
   }
   
-  def updateModel(gmCxn: RepositoryConnection, graphModelFile: String = graphModelFile, graphSpecFile: String = graphSpecificationFile)
+  def updateModel(gmCxn: RepositoryConnection, graphModelFile: String = graphModelFile, graphSpecFile: String = graphSpecificationFile, acornOntology: String = acornOntologyFile)
   {
       logger.info("Updating graph model using file " + graphModelFile)
       val graph = s"$defaultPrefix" + "instructionSet"
@@ -130,6 +130,29 @@ object DrivetrainDriver extends ProjectwideGlobals {
       query = s"INSERT DATA { Graph <$graphSpecGraph> {"
       val graphSpecBr = io.Source.fromFile(s"ontologies//$graphSpecFile")
       for (line <- graphSpecBr.getLines())
+      {
+          if (line.size > 0)
+          {
+              if (line.charAt(0) != '#')
+              {
+                  if (line.charAt(0) != '@') query += line+"\n"
+                  else
+                  {
+                      var formattedPrefix = line.substring(1, line.size-1)
+                      prefixes += formattedPrefix+"\n"
+                  }
+              }
+          }
+      }
+      query += "}}"
+      //logger.info(query)
+      update.updateSparql(gmCxn, query)
+      
+      logger.info("Updating Acorn ontology using file " + acornOntologyFile)
+      val acornOntologyGraph = s"$defaultPrefix" + "acornOntology"
+      query = s"INSERT DATA { Graph <$acornOntologyGraph> {"
+      val acornBr = io.Source.fromFile(s"ontologies//$acornOntologyFile")
+      for (line <- acornBr.getLines())
       {
           if (line.size > 0)
           {

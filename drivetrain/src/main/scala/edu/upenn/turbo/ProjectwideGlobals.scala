@@ -46,6 +46,7 @@ trait ProjectwideGlobals extends Enumeration
      val defaultPrefix = helper.retrieveUriPropertyFromFile("defaultPrefix")
      val expandedNamedGraph = helper.retrieveUriPropertyFromFile("expandedNamedGraph").replace("\"","")
      val clearGraphsAtStart = getBooleanProperty("clearGraphsAtStart")
+     val acornOntologyFile = helper.retrievePropertyFromFile("acornOntologyFile")
      
      def getBooleanProperty(property: String): Boolean =
      {

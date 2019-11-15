@@ -16,6 +16,7 @@ clearGraphsAtStart = false
 
 graphModelFile = turbo_dataModel_file.ttl
 graphSpecificationFile = turbo_graphSpecification.ttl
+acornOntologyFile = acornOntology.ttl
 
 # dataValidationMode options: None, Log, Stop
 dataValidationMode = Stop
