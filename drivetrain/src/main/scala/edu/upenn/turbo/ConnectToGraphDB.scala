@@ -161,7 +161,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
             "processNamedGraph", "reinferRepo", "loadAdditionalOntologies",
             "graphModelFile", "graphSpecificationFile", "defaultPrefix",
             "dataValidationMode", "errorLogFile", "expandedNamedGraph",
-            "clearGraphsAtStart")
+            "clearGraphsAtStart", "acornOntologyFile")
         var a = 0
         while (optToReturn == None && a < requiredProperties.size)
         {
