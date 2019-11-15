@@ -79,7 +79,7 @@ drivetrain:Patients
 .
 
 drivetrain:GidScoGid 
-   a drivetrain:InstanceToTermRecipe ;
+   a drivetrain:TermToTermRecipe ;
    drivetrain:multiplicity drivetrain:1-1 ;
    drivetrain:referencedInGraph properties:ontologyURL ;
    drivetrain:subject drivetrain:GidClassList ;
@@ -88,7 +88,7 @@ drivetrain:GidScoGid
 .
 
 drivetrain:GidOmopConceptIds 
-  a drivetrain:InstanceToLiteralRecipe ;
+  a drivetrain:TermToLiteralRecipe ;
   drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:GidClassList ;
@@ -125,7 +125,7 @@ drivetrain:race_LiteralValue
 .
 
 drivetrain:RidScoStarRid 
-   a drivetrain:InstanceToTermRecipe ;
+   a drivetrain:TermToTermRecipe ;
    drivetrain:multiplicity drivetrain:1-1 ;
    drivetrain:object obo:OMRSE_00000098 ;
    drivetrain:predicate rdfs:subClassOf ;
@@ -135,7 +135,7 @@ drivetrain:RidScoStarRid
 .
 
 drivetrain:RidOmopConceptIds 
-  a drivetrain:InstanceToLiteralRecipe ;
+  a drivetrain:TermToLiteralRecipe ;
   drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject drivetrain:RidClassList ;
