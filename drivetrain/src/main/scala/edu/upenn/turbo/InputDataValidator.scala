@@ -68,7 +68,7 @@ object InputDataValidator extends ProjectwideGlobals
                 else
                 {
                     val connectionType = input(CONNECTIONRECIPETYPE.toString).toString
-                    throw new RuntimeException(s"Unrecognized connection recipe type $connectionType")
+                    if (connectionType != "https://github.com/PennTURBO/Drivetrain/TermToTermRecipe" && connectionType != "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe") throw new RuntimeException(s"Unrecognized connection recipe type $connectionType")
                 }
             }
         }

@@ -114,6 +114,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 metaDataQuery.createInsertDataClause(metaDataTriples, processNamedGraph)
                 //logger.info(metaDataQuery.getQuery())
                 metaDataQuery.runQuery(cxn)  
+                if (triplesAdded == 0) logger.info("Process " + processSpecification + " did not add any triples upon execution")
             }
         }
         processQueryMap
@@ -185,7 +186,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Values ?$CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
                                             drivetrain:InstanceToInstanceRecipe
                                             drivetrain:InstanceToLiteralRecipe
-                                            drivetrain:TermToInstanceRecipe}
+                                            drivetrain:TermToInstanceRecipe
+                                            drivetrain:TermToTermRecipe
+                                            drivetrain:TermToLiteralRecipe}
               Values ?$INPUTTYPE {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
               <$process> ?$INPUTTYPE ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
@@ -294,7 +297,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Values ?CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
                                           drivetrain:InstanceToInstanceRecipe
                                           drivetrain:InstanceToLiteralRecipe
-                                          drivetrain:TermToInstanceRecipe}
+                                          drivetrain:TermToInstanceRecipe
+                                          drivetrain:TermToTermRecipe
+                                          drivetrain:TermToLiteralRecipe}
   
               <$process> drivetrain:removes ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
@@ -346,7 +351,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               Values ?CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
                                             drivetrain:InstanceToInstanceRecipe
                                             drivetrain:InstanceToLiteralRecipe
-                                            drivetrain:TermToInstanceRecipe}
+                                            drivetrain:TermToInstanceRecipe
+                                            drivetrain:TermToTermRecipe
+                                            drivetrain:TermToLiteralRecipe}
               <$process> drivetrain:hasOutput ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
               <$process> drivetrain:outputNamedGraph ?$GRAPH .

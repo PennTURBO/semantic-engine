@@ -25,7 +25,7 @@ owl:Axiom a owl:Class .
 
 drivetrain:KeyDenotesGid
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
   drivetrain:object drivetrain:GidToBeTyped ;
@@ -73,7 +73,7 @@ drivetrain:GidColumnTerm
 
 drivetrain:KeyDenotesRid
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
   drivetrain:object drivetrain:RidToBeTyped ;
@@ -81,7 +81,7 @@ drivetrain:KeyDenotesRid
 .
 drivetrain:KeyDenotesDob
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
   drivetrain:predicate obo:IAO_0000219 ;
@@ -118,7 +118,7 @@ drivetrain:PatKeySymbPartOfColumn
 
 drivetrain:KeyDenotesPatient
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:IAO_0000219 ;
   drivetrain:object obo:NCBITaxon_9606 ;

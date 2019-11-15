@@ -117,7 +117,7 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
             assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToInstanceRecipe")
         }
-        else
+        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
         {
             assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
             assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
@@ -239,7 +239,7 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
                 assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToInstanceRecipe")
             }
-            else
+            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
             {
                 assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
                 assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
@@ -322,11 +322,11 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     var outputSingletonClasses = new HashSet[String]
     var outputSuperSingletonClasses = new HashSet[String]
-    var outputOneToOneConnections = new HashMap[String, HashSet[String]]
-    var outputOneToManyConnections = new HashMap[String, HashSet[String]]
+    var outputOneToOneConnections = new HashMap[String, HashMap[String, String]]
+    var outputOneToManyConnections = new HashMap[String, HashMap[String, String]]
     
-    var inputOneToOneConnections = new HashMap[String, HashSet[String]]
-    var inputOneToManyConnections = new HashMap[String, HashSet[String]]
+    var inputOneToOneConnections = new HashMap[String, HashMap[String, String]]
+    var inputOneToManyConnections = new HashMap[String, HashMap[String, String]]
     var inputSingletonClasses = new HashSet[String]
     var inputSuperSingletonClasses = new HashSet[String]
     var inputNonInstanceClasses = new HashSet[String]
@@ -394,7 +394,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             {  
                 if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/1-1") 
                 {
-                    handleOneToOneConnection(subjectString, objectString, outputOneToOneConnections)
+                    handleOneToOneConnection(subjectString, objectString, connectionName, outputOneToOneConnections)
                     populateDependenciesAndCustomRuleList(subjectString, subjectCustomRule, row(SUBJECTDEPENDEE.toString))
                     populateDependenciesAndCustomRuleList(objectString, objectCustomRule, row(OBJECTDEPENDEE.toString))
                 }
@@ -431,15 +431,15 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 {
                     if (!usedVariables.contains(subjectString)) multiplicityCreators += subjectString
                     if (!usedVariables.contains(objectString)) multiplicityCreators += objectString
-                    if (outputOneToManyConnections.contains(objectString)) outputOneToManyConnections(objectString) += subjectString
-                    else outputOneToManyConnections += objectString -> HashSet(subjectString)
+                    if (outputOneToManyConnections.contains(objectString)) outputOneToManyConnections(objectString) += subjectString -> connectionName
+                    else outputOneToManyConnections += objectString -> HashMap(subjectString -> connectionName)
                 }
                 else if (thisMultiplicity == oneToManyMultiplicity)
                 {
                     if (!usedVariables.contains(subjectString)) multiplicityCreators += subjectString
                     if (!usedVariables.contains(objectString)) multiplicityCreators += objectString
-                    if (outputOneToManyConnections.contains(subjectString)) outputOneToManyConnections(subjectString) += objectString
-                    else outputOneToManyConnections += subjectString -> HashSet(objectString)
+                    if (outputOneToManyConnections.contains(subjectString)) outputOneToManyConnections(subjectString) += objectString -> connectionName
+                    else outputOneToManyConnections += subjectString -> HashMap(objectString -> connectionName)
                 }
                 else
                 {
@@ -476,16 +476,16 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val thisMultiplicity = row(MULTIPLICITY.toString).toString
             if (row(CONNECTIONRECIPETYPE.toString).toString == objToInstRecipe)
             {
-                if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/1-1") handleOneToOneConnection(subjectString, objectString, inputOneToOneConnections)
+                if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/1-1") handleOneToOneConnection(subjectString, objectString, connectionName, inputOneToOneConnections)
                 else if (thisMultiplicity == oneToManyMultiplicity)
                 {
-                    if (inputOneToManyConnections.contains(subjectString)) inputOneToManyConnections(subjectString) += objectString
-                    else inputOneToManyConnections += subjectString -> HashSet(objectString)
+                    if (inputOneToManyConnections.contains(subjectString)) inputOneToManyConnections(subjectString) += objectString -> connectionName
+                    else inputOneToManyConnections += subjectString -> HashMap(objectString -> connectionName)
                 }
                 else if (thisMultiplicity == manyToOneMultiplicity)
                 {
-                    if (inputOneToManyConnections.contains(objectString)) inputOneToManyConnections(objectString) += subjectString
-                    else inputOneToManyConnections += objectString -> HashSet(subjectString)
+                    if (inputOneToManyConnections.contains(objectString)) inputOneToManyConnections(objectString) += subjectString -> connectionName
+                    else inputOneToManyConnections += objectString -> HashMap(subjectString -> connectionName)
                 }
                 else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/many-singleton")
                 {
@@ -516,10 +516,12 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             else if (row(CONNECTIONRECIPETYPE.toString).toString == objToTermRecipe || row(CONNECTIONRECIPETYPE.toString).toString == datatypeRecipe)
             {
                 inputNonInstanceClasses += subjectString
+                logger.info("added " + subjectString)
             }
             else if (row(CONNECTIONRECIPETYPE.toString).toString == objFromTermRecipe)
             {
                 inputNonInstanceClasses += objectString
+                logger.info("added " + objectString)
             }
         }
         // we don't care about non-InstanceToInstanceRecipes if there were InstanceToInstanceRecipes present
@@ -561,71 +563,81 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         assert (!outputSuperSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a SuperSingleton")
     }
     
-    def validateManyToOneClasses(k: String, v: HashSet[String])
+    def validateManyToOneClasses(k: String, v: HashMap[String, String])
     {
-        for (connection <- v)
+        for ((connection,connectionName) <- v)
         {
-            if (inputOneToManyConnections.contains(connection))
+            if (inputOneToManyConnections.contains(connection) && inputOneToManyConnections(connection).contains(k))
             {
-                assert(!inputOneToManyConnections(connection).contains(k), s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently.")
+                 val invalidConnectionName = inputOneToManyConnections(connection)(k)
+                 var connList1 = ""
+                 for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
+                 var connList2 = ""
+                 for ((entity, connName) <- inputOneToManyConnections(connection)) connList2 += entity+"\n"
+                 assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName.\n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")
             }
-            if (outputOneToManyConnections.contains(connection))
+            if (outputOneToManyConnections.contains(connection) && outputOneToManyConnections(connection).contains(k))
             {
-                assert(!outputOneToManyConnections(connection).contains(k), s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently.")
+                val invalidConnectionName = outputOneToManyConnections(connection)(k)
+                var connList1 = ""
+                for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
+                var connList2 = ""
+                for ((entity, connName) <- outputOneToManyConnections(connection)) connList2 += entity+"\n"
+                assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName. \n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")
             }
         }
     }
     
-    def addToConnectionList(element: String, listToPopulate: HashMap[String, HashSet[String]])
-    {
-        val connectionList = listToPopulate(element)
-        for (conn <- connectionList)
-        {
-            for (a <- connectionList)
-            {
-                listToPopulate(conn) += a
-            }
-        }   
-    }
-    
-    def handleOneToOneConnection(thisSubject: String, thisObject: String, listToPopulate: HashMap[String, HashSet[String]])
+    def handleOneToOneConnection(thisSubject: String, thisObject: String, connectionName: String, listToPopulate: HashMap[String, HashMap[String, String]])
     {
         if (listToPopulate.contains(thisObject) && listToPopulate.contains(thisSubject))
         {
-            listToPopulate(thisObject) += thisSubject
-            listToPopulate(thisSubject) += thisObject
-            listToPopulate(thisObject) += thisObject
-            listToPopulate(thisSubject) += thisSubject
+            listToPopulate(thisObject) += thisSubject -> connectionName
+            listToPopulate(thisSubject) += thisObject -> connectionName
+            listToPopulate(thisObject) += thisObject -> connectionName
+            listToPopulate(thisSubject) += thisSubject -> connectionName
             
-            addToConnectionList(thisSubject, listToPopulate)
-            addToConnectionList(thisObject, listToPopulate)
+            addToConnectionList(thisSubject, connectionName, listToPopulate)
+            addToConnectionList(thisObject, connectionName, listToPopulate)
         }
         
         else if (listToPopulate.contains(thisObject) && (!listToPopulate.contains(thisSubject)))
         {
-            listToPopulate(thisObject) += thisSubject
-            listToPopulate(thisObject) += thisObject
-            listToPopulate.put(thisSubject, HashSet(thisObject))
-            listToPopulate(thisSubject) += thisSubject
+            listToPopulate(thisObject) += thisSubject -> connectionName
+            listToPopulate(thisObject) += thisObject -> connectionName
+            listToPopulate.put(thisSubject, HashMap(thisObject -> connectionName))
+            listToPopulate(thisSubject) += thisSubject -> connectionName
           
-            addToConnectionList(thisObject, listToPopulate)
+            addToConnectionList(thisObject, connectionName, listToPopulate)
         }
         else if (listToPopulate.contains(thisSubject) && (!listToPopulate.contains(thisObject)))
         {
-            listToPopulate(thisSubject) += thisObject
-            listToPopulate(thisSubject) += thisSubject
-            listToPopulate.put(thisObject, HashSet(thisSubject))
-            listToPopulate(thisObject) += thisObject
+            listToPopulate(thisSubject) += thisObject -> connectionName
+            listToPopulate(thisSubject) += thisSubject -> connectionName
+            listToPopulate.put(thisObject, HashMap(thisSubject -> connectionName))
+            listToPopulate(thisObject) += thisObject -> connectionName
           
-            addToConnectionList(thisSubject, listToPopulate)
+            addToConnectionList(thisSubject, connectionName, listToPopulate)
         }
         else
         {
-            listToPopulate.put(thisObject, HashSet(thisSubject))
-            listToPopulate.put(thisSubject, HashSet(thisObject))
-            listToPopulate(thisObject) += thisObject
-            listToPopulate(thisSubject) += thisSubject
+            listToPopulate.put(thisObject, HashMap(thisSubject -> connectionName))
+            listToPopulate.put(thisSubject, HashMap(thisObject -> connectionName))
+            listToPopulate(thisObject) += thisObject -> connectionName
+            listToPopulate(thisSubject) += thisSubject -> connectionName
         }
+    }
+    
+    def addToConnectionList(element: String, connectionName: String, listToPopulate: HashMap[String, HashMap[String, String]])
+    {
+        val connectionList = listToPopulate(element)
+        for ((conn,v) <- connectionList)
+        {
+            for ((a,value) <- connectionList)
+            {
+                if (!listToPopulate(conn).contains(a)) listToPopulate(conn) += a -> connectionName
+            }
+        }   
     }
     
     def buildSingletonBindClauses(localUUID: String)
@@ -685,7 +697,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         if (multiplicityEnforcer == "" || !useAnyQualified)
         {
             multiplicityEnforcer = ""
-            for (conn <- outputOneToOneConnections(changeAgent))
+            for ((conn,v) <- outputOneToOneConnections(changeAgent))
             {
                 if (usedVariables.contains(conn) && usedVariables(conn)) 
                 {

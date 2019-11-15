@@ -67,6 +67,8 @@ object GraphModelValidator extends ProjectwideGlobals
     
     def validateProcessSpecification(process: String)
     {
+       helper.validateURI(process)
+       
        val select: String = s"""
           Select * Where {
             <$process> a turbo:TURBO_0010354 .
@@ -158,6 +160,8 @@ object GraphModelValidator extends ProjectwideGlobals
                                                 drivetrain:InstanceToInstanceRecipe
                                                 drivetrain:InstanceToTermRecipe
                                                 drivetrain:InstanceToLiteralRecipe
+                                                drivetrain:TermToTermRecipe
+                                                drivetrain:TermToLiteralRecipe
                                                 }
                   ?recipe a ?CONNECTIONRECIPETYPE .
                   ?recipe drivetrain:subject ?subject .
@@ -205,7 +209,9 @@ object GraphModelValidator extends ProjectwideGlobals
                     Filter (?recipeType IN (drivetrain:InstanceToInstanceRecipe,
                                             drivetrain:InstanceToTermRecipe,
                                             drivetrain:TermToInstanceRecipe,
-                                            drivetrain:InstanceToLiteralRecipe))
+                                            drivetrain:InstanceToLiteralRecipe,
+                                            drivetrain:TermToTermRecipe,
+                                            drivetrain:TermToLiteralRecipe))
                 }
             }
           """
@@ -303,6 +309,8 @@ object GraphModelValidator extends ProjectwideGlobals
                       drivetrain:InstanceToInstanceRecipe,
                       drivetrain:TermToInstanceRecipe,
                       drivetrain:InstanceToLiteralRecipe,
+                      drivetrain:TermToTermRecipe,
+                      drivetrain:TermToLiteralRecipe,
                       drivetrain:MultiObjectDescriber,
                       owl:Class,
                       drivetrain:TurboGraphContext,
@@ -514,7 +522,9 @@ object GraphModelValidator extends ProjectwideGlobals
                   Values ?CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
                                             drivetrain:InstanceToInstanceRecipe
                                             drivetrain:InstanceToLiteralRecipe
-                                            drivetrain:TermToInstanceRecipe}
+                                            drivetrain:TermToInstanceRecipe
+                                            drivetrain:TermToTermRecipe
+                                            drivetrain:TermToLiteralRecipe}
                   ?recipe a ?CONNECTIONRECIPETYPE .
               }
               Minus
