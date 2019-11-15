@@ -18,7 +18,6 @@ class TriplesGroupBuilder extends ProjectwideGlobals
     val allGraphsUsed = new LinkedHashSet[String]
     val typesUsed = new HashSet[String]
     
-    var variablesUsed: HashSet[String] = null
     var valuesBlock = new HashMap[String, String]
     
     def setValuesBlock(valuesBlock: HashMap[String, String])
@@ -151,9 +150,8 @@ class TriplesGroupBuilder extends ProjectwideGlobals
         else addOptionalTripleToOptionalGroup(groupToAdd, triple, graph)
     }
     
-    def buildInsertClauseFromTriplesGroup(variablesUsed: HashSet[String]): String =
+    def buildInsertClauseFromTriplesGroup(): String =
     {
-        this.variablesUsed = variablesUsed
         buildClauseFromTriplesGroup(INSERT)
     }
     
@@ -373,12 +371,7 @@ class TriplesGroupBuilder extends ProjectwideGlobals
     def makeTriple(clauseType: Value, triple: Triple): String =
     {
         var clause = ""
-        if (clauseType == WHERE || clauseType == DELETE) clause += triple.makeTripleWithVariables()
-        else if (clauseType == INSERT)
-        {
-            clause += triple.makeTripleWithVariablesExcludeList(variablesUsed)
-        }
-        else if (clauseType == INSERT_DATA) clause += triple.makeTriple()
+        clause += triple.makeTripleWithVariables()
         
         if (clauseType == WHERE)
         {

@@ -132,31 +132,31 @@ class PatternMatchQuery extends Query
         // this part of the code determines whether a variable is qualified to be a multiplicity enforcer in the bind clause. If set to true then it is qualified.
         for (row <- inputs) 
         {
-            var subjectAType = false
-            var objectAType = false
+            var subjectAnInstance = false
+            var objectAnInstance = false
             var objectADescriber = false
             var subjectADescriber = false
             var required = true
-            if (row(OBJECTTYPE.toString) != null) objectAType = true
-            if (row(SUBJECTTYPE.toString) != null) subjectAType = true
+            if (row(OBJECTANINSTANCE.toString) != null) objectAnInstance = true
+            if (row(SUBJECTANINSTANCE.toString) != null) subjectAnInstance = true
             if (row(SUBJECTADESCRIBER.toString) != null) subjectADescriber = true
             if (row(OBJECTADESCRIBER.toString) != null) objectADescriber = true
             
             if (row(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput") required = false
             
             var objectResultBool = true
-            if (!required || !(objectAType || objectADescriber)) objectResultBool = false
+            if (!required || !(objectAnInstance || objectADescriber)) objectResultBool = false
             
             var subjectResultBool = true
-            if (!required || !(subjectAType || subjectADescriber)) subjectResultBool = false
+            if (!required || !(subjectAnInstance || subjectADescriber)) subjectResultBool = false
             
             var thisObject = row(OBJECT.toString).toString
             var thisSubject = row(SUBJECT.toString).toString
             if (row(SUBJECTCONTEXT.toString) != null) thisSubject += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
             if (row(OBJECTCONTEXT.toString) != null) thisObject += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
 
-            if (objectADescriber || objectAType) if (!usedVariables.contains(thisObject) || !usedVariables(thisObject)) usedVariables += thisObject -> objectResultBool
-            if (subjectADescriber || subjectAType) if (!usedVariables.contains(thisSubject) || !usedVariables(thisSubject)) usedVariables += thisSubject -> subjectResultBool
+            if (objectADescriber || objectAnInstance) if (!usedVariables.contains(thisObject) || !usedVariables(thisObject)) usedVariables += thisObject -> objectResultBool
+            if (subjectADescriber || subjectAnInstance) if (!usedVariables.contains(thisSubject) || !usedVariables(thisSubject)) usedVariables += thisSubject -> subjectResultBool
         }
         assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "")
         assert (whereClauseBuilder.clause.contains("GRAPH"))

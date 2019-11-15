@@ -60,8 +60,6 @@ trait ProjectwideGlobals extends Enumeration
       val SUBJECT = Value("SUBJECT")
       val PREDICATE = Value("PREDICATE")
       val OBJECT = Value("OBJECT")
-      val SUBJECTTYPE = Value("SUBJECTTYPE")
-      val OBJECTTYPE = Value("OBJECTTYPE")
       val GRAPH = Value("GRAPH")
       val OPTIONALGROUP = Value("OPTIONALGROUP")
       val EXPANDEDENTITY = Value("EXPANDEDENTITY")
@@ -86,14 +84,16 @@ trait ProjectwideGlobals extends Enumeration
       val OBJECTALITERAL = Value("OBJECTALITERAL")
       val SUFFIXOPERATOR = Value("SUFFIXOPERATOR")
       val OBJECTALITERALVALUE = Value("OBJECTALITERALVALUE")
+      val SUBJECTANINSTANCE = Value("SUBJECTANINSTANCE")
+      val OBJECTANINSTANCE = Value("OBJECTANINSTANCE")
       
-      val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, 
+      val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, GRAPH, SUBJECTANINSTANCE, OBJECTANINSTANCE,
                                               OPTIONALGROUP, CONNECTIONRECIPETYPE, GRAPHOFCREATINGPROCESS,
                                               MINUSGROUP, GRAPHOFORIGIN, INPUTTYPE, MULTIPLICITY, OBJECTADESCRIBER,
                                               CONNECTIONNAME, SUBJECTADESCRIBER, REQUIREMENT, OBJECTALITERALVALUE, SUFFIXOPERATOR,
                                               SUBJECTCONTEXT, OBJECTCONTEXT, OBJECTALITERAL)
                                               
-      val requiredOutputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, SUBJECTTYPE, OBJECTTYPE, GRAPH, CONNECTIONRECIPETYPE,
+      val requiredOutputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, GRAPH, CONNECTIONRECIPETYPE, SUBJECTANINSTANCE, OBJECTANINSTANCE,
                                               SUBJECTCONTEXT, OBJECTCONTEXT, MULTIPLICITY, OBJECTRULE, SUBJECTRULE, OBJECTADESCRIBER,
                                               SUBJECTADESCRIBER, SUBJECTDEPENDEE, OBJECTDEPENDEE, CONNECTIONNAME, OBJECTALITERALVALUE,
                                               OBJECTALITERAL)
