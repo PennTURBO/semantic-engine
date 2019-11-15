@@ -246,13 +246,16 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?$SUBJECT a owl:Class .
                   filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
-                  BIND (true AS ?$SUBJECTTYPE)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToLiteralRecipe)
+                  BIND (true AS ?$SUBJECTANINSTANCE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
                   filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
-                  BIND (true AS ?$OBJECTTYPE)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
+                  BIND (true AS ?$OBJECTANINSTANCE)
               }
               Optional
               {
@@ -321,13 +324,16 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?$SUBJECT a owl:Class .
                   filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
-                  BIND (true AS ?$SUBJECTTYPE)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToLiteralRecipe)
+                  BIND (true AS ?$SUBJECTANINSTANCE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
                   filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
-                  BIND (true AS ?$OBJECTTYPE)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
+                  BIND (true AS ?$OBJECTANINSTANCE)
               }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
          }
@@ -410,13 +416,16 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?$SUBJECT a owl:Class .
                   filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
-                  BIND (true AS ?$SUBJECTTYPE)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToLiteralRecipe)
+                  BIND (true AS ?$SUBJECTANINSTANCE)
               }
               Optional
               {
                   ?$OBJECT a owl:Class .
                   filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
-                  BIND (true AS ?$OBJECTTYPE)
+                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
+                  BIND (true AS ?$OBJECTANINSTANCE)
               }
               Optional
               {

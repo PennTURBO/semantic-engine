@@ -48,8 +48,8 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         var optionalGroupForThisRow: String = null
         var minusGroupForThisRow: String = null
         
-        var subjectAType = false
-        var objectAType = false
+        var subjectAnInstance = false
+        var objectAnInstance = false
         
         var objectADescriber = false
         var subjectADescriber = false
@@ -90,42 +90,44 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val valsAsString = helper.getDescriberRangesAsString(gmCxn, rowResult(SUBJECT.toString).toString)
             if (valsAsString.size > 0) valuesBlock += rowResult(SUBJECT.toString).toString -> valsAsString
         }
-        if (rowResult(SUBJECTTYPE.toString) != null) 
-        {
-            subjectAType = true
-            varsForProcessInput += rowResult(SUBJECT.toString).toString
-        }
-        if (rowResult(OBJECTTYPE.toString) != null) 
-        {
-            objectAType = true
-            varsForProcessInput += rowResult(OBJECT.toString).toString
-        }
         if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe") 
         {
-            assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
             assert (objectALiteralValue || objectADefinedLiteral, s"The object of connection $connectionName is not a literal, but the connection is a datatype connection.")
-            //this might be kind of hackish but it's making sure that a URI representing a literal is considered a variable not a static class
             objectADescriber = true
+            subjectAnInstance = true
+            varsForProcessInput += rowResult(SUBJECT.toString).toString
         }
         else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe") 
         {
-            assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology" )
             assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type InstanceToTermRecipe")
+            subjectAnInstance = true
+            varsForProcessInput += rowResult(SUBJECT.toString).toString
         }
         else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe") 
         {
-            assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
             assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToInstanceRecipe")
+            objectAnInstance = true
+            varsForProcessInput += rowResult(OBJECT.toString).toString
         }
         else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
         {
-            assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
-            assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
             assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type InstanceToInstanceRecipe")
+            objectAnInstance = true
+            subjectAnInstance = true
+            varsForProcessInput += rowResult(OBJECT.toString).toString
+            varsForProcessInput += rowResult(SUBJECT.toString).toString
+        }
+        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToTermRecipe")
+        {
+            assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToTermRecipe")
+        }
+        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe")
+        {
+            assert (objectALiteralValue || objectADefinedLiteral, s"The object of connection $connectionName is not a literal, but the connection is a datatype connection.")
+            objectADescriber = true
         }
         val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
-                                                 subjectAType, objectAType, subjectADescriber, objectADescriber, subjectContext, objectContext, objectALiteralValue, suffixOperator)
-        
+                                                 subjectAnInstance, objectAnInstance, subjectADescriber, objectADescriber, subjectContext, objectContext, objectALiteralValue, suffixOperator)
         
         graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(graphForThisRow)
         addNewTripleToGroup(newTriple, minusGroupForThisRow, optionalGroupForThisRow, required, graphForThisRow)
@@ -162,10 +164,6 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], process: String, varsForProcessInput: HashSet[String], usedVariables: HashMap[String, Boolean])
     {
         val triplesGroup = new TriplesGroupBuilder()
-        var nonVariableClasses: HashSet[String] = new HashSet[String]
-        
-        // this ensures that the process will be represented as a static URI, not a variable
-        nonVariableClasses += process
         
         for (rowResult <- outputs)
         {
@@ -175,8 +173,9 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             
             val connectionName = rowResult(CONNECTIONNAME.toString).toString
             
-            var subjectAType = false
-            var objectAType = false
+            var subjectAnInstance = false
+            var objectAnInstance = false
+            
             var subjectContext: String = ""
             var objectContext: String = ""
             
@@ -192,8 +191,6 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             if (rowResult(OBJECTALITERALVALUE.toString).toString.contains("true")) objectALiteralValue = true
             if (rowResult(OBJECTALITERAL.toString) != null) objectADefinedLiteral = true
             
-            if (rowResult(SUBJECTTYPE.toString) != null) subjectAType = true
-            if (rowResult(OBJECTTYPE.toString) != null) objectAType = true
             if (rowResult(SUBJECTCONTEXT.toString) != null) subjectContext = rowResult(SUBJECTCONTEXT.toString).toString
             if (rowResult(OBJECTCONTEXT.toString) != null) objectContext = rowResult(OBJECTCONTEXT.toString).toString
             if (rowResult(OBJECTADESCRIBER.toString) != null) 
@@ -221,43 +218,48 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             
             if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe") 
             {
-                assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
                 assert (objectALiteralValue || objectADefinedLiteral, s"The object of connection $connectionName is not a literal, but the connection is a datatype connection.")
                 objectFromDatatypeConnection = true
+                subjectAnInstance = true
+                objectADescriber = true
             }
             else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe") 
             {
-                objectAType = false
-                if (!usedVariables.contains(thisObject)) nonVariableClasses += thisObject
-                assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
                 assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type InstanceToTermRecipe")
+                subjectAnInstance = true
             }
             else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe") 
             {
-                subjectAType = false
-                if (!usedVariables.contains(thisSubject)) nonVariableClasses += thisSubject
-                assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
                 assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToInstanceRecipe")
+                objectAnInstance = true
             }
             else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
             {
-                assert (subjectAType || subjectADescriber, s"The subject of connection $connectionName is not present in the TURBO ontology")
-                assert (objectAType || objectADescriber, s"The object of connection $connectionName is not present in the TURBO ontology")
                 assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type InstanceToInstanceRecipe")
+                subjectAnInstance = true
+                objectAnInstance = true
+            }
+            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToTermRecipe")
+            {
+                assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToTermRecipe")
+            }
+            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe")
+            {
+                assert (objectALiteralValue || objectADefinedLiteral, s"The object of connection $connectionName is not a literal, but the connection is a datatype connection.")
+                objectFromDatatypeConnection = true
+                objectADescriber = true
             }
             
             var graph = rowResult(GRAPH.toString).toString
             
             val newTriple = new Triple(thisSubject, rowResult(PREDICATE.toString).toString, thisObject,
-                                      subjectAType, objectAType, subjectADescriber, objectADescriber, subjectContext, objectContext, objectALiteralValue)
+                                      subjectAnInstance, objectAnInstance, subjectADescriber, objectADescriber, subjectContext, objectContext, objectALiteralValue)
             graph = helper.checkAndConvertPropertiesReferenceToNamedGraph(graph)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
-            /*if (usedVariables.contains(newTriple.getSubjectWithContext()) && !subjectADescriber)
-            {*/
-                val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", thisSubject, false, false, false, false, "", subjectContext)
-                triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
-            //}
-            if (!objectFromDatatypeConnection /*&& usedVariables.contains(newTriple.getObjectWithContext())*/ && newTriple.triplePredicate != "rdf:type")
+            
+            val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", thisSubject, false, false, false, false, "", subjectContext)
+            triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
+            if (!objectFromDatatypeConnection && newTriple.triplePredicate != "rdf:type")
             {
                 val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", thisObject, false, false, false, false, "", objectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
@@ -268,7 +270,7 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             val processInputTriple = new Triple(process, "obo:OBI_0000293", uri, false, false, false)
             triplesGroup.addRequiredTripleToRequiredGroup(processInputTriple, processNamedGraph)
         }
-        clause = triplesGroup.buildInsertClauseFromTriplesGroup(nonVariableClasses)
+        clause = triplesGroup.buildInsertClauseFromTriplesGroup()
     }
 }
 
@@ -281,8 +283,9 @@ class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         {
             for (key <- requiredOutputKeysList) assert (rowResult.contains(key.toString))
             
-            var subjectAType = false
-            var objectAType = false
+            var subjectAnInstance = false
+            var objectAnInstance = false
+            
             var subjectContext: String = ""
             var objectContext: String = ""
             
@@ -293,8 +296,9 @@ class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
      
             if (rowResult(OBJECTALITERALVALUE.toString).toString.contains("true")) objectALiteral = true
             
-            if (rowResult(SUBJECTTYPE.toString) != null) subjectAType = true
-            if (rowResult(OBJECTTYPE.toString) != null) objectAType = true
+            if (rowResult(SUBJECTANINSTANCE.toString) != null) subjectAnInstance = true
+            if (rowResult(OBJECTANINSTANCE.toString) != null) objectAnInstance = true
+            
             if (rowResult(SUBJECTCONTEXT.toString) != null) subjectContext = rowResult(SUBJECTCONTEXT.toString).toString
             if (rowResult(OBJECTCONTEXT.toString) != null) objectContext = rowResult(OBJECTCONTEXT.toString).toString
             if (rowResult(OBJECTADESCRIBER.toString) != null) objectADescriber = true
@@ -445,12 +449,12 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 {
                     assert (1==2, s"Error in graph model: Discovered invalid multiplicity $thisMultiplicity")
                 }
-                var subjAType = false
-                if (row(SUBJECTTYPE.toString) != null) subjAType = true
-                var objAType = false
-                if (row(OBJECTTYPE.toString) != null) objAType = true
-                variablesToBind += objectString -> objAType
-                variablesToBind += subjectString -> subjAType
+                var subjectAnInstance = false
+                if (row(SUBJECTANINSTANCE.toString) != null) subjectAnInstance = true
+                var objectAnInstance = false
+                if (row(OBJECTANINSTANCE.toString) != null) objectAnInstance = true
+                variablesToBind += objectString -> objectAnInstance
+                variablesToBind += subjectString -> subjectAnInstance
            }
            else 
            {
@@ -516,12 +520,10 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             else if (row(CONNECTIONRECIPETYPE.toString).toString == objToTermRecipe || row(CONNECTIONRECIPETYPE.toString).toString == datatypeRecipe)
             {
                 inputNonInstanceClasses += subjectString
-                logger.info("added " + subjectString)
             }
             else if (row(CONNECTIONRECIPETYPE.toString).toString == objFromTermRecipe)
             {
                 inputNonInstanceClasses += objectString
-                logger.info("added " + objectString)
             }
         }
         // we don't care about non-InstanceToInstanceRecipes if there were InstanceToInstanceRecipes present
