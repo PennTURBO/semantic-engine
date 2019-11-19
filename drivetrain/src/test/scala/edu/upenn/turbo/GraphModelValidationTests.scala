@@ -618,7 +618,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     drivetrain:subject turbo:object1 ;
                     drivetrain:predicate turbo:pred1 ;
                     drivetrain:object turbo:object3 ;
-                    drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+                    drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
                   .
  
                   ontologies:object1ToObject4
@@ -627,7 +627,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     drivetrain:subject turbo:object1 ;
                     drivetrain:predicate turbo:pred1 ;
                     drivetrain:object turbo:object4 ;
-                    drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+                    drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
                   .
                   
                   ontologies:object1 a owl:Class .
@@ -684,7 +684,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     drivetrain:subject turbo:object1 ;
                     drivetrain:predicate turbo:pred1 ;
                     drivetrain:object turbo:object3 ;
-                    drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+                    drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
                     drivetrain:subjectUsesContext drivetrain:context1 ;
                   .
  
@@ -694,7 +694,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     drivetrain:subject turbo:object1 ;
                     drivetrain:predicate turbo:pred1 ;
                     drivetrain:object turbo:object4 ;
-                    drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists ;
+                    drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
                     drivetrain:subjectUsesContext drivetrain:context2 ;
                   .
                   

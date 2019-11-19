@@ -502,7 +502,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
         else 
         {
             val res = update.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
-            completedQueriesMap += getGraphs -> res
+            if (res.size > 0) completedQueriesMap += getGraphs -> res
             res
         }
     }
@@ -524,7 +524,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
             else 
             {
                 val res = update.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
-                completedQueriesMap += getGraphs -> res
+                if (res.size > 0) completedQueriesMap += getGraphs -> res
                 res
             }
         }
@@ -817,7 +817,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
           Select * Where
           {
               <$describer> drivetrain:range ?range .
-              <$describer> a drivetrain:MultiObjectDescriber .
+              <$describer> a drivetrain:ClassResourceList .
           }
           """
         update.querySparqlAndUnpackTuple(cxn, sparql, "range")
@@ -860,7 +860,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
     def checkGeneratedQueryAgainstMatchedQuery(processSpec: String, expectedQuery: String, printQuery: Boolean = false): Boolean =
     {
         var expectedQueryListBuffer = new ArrayBuffer[String]
-        val processQueryMap = RunDrivetrainProcess.runProcess(processSpec)
+        val processQueryMap = RunDrivetrainProcess.runProcess(processSpec, "None", false)
         val query = processQueryMap(processSpec)
         if (printQuery) logger.info(query.getQuery())
         val queryText = query.getQuery().replaceAll(" ", "").split("\\n")

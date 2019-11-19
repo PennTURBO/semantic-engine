@@ -3,6 +3,8 @@ drivetrain:1-many a drivetrain:TurboGraphMultiplicityRule .
 drivetrain:many-1 a drivetrain:TurboGraphMultiplicityRule .
 drivetrain:many-singleton a drivetrain:TurboGraphMultiplicityRule .
 drivetrain:singleton-many a drivetrain:TurboGraphMultiplicityRule .
+drivetrain:superSingleton-many a drivetrain:TurboGraphMultiplicityRule .
+drivetrain:many-superSingleton a drivetrain:TurboGraphMultiplicityRule .
 
 drivetrain:eitherSubjectOrObjectExists a drivetrain:TurboGraphRequirementSpecification .
 drivetrain:subjectExists a drivetrain:TurboGraphRequirementSpecification .

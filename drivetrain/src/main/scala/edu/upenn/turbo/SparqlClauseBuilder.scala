@@ -257,17 +257,17 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             graph = helper.checkAndConvertPropertiesReferenceToNamedGraph(graph)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
             
-            val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", thisSubject, false, false, false, false, "", subjectContext)
+            val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", thisSubject, false, false, false, (subjectAnInstance || subjectADescriber), "", subjectContext)
             triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
             if (!objectFromDatatypeConnection && newTriple.triplePredicate != "rdf:type")
             {
-                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", thisObject, false, false, false, false, "", objectContext)
+                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", thisObject, false, false, false, (objectAnInstance || objectADescriber), "", objectContext)
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
             }
         }
         for (uri <- varsForProcessInput)
         {
-            val processInputTriple = new Triple(process, "obo:OBI_0000293", uri, false, false, false)
+            val processInputTriple = new Triple(process, "obo:OBI_0000293", uri, false, false, false, true)
             triplesGroup.addRequiredTripleToRequiredGroup(processInputTriple, processNamedGraph)
         }
         clause = triplesGroup.buildInsertClauseFromTriplesGroup()

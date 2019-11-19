@@ -58,7 +58,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       RunDrivetrainProcess.setGraphModelConnection(gmCxn)
                       RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
                       GraphModelValidator.checkAcornFilesForMissingTypes()
-                      GraphModelValidator.validateGraphSpecificationAgainstOntology()
+                      if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
                       val query = RunDrivetrainProcess.createPatternMatchQuery(args(1))
                       if (query != null)
                       {
@@ -80,7 +80,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
                   RunDrivetrainProcess.setGlobalUUID(globalUUID)
                   GraphModelValidator.checkAcornFilesForMissingTypes()
-                  GraphModelValidator.validateGraphSpecificationAgainstOntology()
+                  if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
                   val thisProcess = helper.getProcessNameAsUri(args(0))
                   RunDrivetrainProcess.runProcess(thisProcess)   
               }
@@ -98,14 +98,14 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
   }
   
-  def updateModel(gmCxn: RepositoryConnection, graphModelFile: String = graphModelFile, graphSpecFile: String = graphSpecificationFile, acornOntology: String = acornOntologyFile)
+  def updateModel(gmCxn: RepositoryConnection, instructionSetFile: String = instructionSetFile, graphSpecFile: String = graphSpecificationFile, acornOntology: String = acornOntologyFile)
   {
-      logger.info("Updating graph model using file " + graphModelFile)
+      logger.info("Updating graph model using file " + instructionSetFile)
       val graph = s"$defaultPrefix" + "instructionSet"
       helper.deleteAllTriplesInDatabase(gmCxn)
       var query = s"INSERT DATA { Graph <$graph> {"
       var prefixes = ""
-      val br = io.Source.fromFile(s"ontologies//$graphModelFile")
+      val br = io.Source.fromFile(s"ontologies//$instructionSetFile")
       for (line <- br.getLines())
       {
           if (line.size > 0)
