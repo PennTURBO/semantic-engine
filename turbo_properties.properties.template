@@ -14,13 +14,13 @@ processNamedGraph = http://www.itmat.upenn.edu/biobank/processes
 expandedNamedGraph = http://www.itmat.upenn.edu/biobank/expanded
 clearGraphsAtStart = false
 
-graphModelFile = turbo_dataModel_file.ttl
+instructionSetFile = turbo_dataModel_file.ttl
 graphSpecificationFile = turbo_graphSpecification.ttl
 acornOntologyFile = acornOntology.ttl
 
 # dataValidationMode options: None, Log, Stop
 dataValidationMode = Stop
-
+validateAgainstOntology = true
 errorLogFile = turbo_errorLog.txt
 
 reinferRepo = true

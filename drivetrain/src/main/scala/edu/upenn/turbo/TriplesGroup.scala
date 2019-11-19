@@ -395,12 +395,12 @@ class TriplesGroupBuilder extends ProjectwideGlobals
     def addTypeTriples(triple: Triple): String =
     {
        var clause = ""
-       if (triple.subjectAType && !typesUsed.contains(triple.tripleSubject + triple.subjectContext)) 
+       if (triple.subjectAnInstance && !triple.subjectADescriber && !typesUsed.contains(triple.tripleSubject + triple.subjectContext)) 
        {
            clause += triple.makeSubjectTypeTriple()
            typesUsed += triple.tripleSubject + triple.subjectContext
        }
-       if (triple.objectAType && !typesUsed.contains(triple.tripleObject + triple.objectContext)) 
+       if (triple.objectAnInstance && !triple.objectADescriber && !typesUsed.contains(triple.tripleObject + triple.objectContext)) 
        {
            clause += triple.makeObjectTypeTriple()
            typesUsed += triple.tripleObject + triple.objectContext

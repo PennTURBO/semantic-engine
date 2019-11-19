@@ -9,8 +9,8 @@ class Triple extends ProjectwideGlobals
     var triplePredicate: String = null
     var tripleObject: String = null
     
-    var subjectAType: Boolean = false
-    var objectAType: Boolean = false
+    var subjectAnInstance: Boolean = false
+    var objectAnInstance: Boolean = false
     
     var objectADescriber: Boolean = false
     var subjectADescriber: Boolean = false
@@ -20,13 +20,13 @@ class Triple extends ProjectwideGlobals
     var subjectContext: String = ""
     var objectContext: String = ""
     
-    def this(subject: String, predicate: String, objectVar: String, subjectAType: Boolean = false, 
-            objectAType: Boolean = false, subjectADescriber: Boolean = false, objectADescriber: Boolean = false, subjectContext: String = "", 
+    def this(subject: String, predicate: String, objectVar: String, subjectAnInstance: Boolean = false, 
+            objectAnInstance: Boolean = false, subjectADescriber: Boolean = false, objectADescriber: Boolean = false, subjectContext: String = "", 
             objectContext: String = "", objectALiteral: Boolean = false, predicateSuffixOperator: String = "")
     {
         this
-        this.subjectAType = subjectAType
-        this.objectAType = objectAType
+        this.subjectAnInstance = subjectAnInstance
+        this.objectAnInstance = objectAnInstance
         this.objectADescriber = objectADescriber
         this.subjectADescriber = subjectADescriber
         this.objectALiteral = objectALiteral
@@ -35,6 +35,8 @@ class Triple extends ProjectwideGlobals
         this.objectContext = helper.convertTypeToSparqlVariable(objectContext)
         if (this.subjectContext.size > 1) this.subjectContext = this.subjectContext.substring(1)
         if (this.objectContext.size > 1) this.objectContext = this.objectContext.substring(1)
+        
+        assert (!(objectALiteral && objectAnInstance), s"Object $objectVar cannot be set as both a literal and an instance")
         
         setSubject(subject)
         setPredicate(predicate, predicateSuffixOperator)
@@ -112,7 +114,7 @@ class Triple extends ProjectwideGlobals
     def makeTripleWithVariables(): String = 
     {
         var objectAsVar = ""
-        if (!objectADescriber && !objectAType || objectALiteral)
+        if ((!objectADescriber && !objectAnInstance) || objectALiteral)
         {
             objectAsVar = tripleObject   
         }
@@ -123,7 +125,7 @@ class Triple extends ProjectwideGlobals
         }
         
         var subjectAsVar = ""
-        if (!subjectADescriber && !subjectAType)
+        if (!subjectADescriber && !subjectAnInstance)
         {
             subjectAsVar = tripleSubject   
         }

@@ -36,15 +36,15 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         this.cxn = cxn
     }
     
-    def runProcess(processSpecification: String, dataValidationMode: String = dataValidationMode): HashMap[String, PatternMatchQuery] =
+    def runProcess(processSpecification: String, dataValidationMode: String = dataValidationMode, validateAgainstOntology: Boolean = validateAgainstOntology): HashMap[String, PatternMatchQuery] =
     {
-        runProcess(ArrayBuffer(processSpecification), dataValidationMode)
+        runProcess(ArrayBuffer(processSpecification), dataValidationMode, validateAgainstOntology)
     }
         
-    def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String): HashMap[String, PatternMatchQuery] =
+    def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String, validateAgainstOntology: Boolean): HashMap[String, PatternMatchQuery] =
     {
         GraphModelValidator.checkAcornFilesForMissingTypes()
-        GraphModelValidator.validateGraphSpecificationAgainstOntology()
+        if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
         
         var processQueryMap = new HashMap[String, PatternMatchQuery]
         for (processSpecification <- processSpecifications)
@@ -113,7 +113,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 metaDataQuery.createInsertDataClause(metaDataTriples, processNamedGraph)
                 //logger.info(metaDataQuery.getQuery())
                 metaDataQuery.runQuery(cxn)  
-                if (triplesAdded == 0) logger.info("Process " + processSpecification + " did not add any triples upon execution")
+                if (triplesAdded == 0) logger.warn("Process " + processSpecification + " did not add any triples upon execution")
             }
         }
         processQueryMap
@@ -463,7 +463,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         for (a <- orderedProcessList) logger.info(a)
         
         // run each process
-        runProcess(orderedProcessList, dataValidationMode)
+        runProcess(orderedProcessList, dataValidationMode, validateAgainstOntology)
     }
 
     /**

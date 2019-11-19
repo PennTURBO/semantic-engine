@@ -40,13 +40,14 @@ trait ProjectwideGlobals extends Enumeration
      val bioportalApiKey = helper.retrievePropertyFromFile("bioportalApiKey")
      val reinferRepo = getBooleanProperty("reinferRepo")
      val loadAdditionalOntologies = getBooleanProperty("loadAdditionalOntologies")
-     val graphModelFile = helper.retrievePropertyFromFile("graphModelFile")
+     val instructionSetFile = helper.retrievePropertyFromFile("instructionSetFile")
      val graphSpecificationFile = helper.retrievePropertyFromFile("graphSpecificationFile")
-     var dataValidationMode = helper.retrievePropertyFromFile("dataValidationMode").toLowerCase()
+     val dataValidationMode = helper.retrievePropertyFromFile("dataValidationMode").toLowerCase()
      val defaultPrefix = helper.retrieveUriPropertyFromFile("defaultPrefix")
      val expandedNamedGraph = helper.retrieveUriPropertyFromFile("expandedNamedGraph").replace("\"","")
      val clearGraphsAtStart = getBooleanProperty("clearGraphsAtStart")
      val acornOntologyFile = helper.retrievePropertyFromFile("acornOntologyFile")
+     val validateAgainstOntology = getBooleanProperty("validateAgainstOntology")
      
      def getBooleanProperty(property: String): Boolean =
      {

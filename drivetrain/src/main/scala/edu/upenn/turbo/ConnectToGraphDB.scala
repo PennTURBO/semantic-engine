@@ -30,7 +30,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
      * Returns a TurboGraphConnection containing RepositoryConnection, Repository, and RemoteRepositoryManager objects to be handled and closed
      * by the calling class.
      */
-    def initializeGraphUpdateData(loadDataModel: Boolean = true): TurboGraphConnection =
+    def initializeGraphUpdateData(loadDataModel: Boolean = true, instructionSetFile: String = instructionSetFile, graphSpecFile: String = graphSpecificationFile): TurboGraphConnection =
     {
         val graphConnect: TurboGraphConnection = initializeGraph()
         if (graphConnect.getConnection() != null && loadDataModel)
@@ -38,7 +38,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
             try
             {
                 // update data model and ontology upon establishing connection
-                DrivetrainDriver.updateModel(graphConnect.getGmConnection(), graphModelFile)
+                DrivetrainDriver.updateModel(graphConnect.getGmConnection(), instructionSetFile, graphSpecFile)
                 OntologyLoader.addOntologyFromUrl(graphConnect.getGmConnection())
             }
             catch
@@ -159,9 +159,9 @@ object ConnectToGraphDB extends ProjectwideGlobals
             "password","username","productionRepository",
             "ontologyURL", "modelRepository", "testingRepository", 
             "processNamedGraph", "reinferRepo", "loadAdditionalOntologies",
-            "graphModelFile", "graphSpecificationFile", "defaultPrefix",
+            "instructionSetFile", "graphSpecificationFile", "defaultPrefix",
             "dataValidationMode", "errorLogFile", "expandedNamedGraph",
-            "clearGraphsAtStart", "acornOntologyFile")
+            "clearGraphsAtStart", "acornOntologyFile", "validateAgainstOntology")
         var a = 0
         while (optToReturn == None && a < requiredProperties.size)
         {
