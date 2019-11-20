@@ -95,7 +95,7 @@ drivetrain:GidColumnTerm  a drivetrain:ResourceList ;
   drivetrain:range ontologies:TURBO_0010431 ;
 .
 
-drivetrain:HealthcareEncounterRegDen  a drivetrain:ResourceList ;
+drivetrain:EncounterRegDen  a drivetrain:ResourceList ;
   drivetrain:range ontologies:TURBO_0010256 ;
 .
 

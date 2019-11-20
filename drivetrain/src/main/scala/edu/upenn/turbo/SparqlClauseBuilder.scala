@@ -198,7 +198,7 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 if (!usedVariables.contains(thisObject) && rowResult(OBJECTRULE.toString) == null)
                 {
                     val ranges = helper.getDescriberRangesAsList(gmCxn, thisObject)
-                    assert (ranges.size == 1, s"MultiObjectDescriber $thisObject is not present as an input and has a range list size that is not 1")
+                    assert (ranges.size == 1, s"ResourceClassList $thisObject is not present as an input and has a range list size that is not 1")
                     thisObject = ranges(0)
                 }
                 objectADescriber = true
@@ -208,7 +208,7 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 if (!usedVariables.contains(thisSubject))
                 {
                     val ranges = helper.getDescriberRangesAsList(gmCxn, thisSubject)
-                    assert (ranges.size == 1, s"MultiObjectDescriber $thisSubject is not present as an input and has a range list size that is not 1")
+                    assert (ranges.size == 1, s"ResourceClassList $thisSubject is not present as an input and has a range list size that is not 1")
                     thisSubject = ranges(0)
                 }
                 subjectADescriber = true
