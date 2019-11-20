@@ -200,8 +200,9 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                     val ranges = helper.getDescriberRangesAsList(gmCxn, thisObject)
                     assert (ranges.size == 1, s"ResourceClassList $thisObject is not present as an input and has a range list size that is not 1")
                     thisObject = ranges(0)
+                    objectADescriber = false
                 }
-                objectADescriber = true
+                else objectADescriber = true
             }
             if (rowResult(SUBJECTADESCRIBER.toString) != null && rowResult(SUBJECTRULE.toString) == null)
             {
@@ -210,8 +211,9 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                     val ranges = helper.getDescriberRangesAsList(gmCxn, thisSubject)
                     assert (ranges.size == 1, s"ResourceClassList $thisSubject is not present as an input and has a range list size that is not 1")
                     thisSubject = ranges(0)
+                    objectADescriber = false
                 }
-                subjectADescriber = true
+                else subjectADescriber = true
             }
             
             var objectFromDatatypeConnection = false

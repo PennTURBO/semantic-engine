@@ -2665,6 +2665,8 @@ drivetrain:RxAboutnessAxiomDbXref_person_id_column a drivetrain:ClassResourceLis
 drivetrain:RxParthoodAxiomDbXref_visit_occurrence_id_column a drivetrain:ClassResourceList .
 drivetrain:RxTmd_drug_exposure_start_datetime_column a drivetrain:ClassResourceList .
 
+drivetrain:condition_occurrence_id_StringLiteralValue a drivetrain:LiteralResourceList .
+
 ###
 
 drivetrain:DiagAboutnessAxiomDbXrefPartOfColumn drivetrain:object drivetrain:DiagAboutnessAxiomDbXref_person_id_column .
