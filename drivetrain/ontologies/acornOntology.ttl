@@ -1,3 +1,17 @@
+# baseURI: https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/acornOntology.ttl/
+
+@prefix : <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/acornOntology.ttl/> .
+@prefix drivetrain: <https://github.com/PennTURBO/Drivetrain/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/acornOntology.ttl> a owl:Ontology ;
+    owl:priorVersion "not applicable" ; 
+    owl:versionInfo "unversioned" ;
+    owl:versionIRI <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/acornOntology.ttl> ;
+	rdfs:comment "that's not really a version IRI" .
+
 drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
 drivetrain:1-many a drivetrain:TurboGraphMultiplicityRule .
 drivetrain:many-1 a drivetrain:TurboGraphMultiplicityRule .
@@ -41,6 +55,7 @@ drivetrain:TurboGraphMultiplicityRule a owl:Class .
 drivetrain:PredicateSuffixSymbol a owl:Class .
 
 drivetrain:ResourceList a owl:Class .
+
 drivetrain:ClassResourceList a owl:Class .
 drivetrain:LiteralResourceList a owl:Class .
 drivetrain:ClassResourceList rdfs:subClassOf drivetrain:ResourceList .
@@ -84,4 +99,21 @@ drivetrain:hasPossibleContext a rdf:Property .
 drivetrain:range a rdf:Property .
 owl:versionInfo a rdf:Property .
 drivetrain:usesSparqlOperator a rdf:Property .
-drivetrain:predicateSuffi a rdf:Property .
+drivetrain:predicateSuffix a rdf:Property .
+
+owl:annotatedSource a rdf:Property .
+owl:annotatedProperty a rdf:Property .
+owl:annotatedTarget a rdf:Property .
+
+owl:Ontology a rdfs:Class .
+rdfs:Class a rdfs:Class .
+
+owl:priorVersion a owl:AnnotationProperty, owl:OntologyProperty . 
+owl:versionInfo a owl:AnnotationProperty . 
+owl:versionIRI a owl:OntologyProperty . 
+
+owl:AnnotationProperty a rdfs:Class . 
+owl:OntologyProperty a rdfs:Class . 
+
+rdfs:comment a rdf:Property .
+

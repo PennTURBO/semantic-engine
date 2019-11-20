@@ -1,7 +1,6 @@
-# baseURI: https://unnamed/acorn/inputs
-# prefix: inputs
+# baseURI: https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/post_icbo_synthea_omop_cnp_transformation_instructions.ttl/
 
-@prefix : <https://unnamed/acorn/post_icbo_synthea_omop_cnp_inputs/> .
+@prefix : <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/post_icbo_synthea_omop_cnp_transformation_instructions.ttl/> .
 @prefix properties: <http://turboProperties.org/> .
 @prefix turbo: <http://transformunify.org/ontologies/> .
 
@@ -16,6 +15,14 @@
 @prefix sdvg: <http://api.stardog.com/> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/post_icbo_synthea_omop_cnp_transformation_instructions.ttl> a owl:Ontology ;
+    owl:priorVersion "not applicable" ; 
+    owl:versionInfo "unversioned" ;
+    owl:versionIRI <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/post_icbo_synthea_omop_cnp_transformation_instructions.ttl> ;
+	rdfs:comment "that's not really a version IRI" .
+
+# MAM: I shold probably make the resource lists more specific (integer, string...) in this file
 
 # these classes are present in Stardog's direct mapping of OMOP tables, but not in the TURBO ontology
 <http://api.stardog.com/visit_occurrence> a owl:Class .
@@ -77,6 +84,51 @@ drivetrain:Patients
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:HealthCareEncounters ;
 .
+
+# MAM added 20191120
+
+drivetrain:dobColumnTerm a drivetrain:ResourceList ;
+  drivetrain:range ontologies:TURBO_0010443 ;
+.
+
+drivetrain:GidColumnTerm  a drivetrain:ResourceList ;
+  drivetrain:range ontologies:TURBO_0010431 ;
+.
+
+drivetrain:HealthcareEncounterRegDen  a drivetrain:ResourceList ;
+  drivetrain:range ontologies:TURBO_0010256 ;
+.
+
+drivetrain:DiagColumnTerm  a drivetrain:ResourceList ;
+  drivetrain:range ontologies:TURBO_0010605 ;
+.
+
+# MAM 20191120 synthea omop doesn't have a diagnosis *registry*, so it uses a key sourcec denoter
+# does PDS or PMBB really ahve a diagnosis registry of its own? Not ICD9CM or ICD10CM.
+# I put the OMOP diagnosis source denoter term below, but it shouldn't be part of a CRID.
+
+drivetrain:diagnosisRegDen  a drivetrain:ResourceList ;
+  drivetrain:range ontologies:TURBO_0010510 ;
+.
+
+# MAM 20191120 
+# first
+# (run-main-2) java.lang.AssertionError: assertion failed: The object of connection https://github.com/PennTURBO/Drivetrain/DiagKeySymbHasRepresentation is not a literal, but the connection is a datatype connection.
+# see drivetrain:Diagnosis
+
+# drivetrain:DiagKeySymbHasRepresentation
+  # # drivetrain:object drivetrain:condition_occurrence_id_StringLiteralValue ;
+  # drivetrain:object drivetrain:condition_occurrence_id_LiteralValue ;
+
+# then
+# The object of connection https://github.com/PennTURBO/Drivetrain/CondKeysymShortcut is not a literal, but the connection is a datatype connection.
+
+# drivetrain:condition_occurrence_id_IntegerLiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
+
+# drivetrain:condition_occurrence_id_IntegerLiteralValue
+  # a drivetrain:TurboGraphIntegerLiteralValue ;
+# .
+
 
 drivetrain:GidScoGid 
    a drivetrain:TermToTermRecipe ;
@@ -402,8 +454,7 @@ drivetrain:HcePrecedence
   drivetrain:hasRequiredInput drivetrain:RepresenteeOfPreviousVisitId ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes drivetrain:HealthCareProcedures ;
-  # drivetrain:precedes drivetrain:PatientMeasurements ;  
+  drivetrain:precedes drivetrain:HealthCareProcedures ; 
 .
 
 drivetrain:preceding_encounter_keysym_LiteralValue
@@ -465,7 +516,7 @@ drivetrain:PrevencScoEnc
 .
 
 drivetrain:PrevencsClass
-  a drivetrain:MultiObjectDescriber .
+  a drivetrain:ResourceList .
 
 drivetrain:hce_id_IntegerLiteralValue 
   a drivetrain:TurboGraphIntegerLiteralValue ;
@@ -864,7 +915,7 @@ drivetrain:MulScoMul
 .
 
 drivetrain:MulToBeTyped 
-  a drivetrain:MultiObjectDescriber ;
+  a drivetrain:ResourceList ;
 .
 
 drivetrain:measurement_units_LiteralValue
@@ -951,7 +1002,7 @@ drivetrain:KeyDenotesMeasInp
 .
 
 ### conditions/diagnoses (?)
- drivetrain:Diagnosis
+drivetrain:Diagnosis
   drivetrain:precedes drivetrain:DiagnosisAboutness ;
   a ontologies:TURBO_0010354 ;
   drivetrain:hasOutput drivetrain:DiagExpansion;
@@ -984,13 +1035,19 @@ drivetrain:CondCodeShortcut
   drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
 .
 
+
+# MAM 20191120
+
 drivetrain:CondKeysymShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:condition_occurrence_id_IntegerLiteralValue ;
+  # drivetrain:object drivetrain:condition_occurrence_id_IntegerLiteralValue ;
+  drivetrain:object drivetrain:condition_occurrence_id_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/condition_occurrence#condition_occurrence_id> ;
   drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
 .
+
+drivetrain:condition_occurrence_id_LiteralValue a drivetrain:IntegerLiteralResourceList .
 
 drivetrain:CondStartDatetimeShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
@@ -1023,15 +1080,11 @@ drivetrain:condition_type_LiteralValue
   a drivetrain:TurboGraphStringLiteralValue ;
 .
 
-drivetrain:condition_occurrence_id_IntegerLiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
-.
-
 drivetrain:condition_start_datetime_DateLiteralValue
   a drivetrain:TurboGraphDateLiteralValue ;
 .
   
-# ### diag aboutness
+### diag aboutness
 
 drivetrain:DiagnosisAboutness 
   a ontologies:TURBO_0010354 ;
@@ -1073,7 +1126,7 @@ drivetrain:KeyDenotesDiagInp
   drivetrain:subjectUsesContext drivetrain:DiagDenotationContext ;
 .
 
-# ### diag parthood
+### diag parthood
 drivetrain:DiagnosisParthood
   drivetrain:precedes drivetrain:Prescription ;
   a ontologies:TURBO_0010354 ;
@@ -1149,12 +1202,12 @@ drivetrain:RxExpansion
 .
 
 drivetrain:RxColumnTerm
-  a drivetrain:MultiObjectDescriber ;
+  a drivetrain:ResourceList ;
   drivetrain:range ontologies:TURBO_0010707 ;
 .
 
 drivetrain:RxSourcedenTerm
-  a drivetrain:MultiObjectDescriber ;
+  a drivetrain:ResourceList ;
   drivetrain:range ontologies:TURBO_0010511 ;
 .
 
@@ -1210,7 +1263,7 @@ drivetrain:WrittenNotDispensedSco
 .
 
 drivetrain:WrittenNotDispensedMOD
-  a drivetrain:MultiObjectDescriber ;
+  a drivetrain:ResourceList ;
 .
 
 drivetrain:WrittenNotDispensedLiteral
@@ -1620,7 +1673,7 @@ drivetrain:ValspecHasSpecVal drivetrain:referencedInGraph
 
 drivetrain:WrittenNotDispensedLiteral a drivetrain:TurboGraphIntegerLiteralValue .
 drivetrain:birth_datetime_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
-drivetrain:condition_occurrence_id_IntegerLiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
+
 drivetrain:condition_start_datetime_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
 drivetrain:condition_type_LiteralValue a drivetrain:TurboGraphStringLiteralValue .
 drivetrain:drug_code_LiteralValue a drivetrain:TurboGraphStringLiteralValue .

@@ -1,7 +1,7 @@
-# baseURI: https://unnamed/acorn/outputs
-# prefix: outputs
+# baseURI: https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/turbo_valid_graph_specification.ttl/
 
-#@prefix : <https://unnamed/acorn/post_icbo_synthea_omop_cnp_inputs/> .
+@prefix : <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/turbo_valid_graph_specification.ttl/> .
+
 @prefix properties: <http://turboProperties.org/> .
 @prefix turbo: <http://transformunify.org/ontologies/> .
 
@@ -16,6 +16,12 @@
 @prefix sdvg: <http://api.stardog.com/> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/turbo_valid_graph_specification.ttl> a owl:Ontology ;
+    owl:priorVersion "not applicable" ; 
+    owl:versionInfo "unversioned" ;
+    owl:versionIRI <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/turbo_valid_graph_specification.ttl> ;
+	rdfs:comment "that's not really a version IRI" .
 
 drivetrain:star a drivetrain:PredicateSuffixSymbol ;
   drivetrain:usesSparqlOperator '*' ;
@@ -394,6 +400,7 @@ drivetrain:HardcodedEncSourceden
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 drivetrain:HealthcareEncounterRegDen a drivetrain:ClassResourceList .
+
 drivetrain:CridDenotesEnc
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -2073,14 +2080,45 @@ drivetrain:DiagKeySymbPartOfColumn
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
+###
+
+# The object of connection https://github.com/PennTURBO/Drivetrain/DiagKeySymbHasRepresentation is not a literal, but the connection is a datatype connection.
+# called by drivetrain:Diagnosis in post_icbo_synthea_omop_cnp_transformation_instructions.ttl
+# which says
+
+# drivetrain:condition_occurrence_id_IntegerLiteralValue
+  # a drivetrain:TurboGraphIntegerLiteralValue ;
+# .
+
+# below:  drivetrain:condition_occurrence_id_StringLiteralValue a drivetrain:StringLiteralResourceList .
+
+# drivetrain:IntegerLiteralResourceList  a owl:Class ;
+  # rdfs:subClassOf drivetrain:LiteralResourceList .
+# drivetrain:TurboGraphIntegerLiteralValue a owl:Class .
+
+
+# drivetrain:condition_occurrence_id_IntegerLiteralValue a drivetrain:StringLiteralResourceList .
+
+# drivetrain:condition_occurrence_id_StringLiteralValue a drivetrain:StringLiteralResourceList .
+
+# drivetrain:condition_occurrence_id_IntegerLiteralValue
+  # a drivetrain:TurboGraphIntegerLiteralValue ;
+# .
+
+drivetrain:condition_occurrence_id_LiteralValue a drivetrain:LiteralResourceList .
+
+###
+
 drivetrain:DiagKeySymbHasRepresentation
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:condition_occurrence_id_StringLiteralValue ;
+  # drivetrain:object drivetrain:condition_occurrence_id_StringLiteralValue ;
+  drivetrain:object drivetrain:condition_occurrence_id_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
+
 
 drivetrain:HardcodedDiagSourceden 
   a drivetrain:InstanceToTermRecipe ;
@@ -2639,7 +2677,7 @@ ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:RxAboutnessAxi
 drivetrain:WrittenNotDispensedLiteral a drivetrain:LiteralResourceList .
 drivetrain:birth_datetime_DateLiteralValue a drivetrain:DateLiteralResourceList .
 drivetrain:birth_datetime_StringLiteralValue a drivetrain:StringLiteralResourceList .
-drivetrain:condition_occurrence_id_StringLiteralValue a drivetrain:StringLiteralResourceList .
+
 drivetrain:condition_start_datetime_DateLiteralValue a drivetrain:LiteralResourceList .
 drivetrain:condition_type_LiteralValue a drivetrain:LiteralResourceList .
 drivetrain:drug_code_LiteralValue a drivetrain:StringLiteralResourceList .
