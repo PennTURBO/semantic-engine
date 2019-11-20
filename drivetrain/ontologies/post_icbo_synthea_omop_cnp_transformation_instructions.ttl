@@ -76,6 +76,8 @@ drivetrain:Patients
   drivetrain:hasOutput drivetrain:RidPartOfColumn ;
   drivetrain:hasOutput drivetrain:RidTypingRecipe ;
   drivetrain:hasOutput drivetrain:SymbolPartOfCridForPatient ;
+  
+  drivetrain:hasOutput drivetrain:RoleToRoleType ;
 
   drivetrain:hasRequiredInput drivetrain:PatientKeySymShortcut ;
   drivetrain:hasRequiredInput drivetrain:RidOmopConceptIds ;
@@ -405,6 +407,9 @@ drivetrain:HceParticipation
   drivetrain:hasRequiredInput drivetrain:PatKeySymbHasRepresentation ;
   drivetrain:hasRequiredInput drivetrain:PatKeySymbPartOfKey ;
   drivetrain:hasRequiredInput drivetrain:PatientHasRole;
+  
+  drivetrain:hasRequiredInput drivetrain:RoleToRoleType ;
+  
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:HcePrecedence ;
@@ -651,6 +656,9 @@ drivetrain:HcpParticipation
   drivetrain:hasOutput drivetrain:ProcParticipationAxiomSource ;
   drivetrain:hasOutput drivetrain:ProcParticipationAxiomTarget ;
   drivetrain:hasOutput drivetrain:ProcRealizesPatientRole ;
+  
+  drivetrain:hasRequiredInput drivetrain:RoleToRoleType ;
+  
   drivetrain:hasRequiredInput drivetrain:HardcodedPatientSourceden ;
   drivetrain:hasRequiredInput drivetrain:KeyDenotesPatient ;
   drivetrain:hasRequiredInput drivetrain:PatKeySymbHasRepresentation ;
@@ -1736,4 +1744,6 @@ drivetrain:RxParthoodAxiomDbXref_visit_occurrence_id_column drivetrain:range tur
 drivetrain:RxTmd_drug_exposure_start_datetime_column drivetrain:range turbo:TURBO_0010706 .
 
 ###
+
+drivetrain:RoleClassList drivetrain:range obo:OBI_0000093 .
 
