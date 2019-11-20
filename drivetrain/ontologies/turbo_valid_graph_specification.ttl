@@ -657,7 +657,7 @@ drivetrain:EncParticipationAxiomTarget
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedTarget ;
-  drivetrain:object obo:OBI_0000093 ;
+  drivetrain:object drivetrain:RoleToBeTyped ;
   drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
@@ -1291,7 +1291,7 @@ drivetrain:ProcRealizesPatientRole
  drivetrain:multiplicity drivetrain:1-many ;
  drivetrain:subject drivetrain:ProcToBeTyped ;
  drivetrain:predicate obo:BFO_0000055 ;
- drivetrain:object obo:OBI_0000093 ;
+ drivetrain:object drivetrain:RoleToBeTyped ;
 .
 
 drivetrain:ProcParticipationAxiomSource
@@ -1317,7 +1317,7 @@ drivetrain:ProcParticipationAxiomTarget
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedTarget ;
-  drivetrain:object obo:OBI_0000093 ;
+  drivetrain:object drivetrain:RoleToBeTyped ;
   drivetrain:subjectUsesContext drivetrain:ParticipationAxiomContext ;
 .
 
