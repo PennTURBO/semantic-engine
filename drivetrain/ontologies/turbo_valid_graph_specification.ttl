@@ -196,18 +196,16 @@ drivetrain:PatKeySymbHasRepresentation
 .
 obo:IAO_0000028 
   drivetrain:hasPossibleContext drivetrain:PatientCridContext ;
-  drivetrain:hasPossibleContext drivetrain:HealthcareEncounterCridContext ;
+  drivetrain:hasPossibleContext drivetrain:EncounterCridContext ;
   drivetrain:hasPossibleContext drivetrain:TumorCridContext ;
-  drivetrain:hasPossibleContext drivetrain:BiobankEncounterCridContext ;
   drivetrain:hasPossibleContext drivetrain:KeyContext ;
   drivetrain:hasPossibleContext drivetrain:IndexContext ;
   drivetrain:hasPossibleContext drivetrain:LossOfFunctionCridContext ;
 .
 obo:IAO_0000578
   drivetrain:hasPossibleContext drivetrain:PatientCridContext ;
-  drivetrain:hasPossibleContext drivetrain:HealthcareEncounterCridContext ;
+  drivetrain:hasPossibleContext drivetrain:EncounterCridContext ;
   drivetrain:hasPossibleContext drivetrain:TumorCridContext ;
-  drivetrain:hasPossibleContext drivetrain:BiobankEncounterCridContext ;
   drivetrain:hasPossibleContext drivetrain:LossOfFunctionCridContext ;
 .
 ontologies:TURBO_0010433 
@@ -216,9 +214,8 @@ ontologies:TURBO_0010433
 .
 drivetrain:KeyContext a drivetrain:TurboGraphContext .
 drivetrain:PatientCridContext a drivetrain:TurboGraphContext .
-drivetrain:HealthcareEncounterCridContext a drivetrain:TurboGraphContext .
+drivetrain:EncounterCridContext a drivetrain:TurboGraphContext .
 drivetrain:TumorCridContext a drivetrain:TurboGraphContext .
-drivetrain:BiobankEncounterCridContext a drivetrain:TurboGraphContext .
 drivetrain:IndexContext a drivetrain:TurboGraphContext .
 
 drivetrain:HardcodedPatientSourceden 
@@ -316,7 +313,7 @@ drivetrain:EncCridSymPartOfColumn
   # drivetrain:object ontologies:TURBO_0010455 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:subject obo:IAO_0000028 ;
-  drivetrain:subjectUsesContext drivetrain:HealthcareEncounterCridContext ;
+  drivetrain:subjectUsesContext drivetrain:EncounterCridContext ;
 .
 
 drivetrain:KeyDenotesEncCridSym
@@ -326,7 +323,7 @@ drivetrain:KeyDenotesEncCridSym
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
   drivetrain:predicate obo:IAO_0000219 ;
   drivetrain:object obo:IAO_0000028 ;
-  drivetrain:objectUsesContext drivetrain:HealthcareEncounterCridContext ;
+  drivetrain:objectUsesContext drivetrain:EncounterCridContext ;
 .
 drivetrain:EncStartDatePartOfColumn
   a drivetrain:InstanceToTermRecipe ;
@@ -416,7 +413,7 @@ drivetrain:CridDenotesEnc
   drivetrain:subject obo:IAO_0000578 ;
   drivetrain:predicate obo:IAO_0000219 ;
   drivetrain:object drivetrain:EncToBeTyped ;
-  drivetrain:subjectUsesContext drivetrain:HealthcareEncounterCridContext ;
+  drivetrain:subjectUsesContext drivetrain:EncounterCridContext ;
 .
 
 drivetrain:EncTypingRecipe 
@@ -437,7 +434,7 @@ drivetrain:EncCridsymbHasRepresentation
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
   drivetrain:object drivetrain:encounter_cridsym_LiteralValue ;
-  drivetrain:subjectUsesContext drivetrain:HealthcareEncounterCridContext ;
+  drivetrain:subjectUsesContext drivetrain:EncounterCridContext ;
 .
 
 drivetrain:EncClassList
@@ -529,8 +526,8 @@ drivetrain:symbolPartOfCridForEnc
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:object obo:IAO_0000578 ;
-  drivetrain:subjectUsesContext drivetrain:HealthcareEncounterCridContext ;
-  drivetrain:objectUsesContext drivetrain:HealthcareEncounterCridContext ;
+  drivetrain:subjectUsesContext drivetrain:EncounterCridContext ;
+  drivetrain:objectUsesContext drivetrain:EncounterCridContext ;
 .
 
 drivetrain:EncTypeAxiomSource
@@ -2022,31 +2019,6 @@ drivetrain:DiagKeySymbPartOfColumn
   drivetrain:subject obo:IAO_0000028 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
-
-###
-
-# The object of connection https://github.com/PennTURBO/Drivetrain/DiagKeySymbHasRepresentation is not a literal, but the connection is a datatype connection.
-# called by drivetrain:Diagnosis in post_icbo_synthea_omop_cnp_transformation_instructions.ttl
-# which says
-
-# drivetrain:condition_occurrence_id_IntegerLiteralValue
-  # a drivetrain:TurboGraphIntegerLiteralValue ;
-# .
-
-# below:  drivetrain:condition_occurrence_id_StringLiteralValue a drivetrain:StringLiteralResourceList .
-
-# drivetrain:IntegerLiteralResourceList  a owl:Class ;
-  # rdfs:subClassOf drivetrain:LiteralResourceList .
-# drivetrain:TurboGraphIntegerLiteralValue a owl:Class .
-
-
-# drivetrain:condition_occurrence_id_IntegerLiteralValue a drivetrain:StringLiteralResourceList .
-
-# drivetrain:condition_occurrence_id_StringLiteralValue a drivetrain:StringLiteralResourceList .
-
-# drivetrain:condition_occurrence_id_IntegerLiteralValue
-  # a drivetrain:TurboGraphIntegerLiteralValue ;
-# .
 
 drivetrain:condition_occurrence_id_LiteralValue a drivetrain:LiteralResourceList .
 
