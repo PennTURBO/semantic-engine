@@ -757,3 +757,7 @@ drivetrain:condition_type_LiteralValue
 drivetrain:RxSourcedenTerm
   drivetrain:range ontologies:TURBO_0010714 ;
 .
+drivetrain:RoleToBeTyped
+  drivetrain:range obo:OBI_0000093 ;
+  drivetrain:range obo:OBI_0000097 ;
+.

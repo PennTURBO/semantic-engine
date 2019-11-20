@@ -623,8 +623,6 @@ drivetrain:RoleToBeTyped
 .
 drivetrain:RoleClassList
   a drivetrain:ClassResourceList ;
-  drivetrain:range obo:OBI_0000093 ;
-  drivetrain:range obo:OBI_0000097 ;
 .
 
 drivetrain:PuiRoleRealizesBiobankEncounter
