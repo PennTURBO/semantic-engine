@@ -376,6 +376,15 @@ drivetrain:EncKeySymbPartOfKey
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
   drivetrain:objectUsesContext drivetrain:KeyContext ;
 .
+drivetrain:KeyHasPartEncKeySymb
+  a drivetrain:InstanceToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:object obo:IAO_0000028 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:KeyContext ;
+  drivetrain:objectUsesContext drivetrain:KeyContext ;
+.
 drivetrain:EncKeySymbHasRepresentation
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -388,12 +397,12 @@ drivetrain:EncKeySymbHasRepresentation
 drivetrain:HardcodedEncSourceden 
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:object drivetrain:HealthcareEncounterRegDen ;
+  drivetrain:object drivetrain:EncounterRegDen ;
   drivetrain:predicate obo:BFO_0000051 ;
   drivetrain:subject ontologies:TURBO_0010433 ;
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
-drivetrain:HealthcareEncounterRegDen a drivetrain:ClassResourceList .
+drivetrain:EncounterRegDen a drivetrain:ClassResourceList .
 drivetrain:CridDenotesEnc
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -586,7 +595,7 @@ drivetrain:EncRealizesRole
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:subject drivetrain:EncToBeTyped  ;
   drivetrain:predicate obo:BFO_0000055 ;
-  drivetrain:object obo:OBI_0000093 ;
+  drivetrain:object drivetrain:RoleToBeTyped ;
 .
 
 drivetrain:PatientHasRole
@@ -594,7 +603,33 @@ drivetrain:PatientHasRole
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:subject obo:NCBITaxon_9606 ;
   drivetrain:predicate obo:RO_0000087 ;
-  drivetrain:object obo:OBI_0000093 ;
+  drivetrain:object drivetrain:RoleToBeTyped ;
+.
+
+drivetrain:RoleToRoleType
+  a drivetrain:InstanceToTermRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:RoleToBeTyped ;
+  drivetrain:predicate rdf:type ;
+  drivetrain:object drivetrain:RoleClassList ;
+.
+
+drivetrain:RoleToBeTyped
+  a drivetrain:ClassResourceList ;
+.
+drivetrain:RoleClassList
+  a drivetrain:ClassResourceList ;
+  drivetrain:range obo:OBI_0000093 ;
+  drivetrain:range obo:OBI_0000097 ;
+.
+
+drivetrain:PuiRoleRealizesBiobankEncounter
+  a drivetrain:InstanceToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
+  drivetrain:object turbo:TURBO_0000527 ;
+  drivetrain:predicate obo:BFO_0000054 ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:subject obo:OBI_0000097 ;
 .
 
 drivetrain:EncParticipationAxiomSource
@@ -1035,98 +1070,6 @@ drivetrain:tumorRegDenPartOfTumorCrid
   drivetrain:subject drivetrain:TumorRegistryClassList ;
 .
 drivetrain:TumorRegistryClassList a drivetrain:ClassResourceList .
-
-### biobank encounters
-
-drivetrain:ProcboundStartsBiobankEnc
-  a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
-  drivetrain:subject obo:BFO_0000035 ;
-  drivetrain:predicate obo:RO_0002223 ;
-  drivetrain:object turbo:TURBO_0000527 ;
-  drivetrain:subjectUsesContext drivetrain:StartContext ;
-.
-drivetrain:biobankEncounterCridDenotesBiobankEncounter
-  a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object ontologies:TURBO_0000527 ;
-  drivetrain:predicate obo:IAO_0000219 ;
-  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject obo:IAO_0000578 ;
-  drivetrain:subjectUsesContext drivetrain:BiobankEncounterCridContext ;
-.
-drivetrain:biobankEncounterCridHasPartRegDen
-  a drivetrain:InstanceToTermRecipe ;
-  drivetrain:multiplicity drivetrain:many-singleton ;
-  drivetrain:object drivetrain:BiobankEncRegDenClassList ;
-  drivetrain:predicate obo:BFO_0000051 ;
-  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject obo:IAO_0000578 ;
-  drivetrain:subjectUsesContext drivetrain:BiobankEncounterCridContext ;
-.
-drivetrain:biobankEncounterCridHasPartSymbol
-  a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object obo:IAO_0000028 ;
-  drivetrain:predicate obo:BFO_0000051 ;
-  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject obo:IAO_0000578 ;
-  drivetrain:subjectUsesContext drivetrain:BiobankEncounterCridContext ;
-  drivetrain:objectUsesContext drivetrain:BiobankEncounterCridContext ;
-.
-drivetrain:biobankEncounterRegistryDenoterPartOfCrid
-  a drivetrain:TermToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:singleton-many ;
-  drivetrain:object obo:IAO_0000578 ;
-  drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject drivetrain:BiobankEncRegDenClassList ;
-  drivetrain:objectUsesContext drivetrain:BiobankEncounterCridContext ;
-.
-drivetrain:biobankEncounterStartStartsBiobankEncounter
-  a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object ontologies:TURBO_0000527 ;
-  drivetrain:predicate obo:RO_0002223 ;
-  drivetrain:mustExecuteIf drivetrain:subjectExists ;
-  drivetrain:subject ontologies:TURBO_0000531 ;
-.
-drivetrain:biobankEncounterSymbolPartOfCrid
-  a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object obo:IAO_0000578 ;
-  drivetrain:predicate obo:BFO_0000050 ;
-  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject obo:IAO_0000028 ;
-  drivetrain:subjectUsesContext drivetrain:BiobankEncounterCridContext ;
-  drivetrain:objectUsesContext drivetrain:BiobankEncounterCridContext ;
-.
-drivetrain:biobankEncounterSymbolHasRepresentation
-  a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object drivetrain:biobankEnc_LiteralValue ;
-  drivetrain:predicate ontologies:TURBO_0010094 ;
-  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject obo:IAO_0000028 ;
-  drivetrain:subjectUsesContext drivetrain:BiobankEncounterCridContext ;
-.
-drivetrain:patientHasRolePuiRole
-  a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object obo:OBI_0000097 ;
-  drivetrain:predicate obo:RO_0000087 ;
-  drivetrain:mustExecuteIf drivetrain:objectExists ;
-  drivetrain:subject obo:NCBITaxon_9606 ;
-.
-drivetrain:puiRoleRealizesBiobankEncounter
-  a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
-  drivetrain:object turbo:TURBO_0000527 ;
-  drivetrain:predicate obo:BFO_0000054 ;
-  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject obo:OBI_0000097 ;
-.
-drivetrain:BiobankEncRegDenClassList a drivetrain:ClassResourceList .
 
 ### loss of function
 

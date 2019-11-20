@@ -85,3 +85,7 @@ drivetrain:range a rdf:Property .
 owl:versionInfo a rdf:Property .
 drivetrain:usesSparqlOperator a rdf:Property .
 drivetrain:predicateSuffi a rdf:Property .
+
+<http://www.w3.org/2002/07/owl#annotatedSource> a rdf:Property .
+<http://www.w3.org/2002/07/owl#annotatedProperty> a rdf:Property .
+<http://www.w3.org/2002/07/owl#annotatedTarget> a rdf:Property .

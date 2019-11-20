@@ -507,7 +507,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
         }
     }
     
-    def generateSimpleNamedGraphsListFromPrefix(cxn: RepositoryConnection, graphsPrefix: String): ArrayBuffer[String] =
+    def generateSimpleNamedGraphsListFromPrefix(cxn: RepositoryConnection, graphsPrefix: String, useCache: Boolean = true): ArrayBuffer[String] =
     {
         val graphVar = "g"
         var filterClause = "filter "
@@ -520,13 +520,17 @@ class TurboMultiuseClass extends Enumeration with Matchers
             $filterClause
             }"""
             //println(getGraphs)
-            if (completedQueriesMap.contains(getGraphs)) completedQueriesMap(getGraphs)
-            else 
+            if (useCache)
             {
-                val res = update.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
-                if (res.size > 0) completedQueriesMap += getGraphs -> res
-                res
+                if (completedQueriesMap.contains(getGraphs)) completedQueriesMap(getGraphs)
+                else 
+                {
+                    val res = update.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
+                    if (res.size > 0) completedQueriesMap += getGraphs -> res
+                    res
+                } 
             }
+            else update.querySparqlAndUnpackTuple(cxn, getGraphs, graphVar)
         }
         else 
         {

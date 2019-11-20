@@ -182,10 +182,6 @@ object GraphModelValidator extends ProjectwideGlobals
           {
               graph <$defaultPrefix"""+s"""graphSpecification>
               {
-                  Values ?CONNECTIONRECIPETYPE {drivetrain:TermToInstanceRecipe 
-                                                drivetrain:InstanceToInstanceRecipe
-                                                drivetrain:InstanceToTermRecipe
-                                                }
                   ?recipe a ?CONNECTIONRECIPETYPE .
                   ?recipe drivetrain:object ?object .
                   ?recipe drivetrain:predicate ?predicate .
@@ -193,6 +189,10 @@ object GraphModelValidator extends ProjectwideGlobals
                   {
                       ?object a drivetrain:MultiObjectDescriber .
                   }
+              }
+              graph <$defaultPrefix"""+s"""acornOntology>
+              {
+                  ?CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
               }
               graph <$ontologyURL>
               {
@@ -203,8 +203,14 @@ object GraphModelValidator extends ProjectwideGlobals
                       ?object rdfs:subClassOf* ?range .
                   }
               }
+              Minus
+              {
+                  ?object a ?resourceList .
+                  ?resourceList rdfs:subClassOf* drivetrain:ResourceList .
+              }
           }
           """
+        //logger.info(rangeQuery)
         var res = update.querySparqlAndUnpackTuple(gmCxn, rangeQuery, "recipe")
         var allRes = ""
         for (singleRes <- res)
@@ -218,20 +224,17 @@ object GraphModelValidator extends ProjectwideGlobals
           {
               graph <$defaultPrefix"""+s"""graphSpecification>
               {
-                  Values ?CONNECTIONRECIPETYPE {drivetrain:TermToInstanceRecipe 
-                                                drivetrain:InstanceToInstanceRecipe
-                                                drivetrain:InstanceToTermRecipe
-                                                drivetrain:InstanceToLiteralRecipe
-                                                drivetrain:TermToTermRecipe
-                                                drivetrain:TermToLiteralRecipe
-                                                }
                   ?recipe a ?CONNECTIONRECIPETYPE .
                   ?recipe drivetrain:subject ?subject .
                   ?recipe drivetrain:predicate ?predicate .
                   minus
                   {
-                      ?subject a drivetrain:MultiObjectDescriber .
+                      ?subject a drivetrain:ClassResourceList .
                   }
+              }
+              graph <$defaultPrefix"""+s"""acornOntology>
+              {
+                  ?CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
               }
               graph <$ontologyURL>
               {
@@ -244,6 +247,7 @@ object GraphModelValidator extends ProjectwideGlobals
               }
           }
           """
+        //logger.info(domainQuery)
         res = update.querySparqlAndUnpackTuple(gmCxn, domainQuery, "recipe")
         allRes = ""
         for (singleRes <- res)

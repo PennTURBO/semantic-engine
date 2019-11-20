@@ -21,6 +21,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     var inputProcessSet = new HashSet[String]
     var typeMap = new HashMap[String,Value]
     
+    var useInputNamedGraphsCache: Boolean = true
+    
     def setGlobalUUID(globalUUID: String)
     {
         this.localUUID = globalUUID
@@ -34,6 +36,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     def setOutputRepositoryConnection(cxn: RepositoryConnection)
     {
         this.cxn = cxn
+    }
+    def setInputNamedGraphsCache(useInputNamedGraphsCache: Boolean)
+    {
+        this.useInputNamedGraphsCache = useInputNamedGraphsCache
     }
     
     def runProcess(processSpecification: String, dataValidationMode: String = dataValidationMode, validateAgainstOntology: Boolean = validateAgainstOntology): HashMap[String, PatternMatchQuery] =
@@ -67,7 +73,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
             //var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
             // get list of all named graphs which match pattern specified in inputNamedGraph but without match on where clause
-            var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph)
+            var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, useInputNamedGraphsCache)
             logger.info("\tinput named graphs size: " + inputNamedGraphsList.size)
             if (inputNamedGraphsList.size == 0) logger.info(s"\tCannot run process $processSpecification: no input named graphs found")
             else
@@ -182,15 +188,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-              Values ?$CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
-                                            drivetrain:InstanceToInstanceRecipe
-                                            drivetrain:InstanceToLiteralRecipe
-                                            drivetrain:TermToInstanceRecipe
-                                            drivetrain:TermToTermRecipe
-                                            drivetrain:TermToLiteralRecipe}
               Values ?$INPUTTYPE {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
               <$process> ?$INPUTTYPE ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
+              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
               <$process> drivetrain:inputNamedGraph ?$GRAPH .
               ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
               ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
@@ -268,13 +269,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               Optional
               {
-                  Values ?graphLiteral {drivetrain:TurboGraphStringLiteralValue
-                                        drivetrain:TurboGraphDateLiteralValue
-                                        drivetrain:TurboGraphLiteralValue
-                                        drivetrain:TurboGraphDoubleLiteralValue
-                                        drivetrain:TurboGraphIntegerLiteralValue
-                                        drivetrain:TurboGraphBooleanLiteralValue}
                   ?$OBJECT a ?graphLiteral .
+                  ?graphLiteral rdfs:subClassOf* drivetrain:LiteralResourceList .
                   BIND (true AS ?$OBJECTALITERAL)
               }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
@@ -296,15 +292,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          
          Where
          {
-              Values ?CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
-                                          drivetrain:InstanceToInstanceRecipe
-                                          drivetrain:InstanceToLiteralRecipe
-                                          drivetrain:TermToInstanceRecipe
-                                          drivetrain:TermToTermRecipe
-                                          drivetrain:TermToLiteralRecipe}
-  
               <$process> drivetrain:removes ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
+              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
               <$process> drivetrain:outputNamedGraph ?$GRAPH .
               ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
               ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
@@ -353,14 +343,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          Where
          {
               Values ?INPUTTO {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
-              Values ?CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
-                                            drivetrain:InstanceToInstanceRecipe
-                                            drivetrain:InstanceToLiteralRecipe
-                                            drivetrain:TermToInstanceRecipe
-                                            drivetrain:TermToTermRecipe
-                                            drivetrain:TermToLiteralRecipe}
               <$process> drivetrain:hasOutput ?$CONNECTIONNAME .
               ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
+              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
               <$process> drivetrain:outputNamedGraph ?$GRAPH .
               ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
               ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
@@ -428,13 +413,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               Optional
               {
-                  Values ?graphLiteral {drivetrain:TurboGraphStringLiteralValue
-                                        drivetrain:TurboGraphDateLiteralValue
-                                        drivetrain:TurboGraphLiteralValue
-                                        drivetrain:TurboGraphDoubleLiteralValue
-                                        drivetrain:TurboGraphIntegerLiteralValue
-                                        drivetrain:TurboGraphBooleanLiteralValue}
                   ?$OBJECT a ?graphLiteral .
+                  ?graphLiteral rdfs:subClassOf* drivetrain:LiteralResourceList .
                   BIND (true AS ?$OBJECTALITERAL)
               }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
