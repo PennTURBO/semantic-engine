@@ -73,7 +73,7 @@ pmbb:HomoSapiensExpansionProcess
   drivetrain:buildsOptionalGroup ontologies:shortcutTumorOptionalGroup ;
   drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes pmbb:HealthcareEncounterExpansionProcess ;
+  drivetrain:precedes pmbb:EncounterExpansionProcess ;
   a ontologies:TURBO_0010354 ;
   drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensIdToRegistry ;
   drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensIdToSymbol ;
@@ -117,71 +117,30 @@ pmbb:HomoSapiensExpansionProcess
   drivetrain:hasOutput drivetrain:tumorCridHasPartRegDen ;
   drivetrain:hasOutput drivetrain:tumorRegDenPartOfTumorCrid ;
 .
-pmbb:BiobankEncounterExpansionProcess
-  drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
-  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:precedes pmbb:LossOfFunctionExpansionProcess ;
-  drivetrain:buildsOptionalGroup drivetrain:BiobankEncounterMeasurementsOptionalGroup ;
-  a ontologies:TURBO_0010354 ;
-  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI ;
-  drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
-  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToShortcutMeasurement ;
-  drivetrain:hasRequiredInput ontologies:shortcutMeasurementToShortcutMeasType ;
-  drivetrain:hasRequiredInput ontologies:shortcutMeasurementToValue ;
-  drivetrain:hasRequiredInput ontologies:shortcutMeasurementToUnitLabel ;
-  drivetrain:hasOptionalInput ontologies:shortcutBiobankEncounterToDateLiteralValue ;
-  drivetrain:hasOptionalInput ontologies:shortcutBiobankEncounterToDateStringValue ;
-  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToRegistry ;
-  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI ;
-  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToSymbolValue ;
-  drivetrain:hasOutput ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter ;
-  drivetrain:hasOutput ontologies:shortcutMeasurementToExpandedMeasurement ;
-  drivetrain:hasOutput drivetrain:biobankEncounterCridDenotesBiobankEncounter ;
-  drivetrain:hasOutput drivetrain:biobankEncounterCridHasPartRegDen ;
-  drivetrain:hasOutput drivetrain:biobankEncounterCridHasPartSymbol ;
-  drivetrain:hasOutput drivetrain:biobankEncounterRegistryDenoterPartOfCrid ;
-  drivetrain:hasOutput drivetrain:biobankEncounterStartStartsBiobankEncounter ;
-  drivetrain:hasOutput drivetrain:biobankEncounterSymbolPartOfCrid ;
-  drivetrain:hasOutput drivetrain:biobankEncounterSymbolHasRepresentation ;
-  drivetrain:hasOutput drivetrain:patientHasRolePuiRole ;
-  drivetrain:hasOutput drivetrain:puiRoleRealizesBiobankEncounter ;
-  drivetrain:hasOutput drivetrain:MeasTypingRecipe ;
-  drivetrain:hasOutput drivetrain:MeasAboutPat ;
-  drivetrain:hasOutput drivetrain:BiobankEncHasOutputMeas ;
-  drivetrain:hasOutput drivetrain:MeasHasValspec ;
-  drivetrain:hasOutput drivetrain:ValspecHasSpecVal ;
-  drivetrain:hasOutput drivetrain:MeasHasMul ;
-  #drivetrain:hasOutput drivetrain:EncStartDatePartOfColumn ;
-  drivetrain:hasOutput drivetrain:KeyDenotesEncStartDate ;
-  drivetrain:hasOutput drivetrain:EncStartingTmdHasMeasVal ;
-  drivetrain:hasOutput drivetrain:EncStartingTmdHasRawStringVal ;
-  drivetrain:hasOutput drivetrain:StartingTmdAboutProcbound ;
-  drivetrain:hasOutput drivetrain:ProcboundStartsBiobankEnc ;
-.
-pmbb:HealthcareEncounterExpansionProcess
+pmbb:EncounterExpansionProcess
   drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes pmbb:DiagnosisExpansionProcess ;
-  drivetrain:buildsOptionalGroup drivetrain:HealthcareEncounterMeasurementsOptionalGroup ;
+  drivetrain:buildsOptionalGroup drivetrain:EncounterMeasurementsOptionalGroup ;
   a ontologies:TURBO_0010354 ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToEncounterType ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutMeasurement ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToEncounterType ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToShortcutMeasurement ;
   drivetrain:hasRequiredInput ontologies:shortcutMeasurementToShortcutMeasType ;
   drivetrain:hasRequiredInput ontologies:shortcutMeasurementToValue ;
   drivetrain:hasRequiredInput ontologies:shortcutMeasurementToUnitLabel ;
-  drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToDateStringValue ;
-  drivetrain:hasOptionalInput ontologies:shortcutHealthcareEncounterToDateValue ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToSymbolValue ;
+  drivetrain:hasOptionalInput ontologies:shortcutEncounterToDateStringValue ;
+  drivetrain:hasOptionalInput ontologies:shortcutEncounterToDateValue ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToRegistry ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToShortcutHomoSapiensURI ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToSymbolValue ;
   drivetrain:hasRequiredInput ontologies:shortcutHomoSapiensToExpandedHomoSapiens ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToRoleType ;
   drivetrain:hasOutput ontologies:shortcutMeasurementToExpandedMeasurement ;
-  drivetrain:hasOutput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
-  #drivetrain:hasOutput drivetrain:EncIdPartOfColumn ;
-  #drivetrain:hasOutput drivetrain:EncStartDatePartOfColumn ;
+  drivetrain:hasOutput ontologies:shortcutEncounterToExpandedEncounter ;
   drivetrain:hasOutput drivetrain:KeyDenotesEncStartDate ;
   drivetrain:hasOutput drivetrain:KeyDenotesEnc ;
   drivetrain:hasOutput drivetrain:EncKeySymbPartOfKey ;
+  drivetrain:hasOutput drivetrain:KeyHasPartEncKeySymb ;
   drivetrain:hasOutput drivetrain:EncKeySymbHasRepresentation ;
   drivetrain:hasOutput drivetrain:HardcodedEncSourceden  ;
   drivetrain:hasOutput drivetrain:EncTypingRecipe ;
@@ -191,6 +150,7 @@ pmbb:HealthcareEncounterExpansionProcess
   drivetrain:hasOutput drivetrain:ProcboundStartsEnc ;
   drivetrain:hasOutput drivetrain:EncRealizesRole ;
   drivetrain:hasOutput drivetrain:PatientHasRole ;
+  drivetrain:hasOutput drivetrain:RoleToRoleType ;
   drivetrain:hasOutput drivetrain:MeasTypingRecipe ;
   drivetrain:hasOutput drivetrain:MeasAboutPat ;
   drivetrain:hasOutput drivetrain:EncHsoMeas ;
@@ -203,9 +163,9 @@ pmbb:DiagnosisExpansionProcess
   drivetrain:precedes pmbb:MedicationExpansionProcess ;
   drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToDiagnosis ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToDiagnosis ;
   drivetrain:hasRequiredInput drivetrain:EncTypingRecipe ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToExpandedEncounter ;
   drivetrain:hasRequiredInput ontologies:shortcutDiagnosisToRegistryString ;
   drivetrain:hasRequiredInput ontologies:shortcutDiagnosisToPrimaryKey ;
   drivetrain:hasRequiredInput drivetrain:EncRealizesRole ;
@@ -219,12 +179,10 @@ pmbb:DiagnosisExpansionProcess
   drivetrain:hasOutput drivetrain:DiagAboutPat ;
   drivetrain:hasOutput drivetrain:KeyDenotesDiag ;
   drivetrain:hasOutput drivetrain:DiagKeySymbPartOfKey ;
-  #drivetrain:hasOutput drivetrain:DiagKeySymbPartOfColumn ;
   drivetrain:hasOutput drivetrain:DiagKeySymbHasRepresentation ;
   drivetrain:hasOutput drivetrain:HardcodedDiagSourceden ;
   drivetrain:hasOutput drivetrain:DiagMentionsIcdTerm ;
   drivetrain:hasOutput drivetrain:DiagMentionsSnomedTerm ;
-  #drivetrain:hasOutput drivetrain:DiagPartOfColumn ;
   drivetrain:hasOutput drivetrain:DiagHasRepresentation ;
   drivetrain:hasOutput drivetrain:diagnosisHasCodingSequence ;
   drivetrain:hasOutput drivetrain:diagnosisIsPrimary ;
@@ -232,14 +190,14 @@ pmbb:DiagnosisExpansionProcess
 . 
 pmbb:MedicationExpansionProcess
   a turbo:TURBO_0010354 ;
-  drivetrain:precedes pmbb:BiobankEncounterExpansionProcess ;
+  drivetrain:precedes pmbb:LossOfFunctionExpansionProcess ;
   drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToPrescription ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToPrescription ;
   drivetrain:hasRequiredInput drivetrain:EncRealizesRole ;
   drivetrain:hasRequiredInput drivetrain:PatientHasRole ;
   drivetrain:hasRequiredInput drivetrain:EncTypingRecipe ;
-  drivetrain:hasRequiredInput ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToExpandedEncounter ;
   drivetrain:hasOptionalInput ontologies:shortcutPrescriptionToDrugTerm ;
   drivetrain:hasOptionalInput ontologies:shortcutPrescriptionToMedicationOrderName ;
   drivetrain:hasRequiredInput ontologies:shortcutPrescriptionToSymbolValue ;
@@ -268,9 +226,9 @@ pmbb:LossOfFunctionExpansionProcess
   drivetrain:hasRequiredInput ontologies:shortcutAlleleToShortcutBiobankEncounter ;
   drivetrain:hasRequiredInput ontologies:shortcutAlleleToZygosityIntegerValue ;
   drivetrain:hasRequiredInput ontologies:shortcutAlleleToZygosityValueUri ;
-  drivetrain:hasRequiredInput ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter ;
-  drivetrain:hasRequiredInput drivetrain:patientHasRolePuiRole ;
-  drivetrain:hasRequiredInput drivetrain:puiRoleRealizesBiobankEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToExpandedEncounter ;
+  drivetrain:hasRequiredInput drivetrain:PatientHasRole ;
+  drivetrain:hasRequiredInput drivetrain:PuiRoleRealizesBiobankEncounter ;
   drivetrain:hasOutput drivetrain:DNAExtractionProcessHasOutputDNAExtract ;
   drivetrain:hasOutput drivetrain:DNAExtractionProcessHasInputSpecimen ;
   drivetrain:hasOutput drivetrain:DNAhasGrainDNAExtract ;
@@ -296,7 +254,7 @@ pmbb:LossOfFunctionExpansionProcess
   drivetrain:hasOutput drivetrain:genomeCridDenotesSpecimen ;
   drivetrain:hasOutput drivetrain:genomeSymbolHasRepresentation ;
 .
-drivetrain:HealthcareEncounterMeasurementsOptionalGroup
+drivetrain:EncounterMeasurementsOptionalGroup
   a drivetrain:TurboGraphOptionalGroup ;
 .
 ontologies:shortcutAlleleToExpandedAllele
@@ -371,21 +329,20 @@ ontologies:shortcutAlleleToZygosityValueUri
   drivetrain:mustExecuteIf drivetrain:subjectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
 .
-ontologies:shortcutBiobankEncounterToShortcutMeasurement
+ontologies:shortcutEncounterToShortcutMeasurement
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object drivetrain:shortcutMeasurement ;
-  drivetrain:predicate drivetrain:scBbEnc2ScMeas ;
-  drivetrain:subject ontologies:TURBO_0010169 ;
-  drivetrain:partOf drivetrain:BiobankEncounterMeasurementsOptionalGroup ;
+  drivetrain:predicate drivetrain:scEnc2ScMeas ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
+  drivetrain:partOf drivetrain:EncounterMeasurementsOptionalGroup ;
 .
-ontologies:shortcutHealthcareEncounterToShortcutMeasurement
-  a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
-  drivetrain:object drivetrain:shortcutMeasurement ;
-  drivetrain:predicate drivetrain:scHcEnc2ScMeas ;
-  drivetrain:subject ontologies:TURBO_0010158 ;
-  drivetrain:partOf drivetrain:HealthcareEncounterMeasurementsOptionalGroup ;
+ontologies:shortcutEncounterToRoleType
+  a drivetrain:InstanceToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object drivetrain:RoleClassList ;
+  drivetrain:predicate drivetrain:scEnc2RoleType ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
 .
 ontologies:shortcutMeasurementToShortcutMeasType
   a drivetrain:InstanceToTermRecipe ;
@@ -394,8 +351,7 @@ ontologies:shortcutMeasurementToShortcutMeasType
   drivetrain:predicate drivetrain:scMeasHasType ;
   drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject drivetrain:shortcutMeasurement ;
-  drivetrain:partOf drivetrain:BiobankEncounterMeasurementsOptionalGroup ;
-  drivetrain:partOf drivetrain:HealthcareEncounterMeasurementsOptionalGroup ;
+  drivetrain:partOf drivetrain:EncounterMeasurementsOptionalGroup ;
   drivetrain:objectRequiredToCreate drivetrain:MeasToBeTyped ;
   drivetrain:objectRequiredToCreate obo:OBI_0001933 ;
 .
@@ -406,8 +362,7 @@ ontologies:shortcutMeasurementToValue
   drivetrain:predicate drivetrain:scMeasHasValue ;
   drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject drivetrain:shortcutMeasurement ;
-  drivetrain:partOf drivetrain:BiobankEncounterMeasurementsOptionalGroup ;
-  drivetrain:partOf drivetrain:HealthcareEncounterMeasurementsOptionalGroup ;
+  drivetrain:partOf drivetrain:EncounterMeasurementsOptionalGroup ;
 .
 ontologies:shortcutMeasurementToUnitLabel
   a drivetrain:InstanceToTermRecipe ;
@@ -416,38 +371,13 @@ ontologies:shortcutMeasurementToUnitLabel
   drivetrain:predicate drivetrain:scMeasHasUnitLabel ;
   drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject drivetrain:shortcutMeasurement ;
-  drivetrain:partOf drivetrain:BiobankEncounterMeasurementsOptionalGroup ;
-  drivetrain:partOf drivetrain:HealthcareEncounterMeasurementsOptionalGroup ;
+  drivetrain:partOf drivetrain:EncounterMeasurementsOptionalGroup ;
 .
 drivetrain:shortcutMeasurement
   a owl:Class ;
 .
-drivetrain:BiobankEncounterMeasurementsOptionalGroup
-  a drivetrain:TurboGraphOptionalGroup ;
-.
-ontologies:shortcutBiobankEncounterToDateLiteralValue
-  a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object drivetrain:encounter_start_datetime_DateLiteralValue ;
-  drivetrain:predicate ontologies:TURBO_0000625 ;
-  drivetrain:subject ontologies:TURBO_0010169 ;
-.
-ontologies:shortcutBiobankEncounterToDateStringValue
-  a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object drivetrain:encounter_start_datetime_StringLiteralValue ;
-  drivetrain:objectRequiredToCreate ontologies:TURBO_0000531 ;
-  drivetrain:objectRequiredToCreate ontologies:TURBO_0000532 ;
-  drivetrain:predicate ontologies:TURBO_0000624 ;
-  drivetrain:subject ontologies:TURBO_0010169 ;
-.
-ontologies:shortcutBiobankEncounterToExpandedBiobankEncounter
-  a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object ontologies:TURBO_0000527 ;
-  drivetrain:predicate ontologies:TURBO_0010113 ;
-  drivetrain:mustExecuteIf drivetrain:objectExists ;
-  drivetrain:subject ontologies:TURBO_0010169 ;
+drivetrain:shortcutEncounter
+  a owl:Class ;
 .
 ontologies:shortcutMeasurementToExpandedMeasurement
   a drivetrain:InstanceToInstanceRecipe ;
@@ -456,29 +386,6 @@ ontologies:shortcutMeasurementToExpandedMeasurement
   drivetrain:predicate ontologies:TURBO_0010113 ;
   drivetrain:mustExecuteIf drivetrain:objectExists ;
   drivetrain:subject drivetrain:shortcutMeasurement ;
-.
-ontologies:shortcutBiobankEncounterToRegistry
-  a drivetrain:InstanceToTermRecipe ;
-  drivetrain:multiplicity drivetrain:many-singleton ;
-  drivetrain:object drivetrain:BiobankEncRegDenClassList ;
-  drivetrain:predicate ontologies:TURBO_0010286 ;
-  drivetrain:mustExecuteIf drivetrain:subjectExists ;
-  drivetrain:subject ontologies:TURBO_0010169 ;
-.
-ontologies:shortcutBiobankEncounterToShortcutHomoSapiensURI
-  a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:many-1 ;
-  drivetrain:object ontologies:TURBO_0010161 ;
-  drivetrain:predicate ontologies:TURBO_0010133 ;
-  drivetrain:subject ontologies:TURBO_0010169 ;
-.
-ontologies:shortcutBiobankEncounterToSymbolValue
-  a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object drivetrain:biobankEnc_LiteralValue ;
-  drivetrain:predicate ontologies:TURBO_0000628 ;
-  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject ontologies:TURBO_0010169 ;
 .
 ontologies:encCodeTypeProvenanceOptionalGroup
   a drivetrain:TurboGraphOptionalGroup ;
@@ -536,76 +443,76 @@ ontologies:shortcutDiagnosisToRegistryString
   drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject ontologies:TURBO_0010160 ;
 .
-ontologies:shortcutHealthcareEncounterToEncounterType
+ontologies:shortcutEncounterToEncounterType
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:EncClassList ;
-  drivetrain:predicate drivetrain:scHcEnc2EncType ;
-  drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:predicate drivetrain:scEnc2EncType ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
 .
-ontologies:shortcutHealthcareEncounterToDateStringValue
+ontologies:shortcutEncounterToDateStringValue
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:encounter_start_datetime_StringLiteralValue ;
   drivetrain:objectRequiredToCreate obo:IAO_0000416 ;
   drivetrain:objectRequiredToCreate obo:BFO_0000035 ;
-  drivetrain:predicate ontologies:TURBO_0000644 ;
-  drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:predicate drivetrain:scEnc2RawDate ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
 .
-ontologies:shortcutHealthcareEncounterToDateValue
+ontologies:shortcutEncounterToDateValue
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:encounter_start_datetime_DateLiteralValue ;
-  drivetrain:predicate ontologies:TURBO_0000645 ;
-  drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:predicate drivetrain:scEnc2DateXsd ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
 .
-ontologies:shortcutHealthcareEncounterToDiagnosis
+ontologies:shortcutEncounterToDiagnosis
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object ontologies:TURBO_0010160 ;
   drivetrain:predicate obo:OBI_0000299 ;
   drivetrain:mustExecuteIf drivetrain:objectExists ;
-  drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
 .
-ontologies:shortcutHealthcareEncounterToExpandedHealthcareEncounter
+ontologies:shortcutEncounterToExpandedEncounter
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:EncToBeTyped ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
   drivetrain:mustExecuteIf drivetrain:objectExists ;
-  drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
 .
-ontologies:shortcutHealthcareEncounterToHealthcareEncounterRegistry
+ontologies:shortcutEncounterToRegistry
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:many-singleton ;
-  drivetrain:object drivetrain:HealthcareEncounterRegDen ;
-  drivetrain:predicate ontologies:TURBO_0010110 ;
+  drivetrain:object drivetrain:EncounterRegDen ;
+  drivetrain:predicate drivetrain:scEnc2RegDen ;
   drivetrain:mustExecuteIf drivetrain:subjectExists ;
-  drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
 .
-ontologies:shortcutHealthcareEncounterToPrescription
+ontologies:shortcutEncounterToPrescription
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object ontologies:TURBO_0010159 ;
   drivetrain:predicate obo:OBI_0000299 ;
   drivetrain:mustExecuteIf drivetrain:objectExists ;
-  drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
 .
-ontologies:shortcutHealthcareEncounterToShortcutHomoSapiensURI
+ontologies:shortcutEncounterToShortcutHomoSapiensURI
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object ontologies:TURBO_0010161 ;
-  drivetrain:predicate ontologies:TURBO_0010131 ;
-  drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:predicate drivetrain:ScEnc2ScHs ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
   drivetrain:mustExecuteIf drivetrain:subjectExists ;
 .
-ontologies:shortcutHealthcareEncounterToSymbolValue
+ontologies:shortcutEncounterToSymbolValue
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
-  drivetrain:predicate ontologies:TURBO_0000648 ;
+  drivetrain:predicate drivetrain:scEnc2SymbVal ;
   drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject ontologies:TURBO_0010158 ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
 .
 ontologies:shortcutHomoSapiensIdToRegistry
   a drivetrain:InstanceToTermRecipe ;
@@ -816,15 +723,6 @@ ontologies:homoSapiensDateOfBirthStringLiteralValue
 drivetrain:TumorRegistryClassList 
   drivetrain:range ontologies:TURBO_0010274 ;
 .
-drivetrain:biobankEnc_LiteralValue 
-  a drivetrain:StringLiteralResourceList ;
-.
-drivetrain:BiobankEncRegDenClassList
-  drivetrain:range ontologies:TURBO_0000535 ;
-  drivetrain:range ontologies:TURBO_0010297 ;
-  drivetrain:range ontologies:TURBO_0010298 ;
-  drivetrain:range ontologies:TURBO_0010299 ;
-.
 drivetrain:GenomeRegistryClassList
   drivetrain:range ontologies:TURBO_0000567 ;
 .
@@ -834,12 +732,17 @@ drivetrain:alleleSymbol_LiteralValue
 drivetrain:value_as_number_LiteralValue
   a drivetrain:DoubleLiteralResourceList ;
 .
-drivetrain:HealthcareEncounterRegDen
+drivetrain:EncounterRegDen
   drivetrain:range ontologies:TURBO_0000510 ;
   drivetrain:range ontologies:TURBO_0010256 ;
+  drivetrain:range ontologies:TURBO_0000535 ;
+  drivetrain:range ontologies:TURBO_0010297 ;
+  drivetrain:range ontologies:TURBO_0010298 ;
+  drivetrain:range ontologies:TURBO_0010299 ;
 .
 drivetrain:EncClassList
   drivetrain:range obo:OGMS_0000097 ;
+  drivetrain:range ontologies:TURBO_0000527 ;
 .
 drivetrain:encounter_keysym_LiteralValue
   a drivetrain:StringLiteralResourceList ;
@@ -854,4 +757,3 @@ drivetrain:condition_type_LiteralValue
 drivetrain:RxSourcedenTerm
   drivetrain:range ontologies:TURBO_0010714 ;
 .
-drivetrain:MedicationRegistryPlaceholder a owl:Class .
