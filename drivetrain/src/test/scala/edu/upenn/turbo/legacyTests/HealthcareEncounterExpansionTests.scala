@@ -285,6 +285,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       <processURI> obo:OBI_0000293 ?TURBO_0010158 .
       <processURI> obo:OBI_0000293 ?TURBO_0010161 .
       <processURI> obo:OBI_0000293 ?NCBITaxon_9606 .
+      <processURI> obo:OBI_0000293 ?HealthcareEncounterRegistryOfVariousTypes .
       }
       }
       WHERE {
@@ -374,6 +375,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       <processURI> obo:OBI_0000293 ?TURBO_0010158 .
       <processURI> obo:OBI_0000293 ?OGMS_0000097 .
       <processURI> obo:OBI_0000293 ?TURBO_0010160 .
+      <processURI> obo:OBI_0000293 ?DiagnosisRegistryOfVariousTypes .
       }
       }
       WHERE {
@@ -444,6 +446,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       <processURI> obo:OBI_0000293 ?TURBO_0010158 .
       <processURI> obo:OBI_0000293 ?OGMS_0000097 .
       <processURI> obo:OBI_0000293 ?TURBO_0010159 .
+      <processURI> obo:OBI_0000293 ?DrugTermOfVariousTypes .
       }
       }
       WHERE {

@@ -1,4 +1,4 @@
-package edu.upenn.turbo.legacyTests
+package edu.upenn.turbo
 
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
@@ -10,7 +10,7 @@ import edu.upenn.turbo.RunDrivetrainProcess
 
 class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
-    val clearTestingRepositoryAfterRun: Boolean = true
+    val clearTestingRepositoryAfterRun: Boolean = false
     
     val uuid = UUID.randomUUID().toString.replaceAll("-", "")
     RunDrivetrainProcess.setGlobalUUID(uuid)
@@ -24,6 +24,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
         RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setInputNamedGraphsCache(false)
     }
     
     override def afterAll()
@@ -392,7 +393,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         result.size should be (2)
     }
    
-    test("hc encounter without registry")
+    /*test("hc encounter without registry")
     {
         val insert: String = s"""
           INSERT DATA { GRAPH pmbb:Shortcuts_healthcareEncounterShortcuts {
@@ -595,5 +596,5 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
         val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
         result.size should be (0)
-    }
+    }*/
 }

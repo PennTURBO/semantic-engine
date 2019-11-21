@@ -15,17 +15,24 @@ abstract class SparqlClauseBuilder extends ProjectwideGlobals
 class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
     val triplesGroup = new TriplesGroupBuilder()
-    var varsForProcessInput = new HashSet[String]
+    var varsForProcessInput = new HashSet[Triple]
     var valuesBlock: HashMap[String, String] = new HashMap[String, String]
     var nonDefaultGraphTriples = new ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]
+    var process: String = ""
     
     def setGraphModelConnection(gmCxn: RepositoryConnection)
     {
         this.gmCxn = gmCxn
     }
-    
-    def addTripleFromRowResult(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], defaultInputGraph: String): HashSet[String] =
+    def setProcess(process: String)
     {
+        this.process = process
+    }
+    
+    def addTripleFromRowResult(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], defaultInputGraph: String, process: String): HashSet[Triple] =
+    {
+        assert (process != "")
+        setProcess(process)
         for (rowResult <- inputs)
         {
             for (key <- requiredInputKeysList) assert (rowResult.contains(key.toString), s"Input data does not contian required key $key")
@@ -95,27 +102,22 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             assert (objectALiteralValue || objectADefinedLiteral, s"The object of connection $connectionName is not a literal, but the connection is a datatype connection.")
             objectADescriber = true
             subjectAnInstance = true
-            varsForProcessInput += rowResult(SUBJECT.toString).toString
         }
         else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe") 
         {
             assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type InstanceToTermRecipe")
             subjectAnInstance = true
-            varsForProcessInput += rowResult(SUBJECT.toString).toString
         }
         else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe") 
         {
             assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToInstanceRecipe")
             objectAnInstance = true
-            varsForProcessInput += rowResult(OBJECT.toString).toString
         }
         else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
         {
             assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type InstanceToInstanceRecipe")
             objectAnInstance = true
             subjectAnInstance = true
-            varsForProcessInput += rowResult(OBJECT.toString).toString
-            varsForProcessInput += rowResult(SUBJECT.toString).toString
         }
         else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToTermRecipe")
         {
@@ -128,7 +130,11 @@ class WhereClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
         val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
                                                  subjectAnInstance, objectAnInstance, subjectADescriber, objectADescriber, subjectContext, objectContext, objectALiteralValue, suffixOperator)
-        
+        varsForProcessInput += new Triple(process, "obo:OBI_0000293", rowResult(SUBJECT.toString).toString, false, false, false, (subjectADescriber || subjectAnInstance), "", subjectContext)
+        if (!objectALiteralValue && !objectADefinedLiteral)
+        {
+            varsForProcessInput += new Triple(process, "obo:OBI_0000293", rowResult(OBJECT.toString).toString, false, false, false, (objectADescriber || objectAnInstance), "", objectContext)
+        }
         graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(graphForThisRow)
         addNewTripleToGroup(newTriple, minusGroupForThisRow, optionalGroupForThisRow, required, graphForThisRow)
     }
@@ -161,7 +167,7 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         this.gmCxn = gmCxn
     }
     
-    def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], process: String, varsForProcessInput: HashSet[String], usedVariables: HashMap[String, Boolean])
+    def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], process: String, varsForProcessInput: HashSet[Triple], usedVariables: HashMap[String, Boolean])
     {
         val triplesGroup = new TriplesGroupBuilder()
         
@@ -267,9 +273,8 @@ class InsertClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
             }
         }
-        for (uri <- varsForProcessInput)
+        for (processInputTriple <- varsForProcessInput)
         {
-            val processInputTriple = new Triple(process, "obo:OBI_0000293", uri, false, false, false, true)
             triplesGroup.addRequiredTripleToRequiredGroup(processInputTriple, processNamedGraph)
         }
         clause = triplesGroup.buildInsertClauseFromTriplesGroup()

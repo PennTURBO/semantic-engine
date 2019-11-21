@@ -136,6 +136,10 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
       <processURI> obo:OBI_0000293 ?TURBO_0010191 .
       <processURI> obo:OBI_0000293 ?TURBO_0010161 .
       <processURI> obo:OBI_0000293 ?TURBO_0010168 .
+      <processURI> obo:OBI_0000293 ?HomoSapiensRegistryOfVariousTypes .
+      <processURI> obo:OBI_0000293 ?TumorRegistryDenoterOfVariousTypes .
+      <processURI> obo:OBI_0000293 ?ShortcutGenderIdentityDatumOfVariousTypes .
+      <processURI> obo:OBI_0000293 ?ShortcutRaceIdentityDatumOfVariousTypes .
       }
       }
       WHERE {

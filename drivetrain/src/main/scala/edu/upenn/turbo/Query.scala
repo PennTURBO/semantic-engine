@@ -43,7 +43,7 @@ class PatternMatchQuery extends Query
     var deleteClauseBuilder: DeleteClauseBuilder = new DeleteClauseBuilder()
     var bindClauseBuilder: BindClauseBuilder = new BindClauseBuilder()
     
-    var varsForProcessInput = new HashSet[String]
+    var varsForProcessInput = new HashSet[Triple]
     var rawInputData = new ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]
     
     /* Contains set of of variables used in bind and where clauses, so the insert clause knows that these have already been defined. Any URI present in the 
@@ -128,7 +128,7 @@ class PatternMatchQuery extends Query
         assert (whereClause == "")
         assert (defaultInputGraph != null && defaultInputGraph != "")
         whereClauseBuilder.setGraphModelConnection(gmCxn)
-        varsForProcessInput = whereClauseBuilder.addTripleFromRowResult(inputs, defaultInputGraph)
+        varsForProcessInput = whereClauseBuilder.addTripleFromRowResult(inputs, defaultInputGraph, process)
         // this part of the code determines whether a variable is qualified to be a multiplicity enforcer in the bind clause. If set to true then it is qualified.
         for (row <- inputs) 
         {

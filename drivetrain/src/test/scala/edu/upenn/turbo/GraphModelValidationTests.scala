@@ -544,6 +544,10 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     drivetrain:predicate turbo:pred1 ;
                     drivetrain:subject turbo:obj2 ;
                   .
+
+                  turbo:obj1 a owl:Class .
+                  turbo:obj2 a owl:Class .
+                  turbo:pred1 a rdf:Property .
                }
            }
         """
@@ -556,7 +560,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(1==2)
+            case e: AssertionError => assert(1==2, e.toString())
         }
     }
     
@@ -575,6 +579,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     drivetrain:predicate turbo:pred1 ;
                     drivetrain:object turbo:TURBO_0000502 ;
                   .
+
+                  turbo:pred1 a rdf:Property .
                }
                
                Graph <$defaultPrefix"""+s"""instructionSet>
@@ -599,7 +605,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(1==2)
+            case e: AssertionError => assert(1==2, e.toString())
         }
     }
     
@@ -634,6 +640,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   ontologies:object2 a owl:Class .
                   ontologies:object3 a owl:Class .
                   ontologies:object4 a owl:Class .
+
+                  ontologies:pred1 a rdf:Property .
                   
                   drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
                   drivetrain:eitherSubjectOrObjectExists a drivetrain:TurboGraphRequirementSpecification .
@@ -705,6 +713,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   ontologies:object2 a owl:Class .
                   ontologies:object3 a owl:Class .
                   ontologies:object4 a owl:Class .
+
+                  ontologies:pred1 a rdf:Property .
                   
                   drivetrain:context1 a drivetrain:TurboGraphContext .
                   drivetrain:context2 a drivetrain:TurboGraphContext .
@@ -884,7 +894,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           ontologies:object2ToObject4 drivetrain:object turbo:describer1 .
           ontologies:object2ToObject4 drivetrain:multiplicity drivetrain:1-1 .
           
-          turbo:describer1 a drivetrain:MultiObjectDescriber .
+          turbo:describer1 a drivetrain:ClassResourceList .
           }}"""
        update.updateSparql(gmCxn, insert)
        

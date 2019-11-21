@@ -259,7 +259,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               Optional
               {
-                  ?$CONNECTIONNAME drivetrain:mustExistIf ?$REQUIREMENT .
+                  ?$CONNECTIONNAME drivetrain:mustExecuteIf ?$REQUIREMENT .
               }
               Optional
               {

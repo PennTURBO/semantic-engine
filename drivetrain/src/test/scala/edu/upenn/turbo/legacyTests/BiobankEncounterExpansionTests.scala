@@ -163,6 +163,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
       <processURI> turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000015> .
       <processURI> obo:OBI_0000293 ?TURBO_0010161 .
       <processURI> obo:OBI_0000293 ?TURBO_0010169 .
+      <processURI> obo:OBI_0000293 ?BiobankEncounterRegistryOfVariousTypes .
       }
       }
       WHERE {

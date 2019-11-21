@@ -94,6 +94,9 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
       <processURI> obo:OBI_0000293 ?TURBO_0010144 .
       <processURI> obo:OBI_0000293 ?TURBO_0000527 .
       <processURI> obo:OBI_0000293 ?TURBO_0010169 .
+      <processURI> obo:OBI_0000293 ?GenomeRegistryOfVariousTypes .
+      <processURI> obo:OBI_0000293 ?ZygosityUriOfVariousTypes .
+      <processURI> obo:OBI_0000293 ?GeneSymbolUriOfVariousTypes .
       }
       }
       WHERE {
@@ -321,6 +324,9 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                   obo:OBI_0000293 pmbb:part1 ;
                   obo:OBI_0000293 pmbb:bbenc1 ;
                   obo:OBI_0000293 pmbb:shortcutBbEnc1 ;
+                  obo:OBI_0000293 <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000068912> ;
+                  obo:OBI_0000293 turbo:TURBO_0000567 ;
+                  obo:OBI_0000293 ontologies:TURBO_0000590 ;
                   
                   ontologies:TURBO_0010184 ?TURBO_0000566 ;
                   ontologies:TURBO_0010184 ?OBI_0001868 ;
@@ -377,7 +383,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         }
         """
         val processTriplesResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countProcessTriples, "p")
-        processTriplesResult.size should be (38)
+        processTriplesResult.size should be (41)
     }
 
     test("double allele expansion - multiple biobank encounters")

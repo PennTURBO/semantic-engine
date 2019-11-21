@@ -490,4 +490,80 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
           
          helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
     }
+    
+    test("term to term and term to literal recipes works")
+    {
+        val insert = s"""
+            INSERT DATA
+            {
+                <$defaultPrefix""" + s"""instructionSet>
+                {
+                    pmbb:myProcess1 a turbo:TURBO_0010354 .
+                    pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    pmbb:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection2 .
+                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection3 .
+                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection4 .
+                    
+                    pmbb:connection1 a drivetrain:TermToTermRecipe .
+                    pmbb:connection1 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:TermToLiteralRecipe .
+                    pmbb:connection2 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term1 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection2 drivetrain:object pmbb:literal1 .
+                    
+                    pmbb:connection3 a drivetrain:TermToTermRecipe .
+                    pmbb:connection3 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection3 drivetrain:subject pmbb:term2 .
+                    pmbb:connection3 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection3 drivetrain:object pmbb:term1 .
+                    
+                    pmbb:connection4 a drivetrain:TermToLiteralRecipe .
+                    pmbb:connection4 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection4 drivetrain:subject pmbb:term2 .
+                    pmbb:connection4 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection4 drivetrain:object pmbb:literal1 .
+                    
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                    
+                    pmbb:literal1 a drivetrain:LiteralResourceList .
+                    
+                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
+                }
+            }
+          """
+          update.updateSparql(gmCxn, insert)
+          
+          val expectedQuery = s"""INSERT {
+            GRAPH <$expandedNamedGraph> {
+            <http://www.itmat.upenn.edu/biobank/term2> <http://www.itmat.upenn.edu/biobank/predicate2> <http://www.itmat.upenn.edu/biobank/term1> .
+            <http://www.itmat.upenn.edu/biobank/term2> <http://www.itmat.upenn.edu/biobank/predicate2> ?literal1 .
+            }
+            GRAPH <$processNamedGraph> {
+            <processURI> turbo:TURBO_0010184 <http://www.itmat.upenn.edu/biobank/term1> .
+            <processURI> turbo:TURBO_0010184 <http://www.itmat.upenn.edu/biobank/term2> .
+            <processURI> obo:OBI_0000293 <http://www.itmat.upenn.edu/biobank/term1> .
+            <processURI> obo:OBI_0000293 <http://www.itmat.upenn.edu/biobank/term2> .
+            }
+            }
+            WHERE {
+            GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts> {
+            <http://www.itmat.upenn.edu/biobank/term1> <http://www.itmat.upenn.edu/biobank/predicate1> <http://www.itmat.upenn.edu/biobank/term2> .
+            <http://www.itmat.upenn.edu/biobank/term1> <http://www.itmat.upenn.edu/biobank/predicate1> ?literal1 .
+            }
+             }
+             """
+          
+         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+    }
 }

@@ -76,7 +76,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
             }
         """
       update.updateSparql(testCxn, insert)
-      RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")
+      RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess", dataValidationMode, false)
       
         val check1: String = s"""
           ASK

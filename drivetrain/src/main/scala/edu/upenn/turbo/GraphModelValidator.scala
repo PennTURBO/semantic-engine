@@ -187,7 +187,7 @@ object GraphModelValidator extends ProjectwideGlobals
                   ?recipe drivetrain:predicate ?predicate .
                   minus
                   {
-                      ?object a drivetrain:MultiObjectDescriber .
+                      ?object a drivetrain:ClassResourceList .
                   }
               }
               graph <$defaultPrefix"""+s"""acornOntology>
@@ -312,7 +312,7 @@ object GraphModelValidator extends ProjectwideGlobals
                       Graph <$defaultPrefix"""+s"""graphSpecification>
                       {
                           ?recipe drivetrain:subject ?subject .
-                          ?recipe drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists .
+                          ?recipe drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists .
                           Optional 
                           {
                               ?recipe drivetrain:subjectUsesContext ?context .
@@ -329,7 +329,7 @@ object GraphModelValidator extends ProjectwideGlobals
                       Graph <$defaultPrefix"""+s"""graphSpecification>
                       {
                           ?recipe drivetrain:subject ?subject .
-                          ?recipe drivetrain:mustExistIf drivetrain:subjectExists .
+                          ?recipe drivetrain:mustExecuteIf drivetrain:subjectExists .
                           Optional 
                           {
                               ?recipe drivetrain:subjectUsesContext ?context .
@@ -346,7 +346,7 @@ object GraphModelValidator extends ProjectwideGlobals
                       Graph <$defaultPrefix"""+s"""graphSpecification>
                       {
                           ?recipe drivetrain:object ?object .
-                          ?recipe drivetrain:mustExistIf drivetrain:eitherSubjectOrObjectExists .
+                          ?recipe drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists .
                           Optional 
                           {
                               ?recipe drivetrain:objectUsesContext ?context .
