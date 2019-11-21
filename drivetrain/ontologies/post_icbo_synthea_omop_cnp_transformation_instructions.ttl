@@ -446,6 +446,7 @@ drivetrain:HcePrecedence
   drivetrain:hasOutput drivetrain:PrecedenceAxiomSource ;
   drivetrain:hasOutput drivetrain:PrecedenceAxiomTarget ;
   drivetrain:hasOutput drivetrain:PrevencPrecedesEnc ;
+  
   drivetrain:hasRequiredInput drivetrain:EncExpansionSpecification ;
   drivetrain:hasRequiredInput drivetrain:EncKeyDenotesEnc ;
   drivetrain:hasRequiredInput drivetrain:EncOmopConceptIds ;
@@ -457,6 +458,9 @@ drivetrain:HcePrecedence
   drivetrain:hasRequiredInput drivetrain:PrevencAPrevencsClass ; 
   drivetrain:hasRequiredInput drivetrain:PrevencScoEnc ; 
   drivetrain:hasRequiredInput drivetrain:RepresenteeOfPreviousVisitId ;
+  
+  drivetrain:hasRequiredInput drivetrain:EncScoStarEnc  ;  
+  
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:precedes drivetrain:HealthCareProcedures ; 
@@ -503,7 +507,7 @@ drivetrain:KeyDenotesPrevenc
 .
 
 drivetrain:PrevencAPrevencsClass 
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object drivetrain:PrevencsClass ;
   drivetrain:predicate rdf:type ;
@@ -1746,4 +1750,6 @@ drivetrain:RxTmd_drug_exposure_start_datetime_column drivetrain:range turbo:TURB
 ###
 
 drivetrain:RoleClassList drivetrain:range obo:OBI_0000093 .
+
+# drivetrain:EncClassList drivetrain:range obo:OGMS_0000097 .
 
