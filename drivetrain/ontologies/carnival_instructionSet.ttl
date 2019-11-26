@@ -38,6 +38,10 @@ ontologies:GenderIdentityTypeRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000133) AS ${replacement})" ;
 .
+ontologies:PatientRoleCreationRule
+  a drivetrain:TurboGraphVariableManipulationLogic ;
+  drivetrain:usesSparql """BIND(uri(concat(${defaultPrefix},SHA256("RoleToBeTyped",str(${multiplicityEnforcer}),"${localUUID}",str(${dependent})))) AS ${replacement})""" ;
+.
 ontologies:IcdDiagnosisRegistryRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql """BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", ?condition_type_LiteralValue)), ?unbound) AS ?icd9term)
@@ -343,6 +347,7 @@ ontologies:shortcutEncounterToRoleType
   drivetrain:object drivetrain:RoleClassList ;
   drivetrain:predicate drivetrain:scEnc2RoleType ;
   drivetrain:subject drivetrain:shortcutEncounter ;
+  drivetrain:objectRequiredToCreate drivetrain:RoleToBeTyped ;
 .
 ontologies:shortcutMeasurementToShortcutMeasType
   a drivetrain:InstanceToTermRecipe ;
@@ -502,7 +507,7 @@ ontologies:shortcutEncounterToShortcutHomoSapiensURI
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object ontologies:TURBO_0010161 ;
-  drivetrain:predicate drivetrain:ScEnc2ScHs ;
+  drivetrain:predicate drivetrain:scEnc2ScHs ;
   drivetrain:subject drivetrain:shortcutEncounter ;
   drivetrain:mustExecuteIf drivetrain:subjectExists ;
 .
@@ -757,7 +762,10 @@ drivetrain:condition_type_LiteralValue
 drivetrain:RxSourcedenTerm
   drivetrain:range ontologies:TURBO_0010714 ;
 .
-drivetrain:RoleToBeTyped
+drivetrain:RoleClassList
   drivetrain:range obo:OBI_0000093 ;
   drivetrain:range obo:OBI_0000097 ;
+.
+drivetrain:RoleToBeTyped
+  drivetrain:usesCustomVariableManipulationRule ontologies:PatientRoleCreationRule ;
 .

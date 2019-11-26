@@ -630,7 +630,6 @@ drivetrain:PuiRoleRealizesBiobankEncounter
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object turbo:TURBO_0000527 ;
   drivetrain:predicate obo:BFO_0000054 ;
-  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject obo:OBI_0000097 ;
 .
 
