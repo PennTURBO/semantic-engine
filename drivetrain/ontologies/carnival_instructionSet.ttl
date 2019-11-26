@@ -40,7 +40,7 @@ ontologies:GenderIdentityTypeRule
 .
 ontologies:PatientRoleCreationRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
-  drivetrain:usesSparql """BIND(uri(concat("${defaultPrefix}",SHA256("RoleToBeTyped",str(${multiplicityEnforcer}),"${localUUID}",str(${dependent})))) AS ${replacement})""" ;
+  drivetrain:usesSparql """BIND(uri(concat("${defaultPrefix}",SHA256(CONCAT(str(${replacement}),str(${multiplicityEnforcer}),"${localUUID}",str(${dependent}))))) AS ${replacement})""" ;
 .
 ontologies:IcdDiagnosisRegistryRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
