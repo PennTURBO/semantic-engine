@@ -312,7 +312,7 @@ ontologies:shortcutAlleleToShortcutAlleleRegistryUri
 ontologies:shortcutAlleleToShortcutBiobankEncounter
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object ontologies:TURBO_0010169 ;
+  drivetrain:object drivetrain:shortcutEncounter ;
   drivetrain:predicate ontologies:TURBO_0010142 ;
   drivetrain:mustExecuteIf drivetrain:subjectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
