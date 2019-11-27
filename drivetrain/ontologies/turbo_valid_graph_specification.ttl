@@ -625,12 +625,19 @@ drivetrain:RoleClassList
   a drivetrain:ClassResourceList ;
 .
 
-drivetrain:PuiRoleRealizesBiobankEncounter
+drivetrain:BiobankEncounterRealizesPuiRole
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-many> ;
-  drivetrain:object turbo:TURBO_0000527 ;
-  drivetrain:predicate obo:BFO_0000054 ;
-  drivetrain:subject obo:OBI_0000097 ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/many-1> ;
+  drivetrain:subject ontologies:TURBO_0000527 ;
+  drivetrain:predicate obo:BFO_0000055 ;
+  drivetrain:object obo:OBI_0000097 ;
+.
+drivetrain:PatientHasPuiRole
+  a drivetrain:InstanceToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object obo:OBI_0000097 ;
+  drivetrain:predicate obo:RO_0000087 ;
+  drivetrain:subject obo:NCBITaxon_9606 ;
 .
 
 drivetrain:EncParticipationAxiomSource
