@@ -38,6 +38,10 @@ ontologies:GenderIdentityTypeRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000133) AS ${replacement})" ;
 .
+ontologies:PatientRoleCreationRule
+  a drivetrain:TurboGraphVariableManipulationLogic ;
+  drivetrain:usesSparql """BIND(uri(concat("${defaultPrefix}",SHA256(CONCAT("${replacement}",str(${multiplicityEnforcer}),"${localUUID}",str(${dependent}))))) AS ${replacement})""" ;
+.
 ontologies:IcdDiagnosisRegistryRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql """BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", ?condition_type_LiteralValue)), ?unbound) AS ?icd9term)
@@ -226,9 +230,9 @@ pmbb:LossOfFunctionExpansionProcess
   drivetrain:hasRequiredInput ontologies:shortcutAlleleToShortcutBiobankEncounter ;
   drivetrain:hasRequiredInput ontologies:shortcutAlleleToZygosityIntegerValue ;
   drivetrain:hasRequiredInput ontologies:shortcutAlleleToZygosityValueUri ;
-  drivetrain:hasRequiredInput ontologies:shortcutEncounterToExpandedEncounter ;
-  drivetrain:hasRequiredInput drivetrain:PatientHasRole ;
-  drivetrain:hasRequiredInput drivetrain:PuiRoleRealizesBiobankEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToExpandedBiobankEncounter ;
+  drivetrain:hasRequiredInput drivetrain:PatientHasPuiRole ;
+  drivetrain:hasRequiredInput drivetrain:BiobankEncounterRealizesPuiRole ;
   drivetrain:hasOutput drivetrain:DNAExtractionProcessHasOutputDNAExtract ;
   drivetrain:hasOutput drivetrain:DNAExtractionProcessHasInputSpecimen ;
   drivetrain:hasOutput drivetrain:DNAhasGrainDNAExtract ;
@@ -256,6 +260,15 @@ pmbb:LossOfFunctionExpansionProcess
 .
 drivetrain:EncounterMeasurementsOptionalGroup
   a drivetrain:TurboGraphOptionalGroup ;
+.
+ontologies:shortcutEncounterToExpandedBiobankEncounter 
+  a drivetrain:InstanceToInstanceRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object ontologies:TURBO_0000527 ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:mustExecuteIf drivetrain:objectExists ;
+  drivetrain:subject drivetrain:shortcutEncounter ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
 .
 ontologies:shortcutAlleleToExpandedAllele
   a drivetrain:InstanceToInstanceRecipe ;
@@ -308,7 +321,7 @@ ontologies:shortcutAlleleToShortcutAlleleRegistryUri
 ontologies:shortcutAlleleToShortcutBiobankEncounter
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object ontologies:TURBO_0010169 ;
+  drivetrain:object drivetrain:shortcutEncounter ;
   drivetrain:predicate ontologies:TURBO_0010142 ;
   drivetrain:mustExecuteIf drivetrain:subjectExists ;
   drivetrain:subject ontologies:TURBO_0010144 ;
@@ -343,6 +356,7 @@ ontologies:shortcutEncounterToRoleType
   drivetrain:object drivetrain:RoleClassList ;
   drivetrain:predicate drivetrain:scEnc2RoleType ;
   drivetrain:subject drivetrain:shortcutEncounter ;
+  drivetrain:objectRequiredToCreate drivetrain:RoleToBeTyped ;
 .
 ontologies:shortcutMeasurementToShortcutMeasType
   a drivetrain:InstanceToTermRecipe ;
@@ -502,7 +516,7 @@ ontologies:shortcutEncounterToShortcutHomoSapiensURI
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:many-1 ;
   drivetrain:object ontologies:TURBO_0010161 ;
-  drivetrain:predicate drivetrain:ScEnc2ScHs ;
+  drivetrain:predicate drivetrain:scEnc2ScHs ;
   drivetrain:subject drivetrain:shortcutEncounter ;
   drivetrain:mustExecuteIf drivetrain:subjectExists ;
 .
@@ -757,7 +771,16 @@ drivetrain:condition_type_LiteralValue
 drivetrain:RxSourcedenTerm
   drivetrain:range ontologies:TURBO_0010714 ;
 .
-drivetrain:RoleToBeTyped
+drivetrain:RoleClassList
   drivetrain:range obo:OBI_0000093 ;
   drivetrain:range obo:OBI_0000097 ;
+.
+drivetrain:RoleToBeTyped
+  drivetrain:usesCustomVariableManipulationRule ontologies:PatientRoleCreationRule ;
+.
+drivetrain:BiobankEncounterRealizesPuiRole
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
+.
+drivetrain:PatientHasPuiRole
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
 .
