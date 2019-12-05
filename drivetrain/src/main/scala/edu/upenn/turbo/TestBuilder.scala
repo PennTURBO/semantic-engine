@@ -10,7 +10,11 @@ class TestBuilder extends ProjectwideGlobals
 {
     def buildTest(cxn: RepositoryConnection, process: String)
     {
-        def inputTriplesGraph = "http://www.itmat.upenn.edu/biobank/inputTriplesTestGraph"
+        val testFileName = helper.getPostfixfromURI(process) + "AutomaticSnapshotTest.scala"
+        val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + testFileName)
+        assert(!testFilePath.exists(), s"File $testFileName already exists")
+
+        val inputTriplesGraph = "http://www.itmat.upenn.edu/biobank/inputTriplesTestGraph"
         val inputs = RunDrivetrainProcess.getInputs(process)
         
         val requiredInputTriples = generateInputTriplesWithAllRequirements(process, inputTriplesGraph, inputs)
@@ -29,17 +33,55 @@ class TestBuilder extends ProjectwideGlobals
         
         helper.deleteAllTriplesInDatabase(cxn)
         
-        def testFileName = helper.getPostfixfromURI(process) + "AutomaticSnapshotTest"
-        
-        writeTestFile(testFileName, requiredInputTriples, outputPredsMax, minimumInputTriples, outputPredsMin)
+        writeTestFile(testFileName, testFilePath, requiredInputTriples, outputPredsMax, minimumInputTriples, outputPredsMin)
     }
     
-    def writeTestFile(testFileName: String, requiredInputTriples: String, outputPredsMax: ArrayBuffer[String], minimumInputTriples: String, outputPredsMin: ArrayBuffer[String])
+    def writeTestFile(testFileName: String, testFilePath: File, requiredInputTriples: String, outputPredsMax: ArrayBuffer[String], minimumInputTriples: String, outputPredsMin: ArrayBuffer[String])
     {
-        val pw = new PrintWriter(testFileName)
+        val packageString = "package edu.upenn.turbo\n\n"
+
+        val imports = """
+            import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
+            import org.eclipse.rdf4j.repository.Repository
+            import org.eclipse.rdf4j.repository.RepositoryConnection
+            import org.eclipse.rdf4j.model.IRI
+            import org.scalatest.BeforeAndAfter
+            import org.scalatest._
+            import scala.collection.mutable.ArrayBuffer
+            import java.util.UUID\n\n
+        """
+
+        val classAssertion = s"class $testFileName extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers {\n"
         
+        val clearTestingRepo = "val clearTestingRepositoryAfterRun: Boolean = false\n"
+
+        val beforesAndAfters = """
+        override def beforeAll()
+        {
+            graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true)
+            testCxn = graphDBMaterials.getTestConnection()
+            gmCxn = graphDBMaterials.getGmConnection()
+            helper.deleteAllTriplesInDatabase(testCxn)
+            
+            RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+            RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+            RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+            RunDrivetrainProcess.setInputNamedGraphsCache(false)
+        }
+
+        override def afterAll()
+        {
+            ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+        }
         
-        
+        before
+        {
+            helper.deleteAllTriplesInDatabase(testCxn)
+        }\n\n"""
+    }
+
+        val pw = new PrintWriter(testFilePath)
+        var fullTestClassString = packageString + imports + classAssertion + clearTestingRepo + beforesAndAfters + "}"
         pw.close()
     }
     
