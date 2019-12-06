@@ -206,10 +206,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
   def buildAutomatedTest(gmCxn: RepositoryConnection, testCxn: RepositoryConnection, args: Array[String])
   {
       assert (args.size > 1, "No process specified for Automated Test Builder; please specify URI")
+      RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+      RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
       val process = helper.getProcessNameAsUri(args(1))
       GraphModelValidator.validateProcessSpecification(process)
-      updateModel(gmCxn)
       def testBuilder = new TestBuilder()
-      testBuilder.buildTest(testCxn, process)
+      testBuilder.buildTest(testCxn, gmCxn, process)
   }
 }
