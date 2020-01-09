@@ -127,7 +127,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
 
     def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()): PatternMatchQuery =
     {
-        assert (localUUID != null, "You must set the globalUUID before running any process.")
+        if (localUUID == null) localUUID = UUID.randomUUID().toString().replaceAll("-", "")
         var thisProcessSpecification = helper.getProcessNameAsUri(processSpecification)
         
         GraphModelValidator.validateProcessSpecification(thisProcessSpecification)
@@ -269,8 +269,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               }
               Optional
               {
-                  ?$OBJECT a ?graphLiteral .
-                  ?graphLiteral rdfs:subClassOf* drivetrain:LiteralResourceList .
+                  ?$OBJECT a ?$GRAPHLITERALTYPE .
+                  ?$GRAPHLITERALTYPE rdfs:subClassOf* drivetrain:LiteralResourceList .
                   BIND (true AS ?$OBJECTALITERAL)
               }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
