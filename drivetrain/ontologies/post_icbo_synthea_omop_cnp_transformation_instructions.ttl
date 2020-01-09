@@ -22,7 +22,7 @@
     owl:versionIRI <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/post_icbo_synthea_omop_cnp_transformation_instructions.ttl> ;
 	rdfs:comment "that's not really a version IRI" .
 
-# MAM: I shold probably make the resource lists more specific (integer, string...) in this file
+# MAM: I should probably make the resource lists more specific (integer, string...) in this file
 
 # these classes are present in Stardog's direct mapping of OMOP tables, but not in the TURBO ontology
 <http://api.stardog.com/visit_occurrence> a owl:Class .
@@ -37,17 +37,29 @@ drivetrain:star a drivetrain:PredicateSuffixSymbol ;
   drivetrain:usesSparqlOperator '*' ;
 .
 
+# expect 1152 patients
+#
+# there are different ways of expressing (and grouping?) optionals
+# if a data shortcut is required and is not asserted at all, then that shortcut "row" won't be instantiated at all
+# Or, what if the value is 0, and no term in the ontology has an OMOP value of 0... same result?
+# but what if lots of TURBO terms are annotated as OMOP concept 0?
+# then we have to constrain the expanded classes/types to be subclasses some parent
+# but if the the parenthood isn't DIRECT, then a subClassOf* could be used in an optional block, which destroys performance
+# so: be sure to annotate the relevant general classes, like   [racial identity datum](http://purl.obolibrary.org/obo/OMRSE_00000098),
+# with OMOP concept 0!
+# and don't make the data shortcuts optional
+#
+# ask Hayden to walk through explain plan
 drivetrain:Patients
   a ontologies:TURBO_0010354 ;
-  drivetrain:hasOptionalInput drivetrain:PatientCridsymShortcut ;
-  drivetrain:hasOptionalInput drivetrain:PatientDobShortcut ;
-  
-  drivetrain:hasOptionalInput drivetrain:PatientGidShortcut ;
-  
-  drivetrain:hasRequiredInput drivetrain:GidOmopConceptIds ;
-  drivetrain:hasRequiredInput drivetrain:GidScoGid ;
-  
-  drivetrain:hasOptionalInput drivetrain:PatientRidShortcut ;
+  # drivetrain:hasOptionalInput drivetrain:PatientCridsymShortcut ;
+  # drivetrain:hasOptionalInput drivetrain:PatientDobShortcut ;
+  # drivetrain:hasOptionalInput drivetrain:PatientGidShortcut ;
+  # drivetrain:hasOptionalInput drivetrain:PatientRidShortcut ;
+  drivetrain:hasRequiredInput drivetrain:PatientCridsymShortcut ;
+  drivetrain:hasRequiredInput drivetrain:PatientDobShortcut ;
+  drivetrain:hasRequiredInput drivetrain:PatientGidShortcut ;
+  drivetrain:hasRequiredInput drivetrain:PatientRidShortcut ;
   drivetrain:hasOutput drivetrain:CridDenotesPatient;
   drivetrain:hasOutput drivetrain:DobAboutSns ;
   drivetrain:hasOutput drivetrain:DobHasMeasVal ;
@@ -75,10 +87,10 @@ drivetrain:Patients
   drivetrain:hasOutput drivetrain:RidHasRepresentation ;
   drivetrain:hasOutput drivetrain:RidPartOfColumn ;
   drivetrain:hasOutput drivetrain:RidTypingRecipe ;
-  drivetrain:hasOutput drivetrain:SymbolPartOfCridForPatient ;
-  
   drivetrain:hasOutput drivetrain:RoleToRoleType ;
-
+  drivetrain:hasOutput drivetrain:SymbolPartOfCridForPatient ;
+  drivetrain:hasRequiredInput drivetrain:GidOmopConceptIds ;
+  drivetrain:hasRequiredInput drivetrain:GidScoStarGid ;
   drivetrain:hasRequiredInput drivetrain:PatientKeySymShortcut ;
   drivetrain:hasRequiredInput drivetrain:RidOmopConceptIds ;
   drivetrain:hasRequiredInput drivetrain:RidScoStarRid ;
@@ -89,56 +101,38 @@ drivetrain:Patients
 
 # MAM added 20191120
 
-drivetrain:dobColumnTerm a drivetrain:ResourceList ;
+drivetrain:dobColumnTerm a drivetrain:ClassResourceList ;
   drivetrain:range ontologies:TURBO_0010443 ;
 .
 
-drivetrain:GidColumnTerm  a drivetrain:ResourceList ;
+drivetrain:GidColumnTerm  a drivetrain:ClassResourceList ;
   drivetrain:range ontologies:TURBO_0010431 ;
 .
 
-drivetrain:EncounterRegDen  a drivetrain:ResourceList ;
+drivetrain:EncounterRegDen  a drivetrain:ClassResourceList ;
   drivetrain:range ontologies:TURBO_0010256 ;
 .
 
-drivetrain:DiagColumnTerm  a drivetrain:ResourceList ;
+drivetrain:DiagColumnTerm  a drivetrain:ClassResourceList ;
   drivetrain:range ontologies:TURBO_0010605 ;
 .
 
-# MAM 20191120 synthea omop doesn't have a diagnosis *registry*, so it uses a key sourcec denoter
-# does PDS or PMBB really ahve a diagnosis registry of its own? Not ICD9CM or ICD10CM.
+# MAM 20191120 Synthea OMOP doesn't have a diagnosis *registry*, so it uses a key source denoter
+# does PDS or PMBB really have a diagnosis registry of its own? Not ICD9CM or ICD10CM.
 # I put the OMOP diagnosis source denoter term below, but it shouldn't be part of a CRID.
 
-drivetrain:diagnosisRegDen  a drivetrain:ResourceList ;
+drivetrain:diagnosisRegDen  a drivetrain:ClassResourceList ;
   drivetrain:range ontologies:TURBO_0010510 ;
 .
 
-# MAM 20191120 
-# first
-# (run-main-2) java.lang.AssertionError: assertion failed: The object of connection https://github.com/PennTURBO/Drivetrain/DiagKeySymbHasRepresentation is not a literal, but the connection is a datatype connection.
-# see drivetrain:Diagnosis
-
-# drivetrain:DiagKeySymbHasRepresentation
-  # # drivetrain:object drivetrain:condition_occurrence_id_StringLiteralValue ;
-  # drivetrain:object drivetrain:condition_occurrence_id_LiteralValue ;
-
-# then
-# The object of connection https://github.com/PennTURBO/Drivetrain/CondKeysymShortcut is not a literal, but the connection is a datatype connection.
-
-# drivetrain:condition_occurrence_id_IntegerLiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-
-# drivetrain:condition_occurrence_id_IntegerLiteralValue
-  # a drivetrain:TurboGraphIntegerLiteralValue ;
-# .
-
-
-drivetrain:GidScoGid 
+drivetrain:GidScoStarGid 
    a drivetrain:TermToTermRecipe ;
    drivetrain:multiplicity drivetrain:1-1 ;
    drivetrain:referencedInGraph properties:ontologyURL ;
    drivetrain:subject drivetrain:GidClassList ;
    drivetrain:predicate rdfs:subClassOf ;
    drivetrain:object obo:OMRSE_00000133 ;
+   drivetrain:predicateSuffix drivetrain:star ;
 .
 
 drivetrain:GidOmopConceptIds 
@@ -324,7 +318,7 @@ drivetrain:EncScoStarEnc
    drivetrain:multiplicity drivetrain:1-1 ;
    drivetrain:object obo:OGMS_0000097 ;
    drivetrain:predicate rdfs:subClassOf ;
-   drivetrain:predicateSuffix drivetrain:star ;
+   # drivetrain:predicateSuffix drivetrain:star ;
    drivetrain:referencedInGraph properties:ontologyURL ;
    drivetrain:subject drivetrain:EncClassList ;
 .
@@ -525,7 +519,7 @@ drivetrain:PrevencScoEnc
 .
 
 drivetrain:PrevencsClass
-  a drivetrain:ResourceList .
+  a drivetrain:ClassResourceList .
 
 drivetrain:hce_id_IntegerLiteralValue 
   a drivetrain:TurboGraphIntegerLiteralValue ;
@@ -762,7 +756,7 @@ drivetrain:PatientMeasurements
   drivetrain:hasRequiredInput drivetrain:MeasDatetimeShortcut ;
   drivetrain:hasRequiredInput drivetrain:MeasKeysymShortcut ;
   drivetrain:hasRequiredInput drivetrain:MeasNumValShortcut ;
-  drivetrain:hasRequiredInput drivetrain:MeasScoMeas ;
+  drivetrain:hasRequiredInput drivetrain:MeasScoStarMeas ;
   drivetrain:hasRequiredInput drivetrain:MeasVocabShortcut ;
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
@@ -770,7 +764,7 @@ drivetrain:PatientMeasurements
 
 .
 
-drivetrain:MeasScoMeas
+drivetrain:MeasScoStarMeas
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object obo:IAO_0000109 ;
@@ -875,7 +869,8 @@ drivetrain:measurement_vocabulary_id_LiteralValue
 .
 
 
-### Measurement unit label... sco input leads to never-ending update
+### Measurement unit label... sco STAR input leads to never-ending update
+### revisit this... careful blocking and more memory may help
 
 drivetrain:PatientMul
   a ontologies:TURBO_0010354 ;
@@ -892,7 +887,7 @@ drivetrain:PatientMul
   drivetrain:hasRequiredInput drivetrain:MeasMoreUnitsShortcut ;
   drivetrain:hasRequiredInput drivetrain:MulClassHasOmopConceptId ;
   
-  # drivetrain:hasRequiredInput drivetrain:MulScoMul 
+  # drivetrain:hasRequiredInput drivetrain:MulScoStarMul 
   
   drivetrain:inputNamedGraph properties:shortcutNamedGraph ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
@@ -916,7 +911,7 @@ drivetrain:MulClassHasOmopConceptId
   drivetrain:object drivetrain:measurement_units_LiteralValue ;
 .
 
-drivetrain:MulScoMul
+drivetrain:MulScoStarMul
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
   drivetrain:object obo:IAO_0000003 ;
@@ -927,7 +922,7 @@ drivetrain:MulScoMul
 .
 
 drivetrain:MulToBeTyped 
-  a drivetrain:ResourceList ;
+  a drivetrain:ClassResourceList ;
 .
 
 drivetrain:measurement_units_LiteralValue
@@ -1214,12 +1209,12 @@ drivetrain:RxExpansion
 .
 
 drivetrain:RxColumnTerm
-  a drivetrain:ResourceList ;
+  a drivetrain:ClassResourceList ;
   drivetrain:range ontologies:TURBO_0010707 ;
 .
 
 drivetrain:RxSourcedenTerm
-  a drivetrain:ResourceList ;
+  a drivetrain:ClassResourceList ;
   drivetrain:range ontologies:TURBO_0010511 ;
 .
 
@@ -1275,7 +1270,7 @@ drivetrain:WrittenNotDispensedSco
 .
 
 drivetrain:WrittenNotDispensedMOD
-  a drivetrain:ResourceList ;
+  a drivetrain:ClassResourceList ;
 .
 
 drivetrain:WrittenNotDispensedLiteral
@@ -1750,6 +1745,4 @@ drivetrain:RxTmd_drug_exposure_start_datetime_column drivetrain:range turbo:TURB
 ###
 
 drivetrain:RoleClassList drivetrain:range obo:OBI_0000093 .
-
-# drivetrain:EncClassList drivetrain:range obo:OGMS_0000097 .
 
