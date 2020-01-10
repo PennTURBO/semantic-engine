@@ -44,7 +44,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
               else if (args(0) == "loadTestTurboOntology") OntologyLoader.addOntologyFromUrl(testCxn)
               else if (args(0) == "updateModelOntology") OntologyLoader.addOntologyFromUrl(gmCxn)
               else if (args(0) == "updateModel") updateModel(gmCxn)
-              else if (args(0) == "all") 
+              else if (args(0) == "buildTest") buildAutomatedTest(gmCxn, testCxn, args)
+              else if (args(0) == "all")
               {
                   clearProductionNamedGraphs(cxn)
                   runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
@@ -200,5 +201,16 @@ object DrivetrainDriver extends ProjectwideGlobals {
           helper.clearNamedGraph(cxn, processNamedGraph)
           helper.clearNamedGraph(cxn, expandedNamedGraph)
       }
+  }
+  
+  def buildAutomatedTest(gmCxn: RepositoryConnection, testCxn: RepositoryConnection, args: Array[String])
+  {
+      assert (args.size > 1, "No process specified for Automated Test Builder; please specify URI")
+      RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+      RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+      val process = helper.getProcessNameAsUri(args(1))
+      GraphModelValidator.validateProcessSpecification(process)
+      def testBuilder = new TestBuilder()
+      testBuilder.buildTest(testCxn, gmCxn, process)
   }
 }
