@@ -873,7 +873,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
         {
             if (a.length() != 0)
             {
-                val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
+                val replacement = a.substring(0,a.length()/*-1*/).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
                 expectedQueryListBuffer += replacement 
             }
         }
