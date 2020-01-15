@@ -18,7 +18,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     override def beforeAll()
     {
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
+        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "carnival_instructionSet.ttl", "turbo_valid_graph_specification.ttl")
         testCxn = graphDBMaterials.getTestConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(testCxn)
