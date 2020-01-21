@@ -14,7 +14,7 @@ processNamedGraph = http://www.itmat.upenn.edu/biobank/processes
 expandedNamedGraph = http://www.itmat.upenn.edu/biobank/expanded
 clearGraphsAtStart = false
 
-instructionSetFile = turbo_dataModel_file.ttl
+instructionSetFile = your_instruction_set.ttl
 graphSpecificationFile = turbo_graphSpecification.ttl
 acornOntologyFile = acornOntology.ttl
 
