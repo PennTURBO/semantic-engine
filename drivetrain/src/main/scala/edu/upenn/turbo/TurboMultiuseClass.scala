@@ -871,8 +871,11 @@ class TurboMultiuseClass extends Enumeration with Matchers
         val process = query.process
         for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
         {
-            val replacement = a.substring(0,a.length()-1).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
-            expectedQueryListBuffer += replacement
+            if (a.length() != 0)
+            {
+                val replacement = a.substring(0,a.length()/*-1*/).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
+                expectedQueryListBuffer += replacement 
+            }
         }
         var expectedQueryList = expectedQueryListBuffer.toArray
         val boolAsString = checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String]
