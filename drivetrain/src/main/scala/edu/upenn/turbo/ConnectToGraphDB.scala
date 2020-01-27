@@ -192,4 +192,20 @@ object ConnectToGraphDB extends ProjectwideGlobals
         }
         optToReturn
     }
+    
+    def getNewConnectionToPrdRepo(): TurboGraphConnection =
+    {
+        val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
+        repoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
+        repoManager.initialize()
+        val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile("productionRepository"))
+        val cxn: RepositoryConnection = repository.getConnection()
+        
+        val graphConnection = new TurboGraphConnection
+        graphConnection.setConnection(cxn)
+        graphConnection.setRepoManager(repoManager)
+        graphConnection.setRepository(repository)
+        
+        graphConnection
+    }
 }

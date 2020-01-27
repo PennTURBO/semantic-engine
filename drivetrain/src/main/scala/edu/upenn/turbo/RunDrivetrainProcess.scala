@@ -12,6 +12,7 @@ import scala.collection.mutable.HashMap
 import java.util.UUID
 import java.util.Calendar
 import java.text.SimpleDateFormat
+import scala.collection.parallel._
 
 object RunDrivetrainProcess extends ProjectwideGlobals
 {
@@ -22,6 +23,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     var typeMap = new HashMap[String,Value]
     
     var useInputNamedGraphsCache: Boolean = true
+    
+    val taskSupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(4))
     
     def setGlobalUUID(globalUUID: String)
     {
@@ -87,13 +90,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 }
                 else logger.info("\tInput Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
-                for (graph <- inputNamedGraphsList)
-                {
-                    logger.info("\tNow running on input graph " + graph)
-                    primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, graph)
-                    //logger.info(primaryQuery.getQuery())
-                    primaryQuery.runQuery(cxn)
-                }
+                val parColl = inputNamedGraphsList.par
+                parColl.tasksupport = taskSupport
+                parColl.foreach(submitQuery(_, primaryQuery, genericWhereClause))
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
                 
@@ -123,6 +122,18 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             }
         }
         processQueryMap
+    }
+    
+    def submitQuery(inputNamedGraph: String, primaryQuery: PatternMatchQuery, genericWhereClause: String)
+    {
+        logger.info("Now running on input named graph: " + inputNamedGraph)
+        val graphConnection = ConnectToGraphDB.getNewConnectionToPrdRepo()
+        val localCxn = graphConnection.cxn
+        primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, inputNamedGraph)
+        primaryQuery.runQuery(localCxn)
+        logger.info("Ran query")
+        ConnectToGraphDB.closeGraphConnection(graphConnection)
+        logger.info("finished input named graph: " + inputNamedGraph)
     }
 
     def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()): PatternMatchQuery =
