@@ -16,11 +16,11 @@ pipeline {
         stage('Setup Workspace') { 
             steps {
 
-                git(
+                /*git(
                     branch: "master", 
                     url: 'https://github.com/PennTURBO/Drivetrain.git'
-                )
-                //checkout scm
+                )*/
+                checkout scm
 
                 // setup local workspace
                 fileExists("turbo_properties.properties.template")
