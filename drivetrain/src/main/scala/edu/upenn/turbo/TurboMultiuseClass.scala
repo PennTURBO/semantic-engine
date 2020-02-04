@@ -632,7 +632,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
             else if (arr2(index2).size == 0) findSortedArrayDifferences(arr1, index1, arr2, index2+1)
             else
             {
-              val compare: Int = arr1(index1).compareTo(arr2(index2))
+              val compare: Int = arr1(index1).replaceAll("\\r\\n","").replaceAll("\\r","").compareTo(arr2(index2).replaceAll("\\r\\n","").replaceAll("\\r",""))
               if (compare == 0) findSortedArrayDifferences(arr1, index1+1, arr2, index2+1)
               else if (compare > 0)
               {
@@ -868,17 +868,19 @@ class TurboMultiuseClass extends Enumeration with Matchers
         val query = processQueryMap(processSpec)
         if (printQuery) logger.info(query.getQuery())
         val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        var queryTextValueStatementsRemoved = new ArrayBuffer[String]
+        for (line <- queryText) if (!line.startsWith("VALUES") && line.length() != 0 && line.charAt(0) != '\r') queryTextValueStatementsRemoved += line
         val process = query.process
         for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
         {
-            if (a.length() != 0)
+            if (a.length() != 0 && a.charAt(0) != '\r')
             {
-                val replacement = a.substring(0,a.length()/*-1*/).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
+                val replacement = a.substring(0,a.length()).replace("localUUID", RunDrivetrainProcess.localUUID).replace("processURI", process)
                 expectedQueryListBuffer += replacement 
             }
         }
         var expectedQueryList = expectedQueryListBuffer.toArray
-        val boolAsString = checkStringArraysForEquivalency(queryText, expectedQueryList)("equivalent").asInstanceOf[String]
+        val boolAsString = checkStringArraysForEquivalency(queryTextValueStatementsRemoved.toArray, expectedQueryList)("equivalent").asInstanceOf[String]
         if (boolAsString == "true") true
         else false
     }

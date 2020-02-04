@@ -100,8 +100,6 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
       }
       }
       WHERE {
-      VALUES ?GenomeRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000567>}
-      VALUES ?ZygosityUriOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000590><http://transformunify.org/ontologies/TURBO_0000591>}
       GRAPH <$expandedNamedGraph> {
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010113> ?TURBO_0000527 .
       ?TURBO_0000527 rdf:type <http://transformunify.org/ontologies/TURBO_0000527> .

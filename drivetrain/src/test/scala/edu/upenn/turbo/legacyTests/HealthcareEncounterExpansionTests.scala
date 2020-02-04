@@ -295,7 +295,6 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       }
       GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010110> ?HealthcareEncounterRegistryOfVariousTypes .
-      VALUES ?HealthcareEncounterRegistryOfVariousTypes {<http://transformunify.org/ontologies/TURBO_0000510><http://transformunify.org/ontologies/TURBO_0010256>}
       ?TURBO_0010158 rdf:type <http://transformunify.org/ontologies/TURBO_0010158> .
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0000643> ?datasetTitleStringLiteralValue .
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0000648> ?healthcareEncounterSymbolLiteralValue .
@@ -391,7 +390,6 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0000643> ?datasetTitleStringLiteralValue .
       OPTIONAL {
        ?TURBO_0010160 <http://transformunify.org/ontologies/TURBO_0004603> ?DiagnosisRegistryOfVariousTypes .
-      VALUES ?DiagnosisRegistryOfVariousTypes {<http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890><http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892><http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>}
        }
       OPTIONAL {
        ?TURBO_0010160 <http://transformunify.org/ontologies/TURBO_0010014> ?diagnosisCodingSequenceIntegerLiteralValue .
@@ -496,7 +494,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         helper.deleteAllTriplesInDatabase(testCxn)
     }
     
-    test("generated query matched expected query - healthcare expansion")
+    /*test("generated query matched expected query - healthcare expansion")
     {
         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", healthcareQuery) should be (true) 
     }
@@ -1443,10 +1441,11 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         update.querySparqlBoolean(testCxn, healthcareInputsOutputs).get should be (true)
         update.querySparqlBoolean(testCxn, medicationsInputsOutputs).get should be (true)
-    }
+    }*/
     
     test("expand hc encs over multiple named graphs")
     {
+        logger.info("starting triples count: " + helper.countTriplesInDatabase(testCxn))
         val insert1: String = s"""
           INSERT DATA
           {
@@ -1534,7 +1533,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
-        
+        logger.info("ending triples count: " + helper.countTriplesInDatabase(testCxn))
         val datasetCheck1: String = s"""
           ASK
           {
@@ -1826,7 +1825,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, medicationsInputsOutputs).get should be (true)
     }
     
-    test("diagnosis not expanded by itself")
+    /*test("diagnosis not expanded by itself")
     {
        val insert = """
          INSERT DATA {
@@ -1864,5 +1863,5 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
        result.size should be (0)
-    }
+    }*/
 }
