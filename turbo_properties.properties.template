@@ -1,10 +1,10 @@
-serviceURL = http://turbo-prd-db01.pmacs.upenn.edu:7200/
+serviceURL = your_db
 username = your_username
 password = your_password
 
-productionRepository = Hayden_drivetrain
-testingRepository = Hayden_drivetrain
-modelRepository = Haydens_graph_model
+productionRepository = your_prod_repo
+testingRepository = your_test_repo
+modelRepository = your_model_repo
 
 importOntologies = true
 ontologyURL = https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl

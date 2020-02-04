@@ -709,6 +709,7 @@ drivetrain:PatientRegden
   drivetrain:range ontologies:TURBO_0000505 ;
   drivetrain:range ontologies:TURBO_0010275 ;
   drivetrain:range ontologies:TURBO_0010295 ;
+  drivetrain:range ontologies:TURBO_0010255 ;
 .
 drivetrain:IcdClassList 
   drivetrain:usesCustomVariableManipulationRule ontologies:IcdDiagnosisRegistryRule ;
@@ -764,6 +765,7 @@ drivetrain:encounter_keysym_LiteralValue
 drivetrain:diagnosisRegDen
   drivetrain:range <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890> ;
   drivetrain:range <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892> ;
+  drivetrain:range <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489> ;
 .
 drivetrain:condition_type_LiteralValue 
   a drivetrain:StringLiteralResourceList 
