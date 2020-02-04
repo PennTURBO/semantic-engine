@@ -43,7 +43,7 @@ pipeline {
                         sh "sed -i 's/password = your_password/password = $graphDbPassword/g' turbo_properties.properties"
                         sh "sed -i 's/testingRepository = your_prod_repo/productionRepository = jenkinsTest/g' turbo_properties.properties"
                         sh "sed -i 's/modelRepository = your_prod_repo/modelRepository = jenkinsModel/g' turbo_properties.properties"
-                        sh "sed -i 's/serviceURL = your_db/serviceURL = http:\/\/turbo-dev-db01.pmacs.upenn.edu:7200/g' turbo_properties.properties"
+                        sh "sed -i 's/serviceURL = your_db/serviceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
                     }
                 }
             }
