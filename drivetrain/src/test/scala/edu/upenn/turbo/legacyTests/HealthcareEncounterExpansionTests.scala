@@ -494,7 +494,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         helper.deleteAllTriplesInDatabase(testCxn)
     }
     
-    /*test("generated query matched expected query - healthcare expansion")
+    test("generated query matched expected query - healthcare expansion")
     {
         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", healthcareQuery) should be (true) 
     }
@@ -1441,7 +1441,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         update.querySparqlBoolean(testCxn, healthcareInputsOutputs).get should be (true)
         update.querySparqlBoolean(testCxn, medicationsInputsOutputs).get should be (true)
-    }*/
+    }
     
     test("expand hc encs over multiple named graphs")
     {
@@ -1530,10 +1530,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }
           """
         update.updateSparql(testCxn, insert1)
+        logger.info("triples count after insert: " + helper.countTriplesInDatabase(testCxn))
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        logger.info("triples count after hc process: " + helper.countTriplesInDatabase(testCxn))
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        logger.info("triples count after diagnoses process: " + helper.countTriplesInDatabase(testCxn))
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
-        logger.info("ending triples count: " + helper.countTriplesInDatabase(testCxn))
+        logger.info("triples count after meds process: " + helper.countTriplesInDatabase(testCxn))
         val datasetCheck1: String = s"""
           ASK
           {
@@ -1825,7 +1828,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         update.querySparqlBoolean(testCxn, medicationsInputsOutputs).get should be (true)
     }
     
-    /*test("diagnosis not expanded by itself")
+    test("diagnosis not expanded by itself")
     {
        val insert = """
          INSERT DATA {
@@ -1863,5 +1866,5 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
        result.size should be (0)
-    }*/
+    }
 }
