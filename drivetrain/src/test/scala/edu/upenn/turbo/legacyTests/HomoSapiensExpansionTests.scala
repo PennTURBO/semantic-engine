@@ -217,7 +217,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         helper.deleteAllTriplesInDatabase(testCxn)
     }
     
-    test("generated query matched expected query")
+    /*test("generated query matched expected query")
     {
         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", expectedQuery) should be (true) 
     }
@@ -902,7 +902,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           """
         
         update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
-    }
+    }*/
     
     test("expand homoSapiens with multiple identifiers - multiple datasets")
     {

@@ -90,10 +90,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 }
                 else logger.info("\tInput Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
-                /*val parColl = inputNamedGraphsList.par
+                val parColl = inputNamedGraphsList.par
                 parColl.tasksupport = taskSupport
-                parColl.foreach(submitQuery(_, primaryQuery, genericWhereClause))*/
-                inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause))
+                parColl.foreach(submitQuery(_, primaryQuery, genericWhereClause))
+                //inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause))
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
                 
