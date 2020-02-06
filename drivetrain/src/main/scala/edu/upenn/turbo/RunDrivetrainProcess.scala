@@ -130,9 +130,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         logger.info("Now running on input named graph: " + inputNamedGraph)
         val graphConnection = ConnectToGraphDB.getNewConnectionToPrdRepo()
         val localCxn = graphConnection.cxn
-        primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, inputNamedGraph)
-        //logger.info(primaryQuery.getQuery())
-        primaryQuery.runQuery(localCxn)
+        var whereClauseString = primaryQuery.whereClause
+        whereClauseString = whereClauseString.replaceAll(primaryQuery.defaultInputGraph, inputNamedGraph)
+        val localQuery = primaryQuery.deleteClause + "\n" + primaryQuery.insertClause + "\n" + whereClauseString + primaryQuery.bindClause + "}"
+        //logger.info(localQuery)
+        update.updateSparql(localCxn, localQuery)
         ConnectToGraphDB.closeGraphConnection(graphConnection)
         logger.info("finished named graph: " + inputNamedGraph)
     }
