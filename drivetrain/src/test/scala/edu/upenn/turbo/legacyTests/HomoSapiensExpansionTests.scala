@@ -947,7 +947,9 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false)
         
           val output: String = s"""
-          ASK {GRAPH <$expandedNamedGraph> {
+          ASK 
+            #{GRAPH <$expandedNamedGraph> 
+            {
         	
         		?part a obo:NCBITaxon_9606 .
         		?instantiation a turbo:TURBO_0000522 .
@@ -1022,7 +1024,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             filter (?dataset2 != ?dataset3)
             filter (?dataset3 != ?dataset1)
         		
-          }}
+          }
+          #}
           """
         
         update.querySparqlBoolean(testCxn, output).get should be (true)

@@ -131,8 +131,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val graphConnection = ConnectToGraphDB.getNewConnectionToPrdRepo()
         val localCxn = graphConnection.cxn
         primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, inputNamedGraph)
+        //logger.info(primaryQuery.getQuery())
         primaryQuery.runQuery(localCxn)
         ConnectToGraphDB.closeGraphConnection(graphConnection)
+        logger.info("finished named graph: " + inputNamedGraph)
     }
 
     def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()): PatternMatchQuery =

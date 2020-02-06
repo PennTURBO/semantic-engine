@@ -5,6 +5,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
 import org.eclipse.rdf4j.model.Value
+import java.util.UUID
 
 abstract class Query extends ProjectwideGlobals
 {
@@ -56,6 +57,9 @@ class PatternMatchQuery extends Query
     {
         query = getQuery()
         assert (query != "" && query != null)
+        val graphUUID = UUID.randomUUID().toString().replaceAll("-", "")
+        query = query.replaceAll("GRAPH <http://www.itmat.upenn.edu/biobank/expanded>", s"GRAPH <http://www.itmat.upenn.edu/biobank/expanded_$graphUUID>")
+        logger.info(query)
         update.updateSparql(cxn, query)
     }
     
