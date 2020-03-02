@@ -15,7 +15,7 @@ expandedNamedGraph = http://www.itmat.upenn.edu/biobank/expanded
 clearGraphsAtStart = false
 
 instructionSetFile = your_instruction_set.ttl
-graphSpecificationFile = turbo_graphSpecification.ttl
+graphSpecificationFile = turbo_valid_graph_specification.ttl
 acornOntologyFile = acornOntology.ttl
 
 # dataValidationMode options: None, Log, Stop
