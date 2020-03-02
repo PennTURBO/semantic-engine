@@ -127,7 +127,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
                 }
             """
           update.updateSparql(testCxn, insert)
-          RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false)
+          RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false, "testingRepository")
           
            val check: String = s"""
             ASK
@@ -245,7 +245,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
               }
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false, "testingRepository")
         
         val check: String = s"""
           ASK

@@ -26,3 +26,5 @@ errorLogFile = turbo_errorLog.txt
 reinferRepo = true
 loadAdditionalOntologies = true
 bioportalApiKey = yourKey
+
+useMultipleThreads = false

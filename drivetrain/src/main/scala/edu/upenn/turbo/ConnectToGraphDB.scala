@@ -161,7 +161,8 @@ object ConnectToGraphDB extends ProjectwideGlobals
             "processNamedGraph", "reinferRepo", "loadAdditionalOntologies",
             "instructionSetFile", "graphSpecificationFile", "defaultPrefix",
             "dataValidationMode", "errorLogFile", "expandedNamedGraph",
-            "clearGraphsAtStart", "acornOntologyFile", "validateAgainstOntology")
+            "clearGraphsAtStart", "acornOntologyFile", "validateAgainstOntology",
+            "useMultipleThreads")
         var a = 0
         while (optToReturn == None && a < requiredProperties.size)
         {
@@ -193,12 +194,13 @@ object ConnectToGraphDB extends ProjectwideGlobals
         optToReturn
     }
     
-    def getNewConnectionToPrdRepo(): TurboGraphConnection =
+    def getNewConnectionToRepoFromPropertiesKey(key: String): TurboGraphConnection =
     {
+        assert (key == "modelRepository" || key == "productionRepository" || key == "testingRepository", s"Key $key is not a valid properties key")
         val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
         repoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
         repoManager.initialize()
-        val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile("productionRepository"))
+        val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile(key))
         val cxn: RepositoryConnection = repository.getConnection()
         
         val graphConnection = new TurboGraphConnection

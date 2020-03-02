@@ -45,12 +45,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         this.useInputNamedGraphsCache = useInputNamedGraphsCache
     }
     
-    def runProcess(processSpecification: String, dataValidationMode: String = dataValidationMode, validateAgainstOntology: Boolean = validateAgainstOntology): HashMap[String, PatternMatchQuery] =
+    def runProcess(processSpecification: String, dataValidationMode: String = dataValidationMode, validateAgainstOntology: Boolean = validateAgainstOntology, connectTo: String = "productionRepository"): HashMap[String, PatternMatchQuery] =
     {
-        runProcess(ArrayBuffer(processSpecification), dataValidationMode, validateAgainstOntology)
+        runProcess(ArrayBuffer(processSpecification), dataValidationMode, validateAgainstOntology, connectTo)
     }
         
-    def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String, validateAgainstOntology: Boolean): HashMap[String, PatternMatchQuery] =
+    def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String, validateAgainstOntology: Boolean, connectTo: String): HashMap[String, PatternMatchQuery] =
     {
         GraphModelValidator.checkAcornFilesForMissingTypes()
         if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
@@ -90,10 +90,18 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 }
                 else logger.info("\tInput Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
-                val parColl = inputNamedGraphsList.par
-                parColl.tasksupport = taskSupport
-                parColl.foreach(submitQuery(_, primaryQuery, genericWhereClause))
-                //inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause))
+                if (useMultipleThreads)
+                {
+                    logger.info("Multiple threads enabled")
+                    val parColl = inputNamedGraphsList.par
+                    parColl.tasksupport = taskSupport
+                    parColl.foreach(submitQuery(_, primaryQuery, genericWhereClause, connectTo))
+                }
+                else 
+                {
+                    logger.info("Multiple threads disabled")
+                    inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause, connectTo))
+                }
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
                 
@@ -125,10 +133,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         processQueryMap
     }
     
-    def submitQuery(inputNamedGraph: String, primaryQuery: PatternMatchQuery, genericWhereClause: String)
+    def submitQuery(inputNamedGraph: String, primaryQuery: PatternMatchQuery, genericWhereClause: String, connectTo: String)
     {
         logger.info("Now running on input named graph: " + inputNamedGraph)
-        val graphConnection = ConnectToGraphDB.getNewConnectionToPrdRepo()
+        val graphConnection = ConnectToGraphDB.getNewConnectionToRepoFromPropertiesKey(connectTo)
         val localCxn = graphConnection.cxn
         var whereClauseString = primaryQuery.whereClause
         whereClauseString = whereClauseString.replaceAll(primaryQuery.defaultInputGraph, inputNamedGraph)
@@ -136,7 +144,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         //logger.info(localQuery)
         update.updateSparql(localCxn, localQuery)
         ConnectToGraphDB.closeGraphConnection(graphConnection)
-        logger.info("finished named graph: " + inputNamedGraph)
+        //logger.info("finished named graph: " + inputNamedGraph)
     }
 
     def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()): PatternMatchQuery =
@@ -457,7 +465,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         for (a <- orderedProcessList) logger.info(a)
         
         // run each process
-        runProcess(orderedProcessList, dataValidationMode, validateAgainstOntology)
+        runProcess(orderedProcessList, dataValidationMode, validateAgainstOntology, "productionRepository")
     }
 
     /**
