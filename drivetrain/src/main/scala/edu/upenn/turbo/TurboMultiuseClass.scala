@@ -31,6 +31,7 @@ import java.io.InputStream
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
 import org.eclipse.rdf4j.model.Model
 import org.scalatest._
+import java.math.BigInteger
 
 /**
  * The TurboMultiuseClass contains methods whose functionality is repeatedly used by some component of the Drivetrain application. A few of the methods
@@ -687,7 +688,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
         cxn.remove(model, f.createIRI("http://www.ontotext.com/implicit"))
     }
     
-    def countTriplesInDatabase(cxn: RepositoryConnection): Int =
+    def countTriplesInDatabase(cxn: RepositoryConnection): BigInteger =
     {        
         val query: String = """
           select (count (?s) as ?tripcount) where
@@ -695,7 +696,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
               ?s ?p ?o .
           }
           """
-         update.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1).toInt
+         new BigInter(update.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1))
     }
     
     def countTriplesInNamedGraph(cxn: RepositoryConnection, namedGraph: String): Int =

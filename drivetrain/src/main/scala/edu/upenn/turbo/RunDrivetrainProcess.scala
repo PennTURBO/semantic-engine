@@ -106,7 +106,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 primaryQuery.whereClause = genericWhereClause
                 
                 val endingTriplesCount = helper.countTriplesInDatabase(cxn)
-                val triplesAdded = endingTriplesCount - startingTriplesCount
+                val triplesAdded = endingTriplesCount.subtract(startingTriplesCount)
                 val endTime = System.nanoTime()
                 val runtime: String = ((endTime - startTime)/1000000000.0).toString
                 logger.info("Completed process " + processSpecification + " in " + runtime + " seconds")
