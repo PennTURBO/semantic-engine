@@ -75,7 +75,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   GraphModelValidator.validateProcessSpecification(helper.getProcessNameAsUri(args(0)))
                   
                   //load the TURBO ontology
-                  OntologyLoader.addOntologyFromUrl(cxn)
+                  //OntologyLoader.addOntologyFromUrl(cxn)
                   clearProductionNamedGraphs(cxn)
                   
                   logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")

@@ -696,7 +696,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
               ?s ?p ?o .
           }
           """
-         new BigInter(update.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1))
+         new BigInteger(update.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1))
     }
     
     def countTriplesInNamedGraph(cxn: RepositoryConnection, namedGraph: String): Int =
