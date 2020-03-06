@@ -41,9 +41,9 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'Hayden_prd_graphDB_credentials', usernameVariable: 'graphDbUserName', passwordVariable: 'graphDbPassword')]) {
                         sh "sed -i 's/username = your_username/username = $graphDbUserName/g' turbo_properties.properties"
                         sh "sed -i 's/password = your_password/password = $graphDbPassword/g' turbo_properties.properties"
-                        sh "sed -i 's/testingRepository = your_test_repo/testingRepository = jenkinsTest/g' turbo_properties.properties"
-                        sh "sed -i 's/modelRepository = your_model_repo/modelRepository = jenkinsModel/g' turbo_properties.properties"
-                        sh "sed -i 's/productionRepository = your_prod_repo/productionRepository = jenkinsTest/g' turbo_properties.properties"
+                        sh "sed -i 's/testingRepository = your_test_repo/testingRepository = jenkinsTest+"_"+$BRANCH_NAME/g' turbo_properties.properties"
+                        sh "sed -i 's/modelRepository = your_model_repo/modelRepository = jenkinsModel+"_"+$BRANCH_NAME/g' turbo_properties.properties"
+                        sh "sed -i 's/productionRepository = your_prod_repo/productionRepository = jenkinsTest+"_"+$BRANCH_NAME/g' turbo_properties.properties"
                         sh "sed -i 's/serviceURL = your_db/serviceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
                     }
                 }
