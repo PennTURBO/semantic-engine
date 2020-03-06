@@ -139,7 +139,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
     override def beforeAll()
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getTestConnection()
+        testCxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(testCxn)
         
@@ -197,7 +197,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           """
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false)
         
         val output: String = s"""
           
@@ -438,7 +438,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           """
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false)
         
         val output: String = s"""
           
@@ -650,7 +650,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           """
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false)
         
         val output: String = s"""
           

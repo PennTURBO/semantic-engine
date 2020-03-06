@@ -19,7 +19,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
     override def beforeAll()
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(false)
-        testCxn = graphDBMaterials.getTestConnection()
+        testCxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(testCxn)
         

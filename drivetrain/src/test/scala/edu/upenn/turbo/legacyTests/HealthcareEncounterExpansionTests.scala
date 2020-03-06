@@ -475,7 +475,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
     override def beforeAll()
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getTestConnection()
+        testCxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(testCxn)
         
@@ -551,9 +551,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
@@ -783,9 +783,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
@@ -892,9 +892,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
         
         val diagnosisNoXsd: String = s"""
           ASK { GRAPH <$expandedNamedGraph> {
@@ -1166,9 +1166,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}"""
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
         
         val checkDiag: String = s"""
           Ask
@@ -1319,9 +1319,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           }}"""
         
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
         
         val checkDiag: String = s"""
           Ask
@@ -1531,11 +1531,11 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           """
         update.updateSparql(testCxn, insert1)
         logger.info("triples count after insert: " + helper.countTriplesInDatabase(testCxn))
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
         logger.info("triples count after hc process: " + helper.countTriplesInDatabase(testCxn))
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
         logger.info("triples count after diagnoses process: " + helper.countTriplesInDatabase(testCxn))
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
         logger.info("triples count after meds process: " + helper.countTriplesInDatabase(testCxn))
         val datasetCheck1: String = s"""
           ASK

@@ -18,7 +18,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
     override def beforeAll()
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getTestConnection()
+        testCxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(testCxn)
         

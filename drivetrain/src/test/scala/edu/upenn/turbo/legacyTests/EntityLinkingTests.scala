@@ -91,7 +91,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
       override def beforeAll()
       {
           graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-          testCxn = graphDBMaterials.getTestConnection()
+          testCxn = graphDBMaterials.getConnection()
           gmCxn = graphDBMaterials.getGmConnection()
           helper.deleteAllTriplesInDatabase(testCxn)
           
@@ -127,7 +127,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
                 }
             """
           update.updateSparql(testCxn, insert)
-          RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false, "testingRepository")
+          RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false)
           
            val check: String = s"""
             ASK
@@ -245,7 +245,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
               }
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false)
         
         val check: String = s"""
           ASK

@@ -45,12 +45,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         this.useInputNamedGraphsCache = useInputNamedGraphsCache
     }
     
-    def runProcess(processSpecification: String, dataValidationMode: String = dataValidationMode, validateAgainstOntology: Boolean = validateAgainstOntology, connectTo: String = "productionRepository"): HashMap[String, PatternMatchQuery] =
+    def runProcess(processSpecification: String, dataValidationMode: String = dataValidationMode, validateAgainstOntology: Boolean = validateAgainstOntology): HashMap[String, PatternMatchQuery] =
     {
-        runProcess(ArrayBuffer(processSpecification), dataValidationMode, validateAgainstOntology, connectTo)
+        runProcess(ArrayBuffer(processSpecification), dataValidationMode, validateAgainstOntology)
     }
         
-    def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String, validateAgainstOntology: Boolean, connectTo: String): HashMap[String, PatternMatchQuery] =
+    def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String, validateAgainstOntology: Boolean): HashMap[String, PatternMatchQuery] =
     {
         GraphModelValidator.checkAcornFilesForMissingTypes()
         if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
@@ -95,12 +95,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                     logger.info("Multiple threads enabled")
                     val parColl = inputNamedGraphsList.par
                     parColl.tasksupport = taskSupport
-                    parColl.foreach(submitQuery(_, primaryQuery, genericWhereClause, connectTo))
+                    parColl.foreach(submitQuery(_, primaryQuery, genericWhereClause))
                 }
                 else 
                 {
                     logger.info("Multiple threads disabled")
-                    inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause, connectTo))
+                    inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause))
                 }
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
@@ -133,10 +133,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         processQueryMap
     }
     
-    def submitQuery(inputNamedGraph: String, primaryQuery: PatternMatchQuery, genericWhereClause: String, connectTo: String)
+    def submitQuery(inputNamedGraph: String, primaryQuery: PatternMatchQuery, genericWhereClause: String)
     {
         logger.info("Now running on input named graph: " + inputNamedGraph)
-        val graphConnection = ConnectToGraphDB.getNewConnectionToRepoFromPropertiesKey(connectTo)
+        val graphConnection = ConnectToGraphDB.getNewConnectionToRepo()
         val localCxn = graphConnection.cxn
         var whereClauseString = primaryQuery.whereClause
         whereClauseString = whereClauseString.replaceAll(primaryQuery.defaultInputGraph, inputNamedGraph)
@@ -465,7 +465,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         for (a <- orderedProcessList) logger.info(a)
         
         // run each process
-        runProcess(orderedProcessList, dataValidationMode, validateAgainstOntology, "productionRepository")
+        runProcess(orderedProcessList, dataValidationMode, validateAgainstOntology)
     }
 
     /**

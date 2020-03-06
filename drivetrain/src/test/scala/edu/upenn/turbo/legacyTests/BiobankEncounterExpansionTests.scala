@@ -207,8 +207,10 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     
     override def beforeAll()
     {
+        assert("test" === System.getenv("SCALA_ENV"))
+        
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getTestConnection()
+        testCxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(testCxn)
         
@@ -225,7 +227,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     {
         helper.deleteAllTriplesInDatabase(testCxn)
     }
-    
+
     test("generated query matched expected query")
     {
         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", expectedQuery) should be (true) 
@@ -253,7 +255,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           """
         update.updateSparql(testCxn, insert)
         
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false)
           
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
@@ -354,7 +356,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false)
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
@@ -433,7 +435,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }}
           """
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false)
         
         val dateNoXsd: String = s"""
           ask {

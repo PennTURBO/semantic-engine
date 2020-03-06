@@ -25,6 +25,8 @@ scalaVersion := "2.11.8"
 resolvers += Classpaths.typesafeReleases
 
 parallelExecution in Test := false
+fork in Test := true
+envVars in Test := Map("SCALA_ENV" -> "test")
 
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.1.5" % "runtime",

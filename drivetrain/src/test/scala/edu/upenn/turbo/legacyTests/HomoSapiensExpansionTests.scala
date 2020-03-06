@@ -197,7 +197,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
     override def beforeAll()
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getTestConnection()
+        testCxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(testCxn)
         
@@ -255,7 +255,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               turbo:TURBO_0010277 <http://transformunify.org/ontologies/TURBO_0010274> .
           }}"""
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false)
         
         val extraFields: String = s"""
           ASK {GRAPH <$expandedNamedGraph> {
@@ -476,7 +476,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               turbo:TURBO_0010282 turbo:TURBO_0000505 .
           }}"""
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false)
         
         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
         update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (true)
@@ -560,7 +560,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               
           }}"""
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false)
         
         val dateNoXsd: String = s"""
           ASK {GRAPH <$expandedNamedGraph> {
@@ -702,7 +702,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
 
           }}"""
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false)
     
         val output: String = s"""
           ASK {GRAPH <$expandedNamedGraph> {
@@ -944,7 +944,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           
           }"""
         update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false, "testingRepository")
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false)
         
           val output: String = s"""
           ASK 

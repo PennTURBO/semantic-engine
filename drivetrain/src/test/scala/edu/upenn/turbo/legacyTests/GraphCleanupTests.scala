@@ -40,7 +40,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
     override def beforeAll()
     {
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getTestConnection()
+        testCxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(testCxn)
         
@@ -76,7 +76,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
             }
         """
       update.updateSparql(testCxn, insert)
-      RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess", dataValidationMode, false, "testingRepository")
+      RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess", dataValidationMode, false)
       
         val check1: String = s"""
           ASK

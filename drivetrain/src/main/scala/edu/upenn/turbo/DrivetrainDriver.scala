@@ -20,6 +20,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
       //else if (args(0) == "benchmark") benchmark.runBenchmarking(args, globalUUID)
       else
       {
+          logger.info("System env: " + System.getenv("SCALA_ENV"))
+          assert(System.getenv("SCALA_ENV") == "main")
           try
           {
               graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
@@ -27,10 +29,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
               cxn = graphDBMaterials.getConnection()
               repoManager = graphDBMaterials.getRepoManager()
               repository = graphDBMaterials.getRepository()
-              
-              testCxn = graphDBMaterials.getTestConnection()
-              testRepoManager = graphDBMaterials.getTestRepoManager()
-              testRepository = graphDBMaterials.getTestRepository()
               
               gmCxn = graphDBMaterials.getGmConnection()
               gmRepoManager = graphDBMaterials.getGmRepoManager()

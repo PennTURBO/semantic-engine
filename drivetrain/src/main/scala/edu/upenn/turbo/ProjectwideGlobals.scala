@@ -31,11 +31,22 @@ trait ProjectwideGlobals extends Enumeration
     var testRepository: Repository = null
 
      //properties from file are global variables
-     val serviceURL = helper.retrieveUriPropertyFromFile("serviceURL")
-     val ontologyURL = helper.retrieveUriPropertyFromFile("ontologyURL")
+     val productionServiceURL = helper.retrieveUriPropertyFromFile("productionServiceURL")
+     val productionUsername = helper.retrievePropertyFromFile("productionUsername")
+     val productionPassword = helper.retrievePropertyFromFile("productionPassword")
      val productionRepository = helper.retrievePropertyFromFile("productionRepository")
+     
+     val testingServiceURL = helper.retrieveUriPropertyFromFile("testingServiceURL")
+     val testingUsername = helper.retrievePropertyFromFile("testingUsername")
+     val testingPassword = helper.retrievePropertyFromFile("testingPassword")
      val testingRepository = helper.retrievePropertyFromFile("testingRepository")
+     
+     val modelServiceURL = helper.retrieveUriPropertyFromFile("modelServiceURL")
+     val modelUsername = helper.retrievePropertyFromFile("modelUsername")
+     val modelPassword = helper.retrievePropertyFromFile("modelPassword")
      val modelRepository = helper.retrievePropertyFromFile("modelRepository")
+     
+     val ontologyURL = helper.retrieveUriPropertyFromFile("ontologyURL")
      val processNamedGraph = helper.retrieveUriPropertyFromFile("processNamedGraph").replace("\"","")
      val bioportalApiKey = helper.retrievePropertyFromFile("bioportalApiKey")
      val reinferRepo = getBooleanProperty("reinferRepo")
