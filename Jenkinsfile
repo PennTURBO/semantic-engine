@@ -39,13 +39,13 @@ pipeline {
 
                 script {
                     withCredentials([usernamePassword(credentialsId: 'Hayden_prd_graphDB_credentials', usernameVariable: 'graphDbUserName', passwordVariable: 'graphDbPassword')]) {
-                        sh "sed -i 's/testingUsername = your_username/testingUsernamesername = $graphDbUserName/g' turbo_properties.properties"
+                        sh "sed -i 's/testingUsername = your_username/testingUsername = $graphDbUserName/g' turbo_properties.properties"
                         sh "sed -i 's/testingPassword = your_password/testingPassword = $graphDbPassword/g' turbo_properties.properties"
-                        sh "sed -i 's/modelUsername = your_username/modelUsernamesername = $graphDbUserName/g' turbo_properties.properties"
+                        sh "sed -i 's/modelUsername = your_username/modelUsername = $graphDbUserName/g' turbo_properties.properties"
                         sh "sed -i 's/modelPassword = your_password/modelPassword = $graphDbPassword/g' turbo_properties.properties"
-                        sh "sed -i 's/testingRepository = your_test_repo/testingRepository = jenkinsTest_$BRANCH_NAME/g' turbo_properties.properties"
+                        sh "sed -i 's/testingRepository = your_testing_repo/testingRepository = jenkinsTest_$BRANCH_NAME/g' turbo_properties.properties"
                         sh "sed -i 's/modelRepository = your_model_repo/modelRepository = jenkinsModel_$BRANCH_NAME/g' turbo_properties.properties"
-                        sh "sed -i 's/testingServiceURL = your_db/testingServiceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
+                        sh "sed -i 's/testingServiceURL = your_dev_db/testingServiceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
                         sh "sed -i 's/modelServiceURL = your_db/modelServiceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
                     }
                 }
