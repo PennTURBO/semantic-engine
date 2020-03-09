@@ -20,8 +20,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       //else if (args(0) == "benchmark") benchmark.runBenchmarking(args, globalUUID)
       else
       {
-          logger.info("System env: " + System.getenv("SCALA_ENV"))
-          assert(System.getenv("SCALA_ENV") == "main")
+          assert("main" == System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"main\"; check your build.sbt file")
           try
           {
               graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
@@ -39,10 +38,10 @@ object DrivetrainDriver extends ProjectwideGlobals {
               if (cxn == null || gmCxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
               else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.NQUADS)
               else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
-              else if (args(0) == "loadTestTurboOntology") OntologyLoader.addOntologyFromUrl(testCxn)
+              else if (args(0) == "loadTestTurboOntology") OntologyLoader.addOntologyFromUrl(cxn)
               else if (args(0) == "updateModelOntology") OntologyLoader.addOntologyFromUrl(gmCxn)
               else if (args(0) == "updateModel") updateModel(gmCxn)
-              else if (args(0) == "buildTest") buildAutomatedTest(gmCxn, testCxn, args)
+              else if (args(0) == "buildTest") buildAutomatedTest(gmCxn, cxn, args)
               else if (args(0) == "all")
               {
                   clearProductionNamedGraphs(cxn)
@@ -201,14 +200,14 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
   }
   
-  def buildAutomatedTest(gmCxn: RepositoryConnection, testCxn: RepositoryConnection, args: Array[String])
+  def buildAutomatedTest(gmCxn: RepositoryConnection, cxn: RepositoryConnection, args: Array[String])
   {
       assert (args.size > 1, "No process specified for Automated Test Builder; please specify URI")
       RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-      RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+      RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
       val process = helper.getProcessNameAsUri(args(1))
       GraphModelValidator.validateProcessSpecification(process)
       def testBuilder = new TestBuilder()
-      testBuilder.buildTest(testCxn, gmCxn, process)
+      testBuilder.buildTest(cxn, gmCxn, process)
   }
 }

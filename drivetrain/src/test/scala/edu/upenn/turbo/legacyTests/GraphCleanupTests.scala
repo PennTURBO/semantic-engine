@@ -39,13 +39,15 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
     
     override def beforeAll()
     {
+        assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
+        
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getConnection()
+        cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
     }
     
     override def afterAll()
@@ -55,7 +57,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
     
     before
     {
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
     }
   
     test("generated biobank encounter cleanup query matched expected query")
@@ -75,7 +77,7 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
               }
             }
         """
-      update.updateSparql(testCxn, insert)
+      update.updateSparql(cxn, insert)
       RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess", dataValidationMode, false)
       
         val check1: String = s"""
@@ -87,11 +89,11 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           }
           """
         
-        update.querySparqlBoolean(testCxn, check1).get should be (false)
-        update.querySparqlBoolean(testCxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)
+        update.querySparqlBoolean(cxn, check1).get should be (false)
+        update.querySparqlBoolean(cxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)
       
         val count: String = s"SELECT * WHERE {Graph <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
         result.size should be (2)
       
         val processInputsOutputs: String = s"""
@@ -109,6 +111,6 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           
           """
         
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
     }
 }

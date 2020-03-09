@@ -105,11 +105,11 @@ object ConnectToGraphDB extends ProjectwideGlobals
         
         if (deleteAllTriples)
         {
-             if (!testCxn.isActive()) testCxn.begin()
+             if (!cxn.isActive()) cxn.begin()
              val deleteAll: String = "DELETE {?s ?p ?o} WHERE {?s ?p ?o .} "
-             val tupleDelete = testCxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
+             val tupleDelete = cxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
              tupleDelete.execute()
-             testCxn.commit()
+             cxn.commit()
         }
         if (cxn != null)
         {
@@ -122,12 +122,6 @@ object ConnectToGraphDB extends ProjectwideGlobals
             gmCxn.close()
             gmRepository.shutDown()
             gmRepoManager.shutDown()
-        }
-        if (testCxn != null)
-        {
-            testCxn.close()
-            testRepository.shutDown()
-            testRepoManager.shutDown()
         }
     }
     
@@ -189,7 +183,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
         val connProps = retrieveConnectionPropertiesBasedOnBuildEnvironment()
         
         val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(connProps("serviceURL"))
-        repoManager.setUsernameAndPassword(helper.retrievePropertyFromFile(connProps("username")), helper.retrievePropertyFromFile(connProps("password")))
+        repoManager.setUsernameAndPassword(connProps("username"), connProps("password"))
         repoManager.initialize()
         val repository: Repository = repoManager.getRepository(connProps("repository"))
         val cxn: RepositoryConnection = repository.getConnection()
@@ -212,18 +206,18 @@ object ConnectToGraphDB extends ProjectwideGlobals
         if ("main" == System.getenv("SCALA_ENV"))
         {
             logger.info("Running in production mode")
-            var serviceURL = productionServiceURL
-            var username = productionUsername
-            var password = productionPassword
-            var repository = productionRepository   
+            serviceURL = productionServiceURL
+            username = productionUsername
+            password = productionPassword
+            repository = productionRepository   
         }
         else if ("test" == System.getenv("SCALA_ENV"))
         {
             logger.info("Running in testing mode")
-            var serviceURL = testingServiceURL
-            var username = testingUsername
-            var password = testingPassword
-            var repository = testingRepository   
+            serviceURL = testingServiceURL
+            username = testingUsername
+            password = testingPassword
+            repository = testingRepository   
         }
         else throw new RuntimeException("System variable SCALA_ENV must be set to \"main\" or \"test\"; check your build.sbt file")
         logger.info(s"Connecting to repository $repository at $serviceURL as $username")

@@ -18,13 +18,15 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
     
     override def beforeAll()
     {
+        assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
+        
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(false)
-        testCxn = graphDBMaterials.getConnection()
+        cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
         OntologyLoader.addOntologyFromUrl(gmCxn)
         
         helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")

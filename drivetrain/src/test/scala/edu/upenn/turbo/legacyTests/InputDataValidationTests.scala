@@ -17,13 +17,15 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
     
     override def beforeAll()
     {
+        assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
+        
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getConnection()
+        cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
         RunDrivetrainProcess.setInputNamedGraphsCache(false)
     }
     
@@ -34,7 +36,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
     
     before
     {
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
     }
     
     test("participant without psc")
@@ -48,7 +50,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
               turbo:TURBO_0010084 "part_expand" ;
               turbo:TURBO_0010282 turbo:TURBO_0000505 .
           }}"""
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -61,7 +63,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -76,7 +78,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
               turbo:TURBO_0010079 "4" ;
               turbo:TURBO_0010282 turbo:TURBO_0000505 .
           }}"""
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -89,7 +91,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -105,7 +107,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
               turbo:TURBO_0010282 turbo:TURBO_0000505 ;
               turbo:TURBO_0010084 turbo:thisShouldBeALiteral .
           }}"""
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -118,7 +120,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -134,7 +136,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
               turbo:TURBO_0010084 "part_expand" ;
               turbo:TURBO_0010282 turbo:notARealRegistry .
           }}"""
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -147,7 +149,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -162,7 +164,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
               turbo:TURBO_0010079 "4" ;
               turbo:TURBO_0010084 "part_expand" .
           }}"""
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -175,7 +177,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -186,7 +188,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
               <http://www.itmat.upenn.edu/biobank/part1>
               a turbo:TURBO_0010161 .
           }}"""
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -199,7 +201,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -214,7 +216,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
               turbo:TURBO_0010084 "part_expand" .
               
           }}"""
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -227,7 +229,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -241,7 +243,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
                   ontologies:TURBO_0010194 'tumorId' .
                   
           }}"""
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -254,7 +256,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -274,7 +276,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
                 turbo:TURBO_0010079 "4" .
                   
           }}"""
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -287,7 +289,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -308,7 +310,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
                 turbo:TURBO_0010079 "4" .
                   
           }}"""
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -321,7 +323,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -341,7 +343,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
                 turbo:TURBO_0010079 "4" .
                   
           }}"""
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -354,7 +356,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -376,7 +378,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
           }
           }
           """
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -389,7 +391,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (2)
     }
    
@@ -410,7 +412,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}
           """
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -423,7 +425,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (2)
     }
     
@@ -444,7 +446,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}
           """
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -457,7 +459,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph>{?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (2)
     }
     
@@ -470,7 +472,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
           ontologies:TURBO_0004602 'registry1' .
           }}
           """
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -483,7 +485,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -497,7 +499,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
           turbo:TURBO_0000628 "B" .
           }}
           """
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -510,7 +512,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -525,7 +527,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
           turbo:TURBO_0000629 "biobank" .
           }}
           """
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -538,7 +540,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -553,7 +555,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
           turbo:TURBO_0000629 "biobank" .
           }}
           """
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -566,7 +568,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }
     
@@ -581,7 +583,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
           turbo:TURBO_0000643 "enc_expand.csv" .
           }}
           """
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         try
         {
@@ -594,7 +596,7 @@ class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with
         }
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
         result.size should be (0)
     }*/
 }

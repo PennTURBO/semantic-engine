@@ -25,10 +25,6 @@ trait ProjectwideGlobals extends Enumeration
     var gmCxn: RepositoryConnection = null
     var gmRepoManager: RemoteRepositoryManager = null
     var gmRepository: Repository = null
-    
-    var testCxn: RepositoryConnection = null
-    var testRepoManager: RemoteRepositoryManager = null
-    var testRepository: Repository = null
 
      //properties from file are global variables
      val productionServiceURL = helper.retrieveUriPropertyFromFile("productionServiceURL")
