@@ -34,4 +34,4 @@ reinferRepo = true
 loadAdditionalOntologies = true
 bioportalApiKey = yourKey
 
-useMultipleThreads = false
+useMultipleThreads = true
