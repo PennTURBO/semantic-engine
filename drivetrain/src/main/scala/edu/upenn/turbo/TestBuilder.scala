@@ -12,7 +12,7 @@ import java.util.UUID
 
 class TestBuilder extends ProjectwideGlobals
 {
-    def buildTest(testCxn: RepositoryConnection, gmCxn: RepositoryConnection, process: String)
+    def buildTest(cxn: RepositoryConnection, gmCxn: RepositoryConnection, process: String)
     {
         val testFileName = helper.getPostfixfromURI(process) + "AutomaticSnapshotTest"
         val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + testFileName + ".scala")
@@ -27,19 +27,19 @@ class TestBuilder extends ProjectwideGlobals
         
         println(fullTripleSet)
         
-        update.updateSparql(testCxn, fullTripleSet)
+        update.updateSparql(cxn, fullTripleSet)
         val queryResultMax = RunDrivetrainProcess.runProcess(process)
         val outputNamedGraph = queryResultMax(process).defaultOutputGraph
 
-        val outputPredsMax = getOutputPredicates(testCxn, outputNamedGraph)
+        val outputPredsMax = getOutputPredicates(cxn, outputNamedGraph)
         
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         
-        update.updateSparql(testCxn, minimumTripleSet)
+        update.updateSparql(cxn, minimumTripleSet)
         val queryResultMin = RunDrivetrainProcess.runProcess(process)
-        val outputPredsMin = getOutputPredicates(testCxn, outputNamedGraph)
+        val outputPredsMin = getOutputPredicates(cxn, outputNamedGraph)
         
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         
         writeTestFile(testFileName, testFilePath, fullTripleSet, outputPredsMax, minimumTripleSet, outputPredsMin)
     }
@@ -69,12 +69,12 @@ class TestBuilder extends ProjectwideGlobals
         override def beforeAll()
         {
             graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true)
-            testCxn = graphDBMaterials.getTestConnection()
+            cxn = graphDBMaterials.getTestConnection()
             gmCxn = graphDBMaterials.getGmConnection()
-            helper.deleteAllTriplesInDatabase(testCxn)
+            helper.deleteAllTriplesInDatabase(cxn)
             
             RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-            RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+            RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
             RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
             RunDrivetrainProcess.setInputNamedGraphsCache(false)
         }
@@ -86,7 +86,7 @@ class TestBuilder extends ProjectwideGlobals
         
         before
         {
-            helper.deleteAllTriplesInDatabase(testCxn)
+            helper.deleteAllTriplesInDatabase(cxn)
         }
         
         """

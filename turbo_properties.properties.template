@@ -1,9 +1,16 @@
-serviceURL = your_db
-username = your_username
-password = your_password
+productionServiceURL = your_prd_db
+productionUsername = your_username
+productionPassword = your_password
+productionRepository = your_prd_repo
 
-productionRepository = your_prod_repo
-testingRepository = your_test_repo
+testingServiceURL = your_dev_db
+testingUsername = your_username
+testingPassword = your_password
+testingRepository = your_testing_repo
+
+modelServiceURL = your_db
+modelUsername = your_username
+modelPassword = your_password
 modelRepository = your_model_repo
 
 importOntologies = true
@@ -27,4 +34,4 @@ reinferRepo = true
 loadAdditionalOntologies = true
 bioportalApiKey = yourKey
 
-useMultipleThreads = false
+useMultipleThreads = true

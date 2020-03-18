@@ -18,13 +18,15 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     override def beforeAll()
     {
+        assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
+        
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "carnival_instructionSet.ttl", "turbo_valid_graph_specification.ttl")
-        testCxn = graphDBMaterials.getTestConnection()
+        cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
     }
     
     override def afterAll()
@@ -34,7 +36,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     before
     {
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
         helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
         
@@ -103,7 +105,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           }
           
           """
-        update.updateSparql(testCxn, insertData)
+        update.updateSparql(cxn, insertData)
     }
     
     test("run process normally")
@@ -320,7 +322,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         """
         
         update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(testCxn, insertData)
+        update.updateSparql(cxn, insertData)
         
         try
         {
@@ -378,7 +380,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         """
         
         update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(testCxn, insertData)
+        update.updateSparql(cxn, insertData)
         
         try
         {
@@ -436,7 +438,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         """
         
         update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(testCxn, insertData)
+        update.updateSparql(cxn, insertData)
         
         try
         {
@@ -483,7 +485,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         """
         
         update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(testCxn, insertData)
+        update.updateSparql(cxn, insertData)
         
         try
         {
@@ -556,7 +558,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(testCxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
         }
         catch
         {
@@ -601,7 +603,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(testCxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
         }
         catch
         {
@@ -668,7 +670,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(testCxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
             assert(1==2)
         }
         catch
@@ -744,7 +746,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(testCxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
         }
         catch
         {

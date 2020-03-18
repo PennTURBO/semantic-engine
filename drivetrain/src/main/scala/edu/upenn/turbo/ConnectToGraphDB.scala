@@ -64,23 +64,19 @@ object ConnectToGraphDB extends ProjectwideGlobals
         }
         else
         {
-            val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
-            repoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
+            val connProps = retrieveConnectionPropertiesBasedOnBuildEnvironment()
+            
+            val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(connProps("serviceURL"))
+            repoManager.setUsernameAndPassword(connProps("username"), connProps("password"))
             repoManager.initialize()
-            val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile("productionRepository"))
+            val repository: Repository = repoManager.getRepository(connProps("repository"))
             val cxn: RepositoryConnection = repository.getConnection()
             
-            val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
-            gmRepoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
+            val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(modelServiceURL)
+            gmRepoManager.setUsernameAndPassword(modelUsername, modelPassword)
             gmRepoManager.initialize()
-            val gmRepository: Repository = gmRepoManager.getRepository(helper.retrievePropertyFromFile("modelRepository"))
+            val gmRepository: Repository = gmRepoManager.getRepository(modelRepository)
             val gmCxn: RepositoryConnection = gmRepository.getConnection()
-            
-            val testRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
-            testRepoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
-            testRepoManager.initialize()
-            val testRepository: Repository = testRepoManager.getRepository(helper.retrievePropertyFromFile("testingRepository"))
-            val testCxn: RepositoryConnection = testRepository.getConnection()
             
             graphConnect.setConnection(cxn)
             graphConnect.setRepoManager(repoManager)
@@ -89,10 +85,6 @@ object ConnectToGraphDB extends ProjectwideGlobals
             graphConnect.setGmConnection(gmCxn)
             graphConnect.setGmRepoManager(gmRepoManager)
             graphConnect.setGmRepository(gmRepository)
-            
-            graphConnect.setTestConnection(testCxn)
-            graphConnect.setTestRepoManager(testRepoManager)
-            graphConnect.setTestRepository(testRepository)
         }
         graphConnect
     }
@@ -111,17 +103,13 @@ object ConnectToGraphDB extends ProjectwideGlobals
         val gmRepoManager = graphCxn.getGmRepoManager()
         val gmRepository = graphCxn.getGmRepository()
         
-        val testCxn = graphCxn.getTestConnection()
-        val testRepoManager = graphCxn.getTestRepoManager()
-        val testRepository = graphCxn.getTestRepository()
-        
         if (deleteAllTriples)
         {
-             if (!testCxn.isActive()) testCxn.begin()
+             if (!cxn.isActive()) cxn.begin()
              val deleteAll: String = "DELETE {?s ?p ?o} WHERE {?s ?p ?o .} "
-             val tupleDelete = testCxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
+             val tupleDelete = cxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
              tupleDelete.execute()
-             testCxn.commit()
+             cxn.commit()
         }
         if (cxn != null)
         {
@@ -134,12 +122,6 @@ object ConnectToGraphDB extends ProjectwideGlobals
             gmCxn.close()
             gmRepository.shutDown()
             gmRepoManager.shutDown()
-        }
-        if (testCxn != null)
-        {
-            testCxn.close()
-            testRepository.shutDown()
-            testRepoManager.shutDown()
         }
     }
     
@@ -155,9 +137,11 @@ object ConnectToGraphDB extends ProjectwideGlobals
         input.close()
         var optToReturn: Option[String] = None : Option[String]
         val proceed: Boolean = true
-        var requiredProperties: ArrayBuffer[String] = ArrayBuffer("serviceURL",
-            "password","username","productionRepository",
-            "ontologyURL", "modelRepository", "testingRepository", 
+        var requiredProperties: ArrayBuffer[String] = ArrayBuffer("productionServiceURL",
+            "productionPassword","productionUsername","productionRepository",
+            "testingServiceURL", "testingUsername", "testingPassword",
+            "testingRepository", "modelServiceURL", "modelUsername",
+            "modelPassword", "modelRepository", "ontologyURL",
             "processNamedGraph", "reinferRepo", "loadAdditionalOntologies",
             "instructionSetFile", "graphSpecificationFile", "defaultPrefix",
             "dataValidationMode", "errorLogFile", "expandedNamedGraph",
@@ -194,13 +178,14 @@ object ConnectToGraphDB extends ProjectwideGlobals
         optToReturn
     }
     
-    def getNewConnectionToRepoFromPropertiesKey(key: String): TurboGraphConnection =
+    def getNewConnectionToRepo(): TurboGraphConnection =
     {
-        assert (key == "modelRepository" || key == "productionRepository" || key == "testingRepository", s"Key $key is not a valid properties key")
-        val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(serviceURL)
-        repoManager.setUsernameAndPassword(helper.retrievePropertyFromFile("username"), helper.retrievePropertyFromFile("password"))
+        val connProps = retrieveConnectionPropertiesBasedOnBuildEnvironment()
+        
+        val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(connProps("serviceURL"))
+        repoManager.setUsernameAndPassword(connProps("username"), connProps("password"))
         repoManager.initialize()
-        val repository: Repository = repoManager.getRepository(helper.retrievePropertyFromFile(key))
+        val repository: Repository = repoManager.getRepository(connProps("repository"))
         val cxn: RepositoryConnection = repository.getConnection()
         
         val graphConnection = new TurboGraphConnection
@@ -209,5 +194,33 @@ object ConnectToGraphDB extends ProjectwideGlobals
         graphConnection.setRepository(repository)
         
         graphConnection
+    }
+    
+    def retrieveConnectionPropertiesBasedOnBuildEnvironment(): Map[String, String] =
+    {
+        var serviceURL = ""
+        var username = ""
+        var password = ""
+        var repository = ""
+        
+        if ("main" == System.getenv("SCALA_ENV"))
+        {
+            logger.info("Running in production mode")
+            serviceURL = productionServiceURL
+            username = productionUsername
+            password = productionPassword
+            repository = productionRepository   
+        }
+        else if ("test" == System.getenv("SCALA_ENV"))
+        {
+            logger.info("Running in testing mode")
+            serviceURL = testingServiceURL
+            username = testingUsername
+            password = testingPassword
+            repository = testingRepository   
+        }
+        else throw new RuntimeException("System variable SCALA_ENV must be set to \"main\" or \"test\"; check your build.sbt file")
+        logger.info(s"Connecting to repository $repository at $serviceURL as $username")
+        Map("serviceURL" -> serviceURL, "username" -> username, "password" -> password, "repository" -> repository)
     }
 }

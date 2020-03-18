@@ -196,13 +196,15 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
     
     override def beforeAll()
     {
+        assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
+        
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getTestConnection()
+        cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
         RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
         RunDrivetrainProcess.setInputNamedGraphsCache(false)
     }
@@ -214,7 +216,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
     
     before
     {
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
     }
     
     test("generated query matched expected query")
@@ -254,8 +256,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               turbo:TURBO_0010194 '456' ;
               turbo:TURBO_0010277 <http://transformunify.org/ontologies/TURBO_0010274> .
           }}"""
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false, "testingRepository")
+        update.updateSparql(cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false)
         
         val extraFields: String = s"""
           ASK {GRAPH <$expandedNamedGraph> {
@@ -339,14 +341,14 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
            filter (?tumorCridSymbol1 != ?tumorCridSymbol2)
           }
           """
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (true)
-        update.querySparqlBoolean(testCxn, extraFields).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, minimumPartRequirements).get should be (true)
+        update.querySparqlBoolean(cxn, extraFields).get should be (true)
+        update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
         
         val expectedPredicates = Array (
             
@@ -461,7 +463,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           
           """
         
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
     }
     
     test("participant with minimum required for expansion")
@@ -475,15 +477,15 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               turbo:TURBO_0010079 "4" ;
               turbo:TURBO_0010282 turbo:TURBO_0000505 .
           }}"""
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false, "testingRepository")
+        update.updateSparql(cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false)
         
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, minimumPartRequirements).get should be (true)
+        update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")        
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")        
         
         //compare expected predicates to received predicates
         //only checking predicates because many of the subjects/objects in expanded triples are unique UUIDs
@@ -537,7 +539,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           
           """
         
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
     }
     
     test("participant with text but not xsd values")
@@ -559,8 +561,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
               turbo:TURBO_0010079 "4" .
               
           }}"""
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false, "testingRepository")
+        update.updateSparql(cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false)
         
         val dateNoXsd: String = s"""
           ASK {GRAPH <$expandedNamedGraph> {
@@ -587,14 +589,14 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
         		?dataset a obo:IAO_0000100 .
           }}"""
         
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(testCxn, minimumPartRequirements).get should be (true)
-        update.querySparqlBoolean(testCxn, dateNoXsd).get should be (true)
-        update.querySparqlBoolean(testCxn, gidNoXsd).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, minimumPartRequirements).get should be (true)
+        update.querySparqlBoolean(cxn, dateNoXsd).get should be (true)
+        update.querySparqlBoolean(cxn, gidNoXsd).get should be (true)
+        update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
         
         val expectedPredicates = Array (
             "http://purl.obolibrary.org/obo/OBI_0000293", "http://purl.obolibrary.org/obo/IAO_0000136",
@@ -665,7 +667,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           
           """
         
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
     }
     
     test("expand homoSapiens with multiple identifiers - single dataset")
@@ -701,8 +703,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
             pmbb:shortcutCrid3 turbo:TURBO_0010282 <http://transformunify.org/ontologies/TURBO_0000505> .
 
           }}"""
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false, "testingRepository")
+        update.updateSparql(cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false)
     
         val output: String = s"""
           ASK {GRAPH <$expandedNamedGraph> {
@@ -794,15 +796,15 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           }
           """
         
-        update.querySparqlAndUnpackTuple(testCxn, oneConsenter, "homosapienscount")(0).split("\"")(1) should be ("1")
-        update.querySparqlAndUnpackTuple(testCxn, threeIdentifiers, "cridcount")(0).split("\"")(1) should be ("3")
-        update.querySparqlAndUnpackTuple(testCxn, threeSymbols, "symbolcount")(0).split("\"")(1) should be ("3")
+        update.querySparqlAndUnpackTuple(cxn, oneConsenter, "homosapienscount")(0).split("\"")(1) should be ("1")
+        update.querySparqlAndUnpackTuple(cxn, threeIdentifiers, "cridcount")(0).split("\"")(1) should be ("3")
+        update.querySparqlAndUnpackTuple(cxn, threeSymbols, "symbolcount")(0).split("\"")(1) should be ("3")
         
-        update.querySparqlBoolean(testCxn, output).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(cxn, output).get should be (true)
+        update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
         
         val expectedPredicates = Array (
             
@@ -901,7 +903,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           
           """
         
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
     }
     
     test("expand homoSapiens with multiple identifiers - multiple datasets")
@@ -943,8 +945,8 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           }
           
           }"""
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false, "testingRepository")
+        update.updateSparql(cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", dataValidationMode, false)
         
           val output: String = s"""
           ASK 
@@ -1028,9 +1030,9 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           #}
           """
         
-        update.querySparqlBoolean(testCxn, output).get should be (true)
+        update.querySparqlBoolean(cxn, output).get should be (true)
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
         result.size should be (69)
         
         val processMetaMultipleDatasets: String = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HomoSapiensExpansionProcess", 
@@ -1094,6 +1096,6 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
           
           """
         
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
     }
 }

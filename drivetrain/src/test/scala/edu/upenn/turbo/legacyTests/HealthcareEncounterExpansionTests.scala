@@ -474,13 +474,15 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
     
     override def beforeAll()
     {
+        assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
+        
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getTestConnection()
+        cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
         RunDrivetrainProcess.setInputNamedGraphsCache(false)
     }
     
@@ -491,7 +493,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
     
     before
     {
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
     }
     
     test("generated query matched expected query - healthcare expansion")
@@ -550,22 +552,22 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}
           """
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
+        update.updateSparql(cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
         
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareDiagnosis).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareMedications).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareMeasurements).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareEncounterDate).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -759,9 +761,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(testCxn, healthcareInputsOutputs).get should be (true)
-        update.querySparqlBoolean(testCxn, diagnosisInputsOutputs).get should be (true)
-        update.querySparqlBoolean(testCxn, medicationsInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, diagnosisInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, medicationsInputsOutputs).get should be (true)
     }
     
     test("hc encounter with minimum required for expansion")
@@ -782,22 +784,22 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}
           """
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
+        update.updateSparql(cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
         
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareMeasurements).get should be (false)
+        update.querySparqlBoolean(cxn, healthcareDiagnosis).get should be (false)
+        update.querySparqlBoolean(cxn, healthcareMedications).get should be (false)
+        update.querySparqlBoolean(cxn, healthcareEncounterDate).get should be (false)
+        update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -854,7 +856,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
     }
     
     test("hc encounter with text but not xsd values and only diag code without reg info")
@@ -891,10 +893,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}
           """
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
+        update.updateSparql(cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
         
         val diagnosisNoXsd: String = s"""
           ASK { GRAPH <$expandedNamedGraph> {
@@ -941,19 +943,19 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         		}}
         """
         
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(testCxn, healthcareMedicationsMinimum).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(testCxn, diagnosisNoXsd).get should be (true)
-        update.querySparqlBoolean(testCxn, dateNoXsd).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareMeasurements).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareDiagnosis).get should be (false)
+        update.querySparqlBoolean(cxn, healthcareMedicationsMinimum).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareEncounterDate).get should be (false)
+        update.querySparqlBoolean(cxn, diagnosisNoXsd).get should be (true)
+        update.querySparqlBoolean(cxn, dateNoXsd).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -1125,9 +1127,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(testCxn, healthcareInputsOutputs).get should be (true)
-        update.querySparqlBoolean(testCxn, diagnosisInputsOutputs).get should be (true)
-        update.querySparqlBoolean(testCxn, medicationsInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, diagnosisInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, medicationsInputsOutputs).get should be (true)
     }
     
     test("ensure diagnosis info stays together with duplicate hc enc URI")
@@ -1165,10 +1167,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}"""
         
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
+        update.updateSparql(cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
         
         val checkDiag: String = s"""
           Ask
@@ -1206,12 +1208,12 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               }
           }
           """
-         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
-         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
-         update.querySparqlBoolean(testCxn, checkDiag).get should be (true)
-         update.querySparqlAndUnpackTuple(testCxn, countDiag, "diagnosisCount")(0) should startWith ("\"2")
-         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
-         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+         update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
+         update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
+         update.querySparqlBoolean(cxn, checkDiag).get should be (true)
+         update.querySparqlAndUnpackTuple(cxn, countDiag, "diagnosisCount")(0) should startWith ("\"2")
+         update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
+         update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val healthcareInputsOutputs: String = s"""
           
@@ -1281,8 +1283,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(testCxn, healthcareInputsOutputs).get should be (true)
-        update.querySparqlBoolean(testCxn, diagnosisInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, diagnosisInputsOutputs).get should be (true)
     }
     
     test("ensure medication info stays together with duplicate hc enc URI")
@@ -1318,10 +1320,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}"""
         
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
+        update.updateSparql(cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
         
         val checkDiag: String = s"""
           Ask
@@ -1366,13 +1368,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               }
           }
           """
-         update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
-         update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
-         update.querySparqlBoolean(testCxn, checkDiag).get should be (true)
-         update.querySparqlAndUnpackTuple(testCxn, countDiag, "prescriptCount")(0) should startWith ("\"2")
-         update.querySparqlAndUnpackTuple(testCxn, countDiag, "medCridCount")(0) should startWith ("\"2")
-         update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
-         update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+         update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
+         update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
+         update.querySparqlBoolean(cxn, checkDiag).get should be (true)
+         update.querySparqlAndUnpackTuple(cxn, countDiag, "prescriptCount")(0) should startWith ("\"2")
+         update.querySparqlAndUnpackTuple(cxn, countDiag, "medCridCount")(0) should startWith ("\"2")
+         update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
+         update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val healthcareInputsOutputs: String = s"""
           ASK 
@@ -1439,13 +1441,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(testCxn, healthcareInputsOutputs).get should be (true)
-        update.querySparqlBoolean(testCxn, medicationsInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, medicationsInputsOutputs).get should be (true)
     }
     
     test("expand hc encs over multiple named graphs")
     {
-        logger.info("starting triples count: " + helper.countTriplesInDatabase(testCxn))
+        logger.info("starting triples count: " + helper.countTriplesInDatabase(cxn))
         val insert1: String = s"""
           INSERT DATA
           {
@@ -1529,14 +1531,14 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               }
           }
           """
-        update.updateSparql(testCxn, insert1)
-        logger.info("triples count after insert: " + helper.countTriplesInDatabase(testCxn))
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false, "testingRepository")
-        logger.info("triples count after hc process: " + helper.countTriplesInDatabase(testCxn))
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false, "testingRepository")
-        logger.info("triples count after diagnoses process: " + helper.countTriplesInDatabase(testCxn))
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false, "testingRepository")
-        logger.info("triples count after meds process: " + helper.countTriplesInDatabase(testCxn))
+        update.updateSparql(cxn, insert1)
+        logger.info("triples count after insert: " + helper.countTriplesInDatabase(cxn))
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
+        logger.info("triples count after hc process: " + helper.countTriplesInDatabase(cxn))
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
+        logger.info("triples count after diagnoses process: " + helper.countTriplesInDatabase(cxn))
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
+        logger.info("triples count after meds process: " + helper.countTriplesInDatabase(cxn))
         val datasetCheck1: String = s"""
           ASK
           {
@@ -1690,20 +1692,20 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                                                       "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts3",
                                                       "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts4"))
         
-        update.querySparqlBoolean(testCxn, processMetaMultipleDatasets).get should be (true)
-        update.querySparqlAndUnpackTuple(testCxn, thereShouldOnlyBeOneEncounter, "enc").size should be (1)
-        update.querySparqlAndUnpackTuple(testCxn, thereShouldBeFiveDatasets, "dataset").size should be (5)
-        update.querySparqlBoolean(testCxn, healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareDiagnosis).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareMedications).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareMeasurements).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareEncounterDate).get should be (true)
-        update.querySparqlBoolean(testCxn, healthcareSymbolAndRegistry).get should be (true)
-        update.querySparqlBoolean(testCxn, datasetCheck1).get should be (true)
-        update.querySparqlBoolean(testCxn, datasetCheck2).get should be (true)
-        update.querySparqlBoolean(testCxn, datasetCheck3).get should be (true)
-        update.querySparqlBoolean(testCxn, datasetCheck4).get should be (true)
-        update.querySparqlBoolean(testCxn, datasetCheck5).get should be (true)
+        update.querySparqlBoolean(cxn, processMetaMultipleDatasets).get should be (true)
+        update.querySparqlAndUnpackTuple(cxn, thereShouldOnlyBeOneEncounter, "enc").size should be (1)
+        update.querySparqlAndUnpackTuple(cxn, thereShouldBeFiveDatasets, "dataset").size should be (5)
+        update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareDiagnosis).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareMedications).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareMeasurements).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareEncounterDate).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
+        update.querySparqlBoolean(cxn, datasetCheck1).get should be (true)
+        update.querySparqlBoolean(cxn, datasetCheck2).get should be (true)
+        update.querySparqlBoolean(cxn, datasetCheck3).get should be (true)
+        update.querySparqlBoolean(cxn, datasetCheck4).get should be (true)
+        update.querySparqlBoolean(cxn, datasetCheck5).get should be (true)
         
         val healthcareInputsOutputs: String = s"""
           
@@ -1823,9 +1825,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(testCxn, healthcareInputsOutputs).get should be (true)
-        update.querySparqlBoolean(testCxn, diagnosisInputsOutputs).get should be (true)
-        update.querySparqlBoolean(testCxn, medicationsInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, healthcareInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, diagnosisInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, medicationsInputsOutputs).get should be (true)
     }
     
     test("diagnosis not expanded by itself")
@@ -1840,12 +1842,12 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                       turbo:TURBO_0010013 "true"^^xsd:Boolean ;
                       turbo:TURBO_0010014 "1"^^xsd:Integer . }}
          """
-       update.updateSparql(testCxn, insert)
+       update.updateSparql(cxn, insert)
        
        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", "none", false)
        
        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-       val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+       val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
        result.size should be (0)
     }
     
@@ -1859,12 +1861,12 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                       turbo:TURBO_0005612 turbo:someDrug ;
                       turbo:TURBO_0005601 "3" . }}
          """
-       update.updateSparql(testCxn, insert)
+       update.updateSparql(cxn, insert)
        
        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", "none", false)
        
        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-       val result = update.querySparqlAndUnpackTuple(testCxn, count, "s")
+       val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
        result.size should be (0)
     }
 }

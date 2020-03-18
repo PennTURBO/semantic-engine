@@ -90,13 +90,15 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
       
       override def beforeAll()
       {
+          assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
+          
           graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-          testCxn = graphDBMaterials.getTestConnection()
+          cxn = graphDBMaterials.getConnection()
           gmCxn = graphDBMaterials.getGmConnection()
-          helper.deleteAllTriplesInDatabase(testCxn)
+          helper.deleteAllTriplesInDatabase(cxn)
           
           RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-          RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+          RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
       }
       
       override def afterAll()
@@ -106,7 +108,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
       
       before
       {
-          helper.deleteAllTriplesInDatabase(testCxn)
+          helper.deleteAllTriplesInDatabase(cxn)
       }
       
       test("generated query matched expected query - biobank")
@@ -126,8 +128,8 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
                   }
                 }
             """
-          update.updateSparql(testCxn, insert)
-          RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false, "testingRepository")
+          update.updateSparql(cxn, insert)
+          RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false)
           
            val check: String = s"""
             ASK
@@ -168,8 +170,8 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
             }}
             """
           
-      update.querySparqlBoolean(testCxn, check).get should be (true)
-      update.querySparqlBoolean(testCxn, processMetaBiobank).get should be (true)
+      update.querySparqlBoolean(cxn, check).get should be (true)
+      update.querySparqlBoolean(cxn, processMetaBiobank).get should be (true)
           
       val processInputsOutputs: String = s"""
         
@@ -211,10 +213,10 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
         
         """
       
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
           
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
       
         var expectedPredicates: ArrayBuffer[String] = ArrayBuffer(
           "http://purl.obolibrary.org/obo/RO_0000056", "http://purl.obolibrary.org/obo/RO_0000086",
@@ -244,8 +246,8 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
                 }
               }
           """
-        update.updateSparql(testCxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false, "testingRepository")
+        update.updateSparql(cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false)
         
         val check: String = s"""
           ASK
@@ -284,9 +286,9 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
               ?s a ?heightOrWeight . }
           """
         
-        update.querySparqlBoolean(testCxn, check).get should be (true)
-        update.querySparqlBoolean(testCxn, noHeightWeightBmiOrDate).get should be (false)
-        update.querySparqlBoolean(testCxn, processMetaBiobank).get should be (true)
+        update.querySparqlBoolean(cxn, check).get should be (true)
+        update.querySparqlBoolean(cxn, noHeightWeightBmiOrDate).get should be (false)
+        update.querySparqlBoolean(cxn, processMetaBiobank).get should be (true)
         
         val processInputsOutputs: String = s"""
         
@@ -315,10 +317,10 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
         
         """
       
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
       
         var expectedPredicates: ArrayBuffer[String] = ArrayBuffer(
           "http://purl.obolibrary.org/obo/RO_0000056", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
