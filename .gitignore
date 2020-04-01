@@ -12,3 +12,6 @@ turbo_errorlog.txt
 wes_pds__med_standard.csv
 prep4solr_search_train_classsvm.R
 unique4solr.csv
+*.orig
+test-result/
+*.s2r
