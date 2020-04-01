@@ -194,7 +194,7 @@ pmbb:DiagnosisExpansionProcess
 . 
 pmbb:MedicationExpansionProcess
   a turbo:TURBO_0010354 ;
-  #drivetrain:precedes pmbb:LossOfFunctionExpansionProcess ;
+  drivetrain:precedes pmbb:LossOfFunctionExpansionProcess ;
   drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   drivetrain:hasRequiredInput ontologies:shortcutEncounterToPrescription ;
@@ -217,47 +217,47 @@ pmbb:MedicationExpansionProcess
   drivetrain:hasOutput drivetrain:EncHsoRx ;
   drivetrain:hasOutput drivetrain:RxAboutPat ;
 .  
-#pmbb:LossOfFunctionExpansionProcess
-#  drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
-#  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
-#  a ontologies:TURBO_0010354 ;
-#  drivetrain:hasOutput ontologies:shortcutAlleleToExpandedAllele ; 
-#  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbol ;
-#  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolFirstPart ;
-#  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolSecondPart ;
-#  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolUri ;
-#  drivetrain:hasRequiredInput ontologies:shortcutAlleleToShortcutAlleleRegistryUri ;
-#  drivetrain:hasRequiredInput ontologies:shortcutAlleleToShortcutBiobankEncounter ;
-#  drivetrain:hasRequiredInput ontologies:shortcutAlleleToZygosityIntegerValue ;
-#  drivetrain:hasRequiredInput ontologies:shortcutAlleleToZygosityValueUri ;
-#  drivetrain:hasRequiredInput ontologies:shortcutEncounterToExpandedBiobankEncounter ;
-#  drivetrain:hasRequiredInput drivetrain:PatientHasPuiRole ;
-#  drivetrain:hasRequiredInput drivetrain:BiobankEncounterRealizesPuiRole ;
-#  drivetrain:hasOutput drivetrain:DNAExtractionProcessHasOutputDNAExtract ;
-#  drivetrain:hasOutput drivetrain:DNAExtractionProcessHasInputSpecimen ;
-#  drivetrain:hasOutput drivetrain:DNAhasGrainDNAExtract ;
-#  drivetrain:hasOutput drivetrain:DNAIsGenomeOfHomoSapiens ;
-#  drivetrain:hasOutput drivetrain:alleleIsAboutDNA ;
-#  drivetrain:hasOutput drivetrain:alleleHasGeneSymbolGeneSymbolPrefix ;
-#  drivetrain:hasOutput drivetrain:alleleHasGeneSymbolGeneSymbolSuffix ;
-#  drivetrain:hasOutput drivetrain:alleleMentionsGeneSymbolUri ;
-#  drivetrain:hasOutput drivetrain:alleleHasRepresentation ;
-#  drivetrain:hasOutput drivetrain:alleleHasValueSpecZygosityUri ;
-#  drivetrain:hasOutput drivetrain:biobankEncounterHasPartCollectionProcess ;
-#  drivetrain:hasOutput drivetrain:collectionProcessPartOfBiobankEncounter ;
-#  drivetrain:hasOutput drivetrain:collectionProcessHasInputHomoSapiens ;
-#  drivetrain:hasOutput drivetrain:collectionProcessHasOutputSpecimen ;
-#  drivetrain:hasOutput drivetrain:exomeSequenceProcessHasInputDNAExtract ;
-#  drivetrain:hasOutput drivetrain:exomeSequenceProcessHasOutputSequenceData ;
-#  drivetrain:hasOutput drivetrain:formProcessHasOutputAllele ;
-#  drivetrain:hasOutput drivetrain:formProcessHasInputSequenceData ;
-#  drivetrain:hasOutput drivetrain:genomeCridRegistryDenoterPartOfGenomeCrid ;
-#  drivetrain:hasOutput drivetrain:genomeCridSymbolPartOfGenomeCrid ;
-#  drivetrain:hasOutput drivetrain:genomeCridHasPartGenomeCridSymbol ;
-#  drivetrain:hasOutput drivetrain:genomeCridHasPartGenomeCridRegDen ;
-#  drivetrain:hasOutput drivetrain:genomeCridDenotesSpecimen ;
-#  drivetrain:hasOutput drivetrain:genomeSymbolHasRepresentation ;
-#.
+pmbb:LossOfFunctionExpansionProcess
+  drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  a ontologies:TURBO_0010354 ;
+  drivetrain:hasOutput ontologies:shortcutAlleleToExpandedAllele ; 
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbol ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolFirstPart ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolSecondPart ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolUri ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToShortcutAlleleRegistryUri ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToShortcutBiobankEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToZygosityIntegerValue ;
+  drivetrain:hasRequiredInput ontologies:shortcutAlleleToZygosityValueUri ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToExpandedBiobankEncounter ;
+  drivetrain:hasRequiredInput drivetrain:PatientHasPuiRole ;
+  drivetrain:hasRequiredInput drivetrain:BiobankEncounterRealizesPuiRole ;
+  drivetrain:hasOutput drivetrain:DNAExtractionProcessHasOutputDNAExtract ;
+  drivetrain:hasOutput drivetrain:DNAExtractionProcessHasInputSpecimen ;
+  drivetrain:hasOutput drivetrain:DNAhasGrainDNAExtract ;
+  drivetrain:hasOutput drivetrain:DNAIsGenomeOfHomoSapiens ;
+  drivetrain:hasOutput drivetrain:alleleIsAboutDNA ;
+  drivetrain:hasOutput drivetrain:alleleHasGeneSymbolGeneSymbolPrefix ;
+  drivetrain:hasOutput drivetrain:alleleHasGeneSymbolGeneSymbolSuffix ;
+  drivetrain:hasOutput drivetrain:alleleMentionsGeneSymbolUri ;
+  drivetrain:hasOutput drivetrain:alleleHasRepresentation ;
+  drivetrain:hasOutput drivetrain:alleleHasValueSpecZygosityUri ;
+  drivetrain:hasOutput drivetrain:biobankEncounterHasPartCollectionProcess ;
+  drivetrain:hasOutput drivetrain:collectionProcessPartOfBiobankEncounter ;
+  drivetrain:hasOutput drivetrain:collectionProcessHasInputHomoSapiens ;
+  drivetrain:hasOutput drivetrain:collectionProcessHasOutputSpecimen ;
+  drivetrain:hasOutput drivetrain:exomeSequenceProcessHasInputDNAExtract ;
+  drivetrain:hasOutput drivetrain:exomeSequenceProcessHasOutputSequenceData ;
+  drivetrain:hasOutput drivetrain:formProcessHasOutputAllele ;
+  drivetrain:hasOutput drivetrain:formProcessHasInputSequenceData ;
+  drivetrain:hasOutput drivetrain:genomeCridRegistryDenoterPartOfGenomeCrid ;
+  drivetrain:hasOutput drivetrain:genomeCridSymbolPartOfGenomeCrid ;
+  drivetrain:hasOutput drivetrain:genomeCridHasPartGenomeCridSymbol ;
+  drivetrain:hasOutput drivetrain:genomeCridHasPartGenomeCridRegDen ;
+  drivetrain:hasOutput drivetrain:genomeCridDenotesSpecimen ;
+  drivetrain:hasOutput drivetrain:genomeSymbolHasRepresentation ;
+.
 drivetrain:EncounterMeasurementsOptionalGroup
   a drivetrain:TurboGraphOptionalGroup ;
 .

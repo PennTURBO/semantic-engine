@@ -84,9 +84,10 @@ class TurboMultiuseClass extends Enumeration with Matchers
          update.updateSparql(cxn, deleteAll)
      }
     
-    def genTurboIRI(): String =
+    def genTurboIRI(seed: String = ""): String =
     {
-        defaultPrefix + UUID.randomUUID().toString().replaceAll("-", "")
+        if (seed == "") defaultPrefix + UUID.randomUUID().toString().replaceAll("-", "")
+        else defaultPrefix + seed.hashCode()
     }
     
     /**

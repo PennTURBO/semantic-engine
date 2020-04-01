@@ -21,77 +21,80 @@ object DrivetrainDriver extends ProjectwideGlobals {
       else
       {
           assert("main" == System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"main\"; check your build.sbt file")
-          try
+          if (args(0) == "buildTest") buildAutomatedTest(args)
+          else
           {
-              graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
+              try
+              {   
+                  graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
               
-              cxn = graphDBMaterials.getConnection()
-              repoManager = graphDBMaterials.getRepoManager()
-              repository = graphDBMaterials.getRepository()
+                  gmCxn = graphDBMaterials.getGmConnection()
+                  gmRepoManager = graphDBMaterials.getGmRepoManager()
+                  gmRepository = graphDBMaterials.getGmRepository() 
               
-              gmCxn = graphDBMaterials.getGmConnection()
-              gmRepoManager = graphDBMaterials.getGmRepoManager()
-              gmRepository = graphDBMaterials.getGmRepository() 
-              
-              val instantiationURI = defaultPrefix + UUID.randomUUID().toString().replaceAll("-", "")
-              
-              if (cxn == null || gmCxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
-              else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.NQUADS)
-              else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
-              else if (args(0) == "loadTestTurboOntology") OntologyLoader.addOntologyFromUrl(cxn)
-              else if (args(0) == "updateModelOntology") OntologyLoader.addOntologyFromUrl(gmCxn)
-              else if (args(0) == "updateModel") updateModel(gmCxn)
-              else if (args(0) == "buildTest") buildAutomatedTest(gmCxn, cxn, args)
-              else if (args(0) == "all")
-              {
-                  clearProductionNamedGraphs(cxn)
-                  runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
-              }
-              else if (args(0) == "printQuery")
-              {
-                  if (args.size < 2) logger.info("Must provide a process URI after printQuery declaration")
-                  else 
+                  cxn = graphDBMaterials.getConnection()
+                  repoManager = graphDBMaterials.getRepoManager()
+                  repository = graphDBMaterials.getRepository()
+                  
+                  val instantiationURI = defaultPrefix + UUID.randomUUID().toString().replaceAll("-", "")
+                  
+                  if (cxn == null || gmCxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
+                  else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.NQUADS)
+                  else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
+                  else if (args(0) == "loadTestTurboOntology") OntologyLoader.addOntologyFromUrl(cxn)
+                  else if (args(0) == "updateModelOntology") OntologyLoader.addOntologyFromUrl(gmCxn)
+                  else if (args(0) == "updateModel") updateModel(gmCxn)
+                  else if (args(0) == "all")
                   {
-                      RunDrivetrainProcess.setGlobalUUID(globalUUID)
-                      RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-                      RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-                      GraphModelValidator.checkAcornFilesForMissingTypes()
-                      if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
-                      val query = RunDrivetrainProcess.createPatternMatchQuery(args(1))
-                      if (query != null)
+                      clearProductionNamedGraphs(cxn)
+                      runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
+                  }
+                  else if (args(0) == "printQuery")
+                  {
+                      if (args.size < 2) logger.info("Must provide a process URI after printQuery declaration")
+                      else 
                       {
-                          logger.info("Here is the SPARQL statement for the process you requested.")
-                          logger.info(query.getQuery()) 
+                          RunDrivetrainProcess.setGlobalUUID(globalUUID)
+                          RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+                          RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+                          GraphModelValidator.checkAcornFilesForMissingTypes()
+                          if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
+                          val query = RunDrivetrainProcess.createPatternMatchQuery(args(1))
+                          if (query != null)
+                          {
+                              logger.info("Here is the SPARQL statement for the process you requested.")
+                              logger.info(query.getQuery()) 
+                          }
                       }
                   }
+                  else
+                  {
+                      RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+                      RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+                      GraphModelValidator.validateProcessSpecification(helper.getProcessNameAsUri(args(0)))
+                      
+                      //load the TURBO ontology
+                      //OntologyLoader.addOntologyFromUrl(cxn)
+                      clearProductionNamedGraphs(cxn)
+                      
+                      logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
+                      RunDrivetrainProcess.setGlobalUUID(globalUUID)
+                      GraphModelValidator.checkAcornFilesForMissingTypes()
+                      if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
+                      val thisProcess = helper.getProcessNameAsUri(args(0))
+                      RunDrivetrainProcess.runProcess(thisProcess)   
+                  }
               }
-              else
+              catch
               {
-                  RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-                  RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-                  GraphModelValidator.validateProcessSpecification(helper.getProcessNameAsUri(args(0)))
-                  
-                  //load the TURBO ontology
-                  //OntologyLoader.addOntologyFromUrl(cxn)
-                  clearProductionNamedGraphs(cxn)
-                  
-                  logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
-                  RunDrivetrainProcess.setGlobalUUID(globalUUID)
-                  GraphModelValidator.checkAcornFilesForMissingTypes()
-                  if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
-                  val thisProcess = helper.getProcessNameAsUri(args(0))
-                  RunDrivetrainProcess.runProcess(thisProcess)   
+                  case e: RuntimeException => 
+                    logger.info("exception thrown:" + e.printStackTrace())
+                    ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
               }
-          }
-          catch
-          {
-              case e: RuntimeException => 
-                logger.info("exception thrown:" + e.printStackTrace())
-                ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
-          }
-          finally 
-          {
-              ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
+              finally 
+              {
+                  ConnectToGraphDB.closeGraphConnection(graphDBMaterials, false)
+              }
           }
       }
   }
@@ -200,14 +203,25 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
   }
   
-  def buildAutomatedTest(gmCxn: RepositoryConnection, cxn: RepositoryConnection, args: Array[String])
+  def buildAutomatedTest(args: Array[String])
   {
       assert (args.size > 1, "No process specified for Automated Test Builder; please specify URI")
+      logger.info("Building test for process " + args(1))
+      // get connection to test repo
+      val graphDbTestConnectionDetails = ConnectToGraphDB.getTestRepositoryConnection()
+      val testCxn = graphDbTestConnectionDetails.getConnection()
+      val gmCxn = graphDbTestConnectionDetails.getGmConnection()
+      
+      RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
       RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-      RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+      RunDrivetrainProcess.setMultithreading(false)
+      helper.deleteAllTriplesInDatabase(testCxn)
+      
       val process = helper.getProcessNameAsUri(args(1))
       GraphModelValidator.validateProcessSpecification(process)
-      def testBuilder = new TestBuilder()
-      testBuilder.buildTest(cxn, gmCxn, process)
+      val testBuilder = new TestBuilder()
+      testBuilder.buildTest(testCxn, gmCxn, process)
+     
+      ConnectToGraphDB.closeGraphConnection(graphDbTestConnectionDetails)
   }
 }

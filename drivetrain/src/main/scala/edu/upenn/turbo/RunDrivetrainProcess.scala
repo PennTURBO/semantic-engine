@@ -21,6 +21,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     var inputSet = new HashSet[Value]
     var inputProcessSet = new HashSet[String]
     var typeMap = new HashMap[String,Value]
+    var multithread = useMultipleThreads
     
     var useInputNamedGraphsCache: Boolean = true
     
@@ -29,6 +30,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     def setGlobalUUID(globalUUID: String)
     {
         this.localUUID = globalUUID
+    }
+    def setMultithreading(multithread: Boolean)
+    {
+        this.multithread = multithread
     }
     def setGraphModelConnection(gmCxn: RepositoryConnection)
     {
@@ -90,7 +95,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 }
                 else logger.info("\tInput Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
-                if (useMultipleThreads)
+                if (multithread)
                 {
                     logger.info("Multiple threads enabled")
                     val parColl = inputNamedGraphsList.par
@@ -100,7 +105,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 else 
                 {
                     logger.info("Multiple threads disabled")
-                    inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause))
+                    inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause, cxn))
                 }
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
@@ -133,18 +138,22 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         processQueryMap
     }
     
-    def submitQuery(inputNamedGraph: String, primaryQuery: PatternMatchQuery, genericWhereClause: String)
+    def submitQuery(inputNamedGraph: String, primaryQuery: PatternMatchQuery, genericWhereClause: String, paramCxn: RepositoryConnection = null)
     {
         logger.info("Now running on input named graph: " + inputNamedGraph)
-        val graphConnection = ConnectToGraphDB.getNewConnectionToRepo()
-        val localCxn = graphConnection.cxn
         var whereClauseString = primaryQuery.whereClause
         whereClauseString = whereClauseString.replaceAll(primaryQuery.defaultInputGraph, inputNamedGraph)
         val localQuery = primaryQuery.deleteClause + "\n" + primaryQuery.insertClause + "\n" + whereClauseString + primaryQuery.bindClause + "}"
-        //logger.info(localQuery)
-        update.updateSparql(localCxn, localQuery)
-        ConnectToGraphDB.closeGraphConnection(graphConnection)
-        //logger.info("finished named graph: " + inputNamedGraph)
+        if (paramCxn == null)
+        {
+            val graphConnection = ConnectToGraphDB.getNewConnectionToRepo()
+            val localCxn = graphConnection.cxn
+            //logger.info(localQuery)
+            update.updateSparql(localCxn, localQuery)
+            ConnectToGraphDB.closeGraphConnection(graphConnection)
+            //logger.info("finished named graph: " + inputNamedGraph) 
+        }
+        else update.updateSparql(paramCxn, localQuery)
     }
 
     def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()): PatternMatchQuery =
@@ -206,7 +215,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
        
        val query = s"""
          
-         Select $variablesToSelect
+         Select distinct $variablesToSelect
          
          Where
          {
@@ -293,6 +302,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?$OBJECT a ?$GRAPHLITERALTYPE .
                   ?$GRAPHLITERALTYPE rdfs:subClassOf* drivetrain:LiteralResourceList .
+                  minus
+                  {
+                      ?OBJECT a ?GRAPHLITERALTYPE2 .
+                      ?GRAPHLITERALTYPE2 rdfs:subClassOf+ ?GRAPHLITERALTYPE .
+                  }
                   BIND (true AS ?$OBJECTALITERAL)
               }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
@@ -310,7 +324,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
        
        val query = s"""
          
-         Select $variablesToSelect
+         Select distinct $variablesToSelect
          
          Where
          {
@@ -361,7 +375,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
        
        val query = s"""
          
-         Select $variablesToSelect
+         Select distinct $variablesToSelect
          Where
          {
               Values ?INPUTTO {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}

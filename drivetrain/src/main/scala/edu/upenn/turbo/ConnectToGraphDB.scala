@@ -195,6 +195,37 @@ object ConnectToGraphDB extends ProjectwideGlobals
         
         graphConnection
     }
+
+    def getTestRepositoryConnection(): TurboGraphConnection =
+    {
+        logger.info(s"Connecting to repository $testingRepository at $testingServiceURL as $testingUsername")
+
+        val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(testingServiceURL)
+        repoManager.setUsernameAndPassword(testingUsername, testingPassword)
+        repoManager.initialize()
+        val repository: Repository = repoManager.getRepository(testingRepository)
+        val testCxn: RepositoryConnection = repository.getConnection()
+        
+        val graphConnection = new TurboGraphConnection
+        graphConnection.setConnection(testCxn)
+        graphConnection.setRepoManager(repoManager)
+        graphConnection.setRepository(repository)
+        
+        val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(modelServiceURL)
+        gmRepoManager.setUsernameAndPassword(modelUsername, modelPassword)
+        gmRepoManager.initialize()
+        val gmRepository: Repository = gmRepoManager.getRepository(modelRepository)
+        val gmCxn: RepositoryConnection = gmRepository.getConnection()
+        
+        graphConnection.setGmConnection(gmCxn)
+        graphConnection.setGmRepoManager(gmRepoManager)
+        graphConnection.setGmRepository(gmRepository)
+        
+        DrivetrainDriver.updateModel(graphConnection.getGmConnection())
+        OntologyLoader.addOntologyFromUrl(graphConnection.getGmConnection())
+               
+        graphConnection
+    }
     
     def retrieveConnectionPropertiesBasedOnBuildEnvironment(): Map[String, String] =
     {

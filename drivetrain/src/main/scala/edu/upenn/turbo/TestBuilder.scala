@@ -14,10 +14,10 @@ class TestBuilder extends ProjectwideGlobals
 {
     def buildTest(cxn: RepositoryConnection, gmCxn: RepositoryConnection, process: String)
     {
-        val testFileName = helper.getPostfixfromURI(process) + "AutomaticSnapshotTest"
+        val testFileName = helper.getPostfixfromURI(process) + "SnapshotTest"
         val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + testFileName + ".scala")
         testFilePath.getParentFile().mkdirs()
-        assert(!testFilePath.exists(), s"File $testFileName.scala already exists")
+        //assert(!testFilePath.exists(), s"File $testFileName.scala already exists")
 
         val inputs = RunDrivetrainProcess.getInputs(process)
         
@@ -29,8 +29,7 @@ class TestBuilder extends ProjectwideGlobals
         
         update.updateSparql(cxn, fullTripleSet)
         val queryResultMax = RunDrivetrainProcess.runProcess(process)
-        val outputNamedGraph = queryResultMax(process).defaultOutputGraph
-
+        val outputNamedGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(queryResultMax(process).defaultOutputGraph)
         val outputPredsMax = getOutputPredicates(cxn, outputNamedGraph)
         
         helper.deleteAllTriplesInDatabase(cxn)
@@ -40,68 +39,115 @@ class TestBuilder extends ProjectwideGlobals
         val outputPredsMin = getOutputPredicates(cxn, outputNamedGraph)
         
         helper.deleteAllTriplesInDatabase(cxn)
+
+        logger.info("Writing test file...")
         
-        writeTestFile(testFileName, testFilePath, fullTripleSet, outputPredsMax, minimumTripleSet, outputPredsMin)
+        writeTestFile(testFileName, process, outputNamedGraph, testFilePath, fullTripleSet, outputPredsMax, 
+                      minimumTripleSet, outputPredsMin)
+
+        logger.info("Test created in src//test//scala//edu//upenn//turbo//AutoGenTests//")
+
     }
     
-    def writeTestFile(testFileName: String, testFilePath: File, requiredInputTriples: String, outputPredsMax: ArrayBuffer[String], minimumInputTriples: String, outputPredsMin: ArrayBuffer[String])
+    def writeTestFile(testFileName: String, process: String, outputNamedGraph: String, 
+                      testFilePath: File, maximumInputTriples: String, outputPredsMax: ArrayBuffer[String], 
+                      minimumInputTriples: String, outputPredsMin: ArrayBuffer[String])
     {
         val packageString = "package edu.upenn.turbo\n"
 
-        val imports = """
-            import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
-            import org.eclipse.rdf4j.repository.Repository
-            import org.eclipse.rdf4j.repository.RepositoryConnection
-            import org.eclipse.rdf4j.model.IRI
-            import org.scalatest.BeforeAndAfter
-            import org.scalatest._
-            import scala.collection.mutable.ArrayBuffer
-            import java.util.UUID
-            
-            
-        """
+val imports = """
+import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
+import org.eclipse.rdf4j.repository.Repository
+import org.eclipse.rdf4j.repository.RepositoryConnection
+import org.eclipse.rdf4j.model.IRI
+import org.scalatest.BeforeAndAfter
+import org.scalatest._
+import scala.collection.mutable.ArrayBuffer
+import java.util.UUID    
+"""
 
         val classAssertion = s"class $testFileName extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers {\n"
         
         val clearTestingRepo = "val clearTestingRepositoryAfterRun: Boolean = false\n"
 
-        val beforesAndAfters = """
-        override def beforeAll()
-        {
-            graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true)
-            cxn = graphDBMaterials.getTestConnection()
-            gmCxn = graphDBMaterials.getGmConnection()
-            helper.deleteAllTriplesInDatabase(cxn)
-            
-            RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-            RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-            RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
-            RunDrivetrainProcess.setInputNamedGraphsCache(false)
-        }
+val beforesAndAfters = """
+override def beforeAll()
+{
+    graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true)
+    cxn = graphDBMaterials.getConnection()
+    gmCxn = graphDBMaterials.getGmConnection()
+    helper.deleteAllTriplesInDatabase(cxn)
+    
+    RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+    RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+    RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+    RunDrivetrainProcess.setInputNamedGraphsCache(false)
+}
 
-        override def afterAll()
-        {
-            ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
-        }
-        
-        before
-        {
-            helper.deleteAllTriplesInDatabase(cxn)
-        }
-        
-        """
-        
-        val insertFullInputDataset = s"""
-          val insertFullInputDataset = 
-          \"\"\"$requiredInputTriples\"\"\"
-          update.updateSparql(cxn, insertFullInputDataset)
-          
-          """
+override def afterAll()
+{
+    ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
+}
+
+before
+{
+    helper.deleteAllTriplesInDatabase(cxn)
+}
+
+"""
+
+val allFieldsTest = buildTestingTemplate("all fields test", maximumInputTriples, process, outputNamedGraph, outputPredsMax)
+val minFieldsTest = buildTestingTemplate("minimum fields test", minimumInputTriples, process, outputNamedGraph, outputPredsMin)
+
 
         val pw = new PrintWriter(testFilePath)
-        var fullTestClassString = packageString + imports + classAssertion + clearTestingRepo + beforesAndAfters + insertFullInputDataset + "}"
+        var fullTestClassString = packageString + imports + classAssertion + clearTestingRepo + beforesAndAfters +
+                                  allFieldsTest + minFieldsTest + "}"
         pw.write(fullTestClassString)
         pw.close()
+    }
+    
+    def buildTestingTemplate(testName: String, inputTriples: String, process: String, outputNamedGraph: String, outputPredsList: ArrayBuffer[String]): String =
+    {
+val startTest: String = s"""
+test("$testName")
+{
+"""
+
+val insertInputDataset = s"""
+val insertInputDataset = 
+\"\"\"$inputTriples\"\"\"
+update.updateSparql(cxn, insertInputDataset)
+
+"""
+
+val queryPredicates = s"""
+RunDrivetrainProcess.runProcess("$process")
+val count: String = s"SELECT * WHERE {GRAPH <$outputNamedGraph> {?s ?p ?o .}}"
+val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+"""
+
+var fullPredsAsString = ""
+for (index <- 0 to outputPredsList.size-1) 
+{
+    fullPredsAsString += "\""+outputPredsList(index)+"\""
+    if (index != outputPredsList.size-1) fullPredsAsString += ","
+    if (index % 2 != 0) fullPredsAsString += "\n"
+}
+val predicateCheck = s"""
+val checkPredicates = Array(
+$fullPredsAsString
+)
+
+helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
+
+result.size should be (checkPredicates.size)
+
+ """
+
+val endTest = "}"
+
+startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
     }
     
     def generateInputTriples(process: String, inputs: ArrayBuffer[HashMap[String,org.eclipse.rdf4j.model.Value]], gmCxn: RepositoryConnection): Array[String] =
@@ -111,7 +157,6 @@ class TestBuilder extends ProjectwideGlobals
         
         val defaultInputGraph = inputs(0)(GRAPH.toString).toString
         
-        val optionalInputs = new ArrayBuffer[HashMap[String,org.eclipse.rdf4j.model.Value]]
         for (input <- inputs)
         {
             var thisGraph = defaultInputGraph
@@ -122,38 +167,36 @@ class TestBuilder extends ProjectwideGlobals
             val optionalBlock = input(OPTIONALGROUP.toString)
             if (optionalBlock == null && inputType == "https://github.com/PennTURBO/Drivetrain/hasRequiredInput")
             {
-                if (generatedRequiredTriples.contains(thisGraph)) generatedRequiredTriples(thisGraph) += makeInstanceDataFromTriple(gmCxn, input)
-                else generatedRequiredTriples += thisGraph -> HashSet(makeInstanceDataFromTriple(gmCxn, input))
+                if (!generatedRequiredTriples.contains(thisGraph)) generatedRequiredTriples += thisGraph -> new HashSet[String]
+                for (triple <- makeInstanceDataFromTriple(gmCxn, input)) generatedRequiredTriples(thisGraph) += triple
             }
-            else optionalInputs += input
+            else
+            {
+                if (!generatedOptionalTriples.contains(thisGraph)) generatedOptionalTriples += thisGraph -> new HashSet[String]
+                for (triple <- makeInstanceDataFromTriple(gmCxn, input)) generatedOptionalTriples(thisGraph) += triple
+            }
         }
-        for (input <- optionalInputs)
-        {
-            var thisGraph = defaultInputGraph
-            if (input(GRAPHOFCREATINGPROCESS.toString) != null) thisGraph = input(GRAPHOFCREATINGPROCESS.toString).toString
-            if (input(GRAPHOFORIGIN.toString) != null) thisGraph = input(GRAPHOFORIGIN.toString).toString
             
-            if (generatedOptionalTriples.contains(thisGraph)) generatedOptionalTriples(thisGraph) += makeInstanceDataFromTriple(gmCxn, input)
-            else generatedOptionalTriples += thisGraph -> HashSet(makeInstanceDataFromTriple(gmCxn, input))
-        }
         var generatedRequiredTriplesAsString = ""
         var generatedOptionalTriplesAsString = ""
         for ((graph,triples) <- generatedRequiredTriples) 
         {
-            generatedRequiredTriplesAsString += "GRAPH <" + graph + "> {\n"
-            for (triple <- triples) generatedRequiredTriplesAsString += triple + "\n"
-            generatedRequiredTriplesAsString += "}"
+            generatedRequiredTriplesAsString += "GRAPH <" + helper.checkAndConvertPropertiesReferenceToNamedGraph(graph) + "> {\n"
+            for (triple <- triples) generatedRequiredTriplesAsString += triple
+            generatedRequiredTriplesAsString += "}\n"
         }
         for ((graph,triples) <- generatedOptionalTriples)
         {
-            generatedOptionalTriplesAsString += "GRAPH <" + graph + "> {\n"
-            for (triple <- triples) generatedOptionalTriplesAsString += triple + "\n"
-            generatedOptionalTriplesAsString += "}"
+            generatedOptionalTriplesAsString += "GRAPH <" + helper.checkAndConvertPropertiesReferenceToNamedGraph(graph) + "> {\n"
+            for (triple <- triples) generatedOptionalTriplesAsString += triple
+            generatedOptionalTriplesAsString += "}\n"
         }
         Array(
         s"""
             INSERT DATA {
+                   # Required triples
                    $generatedRequiredTriplesAsString
+                   # Optional triples
                    $generatedOptionalTriplesAsString
             }
         """,
@@ -170,9 +213,9 @@ class TestBuilder extends ProjectwideGlobals
         update.querySparqlAndUnpackTuple(cxn, s"Select ?p Where { Graph <$outputNamedGraph> { ?s ?p ?o . }}", "p")
     }
     
-    def makeInstanceDataFromTriple(gmCxn: RepositoryConnection, input: HashMap[String,org.eclipse.rdf4j.model.Value]): String =
+    def makeInstanceDataFromTriple(gmCxn: RepositoryConnection, input: HashMap[String,org.eclipse.rdf4j.model.Value]): ArrayBuffer[String] =
     {
-        var thisTripleAsData = ""
+        var thisTripleAsData = new ArrayBuffer[String]
         
         val connectionType = input(CONNECTIONRECIPETYPE.toString).toString
         val subjectString = input(SUBJECT.toString).toString
@@ -182,14 +225,14 @@ class TestBuilder extends ProjectwideGlobals
         val objectADescriber = input(OBJECTADESCRIBER.toString)
         val subjectADescriber = input(SUBJECTADESCRIBER.toString)
         
-        val subjectURI = helper.genTurboIRI()
-        val objectURI = helper.genTurboIRI()
-        
+        val subjectURI = subjectString+"_1"
+        val objectURI = objectString+"_1"
+               
         if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
         {
             thisTripleAsData += s"<$subjectURI> <$predicateString> <$objectURI> .\n"
-            thisTripleAsData += s"<$subjectURI> rdf:type <$subjectString> .\n"
-            thisTripleAsData += s"<$objectURI> rdf:type <$objectString> .\n"
+            if (subjectADescriber == null) thisTripleAsData += s"<$subjectURI> rdf:type <$subjectString> .\n"
+            if (objectADescriber == null) thisTripleAsData += s"<$objectURI> rdf:type <$objectString> .\n"
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe")
         {
@@ -201,7 +244,7 @@ class TestBuilder extends ProjectwideGlobals
                 else localObjectString = descRanges(0)
             }
             thisTripleAsData += s"<$subjectURI> <$predicateString> <$localObjectString> .\n"
-            thisTripleAsData += s"<$subjectURI> rdf:type <$subjectString> .\n"
+            if (subjectADescriber == null) thisTripleAsData += s"<$subjectURI> rdf:type <$subjectString> .\n"
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe")
         {
@@ -213,7 +256,7 @@ class TestBuilder extends ProjectwideGlobals
                 else localSubjectString = descRanges(0)
             }
             thisTripleAsData += s"<$localSubjectString> <$predicateString> <$objectURI> .\n"
-            thisTripleAsData += s"<$objectURI> rdf:type <$objectString> .\n"
+            if (objectADescriber == null) thisTripleAsData += s"<$objectURI> rdf:type <$objectString> .\n"
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/TermToTermRecipe")
         {
@@ -243,17 +286,17 @@ class TestBuilder extends ProjectwideGlobals
             }
             else if (literalType == "https://github.com/PennTURBO/Drivetrain/IntegerLiteralResourceList") 
             {
-                val literalValue = Math.abs(LocalDateTime.now().hashCode())
+                val literalValue = "\""+Math.abs(LocalDateTime.now().hashCode())+"\""
                 thisTripleAsData += s"<$subjectURI> <$predicateString> $literalValue^^xsd:Integer .\n"
             }
             else if (literalType == "https://github.com/PennTURBO/Drivetrain/DoubleLiteralResourceList") 
             {
-                val literalValue = Math.abs(LocalDateTime.now().hashCode()) + ".00"
+                val literalValue = "\""+Math.abs(LocalDateTime.now().hashCode()) + ".00"+"\""
                 thisTripleAsData += s"<$subjectURI> <$predicateString> $literalValue^^xsd:Double .\n"
             }
             else if (literalType == "https://github.com/PennTURBO/Drivetrain/BooleanLiteralResourceList") 
             {
-                val literalValue = true
+                val literalValue = "\"true\""
                 thisTripleAsData += s"<$subjectURI> <$predicateString> $literalValue^^xsd:Boolean .\n"
             }
             else if (literalType == "https://github.com/PennTURBO/Drivetrain/DateLiteralResourceList") 
