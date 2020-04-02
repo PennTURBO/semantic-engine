@@ -70,6 +70,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
             repoManager.setUsernameAndPassword(connProps("username"), connProps("password"))
             repoManager.initialize()
             val repository: Repository = repoManager.getRepository(connProps("repository"))
+            assert(repository != null, s"The repository $repository does not exist on server $serviceURL")
             val cxn: RepositoryConnection = repository.getConnection()
             
             val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(modelServiceURL)

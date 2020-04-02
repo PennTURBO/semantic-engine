@@ -31,12 +31,16 @@ class TestBuilder extends ProjectwideGlobals
         val queryResultMax = RunDrivetrainProcess.runProcess(process)
         val outputNamedGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(queryResultMax(process).defaultOutputGraph)
         val outputPredsMax = getOutputPredicates(cxn, outputNamedGraph)
+        assert (outputPredsMax.size > 0, s"""Process $process did not create any output based on the "all fields" input. 
+        Check that the required and optional triples above are formatted as expected for an input to this process.""")
         
         helper.deleteAllTriplesInDatabase(cxn)
         
         update.updateSparql(cxn, minimumTripleSet)
         val queryResultMin = RunDrivetrainProcess.runProcess(process)
         val outputPredsMin = getOutputPredicates(cxn, outputNamedGraph)
+        assert (outputPredsMax.size > 0, s"""Process $process did not create any output based on the "minimum fields" input. 
+        Check that the required triples above are formatted as expected for an input to this process.""")
         
         helper.deleteAllTriplesInDatabase(cxn)
 

@@ -63,7 +63,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
                           if (query != null)
                           {
                               logger.info("Here is the SPARQL statement for the process you requested.")
-                              logger.info(query.getQuery()) 
+                              println("where:" + query.whereClause)
+                              println("bind:" + query.bindClause)
+                              println(query.getQuery()) 
                           }
                       }
                   }
@@ -212,16 +214,21 @@ object DrivetrainDriver extends ProjectwideGlobals {
       val testCxn = graphDbTestConnectionDetails.getConnection()
       val gmCxn = graphDbTestConnectionDetails.getGmConnection()
       
-      RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
-      RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-      RunDrivetrainProcess.setMultithreading(false)
-      helper.deleteAllTriplesInDatabase(testCxn)
-      
-      val process = helper.getProcessNameAsUri(args(1))
-      GraphModelValidator.validateProcessSpecification(process)
-      val testBuilder = new TestBuilder()
-      testBuilder.buildTest(testCxn, gmCxn, process)
-     
-      ConnectToGraphDB.closeGraphConnection(graphDbTestConnectionDetails)
-  }
+      try
+      {
+          RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+          RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+          RunDrivetrainProcess.setMultithreading(false)
+          helper.deleteAllTriplesInDatabase(testCxn)
+          
+          val process = helper.getProcessNameAsUri(args(1))
+          GraphModelValidator.validateProcessSpecification(process)
+          val testBuilder = new TestBuilder()
+          testBuilder.buildTest(testCxn, gmCxn, process) 
+      }
+      finally
+      {
+          ConnectToGraphDB.closeGraphConnection(graphDbTestConnectionDetails)
+      }
+   }
 }
