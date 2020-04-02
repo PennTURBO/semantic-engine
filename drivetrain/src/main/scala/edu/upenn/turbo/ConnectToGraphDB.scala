@@ -66,11 +66,13 @@ object ConnectToGraphDB extends ProjectwideGlobals
         {
             val connProps = retrieveConnectionPropertiesBasedOnBuildEnvironment()
             
-            val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(connProps("serviceURL"))
+            val service = connProps("serviceURL")
+            val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(service)
             repoManager.setUsernameAndPassword(connProps("username"), connProps("password"))
             repoManager.initialize()
-            val repository: Repository = repoManager.getRepository(connProps("repository"))
-            assert(repository != null, s"The repository $repository does not exist on server $serviceURL")
+            val repoName = connProps("repository")
+            val repository: Repository = repoManager.getRepository(repoName)
+            assert(repository != null, s"The repository $repoName does not exist on server $service")
             val cxn: RepositoryConnection = repository.getConnection()
             
             val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(modelServiceURL)
