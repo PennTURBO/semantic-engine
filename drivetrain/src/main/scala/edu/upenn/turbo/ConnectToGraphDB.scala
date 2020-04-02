@@ -72,7 +72,6 @@ object ConnectToGraphDB extends ProjectwideGlobals
             repoManager.initialize()
             val repoName = connProps("repository")
             val repository: Repository = repoManager.getRepository(repoName)
-            assert(repository != null, s"The repository $repoName does not exist on server $service")
             val cxn: RepositoryConnection = repository.getConnection()
             
             val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(modelServiceURL)
@@ -98,34 +97,38 @@ object ConnectToGraphDB extends ProjectwideGlobals
      */
     def closeGraphConnection(graphCxn: TurboGraphConnection, deleteAllTriples: Boolean = false)
     {
-        val cxn = graphCxn.getConnection()
-        val repoManager = graphCxn.getRepoManager()
-        val repository = graphCxn.getRepository() 
-        
-        val gmCxn = graphCxn.getGmConnection()
-        val gmRepoManager = graphCxn.getGmRepoManager()
-        val gmRepository = graphCxn.getGmRepository()
-        
-        if (deleteAllTriples)
+        if (graphCxn != null)
         {
-             if (!cxn.isActive()) cxn.begin()
-             val deleteAll: String = "DELETE {?s ?p ?o} WHERE {?s ?p ?o .} "
-             val tupleDelete = cxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
-             tupleDelete.execute()
-             cxn.commit()
+            val cxn = graphCxn.getConnection()
+            val repoManager = graphCxn.getRepoManager()
+            val repository = graphCxn.getRepository() 
+            
+            val gmCxn = graphCxn.getGmConnection()
+            val gmRepoManager = graphCxn.getGmRepoManager()
+            val gmRepository = graphCxn.getGmRepository()
+            
+            if (deleteAllTriples)
+            {
+                 if (!cxn.isActive()) cxn.begin()
+                 val deleteAll: String = "DELETE {?s ?p ?o} WHERE {?s ?p ?o .} "
+                 val tupleDelete = cxn.prepareUpdate(QueryLanguage.SPARQL, deleteAll)
+                 tupleDelete.execute()
+                 cxn.commit()
+            }
+            if (cxn != null)
+            {
+                cxn.close()
+                repository.shutDown()
+                repoManager.shutDown() 
+            }
+            if (gmCxn != null)
+            {
+                gmCxn.close()
+                gmRepository.shutDown()
+                gmRepoManager.shutDown()
+            }
         }
-        if (cxn != null)
-        {
-            cxn.close()
-            repository.shutDown()
-            repoManager.shutDown() 
-        }
-        if (gmCxn != null)
-        {
-            gmCxn.close()
-            gmRepository.shutDown()
-            gmRepoManager.shutDown()
-        }
+        else logger.info("There was an issue connecting to the specified repository. Make sure serviceURL, username, password, and repository name have been set correctly.")
     }
     
     /**
