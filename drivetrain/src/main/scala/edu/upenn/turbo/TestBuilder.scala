@@ -12,10 +12,14 @@ import java.util.UUID
 
 class TestBuilder extends ProjectwideGlobals
 {
+    //only make all fields? in the case that there are no optional triples
+    var onlyAllFields = false
+    
     def buildTest(cxn: RepositoryConnection, gmCxn: RepositoryConnection, process: String)
     {
         val testFileName = helper.getPostfixfromURI(process) + "SnapshotTest"
-        val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + testFileName + ".scala")
+        val instructionSetName = instructionSetFile.split("\\.")(0)
+        val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + testFileName + "_" + instructionSetName + ".scala")
         testFilePath.getParentFile().mkdirs()
         //assert(!testFilePath.exists(), s"File $testFileName.scala already exists")
 
@@ -31,23 +35,25 @@ class TestBuilder extends ProjectwideGlobals
         val queryResultMax = RunDrivetrainProcess.runProcess(process)
         val outputNamedGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(queryResultMax(process).defaultOutputGraph)
         val outputPredsMax = getOutputPredicates(cxn, outputNamedGraph)
-        assert (outputPredsMax.size > 0, s"""Process $process did not create any output based on the "all fields" input. 
-        Check that the required and optional triples above are formatted as expected for an input to this process.""")
+        assert (outputPredsMax.size > 0, s"""Process $process did not create any output based on the "all fields" input.
+        This is likely a bug in the TestBuilder code.
+        Check that the required and optional triples above are formatted as expected for an input to this process, and call Hayden.""")
         
         helper.deleteAllTriplesInDatabase(cxn)
         
         update.updateSparql(cxn, minimumTripleSet)
         val queryResultMin = RunDrivetrainProcess.runProcess(process)
         val outputPredsMin = getOutputPredicates(cxn, outputNamedGraph)
-        assert (outputPredsMax.size > 0, s"""Process $process did not create any output based on the "minimum fields" input. 
-        Check that the required triples above are formatted as expected for an input to this process.""")
+        assert (outputPredsMax.size > 0, s"""Process $process did not create any output based on the "minimum fields" input.
+        This is likely a bug in the TestBuilder code.
+        Check that the required triples above are formatted as expected for an input to this process, and call Hayden.""")
         
         helper.deleteAllTriplesInDatabase(cxn)
 
         logger.info("Writing test file...")
         
         writeTestFile(testFileName, process, outputNamedGraph, testFilePath, fullTripleSet, outputPredsMax, 
-                      minimumTripleSet, outputPredsMin)
+                      minimumTripleSet, outputPredsMin, instructionSetName)
 
         logger.info("Test created in src//test//scala//edu//upenn//turbo//AutoGenTests//")
 
@@ -55,7 +61,7 @@ class TestBuilder extends ProjectwideGlobals
     
     def writeTestFile(testFileName: String, process: String, outputNamedGraph: String, 
                       testFilePath: File, maximumInputTriples: String, outputPredsMax: ArrayBuffer[String], 
-                      minimumInputTriples: String, outputPredsMin: ArrayBuffer[String])
+                      minimumInputTriples: String, outputPredsMin: ArrayBuffer[String], instructionSetName: String)
     {
         val packageString = "package edu.upenn.turbo\n"
 
@@ -70,14 +76,14 @@ import scala.collection.mutable.ArrayBuffer
 import java.util.UUID    
 """
 
-        val classAssertion = s"class $testFileName extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers {\n"
+        val classAssertion = s"class "+testFileName+"_"+instructionSetName+" extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers {\n"
         
         val clearTestingRepo = "val clearTestingRepositoryAfterRun: Boolean = false\n"
 
-val beforesAndAfters = """
+val beforesAndAfters = s"""
 override def beforeAll()
 {
-    graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true)
+    graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "$instructionSetFile")
     cxn = graphDBMaterials.getConnection()
     gmCxn = graphDBMaterials.getGmConnection()
     helper.deleteAllTriplesInDatabase(cxn)
@@ -101,7 +107,8 @@ before
 """
 
 val allFieldsTest = buildTestingTemplate("all fields test", maximumInputTriples, process, outputNamedGraph, outputPredsMax)
-val minFieldsTest = buildTestingTemplate("minimum fields test", minimumInputTriples, process, outputNamedGraph, outputPredsMin)
+var minFieldsTest = ""
+if (!onlyAllFields) minFieldsTest = buildTestingTemplate("minimum fields test", minimumInputTriples, process, outputNamedGraph, outputPredsMin)
 
 
         val pw = new PrintWriter(testFilePath)
@@ -195,6 +202,11 @@ startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
             for (triple <- triples) generatedOptionalTriplesAsString += triple
             generatedOptionalTriplesAsString += "}\n"
         }
+        if (generatedOptionalTriplesAsString == "")
+        {
+            logger.info(s"""No optional triples found for process $process. Only "all fields" test will be created.""")
+            onlyAllFields = true
+        }
         Array(
         s"""
             INSERT DATA {
@@ -283,56 +295,12 @@ startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe")
         {
             val literalType = input(GRAPHLITERALTYPE.toString).toString
-            if (literalType == "https://github.com/PennTURBO/Drivetrain/StringLiteralResourceList" || literalType == "https://github.com/PennTURBO/Drivetrain/LiteralResourceList") 
-            {
-                val literalValue = "\"" + UUID.randomUUID().toString().replaceAll("-", "") + "\""
-                thisTripleAsData += s"<$subjectURI> <$predicateString> $literalValue^^xsd:String .\n"
-            }
-            else if (literalType == "https://github.com/PennTURBO/Drivetrain/IntegerLiteralResourceList") 
-            {
-                val literalValue = "\""+Math.abs(LocalDateTime.now().hashCode())+"\""
-                thisTripleAsData += s"<$subjectURI> <$predicateString> $literalValue^^xsd:Integer .\n"
-            }
-            else if (literalType == "https://github.com/PennTURBO/Drivetrain/DoubleLiteralResourceList") 
-            {
-                val literalValue = "\""+Math.abs(LocalDateTime.now().hashCode()) + ".00"+"\""
-                thisTripleAsData += s"<$subjectURI> <$predicateString> $literalValue^^xsd:Double .\n"
-            }
-            else if (literalType == "https://github.com/PennTURBO/Drivetrain/BooleanLiteralResourceList") 
-            {
-                val literalValue = "\"true\""
-                thisTripleAsData += s"<$subjectURI> <$predicateString> $literalValue^^xsd:Boolean .\n"
-            }
-            else if (literalType == "https://github.com/PennTURBO/Drivetrain/DateLiteralResourceList") 
-            {
-                val literalValue = "\"" + LocalDateTime.now() + "\""
-                thisTripleAsData += s"<$subjectURI> <$predicateString> $literalValue^^xsd:Date .\n"
-            }
+            thisTripleAsData += makeTripleWithLiteral(literalType, objectString, subjectURI, predicateString)
+            if (subjectADescriber == null) thisTripleAsData += s"<$subjectURI> rdf:type <$subjectString> .\n"
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe")
         {
             val literalType = input(GRAPHLITERALTYPE.toString).toString
-            var literalValue = ""
-            if (literalType == "https://github.com/PennTURBO/Drivetrain/StringLiteralResourceList" || literalType == "https://github.com/PennTURBO/Drivetrain/LiteralResourceList") 
-            {
-                literalValue = "\"" + UUID.randomUUID().toString().replaceAll("-", "") + "\"^^xsd:String"
-            }
-            else if (literalType == "https://github.com/PennTURBO/Drivetrain/IntegerLiteralResourceList") 
-            {
-                literalValue = Math.abs(LocalDateTime.now().hashCode()) + "^^xsd:Integer"
-            }
-            else if (literalType == "https://github.com/PennTURBO/Drivetrain/DoubleLiteralResourceList") 
-            {
-                literalValue = Math.abs(LocalDateTime.now().hashCode()) + ".00^^xsd:Double"
-            }
-            else if (literalType == "https://github.com/PennTURBO/Drivetrain/BooleanLiteralResourceList") 
-            {
-                literalValue = "true^^xsd:Boolean"
-            }
-            else if (literalType == "https://github.com/PennTURBO/Drivetrain/DateLiteralResourceList") 
-            {
-                literalValue = "\"" + LocalDateTime.now().toString() + "\"^^xsd:Date"
-            }
             var localSubjectString = subjectString
             if (subjectADescriber != null)
             {
@@ -340,8 +308,39 @@ startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
                 if (descRanges.size == 0) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
                 else localSubjectString = descRanges(0)
             }
-            thisTripleAsData += s"<$localSubjectString> <$predicateString> $literalValue .\n"
+            thisTripleAsData += makeTripleWithLiteral(literalType, objectString, localSubjectString, predicateString)
         }
         thisTripleAsData
+    }
+    
+    def makeTripleWithLiteral(literalType: String, objectString: String, subjectURI: String, predicateString: String): String =
+    {
+         var thisTripleAsData = ""
+         if (literalType == "https://github.com/PennTURBO/Drivetrain/StringLiteralResourceList" || literalType == "https://github.com/PennTURBO/Drivetrain/LiteralResourceList") 
+          {
+              val literalValue = "\"" + Math.abs(objectString.hashCode())+"abc" + "\""
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:String .\n"
+          }
+          else if (literalType == "https://github.com/PennTURBO/Drivetrain/IntegerLiteralResourceList") 
+          {
+              val literalValue = "\""+Math.abs(objectString.hashCode())+"\""
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Integer .\n"
+          }
+          else if (literalType == "https://github.com/PennTURBO/Drivetrain/DoubleLiteralResourceList") 
+          {
+              val literalValue = "\""+Math.abs(objectString.hashCode()) + ".00"+"\""
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Double .\n"
+          }
+          else if (literalType == "https://github.com/PennTURBO/Drivetrain/BooleanLiteralResourceList") 
+          {
+              val literalValue = "\"true\""
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Boolean .\n"
+          }
+          else if (literalType == "https://github.com/PennTURBO/Drivetrain/DateLiteralResourceList") 
+          {
+              val literalValue = "\"" + LocalDateTime.now() + "\""
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Date .\n"
+          }
+         thisTripleAsData
     }
 }

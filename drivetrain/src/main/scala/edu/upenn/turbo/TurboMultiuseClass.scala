@@ -886,4 +886,15 @@ class TurboMultiuseClass extends Enumeration with Matchers
         if (boolAsString == "true") true
         else false
     }
+    
+    def getAllProcessInInstructionSet(gmCxn: RepositoryConnection): ArrayBuffer[String] =
+    {
+        val query: String = s"""
+          select * where
+          {
+              ?instSet a turbo:TURBO_0010354 .
+          }
+          """
+         update.querySparqlAndUnpackTuple(gmCxn, query, "instSet")
+    }
 }

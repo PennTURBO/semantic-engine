@@ -1,14 +1,14 @@
-productionServiceURL = your_prd_db
+productionServiceURL = http://your_prd_db:7200/
 productionUsername = your_username
 productionPassword = your_password
 productionRepository = your_prd_repo
 
-testingServiceURL = your_dev_db
+testingServiceURL = http://your_dev_db:7200/
 testingUsername = your_username
 testingPassword = your_password
 testingRepository = your_testing_repo
 
-modelServiceURL = your_db
+modelServiceURL = http://your_db:7200/
 modelUsername = your_username
 modelPassword = your_password
 modelRepository = your_model_repo

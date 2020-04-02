@@ -26,6 +26,7 @@ resolvers += Classpaths.typesafeReleases
 
 parallelExecution in Test := false
 fork := true
+outputStrategy := Some(StdoutOutput)
 envVars := Map("SCALA_ENV" -> "main")
 envVars in Test := Map("SCALA_ENV" -> "test")
 

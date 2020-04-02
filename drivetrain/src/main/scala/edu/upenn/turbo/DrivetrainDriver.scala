@@ -43,7 +43,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
                   else if (args(0) == "loadTestTurboOntology") OntologyLoader.addOntologyFromUrl(cxn)
                   else if (args(0) == "updateModelOntology") OntologyLoader.addOntologyFromUrl(gmCxn)
-                  else if (args(0) == "updateModel") updateModel(gmCxn)
+                  else if (args(0) == "updateModel") logger.info("model updated")
                   else if (args(0) == "all")
                   {
                       clearProductionNamedGraphs(cxn)
@@ -63,8 +63,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
                           if (query != null)
                           {
                               logger.info("Here is the SPARQL statement for the process you requested.")
-                              println("where:" + query.whereClause)
-                              println("bind:" + query.bindClause)
                               println(query.getQuery()) 
                           }
                       }
@@ -207,8 +205,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def buildAutomatedTest(args: Array[String])
   {
-      assert (args.size > 1, "No process specified for Automated Test Builder; please specify URI")
-      logger.info("Building test for process " + args(1))
       // get connection to test repo
       val graphDbTestConnectionDetails = ConnectToGraphDB.getTestRepositoryConnection()
       val testCxn = graphDbTestConnectionDetails.getConnection()
@@ -219,12 +215,24 @@ object DrivetrainDriver extends ProjectwideGlobals {
           RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
           RunDrivetrainProcess.setGraphModelConnection(gmCxn)
           RunDrivetrainProcess.setMultithreading(false)
-          helper.deleteAllTriplesInDatabase(testCxn)
           
-          val process = helper.getProcessNameAsUri(args(1))
-          GraphModelValidator.validateProcessSpecification(process)
-          val testBuilder = new TestBuilder()
-          testBuilder.buildTest(testCxn, gmCxn, process) 
+          var buildArray = new ArrayBuffer[String]
+          if (!(args.size > 1)) 
+          {
+              logger.info(s"No URI found as argument, all tests in instruction set $instructionSetFile will be built.")
+              buildArray = helper.getAllProcessInInstructionSet(gmCxn)
+          }
+          else buildArray = ArrayBuffer(args(1))
+          
+          for (process <- buildArray)
+          {
+              helper.deleteAllTriplesInDatabase(testCxn)
+              val processAsURI = helper.getProcessNameAsUri(process)
+              GraphModelValidator.validateProcessSpecification(processAsURI)
+              val testBuilder = new TestBuilder()
+              logger.info(s"Building test for process $processAsURI")
+              testBuilder.buildTest(testCxn, gmCxn, processAsURI)  
+          }
       }
       finally
       {
