@@ -22,6 +22,6 @@ The following commands can be run via the SBT console
 
 **Test commands**
 
-`test` Run all tests
+`test` Runs all tests
 
 `testOnly edu.upenn.turbo.<test_class_name>` Runs the tests inside a specific test class
