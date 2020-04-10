@@ -22,6 +22,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       {
           assert("main" == System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"main\"; check your build.sbt file")
           if (args(0) == "buildTest") buildAutomatedTest(args)
+          else if (args(0) == "debug") runDebugMode(args)
           else
           {
               try
@@ -219,20 +220,54 @@ object DrivetrainDriver extends ProjectwideGlobals {
           var buildArray = new ArrayBuffer[String]
           if (!(args.size > 1)) 
           {
-              logger.info(s"No URI found as argument, all tests in instruction set $instructionSetFile will be built.")
+              logger.info(s"No URI found as argument, all update specifications in instruction set $instructionSetFile will be processed.")
               buildArray = helper.getAllProcessInInstructionSet(gmCxn)
           }
           else buildArray = ArrayBuffer(args(1))
+          val testBuilder = new TestBuilder()
           
           for (process <- buildArray)
           {
               helper.deleteAllTriplesInDatabase(testCxn)
               val processAsURI = helper.getProcessNameAsUri(process)
               GraphModelValidator.validateProcessSpecification(processAsURI)
-              val testBuilder = new TestBuilder()
               logger.info(s"Building test for process $processAsURI")
               testBuilder.buildTest(testCxn, gmCxn, processAsURI)  
+          } 
+      }
+      finally
+      {
+          ConnectToGraphDB.closeGraphConnection(graphDbTestConnectionDetails)
+      }
+   }
+  
+  def runDebugMode(args: Array[String])
+  {
+      // get connection to test repo
+      val graphDbTestConnectionDetails = ConnectToGraphDB.getTestRepositoryConnection()
+      val testCxn = graphDbTestConnectionDetails.getConnection()
+      val gmCxn = graphDbTestConnectionDetails.getGmConnection()
+      
+      try
+      {
+          RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+          RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+          RunDrivetrainProcess.setMultithreading(false)
+          
+          var buildArray = new ArrayBuffer[String]
+          val nonProcessArgs = Array("debug", "--min")
+          if (nonProcessArgs.contains(args(args.size-1)))
+          {
+              logger.info(s"No URI found as argument, all update specifications in instruction set $instructionSetFile will be processed.")
+              buildArray = helper.getAllProcessesInOrder(gmCxn)
           }
+          else buildArray = ArrayBuffer(args(args.size-1))
+          val testBuilder = new TestBuilder()
+          
+          helper.deleteAllTriplesInDatabase(testCxn)
+          if (args.size > 1 && args(1) == "--min") testBuilder.postMinTripleOutput(testCxn, gmCxn, buildArray)
+          else testBuilder.postMaxTripleOutput(testCxn, gmCxn, buildArray)
+          logger.info("Your requested output data is available in the testing repository.")
       }
       finally
       {

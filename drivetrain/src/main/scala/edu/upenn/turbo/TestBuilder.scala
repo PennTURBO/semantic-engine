@@ -9,14 +9,51 @@ import org.eclipse.rdf4j.model.Value
 import java.io.File
 import java.time.LocalDateTime
 import java.util.UUID
+import org.eclipse.rdf4j.model.Literal
+import scala.collection.mutable.Queue
 
 class TestBuilder extends ProjectwideGlobals
 {
     //only make all fields? in the case that there are no optional triples
     var onlyAllFields = false
     
+    def postMinTripleOutput(cxn: RepositoryConnection, gmCxn: RepositoryConnection, processList: ArrayBuffer[String])
+    {
+        val UUIDKey = UUID.randomUUID().toString().replaceAll("-", "")
+        RunDrivetrainProcess.setGlobalUUID(UUIDKey)
+        for (process <- processList)
+        {
+            val processAsURI = helper.getProcessNameAsUri(process)
+            GraphModelValidator.validateProcessSpecification(processAsURI)
+            val inputs = RunDrivetrainProcess.getInputs(processAsURI)
+            val inputTriplesArr = generateInputTriples(processAsURI, inputs, gmCxn)
+            val minimumTripleSet = inputTriplesArr(1)
+            update.updateSparql(cxn, minimumTripleSet)
+            val queryResultMin = RunDrivetrainProcess.runProcess(processAsURI)
+        }
+    }
+    
+    def postMaxTripleOutput(cxn: RepositoryConnection, gmCxn: RepositoryConnection, processList: ArrayBuffer[String])
+    {
+        val UUIDKey = UUID.randomUUID().toString().replaceAll("-", "")
+        RunDrivetrainProcess.setGlobalUUID(UUIDKey)
+        for (process <- processList)
+        {
+            val processAsURI = helper.getProcessNameAsUri(process)
+            GraphModelValidator.validateProcessSpecification(processAsURI)
+            val inputs = RunDrivetrainProcess.getInputs(processAsURI)
+            val inputTriplesArr = generateInputTriples(processAsURI, inputs, gmCxn)
+            val fullTripleSet = inputTriplesArr(0)
+            update.updateSparql(cxn, fullTripleSet)
+            val queryResultMax = RunDrivetrainProcess.runProcess(processAsURI)   
+        }
+    }
+    
     def buildTest(cxn: RepositoryConnection, gmCxn: RepositoryConnection, process: String)
     {
+        val UUIDKey = UUID.randomUUID().toString().replaceAll("-", "")
+        RunDrivetrainProcess.setGlobalUUID(UUIDKey)
+        
         val testFileName = helper.getPostfixfromURI(process) + "SnapshotTest"
         val instructionSetName = instructionSetFile.split("\\.")(0)
         val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + testFileName + "_" + instructionSetName + ".scala")
@@ -53,15 +90,16 @@ class TestBuilder extends ProjectwideGlobals
         logger.info("Writing test file...")
         
         writeTestFile(testFileName, process, outputNamedGraph, testFilePath, fullTripleSet, outputPredsMax, 
-                      minimumTripleSet, outputPredsMin, instructionSetName)
+                      minimumTripleSet, outputPredsMin, instructionSetName, UUIDKey)
 
         logger.info("Test created in src//test//scala//edu//upenn//turbo//AutoGenTests//")
 
     }
     
     def writeTestFile(testFileName: String, process: String, outputNamedGraph: String, 
-                      testFilePath: File, maximumInputTriples: String, outputPredsMax: ArrayBuffer[String], 
-                      minimumInputTriples: String, outputPredsMin: ArrayBuffer[String], instructionSetName: String)
+                      testFilePath: File, maximumInputTriples: String, outputPredsMax: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]], 
+                      minimumInputTriples: String, outputPredsMin: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]], instructionSetName: String,
+                      UUIDKey: String)
     {
         val packageString = "package edu.upenn.turbo\n"
 
@@ -73,7 +111,8 @@ import org.eclipse.rdf4j.model.IRI
 import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
-import java.util.UUID    
+import java.util.UUID
+import org.eclipse.rdf4j.model.Literal
 """
 
         val classAssertion = s"class "+testFileName+"_"+instructionSetName+" extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers {\n"
@@ -90,7 +129,8 @@ override def beforeAll()
     
     RunDrivetrainProcess.setGraphModelConnection(gmCxn)
     RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-    RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
+    val UUIDKey = "$UUIDKey"
+    RunDrivetrainProcess.setGlobalUUID(UUIDKey)
     RunDrivetrainProcess.setInputNamedGraphsCache(false)
 }
 
@@ -106,9 +146,9 @@ before
 
 """
 
-val allFieldsTest = buildTestingTemplate("all fields test", maximumInputTriples, process, outputNamedGraph, outputPredsMax)
+val allFieldsTest = buildTestingTemplate("all fields test", maximumInputTriples, process, outputNamedGraph, outputPredsMax, UUIDKey)
 var minFieldsTest = ""
-if (!onlyAllFields) minFieldsTest = buildTestingTemplate("minimum fields test", minimumInputTriples, process, outputNamedGraph, outputPredsMin)
+if (!onlyAllFields) minFieldsTest = buildTestingTemplate("minimum fields test", minimumInputTriples, process, outputNamedGraph, outputPredsMin, UUIDKey)
 
 
         val pw = new PrintWriter(testFilePath)
@@ -118,7 +158,7 @@ if (!onlyAllFields) minFieldsTest = buildTestingTemplate("minimum fields test", 
         pw.close()
     }
     
-    def buildTestingTemplate(testName: String, inputTriples: String, process: String, outputNamedGraph: String, outputPredsList: ArrayBuffer[String]): String =
+    def buildTestingTemplate(testName: String, inputTriples: String, process: String, outputNamedGraph: String, outputPredsList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]], UUIDKey: String): String =
     {
 val startTest: String = s"""
 test("$testName")
@@ -134,25 +174,33 @@ update.updateSparql(cxn, insertInputDataset)
 
 val queryPredicates = s"""
 RunDrivetrainProcess.runProcess("$process")
-val count: String = s"SELECT * WHERE {GRAPH <$outputNamedGraph> {?s ?p ?o .}}"
-val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+val query: String = s"SELECT * WHERE {GRAPH <$outputNamedGraph> {?s ?p ?o .}}"
+val result = update.querySparqlAndUnpackTuple(cxn, query, Array("s", "p", "o"))
+val resArr = new ArrayBuffer[String]
+for (index <- 0 to result.size-1) 
+{
+    if (!result(index)(2).isInstanceOf[Literal]) resArr += "<"+result(index)(0)+"> <"+result(index)(1)+"> <"+result(index)(2)+">"
+    else resArr += "<"+result(index)(0)+"> <"+result(index)(1)+"> "+result(index)(2)
+}
+
+
 """
 
 var fullPredsAsString = ""
 for (index <- 0 to outputPredsList.size-1) 
 {
-    fullPredsAsString += "\""+outputPredsList(index)+"\""
-    if (index != outputPredsList.size-1) fullPredsAsString += ","
-    if (index % 2 != 0) fullPredsAsString += "\n"
+    if (!outputPredsList(index)(2).isInstanceOf[Literal]) fullPredsAsString += "\"\"\"<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> <"+outputPredsList(index)(2)+">\"\"\""
+    else fullPredsAsString += "\"\"\"<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> "+outputPredsList(index)(2)+"\"\"\""
+    if (index != outputPredsList.size-1) fullPredsAsString += ",\n"
 }
 val predicateCheck = s"""
-val checkPredicates = Array(
+val checkTriples = Array(
 $fullPredsAsString
 )
 
-helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
+helper.checkStringArraysForEquivalency(checkTriples, resArr.toArray)("equivalent").asInstanceOf[String] should be ("true")
 
-result.size should be (checkPredicates.size)
+result.size should be (checkTriples.size)
 
  """
 
@@ -161,12 +209,136 @@ val endTest = "}"
 startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
     }
     
+    def getInstanceCountsFromInput(inputs: ArrayBuffer[HashMap[String,org.eclipse.rdf4j.model.Value]]): HashMap[String, Integer] =
+    {
+        var instanceCountMap = new HashMap[String, Integer]
+        val instancesWithOnlyTermsOrLiterals = new HashSet[String]
+        val connectionsMap = new HashMap[String, HashSet[String]]
+        for (input <- inputs)
+        {
+            val subjectString = input(SUBJECT.toString).toString
+            val objectString = input(OBJECT.toString).toString
+            val subjectExistsInMap: Boolean = instanceCountMap.contains(subjectString)
+            val objectExistsInMap: Boolean = instanceCountMap.contains(objectString)
+            val multiplicity = input(MULTIPLICITY.toString).toString
+            if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
+            {
+                if (!subjectExistsInMap && !objectExistsInMap) 
+                {
+                    if (multiplicity == oneToOneMultiplicity)
+                    {
+                        instanceCountMap += subjectString -> 1
+                        instanceCountMap += objectString -> 1
+                    }
+                    else if (multiplicity == oneToManyMultiplicity)
+                    {
+                        instanceCountMap += subjectString -> 1
+                        instanceCountMap += objectString -> 2
+                    }
+                    else if (multiplicity == manyToOneMultiplicity)
+                    {
+                        instanceCountMap += subjectString -> 2
+                        instanceCountMap += objectString -> 1
+                    }
+                }
+                else if (!subjectExistsInMap && objectExistsInMap)
+                {
+                    if (multiplicity == oneToOneMultiplicity) instanceCountMap += subjectString -> instanceCountMap(objectString)
+                    else if (multiplicity == oneToManyMultiplicity)
+                    {
+                        if (instanceCountMap(objectString) > 1) instanceCountMap += subjectString -> instanceCountMap(objectString)/2
+                        else
+                        {
+                            instanceCountMap += subjectString -> 1
+                            instanceCountMap(objectString) = 2
+                            // recursively iterate through all connections of objectString, multiply by 2
+                        }
+                    }
+                    else if (multiplicity == manyToOneMultiplicity) instanceCountMap += subjectString -> instanceCountMap(objectString)*2
+                }
+                else if (subjectExistsInMap && !objectExistsInMap)
+                {
+                    if (multiplicity == oneToOneMultiplicity) instanceCountMap += objectString -> instanceCountMap(subjectString)
+                    else if (multiplicity == manyToOneMultiplicity)
+                    {
+                        if (instanceCountMap(subjectString) > 1) instanceCountMap += objectString -> instanceCountMap(subjectString)/2
+                        else
+                        {
+                            instanceCountMap += objectString -> 1
+                            instanceCountMap(subjectString) = 2
+                            // recursively iterate through all connections of subjectString, multiply by 2
+                            instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, 2)
+                        }
+                    }
+                    else if (multiplicity == oneToManyMultiplicity) instanceCountMap += objectString -> instanceCountMap(subjectString)*2
+                }
+                else if (subjectExistsInMap && objectExistsInMap)
+                {
+                    if (multiplicity == oneToOneMultiplicity && (instanceCountMap(subjectString) != instanceCountMap(objectString)))
+                    {
+                        if (instanceCountMap(subjectString) > instanceCountMap(objectString)) instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, objectString, instanceCountMap(subjectString)/instanceCountMap(objectString))
+                        else instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, instanceCountMap(objectString)/instanceCountMap(subjectString))
+                    }
+                    else if (multiplicity == manyToOneMultiplicity)
+                    {
+                        if (instanceCountMap(subjectString) <= instanceCountMap(objectString))
+                        {
+                            val multiplier = instanceCountMap(objectString)*2/instanceCountMap(subjectString)
+                            instanceCountMap(subjectString) = instanceCountMap(objectString)*2
+                            instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, multiplier)
+                        }  
+                    }
+                    else if (multiplicity == oneToManyMultiplicity)
+                    {
+                        if (instanceCountMap(objectString) <= instanceCountMap(subjectString))
+                        {
+                            val multiplier = instanceCountMap(subjectString)*2/instanceCountMap(objectString)
+                            instanceCountMap(objectString) = instanceCountMap(subjectString)*2
+                            instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, objectString, multiplier)
+                        }  
+                    }
+                }
+                if (connectionsMap.contains(subjectString)) connectionsMap(subjectString) += objectString
+                else connectionsMap += subjectString -> HashSet(objectString)
+                if (connectionsMap.contains(objectString)) connectionsMap(objectString) += subjectString
+                else connectionsMap += objectString -> HashSet(subjectString)
+            }
+            else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe" && !subjectExistsInMap) instancesWithOnlyTermsOrLiterals += subjectString
+            else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe" && !objectExistsInMap) instancesWithOnlyTermsOrLiterals += objectString
+            else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe" && !subjectExistsInMap) instancesWithOnlyTermsOrLiterals += subjectString
+        }
+        for (instance <- instancesWithOnlyTermsOrLiterals)
+        {
+            if (!instanceCountMap.contains(instance)) instanceCountMap += instance -> 1
+        }
+        println("Creating test data with the following instance counts:")
+        for ((k,v) <- instanceCountMap) println("Instance: " + k + " Count: " + v)
+        instanceCountMap
+    }
+    
+    def updateMultiplicityChangeThroughConnectionsList(instanceCountMap: HashMap[String, Integer], connectionsList: HashMap[String, HashSet[String]], start: String, multiplier: Integer): HashMap[String, Integer] =
+    {
+        val updateQueue = new Queue[String]
+        val alreadyUpdated = HashSet(start)
+        for (cxn <- connectionsList(start)) updateQueue += cxn
+        while (!updateQueue.isEmpty)
+        {
+            val firstElement = updateQueue.dequeue
+            instanceCountMap(firstElement) = instanceCountMap(firstElement)*multiplier
+            alreadyUpdated += firstElement
+            for (cxn <- connectionsList(firstElement)) if (!alreadyUpdated.contains(cxn)) updateQueue += cxn
+        }
+        instanceCountMap
+    }
+    
     def generateInputTriples(process: String, inputs: ArrayBuffer[HashMap[String,org.eclipse.rdf4j.model.Value]], gmCxn: RepositoryConnection): Array[String] =
     {
         var generatedRequiredTriples = new HashMap[String, HashSet[String]]
         var generatedOptionalTriples = new HashMap[String, HashSet[String]]
         
         val defaultInputGraph = inputs(0)(GRAPH.toString).toString
+        
+        val instanceCounts = getInstanceCountsFromInput(inputs)
         
         for (input <- inputs)
         {
@@ -179,12 +351,12 @@ startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
             if (optionalBlock == null && inputType == "https://github.com/PennTURBO/Drivetrain/hasRequiredInput")
             {
                 if (!generatedRequiredTriples.contains(thisGraph)) generatedRequiredTriples += thisGraph -> new HashSet[String]
-                for (triple <- makeInstanceDataFromTriple(gmCxn, input)) generatedRequiredTriples(thisGraph) += triple
+                for (triple <- makeInstanceDataFromTriple(gmCxn, input, instanceCounts)) generatedRequiredTriples(thisGraph) += triple
             }
             else
             {
                 if (!generatedOptionalTriples.contains(thisGraph)) generatedOptionalTriples += thisGraph -> new HashSet[String]
-                for (triple <- makeInstanceDataFromTriple(gmCxn, input)) generatedOptionalTriples(thisGraph) += triple
+                for (triple <- makeInstanceDataFromTriple(gmCxn, input, instanceCounts)) generatedOptionalTriples(thisGraph) += triple
             }
         }
             
@@ -224,12 +396,12 @@ startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
         )
     }
     
-    def getOutputPredicates(cxn: RepositoryConnection, outputNamedGraph: String): ArrayBuffer[String] =
+    def getOutputPredicates(cxn: RepositoryConnection, outputNamedGraph: String): ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] =
     {
-        update.querySparqlAndUnpackTuple(cxn, s"Select ?p Where { Graph <$outputNamedGraph> { ?s ?p ?o . }}", "p")
+        update.querySparqlAndUnpackTuple(cxn, s"Select * Where { Graph <$outputNamedGraph> { ?s ?p ?o . }}", Array("s", "p", "o"))
     }
     
-    def makeInstanceDataFromTriple(gmCxn: RepositoryConnection, input: HashMap[String,org.eclipse.rdf4j.model.Value]): ArrayBuffer[String] =
+    def makeInstanceDataFromTriple(gmCxn: RepositoryConnection, input: HashMap[String,org.eclipse.rdf4j.model.Value], instanceCounts: HashMap[String, Integer]): ArrayBuffer[String] =
     {
         var thisTripleAsData = new ArrayBuffer[String]
         
@@ -241,14 +413,62 @@ startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
         val objectADescriber = input(OBJECTADESCRIBER.toString)
         val subjectADescriber = input(SUBJECTADESCRIBER.toString)
         
-        val subjectURI = subjectString+"_1"
-        val objectURI = objectString+"_1"
-               
+        val subjectContext = input(SUBJECTCONTEXT.toString)
+        val objectContext = input(OBJECTCONTEXT.toString)
+        
+        val subjectInstanceArray = new ArrayBuffer[String]
+        val objectInstanceArray = new ArrayBuffer[String]
+        
+        if (instanceCounts.contains(subjectString))
+        {
+            for (instance <- 1 to instanceCounts(subjectString))
+            {
+                var subjectURI = subjectString + "_" + instance
+                if (subjectContext != null) subjectURI += "_" + helper.convertTypeToSparqlVariable(subjectContext.toString, false)
+                subjectInstanceArray += subjectURI
+            } 
+        }
+        if (instanceCounts.contains(objectString))
+        {
+            for (instance <- 1 to instanceCounts(objectString))
+            {
+                var objectURI = objectString + "_" + instance
+                if (objectContext != null) objectURI += "_" + helper.convertTypeToSparqlVariable(objectContext.toString, false)
+                objectInstanceArray += objectURI
+            }   
+        }
+        
         if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
         {
-            thisTripleAsData += s"<$subjectURI> <$predicateString> <$objectURI> .\n"
-            if (subjectADescriber == null) thisTripleAsData += s"<$subjectURI> rdf:type <$subjectString> .\n"
-            if (objectADescriber == null) thisTripleAsData += s"<$objectURI> rdf:type <$objectString> .\n"
+            if (subjectInstanceArray.size == objectInstanceArray.size)
+            {
+                for (index <- 0 to subjectInstanceArray.size-1)
+                {
+                    thisTripleAsData += "<"+subjectInstanceArray(index)+"> <"+predicateString+"> <"+objectInstanceArray(index)+"> .\n"
+                    if (subjectADescriber == null) thisTripleAsData += "<"+subjectInstanceArray(index)+"> rdf:type <"+subjectString+"> .\n"
+                    if (objectADescriber == null) thisTripleAsData += s"<"+objectInstanceArray(index)+"> rdf:type <"+objectString+"> .\n"   
+                }
+            }
+            else if ((subjectInstanceArray.size / objectInstanceArray.size) > 0)
+            {
+                val divisor = subjectInstanceArray.size / objectInstanceArray.size
+                for (index <- 0 to subjectInstanceArray.size-1)
+                {
+                    thisTripleAsData += "<"+subjectInstanceArray(index)+"> <"+predicateString+"> <"+objectInstanceArray(index/divisor)+"> .\n"
+                    if (subjectADescriber == null) thisTripleAsData += "<"+subjectInstanceArray(index)+"> rdf:type <"+subjectString+"> .\n"
+                    if (objectADescriber == null) thisTripleAsData += s"<"+objectInstanceArray(index/divisor)+"> rdf:type <"+objectString+"> .\n"   
+                }
+            }
+            else if ((objectInstanceArray.size / subjectInstanceArray.size) > 0)
+            {
+                val divisor = objectInstanceArray.size / subjectInstanceArray.size
+                for (index <- 0 to objectInstanceArray.size-1)
+                {
+                    thisTripleAsData += "<"+subjectInstanceArray(index/divisor)+"> <"+predicateString+"> <"+objectInstanceArray(index)+"> .\n"
+                    if (subjectADescriber == null) thisTripleAsData += "<"+subjectInstanceArray(index/divisor)+"> rdf:type <"+subjectString+"> .\n"
+                    if (objectADescriber == null) thisTripleAsData += s"<"+objectInstanceArray(index)+"> rdf:type <"+objectString+"> .\n"   
+                }
+            }
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe")
         {
@@ -259,8 +479,11 @@ startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
                 if (descRanges.size == 0) localObjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
                 else localObjectString = descRanges(0)
             }
-            thisTripleAsData += s"<$subjectURI> <$predicateString> <$localObjectString> .\n"
-            if (subjectADescriber == null) thisTripleAsData += s"<$subjectURI> rdf:type <$subjectString> .\n"
+            for (subjectURI <- subjectInstanceArray)
+            {
+                thisTripleAsData += s"<$subjectURI> <$predicateString> <$localObjectString> .\n"
+                if (subjectADescriber == null) thisTripleAsData += s"<$subjectURI> rdf:type <$subjectString> .\n"   
+            }
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe")
         {
@@ -271,8 +494,11 @@ startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
                 if (descRanges.size == 0) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
                 else localSubjectString = descRanges(0)
             }
-            thisTripleAsData += s"<$localSubjectString> <$predicateString> <$objectURI> .\n"
-            if (objectADescriber == null) thisTripleAsData += s"<$objectURI> rdf:type <$objectString> .\n"
+            for (objectURI <- objectInstanceArray)
+            {
+                thisTripleAsData += s"<$localSubjectString> <$predicateString> <$objectURI> .\n"
+                if (objectADescriber == null) thisTripleAsData += s"<$objectURI> rdf:type <$objectString> .\n" 
+            }
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/TermToTermRecipe")
         {
@@ -295,8 +521,11 @@ startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe")
         {
             val literalType = input(GRAPHLITERALTYPE.toString).toString
-            thisTripleAsData += makeTripleWithLiteral(literalType, objectString, subjectURI, predicateString)
-            if (subjectADescriber == null) thisTripleAsData += s"<$subjectURI> rdf:type <$subjectString> .\n"
+            for (subjectURI <- subjectInstanceArray)
+            {
+                thisTripleAsData += makeTripleWithLiteral(literalType, objectString, subjectURI, predicateString)
+                if (subjectADescriber == null) thisTripleAsData += s"<$subjectURI> rdf:type <$subjectString> .\n"   
+            }
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe")
         {
@@ -338,7 +567,8 @@ startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
           }
           else if (literalType == "https://github.com/PennTURBO/Drivetrain/DateLiteralResourceList") 
           {
-              val literalValue = "\"" + LocalDateTime.now() + "\""
+              val lh = objectString.hashCode().toString()
+              val literalValue = "\"" + lh.charAt(1)+lh.charAt(2)+"/"+lh.charAt(3)+lh.charAt(4)+"/"+lh.charAt(5)+lh.charAt(6)+ "\""
               thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Date .\n"
           }
          thisTripleAsData

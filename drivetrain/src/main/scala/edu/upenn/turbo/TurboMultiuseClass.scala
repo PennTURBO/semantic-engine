@@ -897,4 +897,57 @@ class TurboMultiuseClass extends Enumeration with Matchers
           """
          update.querySparqlAndUnpackTuple(gmCxn, query, "instSet")
     }
+    
+    /**
+     * Searches the model graph and returns all processes in the order that they should be run
+     * 
+     * @return ArrayBuffer[String] where each string represents a process and the index represents where each should be run in a sequence
+     */
+    def getAllProcessesInOrder(gmCxn: RepositoryConnection): ArrayBuffer[String] =
+    {
+        val getFirstProcess: String = s"""
+          select ?firstProcess where
+          {
+              Graph <$defaultPrefix"""+s"""instructionSet>
+              {
+                  ?firstProcess a turbo:TURBO_0010354 .
+                  Minus
+                  {
+                      ?someOtherProcess drivetrain:precedes ?firstProcess .
+                      ?someOtherProcess a turbo:TURBO_0010354 .
+                  }
+              }
+          }
+        """
+        
+        val getProcesses: String = s"""
+          select ?precedingProcess ?succeedingProcess where
+          {
+              Graph <$defaultPrefix"""+s"""instructionSet>
+              {
+                  ?precedingProcess drivetrain:precedes ?succeedingProcess .
+                  ?precedingProcess a turbo:TURBO_0010354 .
+                  ?succeedingProcess a turbo:TURBO_0010354 .
+              }
+          }
+        """
+        
+        val firstProcessRes = update.querySparqlAndUnpackTuple(gmCxn, getFirstProcess, "firstProcess")
+        if (firstProcessRes.size > 1) throw new RuntimeException ("Multiple starting processes discovered in graph model")
+        if (firstProcessRes.size == 0) throw new RuntimeException ("No starting process discovered in graph model")
+        val res = update.querySparqlAndUnpackTuple(gmCxn, getProcesses, Array("precedingProcess", "succeedingProcess"))
+        var currProcess: String = firstProcessRes(0)
+        var processesInOrder: ArrayBuffer[String] = new ArrayBuffer[String]
+        var processMap: HashMap[String, String] = new HashMap[String, String]
+        
+        for (a <- res) processMap += a(0).toString -> a(1).toString
+        
+        while (currProcess != null)
+        {
+            processesInOrder += currProcess
+            if (processMap.contains(currProcess)) currProcess = processMap(currProcess)
+            else currProcess = null
+        }
+        processesInOrder
+    }
 }

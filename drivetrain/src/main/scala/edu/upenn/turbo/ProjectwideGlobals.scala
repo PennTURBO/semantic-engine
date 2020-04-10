@@ -112,4 +112,11 @@ trait ProjectwideGlobals extends Enumeration
       // define enums used as keys for process meta info hashmap
       val PROCESS, DATE, OUTPUTNAMEDGRAPH, METAQUERY, PROCESSRUNTIME, TRIPLESADDED, REPLACEMENTSTRING, INPUTNAMEDGRAPHS, PROCESSSPECIFICATION = Value
 
+      val manyToOneMultiplicity = "https://github.com/PennTURBO/Drivetrain/many-1"
+      val oneToManyMultiplicity = "https://github.com/PennTURBO/Drivetrain/1-many"
+      val oneToOneMultiplicity = "https://github.com/PennTURBO/Drivetrain/1-1"
+      val objToInstRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe"
+      val objToTermRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe"
+      val objFromTermRecipe = "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe"
+      val datatypeRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe"
 }
