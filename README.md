@@ -25,3 +25,7 @@ The following commands can be run via the SBT console
 `test` Runs all tests
 
 `testOnly edu.upenn.turbo.<test_class_name>` Runs the tests inside a specific test class
+
+`testOnly edu.upenn.turbo.SnapshotTest` Runs all Snapshot tests
+
+`testOnly edu.upenn.turbo.SnapshotTest -- -DfindTest={searchString}` Runs Snapshot tests whose name includes the searchString
