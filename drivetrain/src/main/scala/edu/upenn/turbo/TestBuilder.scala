@@ -56,10 +56,9 @@ class TestBuilder extends ProjectwideGlobals
         
         val testFileName = helper.getPostfixfromURI(process) + "SnapshotTest"
         val instructionSetName = instructionSetFile.split("\\.")(0)
-        val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + testFileName + "_" + instructionSetName + ".scala")
+        val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + testFileName + "_" + instructionSetName + ".snapshot")
         testFilePath.getParentFile().mkdirs()
-        //assert(!testFilePath.exists(), s"File $testFileName.scala already exists")
-
+        
         val inputs = RunDrivetrainProcess.getInputs(process)
         
         val inputTriplesArr = generateInputTriples(process, inputs, gmCxn)
@@ -68,7 +67,7 @@ class TestBuilder extends ProjectwideGlobals
         
         println(fullTripleSet)
         
-        update.updateSparql(cxn, fullTripleSet)
+        update.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
         val queryResultMax = RunDrivetrainProcess.runProcess(process)
         val outputNamedGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(queryResultMax(process).defaultOutputGraph)
         val outputPredsMax = getOutputPredicates(cxn, outputNamedGraph)
@@ -78,7 +77,7 @@ class TestBuilder extends ProjectwideGlobals
         
         helper.deleteAllTriplesInDatabase(cxn)
         
-        update.updateSparql(cxn, minimumTripleSet)
+        update.updateSparql(cxn, "INSERT DATA {" + minimumTripleSet + "}")
         val queryResultMin = RunDrivetrainProcess.runProcess(process)
         val outputPredsMin = getOutputPredicates(cxn, outputNamedGraph)
         assert (outputPredsMax.size > 0, s"""Process $process did not create any output based on the "minimum fields" input.
@@ -101,112 +100,35 @@ class TestBuilder extends ProjectwideGlobals
                       minimumInputTriples: String, outputPredsMin: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]], instructionSetName: String,
                       UUIDKey: String)
     {
-        val packageString = "package edu.upenn.turbo\n"
-
-val imports = """
-import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
-import org.eclipse.rdf4j.repository.Repository
-import org.eclipse.rdf4j.repository.RepositoryConnection
-import org.eclipse.rdf4j.model.IRI
-import org.scalatest.BeforeAndAfter
-import org.scalatest._
-import scala.collection.mutable.ArrayBuffer
-import java.util.UUID
-import org.eclipse.rdf4j.model.Literal
-"""
-
-        val classAssertion = s"class "+testFileName+"_"+instructionSetName+" extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers {\n"
+        val maxOutputTriplesAsString = convertOutputTriplesToString(outputPredsMax)
+        val minOutputTriplesAsString = convertOutputTriplesToString(outputPredsMin)
         
-        val clearTestingRepo = "val clearTestingRepositoryAfterRun: Boolean = false\n"
-
-val beforesAndAfters = s"""
-override def beforeAll()
-{
-    graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "$instructionSetFile")
-    cxn = graphDBMaterials.getConnection()
-    gmCxn = graphDBMaterials.getGmConnection()
-    helper.deleteAllTriplesInDatabase(cxn)
-    
-    RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-    RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-    val UUIDKey = "$UUIDKey"
-    RunDrivetrainProcess.setGlobalUUID(UUIDKey)
-    RunDrivetrainProcess.setInputNamedGraphsCache(false)
-}
-
-override def afterAll()
-{
-    ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
-}
-
-before
-{
-    helper.deleteAllTriplesInDatabase(cxn)
-}
-
-"""
-
-val allFieldsTest = buildTestingTemplate("all fields test", maximumInputTriples, process, outputNamedGraph, outputPredsMax, UUIDKey)
-var minFieldsTest = ""
-if (!onlyAllFields) minFieldsTest = buildTestingTemplate("minimum fields test", minimumInputTriples, process, outputNamedGraph, outputPredsMin, UUIDKey)
-
+        val outputNamedGraphDec = s"outputNamedGraph -> $outputNamedGraph"
+        val instructionSetFileDec = s"instructionSetFile -> $instructionSetName"
+        val UUIDKeyDec = s"UUIDKey -> $UUIDKey"
+        val processDec = s"UpdateSpecificationURI -> $process"
+        val maxInputTriplesDec = s"allInputTriples -> $maximumInputTriples"
+        val minInputTriplesDec = s"minimumInputTriples -> $minimumInputTriples"
+        val maxOutputTriplesDec = s"maximumOutputTriples -> $maxOutputTriplesAsString"
+        val minOutputTriplesDec = s"minimumOutputTriples -> $minOutputTriplesAsString"
 
         val pw = new PrintWriter(testFilePath)
-        var fullTestClassString = packageString + imports + classAssertion + clearTestingRepo + beforesAndAfters +
-                                  allFieldsTest + minFieldsTest + "}"
+        var fullTestClassString = instructionSetFileDec + "\n" + outputNamedGraphDec + "\n" + UUIDKeyDec + "\n" + processDec + "\n" + 
+                                  maxInputTriplesDec + "\n" + minInputTriplesDec + "\n" + maxOutputTriplesDec + "\n\n" + minOutputTriplesDec
         pw.write(fullTestClassString)
         pw.close()
     }
     
-    def buildTestingTemplate(testName: String, inputTriples: String, process: String, outputNamedGraph: String, outputPredsList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]], UUIDKey: String): String =
+    def convertOutputTriplesToString(outputPredsList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]]): String =
     {
-val startTest: String = s"""
-test("$testName")
-{
-"""
-
-val insertInputDataset = s"""
-val insertInputDataset = 
-\"\"\"$inputTriples\"\"\"
-update.updateSparql(cxn, insertInputDataset)
-
-"""
-
-val queryPredicates = s"""
-RunDrivetrainProcess.runProcess("$process")
-val query: String = s"SELECT * WHERE {GRAPH <$outputNamedGraph> {?s ?p ?o .}}"
-val result = update.querySparqlAndUnpackTuple(cxn, query, Array("s", "p", "o"))
-val resArr = new ArrayBuffer[String]
-for (index <- 0 to result.size-1) 
-{
-    if (!result(index)(2).isInstanceOf[Literal]) resArr += "<"+result(index)(0)+"> <"+result(index)(1)+"> <"+result(index)(2)+">"
-    else resArr += "<"+result(index)(0)+"> <"+result(index)(1)+"> "+result(index)(2)
-}
-
-
-"""
-
-var fullPredsAsString = ""
-for (index <- 0 to outputPredsList.size-1) 
-{
-    if (!outputPredsList(index)(2).isInstanceOf[Literal]) fullPredsAsString += "\"\"\"<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> <"+outputPredsList(index)(2)+">\"\"\""
-    else fullPredsAsString += "\"\"\"<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> "+outputPredsList(index)(2)+"\"\"\""
-    if (index != outputPredsList.size-1) fullPredsAsString += ",\n"
-}
-val predicateCheck = s"""
-val checkTriples = Array(
-$fullPredsAsString
-)
-
-helper.checkStringArraysForEquivalency(checkTriples, resArr.toArray)("equivalent").asInstanceOf[String] should be ("true")
-
-result.size should be (checkTriples.size)
-
- """
-
-val endTest = "}"
-
-startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
+        var fullPredsAsString = ""
+        for (index <- 0 to outputPredsList.size-1) 
+        {
+            if (!outputPredsList(index)(2).isInstanceOf[Literal]) fullPredsAsString += "\"\"\"<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> <"+outputPredsList(index)(2)+">\"\"\""
+            else fullPredsAsString += "\"\"\"<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> "+outputPredsList(index)(2)+"\"\"\""
+            if (index != outputPredsList.size-1) fullPredsAsString += ",\n"
+        }
+        fullPredsAsString
     }
     
     def getInstanceCountsFromInput(inputs: ArrayBuffer[HashMap[String,org.eclipse.rdf4j.model.Value]]): HashMap[String, Integer] =
@@ -381,17 +303,13 @@ startTest + insertInputDataset + queryPredicates + predicateCheck + endTest
         }
         Array(
         s"""
-            INSERT DATA {
-                   # Required triples
-                   $generatedRequiredTriplesAsString
-                   # Optional triples
-                   $generatedOptionalTriplesAsString
-            }
+             # Required triples
+             $generatedRequiredTriplesAsString
+             # Optional triples
+             $generatedOptionalTriplesAsString
         """,
         s"""
-            INSERT DATA {
-                   $generatedRequiredTriplesAsString
-            }
+             $generatedRequiredTriplesAsString
         """
         )
     }
