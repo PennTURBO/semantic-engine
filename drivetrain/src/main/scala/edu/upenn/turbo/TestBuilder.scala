@@ -106,10 +106,10 @@ class TestBuilder extends ProjectwideGlobals
         val outputNamedGraphDec = s"outputNamedGraph -> $outputNamedGraph"
         val instructionSetFileDec = s"instructionSetFile -> $instructionSetName"
         val UUIDKeyDec = s"UUIDKey -> $UUIDKey"
-        val processDec = s"UpdateSpecificationURI -> $process"
+        val processDec = s"updateSpecificationURI -> $process"
         val maxInputTriplesDec = s"allInputTriples -> $maximumInputTriples"
         val minInputTriplesDec = s"minimumInputTriples -> $minimumInputTriples"
-        val maxOutputTriplesDec = s"maximumOutputTriples -> $maxOutputTriplesAsString"
+        val maxOutputTriplesDec = s"allOutputTriples -> $maxOutputTriplesAsString"
         val minOutputTriplesDec = s"minimumOutputTriples -> $minOutputTriplesAsString"
 
         val pw = new PrintWriter(testFilePath)
@@ -124,9 +124,9 @@ class TestBuilder extends ProjectwideGlobals
         var fullPredsAsString = ""
         for (index <- 0 to outputPredsList.size-1) 
         {
-            if (!outputPredsList(index)(2).isInstanceOf[Literal]) fullPredsAsString += "\"\"\"<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> <"+outputPredsList(index)(2)+">\"\"\""
-            else fullPredsAsString += "\"\"\"<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> "+outputPredsList(index)(2)+"\"\"\""
-            if (index != outputPredsList.size-1) fullPredsAsString += ",\n"
+            if (!outputPredsList(index)(2).isInstanceOf[Literal]) fullPredsAsString += "<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> <"+outputPredsList(index)(2)+">"
+            else fullPredsAsString += "<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> "+outputPredsList(index)(2)
+            if (index != outputPredsList.size-1) fullPredsAsString += "\n"
         }
         fullPredsAsString
     }

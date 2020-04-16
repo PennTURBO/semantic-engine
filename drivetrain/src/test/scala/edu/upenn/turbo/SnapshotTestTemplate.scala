@@ -14,36 +14,21 @@ import java.io.File
 class SnapshotTest extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers {
 val clearTestingRepositoryAfterRun: Boolean = false
 
+var testsToRun: Array[File] = null
+var allTests: Array[File] = null
 var testSearchString: Option[String] = None
-var testsToRun: Array[File] = Array()
-
+  
     override def run(testName: Option[String], args: org.scalatest.Args): Status =
     {
-        logger.info("step 1")
         if (args.configMap.contains("findTest")) testSearchString = Option(args.configMap.getRequired[String]("findTest"))
-        logger.info("step 2")
-        logger.info("step 3")
+        findTestsFromSearchString(testSearchString)
         val superRes = super.run(testName, args)
-        logger.info("step 4")
         superRes
     }
-    
-    override def beforeAll()
+
+    before
     {
-        logger.info("step 6")
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "post_icbo_synthea_omop_cnp_transformation_instructions.ttl")
-        cxn = graphDBMaterials.getConnection()
-        gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(cxn)
-        
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-        val UUIDKey = "562783805f5b4da38876b9abfbfa06d7"
-        RunDrivetrainProcess.setGlobalUUID(UUIDKey)
-        RunDrivetrainProcess.setInputNamedGraphsCache(false)
-        
-        testsToRun = findTestsFromSearchString(testSearchString)
-        logger.info("step 7")
     }
     
     override def afterAll()
@@ -51,34 +36,113 @@ var testsToRun: Array[File] = Array()
         ConnectToGraphDB.closeGraphConnection(graphDBMaterials, clearTestingRepositoryAfterRun)
     }
     
-    def findTestsFromSearchString(searchStringOptional: Option[String]): Array[File] =
+    def findTestsFromSearchString(searchStringOptional: Option[String])
     {
-        val directory = new File("src//test//scala//edu//upenn//turbo//AutoGenTests")
-        val availableFiles = directory.listFiles.filter(_.isFile).toArray
-        var testsToRun: Array[File] = null
         if (!searchStringOptional.isDefined) 
         {
             logger.info("No specific test search given; running all Snapshot tests")
-            testsToRun = availableFiles
+            testsToRun = allTests
         }
-        else 
+        else
         {
             val searchString: String = searchStringOptional.get
             logger.info("Searching for Snapshot tests containing string " + searchString)
+            val regexSearch: scala.util.matching.Regex = searchString.toLowerCase().r
+            var testsToRunBuffer = new ArrayBuffer[File]
+            for (singleTest <- allTests) if (regexSearch.findFirstIn(singleTest.toString.toLowerCase()) != None) testsToRunBuffer += singleTest
+            testsToRun = testsToRunBuffer.toArray
         }
-        logger.info("The following tests will be run")
+        logger.info("The following tests will be run (list size:" + testsToRun.size+")")
         testsToRun.foreach{ test => logger.info(test.toString)}
-        testsToRun
+        println()
     }
     
-    testsToRun.foreach{ testName =>
-        test(s"first test on $testName")
+    def getAllTests()
+    {
+        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(false)
+        cxn = graphDBMaterials.getConnection()
+        gmCxn = graphDBMaterials.getGmConnection()
+        
+        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+        RunDrivetrainProcess.setInputNamedGraphsCache(false)
+        
+        OntologyLoader.addOntologyFromUrl(gmCxn)
+        
+        val directory = new File("src//test//scala//edu//upenn//turbo//AutoGenTests")
+        allTests = directory.listFiles.filter(_.isFile).toArray
+    }
+    
+    getAllTests()
+    var prevInstructionSet = ""
+    allTests.foreach{ testName =>
+      
+        val fileMap = io.Source
+          .fromFile(testName)
+          .mkString
+          .split("(?=\\n\\S+\\s*->)")
+          .map(_.trim.split("\\s*->\\s*"))
+          .map(arr => (arr(0)->arr(1)))
+          .toMap     
+
+        //for ((k,v) <- fileMap) println("key: " + k + " value: " + v)
+        
+        test(s"all fields test on $testName")
         {
-            println(s"running first test on $testName")
+            assume(testsToRun.contains(testName))
+            RunDrivetrainProcess.setGlobalUUID(fileMap("UUIDKey"))
+            
+            if (fileMap("instructionSetFile") != prevInstructionSet) 
+            {
+                DrivetrainDriver.updateModel(gmCxn, fileMap("instructionSetFile")+".ttl")
+                OntologyLoader.addOntologyFromUrl(gmCxn)
+                prevInstructionSet = fileMap("instructionSetFile")
+            }
+            
+            val inputTriples = fileMap("allInputTriples")
+            update.updateSparql(cxn, s"INSERT DATA { $inputTriples \n}")
+            RunDrivetrainProcess.runProcess(fileMap("updateSpecificationURI"))
+            val outputTriples = fileMap("allOutputTriples").split("\n")
+            
+            val getAllTriples: String = "SELECT * WHERE {GRAPH <"+fileMap("outputNamedGraph")+"> {?s ?p ?o .}}"
+            val result = update.querySparqlAndUnpackTuple(cxn, getAllTriples, Array("s", "p", "o"))
+            
+            var resultsArray = new ArrayBuffer[String]
+            for (index <- 0 to result.size-1) 
+            {
+                if (!result(index)(2).isInstanceOf[Literal]) resultsArray += "<"+result(index)(0)+"> <"+result(index)(1)+"> <"+result(index)(2)+">"
+                else resultsArray += "<"+result(index)(0)+"> <"+result(index)(1)+"> "+result(index)(2)
+            }
+            helper.checkStringArraysForEquivalency(outputTriples, resultsArray.toArray)("equivalent").asInstanceOf[String] should be ("true")
+
         }
-        test(s"second test on $testName")
+        test(s"minimum fields test on $testName")
         {
-            println(s"second test on $testName")   
+            assume(testsToRun.contains(testName))
+            RunDrivetrainProcess.setGlobalUUID(fileMap("UUIDKey"))
+            
+            if (fileMap("instructionSetFile") != prevInstructionSet) 
+            {
+                DrivetrainDriver.updateModel(gmCxn, fileMap("instructionSetFile")+".ttl")
+                OntologyLoader.addOntologyFromUrl(gmCxn)
+                prevInstructionSet = fileMap("instructionSetFile")
+            }
+            
+            val inputTriples = fileMap("minimumInputTriples")
+            update.updateSparql(cxn, s"INSERT DATA { $inputTriples \n}")
+            RunDrivetrainProcess.runProcess(fileMap("updateSpecificationURI"))
+            val outputTriples = fileMap("minimumOutputTriples").split("\n")
+            
+            val getAllTriples: String = "SELECT * WHERE {GRAPH <"+fileMap("outputNamedGraph")+"> {?s ?p ?o .}}"
+            val result = update.querySparqlAndUnpackTuple(cxn, getAllTriples, Array("s", "p", "o"))
+            
+            var resultsArray = new ArrayBuffer[String]
+            for (index <- 0 to result.size-1) 
+            {
+                if (!result(index)(2).isInstanceOf[Literal]) resultsArray += "<"+result(index)(0)+"> <"+result(index)(1)+"> <"+result(index)(2)+">"
+                else resultsArray += "<"+result(index)(0)+"> <"+result(index)(1)+"> "+result(index)(2)
+            }
+            helper.checkStringArraysForEquivalency(outputTriples, resultsArray.toArray)("equivalent").asInstanceOf[String] should be ("true")
         }
     }
 }

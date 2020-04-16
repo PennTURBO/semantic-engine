@@ -1,0 +1,70 @@
+instructionSetFile -> post_icbo_synthea_omop_cnp_transformation_instructions
+outputNamedGraph -> http://www.itmat.upenn.edu/biobank/expanded
+UUIDKey -> de26e7fc87214bfc96b467fc2fad4a23
+updateSpecificationURI -> https://github.com/PennTURBO/Drivetrain/Prescription
+allInputTriples -> 
+             # Required triples
+             GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
+<http://api.stardog.com/drug_exposure_1> <http://api.stardog.com/drug_exposure#drug_exposure_start_datetime> "362454259abc"^^xsd:String .
+<http://api.stardog.com/drug_exposure_1> <http://api.stardog.com/drug_exposure#drug_type_concept_id> "868359611abc"^^xsd:String .
+<http://api.stardog.com/drug_exposure_1> <http://api.stardog.com/drug_exposure#drug_source_value> "808753002abc"^^xsd:String .
+<http://api.stardog.com/drug_exposure_1> rdf:type <http://api.stardog.com/drug_exposure> .
+<http://api.stardog.com/drug_exposure_1> <http://api.stardog.com/drug_exposure#drug_exposure_id> "1006779358abc"^^xsd:String .
+}
+GRAPH <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> {
+<https://github.com/PennTURBO/Drivetrain/WrittenNotDispensedMOD_1> <http://transformunify.org/ontologies/TURBO_0010147> "868359611abc"^^xsd:String .
+<https://github.com/PennTURBO/Drivetrain/WrittenNotDispensedMOD_1> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://purl.obolibrary.org/obo/OBI_0000011> .
+}
+
+             # Optional triples
+             
+        
+minimumInputTriples -> 
+             GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
+<http://api.stardog.com/drug_exposure_1> <http://api.stardog.com/drug_exposure#drug_exposure_start_datetime> "362454259abc"^^xsd:String .
+<http://api.stardog.com/drug_exposure_1> <http://api.stardog.com/drug_exposure#drug_type_concept_id> "868359611abc"^^xsd:String .
+<http://api.stardog.com/drug_exposure_1> <http://api.stardog.com/drug_exposure#drug_source_value> "808753002abc"^^xsd:String .
+<http://api.stardog.com/drug_exposure_1> rdf:type <http://api.stardog.com/drug_exposure> .
+<http://api.stardog.com/drug_exposure_1> <http://api.stardog.com/drug_exposure#drug_exposure_id> "1006779358abc"^^xsd:String .
+}
+GRAPH <https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl> {
+<https://github.com/PennTURBO/Drivetrain/WrittenNotDispensedMOD_1> <http://transformunify.org/ontologies/TURBO_0010147> "868359611abc"^^xsd:String .
+<https://github.com/PennTURBO/Drivetrain/WrittenNotDispensedMOD_1> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://purl.obolibrary.org/obo/OBI_0000011> .
+}
+
+        
+allOutputTriples -> <http://api.stardog.com/drug_exposure_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://api.stardog.com/drug_exposure>
+<http://www.itmat.upenn.edu/biobank/da7ae504ae56137e01654591d26db5c9b0c45637c31aa6fed0f0b8fad9862f75> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010433>
+<http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/PDRO_0000024>
+<http://www.itmat.upenn.edu/biobank/05abdbd424c63fb92501d48d54dd4b2e8cc9f95297cb4a76e504936398b2150b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000028>
+<http://www.itmat.upenn.edu/biobank/8f7467d72ccbe57ea6bdbc3c49d5c9062d11950c961785779a58cc4e0b525d3e> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000416>
+<http://api.stardog.com/drug_exposure_1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6>
+<http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010707>
+<http://www.itmat.upenn.edu/biobank/05abdbd424c63fb92501d48d54dd4b2e8cc9f95297cb4a76e504936398b2150b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010707>
+<http://www.itmat.upenn.edu/biobank/05abdbd424c63fb92501d48d54dd4b2e8cc9f95297cb4a76e504936398b2150b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/da7ae504ae56137e01654591d26db5c9b0c45637c31aa6fed0f0b8fad9862f75>
+<http://www.itmat.upenn.edu/biobank/8f7467d72ccbe57ea6bdbc3c49d5c9062d11950c961785779a58cc4e0b525d3e> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010706>
+<http://www.itmat.upenn.edu/biobank/da7ae504ae56137e01654591d26db5c9b0c45637c31aa6fed0f0b8fad9862f75> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6>
+<http://www.itmat.upenn.edu/biobank/da7ae504ae56137e01654591d26db5c9b0c45637c31aa6fed0f0b8fad9862f75> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/8f7467d72ccbe57ea6bdbc3c49d5c9062d11950c961785779a58cc4e0b525d3e>
+<http://www.itmat.upenn.edu/biobank/da7ae504ae56137e01654591d26db5c9b0c45637c31aa6fed0f0b8fad9862f75> <http://purl.obolibrary.org/obo/BFO_0000051> <http://transformunify.org/ontologies/TURBO_0010511>
+<http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6> <http://transformunify.org/ontologies/TURBO_0010094> "808753002abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://www.itmat.upenn.edu/biobank/05abdbd424c63fb92501d48d54dd4b2e8cc9f95297cb4a76e504936398b2150b> <http://transformunify.org/ontologies/TURBO_0010094> "1006779358abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://www.itmat.upenn.edu/biobank/8f7467d72ccbe57ea6bdbc3c49d5c9062d11950c961785779a58cc4e0b525d3e> <http://purl.obolibrary.org/obo/IAO_0000004> "362454259abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6> <http://purl.obolibrary.org/obo/IAO_0000581> <http://www.itmat.upenn.edu/biobank/8f7467d72ccbe57ea6bdbc3c49d5c9062d11950c961785779a58cc4e0b525d3e>
+
+minimumOutputTriples -> <http://api.stardog.com/drug_exposure_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://api.stardog.com/drug_exposure>
+<http://www.itmat.upenn.edu/biobank/da7ae504ae56137e01654591d26db5c9b0c45637c31aa6fed0f0b8fad9862f75> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010433>
+<http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/PDRO_0000024>
+<http://www.itmat.upenn.edu/biobank/05abdbd424c63fb92501d48d54dd4b2e8cc9f95297cb4a76e504936398b2150b> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000028>
+<http://www.itmat.upenn.edu/biobank/8f7467d72ccbe57ea6bdbc3c49d5c9062d11950c961785779a58cc4e0b525d3e> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000416>
+<http://api.stardog.com/drug_exposure_1> <http://transformunify.org/ontologies/TURBO_0010113> <http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6>
+<http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010707>
+<http://www.itmat.upenn.edu/biobank/05abdbd424c63fb92501d48d54dd4b2e8cc9f95297cb4a76e504936398b2150b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010707>
+<http://www.itmat.upenn.edu/biobank/05abdbd424c63fb92501d48d54dd4b2e8cc9f95297cb4a76e504936398b2150b> <http://purl.obolibrary.org/obo/BFO_0000050> <http://www.itmat.upenn.edu/biobank/da7ae504ae56137e01654591d26db5c9b0c45637c31aa6fed0f0b8fad9862f75>
+<http://www.itmat.upenn.edu/biobank/8f7467d72ccbe57ea6bdbc3c49d5c9062d11950c961785779a58cc4e0b525d3e> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010706>
+<http://www.itmat.upenn.edu/biobank/da7ae504ae56137e01654591d26db5c9b0c45637c31aa6fed0f0b8fad9862f75> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6>
+<http://www.itmat.upenn.edu/biobank/da7ae504ae56137e01654591d26db5c9b0c45637c31aa6fed0f0b8fad9862f75> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/8f7467d72ccbe57ea6bdbc3c49d5c9062d11950c961785779a58cc4e0b525d3e>
+<http://www.itmat.upenn.edu/biobank/da7ae504ae56137e01654591d26db5c9b0c45637c31aa6fed0f0b8fad9862f75> <http://purl.obolibrary.org/obo/BFO_0000051> <http://transformunify.org/ontologies/TURBO_0010511>
+<http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6> <http://transformunify.org/ontologies/TURBO_0010094> "808753002abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://www.itmat.upenn.edu/biobank/05abdbd424c63fb92501d48d54dd4b2e8cc9f95297cb4a76e504936398b2150b> <http://transformunify.org/ontologies/TURBO_0010094> "1006779358abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://www.itmat.upenn.edu/biobank/8f7467d72ccbe57ea6bdbc3c49d5c9062d11950c961785779a58cc4e0b525d3e> <http://purl.obolibrary.org/obo/IAO_0000004> "362454259abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://www.itmat.upenn.edu/biobank/5d7cc0e93b6e2ded6596f368f81417d5720bf28b857ae8bbb7ae00b38db298e6> <http://purl.obolibrary.org/obo/IAO_0000581> <http://www.itmat.upenn.edu/biobank/8f7467d72ccbe57ea6bdbc3c49d5c9062d11950c961785779a58cc4e0b525d3e>

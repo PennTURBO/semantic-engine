@@ -1,0 +1,178 @@
+instructionSetFile -> post_icbo_synthea_omop_cnp_transformation_instructions
+outputNamedGraph -> http://www.itmat.upenn.edu/biobank/expanded
+UUIDKey -> e274fcf4e65840ee8b195d0755cb2f5d
+updateSpecificationURI -> https://github.com/PennTURBO/Drivetrain/HcpParticipation
+allInputTriples -> 
+             # Required triples
+             GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
+<http://api.stardog.com/procedure_occurrence_2> rdf:type <http://api.stardog.com/procedure_occurrence> .
+<http://api.stardog.com/procedure_occurrence_1> <http://api.stardog.com/procedure_occurrence#person_id> "2144189648abc"^^xsd:String .
+<http://api.stardog.com/procedure_occurrence_1> rdf:type <http://api.stardog.com/procedure_occurrence> .
+<http://api.stardog.com/procedure_occurrence_2> <http://api.stardog.com/procedure_occurrence#person_id> "2144189648abc"^^xsd:String .
+}
+GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+<http://transformunify.org/ontologies/TURBO_0010433_2> <http://purl.obolibrary.org/obo/IAO_0000219> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2> .
+<https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0000093> .
+<http://transformunify.org/ontologies/TURBO_0010433_2> rdf:type <http://transformunify.org/ontologies/TURBO_0010433> .
+<http://api.stardog.com/procedure_occurrence_2> rdf:type <http://api.stardog.com/procedure_occurrence> .
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> .
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> rdf:type <http://purl.obolibrary.org/obo/IAO_0000028> .
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> rdf:type <http://transformunify.org/ontologies/TURBO_0010433> .
+<http://transformunify.org/ontologies/TURBO_0010433_1> <http://purl.obolibrary.org/obo/IAO_0000219> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1> .
+<http://transformunify.org/ontologies/TURBO_0010433_1> rdf:type <http://transformunify.org/ontologies/TURBO_0010433> .
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/BFO_0000001> .
+<http://api.stardog.com/person_1> <http://transformunify.org/ontologies/TURBO_0010113> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1> .
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> rdf:type <http://purl.obolibrary.org/obo/IAO_0000028> .
+<http://api.stardog.com/procedure_occurrence_1> rdf:type <http://api.stardog.com/procedure_occurrence> .
+<http://purl.obolibrary.org/obo/NCBITaxon_9606_1> rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/BFO_0000001> .
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> <http://purl.obolibrary.org/obo/IAO_0000219> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1> .
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000051> <http://transformunify.org/ontologies/TURBO_0010396> .
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000051> <http://transformunify.org/ontologies/TURBO_0010396> .
+<http://purl.obolibrary.org/obo/NCBITaxon_9606_1> <http://purl.obolibrary.org/obo/RO_0000087> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1> .
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> rdf:type <http://transformunify.org/ontologies/TURBO_0010433> .
+<http://api.stardog.com/procedure_occurrence_1> <http://transformunify.org/ontologies/TURBO_0010113> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1> .
+<http://api.stardog.com/person_1> rdf:type <http://api.stardog.com/person> .
+<http://api.stardog.com/procedure_occurrence_2> <http://transformunify.org/ontologies/TURBO_0010113> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2> .
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> <http://purl.obolibrary.org/obo/IAO_0000219> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1> .
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> .
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^xsd:String .
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^xsd:String .
+}
+
+             # Optional triples
+             
+        
+minimumInputTriples -> 
+             GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
+<http://api.stardog.com/procedure_occurrence_2> rdf:type <http://api.stardog.com/procedure_occurrence> .
+<http://api.stardog.com/procedure_occurrence_1> <http://api.stardog.com/procedure_occurrence#person_id> "2144189648abc"^^xsd:String .
+<http://api.stardog.com/procedure_occurrence_1> rdf:type <http://api.stardog.com/procedure_occurrence> .
+<http://api.stardog.com/procedure_occurrence_2> <http://api.stardog.com/procedure_occurrence#person_id> "2144189648abc"^^xsd:String .
+}
+GRAPH <http://www.itmat.upenn.edu/biobank/expanded> {
+<http://transformunify.org/ontologies/TURBO_0010433_2> <http://purl.obolibrary.org/obo/IAO_0000219> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2> .
+<https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0000093> .
+<http://transformunify.org/ontologies/TURBO_0010433_2> rdf:type <http://transformunify.org/ontologies/TURBO_0010433> .
+<http://api.stardog.com/procedure_occurrence_2> rdf:type <http://api.stardog.com/procedure_occurrence> .
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> .
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> rdf:type <http://purl.obolibrary.org/obo/IAO_0000028> .
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> rdf:type <http://transformunify.org/ontologies/TURBO_0010433> .
+<http://transformunify.org/ontologies/TURBO_0010433_1> <http://purl.obolibrary.org/obo/IAO_0000219> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1> .
+<http://transformunify.org/ontologies/TURBO_0010433_1> rdf:type <http://transformunify.org/ontologies/TURBO_0010433> .
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/BFO_0000001> .
+<http://api.stardog.com/person_1> <http://transformunify.org/ontologies/TURBO_0010113> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1> .
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> rdf:type <http://purl.obolibrary.org/obo/IAO_0000028> .
+<http://api.stardog.com/procedure_occurrence_1> rdf:type <http://api.stardog.com/procedure_occurrence> .
+<http://purl.obolibrary.org/obo/NCBITaxon_9606_1> rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/BFO_0000001> .
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> <http://purl.obolibrary.org/obo/IAO_0000219> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1> .
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000051> <http://transformunify.org/ontologies/TURBO_0010396> .
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000051> <http://transformunify.org/ontologies/TURBO_0010396> .
+<http://purl.obolibrary.org/obo/NCBITaxon_9606_1> <http://purl.obolibrary.org/obo/RO_0000087> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1> .
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> rdf:type <http://transformunify.org/ontologies/TURBO_0010433> .
+<http://api.stardog.com/procedure_occurrence_1> <http://transformunify.org/ontologies/TURBO_0010113> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1> .
+<http://api.stardog.com/person_1> rdf:type <http://api.stardog.com/person> .
+<http://api.stardog.com/procedure_occurrence_2> <http://transformunify.org/ontologies/TURBO_0010113> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2> .
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> <http://purl.obolibrary.org/obo/IAO_0000219> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1> .
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> .
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^xsd:String .
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^xsd:String .
+}
+
+        
+allOutputTriples -> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/NCBITaxon_9606>
+<https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0000093>
+<http://api.stardog.com/person_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://api.stardog.com/person>
+<http://transformunify.org/ontologies/TURBO_0010433_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010433>
+<http://api.stardog.com/procedure_occurrence_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://api.stardog.com/procedure_occurrence>
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/BFO_0000001>
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000028>
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010433>
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000028>
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010433>
+<http://api.stardog.com/procedure_occurrence_2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://api.stardog.com/procedure_occurrence>
+<http://transformunify.org/ontologies/TURBO_0010433_2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010433>
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/BFO_0000001>
+<http://www.itmat.upenn.edu/biobank/4efa2fbf998de6c77ee22f98551ac7cc19ff8ae82e8d9be079fd38071c7ef69a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Axiom>
+<http://www.itmat.upenn.edu/biobank/c0a82e0e88cc2823cb5ea7ff79818c5daa0f199ce609c3cc273997b22df40272> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010404>
+<http://www.itmat.upenn.edu/biobank/5907cacf993c6739a695da8ff6bde65179a4e7a645ce92c3d3361ef457c06f07> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Axiom>
+<http://www.itmat.upenn.edu/biobank/12689ee314b491e48243fa5a6b42a5e29ffa9bbe5dd06f2f3096d83caadfdc5d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010404>
+<http://api.stardog.com/person_1> <http://transformunify.org/ontologies/TURBO_0010113> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1>
+<http://api.stardog.com/procedure_occurrence_1> <http://transformunify.org/ontologies/TURBO_0010113> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1>
+<http://api.stardog.com/procedure_occurrence_2> <http://transformunify.org/ontologies/TURBO_0010113> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2>
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext>
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext>
+<http://www.itmat.upenn.edu/biobank/c0a82e0e88cc2823cb5ea7ff79818c5daa0f199ce609c3cc273997b22df40272> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010464>
+<http://www.itmat.upenn.edu/biobank/12689ee314b491e48243fa5a6b42a5e29ffa9bbe5dd06f2f3096d83caadfdc5d> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010464>
+<http://transformunify.org/ontologies/TURBO_0010433_1> <http://purl.obolibrary.org/obo/IAO_0000219> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1>
+<http://transformunify.org/ontologies/TURBO_0010433_1> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/c0a82e0e88cc2823cb5ea7ff79818c5daa0f199ce609c3cc273997b22df40272>
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> <http://purl.obolibrary.org/obo/IAO_0000219> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1>
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> <http://purl.obolibrary.org/obo/IAO_0000219> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1>
+<http://transformunify.org/ontologies/TURBO_0010433_2> <http://purl.obolibrary.org/obo/IAO_0000219> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2>
+<http://transformunify.org/ontologies/TURBO_0010433_2> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/12689ee314b491e48243fa5a6b42a5e29ffa9bbe5dd06f2f3096d83caadfdc5d>
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000051> <http://transformunify.org/ontologies/TURBO_0010396>
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000051> <http://transformunify.org/ontologies/TURBO_0010396>
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://www.itmat.upenn.edu/biobank/c0a82e0e88cc2823cb5ea7ff79818c5daa0f199ce609c3cc273997b22df40272> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://www.itmat.upenn.edu/biobank/12689ee314b491e48243fa5a6b42a5e29ffa9bbe5dd06f2f3096d83caadfdc5d> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1> <http://purl.obolibrary.org/obo/BFO_0000055> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1>
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2> <http://purl.obolibrary.org/obo/BFO_0000055> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1>
+<http://purl.obolibrary.org/obo/NCBITaxon_9606_1> <http://purl.obolibrary.org/obo/RO_0000087> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1>
+<http://www.itmat.upenn.edu/biobank/4efa2fbf998de6c77ee22f98551ac7cc19ff8ae82e8d9be079fd38071c7ef69a> <http://www.w3.org/2002/07/owl#annotatedSource> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1>
+<http://www.itmat.upenn.edu/biobank/5907cacf993c6739a695da8ff6bde65179a4e7a645ce92c3d3361ef457c06f07> <http://www.w3.org/2002/07/owl#annotatedSource> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2>
+<http://www.itmat.upenn.edu/biobank/4efa2fbf998de6c77ee22f98551ac7cc19ff8ae82e8d9be079fd38071c7ef69a> <http://www.w3.org/2002/07/owl#annotatedProperty> <http://purl.obolibrary.org/obo/BFO_0000055>
+<http://www.itmat.upenn.edu/biobank/5907cacf993c6739a695da8ff6bde65179a4e7a645ce92c3d3361ef457c06f07> <http://www.w3.org/2002/07/owl#annotatedProperty> <http://purl.obolibrary.org/obo/BFO_0000055>
+<http://www.itmat.upenn.edu/biobank/4efa2fbf998de6c77ee22f98551ac7cc19ff8ae82e8d9be079fd38071c7ef69a> <http://www.w3.org/2002/07/owl#annotatedTarget> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1>
+<http://www.itmat.upenn.edu/biobank/5907cacf993c6739a695da8ff6bde65179a4e7a645ce92c3d3361ef457c06f07> <http://www.w3.org/2002/07/owl#annotatedTarget> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1>
+<http://www.itmat.upenn.edu/biobank/4efa2fbf998de6c77ee22f98551ac7cc19ff8ae82e8d9be079fd38071c7ef69a> <http://www.geneontology.org/formats/oboInOwl#hasDbXref> <http://www.itmat.upenn.edu/biobank/c0a82e0e88cc2823cb5ea7ff79818c5daa0f199ce609c3cc273997b22df40272>
+<http://www.itmat.upenn.edu/biobank/5907cacf993c6739a695da8ff6bde65179a4e7a645ce92c3d3361ef457c06f07> <http://www.geneontology.org/formats/oboInOwl#hasDbXref> <http://www.itmat.upenn.edu/biobank/12689ee314b491e48243fa5a6b42a5e29ffa9bbe5dd06f2f3096d83caadfdc5d>
+
+minimumOutputTriples -> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/NCBITaxon_9606>
+<https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/OBI_0000093>
+<http://api.stardog.com/person_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://api.stardog.com/person>
+<http://transformunify.org/ontologies/TURBO_0010433_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010433>
+<http://api.stardog.com/procedure_occurrence_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://api.stardog.com/procedure_occurrence>
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/BFO_0000001>
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000028>
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010433>
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000028>
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010433>
+<http://api.stardog.com/procedure_occurrence_2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://api.stardog.com/procedure_occurrence>
+<http://transformunify.org/ontologies/TURBO_0010433_2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010433>
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/BFO_0000001>
+<http://www.itmat.upenn.edu/biobank/4efa2fbf998de6c77ee22f98551ac7cc19ff8ae82e8d9be079fd38071c7ef69a> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Axiom>
+<http://www.itmat.upenn.edu/biobank/c0a82e0e88cc2823cb5ea7ff79818c5daa0f199ce609c3cc273997b22df40272> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010404>
+<http://www.itmat.upenn.edu/biobank/5907cacf993c6739a695da8ff6bde65179a4e7a645ce92c3d3361ef457c06f07> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Axiom>
+<http://www.itmat.upenn.edu/biobank/12689ee314b491e48243fa5a6b42a5e29ffa9bbe5dd06f2f3096d83caadfdc5d> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010404>
+<http://api.stardog.com/person_1> <http://transformunify.org/ontologies/TURBO_0010113> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1>
+<http://api.stardog.com/procedure_occurrence_1> <http://transformunify.org/ontologies/TURBO_0010113> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1>
+<http://api.stardog.com/procedure_occurrence_2> <http://transformunify.org/ontologies/TURBO_0010113> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2>
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext>
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext>
+<http://www.itmat.upenn.edu/biobank/c0a82e0e88cc2823cb5ea7ff79818c5daa0f199ce609c3cc273997b22df40272> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010464>
+<http://www.itmat.upenn.edu/biobank/12689ee314b491e48243fa5a6b42a5e29ffa9bbe5dd06f2f3096d83caadfdc5d> <http://purl.obolibrary.org/obo/BFO_0000050> <http://transformunify.org/ontologies/TURBO_0010464>
+<http://transformunify.org/ontologies/TURBO_0010433_1> <http://purl.obolibrary.org/obo/IAO_0000219> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1>
+<http://transformunify.org/ontologies/TURBO_0010433_1> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/c0a82e0e88cc2823cb5ea7ff79818c5daa0f199ce609c3cc273997b22df40272>
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> <http://purl.obolibrary.org/obo/IAO_0000219> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1>
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> <http://purl.obolibrary.org/obo/IAO_0000219> <http://purl.obolibrary.org/obo/NCBITaxon_9606_1>
+<http://transformunify.org/ontologies/TURBO_0010433_2> <http://purl.obolibrary.org/obo/IAO_0000219> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2>
+<http://transformunify.org/ontologies/TURBO_0010433_2> <http://purl.obolibrary.org/obo/IAO_0000219> <http://www.itmat.upenn.edu/biobank/12689ee314b491e48243fa5a6b42a5e29ffa9bbe5dd06f2f3096d83caadfdc5d>
+<http://transformunify.org/ontologies/TURBO_0010433_1_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000051> <http://transformunify.org/ontologies/TURBO_0010396>
+<http://transformunify.org/ontologies/TURBO_0010433_2_KeyContext> <http://purl.obolibrary.org/obo/BFO_0000051> <http://transformunify.org/ontologies/TURBO_0010396>
+<http://purl.obolibrary.org/obo/IAO_0000028_1_KeyContext> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://purl.obolibrary.org/obo/IAO_0000028_2_KeyContext> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://www.itmat.upenn.edu/biobank/c0a82e0e88cc2823cb5ea7ff79818c5daa0f199ce609c3cc273997b22df40272> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<http://www.itmat.upenn.edu/biobank/12689ee314b491e48243fa5a6b42a5e29ffa9bbe5dd06f2f3096d83caadfdc5d> <http://transformunify.org/ontologies/TURBO_0010094> "2144189648abc"^^<http://www.w3.org/2001/XMLSchema#String>
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1> <http://purl.obolibrary.org/obo/BFO_0000055> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1>
+<https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2> <http://purl.obolibrary.org/obo/BFO_0000055> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1>
+<http://purl.obolibrary.org/obo/NCBITaxon_9606_1> <http://purl.obolibrary.org/obo/RO_0000087> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1>
+<http://www.itmat.upenn.edu/biobank/4efa2fbf998de6c77ee22f98551ac7cc19ff8ae82e8d9be079fd38071c7ef69a> <http://www.w3.org/2002/07/owl#annotatedSource> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_1>
+<http://www.itmat.upenn.edu/biobank/5907cacf993c6739a695da8ff6bde65179a4e7a645ce92c3d3361ef457c06f07> <http://www.w3.org/2002/07/owl#annotatedSource> <https://github.com/PennTURBO/Drivetrain/ProcToBeTyped_2>
+<http://www.itmat.upenn.edu/biobank/4efa2fbf998de6c77ee22f98551ac7cc19ff8ae82e8d9be079fd38071c7ef69a> <http://www.w3.org/2002/07/owl#annotatedProperty> <http://purl.obolibrary.org/obo/BFO_0000055>
+<http://www.itmat.upenn.edu/biobank/5907cacf993c6739a695da8ff6bde65179a4e7a645ce92c3d3361ef457c06f07> <http://www.w3.org/2002/07/owl#annotatedProperty> <http://purl.obolibrary.org/obo/BFO_0000055>
+<http://www.itmat.upenn.edu/biobank/4efa2fbf998de6c77ee22f98551ac7cc19ff8ae82e8d9be079fd38071c7ef69a> <http://www.w3.org/2002/07/owl#annotatedTarget> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1>
+<http://www.itmat.upenn.edu/biobank/5907cacf993c6739a695da8ff6bde65179a4e7a645ce92c3d3361ef457c06f07> <http://www.w3.org/2002/07/owl#annotatedTarget> <https://github.com/PennTURBO/Drivetrain/RoleToBeTyped_1>
+<http://www.itmat.upenn.edu/biobank/4efa2fbf998de6c77ee22f98551ac7cc19ff8ae82e8d9be079fd38071c7ef69a> <http://www.geneontology.org/formats/oboInOwl#hasDbXref> <http://www.itmat.upenn.edu/biobank/c0a82e0e88cc2823cb5ea7ff79818c5daa0f199ce609c3cc273997b22df40272>
+<http://www.itmat.upenn.edu/biobank/5907cacf993c6739a695da8ff6bde65179a4e7a645ce92c3d3361ef457c06f07> <http://www.geneontology.org/formats/oboInOwl#hasDbXref> <http://www.itmat.upenn.edu/biobank/12689ee314b491e48243fa5a6b42a5e29ffa9bbe5dd06f2f3096d83caadfdc5d>
