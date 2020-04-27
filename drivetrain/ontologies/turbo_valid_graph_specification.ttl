@@ -201,12 +201,14 @@ obo:IAO_0000028
   drivetrain:hasPossibleContext drivetrain:KeyContext ;
   drivetrain:hasPossibleContext drivetrain:IndexContext ;
   drivetrain:hasPossibleContext drivetrain:LossOfFunctionCridContext ;
+  drivetrain:hasPossibleContext drivetrain:MeasurementCridContext ;
 .
 obo:IAO_0000578
   drivetrain:hasPossibleContext drivetrain:PatientCridContext ;
   drivetrain:hasPossibleContext drivetrain:EncounterCridContext ;
   drivetrain:hasPossibleContext drivetrain:TumorCridContext ;
   drivetrain:hasPossibleContext drivetrain:LossOfFunctionCridContext ;
+  drivetrain:hasPossibleContext drivetrain:MeasurementCridContext ;
 .
 ontologies:TURBO_0010433 
   drivetrain:hasPossibleContext drivetrain:KeyContext ;
@@ -1487,6 +1489,43 @@ drivetrain:KeyDenotesMeas
   drivetrain:subjectUsesContext drivetrain:KeyContext ;
 .
 
+drivetrain:CridDenotesMeas
+  a drivetrain:InstanceToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000578 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object drivetrain:MeasToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:MeasurementCridContext ;
+.
+
+drivetrain:SymbolPartOfCridForMeasurement
+  a drivetrain:InstanceToInstanceRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object obo:IAO_0000578 ;
+  drivetrain:subjectUsesContext drivetrain:MeasurementCridContext ;
+  drivetrain:objectUsesContext drivetrain:MeasurementCridContext ;
+.
+
+drivetrain:SymbolHasRepresentationForMeasurement
+  a drivetrain:InstanceToLiteralRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate turbo:TURBO_0010094 ;
+  drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
+  drivetrain:object drivetrain:measurementSymbol_LiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:MeasurementCridContext ;
+.
+
+drivetrain:measurementIsAbnormal
+  a drivetrain:InstanceToLiteralRecipe ;
+  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:subject drivetrain:MeasToBeTyped ;
+  drivetrain:predicate rdfs:comment ;
+  drivetrain:object drivetrain:abnormalMeas_LiteralValue ;
+.
+
 drivetrain:MeasKeySymbPartOfKey
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:multiplicity drivetrain:1-1 ;
@@ -1900,6 +1939,8 @@ drivetrain:MeasAboutnessAxiomContext a drivetrain:TurboGraphContext .
 drivetrain:ProcToBeTyped drivetrain:hasPossibleContext drivetrain:MeasAboutnessAxiomContext . 
 owl:Axiom drivetrain:hasPossibleContext drivetrain:MeasAboutnessAxiomContext . 
 ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:MeasAboutnessAxiomContext .
+
+drivetrain:MeasurementCridContext a drivetrain:TurboGraphContext .
 
 ### measurement parthood
 
@@ -2637,6 +2678,8 @@ drivetrain:encounter_start_datetime_StringLiteralValue a drivetrain:StringLitera
 drivetrain:diagnosis_CodingSequence a drivetrain:IntegerLiteralResourceList .
 drivetrain:diagnosis_PrimaryBoolean a drivetrain:BooleanLiteralResourceList .
 drivetrain:diagnosis_RegistryStringLiteral a drivetrain:StringLiteralResourceList .
+drivetrain:measurementSymbol_LiteralValue a drivetrain:LiteralResourceList .
+drivetrain:abnormalMeas_LiteralValue a drivetrain:LiteralResourceList .
 
 ###
 

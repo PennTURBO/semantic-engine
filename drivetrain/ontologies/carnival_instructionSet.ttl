@@ -221,6 +221,7 @@ pmbb:LossOfFunctionExpansionProcess
   drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
   drivetrain:outputNamedGraph properties:expandedNamedGraph ;
   a ontologies:TURBO_0010354 ;
+  drivetrain:precedes pmbb:LabsExpansionProcess ;
   drivetrain:hasOutput ontologies:shortcutAlleleToExpandedAllele ; 
   drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbol ;
   drivetrain:hasRequiredInput ontologies:shortcutAlleleToGeneSymbolFirstPart ;
@@ -257,6 +258,33 @@ pmbb:LossOfFunctionExpansionProcess
   drivetrain:hasOutput drivetrain:genomeCridHasPartGenomeCridRegDen ;
   drivetrain:hasOutput drivetrain:genomeCridDenotesSpecimen ;
   drivetrain:hasOutput drivetrain:genomeSymbolHasRepresentation ;
+.
+pmbb:LabsExpansionProcess
+  drivetrain:inputNamedGraph pmbb:Shortcuts_ ;
+  drivetrain:outputNamedGraph properties:expandedNamedGraph ;
+  a ontologies:TURBO_0010354 ;
+  drivetrain:hasOutput ontologies:shortcutMeasurementToExpandedMeasurement ;
+  drivetrain:hasOutput drivetrain:MeasTypingRecipe ;
+  drivetrain:hasOutput drivetrain:MeasMentionsCode ;
+  drivetrain:hasOutput drivetrain:CridDenotesMeas ;
+  drivetrain:hasOutput drivetrain:MeasHasValspec ;
+  drivetrain:hasOutput drivetrain:ValspecHasSpecVal ;
+  drivetrain:hasOutput drivetrain:EncHsoMeas ;
+  drivetrain:hasOutput drivetrain:MeasHasMul ;
+  drivetrain:hasOutput drivetrain:SymbolPartOfCridForMeasurement ;
+  drivetrain:hasOutput drivetrain:SymbolHasRepresentationForMeasurement ;
+  drivetrain:hasOutput drivetrain:measurementIsAbnormal ;
+  drivetrain:hasRequiredInput drivetrain:EncRealizesRole ;
+  drivetrain:hasRequiredInput drivetrain:PatientHasRole ;
+  drivetrain:hasRequiredInput drivetrain:EncTypingRecipe ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToExpandedEncounter ;
+  drivetrain:hasRequiredInput ontologies:shortcutEncounterToShortcutMeasurement ;
+  drivetrain:hasRequiredInput ontologies:shortcutMeasurementToShortcutMeasType ;
+  drivetrain:hasRequiredInput ontologies:shortcutMeasurementToValue ;
+  drivetrain:hasRequiredInput ontologies:shortcutMeasurementToUnitLabel ;
+  drivetrain:hasRequiredInput ontologies:shortcutMeasurementToMeasId ;
+  drivetrain:hasRequiredInput ontologies:shortcutMeasurementToMentionedCode ;
+  drivetrain:hasOptionalInput ontologies:shortcutMeasurementToAbnormalFlag ;
 .
 drivetrain:EncounterMeasurementsOptionalGroup
   a drivetrain:TurboGraphOptionalGroup ;
@@ -378,6 +406,13 @@ ontologies:shortcutMeasurementToValue
   drivetrain:subject drivetrain:shortcutMeasurement ;
   drivetrain:partOf drivetrain:EncounterMeasurementsOptionalGroup ;
 .
+ontologies:shortcutMeasurementToMentionedCode
+  a drivetrain:InstanceToTermRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object drivetrain:MeasCodeMentionedClassList ;
+  drivetrain:predicate drivetrain:scMeasMentions ;
+  drivetrain:subject drivetrain:shortcutMeasurement ;
+.
 ontologies:shortcutMeasurementToUnitLabel
   a drivetrain:InstanceToTermRecipe ;
   drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
@@ -386,6 +421,20 @@ ontologies:shortcutMeasurementToUnitLabel
   drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
   drivetrain:subject drivetrain:shortcutMeasurement ;
   drivetrain:partOf drivetrain:EncounterMeasurementsOptionalGroup ;
+.
+ontologies:shortcutMeasurementToAbnormalFlag
+  a drivetrain:InstanceToLiteralRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object drivetrain:abnormalMeas_LiteralValue ;
+  drivetrain:predicate drivetrain:scMeasIsAbnormal ;
+  drivetrain:subject drivetrain:shortcutMeasurement ;
+.
+ontologies:shortcutMeasurementToMeasId
+  a drivetrain:InstanceToLiteralRecipe ;
+  drivetrain:multiplicity <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:object drivetrain:measurementSymbol_LiteralValue ;
+  drivetrain:predicate drivetrain:scMeasHasId ;
+  drivetrain:subject drivetrain:shortcutMeasurement ;
 .
 drivetrain:shortcutMeasurement
   a owl:Class ;
@@ -687,6 +736,12 @@ drivetrain:GidClassList
   drivetrain:range obo:OMRSE_00000138 ;
   drivetrain:range obo:OMRSE_00000141 ;
   drivetrain:usesCustomVariableManipulationRule ontologies:GenderIdentityTypeRule ;
+.
+drivetrain:MulClassList
+  drivetrain:range efo:EFO_0004340 ;
+  drivetrain:range obo:IAO_0000414 ;
+  drivetrain:range obo:IAO_0000408 ;
+  drivetrain:range obo:IAO_0000109 ;
 .
 drivetrain:ShortcutGidClassList
   a drivetrain:ClassResourceList ;

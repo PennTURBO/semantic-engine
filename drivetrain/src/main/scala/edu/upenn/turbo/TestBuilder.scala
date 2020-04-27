@@ -28,7 +28,7 @@ class TestBuilder extends ProjectwideGlobals
             val inputs = RunDrivetrainProcess.getInputs(processAsURI)
             val inputTriplesArr = generateInputTriples(processAsURI, inputs, gmCxn)
             val minimumTripleSet = inputTriplesArr(1)
-            update.updateSparql(cxn, minimumTripleSet)
+            update.updateSparql(cxn, "INSERT DATA {" + minimumTripleSet + "}")
             val queryResultMin = RunDrivetrainProcess.runProcess(processAsURI)
         }
     }
@@ -44,7 +44,7 @@ class TestBuilder extends ProjectwideGlobals
             val inputs = RunDrivetrainProcess.getInputs(processAsURI)
             val inputTriplesArr = generateInputTriples(processAsURI, inputs, gmCxn)
             val fullTripleSet = inputTriplesArr(0)
-            update.updateSparql(cxn, fullTripleSet)
+            update.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
             val queryResultMax = RunDrivetrainProcess.runProcess(processAsURI)   
         }
     }
