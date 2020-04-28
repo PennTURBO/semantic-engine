@@ -13,6 +13,7 @@ import java.io.File
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import scala.collection.mutable.HashMap
+import java.util.Arrays
 
 case class SnapshotTestData(
     val instructionSetFile: String,
@@ -82,10 +83,8 @@ var testSearchString: Option[String] = None
         RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
         RunDrivetrainProcess.setInputNamedGraphsCache(false)
         
-        OntologyLoader.addOntologyFromUrl(gmCxn)
-        
         val directory = new File("src//test//scala//edu//upenn//turbo//AutoGenTests")
-        allTests = directory.listFiles.filter(_.isFile).toArray
+        allTests = directory.listFiles.filter(_.isFile).sorted
     }
     
     getAllTests()

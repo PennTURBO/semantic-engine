@@ -62,7 +62,7 @@ class TestBuilder extends ProjectwideGlobals
         
         val testFileName = helper.getPostfixfromURI(process) + "SnapshotTest"
         val instructionSetName = instructionSetFile.split("\\.")(0)
-        val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + testFileName + "_" + instructionSetName + ".snapshot")
+        val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + instructionSetName + "_" + testFileName + ".snapshot")
         testFilePath.getParentFile().mkdirs()
         
         val inputs = RunDrivetrainProcess.getInputs(process)
