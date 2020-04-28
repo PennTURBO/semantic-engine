@@ -19,6 +19,8 @@ defaultPrefix = http://www.itmat.upenn.edu/biobank/
 
 processNamedGraph = http://www.itmat.upenn.edu/biobank/processes
 expandedNamedGraph = http://www.itmat.upenn.edu/biobank/expanded
+shortcutNamedGraph = http://www.itmat.upenn.edu/biobank/Shortcuts_
+
 clearGraphsAtStart = false
 
 instructionSetFile = your_instruction_set.ttl
