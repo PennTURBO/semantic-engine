@@ -10,9 +10,24 @@ import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 import org.eclipse.rdf4j.model.Literal
 import java.io.File
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
+import scala.collection.mutable.HashMap
+
+case class SnapshotTestData(
+    val instructionSetFile: String,
+    val iriCreationSeed: String,
+    val updateSpecificationURI: String,
+    val allInputTriples: String,
+    val minimumInputTriples: String,
+    val allOutputTriples: String,
+    val minimumOutputTriples: String
+)
 
 class SnapshotTest extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers {
 val clearTestingRepositoryAfterRun: Boolean = false
+
+implicit val formats = DefaultFormats
 
 var testsToRun: Array[File] = null
 var allTests: Array[File] = null
@@ -76,35 +91,29 @@ var testSearchString: Option[String] = None
     getAllTests()
     var prevInstructionSet = ""
     allTests.foreach{ testName =>
-      
-        val fileMap = io.Source
-          .fromFile(testName)
-          .mkString
-          .split("(?=\\n\\S+\\s*->)")
-          .map(_.trim.split("\\s*->\\s*"))
-          .map(arr => (arr(0)->arr(1)))
-          .toMap     
 
         //for ((k,v) <- fileMap) println("key: " + k + " value: " + v)
+        val snapshotTestData = parse(io.Source.fromFile(testName).mkString).extract[SnapshotTestData]
         
         test(s"all fields test on $testName")
         {
             assume(testsToRun.contains(testName))
-            RunDrivetrainProcess.setGlobalUUID(fileMap("UUIDKey"))
+            RunDrivetrainProcess.setGlobalUUID(snapshotTestData.iriCreationSeed)
             
-            if (fileMap("instructionSetFile") != prevInstructionSet) 
+            if (snapshotTestData.instructionSetFile != prevInstructionSet) 
             {
-                DrivetrainDriver.updateModel(gmCxn, fileMap("instructionSetFile")+".ttl")
+                DrivetrainDriver.updateModel(gmCxn, snapshotTestData.instructionSetFile + ".ttl")
                 OntologyLoader.addOntologyFromUrl(gmCxn)
-                prevInstructionSet = fileMap("instructionSetFile")
+                prevInstructionSet = snapshotTestData.instructionSetFile
             }
             
-            val inputTriples = fileMap("allInputTriples")
+            val inputTriples = snapshotTestData.allInputTriples
             update.updateSparql(cxn, s"INSERT DATA { $inputTriples \n}")
-            RunDrivetrainProcess.runProcess(fileMap("updateSpecificationURI"))
-            val outputTriples = fileMap("allOutputTriples").split("\n")
+            val queryResMap = RunDrivetrainProcess.runProcess(snapshotTestData.updateSpecificationURI)
+            val outputNamedGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(queryResMap(snapshotTestData.updateSpecificationURI).defaultOutputGraph)
+            val outputTriples = snapshotTestData.allOutputTriples.split("\n")
             
-            val getAllTriples: String = "SELECT * WHERE {GRAPH <"+fileMap("outputNamedGraph")+"> {?s ?p ?o .}}"
+            val getAllTriples: String = "SELECT * WHERE {GRAPH <"+outputNamedGraph+"> {?s ?p ?o .}}"
             val result = update.querySparqlAndUnpackTuple(cxn, getAllTriples, Array("s", "p", "o"))
             
             var resultsArray = new ArrayBuffer[String]
@@ -119,21 +128,22 @@ var testSearchString: Option[String] = None
         test(s"minimum fields test on $testName")
         {
             assume(testsToRun.contains(testName))
-            RunDrivetrainProcess.setGlobalUUID(fileMap("UUIDKey"))
+            RunDrivetrainProcess.setGlobalUUID(snapshotTestData.iriCreationSeed)
             
-            if (fileMap("instructionSetFile") != prevInstructionSet) 
+            if (snapshotTestData.instructionSetFile != prevInstructionSet) 
             {
-                DrivetrainDriver.updateModel(gmCxn, fileMap("instructionSetFile")+".ttl")
+                DrivetrainDriver.updateModel(gmCxn, snapshotTestData.instructionSetFile + ".ttl")
                 OntologyLoader.addOntologyFromUrl(gmCxn)
-                prevInstructionSet = fileMap("instructionSetFile")
+                prevInstructionSet = snapshotTestData.instructionSetFile
             }
             
-            val inputTriples = fileMap("minimumInputTriples")
+            val inputTriples = snapshotTestData.minimumInputTriples
             update.updateSparql(cxn, s"INSERT DATA { $inputTriples \n}")
-            RunDrivetrainProcess.runProcess(fileMap("updateSpecificationURI"))
-            val outputTriples = fileMap("minimumOutputTriples").split("\n")
+            val queryResMap = RunDrivetrainProcess.runProcess(snapshotTestData.updateSpecificationURI)
+            val outputNamedGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(queryResMap(snapshotTestData.updateSpecificationURI).defaultOutputGraph)
+            val outputTriples = snapshotTestData.minimumOutputTriples.split("\n")
             
-            val getAllTriples: String = "SELECT * WHERE {GRAPH <"+fileMap("outputNamedGraph")+"> {?s ?p ?o .}}"
+            val getAllTriples: String = "SELECT * WHERE {GRAPH <"+outputNamedGraph+"> {?s ?p ?o .}}"
             val result = update.querySparqlAndUnpackTuple(cxn, getAllTriples, Array("s", "p", "o"))
             
             var resultsArray = new ArrayBuffer[String]

@@ -11,9 +11,15 @@ import java.time.LocalDateTime
 import java.util.UUID
 import org.eclipse.rdf4j.model.Literal
 import scala.collection.mutable.Queue
+import org.json4s._
+import org.json4s.JsonDSL._
+import org.json4s.jackson.JsonMethods._
+import org.json4s.jackson.Serialization
 
 class TestBuilder extends ProjectwideGlobals
 {
+    implicit val formats = org.json4s.DefaultFormats
+    
     //only make all fields? in the case that there are no optional triples
     var onlyAllFields = false
     
@@ -88,14 +94,14 @@ class TestBuilder extends ProjectwideGlobals
 
         logger.info("Writing test file...")
         
-        writeTestFile(testFileName, process, outputNamedGraph, testFilePath, fullTripleSet, outputPredsMax, 
+        writeTestFile(testFileName, process, testFilePath, fullTripleSet, outputPredsMax, 
                       minimumTripleSet, outputPredsMin, instructionSetName, UUIDKey)
 
         logger.info("Test created in src//test//scala//edu//upenn//turbo//AutoGenTests//")
 
     }
     
-    def writeTestFile(testFileName: String, process: String, outputNamedGraph: String, 
+    def writeTestFile(testFileName: String, process: String,
                       testFilePath: File, maximumInputTriples: String, outputPredsMax: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]], 
                       minimumInputTriples: String, outputPredsMin: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]], instructionSetName: String,
                       UUIDKey: String)
@@ -103,9 +109,18 @@ class TestBuilder extends ProjectwideGlobals
         val maxOutputTriplesAsString = convertOutputTriplesToString(outputPredsMax)
         val minOutputTriplesAsString = convertOutputTriplesToString(outputPredsMin)
         
-        val outputNamedGraphDec = s"outputNamedGraph -> $outputNamedGraph"
+        val mapToWrite = HashMap(
+            "instructionSetFile" -> instructionSetName,
+            "iriCreationSeed" -> UUIDKey,
+            "updateSpecificationURI" -> process,
+            "allInputTriples" -> maximumInputTriples,
+            "minimumInputTriples" -> minimumInputTriples,
+            "allOutputTriples" -> maxOutputTriplesAsString,
+            "minimumOutputTriples" -> minOutputTriplesAsString
+        )
+
         val instructionSetFileDec = s"instructionSetFile -> $instructionSetName"
-        val UUIDKeyDec = s"UUIDKey -> $UUIDKey"
+        val UUIDKeyDec = s"IriCreationSeed -> $UUIDKey"
         val processDec = s"updateSpecificationURI -> $process"
         val maxInputTriplesDec = s"allInputTriples -> $maximumInputTriples"
         val minInputTriplesDec = s"minimumInputTriples -> $minimumInputTriples"
@@ -113,9 +128,11 @@ class TestBuilder extends ProjectwideGlobals
         val minOutputTriplesDec = s"minimumOutputTriples -> $minOutputTriplesAsString"
 
         val pw = new PrintWriter(testFilePath)
-        var fullTestClassString = instructionSetFileDec + "\n" + outputNamedGraphDec + "\n" + UUIDKeyDec + "\n" + processDec + "\n" + 
+        var fullTestClassString = instructionSetFileDec + "\n" + UUIDKeyDec + "\n" + processDec + "\n" + 
                                   maxInputTriplesDec + "\n" + minInputTriplesDec + "\n" + maxOutputTriplesDec + "\n\n" + minOutputTriplesDec
-        pw.write(fullTestClassString)
+        //pw.write(fullTestClassString)
+        //pw.write(compact(render(mapToWrite)))
+        pw.write(Serialization.write(mapToWrite))
         pw.close()
     }
     
