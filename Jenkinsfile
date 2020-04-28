@@ -45,9 +45,9 @@ pipeline {
                         sh "sed -i 's/modelPassword = your_password/modelPassword = $graphDbPassword/g' turbo_properties.properties"
                         sh "sed -i 's/testingRepository = your_testing_repo/testingRepository = jenkinsTest_$BRANCH_NAME/g' turbo_properties.properties"
                         sh "sed -i 's/modelRepository = your_model_repo/modelRepository = jenkinsModel_$BRANCH_NAME/g' turbo_properties.properties"
-                        sh "sed -i 's/testingServiceURL = your_dev_db/testingServiceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
-                        sh "sed -i 's/productionServiceURL = your_prd_db/productionServiceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
-                        sh "sed -i 's/modelServiceURL = your_db/modelServiceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
+                        sh "sed -i 's/testingServiceURL = http:\\/\\/your_dev_db:7200\\//testingServiceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
+                        sh "sed -i 's/productionServiceURL = http:\\/\\/your_prd_db:7200\\//productionServiceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
+                        sh "sed -i 's/modelServiceURL = http:\\/\\/your_db:7200\\//modelServiceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
                     }
                 }
             }
