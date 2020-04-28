@@ -426,7 +426,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
     def retrieveUriPropertyFromFile(propertyID: String, file: String = "..//turbo_properties.properties"): String =
     {
         var property = retrievePropertyFromFile(propertyID, file)
-        assert (property.contains("/") && property.contains(".") && (property.contains("http") || property.contains("www")), s"Invalid URI for property $propertyID")
+        assert (property.contains("/"), s"Invalid URI for property $propertyID")
         if (propertyID == "defaultPrefix" && !property.endsWith("/")) property += "/"
         property
     }
