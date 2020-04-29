@@ -810,6 +810,7 @@ drivetrain:MeasVocabShortcut
 
 # TWO DEPENDENTS? "LOINC" OR "SNOMED", PLUS VALUE
 # but the base for LOINC URIs is http://purl.bioontology.org/ontology/LNC/
+# Hayden 4/29/2020 - removing fallthrough call to uuid()
 drivetrain:MeasCodeMentionedClassListFromValueRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql """
@@ -821,7 +822,7 @@ drivetrain:MeasCodeMentionedClassListFromValueRule
     uri(concat('http://purl.bioontology.org/ontology/SNOMED/', ${dependent} )),
 	?unbound) 
 	AS ?SnomedMention)	
-  BIND(coalesce(?LoincMention, ?SnomedMention, uuid()) as ${replacement})
+  BIND(coalesce(?LoincMention, ?SnomedMention) as ${replacement})
 """  ;
 .
 
