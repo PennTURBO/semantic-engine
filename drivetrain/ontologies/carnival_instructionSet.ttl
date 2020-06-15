@@ -742,6 +742,8 @@ drivetrain:MeasClassList
   drivetrain:range obo:IAO_0000414 ;
   drivetrain:range obo:IAO_0000408 ;
   drivetrain:range obo:IAO_0000109 ;
+  drivetrain:range obo:HTN_00000001 ;
+  drivetrain:range obo:HTN_00000000 ;
 .
 drivetrain:ShortcutGidClassList
   a drivetrain:ClassResourceList ;
