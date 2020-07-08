@@ -341,6 +341,7 @@ class TestBuilder extends ProjectwideGlobals
         var thisTripleAsData = new ArrayBuffer[String]
         
         val connectionType = input(CONNECTIONRECIPETYPE.toString).toString
+        val connectionName = input(CONNECTIONNAME.toString).toString
         val subjectString = input(SUBJECT.toString).toString
         val predicateString = input(PREDICATE.toString).toString
         val objectString = input(OBJECT.toString).toString
@@ -455,6 +456,7 @@ class TestBuilder extends ProjectwideGlobals
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe")
         {
+            if (input(GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as literal, but does not have literal object.")
             val literalType = input(GRAPHLITERALTYPE.toString).toString
             for (subjectURI <- subjectInstanceArray)
             {
