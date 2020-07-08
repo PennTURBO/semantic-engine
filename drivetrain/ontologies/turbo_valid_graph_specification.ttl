@@ -2641,7 +2641,7 @@ drivetrain:birth_datetime_StringLiteralValue a drivetrain:StringLiteralResourceL
 drivetrain:condition_start_datetime_DateLiteralValue a drivetrain:LiteralResourceList .
 drivetrain:condition_type_LiteralValue a drivetrain:LiteralResourceList .
 drivetrain:drug_code_LiteralValue a drivetrain:StringLiteralResourceList .
-drivetrain:encounter_cridsym_LiteralValue a drivetrain:LiteralResourceLiFst .
+drivetrain:encounter_cridsym_LiteralValue a drivetrain:LiteralResourceList .
 drivetrain:encounter_end_datetime_DateLiteralValue a drivetrain:LiteralResourceList .
 drivetrain:encounter_keysym_LiteralValue a drivetrain:LiteralResourceList .
 drivetrain:encounter_start_datetime_DateLiteralValue a drivetrain:DateLiteralResourceList .
