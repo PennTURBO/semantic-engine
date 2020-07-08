@@ -314,7 +314,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
          }
          
          """
-       //println(query)          
+       println(query)          
        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
 
