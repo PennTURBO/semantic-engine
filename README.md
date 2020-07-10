@@ -1,5 +1,5 @@
 # Drivetrain
-The Semantic Expander
+The Semantic Engine
 
 ## SBT Commands
 The following commands can be run via the SBT console
