@@ -456,7 +456,7 @@ class TestBuilder extends ProjectwideGlobals
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe")
         {
-            if (input(GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as literal, but does not have literal object.")
+            if (input(GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as instance-to-literal, but does not have literal object.")
             val literalType = input(GRAPHLITERALTYPE.toString).toString
             for (subjectURI <- subjectInstanceArray)
             {
@@ -466,6 +466,7 @@ class TestBuilder extends ProjectwideGlobals
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe")
         {
+            if (input(GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as term-to-literal, but does not have literal object.")
             val literalType = input(GRAPHLITERALTYPE.toString).toString
             var localSubjectString = subjectString
             if (subjectADescriber != null)
