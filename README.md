@@ -1,6 +1,22 @@
 # Drivetrain
 The Semantic Engine
 
+## Installation
+
+### Prerequisites
+
+You must have SBT and Java installed on your system. Unless running from a precompiled .jar file, interaction with the software will take place through the SBT console.
+
+### Setup
+
+Clone the repository locally, and copy/remove the .template suffix from the following 4 files:
+- `turbo_properties.properties.template`
+- `drivetrain/build.sbt.template`
+- `drivetrain/project/plugins.sbt.template`
+- `drivetrain/project/build.properties.template`
+
+Configure `turbo_properties.properties` to use the desired Transformation Instruction Set and Graph Specification files. Pre-existing options exist in the `ontologies` folder. For instructions on designing your own Semantic Engine configurations, see the documentation here.
+
 ## SBT Commands
 The following commands can be run via the SBT console
 
