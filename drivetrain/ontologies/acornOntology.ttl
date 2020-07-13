@@ -12,13 +12,13 @@
     owl:versionIRI <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/acornOntology.ttl> ;
 	rdfs:comment "that's not really a version IRI" .
 
-drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
-drivetrain:1-many a drivetrain:TurboGraphMultiplicityRule .
-drivetrain:many-1 a drivetrain:TurboGraphMultiplicityRule .
-drivetrain:many-singleton a drivetrain:TurboGraphMultiplicityRule .
-drivetrain:singleton-many a drivetrain:TurboGraphMultiplicityRule .
-drivetrain:superSingleton-many a drivetrain:TurboGraphMultiplicityRule .
-drivetrain:many-superSingleton a drivetrain:TurboGraphMultiplicityRule .
+drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+drivetrain:1-many a drivetrain:TurboGraphCardinalityRule .
+drivetrain:many-1 a drivetrain:TurboGraphCardinalityRule .
+drivetrain:many-singleton a drivetrain:TurboGraphCardinalityRule .
+drivetrain:singleton-many a drivetrain:TurboGraphCardinalityRule .
+drivetrain:superSingleton-many a drivetrain:TurboGraphCardinalityRule .
+drivetrain:many-superSingleton a drivetrain:TurboGraphCardinalityRule .
 
 drivetrain:eitherSubjectOrObjectExists a drivetrain:TurboGraphRequirementSpecification .
 drivetrain:subjectExists a drivetrain:TurboGraphRequirementSpecification .
@@ -39,7 +39,7 @@ drivetrain:InstanceToLiteralRecipe a owl:Class .
 drivetrain:TermToTermRecipe a owl:Class .
 drivetrain:TermToLiteralRecipe a owl:Class .
 drivetrain:TurboGraphRequirementSpecification a owl:Class .
-drivetrain:TurboGraphMultiplicityRule a owl:Class .
+drivetrain:TurboGraphCardinalityRule a owl:Class .
 drivetrain:TurboGraphContext a owl:Class .
 drivetrain:TurboGraphMinusGroup a owl:Class .
 drivetrain:TurboGraphOptionalGroup a owl:Class .
@@ -51,7 +51,7 @@ drivetrain:TurboGraphDoubleLiteralValue a owl:Class .
 drivetrain:TurboGraphIntegerLiteralValue a owl:Class .
 drivetrain:TurboGraphBooleanLiteralValue a owl:Class .
 drivetrain:TurboGraphRequirementSpecification a owl:Class .
-drivetrain:TurboGraphMultiplicityRule a owl:Class .
+drivetrain:TurboGraphCardinalityRule a owl:Class .
 drivetrain:PredicateSuffixSymbol a owl:Class .
 
 drivetrain:ResourceList a owl:Class .
@@ -81,7 +81,7 @@ drivetrain:usesSparql a rdf:Property .
 drivetrain:partOf a rdf:Property .
 drivetrain:referencedInGraph a rdf:Property .
 drivetrain:mustExecuteIf a rdf:Property .
-drivetrain:multiplicity a rdf:Property .
+drivetrain:cardinality a rdf:Property .
 drivetrain:inputNamedGraph a rdf:Property .
 drivetrain:outputNamedGraph a rdf:Property .
 drivetrain:hasOutput a rdf:Property .

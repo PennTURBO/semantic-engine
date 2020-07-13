@@ -228,7 +228,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
               ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
               ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              ?$CONNECTIONNAME drivetrain:multiplicity ?$MULTIPLICITY .
+              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
               
               Optional
               {
@@ -387,7 +387,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
               ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
               ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              ?$CONNECTIONNAME drivetrain:multiplicity ?$MULTIPLICITY .
+              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
               
               Optional
               {

@@ -127,7 +127,7 @@ drivetrain:diagnosisRegDen  a drivetrain:ClassResourceList ;
 
 drivetrain:GidScoStarGid 
    a drivetrain:TermToTermRecipe ;
-   drivetrain:multiplicity drivetrain:1-1 ;
+   drivetrain:cardinality drivetrain:1-1 ;
    drivetrain:referencedInGraph properties:ontologyURL ;
    drivetrain:subject drivetrain:GidClassList ;
    drivetrain:predicate rdfs:subClassOf ;
@@ -138,14 +138,14 @@ drivetrain:GidScoStarGid
 drivetrain:GidOmopConceptIds 
   a drivetrain:TermToLiteralRecipe ;
   drivetrain:referencedInGraph properties:ontologyURL ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject drivetrain:GidClassList ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
   drivetrain:object drivetrain:gender_LiteralValue ;
 .
 drivetrain:PatientGidShortcut
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/person> ;
   drivetrain:predicate <http://api.stardog.com/person#gender_concept_id> ;
   drivetrain:object drivetrain:gender_LiteralValue ;
@@ -154,7 +154,7 @@ drivetrain:PatientGidShortcut
 
 drivetrain:PatientRidShortcut
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/person> ;
   drivetrain:predicate <http://api.stardog.com/person#race_concept_id> ;
   drivetrain:object drivetrain:race_LiteralValue ;
@@ -174,7 +174,7 @@ drivetrain:race_LiteralValue
 
 drivetrain:RidScoStarRid 
    a drivetrain:TermToTermRecipe ;
-   drivetrain:multiplicity drivetrain:1-1 ;
+   drivetrain:cardinality drivetrain:1-1 ;
    drivetrain:object obo:OMRSE_00000098 ;
    drivetrain:predicate rdfs:subClassOf ;
    drivetrain:predicateSuffix drivetrain:star ;
@@ -185,14 +185,14 @@ drivetrain:RidScoStarRid
 drivetrain:RidOmopConceptIds 
   a drivetrain:TermToLiteralRecipe ;
   drivetrain:referencedInGraph properties:ontologyURL ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject drivetrain:RidClassList ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
   drivetrain:object drivetrain:race_LiteralValue ;
 .
 drivetrain:PatientCridsymShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/person> ;
   drivetrain:predicate <http://api.stardog.com/person#person_source_value> ;
   drivetrain:object drivetrain:person_cridsym_LiteralValue ;
@@ -204,7 +204,7 @@ drivetrain:person_cridsym_LiteralValue
 
 drivetrain:PatientKeySymShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/person> ;
   drivetrain:predicate <http://api.stardog.com/person#person_id> ;
   drivetrain:object drivetrain:person_keysym_LiteralValue ;
@@ -216,7 +216,7 @@ drivetrain:person_keysym_LiteralValue
 
 drivetrain:PatientDobShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/person> ;
   drivetrain:predicate <http://api.stardog.com/person#birth_datetime> ;
   drivetrain:object drivetrain:birth_datetime_DateLiteralValue ;
@@ -225,7 +225,7 @@ drivetrain:PatientDobShortcut
 drivetrain:PatientExpansionSpecification 
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/person> ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
   drivetrain:object obo:NCBITaxon_9606 ;
@@ -307,7 +307,7 @@ drivetrain:encounter_end_datetime_DateLiteralValue
 
 drivetrain:EncTypeShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:encounter_type_code_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#visit_concept_id> ;
   drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
@@ -315,7 +315,7 @@ drivetrain:EncTypeShortcut
 
 drivetrain:EncScoStarEnc 
    a drivetrain:InstanceToTermRecipe ;
-   drivetrain:multiplicity drivetrain:1-1 ;
+   drivetrain:cardinality drivetrain:1-1 ;
    drivetrain:object obo:OGMS_0000097 ;
    drivetrain:predicate rdfs:subClassOf ;
    # drivetrain:predicateSuffix drivetrain:star ;
@@ -325,7 +325,7 @@ drivetrain:EncScoStarEnc
 
 drivetrain:EncOmopConceptIds 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:encounter_type_code_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
   drivetrain:referencedInGraph properties:ontologyURL ;
@@ -334,35 +334,35 @@ drivetrain:EncOmopConceptIds
 
 drivetrain:EncPersonIdShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:person_keysym_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#person_id> ;
   drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
 .
 drivetrain:EncCridsymShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:encounter_cridsym_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#visit_source_value> ;
   drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
 .
 drivetrain:EncKeysymShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#visit_occurrence_id> ;
   drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
 .
 drivetrain:EncEnddateShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:encounter_end_datetime_DateLiteralValue ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#visit_end_datetime> ;
   drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
 .
 drivetrain:EncStartdateShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:encounter_start_datetime_DateLiteralValue ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#visit_start_datetime> ;
   drivetrain:subject <http://api.stardog.com/visit_occurrence> ;
@@ -370,7 +370,7 @@ drivetrain:EncStartdateShortcut
 
 drivetrain:EncExpansionSpecification
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:EncToBeTyped ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -411,7 +411,7 @@ drivetrain:HceParticipation
 
 drivetrain:EncKeyDenotesEnc
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:EncToBeTyped ;
   drivetrain:predicate obo:IAO_0000219 ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -421,7 +421,7 @@ drivetrain:EncKeyDenotesEnc
 
 drivetrain:EncPatientID 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:person_keysym_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#person_id> ;
   drivetrain:referencedInGraph properties:shortcutNamedGraph ;
@@ -466,7 +466,7 @@ drivetrain:preceding_encounter_keysym_LiteralValue
 
 drivetrain:EncPreviousEncValSc
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:preceding_encounter_keysym_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/visit_occurrence#preceding_visit_occurrence_id> ;
   drivetrain:referencedInGraph properties:shortcutNamedGraph ;
@@ -475,7 +475,7 @@ drivetrain:EncPreviousEncValSc
 
 drivetrain:RepresenteeOfPreviousVisitId
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:preceding_encounter_keysym_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -484,7 +484,7 @@ drivetrain:RepresenteeOfPreviousVisitId
 
 drivetrain:KeyContainerOfPreviousVisitId
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object ontologies:TURBO_0010433 ;
   drivetrain:predicate obo:BFO_0000050 ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -493,7 +493,7 @@ drivetrain:KeyContainerOfPreviousVisitId
 
 drivetrain:KeyDenotesPrevenc
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:Prevenc ;
   drivetrain:predicate obo:IAO_0000219 ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -502,7 +502,7 @@ drivetrain:KeyDenotesPrevenc
 
 drivetrain:PrevencAPrevencsClass 
   a drivetrain:InstanceToTermRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:PrevencsClass ;
   drivetrain:predicate rdf:type ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -511,7 +511,7 @@ drivetrain:PrevencAPrevencsClass
 
 drivetrain:PrevencScoEnc
   a drivetrain:InstanceToTermRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object obo:OGMS_0000097 ;
   drivetrain:predicate rdfs:subClassOf ;
   drivetrain:referencedInGraph properties:ontologyURL ;
@@ -582,7 +582,7 @@ drivetrain:proc_id_IntegerLiteralValue
 
 drivetrain:ProcDatetimeShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#procedure_datetime> ;
   drivetrain:object drivetrain:procedure_datetime_DateLiteralValue ;
@@ -590,7 +590,7 @@ drivetrain:ProcDatetimeShortcut
 
 drivetrain:ProcSciShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#procedure_source_concept_id> ;
   drivetrain:object drivetrain:procedure_type_LiteralValue ;
@@ -599,7 +599,7 @@ drivetrain:ProcSciShortcut
 drivetrain:ProcOmopConceptIds 
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:referencedInGraph properties:ontologyURL ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject drivetrain:ProcClassList ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
   drivetrain:object drivetrain:procedure_type_LiteralValue ;
@@ -607,7 +607,7 @@ drivetrain:ProcOmopConceptIds
 
 drivetrain:ProcKeysymShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:proc_id_IntegerLiteralValue ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#procedure_occurrence_id> ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
@@ -615,7 +615,7 @@ drivetrain:ProcKeysymShortcut
 
 drivetrain:ProcSourceValueShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#procedure_source_value> ;
   drivetrain:object drivetrain:procedure_cridsym_LiteralValue ;
@@ -625,7 +625,7 @@ drivetrain:ProcSourceValueShortcut
 drivetrain:ProcExpansionSpecification
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
   drivetrain:object drivetrain:ProcToBeTyped ;
@@ -674,7 +674,7 @@ drivetrain:HcpParticipation
 
 drivetrain:ProcPatientShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#person_id> ;
   drivetrain:object drivetrain:person_keysym_LiteralValue ;
@@ -708,7 +708,7 @@ drivetrain:HcpParthood
 
 drivetrain:ProcEncShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/procedure_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/procedure_occurrence#visit_occurrence_id> ;
   drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
@@ -766,7 +766,7 @@ drivetrain:PatientMeasurements
 
 drivetrain:MeasScoStarMeas
   a drivetrain:InstanceToTermRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object obo:IAO_0000109 ;
   drivetrain:predicate rdfs:subClassOf  ;
   drivetrain:predicateSuffix drivetrain:star ;
@@ -776,7 +776,7 @@ drivetrain:MeasScoStarMeas
 
 drivetrain:MeasClassHasOmopConceptId 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:measurement_source_concept_id_IntegerLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010147  ;
   drivetrain:referencedInGraph properties:ontologyURL ;
@@ -785,7 +785,7 @@ drivetrain:MeasClassHasOmopConceptId
 
 drivetrain:MeasConceptShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:measurement_source_concept_id_IntegerLiteralValue ;
   drivetrain:predicate <http://api.stardog.com/measurement#measurement_source_concept_id> ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
@@ -793,7 +793,7 @@ drivetrain:MeasConceptShortcut
 
 drivetrain:MeasCodeShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:measurement_type_LiteralValue ;
   drivetrain:objectRequiredToCreate drivetrain:MeasCodeMentionedClassList ;
   drivetrain:predicate <http://api.stardog.com/measurement#measurement_source_value> ;
@@ -802,7 +802,7 @@ drivetrain:MeasCodeShortcut
 
 drivetrain:MeasVocabShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:measurement_vocabulary_id_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/measurement#vocabulary_id> ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
@@ -832,21 +832,21 @@ drivetrain:MeasCodeMentionedClassList
 
 drivetrain:MeasNumValShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
   drivetrain:predicate <http://api.stardog.com/measurement#value_as_number> ;
   drivetrain:object drivetrain:value_as_number_LiteralValue ;
 .
 drivetrain:MeasKeysymShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
   drivetrain:predicate <http://api.stardog.com/measurement#measurement_id> ;
   drivetrain:object drivetrain:measurement_id_IntegerLiteralValue ;
 .
 drivetrain:MeasDatetimeShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
   drivetrain:predicate <http://api.stardog.com/measurement#measurement_datetime> ;
   drivetrain:object drivetrain:measurement_datetime_DateLiteralValue ;
@@ -854,7 +854,7 @@ drivetrain:MeasDatetimeShortcut
 
 drivetrain:MeasExpansionSpecification
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:MeasToBeTyped ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -897,7 +897,7 @@ drivetrain:PatientMul
 
 drivetrain:MeasMoreUnitsShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
   drivetrain:predicate <http://api.stardog.com/measurement#more_units> ;
   drivetrain:object drivetrain:measurement_units_LiteralValue ;
@@ -906,7 +906,7 @@ drivetrain:MeasMoreUnitsShortcut
 drivetrain:MulClassHasOmopConceptId 
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:referencedInGraph properties:ontologyURL ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject drivetrain:MulClassList ;
   drivetrain:predicate ontologies:TURBO_0010147  ;
   drivetrain:object drivetrain:measurement_units_LiteralValue ;
@@ -914,7 +914,7 @@ drivetrain:MulClassHasOmopConceptId
 
 drivetrain:MulScoStarMul
   a drivetrain:InstanceToTermRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object obo:IAO_0000003 ;
   drivetrain:predicate rdfs:subClassOf  ;
   drivetrain:predicateSuffix drivetrain:star ;
@@ -958,7 +958,7 @@ drivetrain:PatientMeasAboutness
 
 drivetrain:MeasPatientShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
   drivetrain:predicate <http://api.stardog.com/measurement#person_id> ;
   drivetrain:object drivetrain:person_keysym_LiteralValue ;
@@ -993,7 +993,7 @@ drivetrain:PatientMeasParthood
 
 drivetrain:MeasEncShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/measurement> ;
   drivetrain:predicate <http://api.stardog.com/measurement#visit_occurrence_id> ;
   drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
@@ -1001,7 +1001,7 @@ drivetrain:MeasEncShortcut
 
 drivetrain:KeyDenotesMeasInp
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:MeasToBeTyped ;
   drivetrain:predicate obo:IAO_0000219 ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -1036,7 +1036,7 @@ drivetrain:Diagnosis
 
 drivetrain:CondCodeShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:condition_type_LiteralValue ;
   drivetrain:objectRequiredToCreate drivetrain:CondMentionedClassList ;
   drivetrain:predicate <http://api.stardog.com/condition_occurrence#condition_source_value> ;
@@ -1048,7 +1048,7 @@ drivetrain:CondCodeShortcut
 
 drivetrain:CondKeysymShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   # drivetrain:object drivetrain:condition_occurrence_id_IntegerLiteralValue ;
   drivetrain:object drivetrain:condition_occurrence_id_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/condition_occurrence#condition_occurrence_id> ;
@@ -1059,7 +1059,7 @@ drivetrain:condition_occurrence_id_LiteralValue a drivetrain:IntegerLiteralResou
 
 drivetrain:CondStartDatetimeShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:condition_start_datetime_DateLiteralValue ;
   drivetrain:predicate <http://api.stardog.com/condition_occurrence#condition_start_datetime> ;
   drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
@@ -1067,7 +1067,7 @@ drivetrain:CondStartDatetimeShortcut
 
 drivetrain:DiagExpansion 
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object obo:OGMS_0000073 ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -1118,7 +1118,7 @@ drivetrain:DiagnosisAboutness
 
 drivetrain:DiagPatientShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
   drivetrain:predicate <http://api.stardog.com/condition_occurrence#person_id> ;
   drivetrain:object drivetrain:person_keysym_LiteralValue ;
@@ -1126,7 +1126,7 @@ drivetrain:DiagPatientShortcut
 
 drivetrain:KeyDenotesDiagInp
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object obo:OGMS_0000073 ;
   drivetrain:predicate obo:IAO_0000219 ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -1161,7 +1161,7 @@ drivetrain:DiagnosisParthood
 
 drivetrain:DiagEncShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/condition_occurrence#visit_occurrence_id> ;
   drivetrain:subject <http://api.stardog.com/condition_occurrence> ;
@@ -1202,7 +1202,7 @@ drivetrain:Prescription
 
 drivetrain:RxExpansion 
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object obo:PDRO_0000024 ;
   drivetrain:predicate ontologies:TURBO_0010113 ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -1221,7 +1221,7 @@ drivetrain:RxSourcedenTerm
 
 drivetrain:RxKeySymbShortcut
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:prescription_id_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_exposure_id> ;
   drivetrain:subject <http://api.stardog.com/drug_exposure> ;
@@ -1229,7 +1229,7 @@ drivetrain:RxKeySymbShortcut
 
 drivetrain:RxStartDatetimeShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:prescription_start_datetime_DateLiteralValue ;
   drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_exposure_start_datetime> ;
   drivetrain:subject <http://api.stardog.com/drug_exposure> ;
@@ -1237,7 +1237,7 @@ drivetrain:RxStartDatetimeShortcut
 
 drivetrain:RxSourceValShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:drug_code_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_source_value> ;
   drivetrain:subject <http://api.stardog.com/drug_exposure> ;
@@ -1246,7 +1246,7 @@ drivetrain:RxSourceValShortcut
 
 drivetrain:RxWrittenNotDispensedShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:WrittenNotDispensedLiteral ;
   drivetrain:predicate <http://api.stardog.com/drug_exposure#drug_type_concept_id> ;
   drivetrain:subject <http://api.stardog.com/drug_exposure> ;
@@ -1254,7 +1254,7 @@ drivetrain:RxWrittenNotDispensedShortcut
 
 drivetrain:WrittenNotDispensedConceptIds 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:WrittenNotDispensedLiteral ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
   drivetrain:referencedInGraph properties:ontologyURL ;
@@ -1263,7 +1263,7 @@ drivetrain:WrittenNotDispensedConceptIds
 
 drivetrain:WrittenNotDispensedSco
    a drivetrain:InstanceToTermRecipe ;
-   drivetrain:multiplicity drivetrain:1-1 ;
+   drivetrain:cardinality drivetrain:1-1 ;
    drivetrain:object obo:OBI_0000011 ;
    drivetrain:predicate rdfs:subClassOf ;
    drivetrain:referencedInGraph properties:ontologyURL ;
@@ -1329,7 +1329,7 @@ drivetrain:RxParthood
 
 drivetrain:RxEncShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:encounter_keysym_LiteralValue ;
   drivetrain:predicate <http://api.stardog.com/drug_exposure#visit_occurrence_id> ;
   drivetrain:subject <http://api.stardog.com/drug_exposure> ;
@@ -1337,7 +1337,7 @@ drivetrain:RxEncShortcut
 
 drivetrain:KeyDenotesRxInp
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object obo:PDRO_0000024 ;
   drivetrain:predicate obo:IAO_0000219 ;
   drivetrain:referencedInGraph properties:expandedNamedGraph ;
@@ -1370,7 +1370,7 @@ drivetrain:RxAboutness
 
 drivetrain:RxPatientShortcut 
   a drivetrain:InstanceToLiteralRecipe ;
-  drivetrain:multiplicity drivetrain:1-1 ;
+  drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject <http://api.stardog.com/drug_exposure> ;
   drivetrain:predicate <http://api.stardog.com/drug_exposure#person_id> ;
   drivetrain:object drivetrain:person_keysym_LiteralValue ;

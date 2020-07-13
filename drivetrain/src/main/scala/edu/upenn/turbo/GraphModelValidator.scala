@@ -270,7 +270,7 @@ object GraphModelValidator extends ProjectwideGlobals
                     ?recipe drivetrain:subject ?subject .
                     ?recipe drivetrain:predicate ?predicate .
                     ?recipe drivetrain:object ?object .
-                    ?recipe drivetrain:multiplicity ?multiplicity .
+                    ?recipe drivetrain:cardinality ?multiplicity .
                     
                     Filter (?recipeType IN (drivetrain:InstanceToInstanceRecipe,
                                             drivetrain:InstanceToTermRecipe,
