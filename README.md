@@ -15,7 +15,7 @@ Clone the repository locally, and copy/remove the .template suffix from the foll
 - `drivetrain/project/plugins.sbt.template`
 - `drivetrain/project/build.properties.template`
 
-Configure `turbo_properties.properties` to use the desired Transformation Instruction Set and Graph Specification files. Pre-existing options exist in the `ontologies` folder. For instructions on designing your own Semantic Engine configurations, see the documentation [here](Semantic%20Engine%20Configuration%20Tutorial.docx).
+Configure `turbo_properties.properties` to use the desired Transformation Instruction Set and Graph Specification files. Pre-existing options exist in the `ontologies` folder. For instructions on designing your own Semantic Engine configurations, see the documentation [here](docs/Semantic%20Engine%20Configuration%20Tutorial.docx).
 
 ## SBT Commands
 The following commands can be run via the SBT console
@@ -36,7 +36,7 @@ The following commands can be run via the SBT console
 
 `run debug [--min] <some_process_URI>` Generates a synthetic set of input triples for a specific update specification and then runs just that update specification, leaving the output for examination in the testing repository. If min flag is present, only the minimum required set of triples will be generated for each update specification, otherwise all possible triples will be generated.
 
-Click [here](snapshotTests.md) more detailed information on the debug mode and snapshot test generation.
+Click [here](docs/snapshotTests.md) more detailed information on the debug mode and snapshot test generation.
 
 **Test commands**
 
