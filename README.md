@@ -28,7 +28,7 @@ The following commands can be run via the SBT console
 
 `run printQuery <some_process_URI>` Prints the generated update query to the console for a specific update specification
 
-`run buildTest` Builds automated tests for all update specifications (even unqueued ones) in the selected transformation instruction set
+`run buildTest` Builds automated tests for all update specifications (even unqueued ones) in the selected transformation instruction set. Note that if updates reference inputs that were the output of a previous update, instances of these input classes will still be created by the synthetic triple generation service, even if other instances of those classes already exist in the graph.
 
 `run buildTest <some_process_URI>` Builds an automated test for a specific update specification
 
