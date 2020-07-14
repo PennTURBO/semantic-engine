@@ -26,7 +26,7 @@ The following commands can be run via the SBT console
 
 `run <some_process_URI>` Runs only a specific update specification from the selected transformation instruction set
 
-`run printQuery <some_process_URI>` Prints the generated update query to the console for a specific update specification
+`run printQuery <some_process_URI>` Prints the generated update query to the console for a specific update specification. No changes will be made to the graph.
 
 `run buildTest` Builds automated tests for all update specifications (even unqueued ones) in the selected transformation instruction set.
 
