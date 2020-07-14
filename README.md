@@ -28,13 +28,15 @@ The following commands can be run via the SBT console
 
 `run printQuery <some_process_URI>` Prints the generated update query to the console for a specific update specification. No changes will be made to the graph.
 
-`run buildTest` Builds automated tests for all update specifications (even unqueued ones) in the selected transformation instruction set.
+`run buildTest` Builds automated snapshot tests for all update specifications (even unqueued ones) in the selected transformation instruction set.
 
-`run buildTest <some_process_URI>` Builds an automated test for a specific update specification
+`run buildTest <some_process_URI>` Builds an automated snapshot test for a specific update specification
 
 `run debug [--min]` Generates a synthetic set of input triples for all queued update specifications and runs them in order, leaving the output for examination in the testing repository. If min flag is present, only the minimum required set of triples will be generated for each update specification, otherwise all possible triples will be generated.  Note that if updates reference inputs that were the output of a previous update, instances of these input classes will still be created by the synthetic triple generation service, even if other instances of those classes already exist in the graph.
 
 `run debug [--min] <some_process_URI>` Generates a synthetic set of input triples for a specific update specification and then runs just that update specification, leaving the output for examination in the testing repository. If min flag is present, only the minimum required set of triples will be generated for each update specification, otherwise all possible triples will be generated.
+
+Click [here](snapshotTests.md) more detailed information on the debug mode and snapshot test generation.
 
 **Test commands**
 
