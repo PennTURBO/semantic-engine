@@ -1,5 +1,6 @@
 # Drivetrain
 The Semantic Engine
+Transforms concise RDF data into a source-independent, semantically rich RDF model. 
 
 ## Installation
 
