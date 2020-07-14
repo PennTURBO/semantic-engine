@@ -1,5 +1,7 @@
 # Semantic Engine
-The Semantic Engine ("Drivetrain") transforms concise RDF data into a source-independent, semantically rich RDF model. 
+The Semantic Engine ("Drivetrain") transforms concise RDF data into a source-independent, semantically rich RDF model. It is designed to allow ontologists and programmers to work collaboratively on the creation and implementation of a target model that standardizes data from disparate sources.
+
+![workers](docs/images/workers.jpg)
 
 ## Installation
 
