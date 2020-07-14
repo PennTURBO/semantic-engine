@@ -36,7 +36,7 @@ The following commands can be run via the SBT console
 
 `run debug [--min] <some_process_URI>` Generates a synthetic set of input triples for a specific update specification and then runs just that update specification, leaving the output for examination in the testing repository. If min flag is present, only the minimum required set of triples will be generated for each update specification, otherwise all possible triples will be generated.
 
-Click [here](docs/snapshotTests.md) more detailed information on the debug mode and snapshot test generation.
+Click [here](docs/snapshotTestDocs.md) more detailed information on the debug mode and snapshot test generation.
 
 **Test commands**
 
