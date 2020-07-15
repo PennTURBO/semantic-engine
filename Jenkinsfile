@@ -76,7 +76,7 @@ pipeline {
                 branch 'master'
             }
             steps {
-                build 'Drivetrain deploy turbo-dev-app01'
+                build 'Drivetrain deploy turbo-dev-app02'
             }
         }
         stage('Deploy to Prd Server') {
@@ -84,7 +84,7 @@ pipeline {
                 branch 'production'
             }
             steps {
-                build 'Drivetrain deploy turbo-prd-app01'
+                build 'Drivetrain deploy turbo-prd-app02'
             }
         }
     }
