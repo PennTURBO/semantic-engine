@@ -9,13 +9,13 @@ The Snapshot Test builder automatically generates a toy triples dataset based on
 3. Placeholders for a set of possible terms (referenced in the Semantic Engine Language as ClassResourceLists) are assigned class values based on the first element in the range list provided. If no range list is provided, the top-level BFO term `obo:BFO_0000001` is used.
 4. Literal values (referenced in the Semantic Engine Languge as LiteralResourceLists) are created based on the type of the literal. The table below shows how the type of the literal effects how the literal is created.
 
-| Literal Type                       | Method of Generation                                                                           |
-|------------------------------------|------------------------------------------------------------------------------------------------|
-| LiteralResourceList (generic type) | Absolute Value of HashCode of LiteralResourceList's URI + "abc"                                |
-| StringLiteralResourceList          | Absolute Value of HashCode of LiteralResourceList's URI + "abc"                                |
-| IntegerLiteralResourceList         | Absolute Value of HashCode of LiteralResourceList's URI                                        |
-| DoubleLiteralResourceList          | Absolute Value of HashCode of LiteralResourceList's URI + ".00"                                |
-| BooleanLiteralResourceList         | "true"                                                                                         |
-| DateLiteralResourceList            | First six characters of HashCode of LiteralResourceList's URI, with slashes every 2 characters |
+| Literal Type                       | Method of Generation                                                                           | XSD type assigned |
+|------------------------------------|------------------------------------------------------------------------------------------------|-------------------|
+| LiteralResourceList (generic type) | Absolute Value of HashCode of LiteralResourceList's URI + "abc"                                |    xsd:String     |
+| StringLiteralResourceList          | Absolute Value of HashCode of LiteralResourceList's URI + "abc"                                |    xsd:String     |
+| IntegerLiteralResourceList         | Absolute Value of HashCode of LiteralResourceList's URI                                        |    xsd:Integer    |
+| DoubleLiteralResourceList          | Absolute Value of HashCode of LiteralResourceList's URI + ".00"                                |    xsd:Double     |
+| BooleanLiteralResourceList         | "true"                                                                                         |    xsd:Boolean    |
+| DateLiteralResourceList            | First six characters of HashCode of LiteralResourceList's URI, with slashes every 2 characters |    xsd:Date       |
 
 To see a code-based specification of the expected output of the triples generation service, see [this ScalaTest class](../drivetrain/src/test/scala/edu/upenn/turbo/TestBuilderIntegrationTests.scala).
