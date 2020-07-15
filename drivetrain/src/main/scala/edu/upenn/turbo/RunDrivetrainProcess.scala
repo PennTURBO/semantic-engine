@@ -21,6 +21,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     var inputSet = new HashSet[Value]
     var inputProcessSet = new HashSet[String]
     var typeMap = new HashMap[String,Value]
+    var multithread = useMultipleThreads
     
     var useInputNamedGraphsCache: Boolean = true
     
@@ -29,6 +30,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     def setGlobalUUID(globalUUID: String)
     {
         this.localUUID = globalUUID
+    }
+    def setMultithreading(multithread: Boolean)
+    {
+        this.multithread = multithread
     }
     def setGraphModelConnection(gmCxn: RepositoryConnection)
     {
@@ -90,15 +95,23 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 }
                 else logger.info("\tInput Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
-                /*val parColl = inputNamedGraphsList.par
-                parColl.tasksupport = taskSupport
-                parColl.foreach(submitQuery(_, primaryQuery, genericWhereClause))*/
-                inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause))
+                if (multithread)
+                {
+                    logger.info("Multiple threads enabled")
+                    val parColl = inputNamedGraphsList.par
+                    parColl.tasksupport = taskSupport
+                    parColl.foreach(submitQuery(_, primaryQuery, genericWhereClause))
+                }
+                else 
+                {
+                    logger.info("Multiple threads disabled")
+                    inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause, cxn))
+                }
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
                 
                 val endingTriplesCount = helper.countTriplesInDatabase(cxn)
-                val triplesAdded = endingTriplesCount - startingTriplesCount
+                val triplesAdded = endingTriplesCount.subtract(startingTriplesCount)
                 val endTime = System.nanoTime()
                 val runtime: String = ((endTime - startTime)/1000000000.0).toString
                 logger.info("Completed process " + processSpecification + " in " + runtime + " seconds")
@@ -125,19 +138,28 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         processQueryMap
     }
     
-    def submitQuery(inputNamedGraph: String, primaryQuery: PatternMatchQuery, genericWhereClause: String)
+    def submitQuery(inputNamedGraph: String, primaryQuery: PatternMatchQuery, genericWhereClause: String, paramCxn: RepositoryConnection = null)
     {
         logger.info("Now running on input named graph: " + inputNamedGraph)
-        val graphConnection = ConnectToGraphDB.getNewConnectionToPrdRepo()
-        val localCxn = graphConnection.cxn
-        primaryQuery.whereClause = genericWhereClause.replaceAll(primaryQuery.defaultInputGraph, inputNamedGraph)
-        primaryQuery.runQuery(localCxn)
-        ConnectToGraphDB.closeGraphConnection(graphConnection)
+        var whereClauseString = primaryQuery.whereClause
+        whereClauseString = whereClauseString.replaceAll(primaryQuery.defaultInputGraph, inputNamedGraph)
+        val localQuery = primaryQuery.deleteClause + "\n" + primaryQuery.insertClause + "\n" + whereClauseString + primaryQuery.bindClause + "}"
+        if (paramCxn == null)
+        {
+            val graphConnection = ConnectToGraphDB.getNewConnectionToRepo()
+            val localCxn = graphConnection.cxn
+            //logger.info(localQuery)
+            update.updateSparql(localCxn, localQuery)
+            ConnectToGraphDB.closeGraphConnection(graphConnection)
+            //logger.info("finished named graph: " + inputNamedGraph) 
+        }
+        else update.updateSparql(paramCxn, localQuery)
     }
 
     def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()): PatternMatchQuery =
     {
         if (localUUID == null) localUUID = UUID.randomUUID().toString().replaceAll("-", "")
+        logger.info(s"Creating new IRIs with hash $localUUID")
         var thisProcessSpecification = helper.getProcessNameAsUri(processSpecification)
         
         GraphModelValidator.validateProcessSpecification(thisProcessSpecification)
@@ -194,7 +216,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
        
        val query = s"""
          
-         Select $variablesToSelect
+         Select distinct $variablesToSelect
          
          Where
          {
@@ -206,7 +228,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
               ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
               ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              ?$CONNECTIONNAME drivetrain:multiplicity ?$MULTIPLICITY .
+              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
               
               Optional
               {
@@ -281,6 +303,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               {
                   ?$OBJECT a ?$GRAPHLITERALTYPE .
                   ?$GRAPHLITERALTYPE rdfs:subClassOf* drivetrain:LiteralResourceList .
+                  minus
+                  {
+                      ?OBJECT a ?GRAPHLITERALTYPE2 .
+                      ?GRAPHLITERALTYPE2 rdfs:subClassOf+ ?GRAPHLITERALTYPE .
+                  }
                   BIND (true AS ?$OBJECTALITERAL)
               }
               BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
@@ -298,7 +325,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
        
        val query = s"""
          
-         Select $variablesToSelect
+         Select distinct $variablesToSelect
          
          Where
          {
@@ -349,7 +376,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
        
        val query = s"""
          
-         Select $variablesToSelect
+         Select distinct $variablesToSelect
          Where
          {
               Values ?INPUTTO {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
@@ -360,7 +387,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
               ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
               ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
               ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              ?$CONNECTIONNAME drivetrain:multiplicity ?$MULTIPLICITY .
+              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
               
               Optional
               {
@@ -445,7 +472,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         setOutputRepositoryConnection(cxn)
       
         // get list of all processes in order
-        val orderedProcessList: ArrayBuffer[String] = getAllProcessesInOrder(gmCxn)
+        val orderedProcessList: ArrayBuffer[String] = helper.getAllProcessesInOrder(gmCxn)
         
         GraphModelValidator.validateProcessesAgainstGraphSpecification(orderedProcessList)
         
@@ -454,59 +481,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
         // run each process
         runProcess(orderedProcessList, dataValidationMode, validateAgainstOntology)
-    }
-
-    /**
-     * Searches the model graph and returns all processes in the order that they should be run
-     * 
-     * @return ArrayBuffer[String] where each string represents a process and the index represents where each should be run in a sequence
-     */
-    def getAllProcessesInOrder(gmCxn: RepositoryConnection): ArrayBuffer[String] =
-    {
-        val getFirstProcess: String = s"""
-          select ?firstProcess where
-          {
-              Graph <$defaultPrefix"""+s"""instructionSet>
-              {
-                  ?firstProcess a turbo:TURBO_0010354 .
-                  Minus
-                  {
-                      ?someOtherProcess drivetrain:precedes ?firstProcess .
-                      ?someOtherProcess a turbo:TURBO_0010354 .
-                  }
-              }
-          }
-        """
-        
-        val getProcesses: String = s"""
-          select ?precedingProcess ?succeedingProcess where
-          {
-              Graph <$defaultPrefix"""+s"""instructionSet>
-              {
-                  ?precedingProcess drivetrain:precedes ?succeedingProcess .
-                  ?precedingProcess a turbo:TURBO_0010354 .
-                  ?succeedingProcess a turbo:TURBO_0010354 .
-              }
-          }
-        """
-        
-        val firstProcessRes = update.querySparqlAndUnpackTuple(gmCxn, getFirstProcess, "firstProcess")
-        if (firstProcessRes.size > 1) throw new RuntimeException ("Multiple starting processes discovered in graph model")
-        if (firstProcessRes.size == 0) throw new RuntimeException ("No starting process discovered in graph model")
-        val res = update.querySparqlAndUnpackTuple(gmCxn, getProcesses, Array("precedingProcess", "succeedingProcess"))
-        var currProcess: String = firstProcessRes(0)
-        var processesInOrder: ArrayBuffer[String] = new ArrayBuffer[String]
-        var processMap: HashMap[String, String] = new HashMap[String, String]
-        
-        for (a <- res) processMap += a(0).toString -> a(1).toString
-        
-        while (currProcess != null)
-        {
-            processesInOrder += currProcess
-            if (processMap.contains(currProcess)) currProcess = processMap(currProcess)
-            else currProcess = null
-        }
-        processesInOrder
     }
     
     def createMetaDataTriples(metaInfo: HashMap[Value, ArrayBuffer[String]]): ArrayBuffer[Triple] =

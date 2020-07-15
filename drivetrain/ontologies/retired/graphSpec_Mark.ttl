@@ -1,0 +1,114 @@
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix turbo: <http://transformunify.org/ontologies/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+turbo:cridDenotesHce a turbo:ObjectConnectionToInstanceRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:encounterToBeTyped;
+  turbo:predicate obo:IAO_0000219;
+  turbo:subject obo:IAO_0000578 .
+
+turbo:cridsymbHasRepresentation a turbo:DatatypeConnectionRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:visit_occurrence_id_StringLiteralValue;
+  turbo:predicate turbo:TURBO_0010094;
+  turbo:subject obo:IAO_0000577 .
+
+turbo:hceExpansionSpecification a turbo:ObjectConnectionToInstanceRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:encounterToBeTyped;
+  turbo:predicate turbo:TURBO_0010113;
+  turbo:subject <http://api.stardog.com/visit_occurrence> .
+
+turbo:procboundEndsEnc a turbo:ObjectConnectionToInstanceRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:encounterToBeTyped;
+  turbo:predicate obo:RO_0002229;
+  turbo:required true;
+  turbo:subject obo:BFO_0000035;
+  turbo:subjectUsesContext turbo:encEndContext .
+
+turbo:procboundStartsEnc a turbo:ObjectConnectionToInstanceRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:encounterToBeTyped;
+  turbo:predicate obo:RO_0002223;
+  turbo:subject obo:BFO_0000035;
+  turbo:subjectUsesContext turbo:encStartContext .
+
+turbo:startingTmdAboutProcbound a turbo:ObjectConnectionToInstanceRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object obo:BFO_0000035;
+  turbo:objectUsesContext turbo:encStartContext;
+  turbo:predicate obo:IAO_0000136;
+  turbo:subject obo:IAO_0000416;
+  turbo:subjectUsesContext turbo:encStartContext .
+
+turbo:startingTmdHasMeasVal a turbo:DatatypeConnectionRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:visit_start_date_DateLiteralValue;
+  turbo:predicate obo:IAO_0000004;
+  turbo:subject obo:IAO_0000416;
+  turbo:subjectUsesContext turbo:encStartContext .
+
+turbo:endingTmdAboutProcbound a turbo:ObjectConnectionToInstanceRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object obo:BFO_0000035;
+  turbo:objectUsesContext turbo:encEndContext;
+  turbo:predicate obo:IAO_0000136;
+  turbo:required true;
+  turbo:subject obo:IAO_0000416;
+  turbo:subjectUsesContext turbo:encEndContext .
+
+turbo:endingTmdHasMeasVal a turbo:DatatypeConnectionRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:visit_end_date_DateLiteralValue;
+  turbo:predicate obo:IAO_0000004;
+  turbo:required true;
+  turbo:subject obo:IAO_0000416;
+  turbo:subjectUsesContext turbo:encEndContext .
+
+turbo:symbolPartOfCridForHce a turbo:ObjectConnectionToInstanceRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object obo:IAO_0000578;
+  turbo:predicate obo:BFO_0000050;
+  turbo:subject obo:IAO_0000577 .
+
+<http://api.stardog.com/visit_occurrence> a owl:Class .
+
+turbo:visit_occurrence_id_StringLiteralValue a turbo:TurboGraphStringLiteralValue .
+
+turbo:visit_start_date_DateLiteralValue a turbo:TurboGraphDateLiteralValue .
+
+turbo:visit_end_date_DateLiteralValue a turbo:TurboGraphDateLiteralValue .
+
+turbo:encStartContext a turbo:TurboGraphContext .
+
+turbo:encEndContext a turbo:TurboGraphContext .
+
+turbo:hardcodedRegden_octtr a turbo:ObjectConnectionToTermRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:TURBO_0010256;
+  turbo:predicate obo:BFO_0000051;
+  turbo:required true;
+  turbo:subject obo:IAO_0000578 .
+
+turbo:visit_type_IntegerLiteralValue a turbo:TurboGraphIntegerLiteralValue .
+
+turbo:EncounterClassList a turbo:MultiObjectDescriber;
+  turbo:range owl:Class .
+
+turbo:encounterTypingRecipe a turbo:ObjectConnectionToTermRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:EncounterClassList;
+  turbo:predicate rdf:type;
+  turbo:required true;
+  turbo:subject turbo:encounterToBeTyped .
+
+turbo:encounterToBeTyped a turbo:MultiObjectDescriber;
+  turbo:range owl:Class .
+
+obo:IAO_0000416 turbo:hasPossibleContext turbo:encEndContext, turbo:encStartContext .
+
+obo:BFO_0000035 turbo:hasPossibleContext turbo:encEndContext, turbo:encStartContext .

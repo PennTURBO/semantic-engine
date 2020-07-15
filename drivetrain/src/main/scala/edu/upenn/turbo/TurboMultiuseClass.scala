@@ -31,6 +31,7 @@ import java.io.InputStream
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
 import org.eclipse.rdf4j.model.Model
 import org.scalatest._
+import java.math.BigInteger
 
 /**
  * The TurboMultiuseClass contains methods whose functionality is repeatedly used by some component of the Drivetrain application. A few of the methods
@@ -83,9 +84,10 @@ class TurboMultiuseClass extends Enumeration with Matchers
          update.updateSparql(cxn, deleteAll)
      }
     
-    def genTurboIRI(): String =
+    def genTurboIRI(seed: String = ""): String =
     {
-        defaultPrefix + UUID.randomUUID().toString().replaceAll("-", "")
+        if (seed == "") defaultPrefix + UUID.randomUUID().toString().replaceAll("-", "")
+        else defaultPrefix + seed.hashCode()
     }
     
     /**
@@ -424,7 +426,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
     def retrieveUriPropertyFromFile(propertyID: String, file: String = "..//turbo_properties.properties"): String =
     {
         var property = retrievePropertyFromFile(propertyID, file)
-        assert (property.contains("/") && property.contains(".") && (property.contains("http") || property.contains("www")), s"Invalid URI for property $propertyID")
+        assert (property.contains("/"), s"Invalid URI for property $propertyID")
         if (propertyID == "defaultPrefix" && !property.endsWith("/")) property += "/"
         property
     }
@@ -687,7 +689,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
         cxn.remove(model, f.createIRI("http://www.ontotext.com/implicit"))
     }
     
-    def countTriplesInDatabase(cxn: RepositoryConnection): Int =
+    def countTriplesInDatabase(cxn: RepositoryConnection): BigInteger =
     {        
         val query: String = """
           select (count (?s) as ?tripcount) where
@@ -695,7 +697,7 @@ class TurboMultiuseClass extends Enumeration with Matchers
               ?s ?p ?o .
           }
           """
-         update.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1).toInt
+         new BigInteger(update.querySparqlAndUnpackTuple(cxn, query, "tripcount")(0).split("\"")(1))
     }
     
     def countTriplesInNamedGraph(cxn: RepositoryConnection, namedGraph: String): Int =
@@ -883,5 +885,69 @@ class TurboMultiuseClass extends Enumeration with Matchers
         val boolAsString = checkStringArraysForEquivalency(queryTextValueStatementsRemoved.toArray, expectedQueryList)("equivalent").asInstanceOf[String]
         if (boolAsString == "true") true
         else false
+    }
+    
+    def getAllProcessInInstructionSet(gmCxn: RepositoryConnection): ArrayBuffer[String] =
+    {
+        val query: String = s"""
+          select * where
+          {
+              ?instSet a turbo:TURBO_0010354 .
+          }
+          """
+         update.querySparqlAndUnpackTuple(gmCxn, query, "instSet")
+    }
+    
+    /**
+     * Searches the model graph and returns all processes in the order that they should be run
+     * 
+     * @return ArrayBuffer[String] where each string represents a process and the index represents where each should be run in a sequence
+     */
+    def getAllProcessesInOrder(gmCxn: RepositoryConnection): ArrayBuffer[String] =
+    {
+        val getFirstProcess: String = s"""
+          select ?firstProcess where
+          {
+              Graph <$defaultPrefix"""+s"""instructionSet>
+              {
+                  ?firstProcess a turbo:TURBO_0010354 .
+                  Minus
+                  {
+                      ?someOtherProcess drivetrain:precedes ?firstProcess .
+                      ?someOtherProcess a turbo:TURBO_0010354 .
+                  }
+              }
+          }
+        """
+        
+        val getProcesses: String = s"""
+          select ?precedingProcess ?succeedingProcess where
+          {
+              Graph <$defaultPrefix"""+s"""instructionSet>
+              {
+                  ?precedingProcess drivetrain:precedes ?succeedingProcess .
+                  ?precedingProcess a turbo:TURBO_0010354 .
+                  ?succeedingProcess a turbo:TURBO_0010354 .
+              }
+          }
+        """
+        
+        val firstProcessRes = update.querySparqlAndUnpackTuple(gmCxn, getFirstProcess, "firstProcess")
+        if (firstProcessRes.size > 1) throw new RuntimeException ("Multiple starting processes discovered in graph model")
+        if (firstProcessRes.size == 0) throw new RuntimeException ("No starting process discovered in graph model")
+        val res = update.querySparqlAndUnpackTuple(gmCxn, getProcesses, Array("precedingProcess", "succeedingProcess"))
+        var currProcess: String = firstProcessRes(0)
+        var processesInOrder: ArrayBuffer[String] = new ArrayBuffer[String]
+        var processMap: HashMap[String, String] = new HashMap[String, String]
+        
+        for (a <- res) processMap += a(0).toString -> a(1).toString
+        
+        while (currProcess != null)
+        {
+            processesInOrder += currProcess
+            if (processMap.contains(currProcess)) currProcess = processMap(currProcess)
+            else currProcess = null
+        }
+        processesInOrder
     }
 }

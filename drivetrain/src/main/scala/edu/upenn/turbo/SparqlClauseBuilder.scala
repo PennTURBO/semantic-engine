@@ -344,13 +344,6 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     
     var process: String = ""
     
-    val manyToOneMultiplicity = "https://github.com/PennTURBO/Drivetrain/many-1"
-    val oneToManyMultiplicity = "https://github.com/PennTURBO/Drivetrain/1-many"
-    val objToInstRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe"
-    val objToTermRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe"
-    val objFromTermRecipe = "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe"
-    val datatypeRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe"
-    
     def buildBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String, process: String, usedVariables: HashMap[String, Boolean]): HashMap[String, Boolean] =
     {   
         this.process = process
@@ -799,7 +792,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(multiplicityEnforcer)
             }
     
-            bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""   
+            bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""
         }
     }
     

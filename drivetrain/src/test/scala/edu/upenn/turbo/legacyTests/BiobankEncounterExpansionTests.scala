@@ -207,13 +207,15 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     
     override def beforeAll()
     {
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getTestConnection()
+        assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
+        
+        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "testing_instruction_set.tis", "testing_graph_specification.gs")
+        cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
     }
     
     override def afterAll()
@@ -223,9 +225,9 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     
     before
     {
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
     }
-    
+
     test("generated query matched expected query")
     {
         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", expectedQuery) should be (true) 
@@ -251,18 +253,18 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           pmbb:part1 a turbo:TURBO_0010161 .
           }}
           """
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false)
           
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (true)
-        update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, biobankEncounterMinimum).get should be (true)
+        update.querySparqlBoolean(cxn, biobankHeightWeightAndBMI).get should be (true)
+        update.querySparqlBoolean(cxn, biobankEncounterDate).get should be (true)
+        update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -339,7 +341,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           
           """
         
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
     }
     
     test("bb encounter with minimum required for expansion")
@@ -353,17 +355,17 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           turbo:TURBO_0010286 turbo:TURBO_0000535 .
           }}
           """
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false)
         
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (false)
-        update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (false)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, biobankEncounterMinimum).get should be (true)
+        update.querySparqlBoolean(cxn, biobankHeightWeightAndBMI).get should be (false)
+        update.querySparqlBoolean(cxn, biobankEncounterDate).get should be (false)
+        update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -412,7 +414,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           
           """
         
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
     }
     
     test("bb encounter with text but not xsd values")
@@ -432,7 +434,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           # turbo:TURBO_0000625 "2017-01-15"^^xsd:date .
           }}
           """
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false)
         
         val dateNoXsd: String = s"""
@@ -449,15 +451,15 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         	}}
           """
         
-        update.querySparqlBoolean(testCxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(testCxn, biobankEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(testCxn, biobankHeightWeightAndBMI).get should be (true)
-        update.querySparqlBoolean(testCxn, biobankEncounterDate).get should be (false) 
-        update.querySparqlBoolean(testCxn, dateNoXsd).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
+        update.querySparqlBoolean(cxn, biobankEncounterMinimum).get should be (true)
+        update.querySparqlBoolean(cxn, biobankHeightWeightAndBMI).get should be (true)
+        update.querySparqlBoolean(cxn, biobankEncounterDate).get should be (false) 
+        update.querySparqlBoolean(cxn, dateNoXsd).get should be (true)
+        update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(testCxn, count, "p")
+        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -523,6 +525,6 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           
           """
         
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
     }
 }

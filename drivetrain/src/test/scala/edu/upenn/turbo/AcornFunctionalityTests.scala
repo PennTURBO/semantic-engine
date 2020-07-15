@@ -18,13 +18,15 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
     
     override def beforeAll()
     {
+        assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
+        
         graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(false)
-        testCxn = graphDBMaterials.getTestConnection()
+        cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
         OntologyLoader.addOntologyFromUrl(gmCxn)
         
         helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
@@ -58,25 +60,25 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection4 .
                     
                     pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection1 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection1 drivetrain:subject pmbb:class1 .
                     pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection1 drivetrain:object pmbb:class2 .
                     
                     pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection2 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection2 drivetrain:subject pmbb:class1 .
                     pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
                     pmbb:connection2 drivetrain:object pmbb:class3 .
                     
                     pmbb:connection3 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection3 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection3 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection3 drivetrain:subject pmbb:class2 .
                     pmbb:connection3 drivetrain:predicate pmbb:predicate3 .
                     pmbb:connection3 drivetrain:object pmbb:class3 .
                     
                     pmbb:connection4 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection4 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection4 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection4 drivetrain:subject pmbb:class1 .
                     pmbb:connection4 drivetrain:predicate pmbb:predicate4 .
                     pmbb:connection4 drivetrain:object pmbb:class4 .
@@ -86,7 +88,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:class3 a owl:Class .
                     pmbb:class4 a owl:Class .
                     
-                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
                 }
             }
           """
@@ -138,26 +140,26 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:myProcess1 drivetrain:buildsOptionalGroup pmbb:optionalGroup1 .
                     
                     pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection1 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection1 drivetrain:subject pmbb:class1 .
                     pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection1 drivetrain:object pmbb:class2 .
                     
                     pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection2 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection2 drivetrain:subject pmbb:class1 .
                     pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
                     pmbb:connection2 drivetrain:object pmbb:class3 .
                     
                     pmbb:connection3 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection3 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection3 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection3 drivetrain:subject pmbb:class2 .
                     pmbb:connection3 drivetrain:predicate pmbb:predicate3 .
                     pmbb:connection3 drivetrain:object pmbb:class3 .
                     pmbb:connection3 drivetrain:partOf pmbb:optionalGroup1 .
                     
                     pmbb:connection4 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection4 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection4 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection4 drivetrain:subject pmbb:class1 .
                     pmbb:connection4 drivetrain:predicate pmbb:predicate4 .
                     pmbb:connection4 drivetrain:object pmbb:class4 .
@@ -171,7 +173,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:class3 a owl:Class .
                     pmbb:class4 a owl:Class .
                     
-                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
                 }
             }
           """
@@ -232,26 +234,26 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:myProcess1 drivetrain:buildsMinusGroup pmbb:minusGroup1 .
                     
                     pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection1 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection1 drivetrain:subject pmbb:class1 .
                     pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection1 drivetrain:object pmbb:class2 .
                     
                     pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection2 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection2 drivetrain:subject pmbb:class1 .
                     pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
                     pmbb:connection2 drivetrain:object pmbb:class3 .
                     
                     pmbb:connection3 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection3 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection3 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection3 drivetrain:subject pmbb:class2 .
                     pmbb:connection3 drivetrain:predicate pmbb:predicate3 .
                     pmbb:connection3 drivetrain:object pmbb:class3 .
                     pmbb:connection3 drivetrain:partOf pmbb:minusGroup1 .
                     
                     pmbb:connection4 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection4 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection4 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection4 drivetrain:subject pmbb:class1 .
                     pmbb:connection4 drivetrain:predicate pmbb:predicate4 .
                     pmbb:connection4 drivetrain:object pmbb:class4 .
@@ -265,7 +267,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:class3 a owl:Class .
                     pmbb:class4 a owl:Class .
                     
-                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
                 }
             }
           """
@@ -326,26 +328,26 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:myProcess1 drivetrain:buildsOptionalGroup pmbb:optionalGroup2 .
                     
                     pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection1 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection1 drivetrain:subject pmbb:class1 .
                     pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection1 drivetrain:object pmbb:class2 .
                     
                     pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection2 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection2 drivetrain:subject pmbb:class1 .
                     pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
                     pmbb:connection2 drivetrain:object pmbb:class3 .
                     
                     pmbb:connection3 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection3 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection3 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection3 drivetrain:subject pmbb:class2 .
                     pmbb:connection3 drivetrain:predicate pmbb:predicate3 .
                     pmbb:connection3 drivetrain:object pmbb:class3 .
                     pmbb:connection3 drivetrain:partOf pmbb:optionalGroup1 .
                     
                     pmbb:connection4 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection4 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection4 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection4 drivetrain:subject pmbb:class1 .
                     pmbb:connection4 drivetrain:predicate pmbb:predicate4 .
                     pmbb:connection4 drivetrain:object pmbb:class4 .
@@ -359,7 +361,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:class3 a owl:Class .
                     pmbb:class4 a owl:Class .
                     
-                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
                 }
             }
           """
@@ -418,26 +420,26 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:myProcess1 drivetrain:buildsMinusGroup pmbb:minusGroup2 .
                     
                     pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection1 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection1 drivetrain:subject pmbb:class1 .
                     pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection1 drivetrain:object pmbb:class2 .
                     
                     pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection2 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection2 drivetrain:subject pmbb:class1 .
                     pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
                     pmbb:connection2 drivetrain:object pmbb:class3 .
                     
                     pmbb:connection3 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection3 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection3 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection3 drivetrain:subject pmbb:class2 .
                     pmbb:connection3 drivetrain:predicate pmbb:predicate3 .
                     pmbb:connection3 drivetrain:object pmbb:class3 .
                     pmbb:connection3 drivetrain:partOf pmbb:minusGroup1 .
                     
                     pmbb:connection4 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection4 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection4 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection4 drivetrain:subject pmbb:class1 .
                     pmbb:connection4 drivetrain:predicate pmbb:predicate4 .
                     pmbb:connection4 drivetrain:object pmbb:class4 .
@@ -451,7 +453,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:class3 a owl:Class .
                     pmbb:class4 a owl:Class .
                     
-                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
                 }
             }
           """
@@ -508,25 +510,25 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection4 .
                     
                     pmbb:connection1 a drivetrain:TermToTermRecipe .
-                    pmbb:connection1 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection1 drivetrain:subject pmbb:term1 .
                     pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection1 drivetrain:object pmbb:term2 .
                     
                     pmbb:connection2 a drivetrain:TermToLiteralRecipe .
-                    pmbb:connection2 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection2 drivetrain:subject pmbb:term1 .
                     pmbb:connection2 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection2 drivetrain:object pmbb:literal1 .
                     
                     pmbb:connection3 a drivetrain:TermToTermRecipe .
-                    pmbb:connection3 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection3 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection3 drivetrain:subject pmbb:term2 .
                     pmbb:connection3 drivetrain:predicate pmbb:predicate2 .
                     pmbb:connection3 drivetrain:object pmbb:term1 .
                     
                     pmbb:connection4 a drivetrain:TermToLiteralRecipe .
-                    pmbb:connection4 drivetrain:multiplicity drivetrain:1-1 .
+                    pmbb:connection4 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection4 drivetrain:subject pmbb:term2 .
                     pmbb:connection4 drivetrain:predicate pmbb:predicate2 .
                     pmbb:connection4 drivetrain:object pmbb:literal1 .
@@ -539,7 +541,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     
                     pmbb:literal1 a drivetrain:LiteralResourceList .
                     
-                    drivetrain:1-1 a drivetrain:TurboGraphMultiplicityRule .
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
                 }
             }
           """

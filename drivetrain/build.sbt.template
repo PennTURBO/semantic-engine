@@ -25,6 +25,10 @@ scalaVersion := "2.11.8"
 resolvers += Classpaths.typesafeReleases
 
 parallelExecution in Test := false
+fork := true
+outputStrategy := Some(StdoutOutput)
+envVars := Map("SCALA_ENV" -> "main")
+envVars in Test := Map("SCALA_ENV" -> "test")
 
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.1.5" % "runtime",
@@ -33,7 +37,10 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.1",
   "commons-logging" % "commons-logging" % "1.2",
   "org.ddahl" %% "rscala" % "2.5.3",
-  "org.json4s" %% "json4s-jackson" % "3.6.0"
+  "org.json4s" %% "json4s-jackson" % "3.6.0",
+  "org.pegdown" % "pegdown" % "1.6.0" % Test
 )
 
 libraryDependencies ~= { _.map(_.exclude("org.slf4j", "slf4j-jdk14")) }
+
+testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-h", "target/test-reports/html")

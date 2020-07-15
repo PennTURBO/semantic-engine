@@ -138,13 +138,15 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
     
     override def beforeAll()
     {
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "legacyInstructionSet.ttl", "legacyGraphSpec.ttl")
-        testCxn = graphDBMaterials.getTestConnection()
+        assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
+        
+        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "testing_instruction_set.tis", "testing_graph_specification.gs")
+        cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
         
         RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
+        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
     }
     
     override def afterAll()
@@ -154,7 +156,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
     
     before
     {
-        helper.deleteAllTriplesInDatabase(testCxn)
+        helper.deleteAllTriplesInDatabase(cxn)
     }
     
     test("generated query matched expected query")
@@ -196,7 +198,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false)
         
         val output: String = s"""
@@ -263,7 +265,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.querySparqlBoolean(testCxn, output).get should be (true)
+        update.querySparqlBoolean(cxn, output).get should be (true)
         
         val countTrips: String = 
         s"""
@@ -276,7 +278,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         }
         """
         
-        val tripsResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countTrips, "p")
+        val tripsResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countTrips, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -367,8 +369,8 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.querySparqlBoolean(testCxn, processInputsOutputs).get should be (true)
-        update.querySparqlBoolean(testCxn, processMeta).get should be (true)
+        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
+        update.querySparqlBoolean(cxn, processMeta).get should be (true)
         
         val countProcessTriples: String = 
         s"""
@@ -380,7 +382,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
             }
         }
         """
-        val processTriplesResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countProcessTriples, "p")
+        val processTriplesResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countProcessTriples, "p")
         processTriplesResult.size should be (41)
     }
 
@@ -437,7 +439,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false)
         
         val output: String = s"""
@@ -561,7 +563,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.querySparqlBoolean(testCxn, output).get should be (true)
+        update.querySparqlBoolean(cxn, output).get should be (true)
         
         val countCollectionProcess: String = 
         s"""
@@ -573,7 +575,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
             }
         }
         """
-        val collProcRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countCollectionProcess, "collProc")
+        val collProcRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countCollectionProcess, "collProc")
         collProcRes.size should be (2)
 
         val countAllele: String = 
@@ -586,7 +588,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
             }
         }
         """
-        val alleleRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countAllele, "allele")
+        val alleleRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countAllele, "allele")
         alleleRes.size should be (2)
 
         val countDNA: String = 
@@ -599,7 +601,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
             }
         }
         """
-        val dnaRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countDNA, "dna")
+        val dnaRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countDNA, "dna")
         dnaRes.size should be (1)
     }
 
@@ -649,7 +651,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.updateSparql(testCxn, insert)
+        update.updateSparql(cxn, insert)
         RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false)
         
         val output: String = s"""
@@ -730,7 +732,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.querySparqlBoolean(testCxn, output).get should be (true)
+        update.querySparqlBoolean(cxn, output).get should be (true)
         
         val countCollectionProcess: String = 
         s"""
@@ -742,7 +744,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
             }
         }
         """
-        val collProcRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countCollectionProcess, "collProc")
+        val collProcRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countCollectionProcess, "collProc")
         collProcRes.size should be (1)
 
         val countAllele: String = 
@@ -755,7 +757,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
             }
         }
         """
-        val alleleRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(testCxn, countAllele, "allele")
+        val alleleRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countAllele, "allele")
         alleleRes.size should be (2)
     }
 }
