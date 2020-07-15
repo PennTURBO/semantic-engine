@@ -16,7 +16,7 @@ modelRepository = your_model_repo
 importOntologies = true
 ontologyURL = https://raw.githubusercontent.com/PennTURBO/Turbo-Ontology/master/ontologies/turbo_merged.owl
 defaultPrefix = http://www.itmat.upenn.edu/biobank/
- 
+
 processNamedGraph = http://www.itmat.upenn.edu/biobank/processes
 expandedNamedGraph = http://www.itmat.upenn.edu/biobank/expanded
 shortcutNamedGraph = http://www.itmat.upenn.edu/biobank/Shortcuts_

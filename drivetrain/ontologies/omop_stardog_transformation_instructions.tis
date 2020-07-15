@@ -635,7 +635,7 @@ drivetrain:ProcExpansionSpecification
 drivetrain:ProcMentionedClassFromValueRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql """
-  BIND(uri(concat('http://purl.bioontology.org/ontology/SNOMEDCT/', ${dependent} )) as  ${replacement} )
+  BIND(uri(concat('http://purl.bioontology.org/ontology/SNOMEDCT/', str(${dependent} ))) as  ${replacement} )
 """  ;
 .
 drivetrain:ProcMentionedClassList 
@@ -815,11 +815,11 @@ drivetrain:MeasCodeMentionedClassListFromValueRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql """
   BIND(IF(?measurement_vocabulary_id_LiteralValue = 'LOINC', 
-    uri(concat('http://purl.bioontology.org/ontology/LNC/', ${dependent} )),
+    uri(concat('http://purl.bioontology.org/ontology/LNC/', str(${dependent} ))),
 	?unbound) 
 	AS ?LoincMention)
   BIND(IF(?measurement_vocabulary_id_LiteralValue = 'SNOMED', 
-    uri(concat('http://purl.bioontology.org/ontology/SNOMED/', ${dependent} )),
+    uri(concat('http://purl.bioontology.org/ontology/SNOMED/', str(${dependent} ))),
 	?unbound) 
 	AS ?SnomedMention)	
   BIND(coalesce(?LoincMention, ?SnomedMention) as ${replacement})
@@ -1077,7 +1077,7 @@ drivetrain:DiagExpansion
 drivetrain:CondMentionedClassFromValueRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql """
-  BIND(uri(concat('http://purl.bioontology.org/ontology/SNOMEDCT/', ${dependent} )) as  ${replacement} )
+  BIND(uri(concat('http://purl.bioontology.org/ontology/SNOMEDCT/', str(${dependent} ))) as  ${replacement} )
 """  ;
 .
 
@@ -1281,7 +1281,7 @@ drivetrain:WrittenNotDispensedLiteral
 drivetrain:RxMentionedClassListFromValueRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql """
-  BIND(uri(concat('http://purl.bioontology.org/ontology/RXNORM/', ${dependent} )) as  ${replacement} )
+  BIND(uri(concat('http://purl.bioontology.org/ontology/RXNORM/', str(${dependent} ))) as  ${replacement} )
 """  ;
 .
 

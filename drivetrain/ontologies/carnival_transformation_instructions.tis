@@ -44,9 +44,9 @@ ontologies:PatientRoleCreationRule
 .
 ontologies:IcdDiagnosisRegistryRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
-  drivetrain:usesSparql """BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", ?condition_type_LiteralValue)), ?unbound) AS ?icd9term)
+  drivetrain:usesSparql """BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71890>, uri(concat(\"http://purl.bioontology.org/ontology/ICD9CM/\", str(?condition_type_LiteralValue))), ?unbound) AS ?icd9term)
 
-BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat(\"http://purl.bioontology.org/ontology/ICD10CM/\", ?condition_type_LiteralValue)), ?unbound) AS ?icd10term)
+BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C71892>, uri(concat(\"http://purl.bioontology.org/ontology/ICD10CM/\", str(?condition_type_LiteralValue))), ?unbound) AS ?icd10term)
 
 BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ${replacement})
 
@@ -71,7 +71,7 @@ ontologies:shortcutTumorToShortcutHomoSapiens
 .
 ontologies:SnomedDiagnosisRegistryRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
-  drivetrain:usesSparql "BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>, uri(concat(\"http://purl.bioontology.org/ontology/SNOMEDCT/\", ?condition_type_LiteralValue)), ?unbound) AS ${replacement})" ;
+  drivetrain:usesSparql "BIND(IF (${dependent} = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>, uri(concat(\"http://purl.bioontology.org/ontology/SNOMEDCT/\", str(?condition_type_LiteralValue))), ?unbound) AS ${replacement})" ;
 .
 pmbb:HomoSapiensExpansionProcess
   drivetrain:buildsOptionalGroup ontologies:shortcutTumorOptionalGroup ;
