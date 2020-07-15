@@ -50,7 +50,7 @@ pipeline {
                         sh "sed -i 's/modelServiceURL = http:\\/\\/your_db:7200\\//modelServiceURL = http:\\/\\/turbo-prd-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
                     }
                 }
-            }
+            } 
         }
         stage('Compile') { 
             steps {
