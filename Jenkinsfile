@@ -39,12 +39,15 @@ pipeline {
 
                 script {
                     withCredentials([usernamePassword(credentialsId: '01f509ad-ca70-4727-93c0-71260af83b11', usernameVariable: 'graphDbUserName', passwordVariable: 'graphDbPassword')]) {
-                        sh "sed -i 's/username = your_username/username = $graphDbUserName/g' turbo_properties.properties"
-                        sh "sed -i 's/password = your_password/password = $graphDbPassword/g' turbo_properties.properties"
-                        sh "sed -i 's/testingRepository = your_test_repo/testingRepository = jenkinsTest/g' turbo_properties.properties"
-                        sh "sed -i 's/modelRepository = your_model_repo/modelRepository = jenkinsModel/g' turbo_properties.properties"
-                        sh "sed -i 's/productionRepository = your_prod_repo/productionRepository = jenkinsTest/g' turbo_properties.properties"
-                        sh "sed -i 's/serviceURL = your_db/serviceURL = http:\\/\\/turbo-dev-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
+                        sh "sed -i 's/testingUsername = your_username/testingUsername = $graphDbUserName/g' turbo_properties.properties"
+                        sh "sed -i 's/testingPassword = your_password/testingPassword = $graphDbPassword/g' turbo_properties.properties"
+                        sh "sed -i 's/modelUsername = your_username/modelUsername = $graphDbUserName/g' turbo_properties.properties"
+                        sh "sed -i 's/modelPassword = your_password/modelPassword = $graphDbPassword/g' turbo_properties.properties"
+                        sh "sed -i 's/testingRepository = your_testing_repo/testingRepository = jenkinsTest_$BRANCH_NAME/g' turbo_properties.properties"
+                        sh "sed -i 's/modelRepository = your_model_repo/modelRepository = jenkinsModel_$BRANCH_NAME/g' turbo_properties.properties"
+                        sh "sed -i 's/testingServiceURL = http:\\/\\/your_dev_db:7200\\//testingServiceURL = http:\\/\\/turbo-prd-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
+                        sh "sed -i 's/productionServiceURL = http:\\/\\/your_prd_db:7200\\//productionServiceURL = http:\\/\\/turbo-prd-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
+                        sh "sed -i 's/modelServiceURL = http:\\/\\/your_db:7200\\//modelServiceURL = http:\\/\\/turbo-prd-db01.pmacs.upenn.edu:7200\\//g' turbo_properties.properties"
                     }
                 }
             }
@@ -73,7 +76,7 @@ pipeline {
                 branch 'master'
             }
             steps {
-                build 'Drivetrain deploy turbo-dev-app01'
+                build 'Drivetrain deploy turbo-dev-app02'
             }
         }
         stage('Deploy to Prd Server') {
@@ -81,7 +84,7 @@ pipeline {
                 branch 'production'
             }
             steps {
-                build 'Drivetrain deploy turbo-prd-app01'
+                build 'Drivetrain deploy turbo-prd-app02'
             }
         }
     }
