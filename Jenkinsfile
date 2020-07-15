@@ -38,7 +38,7 @@ pipeline {
                 }
 
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'Hayden_prd_graphDB_credentials', usernameVariable: 'graphDbUserName', passwordVariable: 'graphDbPassword')]) {
+                    withCredentials([usernamePassword(credentialsId: '01f509ad-ca70-4727-93c0-71260af83b11', usernameVariable: 'graphDbUserName', passwordVariable: 'graphDbPassword')]) {
                         sh "sed -i 's/testingUsername = your_username/testingUsername = $graphDbUserName/g' turbo_properties.properties"
                         sh "sed -i 's/testingPassword = your_password/testingPassword = $graphDbPassword/g' turbo_properties.properties"
                         sh "sed -i 's/modelUsername = your_username/modelUsername = $graphDbUserName/g' turbo_properties.properties"
