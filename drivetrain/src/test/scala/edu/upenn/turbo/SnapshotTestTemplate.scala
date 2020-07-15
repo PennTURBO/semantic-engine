@@ -101,7 +101,7 @@ var testSearchString: Option[String] = None
             
             if (snapshotTestData.instructionSetFile != prevInstructionSet) 
             {
-                DrivetrainDriver.updateModel(gmCxn, snapshotTestData.instructionSetFile + ".ttl")
+                DrivetrainDriver.updateModel(gmCxn, snapshotTestData.instructionSetFile + ".tis")
                 OntologyLoader.addOntologyFromUrl(gmCxn)
                 prevInstructionSet = snapshotTestData.instructionSetFile
             }
@@ -131,7 +131,7 @@ var testSearchString: Option[String] = None
             
             if (snapshotTestData.instructionSetFile != prevInstructionSet) 
             {
-                DrivetrainDriver.updateModel(gmCxn, snapshotTestData.instructionSetFile + ".ttl")
+                DrivetrainDriver.updateModel(gmCxn, snapshotTestData.instructionSetFile + ".tis")
                 OntologyLoader.addOntologyFromUrl(gmCxn)
                 prevInstructionSet = snapshotTestData.instructionSetFile
             }

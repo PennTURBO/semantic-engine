@@ -23,8 +23,8 @@ shortcutNamedGraph = http://www.itmat.upenn.edu/biobank/Shortcuts_
 
 clearGraphsAtStart = false
 
-instructionSetFile = your_instruction_set.ttl
-graphSpecificationFile = turbo_valid_graph_specification.ttl
+instructionSetFile = your_instruction_set.tis
+graphSpecificationFile = turbo_valid_graph_specification.gs
 acornOntologyFile = acornOntology.ttl
 
 # dataValidationMode options: None, Log, Stop

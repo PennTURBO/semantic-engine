@@ -20,7 +20,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     {
         assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
         
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "carnival_instructionSet.ttl", "turbo_valid_graph_specification.ttl")
+        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "carnival_transformation_instructions.tis", "turbo_valid_graph_specification.gs")
         cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(cxn)
