@@ -1,0 +1,55 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix turbo: <http://transformunify.org/ontologies/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+turbo:post_icbo_synthea_omop_cnp_inputs a turbo:TURBO_0010178;
+  turbo:hasOutput turbo:cridDenotesHce, turbo:cridsymbHasRepresentation, turbo:encounterTypingRecipe,
+    turbo:endingTmdAboutProcbound, turbo:endingTmdHasMeasVal, turbo:hardcodedRegden_octtr,
+    turbo:hceExpansionSpecification, turbo:procboundEndsEnc, turbo:procboundStartsEnc,
+    turbo:startingTmdAboutProcbound, turbo:startingTmdHasMeasVal, turbo:symbolPartOfCridForHce;
+  turbo:hasRequiredInput turbo:miniHceCridsymShortcut, turbo:miniHceEnddateShortcut,
+    turbo:miniHceStartdateShortcut ;
+  turbo:inputNamedGraph turbo:omopShortcuts;
+  turbo:outputNamedGraph turbo:omopExpanded .
+
+turbo:miniHceCridsymShortcut a turbo:DatatypeConnectionRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:visit_occurrence_id_StringLiteralValue;
+  turbo:predicate <http://api.stardog.com/visit_occurrence#visit_occurrence_id>;
+  turbo:subject <http://api.stardog.com/visit_occurrence> .
+
+turbo:miniHceEnddateShortcut a turbo:DatatypeConnectionRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:visit_end_date_DateLiteralValue;
+  turbo:predicate <http://api.stardog.com/visit_occurrence#visit_end_date>;
+  turbo:subject <http://api.stardog.com/visit_occurrence> .
+
+turbo:miniHceStartdateShortcut a turbo:DatatypeConnectionRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:visit_start_date_DateLiteralValue;
+  turbo:predicate <http://api.stardog.com/visit_occurrence#visit_start_date>;
+  turbo:subject <http://api.stardog.com/visit_occurrence> .
+
+<http://api.stardog.com/visit_occurrence> a owl:Class .
+
+turbo:encClassFromValueRule a turbo:TurboGraphVariableManipulationLogic;
+  turbo:usesSparql """
+  BIND(IF (${dependent} = 9203, obo:OGMS_0000101, ?unbound) AS ?edEncClass) 
+  BIND(IF (${dependent} = 9201, obo:OGMS_0000100, ?unbound) AS  ?inpatientEncClass) 
+  BIND(IF (${dependent} = 9202, obo:OGMS_0000099, ?unbound) AS ?outpatientEncClass) 
+  bind(coalesce(?edEncClass, ?inpatientEncClass, ?outpatientEncClass, obo:OGMS_0000097) as ${replacement})
+  # BIND(IF (bound(?edEncClass),?edEncClass, ?unbound) as ${replacement}) 
+  # BIND(IF (bound(?inpatientEncClass),?inpatientEncClass, ${replacement}) as ${replacement}) 
+  # BIND(IF (bound(?outpatientEncClass),?outpatientEncClass, ${replacement}) as ${replacement}) 
+  # BIND(IF (bound(${replacement}),${replacement},obo:OGMS_0000097) as ${replacement})
+""" .
+
+turbo:miniHceTypeShortcut a turbo:DatatypeConnectionRecipe;
+  turbo:multiplicity turbo:1-1;
+  turbo:object turbo:visit_type_IntegerLiteralValue;
+  turbo:objectRequiredToCreate turbo:EncounterClassList;
+  turbo:predicate <http://api.stardog.com/visit_occurrence#visit_concept_id>;
+  turbo:subject <http://api.stardog.com/visit_occurrence> .
+
+turbo:EncounterClassList turbo:usesCustomVariableManipulationRule turbo:encClassFromValueRule .
