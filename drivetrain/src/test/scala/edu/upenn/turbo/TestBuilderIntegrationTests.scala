@@ -63,6 +63,10 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
                     pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection7 .
                     pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection8 .
                     pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection9 .
+                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection10 .
+                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection11 .
+                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection12 .
+                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection13 .
                     
                     pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
                     pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
@@ -118,14 +122,42 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
                     pmbb:connection9 drivetrain:predicate pmbb:predicate9 .
                     pmbb:connection9 drivetrain:object pmbb:term2 .
                     
+                    pmbb:connection10 a drivetrain:InstanceToLiteralRecipe .
+                    pmbb:connection10 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection10 drivetrain:subject pmbb:class1 .
+                    pmbb:connection10 drivetrain:predicate pmbb:predicate10 .
+                    pmbb:connection10 drivetrain:object pmbb:literal3 .
+                    
+                    pmbb:connection11 a drivetrain:InstanceToLiteralRecipe .
+                    pmbb:connection11 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection11 drivetrain:subject pmbb:class1 .
+                    pmbb:connection11 drivetrain:predicate pmbb:predicate11 .
+                    pmbb:connection11 drivetrain:object pmbb:literal4 .
+                    
+                    pmbb:connection12 a drivetrain:InstanceToLiteralRecipe .
+                    pmbb:connection12 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection12 drivetrain:subject pmbb:class1 .
+                    pmbb:connection12 drivetrain:predicate pmbb:predicate12 .
+                    pmbb:connection12 drivetrain:object pmbb:literal5 .
+                    
+                    pmbb:connection13 a drivetrain:InstanceToLiteralRecipe .
+                    pmbb:connection13 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection13 drivetrain:subject pmbb:class1 .
+                    pmbb:connection13 drivetrain:predicate pmbb:predicate13 .
+                    pmbb:connection13 drivetrain:object pmbb:literal6 .
+                    
                     pmbb:class1 a owl:Class .
                     pmbb:class2 a owl:Class .
                     pmbb:class3 a owl:Class .
                     pmbb:class4 a owl:Class .
                     pmbb:class5 a owl:Class .
                     
-                    pmbb:literal1 a drivetrain:LiteralResourceList .
+                    pmbb:literal1 a drivetrain:StringLiteralResourceList .
                     pmbb:literal2 a drivetrain:LiteralResourceList .
+                    pmbb:literal3 a drivetrain:IntegerLiteralResourceList .
+                    pmbb:literal4 a drivetrain:DoubleLiteralResourceList .
+                    pmbb:literal5 a drivetrain:BooleanLiteralResourceList .
+                    pmbb:literal6 a drivetrain:DateLiteralResourceList .
                     
                     drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
                     drivetrain:1-many a drivetrain:TurboGraphCardinalityRule .
@@ -169,17 +201,25 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
                      pmbb:class1_1 pmbb:predicate5 pmbb:term1 .
                      pmbb:term2 pmbb:predicate6 pmbb:class1_1 .
                      pmbb:class1_1 pmbb:predicate7 ?literal1 .
+                     pmbb:class1_1 pmbb:predicate10 ?literal3 .
+                     pmbb:class1_1 pmbb:predicate11 ?literal4 .
+                     pmbb:class1_1 pmbb:predicate12 ?literal5 .
+                     pmbb:class1_1 pmbb:predicate13 ?literal6 .
                      pmbb:term1 pmbb:predicate8 ?literal2 .
                      pmbb:term1 pmbb:predicate9 pmbb:term2 .
                      
-                     filter(isLiteral(?literal1))
-                     filter(isLiteral(?literal2))
+                     filter(datatype(?literal1) = xsd:String)
+                     filter(datatype(?literal2) = xsd:String)
+                     filter(datatype(?literal3) = xsd:Integer)
+                     filter(datatype(?literal4) = xsd:Double)
+                     filter(datatype(?literal5) = xsd:Boolean)
+                     filter(datatype(?literal6) = xsd:Date)
                  }
              }
             """
           update.querySparqlBoolean(cxn, checkTriples).get should be (true)
           val count: String = s"SELECT * WHERE {?s ?p ?o .}"
           val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
-          result.size should be (24)
+          result.size should be (28)
       }
 }
