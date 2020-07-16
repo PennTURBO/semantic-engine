@@ -107,7 +107,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
       helper.deleteAllTriplesInDatabase(gmCxn)
       var query = s"INSERT DATA { Graph <$graph> {"
       var prefixes = ""
-      val br = io.Source.fromFile(s"ontologies//$instructionSetFile")
+      var br: scala.io.BufferedSource = null
+      if (instructionSetFile == "testing_instruction_set.tis") br = io.Source.fromFile(s"src//test//scala//edu//upenn//turbo//config_for_testing//testing_instruction_set.tis")
+      else br = io.Source.fromFile(s"config//transformation_instruction_sets//$instructionSetFile")
       for (line <- br.getLines())
       {
           if (line.size > 0)
@@ -130,7 +132,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
       logger.info("Updating graph specification using file " + graphSpecFile)
       val graphSpecGraph = s"$defaultPrefix" + "graphSpecification"
       query = s"INSERT DATA { Graph <$graphSpecGraph> {"
-      val graphSpecBr = io.Source.fromFile(s"ontologies//$graphSpecFile")
+      var graphSpecBr: scala.io.BufferedSource = null
+      if (graphSpecFile == "testing_graph_specification.gs") graphSpecBr = io.Source.fromFile(s"src//test//scala//edu//upenn//turbo//config_for_testing//testing_graph_specification.gs")
+      else graphSpecBr = io.Source.fromFile(s"config//graph_specifications//$graphSpecFile")
       for (line <- graphSpecBr.getLines())
       {
           if (line.size > 0)
