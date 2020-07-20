@@ -486,28 +486,28 @@ class TestBuilder extends ProjectwideGlobals
          if (literalType == "https://github.com/PennTURBO/Drivetrain/StringLiteralResourceList" || literalType == "https://github.com/PennTURBO/Drivetrain/LiteralResourceList") 
           {
               val literalValue = "\"" + Math.abs(objectString.hashCode())+"abc" + "\""
-              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:String .\n"
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:string .\n"
           }
           else if (literalType == "https://github.com/PennTURBO/Drivetrain/IntegerLiteralResourceList") 
           {
               val literalValue = "\""+Math.abs(objectString.hashCode())+"\""
-              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Integer .\n"
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:integer .\n"
           }
           else if (literalType == "https://github.com/PennTURBO/Drivetrain/DoubleLiteralResourceList") 
           {
               val literalValue = "\""+Math.abs(objectString.hashCode()) + ".00"+"\""
-              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Double .\n"
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:double .\n"
           }
           else if (literalType == "https://github.com/PennTURBO/Drivetrain/BooleanLiteralResourceList") 
           {
               val literalValue = "\"true\""
-              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Boolean .\n"
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:boolean .\n"
           }
           else if (literalType == "https://github.com/PennTURBO/Drivetrain/DateLiteralResourceList") 
           {
               val lh = objectString.hashCode().toString()
               val literalValue = "\"" + lh.charAt(1)+lh.charAt(2)+"/"+lh.charAt(3)+lh.charAt(4)+"/"+lh.charAt(5)+lh.charAt(6)+ "\""
-              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Date .\n"
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:date .\n"
           }
          thisTripleAsData
     }

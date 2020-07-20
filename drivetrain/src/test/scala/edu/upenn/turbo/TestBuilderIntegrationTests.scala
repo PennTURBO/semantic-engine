@@ -208,12 +208,12 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
                      pmbb:term1 pmbb:predicate8 ?literal2 .
                      pmbb:term1 pmbb:predicate9 pmbb:term2 .
                      
-                     filter(datatype(?literal1) = xsd:String)
-                     filter(datatype(?literal2) = xsd:String)
-                     filter(datatype(?literal3) = xsd:Integer)
-                     filter(datatype(?literal4) = xsd:Double)
-                     filter(datatype(?literal5) = xsd:Boolean)
-                     filter(datatype(?literal6) = xsd:Date)
+                     filter(datatype(?literal1) = xsd:string)
+                     filter(datatype(?literal2) = xsd:string)
+                     filter(datatype(?literal3) = xsd:integer)
+                     filter(datatype(?literal4) = xsd:double)
+                     filter(datatype(?literal5) = xsd:boolean)
+                     filter(datatype(?literal6) = xsd:date)
                  }
              }
             """
