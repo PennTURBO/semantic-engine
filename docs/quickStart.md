@@ -52,7 +52,7 @@ inputSchema:homoSapiens_3 inputSchema:identifier 3 .
 
 One way to accomplish this would be to launch the following SPARQL query against the database's web interface:
 ```
-prefix inputSchema: <http://databaseA.org/RdfSchema/> 
+prefix inputSchema: <http://SemanticEngineQuickStart.edu/RdfSchema/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 insert data
 {
