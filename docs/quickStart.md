@@ -28,12 +28,11 @@ You will need to create three repositories in an RDF4J-compliant triplestore (or
 
 *Model Repository*: Stores the TIS and GS that is being used for an actively running Semantic Engine instantiation or test, as well as the Semantic Engine Language ontology, which specifies the allowed terms within the TIS and GS. This data will be copied automatically from the file sources by the Semantic Engine. The user should never have to delete, modify, or add data manually to this repository.
 
-**Second**, find the setting in the properties file with key `instructionSetFile`. Replace the placeholder value with `quickStart.tis`. Then, create a file with that name in the directory `drivetrain/config/transformation_instruction_sets`. Open the file and add the following prefixes at the top of the page:
+**Second**, find the setting in the properties file with key `instructionSetFile`. Replace the placeholder value with `quickStart.tis`. Then, create a blank file with that name in the directory `drivetrain/config/transformation_instruction_sets`. You'll want to add some namespace prefixes to make things easier, so open `drivetrain/config/prefixes.txt` and add the following prefixes to the bottom of the list of already known prefixes:
 
 ```
-@prefix semanticEngine: <https://github.com/PennTURBO/Drivetrain/> .
-@prefix inputSchema: <http://SemanticEngineQuickStart.edu/RdfSchema/> .
-@prefix turbo: <http://transformunify.org/ontologies/> .
+Prefix semanticEngine: <https://github.com/PennTURBO/Drivetrain/> .
+Prefix inputSchema: <http://SemanticEngineQuickStart.edu/RdfSchema/> .
 ```
 
 The `semanticEngine` prefix will used to reference terms specific to the Semantic Engine Language, as defined in the [Semantic Engine Language Ontology](https://github.com/PennTURBO/semantic-engine/blob/master/drivetrain/ontologies/acornOntology.ttl). The `inputSchema` prefix will be used to refer to the schema of the incoming concise RDF data.
