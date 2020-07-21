@@ -51,6 +51,26 @@ inputSchema:homoSapiens_3 rdf:type inputSchema:homoSapiens .
 inputSchema:homoSapiens_3 inputSchema:identifier 3 .
 ```
 
+One way to accomplish this would be to launch the following SPARQL query against the database's web interface:
+```
+prefix inputSchema: <http://databaseA.org/RdfSchema/> 
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+insert data
+{
+    graph <https://github.com/PennTURBO/Drivetrain/inputTriples>
+    {
+        inputSchema:homoSapiens_1 rdf:type inputSchema:homoSapiens .
+        inputSchema:homoSapiens_1 inputSchema:identifier 1 .
+
+        inputSchema:homoSapiens_2 rdf:type inputSchema:homoSapiens .
+        inputSchema:homoSapiens_2 inputSchema:identifier 2 .
+
+        inputSchema:homoSapiens_3 rdf:type inputSchema:homoSapiens .
+        inputSchema:homoSapiens_3 inputSchema:identifier 3 .
+    }
+}
+```
+
 **Fourth**, model the schema used to represent the concise RDF data by building Connection Recipes in the TIS. The following Connection Recipe should be added to `quickStart.tis` below the prefix declarations:
 ```
 semanticEngine:personToIdentifier a semanticEngine:InstanceToLiteralRecipe ;
