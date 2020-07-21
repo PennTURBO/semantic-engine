@@ -149,6 +149,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
     }
     
+    // due to the change on 7/21/20, object4 should still be assigned a multiplicity enforcer because there are only 1-1 connections in the input
     test ("one output recipe - new 1-many object without multiplicity context")
     {
         val insert: String = s"""
@@ -173,17 +174,10 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         
         update.updateSparql(gmCxn, insert)
         
-        try
-        {
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
-            assert (1 == 2)
-        }
-        catch
-        {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: For process http://transformunify.org/ontologies/myProcess1, there is not sufficient context to create the following: Set(http://transformunify.org/ontologies/object4)")
-        }
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
     }
     
+    // due to the change on 7/21/20, object4 should still be assigned a multiplicity enforcer because there are only 1-1 connections in the input
     test ("one output recipe - new many-1 object without multiplicity context")
     {
         val insert: String = s"""
@@ -207,16 +201,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         """
         
         update.updateSparql(gmCxn, insert)
-        
-        try
-        {
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
-            assert (1 == 2)
-        }
-        catch
-        {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: For process http://transformunify.org/ontologies/myProcess1, there is not sufficient context to create the following: Set(http://transformunify.org/ontologies/object4)")
-        }
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
     }
     
     test ("2 output connection recipes - mixed singleton declaration")

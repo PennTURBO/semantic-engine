@@ -1,22 +1,5 @@
 # baseURI: https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/turbo_valid_graph_specification.ttl/
 
-@prefix : <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/turbo_valid_graph_specification.ttl/> .
-
-@prefix properties: <http://turboProperties.org/> .
-@prefix turbo: <http://transformunify.org/ontologies/> .
-
-@prefix drivetrain: <https://github.com/PennTURBO/Drivetrain/> .
-@prefix efo: <http://www.ebi.ac.uk/efo/> .
-@prefix obo: <http://purl.obolibrary.org/obo/> .
-@prefix oboInOwl: <http://www.geneontology.org/formats/oboInOwl#> .
-@prefix ontologies: <http://transformunify.org/ontologies/> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix sdvg: <http://api.stardog.com/> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
 <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/turbo_valid_graph_specification.ttl> a owl:Ontology ;
     owl:priorVersion "not applicable" ; 
     owl:versionInfo "unversioned" ;

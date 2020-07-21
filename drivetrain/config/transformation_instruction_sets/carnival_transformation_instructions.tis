@@ -1,36 +1,6 @@
 # baseURI: http://haydensgraph_2.org/
 # imports: http://transformunify.org/ontologies/
 
-@prefix : <http://transformunify.org/ontologies/> .
-@prefix Thesaurus: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#> .
-@prefix dc11: <http://purl.org/dc/elements/1.1/> .
-@prefix fakeprefix: <http://turbo/fakeprefix/> .
-@prefix faldo: <http://biohackathon.org/resource/faldo#> .
-@prefix fn: <http://www.w3.org/2005/xpath-functions#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix gn: <http://www.geonames.org/ontology#> .
-@prefix graph: <http://transformunify.org/ontologies/> .
-@prefix graphBuilder: <http://graphBuilder.org/> .
-@prefix ncbitaxon: <http://purl.obolibrary.org/obo/ncbitaxon#> .
-@prefix ns1: <http://example.com/resource/> .
-@prefix ns11: <http://www.geneontology.org/formats/oboInOwl#> .
-@prefix efo: <http://www.ebi.ac.uk/efo/> .
-@prefix obo: <http://purl.obolibrary.org/obo/> .
-@prefix ontologies: <http://transformunify.org/ontologies/> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix pmbb: <http://www.itmat.upenn.edu/biobank/> .
-@prefix protege: <http://protege.stanford.edu/plugins/owl/protege#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix ro: <http://www.obofoundry.org/ro/ro.owl#> .
-@prefix sesame: <http://www.openrdf.org/schema/sesame#> .
-@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix snomed: <http://purl.bioontology.org/ontology/SNOMEDCT/> .
-@prefix sys: <http://www.ontotext.com/owlim/system#> .
-@prefix terms: <http://purl.org/dc/terms/> .
-@prefix wgs: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-
 <http://data.bioontology.org/ontologies/RXNORM/>
   a drivetrain:TurboNamedGraph ;
 .
