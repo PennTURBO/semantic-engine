@@ -81,12 +81,6 @@ semanticEngine:personToIdentifier a semanticEngine:InstanceToLiteralRecipe ;
 semanticEngine:person_cridsym_LiteralValue
   a semanticEngine:StringLiteralResourceList ;
 .
-semanticEngine:shortcutHomoSapiensToExpandedHomoSapiens a semanticEngine:InstanceToInstanceRecipe ;
-  semanticEngine:subject inputSchema:homoSapiens ;
-  semanticEngine:predicate turbo:TURBO_0010113 ;
-  semanticEngine:object obo:NCBITaxon_9606 ;
-  semanticEngine:cardinality semanticEngine:1-1 ;
-.
 inputSchema:homoSapiens 
     a owl:Class 
 .
@@ -105,7 +99,6 @@ semanticEngine:expandPatientIdentifiers a turbo:TURBO_0010354 ;
   semanticEngine:inputNamedGraph semanticEngine:inputTriples ;
   semanticEngine:outputNamedGraph semanticEngine:expandedTriples ;
   semanticEngine:hasRequiredInput semanticEngine:personToIdentifier ;
-  semanticEngine:hasRequiredInput semanticEngine:shortcutHomoSapiensToExpandedHomoSapiens ;
   semanticEngine:hasOutput semanticEngine:SymbolPartOfCridForPatient ;
   semanticEngine:hasOutput semanticEngine:PatCridsymbHasRepresentation ;
   semanticEngine:hasOutput semanticEngine:CridDenotesPatient ;
