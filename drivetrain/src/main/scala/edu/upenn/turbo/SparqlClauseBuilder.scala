@@ -349,22 +349,9 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         this.process = process
         this.usedVariables = usedVariables
         val newUsedVariables = populateConnectionLists(outputs, inputs)
-
-        /*for ((k,v) <- inputOneToOneConnections)
-        {
-            logger.info("key: " + k)
-            for (a <- v) print("value: " + a + " ")
-            println()
-        }*/
-        
-        /*for ((k,v) <- usedVariables)
-        {
-            logger.info("key: " + k)
-        }*/
         
         buildSingletonBindClauses(localUUID)
         buildBaseGroupBindClauses(localUUID)
-        assert (multiplicityCreators.size == 0, s"Error in graph model: For process $process, there is not sufficient context to create the following: $multiplicityCreators")
         for (a <- bindRules) clause += a
         newUsedVariables
     }
@@ -672,7 +659,6 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
             enforcerAsUri = inputNonInstanceClasses.iterator.next()
             multiplicityEnforcer = helper.convertTypeToSparqlVariable(enforcerAsUri)
         }
-        assert (outputOneToOneConnections.contains(changeAgent))
         // if there are no one-many connections that are qualified enforcers in input, you can choose any element from the input as a multiplicity enforcer
         var useAnyQualified = true
         for ((k,v) <- inputOneToOneConnections)
@@ -696,7 +682,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 }
             }
         }
-        if (multiplicityEnforcer == "" || !useAnyQualified)
+        if ((multiplicityEnforcer == "" || !useAnyQualified) && outputOneToOneConnections.contains(changeAgent))
         {
             multiplicityEnforcer = ""
             for ((conn,v) <- outputOneToOneConnections(changeAgent))
@@ -723,6 +709,12 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     {
         for ((k,v) <- currentGroups)
         {
+            /*println("key: " + k)
+            for ((key, value) <- v)
+            {
+                println("k: " + key)
+                println("v: " + value)
+            }*/
             if (!(usedVariables.contains(k)))
             {
                 var multiplicityEnforcer = ""
@@ -738,6 +730,13 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 addBindRule(v, localUUID, multiplicityEnforcer, connAsVar)
                 multiplicityCreators.remove(k)
             }
+        }
+        // currentGroups holds info about 1-1 connections. If there is an instance with no 1-1 connections, maybe we can still find an enforcer by default
+        for (unassignedCreator <- multiplicityCreators)
+        {
+            val multiplicityEnforcer = getMultiplicityEnforcer(unassignedCreator)
+            val connAsVar = helper.convertTypeToSparqlVariable(unassignedCreator)
+            addBindRule(HashMap("customRule" -> null, "dependee" -> null), localUUID, multiplicityEnforcer, connAsVar)
         }
     }
     
