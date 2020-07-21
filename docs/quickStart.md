@@ -31,8 +31,8 @@ You will need to create three repositories in an RDF4J-compliant triplestore (or
 **Second**, find the setting in the properties file with key `instructionSetFile`. Replace the placeholder value with `quickStart.tis`. Then, create a blank file with that name in the directory `drivetrain/config/transformation_instruction_sets`. You'll want to add some namespace prefixes to make things easier, so open `drivetrain/config/prefixes.txt` and add the following prefixes to the bottom of the list of already known prefixes:
 
 ```
-PREFIX semanticEngine: <https://github.com/PennTURBO/Drivetrain/> .
-PREFIX inputSchema: <http://SemanticEngineQuickStart.edu/RdfSchema/> .
+PREFIX semanticEngine: <https://github.com/PennTURBO/Drivetrain/>
+PREFIX inputSchema: <http://SemanticEngineQuickStart.edu/RdfSchema/>
 ```
 
 The `semanticEngine` prefix will used to reference terms specific to the Semantic Engine Language, as defined in the [Semantic Engine Language Ontology](https://github.com/PennTURBO/semantic-engine/blob/master/drivetrain/ontologies/acornOntology.ttl). The `inputSchema` prefix will be used to refer to the schema of the incoming concise RDF data.
