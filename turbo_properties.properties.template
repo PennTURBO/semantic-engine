@@ -32,8 +32,8 @@ dataValidationMode = Stop
 validateAgainstOntology = true
 errorLogFile = turbo_errorLog.txt
 
-reinferRepo = true
-loadAdditionalOntologies = true
+reinferRepo = false
+loadAdditionalOntologies = false
 bioportalApiKey = yourKey
 
 useMultipleThreads = true
