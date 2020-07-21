@@ -81,8 +81,9 @@ semanticEngine:personToIdentifier a semanticEngine:InstanceToLiteralRecipe ;
 semanticEngine:person_cridsym_LiteralValue
   a semanticEngine:StringLiteralResourceList ;
 .
+semanticEngine:homoSapiens a owl:Class .
 ```
-Try to look at the Connection Recipe above and the schema of the concise RDF triples and understand how one models the other. The Connection Recipe `personToIdentifier` models a triple pattern with a subject that is an instance of class `inputSchema:homoSapiens`, a predicate of `inputSchema:identifier`, and a literal value as the object. We further specify that the literal value, represented by an instance of class `drivetrain:StringLiteralResourceList`, should be of type string. Currently type enforcement of literal values in an incoming data source does not exist in the Semantic Engine, but it should be added without too much difficulty.
+Try to look at the Connection Recipe above and the schema of the concise RDF triples and understand how one models the other. The Connection Recipe `personToIdentifier` models a triple pattern with a subject that is an instance of class `inputSchema:homoSapiens`, a predicate of `inputSchema:identifier`, and a literal value as the object. We assert that `semanticEngine:homoSapiens` is a class. We further specify that the literal value, represented by an instance of class `drivetrain:StringLiteralResourceList`, should be of type string. Currently type enforcement of literal values in an incoming data source does not exist in the Semantic Engine, but it should be added without too much difficulty.
 
 The `drivetrain:cardinality` setting indicates that for each instance of an `inputSchema:homoSapiens`, there should only be one associated literal value that is the `inputSchema:identifier`. In an alternative world where we should expect multiple identifiers per person, the setting `drivetrain:1-many` could be used instead of `drivetrain:1-1`.
 
