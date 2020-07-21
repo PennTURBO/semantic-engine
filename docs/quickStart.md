@@ -106,9 +106,9 @@ semanticEngine:expandPatientIdentifiers a turbo:TURBO_0010354 ;
   semanticEngine:outputNamedGraph semanticEngine:expandedTriples ;
   semanticEngine:hasRequiredInput semanticEngine:personToIdentifier ;
   semanticEngine:hasRequiredInput semanticEngine:shortcutHomoSapiensToExpandedHomoSapiens ;
-  semanticEngine:hasOutput semanticEngine:symbolPartOfCrid ;
-  semanticEngine:hasOutput semanticEngine:symbolHasRepresentation ;
-  semanticEngine:hasOutput semanticEngine:drivetrain:CridDenotesPatient ;
+  semanticEngine:hasOutput semanticEngine:SymbolPartOfCridForPatient ;
+  semanticEngine:hasOutput semanticEngine:PatCridsymbHasRepresentation ;
+  semanticEngine:hasOutput semanticEngine:CridDenotesPatient ;
 .
 ```
 Each object of a triple with predicate `semanticEngine:hasOutput` represents a Connection Recipe already defined in the GS. Our Update Specification creates a partial representation of the full semantic model, including only fields relevant to the schema of our incoming data.
