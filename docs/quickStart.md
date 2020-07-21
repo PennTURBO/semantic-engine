@@ -87,7 +87,7 @@ Try to look at the Connection Recipe above and the schema of the concise RDF tri
 
 The `drivetrain:cardinality` setting indicates that for each instance of an `inputSchema:homoSapiens`, there should only be one associated literal value that is the `inputSchema:identifier`. In an alternative world where we should expect multiple identifiers per person, the setting `drivetrain:1-many` could be used instead of `drivetrain:1-1`.
 
-Note that although there are 3 triples that conform to the pattern specified in the input dataset (with objects `inputSchema:homoSapiens_1`, `inputSchema:homoSapiens_2`, and `inputSchema:homoSapiens_3`), this makes no difference to the TIS. The Connection Recipe specifies the existence of a pattern, and all occurrences of that pattern will be processed.
+Note that although there are 3 triples in the input dataset that conform to the pattern specified (with subjects `inputSchema:homoSapiens_1`, `inputSchema:homoSapiens_2`, and `inputSchema:homoSapiens_3`), this makes no difference to the TIS. The Connection Recipe specifies the existence of a pattern, and all occurrences of that pattern will be processed.
 
 The instance `drivetrain:person_cridsym_LiteralValue` is already declared as an instance of the generic type `drivetrain:LiteralResourceList` in the GS file that we will use. We have adopted the convention that literal values that will be represented in the RDF output should be declared in the GS. If the datatype of that literal is unambigous, then it can be declared in the GS with a specific datatype, but if the datatype varies based on the incoming data source, it should be declared generically in the GS and more specifically in the TIS, as we have done here.
 
