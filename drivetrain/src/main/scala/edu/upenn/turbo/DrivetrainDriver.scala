@@ -119,6 +119,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   if (line.charAt(0) != '@') query += line+"\n"
                   else
                   {
+                      // prefixes stored but not added to graph
                       var formattedPrefix = line.substring(1, line.size-1)
                       prefixes += formattedPrefix+"\n"
                   }
@@ -144,6 +145,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   if (line.charAt(0) != '@') query += line+"\n"
                   else
                   {
+                      // prefixes stored but not added to graph
                       var formattedPrefix = line.substring(1, line.size-1)
                       prefixes += formattedPrefix+"\n"
                   }
@@ -167,6 +169,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   if (line.charAt(0) != '@') query += line+"\n"
                   else
                   {
+                      // prefixes stored but not added to graph
                       var formattedPrefix = line.substring(1, line.size-1)
                       prefixes += formattedPrefix+"\n"
                   }

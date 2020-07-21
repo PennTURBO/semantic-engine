@@ -40,30 +40,7 @@ class SparqlUpdater
     val logger = LoggerFactory.getLogger(getClass)
     val cxn = DrivetrainDriver.cxn
     
-    val sparqlPrefixes = """
-			PREFIX  dc11: <http://purl.org/dc/elements/1.1/>
-			PREFIX  obo:  <http://purl.obolibrary.org/obo/>
-			PREFIX  owl:  <http://www.w3.org/2002/07/owl#>
-			PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-			PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-			PREFIX  turbo: <http://transformunify.org/ontologies/>
-			PREFIX  ontologies: <http://transformunify.org/ontologies/>
-			PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>
-			PREFIX  nci:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
-			PREFIX pmbb: <http://www.itmat.upenn.edu/biobank/>
-			PREFIX sys: <http://www.ontotext.com/owlim/system#>
-			PREFIX efo: <http://www.ebi.ac.uk/efo/>
-			PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-			PREFIX ns1: <http://www.geneontology.org/formats/oboInOwl#>
-			PREFIX graph: <http://haydensgraph.org/>
-			PREFIX j.0: <http://example.com/resource/>
-      PREFIX snomed: <http://purl.bioontology.org/ontology/SNOMEDCT/>
-      PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
-      PREFIX Thesaurus: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
-      PREFIX properties: <https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/>
-      PREFIX drivetrain: <https://github.com/PennTURBO/Drivetrain/>
-			"""
-    
+    val sparqlPrefixes = io.Source.fromFile("config/prefixes.txt").getLines.mkString
     
     /**
      * Overloaded method which is Drivetrain's main point of access to Graph DB for SPARQL queries. Used for when only one variable is requested
