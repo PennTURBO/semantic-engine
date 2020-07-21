@@ -104,4 +104,4 @@ semanticEngine:expandPatientIdentifiers a turbo:TURBO_0010354 ;
 ```
 Each object of a triple with predicate `semanticEngine:hasOutput` represents a Connection Recipe already defined in the GS. Our Update Specification creates a partial representation of the full semantic model, including only fields relevant to the schema of our incoming data.
 
-**Finally**, run the Semantic Engine from the SBT console with the command `run https://github.com/PennTURBO/Drivetrain/expandPatientIdentifiers`. Once the instantiation finishes, check your production repository to see the expanded data in the graph `https://github.com/PennTURBO/Drivetrain/expandedTriples`. The original concise RDF data should be preserved as well.
+**Finally**, from the `drivetrain/` directory, start the SBT console and run the Semantic Engine with the command `run https://github.com/PennTURBO/Drivetrain/expandPatientIdentifiers`. Once the instantiation finishes, check your production repository to see the expanded data in the graph `https://github.com/PennTURBO/Drivetrain/expandedTriples`. The original concise RDF data should be preserved as well.
