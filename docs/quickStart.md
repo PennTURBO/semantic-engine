@@ -78,7 +78,7 @@ insert data
 
 **4. Build a Connection Recipe based on concise RDF schema**
 
-Model the schema used to represent the concise RDF data by building Connection Recipes in the TIS. The following Connection Recipe should be added to `quickStart.tis` below the prefix declarations. The `semanticEngine` prefix references terms specific to the Semantic Engine Language, as defined in the Semantic Engine Language Ontology.
+Model the schema used to represent the concise RDF data by building Connection Recipes in the TIS. The following Connection Recipe should be added to `quickStart.tis`. The `semanticEngine` prefix references terms specific to the Semantic Engine Language, as defined in the Semantic Engine Language Ontology.
 ```
 semanticEngine:personToIdentifier a semanticEngine:InstanceToLiteralRecipe ;
   semanticEngine:subject inputSchema:homoSapiens ;
