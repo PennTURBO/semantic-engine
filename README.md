@@ -19,7 +19,7 @@ Clone the repository locally, and copy/remove the .template suffix from the foll
 - `drivetrain/project/plugins.sbt.template`
 - `drivetrain/project/build.properties.template`
 
-Configure `turbo_properties.properties` to use the desired Transformation Instruction Set and Graph Specification files. Pre-existing options exist in the `ontologies` folder. For instructions on designing your own Semantic Engine configurations, see the documentation [here](docs/Semantic%20Engine%20Configuration%20Tutorial.docx).
+Configure `turbo_properties.properties` to use the desired Transformation Instruction Set and Graph Specification files. Pre-existing options exist in the `config` folder. For instructions on designing your own Semantic Engine configurations, see the documentation [here](docs/Semantic%20Engine%20Configuration%20Tutorial.docx).
 
 ## SBT Commands
 The following commands can be run via the SBT console. SBT should be started from the directory `drivetrain/`.
