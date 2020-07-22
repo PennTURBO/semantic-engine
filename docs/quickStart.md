@@ -2,7 +2,7 @@
 
 This guide will get a user up and running quickly with the Semantic Engine. It should not be considered complete documentation. The Semantic Engine requires an application ontology and a Graph Specification (restriction on the ontology) to be provided. This guide will not cover building an application ontology or Graph Specification (GS), but will use the publically available [TURBO ontology](https://raw.githubusercontent.com/PennTURBO/turbo-ontology/master/ontologies/turbo_merged.owl) and [turbo_valid_graph_specification](https://github.com/PennTURBO/semantic-engine/blob/master/drivetrain/config/graph_specifications/turbo_valid_graph_specification.gs).
 
-**First**, follow the installation instructions on the README. Once you have created `turbo_properties.properties` from the template, open it in a text editor. You should see something like this at the top of the file:
+**First**, follow the installation instructions in the [README](https://github.com/PennTURBO/semantic-engine/blob/master/README.md). Once you have created `turbo_properties.properties` from the template, open it in a text editor. You should see something like this at the top of the file:
 
 ```
 productionServiceURL = http://your_prd_db:7200/
