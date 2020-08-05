@@ -39,30 +39,57 @@ The table below shows the 6 types of Connection Recipes, as well as examples and
 |     Term-to-Literal              |     :datumHasOmopConceptId      a   :TermToLiteralRecipe ;       :subject   :datum;       :predicate   :hasOmopConceptId ;       :object   "omop_1234" ;       :cardinality   :1-1 ;     .                     |     :datum   :hasOmopConceptId "omop_1234" .                                                                                                  |
 |     Term-to-Term                 |     :genderIdentityDatumSubclassOfDatum       a   :TermToTermRecipe ;       :subject   :genderIdentityDatum ;       :predicate   rdfs:subClassOf ;       :object   :datum ;       :cardinality   :1-1 ;     .       |     :genderIdentityDatum   rdfs:subClassOf :datum .                                                                                                |
 
-## Cardinality
+## Cardinality and URI Construction
 
-- Ignored for Term recipes (term is implied to be singleton)
-- May have some bugs in implementation (will try to document and correct)
+Note that Cardinality enforcement may have some bugs in implementation. I will try to document and correct over the next few weeks.
 
-**1-1**
+The following are valid Semantic Engine Cardinality settins: `1-1`, `1-many`, `many-1`, `many-singleton`, `singleton-many`, `singleton-singleton`, `many-superSingleton`, `superSingleton-many`, `singleton-superSingleton`, `superSingleton-singleton`. `superSingleton-superSingleton` is not currently valid but should be added.
 
-**1-many**
+A `singleton` is defined as an Instance that a single Update Specification can only create once, but can be created again by other Update Specifications. A `superSingleton` is defined as an Instance that exists only once in the entire graph.
 
-**many-1**
+The most important concept to grasp when assigning Cardinality settings is that Connection Recipes do not represent a single graph relationship, they represent a graph pattern that can be replicated multiple times. A single Connection Recipe could be responsible for the creation of millions of graph relationships. Cardinality is important to specify because when creating new Instances, the Semantic Engine needs some context for how many of each Instance to create. Instances are created using a SPARQL Bind clause. An example is given below.
 
-**many-singleton**
+```
+BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?MONDO_0004992","fcb96fee01d94924abf3e25c07c109c9", str(?TURBO_0010191))))) AS ?MONDO_0004992)
+```
 
-**singleton-many**
+This Bind clause has been generated to create a new Instance of class `obo:MONDO_0004992`. Instead of randomly assigning URIs, the Semantic Engine creates URIs based on the URIs of pre-existing Instances, and thus enforces cardinality. We will break down the construction of the new URI piece by piece.
 
-**singleton-singleton**
+`http://www.itmat.upenn.edu/biobank/`: This is the default prefix. It can be set in the Properties file using the key `defaultPrefix`
 
-**many-superSingleton**
+`SHA256`: SPARQL Hash function to generate a non-human readable URI string based on the supplied values
 
-**superSingleton-many**
+`CONCAT`: SPARQL function to combine several supplied strings into a single string
 
-**singleton-superSingleton**
+`?MONDO_0004992`: String representation of the class of the instance to be created. Ensures that the generated URI will not collide with URIs generated for other Instances. Question mark is simply a result of implementation, and is irrelevant to the function.
 
-**superSingleton-singleton**
+`fcb96fee01d94924abf3e25c07c109c9`: UUID generated at the start of each Semantic Engine instantiation. It is constant between Update Specifications during a single instantiation. Ensures that the generated URI will not collide with any URIs previously in the graph.
+
+`str(?TURBO_0010191)`: Cardinality Enforcer element. This captures the values of a specific non-optional Instance included in the input pattern and uses it to lock in the cardinality of the new Instance. The determination of which Enforcer element to use is made by an algorithm that processes the supplied Cardinality settings as a group and searches for `1-1` connections between input and output elements. In this case, the class `turbo:TURBO_0010191` has been judged to exist in the input pattern, not be an optional element, and have a `1-1` Cardinality relationship either with `obo:MONDO_0004992` directly, or with another element in the output pattern that has a `1-1` connection with `obo:MONDO_0004992`.
+
+Note that it is possible to configure Cardinality settings in such a way that there are logical inconsistencies. For example, consider the simple pattern below, that introduces a logical inconsistency. If Cardinality inconsistencies exist, they will be flagged by the Semantic Engine, and the instantiation will be cancelled.
+```
+:ClassAtoClassB a :InstanceToInstanceRecipe ;
+  :subject :classA ;
+  :predicate :relatesTo ;
+  :object :classB ;
+  :cardinality :1-1 ;
+.
+
+:ClassBtoClassC a :InstanceToInstanceRecipe ;
+  :subject :classB ;
+  :predicate :relatesTo ;
+  :object :classC ;
+  :cardinality :many-1 ;
+.
+
+:ClassAtoClassC a :InstanceToInstanceRecipe ;
+  :subject :classA ;
+  :predicate :relatesTo ;
+  :object :classC ;
+  :cardinality :1-1 ;
+.
+```
 
 ## Update Specifications*
 
