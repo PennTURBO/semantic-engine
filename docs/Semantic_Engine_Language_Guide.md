@@ -53,7 +53,7 @@ The following are valid Semantic Engine Cardinality settings: `:1-1`, `:1-many`,
 
 A `singleton` is defined as an Instance that a single Update Specification can only create once, but can be created again by other Update Specifications. A `superSingleton` is defined as an Instance that exists only once in the entire graph.
 
-The most important concept to grasp when assigning Cardinality settings is that Connection Recipes do not represent a single graph relationship, they represent a graph pattern that can be replicated multiple times. A single Connection Recipe could be responsible for the creation of millions of graph relationships. Cardinality is important to specify because when creating new instances, the Semantic Engine needs some context for how many of each Instance to create. Instances are created using a SPARQL Bind clause. An example is given below.
+The most important concept to grasp when assigning Cardinality settings is that Connection Recipes do not represent a single graph relationship, they represent a graph pattern that can be replicated multiple times. A single Connection Recipe could be responsible for the reading or writing of millions of relationships to the graph. Cardinality is important to specify because when creating new instances, the Semantic Engine needs some context for how many of each Instance to create. Instances are created using a SPARQL Bind clause. An example is given below.
 
 ```
 BIND(uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?MONDO_0004992","fcb96fee01d94924abf3e25c07c109c9", str(?TURBO_0010191))))) AS ?MONDO_0004992)
