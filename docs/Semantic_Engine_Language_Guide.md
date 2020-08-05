@@ -10,9 +10,9 @@ In the Semantic Engine Language, relationships are declared between Graph Elemen
 
 **Instances**
 
-Instances are typically explicity references to some class that is itself an instance of `owl:Class`. These classes should be defined as an `owl:Class` in the application ontology, but as a workaround they can be defined as such in a TIS or GS file. If a Connection Recipe references a class as an Instance, the Semantic Engine will understand to expect or create instances of this class. Instance types will be assigned automatically in the generated SPARQL. References to an Instance will be made to a URI that has been assigned the type of the provided class.
+Instances are typically explicit references to some class that is itself an instance of `owl:Class`. These classes should be defined as an `owl:Class` in the application ontology, but as a workaround they can be defined as such in a TIS or GS file. If a Connection Recipe references a class as an Instance, the Semantic Engine will understand to expect or create instances of this class. URI creation and assignment of types will be handled automatically.
 
-Instances can also be defined without a type. This can come in handy when the type that an Instance should be assigned is not known until execution time, perhaps because because it is dependent on some element in the incoming dataset. Currently, a ClassResourceList can be supplied instead of a class URI. However, a better method would be to create a new Semantic Engine Language feature called `UntypedInstance`.
+Instances can also be defined without a type. This can come in handy when the type that an Instance should be assigned is not known until execution time, perhaps because because it is dependent on some element in the incoming dataset. Currently, a ClassResourceList can be supplied instead of a class URI. However, this is a bit confusing because these are also used as Term placeholders. In the future, developers on this project could create a new Semantic Engine Language feature called `UntypedInstance`.
 
 **Terms**
 
