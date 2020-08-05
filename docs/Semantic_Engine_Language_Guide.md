@@ -4,6 +4,10 @@ This document covers all features included in the Semantic Engine Language, incl
 
 "*" = Transformation Instruction Set-specific feature
 
+## Namespace
+
+For the remainder of this document, the prefix `:` will be used to denote `https://github.com/PennTURBO/Drivetrain/` which is the namespace for the Semantic Engine Language. Prefixes can be defined in the file `prefixes.txt`.
+
 ## Semantic Engine Language Graph Elements
 
 In the Semantic Engine Language, relationships are declared between Graph Elements. All Elements must be an Instance, a Term, or a Literal.
@@ -28,7 +32,7 @@ Literals are data values attached to Instances or Terms. If a Connection Recipe 
 
 ## Connection Recipes
 
-Relationships between Graph Elements are defined via Connection Recipes. At minimum, Connection Recipes must define the following relationships to external elements: `subject`, `predicate`, `object`, and `cardinality`. Additionally, the type assigned to a Connection Recipe indicates the types of Graph Elements that can be expected as the `subject` and the `object`.
+Relationships between Graph Elements are defined via Connection Recipes. At minimum, Connection Recipes must define the following relationships to external elements: `:subject`, `:predicate`, `:object`, and `:cardinality`. Additionally, the type assigned to a Connection Recipe indicates the types of Graph Elements that can be expected as the `:subject` and the `:object`.
 
 The table below shows the 6 types of Connection Recipes, as well as examples and resulting SPARQL snippets. Note that the Cardinality setting for any Connection Recipe involving a Term is ignored.
 
@@ -45,7 +49,7 @@ The table below shows the 6 types of Connection Recipes, as well as examples and
 
 Note that Cardinality enforcement may have some bugs in implementation. I will try to document and correct over the next few weeks.
 
-The following are valid Semantic Engine Cardinality settings: `1-1`, `1-many`, `many-1`, `many-singleton`, `singleton-many`, `singleton-singleton`, `many-superSingleton`, `superSingleton-many`, `singleton-superSingleton`, `superSingleton-singleton`. `superSingleton-superSingleton` is not currently valid but should be added.
+The following are valid Semantic Engine Cardinality settings: `:1-1`, `:1-many`, `:many-1`, `:many-singleton`, `:singleton-many`, `:singleton-singleton`, `:many-superSingleton`, `:superSingleton-many`, `:singleton-superSingleton`, `:superSingleton-singleton`. `:superSingleton-superSingleton` is not currently valid but should be added.
 
 A `singleton` is defined as an Instance that a single Update Specification can only create once, but can be created again by other Update Specifications. A `superSingleton` is defined as an Instance that exists only once in the entire graph.
 
@@ -67,7 +71,7 @@ This Bind clause has been generated to bind the SPARQL variable `?MONDO_0004992`
 
 `fcb96fee01d94924abf3e25c07c109c9`: UUID generated at the start of each Semantic Engine instantiation. It is constant between Update Specifications during a single instantiation. Ensures that the generated URI will not collide with any URIs previously in the graph.
 
-`str(?TURBO_0010191)`: Cardinality Enforcer element. This captures the existing URIs associated with a specific non-optional Instance included in the input pattern and uses it to lock in the cardinality of the new Instance. The determination of which Enforcer element to use is made by an algorithm that processes the supplied Cardinality settings as a group and searches for `1-1` connections between input and output elements. In this case, we have judged that instances of the class `turbo:TURBO_0010191` exist in the input pattern, and the associated Instance is not an optional element and has a `1-1` Cardinality relationship either with `obo:MONDO_0004992` directly, or with another element in the output pattern that has a `1-1` connection with `obo:MONDO_0004992`.
+`str(?TURBO_0010191)`: Cardinality Enforcer element. This captures the existing URIs associated with a specific non-optional Instance included in the input pattern and uses it to lock in the cardinality of the new Instance. The determination of which Enforcer element to use is made by an algorithm that processes the supplied Cardinality settings as a group and searches for `:1-1` connections between input and output elements. In this case, we have judged that instances of the class `turbo:TURBO_0010191` exist in the input pattern, and the associated Instance is not an optional element and has a `1-1` Cardinality relationship either with `obo:MONDO_0004992` directly, or with another element in the output pattern that has a `:1-1` connection with `obo:MONDO_0004992`.
 
 Note that it is possible to configure Cardinality settings in such a way that there are logical inconsistencies. For example, consider the simple pattern below, that introduces a logical inconsistency. If Cardinality inconsistencies exist, they will be flagged by the Semantic Engine, and the instantiation will be cancelled.
 ```
@@ -95,11 +99,41 @@ Note that it is possible to configure Cardinality settings in such a way that th
 
 ## Update Specifications*
 
+Update Specifications define how Connection Recipes will be grouped together to represent graph patterns. An Update Specification selects a specific group of Connection Recipes as inputs and another group as outputs; the inputs typically are defined in the TIS and the outputs in the GS. Each Update Specification specifies how to construct a single SPARQL Update statement. The input graph pattern is represented in the WHERE clause of the generated SPARQL query, and the output appears in the INSERT clause. Intermediary URI construction is completed in the BIND clause.
+
+Below is an example Update Specification. Note that Update Specification instances must be typed as `turbo:TURBO_0010354`, the TURBO ontology class for Updates.
+
+```
+:myFirstUpdate
+  a turbo:TURBO_0010354 ;
+  :precedes :mySecondUpdate ;
+  :inputNamedGraph :inputDataGraph ;
+  :outputNamedGraph :outputDataGraph ;
+  :hasRequiredInput :connection1 ;
+  :hasRequiredInput :connection2 ;
+  :hasOptionalInput :connection3 ;
+  :hasOutput :connection4 ;
+  :hasOutput :connection5 ;
+  :removes :connection1 ;
+.  
+:inputDataGraph a :TurboNamedGraph .
+:outputDataGraph a :TurboNamedGraph .
+```
+
+The `:precedes` predicate may be used to link Update Specifications. If the `run all` command is used to start the Semantic Engine, Update Specifications will be executed in the order that they are linked using this predicate. The last Update Specification to run in the intended order should not be set to `:precedes` another Update Specification. Note that order can be very important, if some Update Specifications use Connection Recipes as input that are the output of other Update Specifications.
+
 **Inputs and Outputs**
 
-- Required Inputs
-- Optional Inputs
-- Outputs
+The following predicates may be used to connect an Update Specification to a Connection Recipe: `:hasRequiredInput`, `:hasOptionalInput`, `:hasOutput`, `:removes`. The subject of each triple that uses one of these predicates should be a valid Update Specification, and the object should be a valid Connection Recipe. 
+
+The table below shows the relationship between predicates connecting Update Specifications and Connection Recipes, and where the representation of a referenced Connection Recipe will appear in the generated SPARQL statement.
+
+|     Relationship   between Update Specification and Connection Recipe    |     SPARQL Section               |
+|--------------------------------------------------------------------------|----------------------------------|
+|     :hasRequiredInput                                                    |     WHERE                        |
+|     :hasOptionalInput                                                    |     WHERE (IN OPTIONAL BLOCK)    |
+|     :hasOutput                                                           |     INSERT                       |
+|     :removes                                                             |     DELETE                       |
 
 **Named Graphs**
 
