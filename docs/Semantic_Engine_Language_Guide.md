@@ -11,10 +11,9 @@ For the remainder of this document, the prefix `:` will be used to denote `https
 ## Semantic Engine Language Graph Elements
 
 In the Semantic Engine Language, relationships are declared between Graph Elements. All Elements must be an Instance, a Term, or a Literal.
+For the rest of this document, Semantic Engine Language Instances will be referred to as Instances. Actual instances of classes will be referred to as instances.
 
 **Instances**
-
-For the rest of this document, Semantic Engine Language Instances will be referred to as Instances. Actual instances of classes will be referred to as instances.
 
 Instances are generally expressed as explicit references to some class that is itself defined as an instance of `owl:Class`in the application ontology. As a workaround the `owl:Class` declaration could be placed in a TIS or GS file. If a Connection Recipe references a class as an Instance, the Semantic Engine will understand to expect or create instances of this class. An instance appears in the graph as a typed, non-human readable URI. URI creation and assignment of type will be handled automatically.
 
@@ -71,7 +70,7 @@ This Bind clause has been generated to bind the SPARQL variable `?MONDO_0004992`
 
 `fcb96fee01d94924abf3e25c07c109c9`: UUID generated at the start of each Semantic Engine instantiation. It is constant between Update Specifications during a single instantiation. Ensures that the generated URI will not collide with any URIs previously in the graph.
 
-`str(?TURBO_0010191)`: Cardinality Enforcer element. This captures the existing URIs associated with a specific non-optional Instance included in the input pattern and uses it to lock in the cardinality of the new Instance. The determination of which Enforcer element to use is made by an algorithm that processes the supplied Cardinality settings as a group and searches for `:1-1` connections between input and output elements. In this case, we have judged that instances of the class `turbo:TURBO_0010191` exist in the input pattern, and the associated Instance is not an optional element and has a `1-1` Cardinality relationship either with `obo:MONDO_0004992` directly, or with another element in the output pattern that has a `:1-1` connection with `obo:MONDO_0004992`.
+`str(?TURBO_0010191)`: Cardinality Enforcer element. This captures the existing URIs associated with a specific non-optional Instance included in the input pattern and uses it to lock in the cardinality of the new Instance. The determination of which Enforcer element to use is made by an algorithm that processes the supplied Cardinality settings as a group and searches for a `:1-1` connection between a Graph Element that exists in the input pattern and a Graph Element that exists in the output pattern. is case, we have asserted that an Instance referencing class `turbo:TURBO_0010191` exists in the input pattern, is not an optional Graph Element, and has a `1-1` Cardinality relationship either with `obo:MONDO_0004992` directly, or with another Graph Element in the output pattern that has a `:1-1` connection with `obo:MONDO_0004992`.
 
 Note that it is possible to configure Cardinality settings in such a way that there are logical inconsistencies. For example, consider the simple pattern below, that introduces a logical inconsistency. If Cardinality inconsistencies exist, they will be flagged by the Semantic Engine, and the instantiation will be cancelled.
 ```
