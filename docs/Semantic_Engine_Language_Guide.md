@@ -150,9 +150,7 @@ Named graphs can also be referenced from the properties file. For example, the f
 
 ```
 :myFirstUpdate :outputNamedGraph properties:expandedNamedGraph .
-properties:expandedNamedGraph
-  a :TurboNamedGraph ;
-.
+properties:expandedNamedGraph a :TurboNamedGraph .
 ```
 
 ## Resource Lists
