@@ -67,7 +67,7 @@ This Bind clause has been generated to bind the SPARQL variable `?MONDO_0004992`
 
 `CONCAT`: SPARQL function to combine several supplied strings into a single string
 
-`?MONDO_0004992`: String representation of the class that will be assigned as the type of the created instances. Ensures that the generated URI will not collide with URIs generated for other instances. Question mark is simply a result of implementation, and is irrelevant to the function.
+`?MONDO_0004992`: String representation of the class that will be assigned as the type of the created instances. Ensures that the generated URIs will not collide with URIs generated for instances of other classes. Question mark is simply a result of implementation, and is irrelevant to the function.
 
 `fcb96fee01d94924abf3e25c07c109c9`: UUID generated at the start of each Semantic Engine instantiation. It is constant between Update Specifications during a single instantiation. Ensures that the generated URI will not collide with any URIs previously in the graph.
 
