@@ -143,7 +143,7 @@ Wildcard patterns for input named graphs can be used, if multiple input graphs a
 
 ```
 :myFirstUpdate :inputNamedGraph :input_ .
-:input_ a drivetrain:TurboNamedGraph .
+:input_ a :TurboNamedGraph .
 ```
 
 Named graphs can also be referenced from the properties file. For example, the following declaration instructs the Semantic Engine to create the output patterns in a graph named by the value of a properties entry with key `expandedNamedGraph`:
@@ -151,7 +151,7 @@ Named graphs can also be referenced from the properties file. For example, the f
 ```
 :myFirstUpdate :outputNamedGraph properties:expandedNamedGraph .
 properties:expandedNamedGraph
-  a drivetrain:TurboNamedGraph ;
+  a :TurboNamedGraph ;
 .
 ```
 
