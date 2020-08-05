@@ -1,5 +1,5 @@
 # Semantic Engine
-The Semantic Engine ("Drivetrain") transforms concise RDF data into a source-independent, semantically rich RDF model. It is designed to allow ontologists and programmers to work collaboratively on the creation and implementation of a target model that standardizes data from disparate sources. See the [QuickStart Guide](docs/quickStart.md) to get up and running.
+The Semantic Engine transforms concise RDF data into a source-independent, semantically rich RDF model. It is designed to allow ontologists and programmers to work collaboratively on the creation and implementation of a target model that standardizes data from disparate sources. See the [QuickStart Guide](docs/quickStart.md) to get up and running.
 
 The system uses a syntax called the Semantic Engine Language to define RDF graph transformations. There are 2 types of configuration files that use this syntax: a Graph Specification file (.gs) defines the RDF target model, and a Transformation Instruction Set (.tis) maps another RDF schema to the target model. The intention is that this schema will have similar semantics to the original data source, whereas the target model will include rich semantics defined by an application ontology. Pre-existing public .gs and .tis files are available in [drivetrain/config](drivetrain/config).
 
@@ -19,7 +19,7 @@ Clone the repository locally, and copy/remove the .template suffix from the foll
 - `drivetrain/project/plugins.sbt.template`
 - `drivetrain/project/build.properties.template`
 
-Configure `turbo_properties.properties` to use the desired Transformation Instruction Set and Graph Specification files. Pre-existing options exist in the `config` folder. For instructions on designing your own Semantic Engine configurations, see the [Semantic Engine Language Style Guide](docs/Semantic_Engine_Language_Guide.md) or the more verbose documentation [here](docs/Semantic%20Engine%20Configuration%20Tutorial.docx).
+Configure `turbo_properties.properties` to use the desired Transformation Instruction Set and Graph Specification files. Pre-existing options exist in the `config` folder. For instructions on designing your own Semantic Engine configurations, see the [Semantic Engine Language Feature Guide](docs/Semantic_Engine_Language_Guide.md) or the more verbose documentation [here](docs/Semantic%20Engine%20Configuration%20Tutorial.docx).
 
 ## SBT Commands
 The following commands can be run via the SBT console. SBT should be started from the directory `drivetrain/`.
