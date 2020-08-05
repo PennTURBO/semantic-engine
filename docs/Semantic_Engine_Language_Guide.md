@@ -137,8 +137,23 @@ The table below shows the relationship between predicates connecting Update Spec
 
 **Named Graphs**
 
-- Named Graph Wildcard
-- Named Graph From Properties
+A valid Update Specification must have relationships with predicates `:inputNamedGraph` and  `:outputNamedGraph`. This specifies which graph the input data will be read from, and where the output patterns should be created. The object of the triple that uses one of these predicates must be defined as a `:TurboNamedGraph`.
+
+Wildcard patterns for input named graphs can be used, if multiple input graphs are necessary. The wildcard can only be applied at the end of the `:TurboNamedGraph` URI, and uses an underscore syntax. For example, the following declaration would use all named graphs that start with `:inputs_` as input:
+
+```
+:myFirstUpdate :inputNamedGraph :input_ .
+:input_ a drivetrain:TurboNamedGraph .
+```
+
+Named graphs can also be referenced from the properties file. For example, the following declaration instructs the Semantic Engine to create the output patterns in a graph named by the value of a properties entry with key `expandedNamedGraph`:
+
+```
+:myFirstUpdate :outputNamedGraph properties:expandedNamedGraph .
+properties:expandedNamedGraph
+  a drivetrain:TurboNamedGraph ;
+.
+```
 
 ## Resource Lists
 
