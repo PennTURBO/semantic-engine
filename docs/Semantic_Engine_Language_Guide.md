@@ -18,7 +18,7 @@ For the rest of this document, Semantic Engine Language Instances will be referr
 
 Instances are generally expressed as explicit references to some class that is itself defined as an instance of `owl:Class`in the application ontology. As a workaround the `owl:Class` declaration could be placed in a TIS or GS file. If a Connection Recipe references a class as an Instance, the Semantic Engine will understand to expect or create instances of this class. URI creation and assignment of types will be handled automatically.
 
-Instances can also be defined without a type. This can come in handy when the type that an Instance should be assigned is not known until execution time, perhaps because because it is dependent on some element in the incoming dataset. Currently, a ClassResourceList can be supplied instead of a class URI. However, this is a bit confusing because these are also used as Term placeholders. In the future, developers on this project could create a new Semantic Engine Language feature called `UntypedInstance`.
+Instances can also be defined without a type. This can come in handy when the type that an Instance should be assigned is not known until execution time, perhaps because it is dependent on some element in the incoming dataset. Currently, a ClassResourceList can be supplied instead of a class URI. However, this is a bit confusing because these are also used as Term placeholders. In the future, developers on this project could create a new Semantic Engine Language feature called `UntypedInstance`.
 
 **Terms**
 
