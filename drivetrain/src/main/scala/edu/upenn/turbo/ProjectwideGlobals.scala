@@ -111,9 +111,16 @@ trait ProjectwideGlobals extends Enumeration
       val manyToOneMultiplicity = "https://github.com/PennTURBO/Drivetrain/many-1"
       val oneToManyMultiplicity = "https://github.com/PennTURBO/Drivetrain/1-many"
       val oneToOneMultiplicity = "https://github.com/PennTURBO/Drivetrain/1-1"
+      
       val instToInstRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe"
       val instToTermRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe"
       val termToInstRecipe = "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe"
       val instToLiteralRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe"
       val termToLiteralRecipe = "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe"
+      val termToTermRecipe = "https://github.com/PennTURBO/Drivetrain/TermToTermRecipe"
+      
+      val subjectSingleton = Array("https://github.com/PennTURBO/Drivetrain/singleton-many", "https://github.com/PennTURBO/Drivetrain/singleton-superSingleton", "https://github.com/PennTURBO/Drivetrain/singleton-singleton")
+      val subjectSuperSingleton = Array("https://github.com/PennTURBO/Drivetrain/superSingleton-many", "https://github.com/PennTURBO/Drivetrain/superSingleton-singleton", "https://github.com/PennTURBO/Drivetrain/superSingleton-superSingleton")
+      val objectSingleton = Array("https://github.com/PennTURBO/Drivetrain/many-singleton", "https://github.com/PennTURBO/Drivetrain/superSingleton-singleton", "https://github.com/PennTURBO/Drivetrain/singleton-singleton")
+      val objectSuperSingleton = Array("https://github.com/PennTURBO/Drivetrain/many-superSingleton", "https://github.com/PennTURBO/Drivetrain/singleton-superSingleton", "https://github.com/PennTURBO/Drivetrain/superSingleton-superSingleton")
 }

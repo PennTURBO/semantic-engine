@@ -156,38 +156,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     }
 
     def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()): PatternMatchQuery =
-    {   
-        // create empty connection lists to populate
-        var outputSingletonClasses = new HashSet[String]
-        var outputSuperSingletonClasses = new HashSet[String]
-        var inputSingletonClasses = new HashSet[String]
-        var inputSuperSingletonClasses = new HashSet[String]
-        var outputOneToOneConnections = new HashMap[String, HashMap[String, String]]
-        var inputOneToOneConnections = new HashMap[String, HashMap[String, String]]
-        var inputOneToManyConnections = new HashMap[String, HashMap[String, String]]
-        var inputManyToOneConnections = new HashMap[String, HashMap[String, String]]
-        var outputOneToManyConnections = new HashMap[String, HashMap[String, String]]
-        var outputManyToOneConnections = new HashMap[String, HashMap[String, String]]
-        
-        // list of all literals in the output
-        var literalList = new HashSet[String]
-        // list of all required elements in the input
-        var requiredList = new HashSet[String]
-        // list of all optional elements in the input
-        var optionalList = new HashSet[String]
-        // list of all output nodes that need to be bound in the bind clause
-        var classResourceLists = new HashSet[String]
-        // list of all class resource lists
-        var nodesToCreate = new HashSet[String]
-        // this boolean keeps track of whether there are any 1-many or many-1 cardinalities in the input, if not we can use any input element as a cardinality enforcer
-        var inputHasLevelChange = false
-        // list of output nodes dependent on input nodes, as specified in acorn files
-        var dependenciesList = new HashMap[String, org.eclipse.rdf4j.model.Value]
-        // list of custom sparql bind rules, as specified in acorn files
-        var customRulesList = new HashMap[String, org.eclipse.rdf4j.model.Value]
-        // a map with keys of variables that will be bound in the where clause and values a boolean whether that variable can be used as a cardinality enforcer
-        var boundInWhereClause = new HashSet[String]
-        
+    {          
         val modelReader = new GraphModelReader(gmCxn)
     
         if (localUUID == null) localUUID = UUID.randomUUID().toString().replaceAll("-", "")
@@ -208,205 +177,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
         if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
         
-        for (row <- inputs) 
-        {
-            var subjectString = row(SUBJECT.toString).toString
-            var objectString = row(OBJECT.toString).toString
-            if (row(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
-            if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
-            
-            val connectionName = row(CONNECTIONNAME.toString).toString
-            val thisMultiplicity = row(MULTIPLICITY.toString).toString
-            val recipeType = row(CONNECTIONRECIPETYPE.toString).toString
-            
-            var objectALiteral = false
-            if (recipeType == instToLiteralRecipe || recipeType == termToLiteralRecipe) 
-            {
-                objectALiteral = true
-                literalList += objectString
-            }
-
-            if (row(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput" || row(OPTIONALGROUP.toString) != null)
-            {
-                if (!requiredList.contains(subjectString)) optionalList += subjectString
-                if (!requiredList.contains(objectString)) optionalList += objectString
-            }
-            else
-            {
-                requiredList += subjectString
-                requiredList += objectString
-                optionalList.remove(subjectString)
-                optionalList.remove(objectString)
-            }
-            
-            var subjectAnInstance = false
-            if (recipeType == instToInstRecipe || recipeType == instToTermRecipe || recipeType == instToLiteralRecipe) subjectAnInstance = true
-            var objectAnInstance = false
-            if (recipeType == instToInstRecipe || recipeType == termToInstRecipe) objectAnInstance = true
-            var objectADescriber = false
-            var subjectADescriber = false
-            if (row(SUBJECTADESCRIBER.toString) != null) 
-            {
-                classResourceLists += subjectString
-                subjectADescriber = true
-            }
-            if (row(OBJECTADESCRIBER.toString) != null) 
-            {
-                classResourceLists += objectString
-                objectADescriber = true
-            }
-            assert (!(objectALiteral && objectAnInstance))
-            assert (!(objectALiteral && objectADescriber))
-        
-            boundInWhereClause += subjectString
-            boundInWhereClause += objectString
-            
-            if (recipeType == instToLiteralRecipe || recipeType == instToInstRecipe)
-            {
-                if (thisMultiplicity == oneToOneMultiplicity) 
-                {
-                    inputOneToOneConnections = handleOneToOneConnection(subjectString, objectString, connectionName, inputOneToOneConnections, objectALiteral)
-                }
-                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/many-singleton")
-                {
-                    inputSingletonClasses += objectString
-                }
-                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-many")
-                {
-                    inputSingletonClasses += subjectString
-                }
-                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-singleton")
-                {
-                    inputSingletonClasses += subjectString
-                    inputSingletonClasses += objectString
-                }
-                else if (thisMultiplicity.endsWith("superSingleton"))
-                {
-                    inputSuperSingletonClasses += objectString
-                }
-                else if (thisMultiplicity.contains("superSingleton"))
-                {
-                    inputSuperSingletonClasses += subjectString
-                }
-                else if (thisMultiplicity == oneToManyMultiplicity)
-                {
-                    inputHasLevelChange = true
-                    if (inputOneToManyConnections.contains(subjectString)) inputOneToManyConnections(subjectString) += objectString -> connectionName
-                    else inputOneToManyConnections += subjectString -> HashMap(objectString -> connectionName)
-                }
-                else if (thisMultiplicity == manyToOneMultiplicity)
-                {
-                    inputHasLevelChange = true
-                    if (inputManyToOneConnections.contains(subjectString)) inputManyToOneConnections(subjectString) += objectString -> connectionName
-                    else inputManyToOneConnections += subjectString -> HashMap(objectString -> connectionName)
-                }
-                else throw new RuntimeException(s"Unrecognized input cardinality setting: $thisMultiplicity")
-            }
-        }
-        
-        for (row <- outputs)
-        {
-            val recipeType = row(CONNECTIONRECIPETYPE.toString).toString
-
-            val connectionName = row(CONNECTIONNAME.toString).toString
-            val thisMultiplicity = row(MULTIPLICITY.toString).toString
-            
-            var subjectString = row(SUBJECT.toString).toString
-            var objectString = row(OBJECT.toString).toString
-            if (row(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
-            if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
-            
-            var subjectAnInstance = false
-            if (recipeType == instToInstRecipe || recipeType == instToTermRecipe || recipeType == instToLiteralRecipe) subjectAnInstance = true
-            var objectAnInstance = false
-            if (recipeType == instToInstRecipe || recipeType == termToInstRecipe) objectAnInstance = true
-            var objectALiteral = false
-            if (recipeType == instToLiteralRecipe || recipeType == termToLiteralRecipe) 
-            {
-                objectALiteral = true
-                literalList += objectString
-            }
-            assert (!(objectALiteral && objectAnInstance))
-            
-            val subjectDependee = row(SUBJECTDEPENDEE.toString)
-            val objectDependee = row(OBJECTDEPENDEE.toString)
-            if (subjectDependee != null) dependenciesList += subjectString -> subjectDependee
-            if (objectDependee != null) dependenciesList += objectString -> objectDependee
-            
-            val subjectCustomRule = row(SUBJECTRULE.toString)
-            val objectCustomRule = row (OBJECTRULE.toString)
-            if (subjectCustomRule != null) customRulesList += subjectString -> subjectCustomRule
-            if (objectCustomRule != null) customRulesList += objectString -> objectCustomRule
-                        
-            // determine which nodes will need to be created in the bind clause
-            if (!boundInWhereClause.contains(subjectString) && subjectAnInstance) nodesToCreate += subjectString
-            if (!boundInWhereClause.contains(objectString) && objectAnInstance) nodesToCreate += objectString
-                        
-            if (recipeType == instToLiteralRecipe || recipeType == instToInstRecipe)
-            {
-                if (thisMultiplicity == oneToOneMultiplicity) 
-                {
-                    handleOneToOneConnection(subjectString, objectString, connectionName, outputOneToOneConnections, objectALiteral)
-                }
-                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/many-singleton")
-                {
-                    outputSingletonClasses += objectString
-                    nodesToCreate.remove(objectString)
-                }
-                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-many")
-                {
-                    outputSingletonClasses += subjectString
-                    nodesToCreate.remove(subjectString)
-                }
-                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/superSingleton-many")
-                {
-                    outputSuperSingletonClasses += subjectString
-                    nodesToCreate.remove(subjectString)
-                }
-                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/many-superSingleton")
-                {
-                    outputSuperSingletonClasses += objectString
-                    nodesToCreate.remove(objectString)
-                }
-                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-singleton")
-                {
-                    outputSingletonClasses += subjectString
-                    outputSingletonClasses += objectString
-                    nodesToCreate.remove(subjectString)
-                    nodesToCreate.remove(objectString)
-                }
-                else if (thisMultiplicity.endsWith("superSingleton"))
-                {
-                    outputSuperSingletonClasses += objectString
-                    nodesToCreate.remove(objectString)
-                }
-                else if (thisMultiplicity.contains("superSingleton"))
-                {
-                    outputSuperSingletonClasses += subjectString
-                    nodesToCreate.remove(subjectString)
-                }
-                else if (thisMultiplicity == oneToManyMultiplicity)
-                {
-                    if (outputOneToManyConnections.contains(subjectString)) outputOneToManyConnections(subjectString) += objectString -> connectionName
-                    else outputOneToManyConnections += subjectString -> HashMap(objectString -> connectionName)
-                }
-                else if (thisMultiplicity == manyToOneMultiplicity)
-                {
-                    if (outputManyToOneConnections.contains(subjectString)) outputManyToOneConnections(subjectString) += objectString -> connectionName
-                    else outputManyToOneConnections += subjectString -> HashMap(objectString -> connectionName)
-                } 
-                else throw new RuntimeException(s"Unrecognized input cardinality setting: $thisMultiplicity")
-            }
-        }
-                       
-        val inputInstanceCountMap = CardinalityCountBuilder.getInstanceCounts(inputs)
-        val outputInstanceCountMap = CardinalityCountBuilder.getInstanceCounts(outputs)
-        
-        val setConnectionLists = HashMap("outputSingletonList" -> outputSingletonClasses, "inputSingletonList" -> inputSingletonClasses,
-                                        "outputSuperSingletonList" -> outputSuperSingletonClasses, "inputSuperSingletonList" -> inputSuperSingletonClasses)
-        val mapConnectionLists = HashMap("outputOneToOneList" -> outputOneToOneConnections, "inputOneToOneList" -> inputOneToOneConnections,
-                                        "outputOneToManyList" -> outputOneToManyConnections, "inputOneToManyList" -> inputOneToManyConnections,
-                                        "outputManyToOneList" -> outputManyToOneConnections, "inputManyToOneList" -> inputManyToOneConnections)
+        var (inputRecipeList, outputRecipeList) = handleAcornData(inputs, outputs)
         
         //graphModelValidator.validateAcornResults(thisProcessSpecification, inputs, outputs, setConnectionLists, mapConnectionLists)
         
@@ -416,14 +187,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val primaryQuery = new PatternMatchQuery(gmCxn)
         primaryQuery.setProcessSpecification(thisProcessSpecification)
         primaryQuery.setProcess(process)
-        primaryQuery.setInputGraph(inputNamedGraph)
-        primaryQuery.setInputData(inputs)
         
         var outputNamedGraph: String = null
-        primaryQuery.createWhereClause(inputs)
-        primaryQuery.createBindClause(mapConnectionLists, setConnectionLists, localUUID, customRulesList, dependenciesList,
-                                      nodesToCreate, inputHasLevelChange, inputInstanceCountMap, outputInstanceCountMap, 
-                                      literalList, boundInWhereClause, optionalList, classResourceLists)
+        primaryQuery.createWhereClause(inputRecipeList)
+        primaryQuery.createBindClause(inputRecipeList, outputRecipeList)
         
         if (outputs.size != 0)
         {
@@ -437,63 +204,248 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             primaryQuery.setRemovalsGraph(removalsNamedGraph)
             primaryQuery.createDeleteClause(removals)
         }
-        primaryQuery.createInsertClause(outputs)
+        primaryQuery.createInsertClause(outputRecipeList)
         assert(!primaryQuery.getQuery().contains("https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/"), "Could not complete properties term replacement")
         primaryQuery 
     }
     
-    /*
-     *  Makes a map of one to one connections, where each key is an element and each value is a map where each key is a connected element
-     *  and each value is the relevant connection name. Objects are not shown as "connected" with themselves.
-     */
-    def handleOneToOneConnection(thisSubject: String, thisObject: String, connectionName: String, listToPopulate: HashMap[String, HashMap[String, String]], objectALiteral: Boolean): HashMap[String, HashMap[String, String]] =
+    def handleAcornData(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]) =
     {
-        // make it mutable
-        var listToReturn = listToPopulate
-        if (listToReturn.contains(thisObject) && listToReturn.contains(thisSubject))
-        {
-            listToReturn(thisObject) += thisSubject -> connectionName
-            listToReturn(thisSubject) += thisObject -> connectionName
-            
-            listToReturn = addToConnectionList(thisSubject, connectionName, listToReturn)
-            listToReturn = addToConnectionList(thisObject, connectionName, listToReturn)
-        }
+        var discoveredInstances = new HashMap[String, Instance]
+        var discoveredTerms = new HashMap[String, Term]
+        var discoveredLiterals = new HashMap[String, Literal]
         
-        else if (listToReturn.contains(thisObject) && (!listToReturn.contains(thisSubject)))
+        val (inputRecipeList, inpDisInst, inpDisTerm, inpDisLit) = processAcornRowResults(inputs, discoveredInstances, discoveredTerms, discoveredLiterals)
+        discoveredInstances = inpDisInst; discoveredTerms = inpDisTerm; discoveredLiterals = inpDisLit
+        val (outputRecipeList, outDisInst, outDisTerm, outDisLit) = processAcornRowResults(outputs, discoveredInstances, discoveredTerms, discoveredLiterals)
+        (inputRecipeList, outputRecipeList)
+    }
+    
+    def processAcornRowResults(data: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], disInst: HashMap[String, Instance], disTerm: HashMap[String, Term], disLit: HashMap[String, Literal]) =
+    {        
+        val recipesList = new HashSet[ConnectionRecipe]
+        for (row <- data)
         {
-            listToReturn(thisObject) += thisSubject -> connectionName
-            listToReturn.put(thisSubject, HashMap(thisObject -> connectionName))
-          
-            listToReturn = addToConnectionList(thisObject, connectionName, listToReturn)
+            val (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectExplicit, objectExplicit, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper) 
+                = interpretRowData(row)
+            
+            if (recipeType == instToInstRecipe)
+            {
+                val subjInst = findOrCreateNewInstance(disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper)
+                disInst += subjInst.value -> subjInst
+                val obInst = findOrCreateNewInstance(disInst, objectString, objectExplicit, objectIsSingleton, objectIsSuper)
+                disInst += obInst.value -> obInst
+                
+                // right now only updating connection lists for instance-to-instance relations
+                //it would be possible to enforce cardinality based on a LiteralResourceList or maybe even a ClassResourceList...but leaving that alone for now
+                updateConnectionLists(subjInst, obInst, thisMultiplicity)
+                                                
+                val recipe = new InstToInstConnRecipe()
+                
+                recipe.name = connectionName
+                recipe.cardinality = thisMultiplicity
+                recipe.subject = subjInst
+                recipe.crObject = obInst
+                recipe.predicate = predicate
+                recipe.isOptional = Some(optional)
+            }
+            else if (recipeType == instToTermRecipe)
+            {
+                val subjInst = findOrCreateNewInstance(disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper)
+                disInst += subjInst.value -> subjInst
+                val objTerm = findOrCreateNewTerm(disTerm, objectString, objectExplicit)
+                disTerm += objTerm.value -> objTerm
+                
+                val recipe = new InstToTermConnRecipe()
+                
+                recipe.name = connectionName
+                recipe.cardinality = thisMultiplicity
+                recipe.subject = subjInst
+                recipe.crObject = objTerm
+                recipe.predicate = predicate
+                recipe.isOptional = Some(optional)
+            }
+            else if (recipeType == termToInstRecipe)
+            {
+                val subjTerm = findOrCreateNewTerm(disTerm, objectString, objectExplicit)
+                disTerm += subjTerm.value -> subjTerm
+                val objInst = findOrCreateNewInstance(disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper)
+                disInst += objInst.value -> objInst
+                
+                val recipe = new TermToInstConnRecipe()
+                
+                recipe.name = connectionName
+                recipe.cardinality = thisMultiplicity
+                recipe.subject = subjTerm
+                recipe.crObject = objInst
+                recipe.predicate = predicate
+                recipe.isOptional = Some(optional)
+            }
+            else if (recipeType == instToLiteralRecipe)
+            {
+                val subjInst = findOrCreateNewInstance(disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper)
+                disInst += subjInst.value -> subjInst
+                val objLit = findOrCreateNewLiteral(disLit, subjectString, subjectExplicit)
+                disLit += objLit.value -> objLit
+                
+                val recipe = new InstToLitConnRecipe()
+                
+                recipe.name = connectionName
+                recipe.cardinality = thisMultiplicity
+                recipe.subject = subjInst
+                recipe.crObject = objLit
+                recipe.predicate = predicate
+                recipe.isOptional = Some(optional)
+            }
+            else if (recipeType == termToLiteralRecipe)
+            {
+                val subjTerm = findOrCreateNewTerm(disTerm, subjectString, subjectExplicit)
+                disTerm += subjTerm.value -> subjTerm
+                val objLit = findOrCreateNewLiteral(disLit, subjectString, subjectExplicit)
+                disLit += objLit.value -> objLit
+                
+                val recipe = new TermToLitConnRecipe()
+                
+                recipe.name = connectionName
+                recipe.cardinality = thisMultiplicity
+                recipe.subject = subjTerm
+                recipe.crObject = objLit
+                recipe.predicate = predicate
+                recipe.isOptional = Some(optional)
+            }
+            else if (recipeType == termToTermRecipe)
+            {
+                val subjTerm = findOrCreateNewTerm(disTerm, subjectString, subjectExplicit)
+                disTerm += subjTerm.value -> subjTerm
+                val objTerm = findOrCreateNewTerm(disTerm, subjectString, subjectExplicit)
+                disTerm += objTerm.value -> objTerm
+                
+                val recipe = new TermToTermConnRecipe()
+                
+                recipe.name = connectionName
+                recipe.cardinality = thisMultiplicity
+                recipe.subject = subjTerm
+                recipe.crObject = objTerm
+                recipe.predicate = predicate
+                recipe.isOptional = Some(optional)
+            }
+            else throw new RuntimeException(s"Unrecognized input cardinality setting: $thisMultiplicity")
         }
-        else if (listToReturn.contains(thisSubject) && (!listToReturn.contains(thisObject)))
+        (recipesList, disInst, disTerm, disLit)
+    }
+    
+    def updateConnectionLists(subj: Instance, obj: Instance, cardinality: String)
+    {
+        if (cardinality == oneToOneMultiplicity)
         {
-            listToReturn(thisSubject) += thisObject -> connectionName
-            listToReturn.put(thisObject, HashMap(thisSubject -> connectionName))
-          
-            listToReturn = addToConnectionList(thisSubject, connectionName, listToReturn)
+            val subjList = subj.oneToOneConnections
+            val objList = subj.oneToOneConnections
+            
+            for (instance <- subjList) instance.oneToOneConnections += obj
+            for (instance <- objList) instance.oneToOneConnections += subj
+            
+            subjList += obj
+            objList += subj
+        }
+        else if (cardinality == oneToManyMultiplicity)
+        {
+            val subjList = subj.oneToManyConnections
+            val objList = subj.oneToManyConnections
+            
+            subjList += obj
+            objList += subj
+        }
+        else if (cardinality == manyToOneMultiplicity)
+        {
+            val subjList = subj.manyToOneConnections
+            val objList = subj.manyToOneConnections
+            
+            subjList += obj
+            objList += subj
+        }
+    }
+    
+    def interpretRowData(row: HashMap[String, org.eclipse.rdf4j.model.Value]) =
+    {
+        var subjectString = row(SUBJECT.toString).toString
+        var objectString = row(OBJECT.toString).toString
+                   
+        val predicate = row(PREDICATE.toString).toString
+        if (row(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
+        if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
+        
+        val connectionName = row(CONNECTIONNAME.toString).toString
+        val thisMultiplicity = row(MULTIPLICITY.toString).toString
+        val recipeType = row(CONNECTIONRECIPETYPE.toString).toString
+        
+        var optional: Boolean = false
+        if (row(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput" || row(OPTIONALGROUP.toString) != null) optional = true
+        
+        var subjectExplicit = true
+        if (row(SUBJECTADESCRIBER.toString) != null) subjectExplicit = false
+        var objectExplicit = true
+        if (row(OBJECTADESCRIBER.toString) != null) objectExplicit = false
+        
+        var subjectIsSingleton = false
+        var subjectIsSuper = false
+        var objectIsSingleton = false
+        var objectIsSuper = false
+        if (subjectSingleton.contains(thisMultiplicity)) subjectIsSingleton = true
+        else if (subjectSuperSingleton.contains(thisMultiplicity)) subjectIsSuper = true
+        if (objectSingleton.contains(thisMultiplicity)) objectIsSingleton = true
+        else if (objectSuperSingleton.contains(thisMultiplicity)) objectIsSuper = true
+        
+        (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectExplicit, objectExplicit, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper)
+    }
+    
+    def findOrCreateNewInstance(disInst: HashMap[String, Instance], stringVal: String, explicit: Boolean, singleton: Boolean, superSingleton: Boolean): Instance =
+    {
+        var newInst: Instance = null
+        if (disInst.contains(stringVal)) 
+        {
+            // might be a good place to validate the discovered subject with the information gathered about it above
+            newInst = disInst(stringVal)
         }
         else
         {
-            listToReturn.put(thisObject, HashMap(thisSubject -> connectionName))
-            listToReturn.put(thisSubject, HashMap(thisObject -> connectionName))
+          newInst.value = stringVal
+          newInst.isUntyped = Some(!explicit)
+          newInst.isSingleton = Some(singleton)
+          newInst.isSuperSingleton = Some(superSingleton)
         }
-        listToReturn
+        newInst
     }
     
-    def addToConnectionList(element: String, connectionName: String, listToPopulate: HashMap[String, HashMap[String, String]]): HashMap[String, HashMap[String, String]] =
+    def findOrCreateNewTerm(disTerm: HashMap[String, Term], stringVal: String, explicit: Boolean): Term =
     {
-        // make it mutable
-        var listToReturn = listToPopulate
-        val connectionsToElement = listToReturn(element)
-        for ((conn,name) <- connectionsToElement)
+        var newTerm: Term = null
+        if (disTerm.contains(stringVal)) 
         {
-            for ((a,value) <- connectionsToElement)
-            {
-                if (!listToReturn(conn).contains(a) && conn != a) listToReturn(conn) += a -> connectionName
-            }
+            // might be a good place to validate the discovered term with the information gathered about it above
+            newTerm = disTerm(stringVal)
         }
-        listToReturn
+        else
+        {
+          newTerm.value = stringVal
+          newTerm.isResourceList = Some(!explicit)
+        }
+        newTerm
+    }
+    
+    def findOrCreateNewLiteral(disLit: HashMap[String, Literal], stringVal: String, explicit: Boolean): Literal =
+    {
+        var newLit: Literal = null
+        if (disLit.contains(stringVal)) 
+        {
+            // might be a good place to validate the discovered term with the information gathered about it above
+            newLit = disLit(stringVal)
+        }
+        else
+        {
+          newLit.value = stringVal
+          newLit.isResourceList = Some(!explicit)
+        }
+        newLit
     }
     
     /**

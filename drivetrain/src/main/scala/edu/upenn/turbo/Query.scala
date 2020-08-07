@@ -42,7 +42,6 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
     var bindClauseBuilder: BindClauseBuilder = new BindClauseBuilder()
     
     var varsForProcessInput = new HashSet[Triple]
-    var rawInputData = new ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]
     
     /* Contains set of of variables used in bind and where clauses, so the insert clause knows that these have already been defined. Any URI present in the 
      in the insert clause will not be converted to a variable unless it is included in this list. The boolean value represents whether a URI is qualified
@@ -89,11 +88,6 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
     {
         assert (process.contains(':'))
         this.process = process
-    }
-    
-    def setInputData(inputData: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
-    {
-        rawInputData = inputData
     }
     
     def createInsertClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
