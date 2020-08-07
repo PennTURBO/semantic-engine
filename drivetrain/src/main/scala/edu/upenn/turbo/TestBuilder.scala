@@ -10,7 +10,6 @@ import java.io.File
 import java.time.LocalDateTime
 import java.util.UUID
 import org.eclipse.rdf4j.model.Literal
-import scala.collection.mutable.Queue
 import org.json4s._
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
@@ -30,8 +29,10 @@ class TestBuilder extends ProjectwideGlobals
         for (process <- processList)
         {
             val processAsURI = helper.getProcessNameAsUri(process)
-            GraphModelValidator.validateProcessSpecification(processAsURI)
-            val inputs = RunDrivetrainProcess.getInputs(processAsURI)
+            val graphModelValidator = new GraphModelValidator(gmCxn)
+            graphModelValidator.validateProcessSpecification(processAsURI)
+            val modelReader = new GraphModelReader(gmCxn)
+            val inputs = modelReader.getInputs(processAsURI)
             val inputTriplesArr = generateInputTriples(processAsURI, inputs, gmCxn)
             val minimumTripleSet = inputTriplesArr(1)
             update.updateSparql(cxn, "INSERT DATA {" + minimumTripleSet + "}")
@@ -46,8 +47,10 @@ class TestBuilder extends ProjectwideGlobals
         for (process <- processList)
         {
             val processAsURI = helper.getProcessNameAsUri(process)
-            GraphModelValidator.validateProcessSpecification(processAsURI)
-            val inputs = RunDrivetrainProcess.getInputs(processAsURI)
+            val graphModelValidator = new GraphModelValidator(gmCxn)
+            graphModelValidator.validateProcessSpecification(processAsURI)            
+            val modelReader = new GraphModelReader(gmCxn)
+            val inputs = modelReader.getInputs(processAsURI)
             val inputTriplesArr = generateInputTriples(processAsURI, inputs, gmCxn)
             val fullTripleSet = inputTriplesArr(0)
             update.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
@@ -65,7 +68,8 @@ class TestBuilder extends ProjectwideGlobals
         val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + instructionSetName + "_" + testFileName + ".snapshot")
         testFilePath.getParentFile().mkdirs()
         
-        val inputs = RunDrivetrainProcess.getInputs(process)
+        val modelReader = new GraphModelReader(gmCxn)
+        val inputs = modelReader.getInputs(process)
         
         val inputTriplesArr = generateInputTriples(process, inputs, gmCxn)
         val fullTripleSet = inputTriplesArr(0)
@@ -148,128 +152,6 @@ class TestBuilder extends ProjectwideGlobals
         fullPredsAsString
     }
     
-    def getInstanceCountsFromInput(inputs: ArrayBuffer[HashMap[String,org.eclipse.rdf4j.model.Value]]): HashMap[String, Integer] =
-    {
-        var instanceCountMap = new HashMap[String, Integer]
-        val instancesWithOnlyTermsOrLiterals = new HashSet[String]
-        val connectionsMap = new HashMap[String, HashSet[String]]
-        for (input <- inputs)
-        {
-            val subjectString = input(SUBJECT.toString).toString
-            val objectString = input(OBJECT.toString).toString
-            val subjectExistsInMap: Boolean = instanceCountMap.contains(subjectString)
-            val objectExistsInMap: Boolean = instanceCountMap.contains(objectString)
-            val multiplicity = input(MULTIPLICITY.toString).toString
-            if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
-            {
-                if (!subjectExistsInMap && !objectExistsInMap) 
-                {
-                    if (multiplicity == oneToOneMultiplicity)
-                    {
-                        instanceCountMap += subjectString -> 1
-                        instanceCountMap += objectString -> 1
-                    }
-                    else if (multiplicity == oneToManyMultiplicity)
-                    {
-                        instanceCountMap += subjectString -> 1
-                        instanceCountMap += objectString -> 2
-                    }
-                    else if (multiplicity == manyToOneMultiplicity)
-                    {
-                        instanceCountMap += subjectString -> 2
-                        instanceCountMap += objectString -> 1
-                    }
-                }
-                else if (!subjectExistsInMap && objectExistsInMap)
-                {
-                    if (multiplicity == oneToOneMultiplicity) instanceCountMap += subjectString -> instanceCountMap(objectString)
-                    else if (multiplicity == oneToManyMultiplicity)
-                    {
-                        if (instanceCountMap(objectString) > 1) instanceCountMap += subjectString -> instanceCountMap(objectString)/2
-                        else
-                        {
-                            instanceCountMap += subjectString -> 1
-                            instanceCountMap(objectString) = 2
-                            // recursively iterate through all connections of objectString, multiply by 2
-                        }
-                    }
-                    else if (multiplicity == manyToOneMultiplicity) instanceCountMap += subjectString -> instanceCountMap(objectString)*2
-                }
-                else if (subjectExistsInMap && !objectExistsInMap)
-                {
-                    if (multiplicity == oneToOneMultiplicity) instanceCountMap += objectString -> instanceCountMap(subjectString)
-                    else if (multiplicity == manyToOneMultiplicity)
-                    {
-                        if (instanceCountMap(subjectString) > 1) instanceCountMap += objectString -> instanceCountMap(subjectString)/2
-                        else
-                        {
-                            instanceCountMap += objectString -> 1
-                            instanceCountMap(subjectString) = 2
-                            // recursively iterate through all connections of subjectString, multiply by 2
-                            instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, 2)
-                        }
-                    }
-                    else if (multiplicity == oneToManyMultiplicity) instanceCountMap += objectString -> instanceCountMap(subjectString)*2
-                }
-                else if (subjectExistsInMap && objectExistsInMap)
-                {
-                    if (multiplicity == oneToOneMultiplicity && (instanceCountMap(subjectString) != instanceCountMap(objectString)))
-                    {
-                        if (instanceCountMap(subjectString) > instanceCountMap(objectString)) instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, objectString, instanceCountMap(subjectString)/instanceCountMap(objectString))
-                        else instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, instanceCountMap(objectString)/instanceCountMap(subjectString))
-                    }
-                    else if (multiplicity == manyToOneMultiplicity)
-                    {
-                        if (instanceCountMap(subjectString) <= instanceCountMap(objectString))
-                        {
-                            val multiplier = instanceCountMap(objectString)*2/instanceCountMap(subjectString)
-                            instanceCountMap(subjectString) = instanceCountMap(objectString)*2
-                            instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, multiplier)
-                        }  
-                    }
-                    else if (multiplicity == oneToManyMultiplicity)
-                    {
-                        if (instanceCountMap(objectString) <= instanceCountMap(subjectString))
-                        {
-                            val multiplier = instanceCountMap(subjectString)*2/instanceCountMap(objectString)
-                            instanceCountMap(objectString) = instanceCountMap(subjectString)*2
-                            instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, objectString, multiplier)
-                        }  
-                    }
-                }
-                if (connectionsMap.contains(subjectString)) connectionsMap(subjectString) += objectString
-                else connectionsMap += subjectString -> HashSet(objectString)
-                if (connectionsMap.contains(objectString)) connectionsMap(objectString) += subjectString
-                else connectionsMap += objectString -> HashSet(subjectString)
-            }
-            else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe" && !subjectExistsInMap) instancesWithOnlyTermsOrLiterals += subjectString
-            else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe" && !objectExistsInMap) instancesWithOnlyTermsOrLiterals += objectString
-            else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe" && !subjectExistsInMap) instancesWithOnlyTermsOrLiterals += subjectString
-        }
-        for (instance <- instancesWithOnlyTermsOrLiterals)
-        {
-            if (!instanceCountMap.contains(instance)) instanceCountMap += instance -> 1
-        }
-        println("Creating test data with the following instance counts:")
-        for ((k,v) <- instanceCountMap) println("Instance: " + k + " Count: " + v)
-        instanceCountMap
-    }
-    
-    def updateMultiplicityChangeThroughConnectionsList(instanceCountMap: HashMap[String, Integer], connectionsList: HashMap[String, HashSet[String]], start: String, multiplier: Integer): HashMap[String, Integer] =
-    {
-        val updateQueue = new Queue[String]
-        val alreadyUpdated = HashSet(start)
-        for (cxn <- connectionsList(start)) updateQueue += cxn
-        while (!updateQueue.isEmpty)
-        {
-            val firstElement = updateQueue.dequeue
-            instanceCountMap(firstElement) = instanceCountMap(firstElement)*multiplier
-            alreadyUpdated += firstElement
-            for (cxn <- connectionsList(firstElement)) if (!alreadyUpdated.contains(cxn)) updateQueue += cxn
-        }
-        instanceCountMap
-    }
-    
     def generateInputTriples(process: String, inputs: ArrayBuffer[HashMap[String,org.eclipse.rdf4j.model.Value]], gmCxn: RepositoryConnection): Array[String] =
     {
         var generatedRequiredTriples = new HashMap[String, HashSet[String]]
@@ -277,7 +159,9 @@ class TestBuilder extends ProjectwideGlobals
         
         val defaultInputGraph = inputs(0)(GRAPH.toString).toString
         
-        val instanceCounts = getInstanceCountsFromInput(inputs)
+        val instanceCounts = CardinalityCountBuilder.getInstanceCounts(inputs)
+        println("Creating test data with the following instance counts:")
+        for ((k,v) <- instanceCounts) println("Instance: " + k + " Count: " + v)
         
         for (input <- inputs)
         {
@@ -342,15 +226,15 @@ class TestBuilder extends ProjectwideGlobals
         
         val connectionType = input(CONNECTIONRECIPETYPE.toString).toString
         val connectionName = input(CONNECTIONNAME.toString).toString
-        val subjectString = input(SUBJECT.toString).toString
+        var subjectString = input(SUBJECT.toString).toString
         val predicateString = input(PREDICATE.toString).toString
-        val objectString = input(OBJECT.toString).toString
+        var objectString = input(OBJECT.toString).toString
         
         val objectADescriber = input(OBJECTADESCRIBER.toString)
         val subjectADescriber = input(SUBJECTADESCRIBER.toString)
         
-        val subjectContext = input(SUBJECTCONTEXT.toString)
-        val objectContext = input(OBJECTCONTEXT.toString)
+        if (input(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(input(SUBJECTCONTEXT.toString).toString).substring(1)
+        if (input(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(input(OBJECTCONTEXT.toString).toString).substring(1)
         
         val subjectInstanceArray = new ArrayBuffer[String]
         val objectInstanceArray = new ArrayBuffer[String]
@@ -360,7 +244,6 @@ class TestBuilder extends ProjectwideGlobals
             for (instance <- 1 to instanceCounts(subjectString))
             {
                 var subjectURI = subjectString + "_" + instance
-                if (subjectContext != null) subjectURI += "_" + helper.convertTypeToSparqlVariable(subjectContext.toString, false)
                 subjectInstanceArray += subjectURI
             } 
         }
@@ -369,11 +252,9 @@ class TestBuilder extends ProjectwideGlobals
             for (instance <- 1 to instanceCounts(objectString))
             {
                 var objectURI = objectString + "_" + instance
-                if (objectContext != null) objectURI += "_" + helper.convertTypeToSparqlVariable(objectContext.toString, false)
                 objectInstanceArray += objectURI
             }   
         }
-        
         if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
         {
             if (subjectInstanceArray.size == objectInstanceArray.size)

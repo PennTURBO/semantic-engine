@@ -161,15 +161,15 @@ drivetrain:PatientRidShortcut
 .
 
 drivetrain:gender_LiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 
 drivetrain:birth_datetime_DateLiteralValue
-  a drivetrain:TurboGraphDateLiteralValue ;
+  a drivetrain:DateLiteralResourceList ;
 .
 
 drivetrain:race_LiteralValue  
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 
 drivetrain:RidScoStarRid 
@@ -199,7 +199,7 @@ drivetrain:PatientCridsymShortcut
 .
 
 drivetrain:person_cridsym_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 
 drivetrain:PatientKeySymShortcut 
@@ -211,7 +211,7 @@ drivetrain:PatientKeySymShortcut
 .
 
 drivetrain:person_keysym_LiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 
 drivetrain:PatientDobShortcut 
@@ -287,21 +287,21 @@ drivetrain:HealthCareEncounters
 .
 
 drivetrain:encounter_start_datetime_DateLiteralValue 
-  a drivetrain:TurboGraphDateLiteralValue ;
+  a drivetrain:DateLiteralResourceList ;
 .
 
 drivetrain:encounter_cridsym_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 drivetrain:encounter_keysym_LiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 drivetrain:encounter_type_code_LiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 
 drivetrain:encounter_end_datetime_DateLiteralValue 
-  a drivetrain:TurboGraphDateLiteralValue ;
+  a drivetrain:DateLiteralResourceList ;
  .
 
 
@@ -461,7 +461,7 @@ drivetrain:HcePrecedence
 .
 
 drivetrain:preceding_encounter_keysym_LiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 
 drivetrain:EncPreviousEncValSc
@@ -522,19 +522,19 @@ drivetrain:PrevencsClass
   a drivetrain:ClassResourceList .
 
 drivetrain:hce_id_IntegerLiteralValue 
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 
 drivetrain:procedure_cridsym_LiteralValue 
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 
 drivetrain:procedure_type_LiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 
 drivetrain:procedure_datetime_DateLiteralValue 
-  a drivetrain:TurboGraphDateLiteralValue ;
+  a drivetrain:DateLiteralResourceList ;
 .
 
 
@@ -577,7 +577,7 @@ drivetrain:HealthCareProcedures
 .
 
 drivetrain:proc_id_IntegerLiteralValue 
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 
 drivetrain:ProcDatetimeShortcut 
@@ -862,11 +862,11 @@ drivetrain:MeasExpansionSpecification
 .
 
 drivetrain:measurement_type_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 
 drivetrain:measurement_vocabulary_id_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 
 
@@ -927,7 +927,7 @@ drivetrain:MulToBeTyped
 .
 
 drivetrain:measurement_units_LiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 
 ### measurement aboutness
@@ -1085,11 +1085,11 @@ drivetrain:CondMentionedClassList
   drivetrain:usesCustomVariableManipulationRule drivetrain:CondMentionedClassFromValueRule .
   
 drivetrain:condition_type_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 
 drivetrain:condition_start_datetime_DateLiteralValue
-  a drivetrain:TurboGraphDateLiteralValue ;
+  a drivetrain:DateLiteralResourceList ;
 .
   
 ### diag aboutness
@@ -1275,7 +1275,7 @@ drivetrain:WrittenNotDispensedMOD
 .
 
 drivetrain:WrittenNotDispensedLiteral
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 
 drivetrain:RxMentionedClassListFromValueRule
@@ -1289,15 +1289,15 @@ drivetrain:RxMentionedClassList
   drivetrain:usesCustomVariableManipulationRule drivetrain:RxMentionedClassListFromValueRule .
   
 drivetrain:prescription_id_LiteralValue
-  a drivetrain:TurboGraphIntegerLiteralValue ;
+  a drivetrain:IntegerLiteralResourceList ;
 .
 
 drivetrain:prescription_start_datetime_DateLiteralValue
-  a drivetrain:TurboGraphDateLiteralValue ;
+  a drivetrain:DateLiteralResourceList ;
 .
 
 drivetrain:drug_code_LiteralValue
-  a drivetrain:TurboGraphStringLiteralValue ;
+  a drivetrain:StringLiteralResourceList ;
 .
 
 
@@ -1679,36 +1679,36 @@ drivetrain:ValspecHasSpecVal drivetrain:referencedInGraph
 
 ###
 
-drivetrain:WrittenNotDispensedLiteral a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:birth_datetime_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
+drivetrain:WrittenNotDispensedLiteral a drivetrain:IntegerLiteralResourceList .
+drivetrain:birth_datetime_DateLiteralValue a drivetrain:DateLiteralResourceList .
 
-drivetrain:condition_start_datetime_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
-drivetrain:condition_type_LiteralValue a drivetrain:TurboGraphStringLiteralValue .
-drivetrain:drug_code_LiteralValue a drivetrain:TurboGraphStringLiteralValue .
-drivetrain:encounter_cridsym_LiteralValue a drivetrain:TurboGraphStringLiteralValue .
-drivetrain:encounter_end_datetime_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
-drivetrain:encounter_keysym_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:encounter_start_datetime_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
-drivetrain:encounter_type_code_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:gender_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:hce_id_IntegerLiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:measurement_datetime_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
-drivetrain:measurement_id_IntegerLiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:measurement_source_concept_id_IntegerLiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:measurement_type_LiteralValue a drivetrain:TurboGraphStringLiteralValue .
-drivetrain:measurement_units_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:measurement_vocabulary_id_LiteralValue a drivetrain:TurboGraphStringLiteralValue .
-drivetrain:person_cridsym_LiteralValue a drivetrain:TurboGraphStringLiteralValue .
-drivetrain:person_keysym_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:preceding_encounter_keysym_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:prescription_id_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:prescription_start_datetime_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
-drivetrain:proc_id_IntegerLiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:procedure_cridsym_LiteralValue a drivetrain:TurboGraphStringLiteralValue .
-drivetrain:procedure_datetime_DateLiteralValue a drivetrain:TurboGraphDateLiteralValue .
-drivetrain:procedure_type_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:race_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
-drivetrain:value_as_number_LiteralValue a drivetrain:TurboGraphIntegerLiteralValue .
+drivetrain:condition_start_datetime_DateLiteralValue a drivetrain:DateLiteralResourceList .
+drivetrain:condition_type_LiteralValue a drivetrain:StringLiteralResourceList .
+drivetrain:drug_code_LiteralValue a drivetrain:StringLiteralResourceList .
+drivetrain:encounter_cridsym_LiteralValue a drivetrain:StringLiteralResourceList .
+drivetrain:encounter_end_datetime_DateLiteralValue a drivetrain:DateLiteralResourceList .
+drivetrain:encounter_keysym_LiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:encounter_start_datetime_DateLiteralValue a drivetrain:DateLiteralResourceList .
+drivetrain:encounter_type_code_LiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:gender_LiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:hce_id_IntegerLiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:measurement_datetime_DateLiteralValue a drivetrain:DateLiteralResourceList .
+drivetrain:measurement_id_IntegerLiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:measurement_source_concept_id_IntegerLiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:measurement_type_LiteralValue a drivetrain:StringLiteralResourceList .
+drivetrain:measurement_units_LiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:measurement_vocabulary_id_LiteralValue a drivetrain:StringLiteralResourceList .
+drivetrain:person_cridsym_LiteralValue a drivetrain:StringLiteralResourceList .
+drivetrain:person_keysym_LiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:preceding_encounter_keysym_LiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:prescription_id_LiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:prescription_start_datetime_DateLiteralValue a drivetrain:DateLiteralResourceList .
+drivetrain:proc_id_IntegerLiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:procedure_cridsym_LiteralValue a drivetrain:StringLiteralResourceList .
+drivetrain:procedure_datetime_DateLiteralValue a drivetrain:DateLiteralResourceList .
+drivetrain:procedure_type_LiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:race_LiteralValue a drivetrain:IntegerLiteralResourceList .
+drivetrain:value_as_number_LiteralValue a drivetrain:IntegerLiteralResourceList .
 
 ###
 

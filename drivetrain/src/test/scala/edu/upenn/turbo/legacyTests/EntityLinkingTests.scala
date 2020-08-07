@@ -97,8 +97,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
           gmCxn = graphDBMaterials.getGmConnection()
           helper.deleteAllTriplesInDatabase(cxn)
           
-          RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-          RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+          RunDrivetrainProcess.setConnections(gmCxn, cxn)
       }
       
       override def afterAll()

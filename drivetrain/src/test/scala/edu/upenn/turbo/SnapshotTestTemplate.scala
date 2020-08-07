@@ -79,8 +79,7 @@ var testSearchString: Option[String] = None
         cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+        RunDrivetrainProcess.setConnections(gmCxn, cxn)
         RunDrivetrainProcess.setInputNamedGraphsCache(false)
         
         val directory = new File("src//test//scala//edu//upenn//turbo//AutoGenTests")

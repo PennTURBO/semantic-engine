@@ -25,8 +25,7 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(cxn)
         
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+        RunDrivetrainProcess.setConnections(gmCxn, cxn)
         OntologyLoader.addOntologyFromUrl(gmCxn)
         
         helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
@@ -166,7 +165,8 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
             }
           """
           update.updateSparql(gmCxn, insert)
-          val inputs = RunDrivetrainProcess.getInputs("http://www.itmat.upenn.edu/biobank/myProcess1")
+          val modelReader = new GraphModelReader(gmCxn)
+          val inputs = modelReader.getInputs("http://www.itmat.upenn.edu/biobank/myProcess1")
           val testBuilder = new TestBuilder()
           val generatedTriples = testBuilder.generateInputTriples("http://www.itmat.upenn.edu/biobank/myProcess1", inputs, gmCxn)
           val fullTripleSet = generatedTriples(0)

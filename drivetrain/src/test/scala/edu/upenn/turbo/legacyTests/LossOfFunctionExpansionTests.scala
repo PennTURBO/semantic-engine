@@ -145,8 +145,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(cxn)
         
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+        RunDrivetrainProcess.setConnections(gmCxn, cxn)
     }
     
     override def afterAll()

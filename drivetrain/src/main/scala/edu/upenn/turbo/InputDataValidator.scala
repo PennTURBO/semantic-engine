@@ -11,17 +11,12 @@ import scala.collection.mutable.HashSet
 import scala.collection.mutable.HashMap
 import java.util.UUID
 
-object InputDataValidator extends ProjectwideGlobals
+class InputDataValidator(graphModelCxn: RepositoryConnection, dataRepoCxn: RepositoryConnection) extends ProjectwideGlobals
 {
+    this.gmCxn = graphModelCxn
+    this.cxn = dataRepoCxn
+    
     var stopRun = false
-    def setGraphModelConnection(gmCxn: RepositoryConnection)
-    {
-        this.gmCxn = gmCxn
-    }
-    def setOutputRepositoryConnection(cxn: RepositoryConnection)
-    {
-        this.cxn = cxn
-    }
 
     def validateInputData(graphs: ArrayBuffer[String], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], dataValidationMode: String = dataValidationMode)
     {

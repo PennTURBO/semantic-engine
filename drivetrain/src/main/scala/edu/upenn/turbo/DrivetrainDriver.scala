@@ -38,6 +38,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   repository = graphDBMaterials.getRepository()
                   
                   val instantiationURI = defaultPrefix + UUID.randomUUID().toString().replaceAll("-", "")
+                  val graphModelValidator = new GraphModelValidator(gmCxn)
                   
                   if (cxn == null || gmCxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
                   else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.RDFXML)
@@ -56,10 +57,9 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       else 
                       {
                           RunDrivetrainProcess.setGlobalUUID(globalUUID)
-                          RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-                          RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-                          GraphModelValidator.checkAcornFilesForMissingTypes()
-                          if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
+                          RunDrivetrainProcess.setConnections(gmCxn, cxn)
+                          graphModelValidator.checkAcornFilesForMissingTypes()
+                          if (validateAgainstOntology) graphModelValidator.validateGraphSpecificationAgainstOntology()
                           val query = RunDrivetrainProcess.createPatternMatchQuery(args(1))
                           if (query != null)
                           {
@@ -70,9 +70,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   }
                   else
                   {
-                      RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-                      RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-                      GraphModelValidator.validateProcessSpecification(helper.getProcessNameAsUri(args(0)))
+                      RunDrivetrainProcess.setConnections(gmCxn, cxn)
+                      graphModelValidator.validateProcessSpecification(helper.getProcessNameAsUri(args(0)))
                       
                       //load the TURBO ontology
                       //OntologyLoader.addOntologyFromUrl(cxn)
@@ -80,8 +79,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       
                       logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
                       RunDrivetrainProcess.setGlobalUUID(globalUUID)
-                      GraphModelValidator.checkAcornFilesForMissingTypes()
-                      if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
+                      graphModelValidator.checkAcornFilesForMissingTypes()
+                      if (validateAgainstOntology) graphModelValidator.validateGraphSpecificationAgainstOntology()
                       val thisProcess = helper.getProcessNameAsUri(args(0))
                       RunDrivetrainProcess.runProcess(thisProcess)   
                   }
@@ -217,11 +216,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
       val graphDbTestConnectionDetails = ConnectToGraphDB.getTestRepositoryConnection()
       val testCxn = graphDbTestConnectionDetails.getConnection()
       val gmCxn = graphDbTestConnectionDetails.getGmConnection()
+      val graphModelValidator = new GraphModelValidator(gmCxn)
       
       try
       {
-          RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
-          RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+          RunDrivetrainProcess.setConnections(gmCxn, testCxn)
           RunDrivetrainProcess.setMultithreading(false)
           
           var buildArray = new ArrayBuffer[String]
@@ -237,7 +236,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
           {
               helper.deleteAllTriplesInDatabase(testCxn)
               val processAsURI = helper.getProcessNameAsUri(process)
-              GraphModelValidator.validateProcessSpecification(processAsURI)
+              graphModelValidator.validateProcessSpecification(processAsURI)
               logger.info(s"Building test for process $processAsURI")
               testBuilder.buildTest(testCxn, gmCxn, processAsURI)  
           } 
@@ -257,8 +256,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       
       try
       {
-          RunDrivetrainProcess.setOutputRepositoryConnection(testCxn)
-          RunDrivetrainProcess.setGraphModelConnection(gmCxn)
+          RunDrivetrainProcess.setConnections(gmCxn, testCxn)
           RunDrivetrainProcess.setMultithreading(false)
           
           var buildArray = new ArrayBuffer[String]

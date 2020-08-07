@@ -481,8 +481,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(cxn)
         
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+        RunDrivetrainProcess.setConnections(gmCxn, cxn)
         RunDrivetrainProcess.setInputNamedGraphsCache(false)
     }
     

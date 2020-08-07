@@ -91,23 +91,19 @@ trait ProjectwideGlobals extends Enumeration
       val OBJECTDEPENDEE = Value("OBJECTDEPENDEE")
       val CONNECTIONNAME = Value("CONNECTIONNAME")
       val REQUIREMENT = Value("REQUIREMENT")
-      val OBJECTALITERAL = Value("OBJECTALITERAL")
       val SUFFIXOPERATOR = Value("SUFFIXOPERATOR")
       val OBJECTALITERALVALUE = Value("OBJECTALITERALVALUE")
-      val SUBJECTANINSTANCE = Value("SUBJECTANINSTANCE")
-      val OBJECTANINSTANCE = Value("OBJECTANINSTANCE")
       val GRAPHLITERALTYPE = Value("GRAPHLITERALTYPE")
       
-      val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, GRAPH, SUBJECTANINSTANCE, OBJECTANINSTANCE,
+      val requiredInputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, GRAPH,
                                               OPTIONALGROUP, CONNECTIONRECIPETYPE, GRAPHOFCREATINGPROCESS,
                                               MINUSGROUP, GRAPHOFORIGIN, INPUTTYPE, MULTIPLICITY, OBJECTADESCRIBER,
                                               CONNECTIONNAME, SUBJECTADESCRIBER, REQUIREMENT, OBJECTALITERALVALUE, SUFFIXOPERATOR,
-                                              SUBJECTCONTEXT, OBJECTCONTEXT, OBJECTALITERAL, GRAPHLITERALTYPE)
+                                              SUBJECTCONTEXT, OBJECTCONTEXT, GRAPHLITERALTYPE)
                                               
-      val requiredOutputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, GRAPH, CONNECTIONRECIPETYPE, SUBJECTANINSTANCE, OBJECTANINSTANCE,
+      val requiredOutputKeysList = ArrayBuffer(SUBJECT, PREDICATE, OBJECT, GRAPH, CONNECTIONRECIPETYPE,
                                               SUBJECTCONTEXT, OBJECTCONTEXT, MULTIPLICITY, OBJECTRULE, SUBJECTRULE, OBJECTADESCRIBER,
-                                              SUBJECTADESCRIBER, SUBJECTDEPENDEE, OBJECTDEPENDEE, CONNECTIONNAME, OBJECTALITERALVALUE,
-                                              OBJECTALITERAL)
+                                              SUBJECTADESCRIBER, SUBJECTDEPENDEE, OBJECTDEPENDEE, CONNECTIONNAME, OBJECTALITERALVALUE)
       
       // define enums used as keys for process meta info hashmap
       val PROCESS, DATE, OUTPUTNAMEDGRAPH, METAQUERY, PROCESSRUNTIME, TRIPLESADDED, REPLACEMENTSTRING, INPUTNAMEDGRAPHS, PROCESSSPECIFICATION = Value
@@ -115,8 +111,9 @@ trait ProjectwideGlobals extends Enumeration
       val manyToOneMultiplicity = "https://github.com/PennTURBO/Drivetrain/many-1"
       val oneToManyMultiplicity = "https://github.com/PennTURBO/Drivetrain/1-many"
       val oneToOneMultiplicity = "https://github.com/PennTURBO/Drivetrain/1-1"
-      val objToInstRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe"
-      val objToTermRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe"
-      val objFromTermRecipe = "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe"
-      val datatypeRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe"
+      val instToInstRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe"
+      val instToTermRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe"
+      val termToInstRecipe = "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe"
+      val instToLiteralRecipe = "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe"
+      val termToLiteralRecipe = "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe"
 }

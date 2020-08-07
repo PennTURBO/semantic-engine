@@ -21,12 +21,9 @@ abstract class Query extends ProjectwideGlobals
     def getQuery(): String = query
 }
 
-class PatternMatchQuery extends Query
+class PatternMatchQuery(cxn: RepositoryConnection) extends Query
 {
-    def setGraphModelConnection(gmCxn: RepositoryConnection)
-    {
-        this.gmCxn = gmCxn
-    }
+    this.gmCxn = cxn
     
     var bindClause: String = ""
     var whereClause: String = ""
@@ -39,8 +36,8 @@ class PatternMatchQuery extends Query
     var processSpecification: String = null
     var process: String = null
 
-    var whereClauseBuilder: WhereClauseBuilder = new WhereClauseBuilder()
-    var insertClauseBuilder: InsertClauseBuilder = new InsertClauseBuilder()
+    var whereClauseBuilder: WhereClauseBuilder = new WhereClauseBuilder(gmCxn)
+    var insertClauseBuilder: InsertClauseBuilder = new InsertClauseBuilder(gmCxn)
     var deleteClauseBuilder: DeleteClauseBuilder = new DeleteClauseBuilder()
     var bindClauseBuilder: BindClauseBuilder = new BindClauseBuilder()
     
@@ -51,7 +48,7 @@ class PatternMatchQuery extends Query
      in the insert clause will not be converted to a variable unless it is included in this list. The boolean value represents whether a URI is qualified
      to be a multiplicity enforcer for the bind clause. To be qualified, it must have a type declared in the Where block and at some point be listed as required
      input to the process. */
-    var usedVariables: HashMap[String, Boolean] = new HashMap[String, Boolean]
+    var usedVariables: HashSet[String] = new HashSet[String]
     
     override def runQuery(cxn: RepositoryConnection)
     {
@@ -102,7 +99,6 @@ class PatternMatchQuery extends Query
     def createInsertClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
         assert (insertClause == "")
-        insertClauseBuilder.setGraphModelConnection(gmCxn)
         if (whereClause == null || whereClause.size == 0 || bindClause == null || bindClause.size == 0) 
         {
             throw new RuntimeException("Insert clause cannot be built before where or bind clauses are built.")
@@ -130,54 +126,29 @@ class PatternMatchQuery extends Query
     {
         assert (whereClause == "")
         assert (defaultInputGraph != null && defaultInputGraph != "")
-        whereClauseBuilder.setGraphModelConnection(gmCxn)
         varsForProcessInput = whereClauseBuilder.addTripleFromRowResult(inputs, defaultInputGraph, process)
-        // this part of the code determines whether a variable is qualified to be a multiplicity enforcer in the bind clause. If set to true then it is qualified.
-        for (row <- inputs) 
-        {
-            var subjectAnInstance = false
-            var objectAnInstance = false
-            var objectADescriber = false
-            var subjectADescriber = false
-            var required = true
-            if (row(OBJECTANINSTANCE.toString) != null) objectAnInstance = true
-            if (row(SUBJECTANINSTANCE.toString) != null) subjectAnInstance = true
-            if (row(SUBJECTADESCRIBER.toString) != null) subjectADescriber = true
-            if (row(OBJECTADESCRIBER.toString) != null) objectADescriber = true
-            
-            if (row(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput") required = false
-            
-            var objectResultBool = true
-            if (!required || !(objectAnInstance || objectADescriber)) objectResultBool = false
-            
-            var subjectResultBool = true
-            if (!required || !(subjectAnInstance || subjectADescriber)) subjectResultBool = false
-            
-            var thisObject = row(OBJECT.toString).toString
-            var thisSubject = row(SUBJECT.toString).toString
-            if (row(SUBJECTCONTEXT.toString) != null) thisSubject += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
-            if (row(OBJECTCONTEXT.toString) != null) thisObject += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
-
-            if (objectADescriber || objectAnInstance) if (!usedVariables.contains(thisObject) || !usedVariables(thisObject)) usedVariables += thisObject -> objectResultBool
-            if (subjectADescriber || subjectAnInstance) if (!usedVariables.contains(thisSubject) || !usedVariables(thisSubject)) usedVariables += thisSubject -> subjectResultBool
-        }
+        
         assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "")
         assert (whereClauseBuilder.clause.contains("GRAPH"))
         val innerClause = whereClauseBuilder.clause
         whereClause += s"WHERE { \n$innerClause"
     }
 
-    def createBindClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], localUUID: String)
+    def createBindClause(mapConnectionLists: HashMap[String, HashMap[String, HashMap[String, String]]], setConnectionLists: HashMap[String, HashSet[String]], localUUID: String,
+                         customRulesList: HashMap[String, org.eclipse.rdf4j.model.Value], dependenciesList: HashMap[String, org.eclipse.rdf4j.model.Value],
+                         nodesToCreate: HashSet[String], inputHasLevelChange: Boolean, inputInstanceCountMap: HashMap[String, Integer], 
+                         outputInstanceCountMap: HashMap[String, Integer], outputLiteralList: HashSet[String], boundInWhereClause: HashSet[String], optionalList: HashSet[String],
+                         classResourceLists: HashSet[String])
     {
         assert (bindClause == "")
         if (whereClause == null || whereClause.size == 0) 
         {
             throw new RuntimeException("Bind clause cannot be built before where clause is built.")
         }
-        for ((k,v) <- bindClauseBuilder.buildBindClause(outputs, inputs, localUUID, processSpecification, usedVariables))
-        {
-            if (!usedVariables.contains(k)) usedVariables += k -> v
-        }
+        usedVariables = bindClauseBuilder.buildBindClause(processSpecification, mapConnectionLists, setConnectionLists, localUUID, customRulesList, dependenciesList,
+                                      nodesToCreate, inputHasLevelChange, inputInstanceCountMap, outputInstanceCountMap, 
+                                      outputLiteralList, boundInWhereClause, optionalList, classResourceLists)
+     
         bindClause = bindClauseBuilder.clause
         // if we attempted to build the bind clause and no binds were necessary, make the clause contain a single empty character so that other clauses can be built
         if (bindClause == "") bindClause += " "

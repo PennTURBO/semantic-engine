@@ -3,13 +3,11 @@ package edu.upenn.turbo
 import org.eclipse.rdf4j.repository.RepositoryConnection
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
+import scala.collection.mutable.HashSet
 
-object GraphModelValidator extends ProjectwideGlobals 
+class GraphModelValidator(cxn: RepositoryConnection) extends ProjectwideGlobals 
 {   
-    def setGraphModelConnection(gmCxn: RepositoryConnection)
-    {
-        this.gmCxn = gmCxn
-    }
+    this.gmCxn = cxn
     
     def checkAcornFilesForMissingTypes()
     {
@@ -143,7 +141,27 @@ object GraphModelValidator extends ProjectwideGlobals
         assert (res.size == 1, (if (res.size == 0) s"Process $process does not exist, ensure required input and output graphs are present" else s"Process $process has duplicate properties"))
     }
     
-    def validateAcornResults(results: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+    def validateAcornResults(process: String, inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], setLists: HashMap[String, HashSet[String]], mapLists: HashMap[String, HashMap[String, HashMap[String, String]]])
+    {
+        checkForDuplicateAcornProperties(inputs)
+        checkForDuplicateAcornProperties(outputs)
+        
+        val outputOneToOneConnections = mapLists("outputOneToOneList")
+        val inputOneToOneConnections = mapLists("inputOneToOneList")
+        
+        for ((k,v) <- outputOneToOneConnections)
+        {
+            validateSingletonClasses(k, process, setLists)
+            validateManyToOneClasses(k, process, v, mapLists)
+        }
+        for ((k,v) <- inputOneToOneConnections)
+        {
+            validateSingletonClasses(k, process, setLists)
+            validateManyToOneClasses(k, process, v, mapLists)
+        }
+    }
+    
+    def checkForDuplicateAcornProperties(results: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
     {
         var scannedConnections = new HashMap[String, String]
         var multiplicityMap = new HashMap[String, String]
@@ -501,5 +519,139 @@ object GraphModelValidator extends ProjectwideGlobals
         var firstRes = ""
         val res = update.querySparqlAndUnpackTuple(gmCxn, getOutputsOfAllProcesses, "recipe")
         for (recipe <- res) logger.warn(s"Connection recipe $recipe in the Graph Specification is not the output of a queued process in the Instruction Set, but it is not a required recipe.")
+    }
+    
+    def validateManyToOneClasses(k: String, process: String, v: HashMap[String, String], mapLists: HashMap[String, HashMap[String, HashMap[String, String]]])
+    {
+        val outputOneToManyConnections = mapLists("outputOneToManyList")
+        val inputOneToManyConnections = mapLists("inputOneToManyList")
+        val outputManyToOneConnections = mapLists("outputManyToOneList")
+        val inputManyToOneConnections = mapLists("inputManyToOneList")
+        
+        for ((connection,connectionName) <- v)
+        {
+            if (inputOneToManyConnections.contains(connection) && inputOneToManyConnections(connection).contains(k))
+            {
+                 val invalidConnectionName = inputOneToManyConnections(connection)(k)
+                 var connList1 = ""
+                 for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
+                 var connList2 = ""
+                 for ((entity, connName) <- inputOneToManyConnections(connection)) connList2 += entity+"\n"
+                 assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName.\n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")
+            }
+            if (outputOneToManyConnections.contains(connection) && outputOneToManyConnections(connection).contains(k))
+            {
+                val invalidConnectionName = outputOneToManyConnections(connection)(k)
+                var connList1 = ""
+                for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
+                var connList2 = ""
+                for ((entity, connName) <- outputOneToManyConnections(connection)) connList2 += entity+"\n"
+                assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName. \n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")
+            }
+            if (inputManyToOneConnections.contains(connection) && inputManyToOneConnections(connection).contains(k))
+            {
+                val invalidConnectionName = inputManyToOneConnections(connection)(k)
+                var connList1 = ""
+                for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
+                var connList2 = ""
+                for ((entity, connName) <- inputManyToOneConnections(connection)) connList2 += entity+"\n"
+                assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName. \n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")
+            }
+            if (outputManyToOneConnections.contains(connection) && outputManyToOneConnections(connection).contains(k))
+            {
+                val invalidConnectionName = outputManyToOneConnections(connection)(k)
+                var connList1 = ""
+                for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
+                var connList2 = ""
+                for ((entity, connName) <- outputManyToOneConnections(connection)) connList2 += entity+"\n"
+                assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName. \n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")
+            }
+        }
+    }
+    
+    def validateSingletonClasses(k: String, process: String, setLists: HashMap[String, HashSet[String]])
+    {
+        val inputSingletonClasses = setLists("inputSingletonList")
+        val inputSuperSingletonClasses = setLists("inputSuperSingletonList")
+        val outputSingletonClasses = setLists("outputSingletonList")
+        val outputSuperSingletonClasses = setLists("outputSuperSingletonList")
+        
+        assert (!inputSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
+        assert (!inputSuperSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a SuperSingleton")
+        assert (!outputSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
+        assert (!outputSuperSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a SuperSingleton")
+    }
+    
+    def validateConnectionRecipeTypeDeclarations(process: String)
+    {
+        val checkSubjectInstanceRecipesForLiterals: String = s"""
+          Select ?recipe Where
+          {
+              Values ?hasRecipe {drivetrain:hasRequiredInput drivetrain:hasOptionalInput drivetrain:hasOutput}
+              Values ?instanceRecipe {drivetrain:InstanceToInstanceRecipe drivetrain:InstanceToTermRecipe drivetrain:InstanceToLiteralRecipe}
+              <$process> ?hasRecipe ?recipe .
+              ?recipe a ?instanceRecipe .
+              {
+                  {
+                      ?recipe drivetrain:subject ?subject .
+                      ?subject a drivetrain:LiteralResourceList .
+                  }
+                  UNION
+                  {
+                      ?recipe drivetrain:subject ?subject .
+                      filter(isLiteral(?subject))
+                  }
+              }
+          }
+          """
+        var resList = ""
+        var res = update.querySparqlAndUnpackTuple(gmCxn, checkSubjectInstanceRecipesForLiterals, "recipe")
+        for (recipe <- res) resList += recipe
+        if (resList != "") throw new RuntimeException(s"For process $process, the following Connection Recipes have declared their subjects are class instances, but literals were found: $resList")
+        
+        val checkObjectInstanceRecipesForLiterals: String = s"""
+          Select ?recipe Where
+          {
+              Values ?hasRecipe {drivetrain:hasRequiredInput drivetrain:hasOptionalInput drivetrain:hasOutput}
+              Values ?instanceRecipe {drivetrain:InstanceToInstanceRecipe drivetrain:TermToInstanceRecipe}
+              <$process> ?hasRecipe ?recipe .
+              ?recipe a ?instanceRecipe .
+              {
+                  {
+                      ?recipe drivetrain:object ?subject .
+                      ?subject a drivetrain:LiteralResourceList .
+                  }
+                  UNION
+                  {
+                      ?recipe drivetrain:object ?subject .
+                      filter(isLiteral(?subject))
+                  }
+              }
+          }
+          """
+        resList = ""
+        res = update.querySparqlAndUnpackTuple(gmCxn, checkObjectInstanceRecipesForLiterals, "recipe")
+        for (recipe <- res) resList += recipe
+        if (resList != "") throw new RuntimeException(s"For process $process, the following Connection Recipes have declared their objects are class instances, but literals were found: $resList")
+        
+        val checkObjectLiteralRecipesForInstances: String = s"""
+          Select ?recipe Where
+          {
+              Values ?hasRecipe {drivetrain:hasRequiredInput drivetrain:hasOptionalInput drivetrain:hasOutput}
+              Values ?literalRecipe {drivetrain:InstanceToLiteral drivetrain:TermToLiteralRecipe}
+              <$process> ?hasRecipe ?recipe .
+              ?recipe a ?literalRecipe .
+              ?recipe drivetrain:object ?object .
+              Minus
+              {
+                  ?object a ?literalType .
+                  ?literalType rdfs:subClassOf* drivetrain:LiteralResourceList .
+              }
+          }
+          """
+        resList = ""
+        res = update.querySparqlAndUnpackTuple(gmCxn, checkObjectLiteralRecipesForInstances, "recipe")
+        for (recipe <- res) resList += recipe + " "
+        if (resList != "") throw new RuntimeException(s"For process $process, the following Connection Recipes have declared their objects are literals, but non-literals were found: $resList")
     }
 }

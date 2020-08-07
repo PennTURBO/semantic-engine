@@ -214,8 +214,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(cxn)
         
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+        RunDrivetrainProcess.setConnections(gmCxn, cxn)
     }
     
     override def afterAll()

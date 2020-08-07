@@ -66,11 +66,8 @@ pmbb:HomoSapiensExpansionProcess
   drivetrain:hasOutput ontologies:shortcutTumorToExpandedTumor ;
   drivetrain:hasOutput drivetrain:GidAboutPatient ;
   drivetrain:hasOutput drivetrain:GidHasRepresentation ;
-  #drivetrain:hasOutput drivetrain:GidPartOfColumn ;
   drivetrain:hasOutput drivetrain:GidTypingRecipe ;
-  #drivetrain:hasOutput drivetrain:DobPartOfColumn ;
   drivetrain:hasOutput drivetrain:RidAboutPatient ;
-  #drivetrain:hasOutput drivetrain:RidPartOfColumn ;
   drivetrain:hasOutput drivetrain:RidHasRepresentation ;
   drivetrain:hasOutput drivetrain:RidTypingRecipe ;
   drivetrain:hasOutput drivetrain:CridDenotesPatient ;
@@ -425,7 +422,7 @@ ontologies:encCodeTypeProvenanceOptionalGroup
 ontologies:shortcutDiagnosisToPrimaryKey
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object drivetrain:condition_occurrence_id_StringLiteralValue ;
+  drivetrain:object drivetrain:condition_occurrence_id_LiteralValue ;
   drivetrain:predicate drivetrain:scDiag2PrimaryKey ;
   drivetrain:subject ontologies:TURBO_0010160 ;
 .

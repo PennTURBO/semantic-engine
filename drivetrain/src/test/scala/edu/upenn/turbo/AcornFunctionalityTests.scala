@@ -25,8 +25,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(cxn)
         
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+        RunDrivetrainProcess.setConnections(gmCxn, cxn)
         OntologyLoader.addOntologyFromUrl(gmCxn)
         
         helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
@@ -216,8 +215,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
          helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true) 
     }
     
-    // this test currently fails - commented out so jenkins job will pass. feature has not yet been implemented.
-    /*test("minus group using multiple named graphs")
+    test("minus group using multiple named graphs")
     {
         val insert = s"""
             INSERT DATA
@@ -308,7 +306,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
              """
           
          helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
-    }*/
+    }
     
     test("multiple optional groups in input")
     {
@@ -564,6 +562,288 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             <http://www.itmat.upenn.edu/biobank/term1> <http://www.itmat.upenn.edu/biobank/predicate1> <http://www.itmat.upenn.edu/biobank/term2> .
             <http://www.itmat.upenn.edu/biobank/term1> <http://www.itmat.upenn.edu/biobank/predicate1> ?literal1 .
             }
+             }
+             """
+          
+         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+    }
+    
+    test("multiplicity check for 1-many instance to literal - direct method")
+    {
+        val insert = s"""
+            INSERT DATA
+            {
+                <$defaultPrefix""" + s"""instructionSet>
+                {
+                    pmbb:myProcess1 a turbo:TURBO_0010354 .
+                    pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    pmbb:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection2 .
+                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection3 .
+                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection4 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-many .
+                    pmbb:connection2 drivetrain:subject pmbb:term2 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection2 drivetrain:object pmbb:term3 .
+                    
+                    pmbb:connection3 a drivetrain:InstanceToLiteralRecipe .
+                    pmbb:connection3 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection3 drivetrain:subject pmbb:term3 .
+                    pmbb:connection3 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection3 drivetrain:object pmbb:literal1 .
+                    
+                    pmbb:connection4 a drivetrain:InstanceToLiteralRecipe .
+                    pmbb:connection4 drivetrain:cardinality drivetrain:1-many .
+                    pmbb:connection4 drivetrain:subject pmbb:term4 .
+                    pmbb:connection4 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection4 drivetrain:object pmbb:literal1 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    pmbb:term3 a owl:Class .
+                    pmbb:term4 a owl:Class .
+                    
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                    
+                    pmbb:literal1 a drivetrain:LiteralResourceList .
+                    
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                    drivetrain:1-many a drivetrain:TurboGraphCardinalityRule .
+                }
+            }
+          """
+          update.updateSparql(gmCxn, insert)
+          
+          val expectedQuery = s"""INSERT {
+            GRAPH <$expandedNamedGraph> {
+            ?term1 <http://www.itmat.upenn.edu/biobank/predicate1> ?term2 .
+            ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
+            ?term2 <http://www.itmat.upenn.edu/biobank/predicate1> ?term3 .
+            ?term2 rdf:type <http://www.itmat.upenn.edu/biobank/term2> .
+            ?term3 <http://www.itmat.upenn.edu/biobank/predicate1> ?literal1 .
+            ?term3 rdf:type <http://www.itmat.upenn.edu/biobank/term3> .
+            }
+            GRAPH <$processNamedGraph> {
+            <processURI> turbo:TURBO_0010184 ?term1 .
+            <processURI> turbo:TURBO_0010184 ?term2 .
+            <processURI> turbo:TURBO_0010184 ?term3 .
+            <processURI> obo:OBI_0000293 ?term4 .
+            }
+            }
+            WHERE {
+            GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts> {
+            ?term4 <http://www.itmat.upenn.edu/biobank/predicate1> ?literal1 .
+            ?term4 rdf:type <http://www.itmat.upenn.edu/biobank/term4> .
+            }
+            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term1\",\"localUUID\", str(?term4))))) AS ?term1)
+            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term4))))) AS ?term2)
+            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term3\",\"localUUID\", str(?literal1), str(?term4))))) AS ?term4)
+             }
+             """
+          
+         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+    }
+    
+    test("multiplicity check for 1-many instance to literal - instance count method")
+    {
+        val insert = s"""
+            INSERT DATA
+            {
+                <$defaultPrefix""" + s"""instructionSet>
+                {
+                    pmbb:myProcess1 a turbo:TURBO_0010354 .
+                    pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    pmbb:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection2 .
+                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection4 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-many .
+                    pmbb:connection2 drivetrain:subject pmbb:term2 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection2 drivetrain:object pmbb:term3 .
+                    
+                    pmbb:connection4 a drivetrain:InstanceToLiteralRecipe .
+                    pmbb:connection4 drivetrain:cardinality drivetrain:1-many .
+                    pmbb:connection4 drivetrain:subject pmbb:term4 .
+                    pmbb:connection4 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection4 drivetrain:object pmbb:literal1 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    pmbb:term3 a owl:Class .
+                    pmbb:term4 a owl:Class .
+                    
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                    
+                    pmbb:literal1 a drivetrain:LiteralResourceList .
+                    
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                    drivetrain:1-many a drivetrain:TurboGraphCardinalityRule .
+                }
+            }
+          """
+          update.updateSparql(gmCxn, insert)
+          
+          val expectedQuery = s"""INSERT {
+            GRAPH <$expandedNamedGraph> {
+            ?term1 <http://www.itmat.upenn.edu/biobank/predicate1> ?term2 .
+            ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
+            ?term2 <http://www.itmat.upenn.edu/biobank/predicate1> ?term3 .
+            ?term2 rdf:type <http://www.itmat.upenn.edu/biobank/term2> .
+            ?term3 rdf:type <http://www.itmat.upenn.edu/biobank/term3> .
+            }
+            GRAPH <$processNamedGraph> {
+            <processURI> turbo:TURBO_0010184 ?term1 .
+            <processURI> turbo:TURBO_0010184 ?term2 .
+            <processURI> turbo:TURBO_0010184 ?term3 .
+            <processURI> obo:OBI_0000293 ?term4 .
+            }
+            }
+            WHERE {
+            GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts> {
+            ?term4 <http://www.itmat.upenn.edu/biobank/predicate1> ?literal1 .
+            ?term4 rdf:type <http://www.itmat.upenn.edu/biobank/term4> .
+            }
+            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term1\",\"localUUID\", str(?term4))))) AS ?term1)
+            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term4))))) AS ?term2)
+            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term3\",\"localUUID\", str(?literal1), str(?term4))))) AS ?term4)
+             }
+             """
+          
+         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+    }
+    
+    test("cardinality enforcement with only instance-to-term in input")
+    {
+        val insert = s"""
+            INSERT DATA
+            {
+                <$defaultPrefix""" + s"""instructionSet>
+                {
+                    pmbb:myProcess1 a turbo:TURBO_0010354 .
+                    pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    pmbb:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection2 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToTermRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term1 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection2 drivetrain:object pmbb:term3 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                                      
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                }
+            }
+          """
+          update.updateSparql(gmCxn, insert)
+          
+          val expectedQuery = s"""INSERT {
+            GRAPH <$expandedNamedGraph> {
+            ?term1 <http://www.itmat.upenn.edu/biobank/predicate1> ?term2 .
+            ?term2 rdf:type <http://www.itmat.upenn.edu/biobank/term2>
+            }
+            GRAPH <$processNamedGraph> {
+            <processURI> turbo:TURBO_0010184 ?term2 .
+            <processURI> obo:OBI_0000293 ?term1 .
+            }
+            }
+            WHERE {
+            GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts> {
+            ?term1 <http://www.itmat.upenn.edu/biobank/predicate2> <http://www.itmat.upenn.edu/biobank/term3> .
+            ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
+            }
+            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term1))))) AS ?term2})
+             }
+             """
+          
+         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+    }
+    
+    test("cardinality enforcement with only term-to-instance in input")
+    {
+        val insert = s"""
+            INSERT DATA
+            {
+                <$defaultPrefix""" + s"""instructionSet>
+                {
+                    pmbb:myProcess1 a turbo:TURBO_0010354 .
+                    pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    pmbb:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection2 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:TermToInstanceRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term3 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection2 drivetrain:object pmbb:term1 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                                      
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                }
+            }
+          """
+          update.updateSparql(gmCxn, insert)
+          
+          val expectedQuery = s"""INSERT {
+            GRAPH <$expandedNamedGraph> {
+            ?term1 <http://www.itmat.upenn.edu/biobank/predicate1> ?term2 .
+            ?term2 rdf:type <http://www.itmat.upenn.edu/biobank/term2>
+            }
+            GRAPH <$processNamedGraph> {
+            <processURI> turbo:TURBO_0010184 ?term2 .
+            <processURI> obo:OBI_0000293 ?term1 .
+            }
+            }
+            WHERE {
+            GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts> {
+            ?term1 <http://www.itmat.upenn.edu/biobank/predicate2> <http://www.itmat.upenn.edu/biobank/term3> .
+            ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
+            }
+            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term1))))) AS ?term2})
              }
              """
           

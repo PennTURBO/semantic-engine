@@ -23,6 +23,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     var typeMap = new HashMap[String,Value]
     var multithread = useMultipleThreads
     
+    var inputDataValidator: InputDataValidator = null
+    var graphModelValidator: GraphModelValidator = null
+    
     var useInputNamedGraphsCache: Boolean = true
     
     val taskSupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(4))
@@ -35,15 +38,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     {
         this.multithread = multithread
     }
-    def setGraphModelConnection(gmCxn: RepositoryConnection)
+    def setConnections(gmCxn: RepositoryConnection, cxn: RepositoryConnection)
     {
         this.gmCxn = gmCxn
-        InputDataValidator.setGraphModelConnection(gmCxn)
-        GraphModelValidator.setGraphModelConnection(gmCxn)
-    }
-    def setOutputRepositoryConnection(cxn: RepositoryConnection)
-    {
         this.cxn = cxn
+        inputDataValidator = new InputDataValidator(gmCxn, cxn)
+        graphModelValidator = new GraphModelValidator(gmCxn)
     }
     def setInputNamedGraphsCache(useInputNamedGraphsCache: Boolean)
     {
@@ -57,8 +57,8 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
     def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String, validateAgainstOntology: Boolean): HashMap[String, PatternMatchQuery] =
     {
-        GraphModelValidator.checkAcornFilesForMissingTypes()
-        if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
+        graphModelValidator.checkAcornFilesForMissingTypes()
+        if (validateAgainstOntology) graphModelValidator.validateGraphSpecificationAgainstOntology()
         
         var processQueryMap = new HashMap[String, PatternMatchQuery]
         for (processSpecification <- processSpecifications)
@@ -90,8 +90,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 if (dataValidationMode == "stop" || dataValidationMode == "log")
                 {
                     logger.info(s"\tRunning on Input Data Validation Mode $dataValidationMode")
-                    InputDataValidator.setOutputRepositoryConnection(cxn)
-                    InputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData, dataValidationMode)
+                    inputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData, dataValidationMode)
                 }
                 else logger.info("\tInput Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
@@ -157,40 +156,274 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     }
 
     def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()): PatternMatchQuery =
-    {
+    {   
+        // create empty connection lists to populate
+        var outputSingletonClasses = new HashSet[String]
+        var outputSuperSingletonClasses = new HashSet[String]
+        var inputSingletonClasses = new HashSet[String]
+        var inputSuperSingletonClasses = new HashSet[String]
+        var outputOneToOneConnections = new HashMap[String, HashMap[String, String]]
+        var inputOneToOneConnections = new HashMap[String, HashMap[String, String]]
+        var inputOneToManyConnections = new HashMap[String, HashMap[String, String]]
+        var inputManyToOneConnections = new HashMap[String, HashMap[String, String]]
+        var outputOneToManyConnections = new HashMap[String, HashMap[String, String]]
+        var outputManyToOneConnections = new HashMap[String, HashMap[String, String]]
+        
+        // list of all literals in the output
+        var literalList = new HashSet[String]
+        // list of all required elements in the input
+        var requiredList = new HashSet[String]
+        // list of all optional elements in the input
+        var optionalList = new HashSet[String]
+        // list of all output nodes that need to be bound in the bind clause
+        var classResourceLists = new HashSet[String]
+        // list of all class resource lists
+        var nodesToCreate = new HashSet[String]
+        // this boolean keeps track of whether there are any 1-many or many-1 cardinalities in the input, if not we can use any input element as a cardinality enforcer
+        var inputHasLevelChange = false
+        // list of output nodes dependent on input nodes, as specified in acorn files
+        var dependenciesList = new HashMap[String, org.eclipse.rdf4j.model.Value]
+        // list of custom sparql bind rules, as specified in acorn files
+        var customRulesList = new HashMap[String, org.eclipse.rdf4j.model.Value]
+        // a map with keys of variables that will be bound in the where clause and values a boolean whether that variable can be used as a cardinality enforcer
+        var boundInWhereClause = new HashSet[String]
+        
+        val modelReader = new GraphModelReader(gmCxn)
+    
         if (localUUID == null) localUUID = UUID.randomUUID().toString().replaceAll("-", "")
         logger.info(s"Creating new IRIs with hash $localUUID")
         var thisProcessSpecification = helper.getProcessNameAsUri(processSpecification)
         
-        GraphModelValidator.validateProcessSpecification(thisProcessSpecification)
-        GraphModelValidator.validateConnectionRecipesInProcess(thisProcessSpecification)
+        graphModelValidator.validateProcessSpecification(thisProcessSpecification)
+        graphModelValidator.validateConnectionRecipesInProcess(thisProcessSpecification)
+        graphModelValidator.validateConnectionRecipeTypeDeclarations(thisProcessSpecification)
         
         // retrieve connections (inputs, outputs) from model graph
         // the inputs become the "where" block of the SPARQL query
         // the outputs become the "insert" block
-        val inputs = getInputs(thisProcessSpecification)
-        val outputs = getOutputs(thisProcessSpecification)
-        val removals = getRemovals(thisProcessSpecification)
+        val inputs = modelReader.getInputs(thisProcessSpecification)
+        val outputs = modelReader.getOutputs(thisProcessSpecification)
+        val removals = modelReader.getRemovals(thisProcessSpecification)
         
         if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
         if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
         
-        GraphModelValidator.validateAcornResults(inputs)
-        GraphModelValidator.validateAcornResults(outputs)
+        for (row <- inputs) 
+        {
+            var subjectString = row(SUBJECT.toString).toString
+            var objectString = row(OBJECT.toString).toString
+            if (row(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
+            if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
+            
+            val connectionName = row(CONNECTIONNAME.toString).toString
+            val thisMultiplicity = row(MULTIPLICITY.toString).toString
+            val recipeType = row(CONNECTIONRECIPETYPE.toString).toString
+            
+            var objectALiteral = false
+            if (recipeType == instToLiteralRecipe || recipeType == termToLiteralRecipe) 
+            {
+                objectALiteral = true
+                literalList += objectString
+            }
+
+            if (row(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput" || row(OPTIONALGROUP.toString) != null)
+            {
+                if (!requiredList.contains(subjectString)) optionalList += subjectString
+                if (!requiredList.contains(objectString)) optionalList += objectString
+            }
+            else
+            {
+                requiredList += subjectString
+                requiredList += objectString
+                optionalList.remove(subjectString)
+                optionalList.remove(objectString)
+            }
+            
+            var subjectAnInstance = false
+            if (recipeType == instToInstRecipe || recipeType == instToTermRecipe || recipeType == instToLiteralRecipe) subjectAnInstance = true
+            var objectAnInstance = false
+            if (recipeType == instToInstRecipe || recipeType == termToInstRecipe) objectAnInstance = true
+            var objectADescriber = false
+            var subjectADescriber = false
+            if (row(SUBJECTADESCRIBER.toString) != null) 
+            {
+                classResourceLists += subjectString
+                subjectADescriber = true
+            }
+            if (row(OBJECTADESCRIBER.toString) != null) 
+            {
+                classResourceLists += objectString
+                objectADescriber = true
+            }
+            assert (!(objectALiteral && objectAnInstance))
+            assert (!(objectALiteral && objectADescriber))
+        
+            boundInWhereClause += subjectString
+            boundInWhereClause += objectString
+            
+            if (recipeType == instToLiteralRecipe || recipeType == instToInstRecipe)
+            {
+                if (thisMultiplicity == oneToOneMultiplicity) 
+                {
+                    inputOneToOneConnections = handleOneToOneConnection(subjectString, objectString, connectionName, inputOneToOneConnections, objectALiteral)
+                }
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/many-singleton")
+                {
+                    inputSingletonClasses += objectString
+                }
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-many")
+                {
+                    inputSingletonClasses += subjectString
+                }
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-singleton")
+                {
+                    inputSingletonClasses += subjectString
+                    inputSingletonClasses += objectString
+                }
+                else if (thisMultiplicity.endsWith("superSingleton"))
+                {
+                    inputSuperSingletonClasses += objectString
+                }
+                else if (thisMultiplicity.contains("superSingleton"))
+                {
+                    inputSuperSingletonClasses += subjectString
+                }
+                else if (thisMultiplicity == oneToManyMultiplicity)
+                {
+                    inputHasLevelChange = true
+                    if (inputOneToManyConnections.contains(subjectString)) inputOneToManyConnections(subjectString) += objectString -> connectionName
+                    else inputOneToManyConnections += subjectString -> HashMap(objectString -> connectionName)
+                }
+                else if (thisMultiplicity == manyToOneMultiplicity)
+                {
+                    inputHasLevelChange = true
+                    if (inputManyToOneConnections.contains(subjectString)) inputManyToOneConnections(subjectString) += objectString -> connectionName
+                    else inputManyToOneConnections += subjectString -> HashMap(objectString -> connectionName)
+                }
+                else throw new RuntimeException(s"Unrecognized input cardinality setting: $thisMultiplicity")
+            }
+        }
+        
+        for (row <- outputs)
+        {
+            val recipeType = row(CONNECTIONRECIPETYPE.toString).toString
+
+            val connectionName = row(CONNECTIONNAME.toString).toString
+            val thisMultiplicity = row(MULTIPLICITY.toString).toString
+            
+            var subjectString = row(SUBJECT.toString).toString
+            var objectString = row(OBJECT.toString).toString
+            if (row(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
+            if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
+            
+            var subjectAnInstance = false
+            if (recipeType == instToInstRecipe || recipeType == instToTermRecipe || recipeType == instToLiteralRecipe) subjectAnInstance = true
+            var objectAnInstance = false
+            if (recipeType == instToInstRecipe || recipeType == termToInstRecipe) objectAnInstance = true
+            var objectALiteral = false
+            if (recipeType == instToLiteralRecipe || recipeType == termToLiteralRecipe) 
+            {
+                objectALiteral = true
+                literalList += objectString
+            }
+            assert (!(objectALiteral && objectAnInstance))
+            
+            val subjectDependee = row(SUBJECTDEPENDEE.toString)
+            val objectDependee = row(OBJECTDEPENDEE.toString)
+            if (subjectDependee != null) dependenciesList += subjectString -> subjectDependee
+            if (objectDependee != null) dependenciesList += objectString -> objectDependee
+            
+            val subjectCustomRule = row(SUBJECTRULE.toString)
+            val objectCustomRule = row (OBJECTRULE.toString)
+            if (subjectCustomRule != null) customRulesList += subjectString -> subjectCustomRule
+            if (objectCustomRule != null) customRulesList += objectString -> objectCustomRule
+                        
+            // determine which nodes will need to be created in the bind clause
+            if (!boundInWhereClause.contains(subjectString) && subjectAnInstance) nodesToCreate += subjectString
+            if (!boundInWhereClause.contains(objectString) && objectAnInstance) nodesToCreate += objectString
+                        
+            if (recipeType == instToLiteralRecipe || recipeType == instToInstRecipe)
+            {
+                if (thisMultiplicity == oneToOneMultiplicity) 
+                {
+                    handleOneToOneConnection(subjectString, objectString, connectionName, outputOneToOneConnections, objectALiteral)
+                }
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/many-singleton")
+                {
+                    outputSingletonClasses += objectString
+                    nodesToCreate.remove(objectString)
+                }
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-many")
+                {
+                    outputSingletonClasses += subjectString
+                    nodesToCreate.remove(subjectString)
+                }
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/superSingleton-many")
+                {
+                    outputSuperSingletonClasses += subjectString
+                    nodesToCreate.remove(subjectString)
+                }
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/many-superSingleton")
+                {
+                    outputSuperSingletonClasses += objectString
+                    nodesToCreate.remove(objectString)
+                }
+                else if (thisMultiplicity == "https://github.com/PennTURBO/Drivetrain/singleton-singleton")
+                {
+                    outputSingletonClasses += subjectString
+                    outputSingletonClasses += objectString
+                    nodesToCreate.remove(subjectString)
+                    nodesToCreate.remove(objectString)
+                }
+                else if (thisMultiplicity.endsWith("superSingleton"))
+                {
+                    outputSuperSingletonClasses += objectString
+                    nodesToCreate.remove(objectString)
+                }
+                else if (thisMultiplicity.contains("superSingleton"))
+                {
+                    outputSuperSingletonClasses += subjectString
+                    nodesToCreate.remove(subjectString)
+                }
+                else if (thisMultiplicity == oneToManyMultiplicity)
+                {
+                    if (outputOneToManyConnections.contains(subjectString)) outputOneToManyConnections(subjectString) += objectString -> connectionName
+                    else outputOneToManyConnections += subjectString -> HashMap(objectString -> connectionName)
+                }
+                else if (thisMultiplicity == manyToOneMultiplicity)
+                {
+                    if (outputManyToOneConnections.contains(subjectString)) outputManyToOneConnections(subjectString) += objectString -> connectionName
+                    else outputManyToOneConnections += subjectString -> HashMap(objectString -> connectionName)
+                } 
+                else throw new RuntimeException(s"Unrecognized input cardinality setting: $thisMultiplicity")
+            }
+        }
+                       
+        val inputInstanceCountMap = CardinalityCountBuilder.getInstanceCounts(inputs)
+        val outputInstanceCountMap = CardinalityCountBuilder.getInstanceCounts(outputs)
+        
+        val setConnectionLists = HashMap("outputSingletonList" -> outputSingletonClasses, "inputSingletonList" -> inputSingletonClasses,
+                                        "outputSuperSingletonList" -> outputSuperSingletonClasses, "inputSuperSingletonList" -> inputSuperSingletonClasses)
+        val mapConnectionLists = HashMap("outputOneToOneList" -> outputOneToOneConnections, "inputOneToOneList" -> inputOneToOneConnections,
+                                        "outputOneToManyList" -> outputOneToManyConnections, "inputOneToManyList" -> inputOneToManyConnections,
+                                        "outputManyToOneList" -> outputManyToOneConnections, "inputManyToOneList" -> inputManyToOneConnections)
+        
+        //graphModelValidator.validateAcornResults(thisProcessSpecification, inputs, outputs, setConnectionLists, mapConnectionLists)
         
         var inputNamedGraph = inputs(0)(GRAPH.toString).toString
         
         // create primary query
-        val primaryQuery = new PatternMatchQuery()
+        val primaryQuery = new PatternMatchQuery(gmCxn)
         primaryQuery.setProcessSpecification(thisProcessSpecification)
         primaryQuery.setProcess(process)
         primaryQuery.setInputGraph(inputNamedGraph)
         primaryQuery.setInputData(inputs)
-        primaryQuery.setGraphModelConnection(gmCxn)
         
         var outputNamedGraph: String = null
         primaryQuery.createWhereClause(inputs)
-        primaryQuery.createBindClause(outputs, inputs, localUUID)
+        primaryQuery.createBindClause(mapConnectionLists, setConnectionLists, localUUID, customRulesList, dependenciesList,
+                                      nodesToCreate, inputHasLevelChange, inputInstanceCountMap, outputInstanceCountMap, 
+                                      literalList, boundInWhereClause, optionalList, classResourceLists)
         
         if (outputs.size != 0)
         {
@@ -209,257 +442,58 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         primaryQuery 
     }
     
-    def getInputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
+    /*
+     *  Makes a map of one to one connections, where each key is an element and each value is a map where each key is a connected element
+     *  and each value is the relevant connection name. Objects are not shown as "connected" with themselves.
+     */
+    def handleOneToOneConnection(thisSubject: String, thisObject: String, connectionName: String, listToPopulate: HashMap[String, HashMap[String, String]], objectALiteral: Boolean): HashMap[String, HashMap[String, String]] =
     {
-       var variablesToSelect = ""
-       for (key <- requiredInputKeysList) variablesToSelect += "?" + key + " "
-       
-       val query = s"""
-         
-         Select distinct $variablesToSelect
-         
-         Where
-         {
-              Values ?$INPUTTYPE {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
-              <$process> ?$INPUTTYPE ?$CONNECTIONNAME .
-              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
-              <$process> drivetrain:inputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
-              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
-              
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:subjectUsesContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECT drivetrain:hasPossibleContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECTCONTEXT a drivetrain:TurboGraphContext .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:objectUsesContext ?$OBJECTCONTEXT .
-                  ?$OBJECT drivetrain:hasPossibleContext ?$OBJECTCONTEXT .
-                  ?$OBJECTCONTEXT a drivetrain:TurboGraphContext .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:partOf ?$OPTIONALGROUP .
-                  ?$OPTIONALGROUP a drivetrain:TurboGraphOptionalGroup .
-                  <$process> drivetrain:buildsOptionalGroup ?$OPTIONALGROUP .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:partOf ?$MINUSGROUP .
-                  ?$MINUSGROUP a drivetrain:TurboGraphMinusGroup .
-                  <$process> drivetrain:buildsMinusGroup ?$MINUSGROUP .
-              }
-              Optional
-              {
-                  # this feature is a little sketcky. What if the creatingProcess is not queued? What if it is created by multiple processes?
-                  ?creatingProcess drivetrain:hasOutput ?$CONNECTIONNAME .
-                  ?creatingProcess drivetrain:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:referencedInGraph ?$GRAPHOFORIGIN .
-              }
-              Optional
-              {
-                  ?$OBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$OBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?$SUBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$SUBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToLiteralRecipe)
-                  BIND (true AS ?$SUBJECTANINSTANCE)
-              }
-              Optional
-              {
-                  ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  BIND (true AS ?$OBJECTANINSTANCE)
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:mustExecuteIf ?$REQUIREMENT .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:predicateSuffix ?suffix .
-                  ?suffix a drivetrain:PredicateSuffixSymbol .
-                  ?suffix drivetrain:usesSparqlOperator ?$SUFFIXOPERATOR .
-              }
-              Optional
-              {
-                  ?$OBJECT a ?$GRAPHLITERALTYPE .
-                  ?$GRAPHLITERALTYPE rdfs:subClassOf* drivetrain:LiteralResourceList .
-                  minus
-                  {
-                      ?OBJECT a ?GRAPHLITERALTYPE2 .
-                      ?GRAPHLITERALTYPE2 rdfs:subClassOf+ ?GRAPHLITERALTYPE .
-                  }
-                  BIND (true AS ?$OBJECTALITERAL)
-              }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
-         }
-         
-         """
-       //println(query)          
-       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
-    }
-
-    def getRemovals(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
-    {
-       var variablesToSelect = ""
-       for (key <- requiredOutputKeysList) variablesToSelect += "?" + key + " "
-       
-       val query = s"""
-         
-         Select distinct $variablesToSelect
-         
-         Where
-         {
-              <$process> drivetrain:removes ?$CONNECTIONNAME .
-              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
-              <$process> drivetrain:outputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
-              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              Optional
-              {
-                  ?$OBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$OBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?$SUBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$SUBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToLiteralRecipe)
-                  BIND (true AS ?$SUBJECTANINSTANCE)
-              }
-              Optional
-              {
-                  ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  BIND (true AS ?$OBJECTANINSTANCE)
-              }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
-         }
-         
-         """
-       
-       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
+        // make it mutable
+        var listToReturn = listToPopulate
+        if (listToReturn.contains(thisObject) && listToReturn.contains(thisSubject))
+        {
+            listToReturn(thisObject) += thisSubject -> connectionName
+            listToReturn(thisSubject) += thisObject -> connectionName
+            
+            listToReturn = addToConnectionList(thisSubject, connectionName, listToReturn)
+            listToReturn = addToConnectionList(thisObject, connectionName, listToReturn)
+        }
+        
+        else if (listToReturn.contains(thisObject) && (!listToReturn.contains(thisSubject)))
+        {
+            listToReturn(thisObject) += thisSubject -> connectionName
+            listToReturn.put(thisSubject, HashMap(thisObject -> connectionName))
+          
+            listToReturn = addToConnectionList(thisObject, connectionName, listToReturn)
+        }
+        else if (listToReturn.contains(thisSubject) && (!listToReturn.contains(thisObject)))
+        {
+            listToReturn(thisSubject) += thisObject -> connectionName
+            listToReturn.put(thisObject, HashMap(thisSubject -> connectionName))
+          
+            listToReturn = addToConnectionList(thisSubject, connectionName, listToReturn)
+        }
+        else
+        {
+            listToReturn.put(thisObject, HashMap(thisSubject -> connectionName))
+            listToReturn.put(thisSubject, HashMap(thisObject -> connectionName))
+        }
+        listToReturn
     }
     
-    def getOutputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
+    def addToConnectionList(element: String, connectionName: String, listToPopulate: HashMap[String, HashMap[String, String]]): HashMap[String, HashMap[String, String]] =
     {
-       var variablesToSelect = ""
-       for (key <- requiredOutputKeysList) variablesToSelect += "?" + key + " "
-       
-       val query = s"""
-         
-         Select distinct $variablesToSelect
-         Where
-         {
-              Values ?INPUTTO {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
-              <$process> drivetrain:hasOutput ?$CONNECTIONNAME .
-              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
-              <$process> drivetrain:outputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
-              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
-              
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:subjectUsesContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECT drivetrain:hasPossibleContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECTCONTEXT a drivetrain:TurboGraphContext .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:objectUsesContext ?$OBJECTCONTEXT .
-                  ?$OBJECT drivetrain:hasPossibleContext ?$OBJECTCONTEXT .
-                  ?$OBJECTCONTEXT a drivetrain:TurboGraphContext .
-              }
-              Optional
-              {
-                  ?$SUBJECT drivetrain:usesCustomVariableManipulationRule ?subjectRuleDenoter .
-                  ?subjectRuleDenoter drivetrain:usesSparql ?$SUBJECTRULE .
-              }
-              Optional
-              {
-                  ?$OBJECT drivetrain:usesCustomVariableManipulationRule ?objectRuleDenoter .
-                  ?objectRuleDenoter drivetrain:usesSparql ?$OBJECTRULE .
-              }
-              Optional
-              {
-                  ?$SUBJECT a drivetrain:ClassResourceList .
-                  BIND (true as ?$SUBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?$OBJECT a drivetrain:ClassResourceList .
-                  BIND (true as ?$OBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?recipe drivetrain:objectRequiredToCreate ?$OBJECT .
-                  <$process> ?INPUTTO ?recipe .
-                  ?recipe drivetrain:object ?$OBJECTDEPENDEE .
-              }
-              Optional
-              {
-                  ?recipe drivetrain:objectRequiredToCreate ?$SUBJECT .
-                  <$process> ?INPUTTO ?recipe .
-                  ?recipe drivetrain:object ?$SUBJECTDEPENDEE .
-              }
-              Optional
-              {
-                  ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToLiteralRecipe)
-                  BIND (true AS ?$SUBJECTANINSTANCE)
-              }
-              Optional
-              {
-                  ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  BIND (true AS ?$OBJECTANINSTANCE)
-              }
-              Optional
-              {
-                  ?$OBJECT a ?graphLiteral .
-                  ?graphLiteral rdfs:subClassOf* drivetrain:LiteralResourceList .
-                  BIND (true AS ?$OBJECTALITERAL)
-              }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
-         }
-         
-         """
-       //println(query)
-       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
+        // make it mutable
+        var listToReturn = listToPopulate
+        val connectionsToElement = listToReturn(element)
+        for ((conn,name) <- connectionsToElement)
+        {
+            for ((a,value) <- connectionsToElement)
+            {
+                if (!listToReturn(conn).contains(a) && conn != a) listToReturn(conn) += a -> connectionName
+            }
+        }
+        listToReturn
     }
     
     /**
@@ -468,13 +502,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String = UUID.randomUUID().toString.replaceAll("-", ""))
     {
         setGlobalUUID(globalUUID)
-        setGraphModelConnection(gmCxn)
-        setOutputRepositoryConnection(cxn)
-      
+        setConnections(gmCxn, cxn)
+        
         // get list of all processes in order
         val orderedProcessList: ArrayBuffer[String] = helper.getAllProcessesInOrder(gmCxn)
         
-        GraphModelValidator.validateProcessesAgainstGraphSpecification(orderedProcessList)
+        graphModelValidator.validateProcessesAgainstGraphSpecification(orderedProcessList)
         
         logger.info("Drivetrain will now run the following processes in this order:")
         for (a <- orderedProcessList) logger.info(a)

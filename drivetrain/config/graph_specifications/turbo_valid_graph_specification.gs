@@ -1013,7 +1013,8 @@ drivetrain:tumorCridSymbolHasRepresentation
   drivetrain:object drivetrain:tumor_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
   drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject obo:IAO_0000577 ;
+  drivetrain:subjectUsesContext drivetrain:TumorCridContext ;
+  drivetrain:subject obo:IAO_0000028 ;
 .
 drivetrain:tumorCridSymbolPartOfTumorCrid
   a drivetrain:InstanceToInstanceRecipe ;
