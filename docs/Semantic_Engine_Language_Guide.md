@@ -254,6 +254,28 @@ There may be some implementation issues if trying to use a graph pattern that sp
 
 ## Dependents*
 
+Sometimes, a Semantic Engine user may wish to specify that an ouput should only be created if a specific input exists in the graph. You can use Dependents to do this.
+
+To use Dependents, annotate a Connection Recipe with either `:subjectRequiredToCreate` or `:objectRequiredToCreate` and an output Instance.
+
+For example:
+```
+:ClassAtoClassB a :InstanceToInstanceRecipe ;
+  :subject :classA ;
+  :predicate :relatesTo ;
+  :object :classB ;
+  :cardinality :1-1 ;
+  :subjectRequiredToCreate :classC ;
+.
+```
+This instruction informs the Semantic Engine to only create instances of `classC` when there are instances of `classA`. Of course, it is assumed that `classA` has been declared as optional, because if it was required, the entire pattern would not match if `classA` were not present.
+
+Dependents are implemented using a SPARQL `IF` statement within the standard `BIND` clause that creates new URIs. An example is below.
+```
+BIND(IF (BOUND(?birth_datetime_StringLiteralValue), uri(concat("http://www.itmat.upenn.edu/biobank/",SHA256(CONCAT("?EFO_0004950","fcb96fee01d94924abf3e25c07c109c9", str(?TURBO_0010161))))), ?unbound) AS ?EFO_0004950)
+```
+This example shows the conditional creation of instances of class `efo:EFO_0004950`, where the Literal Resource List `birth_datetime_StringLiteralValue` is bound. Note that the use of the `?unbound` variable causes nothing to be bound to the target variable. This is not because `unbound` is a reserved variable name in SPARQL, but just because nothing has been explicitly bound to that variable name. It can be considered a reserved word in the Semantic Engine Language, in that no Graph Pattern Elements should be referenced called `unbound`.
+
 ## Execution Requirements
 
 ## Contexts
