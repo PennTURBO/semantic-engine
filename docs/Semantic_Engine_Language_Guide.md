@@ -248,6 +248,7 @@ The group can then be applied to a particular Update Specification:
  :connection1 a :InstanceToTermRecipe ;
      :partOf :myMinusGroup ;
  ```
+Only Connection Recipes that are inputs to an Update Specification are relevant to include in a Minus Group.
 
 There may be some implementation issues if trying to use a graph pattern that spans over multiple named graphs in a MINUS group.
 
