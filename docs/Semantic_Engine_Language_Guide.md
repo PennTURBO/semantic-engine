@@ -278,13 +278,74 @@ This example shows the conditional creation of instances of class `efo:EFO_00049
 
 ## Execution Requirements
 
+The Semantic Engine Language predicate `:mustExecuteIf` relating a Connection Recipe and a `:TurboGraphRequirementSpecification` can be utilized to indicate a condition when the Connection Recipe must be the output of at least one Update Specification. This allows for enforcement of "required" properties of a class. As an example, consider the Connection Recipe below:
+```
+:ClassAtoClassB a :InstanceToInstanceRecipe ;
+  :subject :classA ;
+  :predicate :relatesTo ;
+  :object :classB ;
+  :cardinality :1-1 ;
+  :mustExecuteIf :subjectExists ;
+.
+```
+This Recipe must be the output of at least one Update Specification, if the `:subject` of the Recipe is the output of any Update Specification. Thus, we can ensure that in the final graph, any instance of `classA` will be required to have a `:relatesTo` relationship with an instance of `classB`.
+
+The following are valid `:TurboGraphRequirementSpecification`s:
+`:subjectExists`
+`:objectExists`
+`:eitherSubjectOrObjectExists`
+
+Enforcement of the Execution Requirement occurs before any Update Specifications are executed, by the `GraphModelValidator`. If errors are found, the user will be alerted and the Semantic Engine instantiation will be cancelled.
+
 ## Contexts
+
+Sometimes, an Update Specificatoin might include patterns with multiple Instances that mention the same class. Consider a graph pattern that describes the case of a `:homoSapiens` (representing a real-life patient) that was prescribed a particular `:medication`, that was itself prescribed by another `:homoSapiens` (representing a real-life doctor). In the Semantic Engine Language (and in the generated SPARQL), an Instance is only denoted by a reference to a class URI, so we need an additional declaration to differentiate the Instance referencing `:homoSapiens` in the context of a patient and the one referencing it in the context of a doctor. We can use instances of `:TurboGraphContext` for this.
+
+```
+:homoSapiensPrescribedMedication a :InstanceToInstanceRecipe ;
+  :subject :homoSapiens ;
+  :predicate :was_prescribed ;
+  :object :medication ;
+  :cardinality :1-many ;
+  :mustExecuteIf :objectExists ;
+  :subjectUsesContext :patientContext ;
+.
+:patientContext a :TurboGraphContext .
+
+:doctorPrescribesMedication a :InstanceToInstanceRecipe ;
+    :subject :doctor ;
+    :predicate :prescribed ;
+    :object :medication ;
+    :cardinality :1-many ;
+    :mustExecuteIf :objectExists ;
+    :subjectUsesContext :doctorContext ;
+.
+:doctorContext a :TurboGraphContext .
+```
+As an additional (and perhaps unnecessary...) safeguard, each referenced class must be annotated with a possible context:
+```
+:homoSapiens a owl:Class ;
+    :hasPossibleContext :doctorContext ;
+    :hasPossibleContext :patientContext ;
+.
+```
+It's important to note that using Contexts would only be relevant if both Instances referencing the same class are expected or created by the same Update Specification. In this case, if Contexts were not used, `:homoSapiens` would be interpreted as a single Instance, rather than as two Instances. It would appear in the generated SPARQL like this:
+```
+?homoSapiens a :homoSapiens .
+```
+With the contexts applied, the two Instances will appear like this:
+```
+?homoSapiens_doctorContext a :homoSapiens .
+?homoSapiens_patientContext a :homoSapiens .
+```
 
 ## Referenced in Graph*
 
 ## Predicate Suffix*
 
 - "*" and "+" supported
+
+### Input Data Validation
 
 ## Custom Bind Rules*
 
