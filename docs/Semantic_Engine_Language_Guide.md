@@ -196,7 +196,34 @@ Class Resource Lists can appear in the output of an Update Specification without
 
 ## SPARQL Groups*
 
+In SPARQL, graph patterns may be enclosed in bracketed groups to designate alternative functions. The Semantic Engine Language has implementations for `OPTIONAL` and `MINUS` SPARQL groups.
+
 **Optional Groups**
+
+A SPARQL `OPTIONAL` group may be used to designate part of a graph pattern that is not required to exist for the query to match. If the optional pattern is not present, the query will still match against the required pattern.
+:
+In the Semantic Engine Language, optional groups can be created like this:
+
+```
+:myOptionalGroup
+  a :TurboGraphOptionalGroup ;
+.
+```
+The group can then be applied to a particular Update Specification:
+```
+:myFirstUpdate
+  a turbo:TURBO_0010354 ;
+  :buildsOptionalGroup :myOptionalGroup ;
+  :hasRequiredInput :connection1 ;
+ ```
+The use of the `:hasRequiredInput` predicate here may be confusing. There are two ways to declare a Connection Recipe as optional: connecting it to an Update Specification with predicate `:hasOptionalInput`, or including it in an Optional Group. When using an Optional Group, the `:hasRequiredInput` predicate can be interpreted to mean required within the Optional Group. Use of `:hasOptionalInput` and an Optional Group in conjunction will lead to a Connection Recipe being represented optionally within an Optional Group.
+ 
+ Finally, individual Connection Recipes that should appear in the Group can be annotated:
+ ```
+ :connection1 a :InstanceToInstanceRecipe ;
+     :partOf :myOptionalGroup ;
+ ```
+Only Connection Recipes that are inputs to an Update Specification are relevant to include in an Optional Group. Outputs will be created or not created based on the input pattern, so there is no need to declare anything in the output as required or optional.
 
 **Minus Groups**
 
