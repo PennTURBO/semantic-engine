@@ -201,7 +201,7 @@ In SPARQL, graph patterns may be enclosed in bracketed groups to designate alter
 **Optional Groups**
 
 A SPARQL `OPTIONAL` group may be used to designate part of a graph pattern that is not required to exist for the query to match. If the optional pattern is not present, the query will still match against the required pattern.
-:
+
 In the Semantic Engine Language, optional groups can be created like this:
 
 ```
