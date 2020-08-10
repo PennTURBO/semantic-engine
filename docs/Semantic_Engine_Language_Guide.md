@@ -202,7 +202,7 @@ In SPARQL, graph patterns may be enclosed in bracketed groups to designate alter
 
 A SPARQL `OPTIONAL` group may be used to designate part of a graph pattern that is not required to exist for the query to match. If the optional pattern is not present, the query will still match against the required pattern.
 
-In the Semantic Engine Language, optional groups can be created like this:
+In the Semantic Engine Language, Optional Groups can be created like this:
 
 ```
 :myOptionalGroup
@@ -226,6 +226,30 @@ The use of the `:hasRequiredInput` predicate here may be confusing. There are tw
 Only Connection Recipes that are inputs to an Update Specification are relevant to include in an Optional Group. Outputs will be created or not created based on the input pattern, so there is no need to declare anything in the output as required or optional.
 
 **Minus Groups**
+
+A SPARQL `MINUS` group may be used to designate part of a graph pattern, the absence of which is matched by the query. No patterns that include the sub-pattern included in the `MINUS` clause will be matched; only queries that do not include this sub-pattern will be matched.
+
+In the Semantic Engine Language, Minus Groups can be created like this:
+
+```
+:myMinusGroup
+  a :TurboGraphMinusGroup ;
+.
+```
+The group can then be applied to a particular Update Specification:
+```
+:myFirstUpdate
+  a turbo:TURBO_0010354 ;
+  :buildsMinusGroup :myOptionalGroup ;
+  :hasRequiredInput :connection1 ;
+ ``` 
+ Finally, individual Connection Recipes that should appear in the Group can be annotated:
+ ```
+ :connection1 a :InstanceToTermRecipe ;
+     :partOf :myMinusGroup ;
+ ```
+
+There may be some implementation issues if trying to use a graph pattern that spans over multiple named graphs in a MINUS group.
 
 ## Dependents*
 
