@@ -90,21 +90,21 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
         this.process = process
     }
     
-    def createInsertClause(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+    def createInsertClause(outputs: HashSet[ConnectionRecipe])
     {
         assert (insertClause == "")
         if (whereClause == null || whereClause.size == 0 || bindClause == null || bindClause.size == 0) 
         {
             throw new RuntimeException("Insert clause cannot be built before where or bind clauses are built.")
         }
-        insertClauseBuilder.addTripleFromRowResult(outputs, process, varsForProcessInput, usedVariables)
+        insertClauseBuilder.addTripleFromRowResult(outputs, process, varsForProcessInput, usedVariables, defaultOutputGraph)
         assert (insertClauseBuilder.clause != null && insertClauseBuilder.clause != "")
         assert (insertClauseBuilder.clause.contains("GRAPH"))
         val innerClause = insertClauseBuilder.clause
         insertClause += s"INSERT { \n$innerClause}"
     }
 
-    def createDeleteClause(removals: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+    def createDeleteClause(removals: HashSet[ConnectionRecipe])
     {
         assert (deleteClause == "")
         assert (defaultRemovalsGraph != null && defaultRemovalsGraph != "")
@@ -116,7 +116,7 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
         deleteClause += s"DELETE { \n$innerClause}"
     }
     
-    def createWhereClause(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+    def createWhereClause(inputs: HashSet[ConnectionRecipe])
     {
         assert (whereClause == "")
         assert (defaultInputGraph != null && defaultInputGraph != "")
@@ -128,20 +128,14 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
         whereClause += s"WHERE { \n$innerClause"
     }
 
-    def createBindClause(mapConnectionLists: HashMap[String, HashMap[String, HashMap[String, String]]], setConnectionLists: HashMap[String, HashSet[String]], localUUID: String,
-                         customRulesList: HashMap[String, org.eclipse.rdf4j.model.Value], dependenciesList: HashMap[String, org.eclipse.rdf4j.model.Value],
-                         nodesToCreate: HashSet[String], inputHasLevelChange: Boolean, inputInstanceCountMap: HashMap[String, Integer], 
-                         outputInstanceCountMap: HashMap[String, Integer], outputLiteralList: HashSet[String], boundInWhereClause: HashSet[String], optionalList: HashSet[String],
-                         classResourceLists: HashSet[String])
+    def createBindClause(inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe])
     {
         assert (bindClause == "")
         if (whereClause == null || whereClause.size == 0) 
         {
             throw new RuntimeException("Bind clause cannot be built before where clause is built.")
         }
-        usedVariables = bindClauseBuilder.buildBindClause(processSpecification, mapConnectionLists, setConnectionLists, localUUID, customRulesList, dependenciesList,
-                                      nodesToCreate, inputHasLevelChange, inputInstanceCountMap, outputInstanceCountMap, 
-                                      outputLiteralList, boundInWhereClause, optionalList, classResourceLists)
+        usedVariables = bindClauseBuilder.buildBindClause(inputs, outputs)
      
         bindClause = bindClauseBuilder.clause
         // if we attempted to build the bind clause and no binds were necessary, make the clause contain a single empty character so that other clauses can be built

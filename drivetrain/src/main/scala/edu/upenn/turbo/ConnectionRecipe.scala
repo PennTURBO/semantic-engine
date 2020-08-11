@@ -7,6 +7,10 @@ trait ConnectionRecipe
     var name: String = null
     
     var isOptional: Option[Boolean] = None
+    var foundInGraph: Option[String] = None
+    var predicateSuffixOperator: Option[String] = None
+    var optionalGroup: Option[String] = None
+    var minusGroup: Option[String] = None
 }
 
 class InstToInstConnRecipe extends ConnectionRecipe 

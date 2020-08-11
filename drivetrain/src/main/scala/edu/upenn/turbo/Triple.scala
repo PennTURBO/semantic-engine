@@ -21,8 +21,7 @@ class Triple extends ProjectwideGlobals
     var objectContext: String = ""
     
     def this(subject: String, predicate: String, objectVar: String, subjectAnInstance: Boolean = false, 
-            objectAnInstance: Boolean = false, subjectADescriber: Boolean = false, objectADescriber: Boolean = false, subjectContext: String = "", 
-            objectContext: String = "", objectALiteral: Boolean = false, predicateSuffixOperator: String = "")
+            objectAnInstance: Boolean = false, subjectADescriber: Boolean = false, objectADescriber: Boolean = false, objectALiteral: Boolean = false, predicateSuffixOperator: String = "")
     {
         this
         this.subjectAnInstance = subjectAnInstance
@@ -90,20 +89,6 @@ class Triple extends ProjectwideGlobals
             }
             else this.tripleObject = objectVar 
         }
-    }
-
-    def getSubjectWithContext(): String =
-    {
-        var subjectWithContext = helper.removeAngleBracketsFromString(tripleSubject)
-        if (subjectContext != "") subjectWithContext += "_" + subjectContext
-        subjectWithContext
-    }
-
-    def getObjectWithContext(): String = 
-    {
-        var objectWithContext = helper.removeAngleBracketsFromString(tripleObject)
-        if (objectContext != "") objectWithContext += "_" + objectContext
-        objectWithContext
     }
     
     def makeTriple(): String = 

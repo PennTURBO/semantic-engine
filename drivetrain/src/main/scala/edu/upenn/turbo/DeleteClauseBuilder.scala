@@ -10,39 +10,73 @@ import scala.util.control._
 
 class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
-    def addTripleFromRowResult(removals: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], defaultRemovalsGraph: String)
+    def addTripleFromRowResult(removals: HashSet[ConnectionRecipe], defaultRemovalsGraph: String)
     {   
         val triplesGroup = new TriplesGroupBuilder()
-        for (rowResult <- removals)
-        {
-            for (key <- requiredOutputKeysList) assert (rowResult.contains(key.toString))
-            
+        for (recipe <- removals)
+        {            
             var subjectAnInstance = false
-            var objectAnInstance = false
-            
-            var subjectContext: String = ""
-            var objectContext: String = ""
-            
+            var objectAnInstance = false            
             var objectADescriber = false
             var subjectADescriber = false
+            var objectALiteralValue = false
+            var objectADefinedLiteral = false
+            var subject: String = null
+            var predicate: String = recipe.predicate
+            var crObject: String = null
             
-            var objectALiteral = false
-     
-            if (rowResult(OBJECTALITERALVALUE.toString).toString.contains("true")) objectALiteral = true
-            val recipeType = rowResult(CONNECTIONRECIPETYPE.toString).toString
-            if (recipeType == instToInstRecipe || recipeType == instToTermRecipe || recipeType == instToLiteralRecipe) subjectAnInstance = true
-            if (recipeType == instToInstRecipe || recipeType == termToInstRecipe) objectAnInstance = true
-            
-            if (rowResult(SUBJECTCONTEXT.toString) != null) subjectContext = rowResult(SUBJECTCONTEXT.toString).toString
-            if (rowResult(OBJECTCONTEXT.toString) != null) objectContext = rowResult(OBJECTCONTEXT.toString).toString
-            if (rowResult(OBJECTADESCRIBER.toString) != null) objectADescriber = true
-            if (rowResult(SUBJECTADESCRIBER.toString) != null) subjectADescriber = true
+            if (recipe.isInstanceOf[InstToInstConnRecipe])
+            {
+                var typedRecipe = recipe.asInstanceOf[InstToInstConnRecipe]   
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
+                subjectAnInstance = true
+                objectAnInstance = true
+            }
+            if (recipe.isInstanceOf[InstToTermConnRecipe])
+            {
+                var typedRecipe = recipe.asInstanceOf[InstToTermConnRecipe]
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
+                subjectAnInstance = true
+                if (typedRecipe.crObject.isResourceList.get) objectADescriber = true
+            }
+            if (recipe.isInstanceOf[InstToLitConnRecipe])
+            {
+                var typedRecipe = recipe.asInstanceOf[InstToLitConnRecipe]
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
+                objectALiteralValue = true
+                subjectAnInstance = true
+                if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
+            }
+            if (recipe.isInstanceOf[TermToLitConnRecipe])
+            {
+                var typedRecipe = recipe.asInstanceOf[TermToLitConnRecipe]
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
+                objectALiteralValue = true
+                if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
+                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
+            }
+            if (recipe.isInstanceOf[TermToTermConnRecipe])
+            {
+                var typedRecipe = recipe.asInstanceOf[TermToTermConnRecipe]
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
+                if (typedRecipe.crObject.isResourceList.get) objectADescriber = true
+                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
+            }
+            if (recipe.isInstanceOf[TermToInstConnRecipe])
+            {
+                var typedRecipe = recipe.asInstanceOf[TermToInstConnRecipe]
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
+                objectAnInstance = true
+                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
+            }
         
-            assert (!rowResult.contains(OPTIONALGROUP.toString))
-            helper.validateURI(defaultRemovalsGraph)
-        
-            val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString, 
-                                  false, false, true, true, subjectContext, objectContext, objectALiteral)
+            val newTriple = new Triple(subject, predicate, crObject, false, false, true, true, objectALiteralValue)
             val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(defaultRemovalsGraph)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graphForThisRow)
             

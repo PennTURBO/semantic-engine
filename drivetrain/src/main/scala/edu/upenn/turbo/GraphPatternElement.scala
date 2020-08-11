@@ -1,6 +1,7 @@
 package edu.upenn.turbo
 
 import scala.collection.mutable.HashSet
+import scala.collection.mutable.ArrayBuffer
 
 trait GraphPatternElement 
 {
@@ -21,6 +22,7 @@ class Instance extends GraphPatternElement
 class Term extends GraphPatternElement
 {
     var isResourceList: Option[Boolean] = None
+    var ranges: Option[ArrayBuffer[String]] = None
 }
 
 class Literal extends GraphPatternElement

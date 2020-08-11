@@ -86,13 +86,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             if (inputNamedGraphsList.size == 0) logger.info(s"\tCannot run process $processSpecification: no input named graphs found")
             else
             {
-                //run validation on input graph
-                if (dataValidationMode == "stop" || dataValidationMode == "log")
-                {
-                    logger.info(s"\tRunning on Input Data Validation Mode $dataValidationMode")
-                    inputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData, dataValidationMode)
-                }
-                else logger.info("\tInput Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
                 if (multithread)
                 {
@@ -177,9 +170,18 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
         if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
         
-        var (inputRecipeList, outputRecipeList) = handleAcornData(inputs, outputs)
+        var (inputRecipeList, outputRecipeList, removalsRecipeList) = handleAcornData(inputs, outputs, removals)
         
+        // This needs to be re-implemented using the object model
         //graphModelValidator.validateAcornResults(thisProcessSpecification, inputs, outputs, setConnectionLists, mapConnectionLists)
+        //run validation on input graph
+        if (dataValidationMode == "stop" || dataValidationMode == "log")
+        {
+            logger.info(s"\tRunning on Input Data Validation Mode $dataValidationMode")
+            // This needs to be re-worked to use connection recipes
+            //inputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData, dataValidationMode)
+        }
+        else logger.info("\tInput Data Validation turned off for this instantiation")
         
         var inputNamedGraph = inputs(0)(GRAPH.toString).toString
         
@@ -202,14 +204,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         {
             removalsNamedGraph = removals(0)(GRAPH.toString).toString
             primaryQuery.setRemovalsGraph(removalsNamedGraph)
-            primaryQuery.createDeleteClause(removals)
+            primaryQuery.createDeleteClause(removalsRecipeList)
         }
         primaryQuery.createInsertClause(outputRecipeList)
         assert(!primaryQuery.getQuery().contains("https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/"), "Could not complete properties term replacement")
         primaryQuery 
     }
     
-    def handleAcornData(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]) =
+    def handleAcornData(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], removals: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]) =
     {
         var discoveredInstances = new HashMap[String, Instance]
         var discoveredTerms = new HashMap[String, Term]
@@ -218,7 +220,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val (inputRecipeList, inpDisInst, inpDisTerm, inpDisLit) = processAcornRowResults(inputs, discoveredInstances, discoveredTerms, discoveredLiterals)
         discoveredInstances = inpDisInst; discoveredTerms = inpDisTerm; discoveredLiterals = inpDisLit
         val (outputRecipeList, outDisInst, outDisTerm, outDisLit) = processAcornRowResults(outputs, discoveredInstances, discoveredTerms, discoveredLiterals)
-        (inputRecipeList, outputRecipeList)
+        discoveredInstances = outDisInst; discoveredTerms = outDisTerm; discoveredLiterals = outDisLit
+        val (removalsRecipeList, remDisInst, remDisTerm, remDisLit) = processAcornRowResults(removals, discoveredInstances, discoveredTerms, discoveredLiterals)
+        (inputRecipeList, outputRecipeList, removalsRecipeList)
     }
     
     def processAcornRowResults(data: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], disInst: HashMap[String, Instance], disTerm: HashMap[String, Term], disLit: HashMap[String, Literal]) =
@@ -226,7 +230,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val recipesList = new HashSet[ConnectionRecipe]
         for (row <- data)
         {
-            val (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectExplicit, objectExplicit, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper) 
+            val (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectExplicit, 
+                objectExplicit, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper, graphForThisRow, suffixOperator,
+                minusGroup, optionalGroup) 
                 = interpretRowData(row)
             
             if (recipeType == instToInstRecipe)
@@ -241,13 +247,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 updateConnectionLists(subjInst, obInst, thisMultiplicity)
                                                 
                 val recipe = new InstToInstConnRecipe()
-                
-                recipe.name = connectionName
-                recipe.cardinality = thisMultiplicity
+
                 recipe.subject = subjInst
                 recipe.crObject = obInst
-                recipe.predicate = predicate
-                recipe.isOptional = Some(optional)
+                updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else if (recipeType == instToTermRecipe)
             {
@@ -258,12 +261,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 
                 val recipe = new InstToTermConnRecipe()
                 
-                recipe.name = connectionName
-                recipe.cardinality = thisMultiplicity
                 recipe.subject = subjInst
                 recipe.crObject = objTerm
-                recipe.predicate = predicate
-                recipe.isOptional = Some(optional)
+                updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else if (recipeType == termToInstRecipe)
             {
@@ -274,12 +274,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 
                 val recipe = new TermToInstConnRecipe()
                 
-                recipe.name = connectionName
-                recipe.cardinality = thisMultiplicity
                 recipe.subject = subjTerm
                 recipe.crObject = objInst
-                recipe.predicate = predicate
-                recipe.isOptional = Some(optional)
+                updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else if (recipeType == instToLiteralRecipe)
             {
@@ -289,13 +286,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 disLit += objLit.value -> objLit
                 
                 val recipe = new InstToLitConnRecipe()
-                
-                recipe.name = connectionName
-                recipe.cardinality = thisMultiplicity
+
                 recipe.subject = subjInst
                 recipe.crObject = objLit
-                recipe.predicate = predicate
-                recipe.isOptional = Some(optional)
+                updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else if (recipeType == termToLiteralRecipe)
             {
@@ -305,13 +299,10 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 disLit += objLit.value -> objLit
                 
                 val recipe = new TermToLitConnRecipe()
-                
-                recipe.name = connectionName
-                recipe.cardinality = thisMultiplicity
+
                 recipe.subject = subjTerm
                 recipe.crObject = objLit
-                recipe.predicate = predicate
-                recipe.isOptional = Some(optional)
+                updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else if (recipeType == termToTermRecipe)
             {
@@ -321,17 +312,27 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 disTerm += objTerm.value -> objTerm
                 
                 val recipe = new TermToTermConnRecipe()
-                
-                recipe.name = connectionName
-                recipe.cardinality = thisMultiplicity
+
                 recipe.subject = subjTerm
                 recipe.crObject = objTerm
-                recipe.predicate = predicate
-                recipe.isOptional = Some(optional)
+                updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else throw new RuntimeException(s"Unrecognized input cardinality setting: $thisMultiplicity")
         }
         (recipesList, disInst, disTerm, disLit)
+    }
+    
+    def updateRecipeWithNonTypeData(recipe: ConnectionRecipe, connectionName: String, thisMultiplicity: String, predicate: String, optional: Boolean, 
+        graphForThisRow: String, suffixOperator: String, minusGroup: String, optionalGroup: String)
+    {
+        recipe.name = connectionName
+        recipe.cardinality = thisMultiplicity
+        recipe.predicate = predicate
+        recipe.isOptional = Some(optional)
+        if (graphForThisRow != null) recipe.foundInGraph = Some(graphForThisRow)
+        if (suffixOperator != null) recipe.predicateSuffixOperator = Some(suffixOperator)
+        if (minusGroup != null) recipe.minusGroup = Some(minusGroup)
+        if (optionalGroup != null) recipe.optionalGroup = Some(optionalGroup)
     }
     
     def updateConnectionLists(subj: Instance, obj: Instance, cardinality: String)
@@ -370,21 +371,30 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         var subjectString = row(SUBJECT.toString).toString
         var objectString = row(OBJECT.toString).toString
                    
-        val predicate = row(PREDICATE.toString).toString
         if (row(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
         if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
+        
+        val predicate = row(PREDICATE.toString).toString
+        
+        var suffixOperator: String = null
+        if (row.contains(SUFFIXOPERATOR.toString) && row(SUFFIXOPERATOR.toString) != null) suffixOperator = row(SUFFIXOPERATOR.toString).toString
         
         val connectionName = row(CONNECTIONNAME.toString).toString
         val thisMultiplicity = row(MULTIPLICITY.toString).toString
         val recipeType = row(CONNECTIONRECIPETYPE.toString).toString
         
         var optional: Boolean = false
-        if (row(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput" || row(OPTIONALGROUP.toString) != null) optional = true
+        if (row(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput") optional = true
         
         var subjectExplicit = true
         if (row(SUBJECTADESCRIBER.toString) != null) subjectExplicit = false
         var objectExplicit = true
         if (row(OBJECTADESCRIBER.toString) != null) objectExplicit = false
+        
+        // SPARQL searches process that created this input as an output and returns their graph (GRAPHOFCREATINGPROCESS). We override that if the user provided a graph explicitly (GRAPHOFORIGIN)
+        var graphForThisRow: String = null
+        if (row.contains(GRAPHOFCREATINGPROCESS.toString) && row(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = row(GRAPHOFCREATINGPROCESS.toString).toString
+        if (row.contains(GRAPHOFORIGIN.toString) && row(GRAPHOFORIGIN.toString) != null) graphForThisRow = row(GRAPHOFORIGIN.toString).toString
         
         var subjectIsSingleton = false
         var subjectIsSuper = false
@@ -395,7 +405,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         if (objectSingleton.contains(thisMultiplicity)) objectIsSingleton = true
         else if (objectSuperSingleton.contains(thisMultiplicity)) objectIsSuper = true
         
-        (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectExplicit, objectExplicit, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper)
+        var minusGroup: String = null
+        var optionalGroup: String = null
+        if (row.contains(MINUSGROUP.toString) && row(MINUSGROUP.toString).toString != null) minusGroup = row(MINUSGROUP.toString).toString
+        if (row.contains(OPTIONALGROUP.toString) && row(OPTIONALGROUP.toString).toString != null) optionalGroup = row(OPTIONALGROUP.toString).toString
+        
+        (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectExplicit, 
+            objectExplicit, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper, graphForThisRow, suffixOperator,
+            minusGroup, optionalGroup)
     }
     
     def findOrCreateNewInstance(disInst: HashMap[String, Instance], stringVal: String, explicit: Boolean, singleton: Boolean, superSingleton: Boolean): Instance =
@@ -403,7 +420,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         var newInst: Instance = null
         if (disInst.contains(stringVal)) 
         {
-            // might be a good place to validate the discovered subject with the information gathered about it above
+            // might be a good place to validate the discovered element with the informations gathered about it that are parameters to this method
             newInst = disInst(stringVal)
         }
         else
@@ -421,13 +438,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         var newTerm: Term = null
         if (disTerm.contains(stringVal)) 
         {
-            // might be a good place to validate the discovered term with the information gathered about it above
+            // might be a good place to validate the discovered element with the informations gathered about it that are parameters to this method
             newTerm = disTerm(stringVal)
         }
         else
         {
           newTerm.value = stringVal
           newTerm.isResourceList = Some(!explicit)
+          if (!explicit) newTerm.ranges = Some(helper.getDescriberRangesAsList(gmCxn, stringVal))
         }
         newTerm
     }
@@ -437,7 +455,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         var newLit: Literal = null
         if (disLit.contains(stringVal)) 
         {
-            // might be a good place to validate the discovered term with the information gathered about it above
+            // might be a good place to validate the discovered element with the informations gathered about it that are parameters to this method
             newLit = disLit(stringVal)
         }
         else

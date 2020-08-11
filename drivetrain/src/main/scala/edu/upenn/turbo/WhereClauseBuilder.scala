@@ -15,7 +15,7 @@ class WhereClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder 
     val triplesGroup = new TriplesGroupBuilder()
     var varsForProcessInput = new HashSet[Triple]
     var valuesBlock: HashMap[String, String] = new HashMap[String, String]
-    var nonDefaultGraphTriples = new ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]
+    var nonDefaultGraphRecipes = new HashSet[ConnectionRecipe]
     var process: String = ""
     
     def setProcess(process: String)
@@ -23,137 +23,148 @@ class WhereClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder 
         this.process = process
     }
     
-    def addTripleFromRowResult(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], defaultInputGraph: String, process: String): HashSet[Triple] =
+    def addTripleFromRowResult(inputs: HashSet[ConnectionRecipe], defaultInputGraph: String, process: String): HashSet[Triple] =
     {
         assert (process != "")
         setProcess(process)
-        for (rowResult <- inputs)
-        {
-            for (key <- requiredInputKeysList) assert (rowResult.contains(key.toString), s"Input data does not contian required key $key")
-            
-            var graphForThisRow: String = defaultInputGraph
-            if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
-            if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
-            if (graphForThisRow != defaultInputGraph) nonDefaultGraphTriples += rowResult
-            else makeNewTripleFromRowResult(rowResult, defaultInputGraph)
+        for (recipe <- inputs)
+        {            
+            if (recipe.foundInGraph != None && recipe.foundInGraph != Some(defaultInputGraph)) nonDefaultGraphRecipes += recipe
+            else makeNewTripleFromRowResult(recipe, defaultInputGraph)
         }
-        for (row <- nonDefaultGraphTriples) makeNewTripleFromRowResult(row, defaultInputGraph)
+        for (recipe <- nonDefaultGraphRecipes) makeNewTripleFromRowResult(recipe, defaultInputGraph)
         
         triplesGroup.setValuesBlock(valuesBlock)
         clause = triplesGroup.buildWhereClauseFromTriplesGroup()
         varsForProcessInput
     }
     
-    def makeNewTripleFromRowResult(rowResult: HashMap[String, org.eclipse.rdf4j.model.Value], defaultInputGraph: String)
-    {
-        var optionalGroupForThisRow: String = null
-        var minusGroupForThisRow: String = null
-        
-        var subjectAnInstance = false
-        var objectAnInstance = false
-        
-        var objectADescriber = false
-        var subjectADescriber = false
-        
-        var objectALiteralValue = false
-        var objectADefinedLiteral = false
-        
-        var subjectContext: String = ""
-        var objectContext: String = ""
-        
-        var suffixOperator = ""
-        if (rowResult(SUFFIXOPERATOR.toString) != null) suffixOperator = rowResult(SUFFIXOPERATOR.toString).toString
-     
-        if (rowResult(OBJECTALITERALVALUE.toString).toString.contains("true")) objectALiteralValue = true
-        else
-        {
-            val recipeType = rowResult(CONNECTIONRECIPETYPE.toString).toString
-            if (recipeType == instToLiteralRecipe || recipeType == termToLiteralRecipe) objectADefinedLiteral = true 
-        }
-        
-        if (rowResult(SUBJECTCONTEXT.toString) != null) subjectContext = rowResult(SUBJECTCONTEXT.toString).toString
-        if (rowResult(OBJECTCONTEXT.toString) != null) objectContext = rowResult(OBJECTCONTEXT.toString).toString
-        
+    def makeNewTripleFromRowResult(recipe: ConnectionRecipe, defaultInputGraph: String)
+    {  
+        var subject: String = null
+        var predicate: String = recipe.predicate
+        var crObject: String = null
+        var subjectAnInstance: Boolean = false
+        var objectAnInstance: Boolean = false
+        var subjectADescriber: Boolean = false
+        var objectADescriber: Boolean = false
+        var objectALiteralValue: Boolean = false
+        var objectADefinedLiteral: Boolean = false
+        var suffixOperator: String = null
         var graphForThisRow: String = defaultInputGraph
-        if (rowResult(GRAPHOFORIGIN.toString) != null) graphForThisRow = rowResult(GRAPHOFORIGIN.toString).toString
-        if (rowResult(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = rowResult(GRAPHOFCREATINGPROCESS.toString).toString
-        val connectionName = rowResult(CONNECTIONNAME.toString).toString
+        var required: Boolean = true
         
-        var required = true
-        if (rowResult(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput") required = false
-        if (rowResult(OPTIONALGROUP.toString) != null) optionalGroupForThisRow = rowResult(OPTIONALGROUP.toString).toString
-        if (rowResult(MINUSGROUP.toString) != null) minusGroupForThisRow = rowResult(MINUSGROUP.toString).toString
-        if (rowResult(OBJECTADESCRIBER.toString) != null) 
+        if (recipe.predicateSuffixOperator != None) suffixOperator = recipe.predicateSuffixOperator.get
+        if (recipe.isOptional != None) required = !recipe.isOptional.get
+        
+        if (recipe.foundInGraph != None) graphForThisRow = recipe.foundInGraph.get
+        
+        if (recipe.isInstanceOf[InstToInstConnRecipe])
         {
-            objectADescriber = true
-            val valsAsString = helper.getDescriberRangesAsString(gmCxn, rowResult(OBJECT.toString).toString)
-            if (valsAsString.size > 0) valuesBlock += rowResult(OBJECT.toString).toString -> valsAsString
-        }
-        if (rowResult(SUBJECTADESCRIBER.toString) != null) 
-        {
-            subjectADescriber = true
-            val valsAsString = helper.getDescriberRangesAsString(gmCxn, rowResult(SUBJECT.toString).toString)
-            if (valsAsString.size > 0) valuesBlock += rowResult(SUBJECT.toString).toString -> valsAsString
-        }
-        if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe") 
-        {
-            assert (objectALiteralValue || objectADefinedLiteral, s"The object of connection $connectionName is not a literal, but the connection is a datatype connection.")
-            objectADescriber = true
+            var typedRecipe = recipe.asInstanceOf[InstToInstConnRecipe]   
+            subject = typedRecipe.subject.value
+            crObject = typedRecipe.crObject.value
             subjectAnInstance = true
-        }
-        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe") 
-        {
-            assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type InstanceToTermRecipe")
-            subjectAnInstance = true
-        }
-        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe") 
-        {
-            assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToInstanceRecipe")
             objectAnInstance = true
         }
-        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
+        if (recipe.isInstanceOf[InstToTermConnRecipe])
         {
-            assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type InstanceToInstanceRecipe")
-            objectAnInstance = true
+            var typedRecipe = recipe.asInstanceOf[InstToTermConnRecipe]
+            subject = typedRecipe.subject.value
+            crObject = typedRecipe.crObject.value
             subjectAnInstance = true
+            if (typedRecipe.crObject.isResourceList.get) 
+            {
+                objectADescriber = true
+                if (typedRecipe.crObject.ranges != None) valuesBlock += typedRecipe.crObject.value -> getRangesAsString(typedRecipe.crObject.value, typedRecipe.crObject.ranges.get)
+            }
         }
-        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToTermRecipe")
+        if (recipe.isInstanceOf[InstToLitConnRecipe])
         {
-            assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToTermRecipe")
+            var typedRecipe = recipe.asInstanceOf[InstToLitConnRecipe]
+            subject = typedRecipe.subject.value
+            crObject = typedRecipe.crObject.value
+            objectALiteralValue = true
+            subjectAnInstance = true
+            if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
         }
-        else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe")
+        if (recipe.isInstanceOf[TermToLitConnRecipe])
         {
-            assert (objectALiteralValue || objectADefinedLiteral, s"The object of connection $connectionName is not a literal, but the connection is a datatype connection.")
-            objectADescriber = true
+            var typedRecipe = recipe.asInstanceOf[TermToLitConnRecipe]
+            subject = typedRecipe.subject.value
+            crObject = typedRecipe.crObject.value
+            objectALiteralValue = true
+            if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
+            if (typedRecipe.subject.isResourceList.get) 
+            {
+               subjectADescriber = true
+               if (typedRecipe.subject.ranges != None) valuesBlock += typedRecipe.subject.value -> getRangesAsString(typedRecipe.subject.value, typedRecipe.subject.ranges.get)
+            }
         }
-        val newTriple = new Triple(rowResult(SUBJECT.toString).toString, rowResult(PREDICATE.toString).toString, rowResult(OBJECT.toString).toString,
-                                                 subjectAnInstance, objectAnInstance, subjectADescriber, objectADescriber, subjectContext, objectContext, objectALiteralValue, suffixOperator)
-        varsForProcessInput += new Triple(process, "obo:OBI_0000293", rowResult(SUBJECT.toString).toString, false, false, false, (subjectADescriber || subjectAnInstance), "", subjectContext)
+        if (recipe.isInstanceOf[TermToTermConnRecipe])
+        {
+            var typedRecipe = recipe.asInstanceOf[TermToTermConnRecipe]
+            subject = typedRecipe.subject.value
+            crObject = typedRecipe.crObject.value
+            if (typedRecipe.crObject.isResourceList.get) 
+            {
+                objectADescriber = true
+                if (typedRecipe.crObject.ranges != None) valuesBlock += typedRecipe.crObject.value -> getRangesAsString(typedRecipe.crObject.value, typedRecipe.crObject.ranges.get)
+            }
+            if (typedRecipe.subject.isResourceList.get) 
+            {
+               subjectADescriber = true
+               if (typedRecipe.subject.ranges != None) valuesBlock += typedRecipe.subject.value -> getRangesAsString(typedRecipe.subject.value, typedRecipe.subject.ranges.get)
+            }
+        }
+        if (recipe.isInstanceOf[TermToInstConnRecipe])
+        {
+            var typedRecipe = recipe.asInstanceOf[TermToInstConnRecipe]
+            subject = typedRecipe.subject.value
+            crObject = typedRecipe.crObject.value
+            objectAnInstance = true
+            if (typedRecipe.subject.isResourceList.get) 
+            {
+               subjectADescriber = true
+               if (typedRecipe.subject.ranges != None) valuesBlock += typedRecipe.subject.value -> getRangesAsString(typedRecipe.subject.value, typedRecipe.subject.ranges.get)
+            }
+        }
+        
+        val newTriple = new Triple(subject, predicate, crObject, subjectAnInstance, objectAnInstance, subjectADescriber, objectADescriber, objectALiteralValue, suffixOperator)
+        varsForProcessInput += new Triple(process, "obo:OBI_0000293", subject, false, false, false, (subjectADescriber || subjectAnInstance))
         if (!objectALiteralValue && !objectADefinedLiteral)
         {
-            varsForProcessInput += new Triple(process, "obo:OBI_0000293", rowResult(OBJECT.toString).toString, false, false, false, (objectADescriber || objectAnInstance), "", objectContext)
+            varsForProcessInput += new Triple(process, "obo:OBI_0000293", crObject, false, false, false, (objectADescriber || objectAnInstance))
         }
         graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(graphForThisRow)
-        addNewTripleToGroup(newTriple, minusGroupForThisRow, optionalGroupForThisRow, required, graphForThisRow)
+        addNewTripleToGroup(newTriple, recipe.minusGroup, recipe.optionalGroup, required, graphForThisRow)
     }
     
-    def addNewTripleToGroup(newTriple: Triple, minusGroupForThisRow: String, optionalGroupForThisRow: String, required: Boolean, graphForThisRow: String)
+    def addNewTripleToGroup(newTriple: Triple, minusGroupForThisRow: Option[String], optionalGroupForThisRow: Option[String], required: Boolean, graphForThisRow: String)
     {
-        if (minusGroupForThisRow != null)
+        if (minusGroupForThisRow != None)
         {
-            triplesGroup.addTripleToMinusGroup(newTriple, graphForThisRow, minusGroupForThisRow)
+            triplesGroup.addTripleToMinusGroup(newTriple, graphForThisRow, minusGroupForThisRow.get)
         }
         else if (required && optionalGroupForThisRow == null)
         {
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graphForThisRow)
         }
-        else if (optionalGroupForThisRow != null)
+        else if (optionalGroupForThisRow != None)
         {
-            triplesGroup.addToOptionalGroup(newTriple, graphForThisRow, optionalGroupForThisRow, required)
+            triplesGroup.addToOptionalGroup(newTriple, graphForThisRow, optionalGroupForThisRow.get, required)
         }
         else
         {
             triplesGroup.addOptionalTripleToRequiredGroup(newTriple, graphForThisRow)
         }
+    }
+    
+    def getRangesAsString(describer: String, rangeList: ArrayBuffer[String]): String =
+    {
+        val describerAsVar = helper.convertTypeToSparqlVariable(describer, true)
+        var res = s"VALUES $describerAsVar {"
+        for (item <- rangeList) res += "<" + item + ">"
+        res + "}"
     }
 }

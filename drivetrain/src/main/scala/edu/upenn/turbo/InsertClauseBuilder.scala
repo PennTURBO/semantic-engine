@@ -12,113 +12,85 @@ class InsertClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder
 {
     this.gmCxn = cxn
     
-    def addTripleFromRowResult(outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], process: String, varsForProcessInput: HashSet[Triple], usedVariables: HashSet[String])
+    def addTripleFromRowResult(outputs: HashSet[ConnectionRecipe], process: String, varsForProcessInput: HashSet[Triple], usedVariables: HashSet[String], outputGraph: String)
     {
         val triplesGroup = new TriplesGroupBuilder()
         
-        for (rowResult <- outputs)
+        for (recipe <- outputs)
         {
-            for (key <- requiredOutputKeysList) assert (rowResult.contains(key.toString))
-            assert (!rowResult.contains(OPTIONALGROUP.toString))
             helper.validateURI(processNamedGraph)
             
-            val connectionName = rowResult(CONNECTIONNAME.toString).toString
-            
             var subjectAnInstance = false
-            var objectAnInstance = false
-            
-            var subjectContext: String = ""
-            var objectContext: String = ""
-            
+            var objectAnInstance = false            
             var objectADescriber = false
             var subjectADescriber = false
-            
             var objectALiteralValue = false
             var objectADefinedLiteral = false
+            var subject: String = null
+            var predicate: String = recipe.predicate
+            var crObject: String = null
+            var graphForThisRow: String = null
             
-            var thisSubject = rowResult(SUBJECT.toString).toString
-            var thisObject = rowResult(OBJECT.toString).toString
-     
-            if (rowResult(OBJECTALITERALVALUE.toString).toString.contains("true")) objectALiteralValue = true
-            else
+            if (recipe.isInstanceOf[InstToInstConnRecipe])
             {
-                val recipeType = rowResult(CONNECTIONRECIPETYPE.toString).toString
-                if (recipeType == instToLiteralRecipe || recipeType == termToLiteralRecipe) objectADefinedLiteral = true 
-            }
-            
-            if (rowResult(SUBJECTCONTEXT.toString) != null) subjectContext = rowResult(SUBJECTCONTEXT.toString).toString
-            if (rowResult(OBJECTCONTEXT.toString) != null) objectContext = rowResult(OBJECTCONTEXT.toString).toString
-            if (rowResult(OBJECTADESCRIBER.toString) != null) 
-            {
-                if (!usedVariables.contains(thisObject) && rowResult(OBJECTRULE.toString) == null)
-                {
-                    val ranges = helper.getDescriberRangesAsList(gmCxn, thisObject)
-                    assert (ranges.size == 1, s"ResourceClassList $thisObject is not present as an input and has a range list size that is not 1")
-                    thisObject = ranges(0)
-                    objectADescriber = false
-                }
-                else objectADescriber = true
-            }
-            if (rowResult(SUBJECTADESCRIBER.toString) != null && rowResult(SUBJECTRULE.toString) == null)
-            {
-                if (!usedVariables.contains(thisSubject))
-                {
-                    val ranges = helper.getDescriberRangesAsList(gmCxn, thisSubject)
-                    assert (ranges.size == 1, s"ResourceClassList $thisSubject is not present as an input and has a range list size that is not 1")
-                    thisSubject = ranges(0)
-                    objectADescriber = false
-                }
-                else subjectADescriber = true
-            }
-            
-            var objectFromDatatypeConnection = false
-            
-            if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe") 
-            {
-                assert (objectALiteralValue || objectADefinedLiteral, s"The object of connection $connectionName is not a literal, but the connection is a datatype connection.")
-                objectFromDatatypeConnection = true
-                subjectAnInstance = true
-                objectADescriber = true
-            }
-            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe") 
-            {
-                assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type InstanceToTermRecipe")
-                subjectAnInstance = true
-            }
-            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe") 
-            {
-                assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToInstanceRecipe")
-                objectAnInstance = true
-            }
-            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
-            {
-                assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type InstanceToInstanceRecipe")
+                var typedRecipe = recipe.asInstanceOf[InstToInstConnRecipe]   
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
                 subjectAnInstance = true
                 objectAnInstance = true
             }
-            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToTermRecipe")
+            if (recipe.isInstanceOf[InstToTermConnRecipe])
             {
-                assert (!objectADefinedLiteral && !objectALiteralValue, s"Found literal object for connection $connectionName of type TermToTermRecipe")
+                var typedRecipe = recipe.asInstanceOf[InstToTermConnRecipe]
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
+                subjectAnInstance = true
+                if (typedRecipe.crObject.isResourceList.get) objectADescriber = true
             }
-            else if (rowResult(CONNECTIONRECIPETYPE.toString).toString() == "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe")
+            if (recipe.isInstanceOf[InstToLitConnRecipe])
             {
-                assert (objectALiteralValue || objectADefinedLiteral, s"The object of connection $connectionName is not a literal, but the connection is a datatype connection.")
-                objectFromDatatypeConnection = true
-                objectADescriber = true
+                var typedRecipe = recipe.asInstanceOf[InstToLitConnRecipe]
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
+                objectALiteralValue = true
+                subjectAnInstance = true
+                if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
+            }
+            if (recipe.isInstanceOf[TermToLitConnRecipe])
+            {
+                var typedRecipe = recipe.asInstanceOf[TermToLitConnRecipe]
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
+                objectALiteralValue = true
+                if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
+                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
+            }
+            if (recipe.isInstanceOf[TermToTermConnRecipe])
+            {
+                var typedRecipe = recipe.asInstanceOf[TermToTermConnRecipe]
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
+                if (typedRecipe.crObject.isResourceList.get) objectADescriber = true
+                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
+            }
+            if (recipe.isInstanceOf[TermToInstConnRecipe])
+            {
+                var typedRecipe = recipe.asInstanceOf[TermToInstConnRecipe]
+                subject = typedRecipe.subject.value
+                crObject = typedRecipe.crObject.value
+                objectAnInstance = true
+                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
             }
             
-            var graph = rowResult(GRAPH.toString).toString
-            
-            val newTriple = new Triple(thisSubject, rowResult(PREDICATE.toString).toString, thisObject,
-                                      subjectAnInstance, objectAnInstance, subjectADescriber, objectADescriber, subjectContext, objectContext, objectALiteralValue)
-            graph = helper.checkAndConvertPropertiesReferenceToNamedGraph(graph)
+            val newTriple = new Triple(subject, predicate, crObject, subjectAnInstance, objectAnInstance, subjectADescriber, objectADescriber, objectALiteralValue)
+            var graph = helper.checkAndConvertPropertiesReferenceToNamedGraph(outputGraph)
             triplesGroup.addRequiredTripleToRequiredGroup(newTriple, graph)
             
-            val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", thisSubject, false, false, false, (subjectAnInstance || subjectADescriber), "", subjectContext)
+            val subjectProcessTriple = new Triple(process, "turbo:TURBO_0010184", subject, false, false, false, (subjectAnInstance || subjectADescriber))
             triplesGroup.addRequiredTripleToRequiredGroup(subjectProcessTriple, processNamedGraph)
-            if (!objectFromDatatypeConnection && newTriple.triplePredicate != "rdf:type")
+            if (!objectALiteralValue && newTriple.triplePredicate != "rdf:type")
             {
-                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", thisObject, false, false, false, (objectAnInstance || objectADescriber), "", objectContext)
+                val objectProcessTriple = new Triple(process, "turbo:TURBO_0010184", crObject, false, false, false, (objectAnInstance || objectADescriber))
                 triplesGroup.addRequiredTripleToRequiredGroup(objectProcessTriple, processNamedGraph)
             }
         }
