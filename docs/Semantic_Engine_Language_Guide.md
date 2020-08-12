@@ -343,7 +343,7 @@ With the contexts applied, the two Instances will appear like this:
 
 ## Referenced in Graph*
 
-By default, the input pattern of an Update Specification will be matched against the provided `:inputNamedGraph`. This can be altered by specifying that a Connection Recipe is `:referencedInGraph`. See the example below.
+By default, the input pattern of an Update Specification will be matched against the provided `:inputNamedGraph`. This default can be altered for individual Connection Recipes by specifying that a Connection Recipe is `:referencedInGraph`. See the example below.
 ```
 :ClassAtoClassB a :InstanceToInstanceRecipe ;
   :subject :classA ;
