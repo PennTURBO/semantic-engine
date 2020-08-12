@@ -368,7 +368,28 @@ If the same Instance is referenced by multiple Connection Recipes that appear in
 
 ## Predicate Suffix*
 
-- "*" and "+" supported
+The Semantic Engine Language has the capacity to implement two SPARQl Property Path operators: * and +. * enables inclusive recursive predicate path searches, and + enables exclusive recursive predicate path searches. See the docs [here](https://www.w3.org/TR/sparql11-property-paths/) for more information.
+
+To implement a Suffix Operator, use the reserved URIs `:star` or `:plus` to annotate a Connection Recipe.
+
+```
+:ClassAtoClassB a :InstanceToInstanceRecipe ;
+  :subject :classA ;
+  :predicate :relatesTo ;
+  :object :classB ;
+  :cardinality :1-1 ;
+  :mustExecuteIf :subjectExists ;
+  :predicateSuffix :star ;
+.
+```
+
+The SPARQL representation of this Connection Recipe will then appear like this:
+```
+?classA <https://github.com/PennTURBO/Drivetrain/relatesTo>* ?classB .
+```
+The asterisk at the end of the predicate indicates that we will still match the pattern if `classB` is any number of `:relatesTo` hops away from `classA`. Without the asterisk, the pattern would only match if it were one hop away.
+
+Note that these operators may cause a significant performance degradation.
 
 ## Input Data Validation
 
