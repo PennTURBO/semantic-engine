@@ -2,6 +2,8 @@ package edu.upenn.turbo
 
 trait ConnectionRecipe 
 {
+    var asSparql: String = null
+    
     var subject: GraphPatternElement = null
     var crObject: GraphPatternElement = null
     
@@ -14,6 +16,12 @@ trait ConnectionRecipe
     var predicateSuffixOperator: Option[String] = None
     var optionalGroup: Option[String] = None
     var minusGroup: Option[String] = None
+    
+    def addSparqlSnippet()
+    {
+        val snippetBuilder = new SparqlSnippetBuilder()
+        asSparql = snippetBuilder.buildSnippet(this)
+    }
 }
 
 class InstToInstConnRecipe(newSubject: Instance, newObject: Instance) extends ConnectionRecipe 

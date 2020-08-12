@@ -36,7 +36,6 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
     var processSpecification: String = null
     var process: String = null
 
-    var whereClauseBuilder: WhereClauseBuilder = new WhereClauseBuilder(gmCxn)
     var insertClauseBuilder: InsertClauseBuilder = new InsertClauseBuilder(gmCxn)
     var deleteClauseBuilder: DeleteClauseBuilder = new DeleteClauseBuilder()
     var bindClauseBuilder: BindClauseBuilder = new BindClauseBuilder()
@@ -120,11 +119,53 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
     {
         assert (whereClause == "")
         assert (defaultInputGraph != null && defaultInputGraph != "", "No default input named graph set")
-        varsForProcessInput = whereClauseBuilder.addTripleFromRowResult(inputs, defaultInputGraph, process)
-        assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "", "Where Clause is empty")
-        assert (whereClauseBuilder.clause.contains("GRAPH"))
-        val innerClause = whereClauseBuilder.clause
-        whereClause += s"WHERE { \n$innerClause"
+        val requiredGroup = new RequiredGroup()
+        val minusGroups: HashMap[String, MinusGroup] = new HashMap[String, MinusGroup]
+        val optionalGroups: HashMap[String, OptionalGroup] = new HashMap[String, OptionalGroup]
+        for (recipe <- inputs) 
+        {
+            var graph = defaultInputGraph
+            if (recipe.foundInGraph != None) graph = recipe.foundInGraph.get
+            if (recipe.minusGroup != None)
+            {
+                val minusGroup = recipe.minusGroup.get
+                if (minusGroups.contains(minusGroup))
+                {
+                    val thisGroup = minusGroups(minusGroup)
+                    if (thisGroup.recipesByGraph.contains(graph)) thisGroup.recipesByGraph(graph) += recipe
+                    else thisGroup.recipesByGraph += graph -> HashSet(recipe)
+                }
+                else 
+                {
+                    val newMinusGroup = new MinusGroup()
+                    newMinusGroup.recipesByGraph += graph -> HashSet(recipe)
+                    minusGroups += minusGroup -> newMinusGroup
+                }
+            }
+            if (recipe.optionalGroup != None)
+            {
+                val optionalGroup = recipe.optionalGroup.get
+                if (optionalGroups.contains(optionalGroup))
+                {
+                    val thisGroup = optionalGroups(optionalGroup)
+                    if (thisGroup.recipesByGraph.contains(graph)) thisGroup.recipesByGraph(graph) += recipe
+                    else thisGroup.recipesByGraph += graph -> HashSet(recipe)
+                }
+                else
+                {
+                    val newOptionalGroup = new OptionalGroup()
+                    newOptionalGroup.recipesByGraph += graph -> HashSet(recipe)
+                    optionalGroups += optionalGroup -> newOptionalGroup
+                }
+            }
+            if (recipe.minusGroup == None && recipe.optionalGroup == None)
+            {
+                if (requiredGroup.recipesByGraph.contains(graph)) requiredGroup.recipesByGraph(graph) += recipe
+                else requiredGroup.recipesByGraph += graph -> HashSet(recipe)
+            }
+        }
+        val groupBuilder = new RecipeGroupBuilder
+        whereClause = groupBuilder.buildWhereGroup(requiredGroup, optionalGroups, minusGroups)
     }
 
     def createBindClause(inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe], localUUID: String)

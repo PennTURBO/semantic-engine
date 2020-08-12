@@ -253,6 +253,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, obInst, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
+                recipe.addSparqlSnippet()
             }
             else if (recipeType == instToTermRecipe)
             {
@@ -267,6 +268,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objTerm, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
+                recipe.addSparqlSnippet()
             }
             else if (recipeType == termToInstRecipe)
             {
@@ -281,6 +283,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objInst, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
+                recipe.addSparqlSnippet()
             }
             else if (recipeType == instToLiteralRecipe)
             {
@@ -295,6 +298,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objLit, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
+                recipe.addSparqlSnippet()
             }
             else if (recipeType == termToLiteralRecipe)
             {
@@ -309,6 +313,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objLit, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
+                recipe.addSparqlSnippet()
             }
             else if (recipeType == termToTermRecipe)
             {
@@ -323,6 +328,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objTerm, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
+                recipe.addSparqlSnippet()
             }
             else throw new RuntimeException(s"Unrecognized input cardinality setting: $thisMultiplicity")
         }
