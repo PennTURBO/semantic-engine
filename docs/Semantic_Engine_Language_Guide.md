@@ -301,7 +301,7 @@ Enforcement of the Execution Requirement occurs before any Update Specifications
 
 ## Contexts
 
-Sometimes, an Update Specificatoin might include patterns with multiple Instances that mention the same class. Consider a graph pattern that describes the case of a `:homoSapiens` (representing a real-life patient) that was prescribed a particular `:medication`, that was itself prescribed by another `:homoSapiens` (representing a real-life doctor). In the Semantic Engine Language (and in the generated SPARQL), an Instance is only denoted by a reference to a class URI, so we need an additional declaration to differentiate the Instance referencing `:homoSapiens` in the context of a patient and the one referencing it in the context of a doctor. We can use instances of `:TurboGraphContext` for this.
+Sometimes, an Update Specification might include patterns with multiple Instances that mention the same class. Consider a graph pattern that describes the case of a `:homoSapiens` (representing a real-life patient) that was prescribed a particular `:medication`, that was itself prescribed by another `:homoSapiens` (representing a real-life doctor). In the Semantic Engine Language (and in the generated SPARQL), an Instance is only denoted by a reference to a class URI, so we need an additional declaration to differentiate the Instance referencing `:homoSapiens` in the context of a patient and the one referencing it in the context of a doctor. We can use instances of `:TurboGraphContext` for this.
 
 ```
 :homoSapiensPrescribedMedication a :InstanceToInstanceRecipe ;
