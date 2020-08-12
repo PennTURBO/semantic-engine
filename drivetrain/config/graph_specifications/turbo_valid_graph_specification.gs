@@ -1925,8 +1925,8 @@ ontologies:TURBO_0010404 drivetrain:hasPossibleContext drivetrain:MeasAboutnessA
 
 drivetrain:MeasurementCridContext a drivetrain:TurboGraphContext .
 
-### measurement parthood
 
+### measurement parthood
 drivetrain:EncHsoMeas
   a drivetrain:InstanceToInstanceRecipe ;
   drivetrain:cardinality drivetrain:1-many ;
@@ -2733,4 +2733,83 @@ drivetrain:RxParthoodAxiomDbXrefPartOfColumn drivetrain:object drivetrain:RxPart
 drivetrain:RxTmdPartOfColumn drivetrain:object drivetrain:RxTmd_drug_exposure_start_datetime_column .
 
 ###
+
+## assay typing... determine from LOINC IRI (in TURBO ontology)
+
+## assay mentions LOINC IRI (build from )
+
+## key denotes assay... model with a database key class, using assay's PK value
+
+drivetrain:KeyDenotesAssay ... KeyDenotesGid has many-1 cardinality. can I keep using drivetrain:KeyContext here?
+  a drivetrain:InstanceToInstanceRecipe ;
+  drivetrain:cardinality drivetrain:many-1 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:predicate obo:IAO_0000219 ;
+  drivetrain:object drivetrain:AssayToBeTyped ;
+  drivetrain:subjectUsesContext drivetrain:AssayKeyContext ;
+.
+
+drivetrain:AssayKeySymbPartOfKey
+  a drivetrain:InstanceToInstanceRecipe ;
+  drivetrain:cardinality drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate obo:BFO_0000050 ;
+  drivetrain:object ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:AssayKeyContext ;
+  drivetrain:objectUsesContext drivetrain:AssayKeyContext ;
+.
+
+drivetrain:KeyHasPartAssayKeySymb
+  a drivetrain:InstanceToInstanceRecipe ;
+  drivetrain:cardinality drivetrain:1-1 ;
+  drivetrain:object obo:IAO_0000028 ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:AssayKeyContext ;
+  drivetrain:objectUsesContext drivetrain:AssayKeyContext ;
+.
+
+drivetrain:AssayKeySymbHasRepresentation
+  a drivetrain:InstanceToLiteralRecipe ;
+  drivetrain:cardinality drivetrain:1-1 ;
+  drivetrain:subject obo:IAO_0000028 ;
+  drivetrain:predicate ontologies:TURBO_0010094 ;
+  drivetrain:object drivetrain:assay_keysym_LiteralValue ;
+  drivetrain:subjectUsesContext drivetrain:AssayKeyContext ;
+.
+
+drivetrain:HardcodedAssaySourceden 
+  a drivetrain:InstanceToTermRecipe ;
+  drivetrain:cardinality drivetrain:1-1 ;
+  drivetrain:object drivetrain:AssayRegDen ;
+  drivetrain:predicate obo:BFO_0000051 ;
+  drivetrain:subject ontologies:TURBO_0010433 ;
+  drivetrain:subjectUsesContext drivetrain:AssayKeyContext ;
+.
+
+drivetrain:AssayRegDen a drivetrain:ClassResourceList .
+
+## key has symbol part
+
+## symbol has value...
+
+## key equivalent of registry?
+
+## assay has datum output... assume scalar measuremnt datum for now
+
+## assay datum has measurement unit label... determine from PDS text unit/lookup in ontology
+
+## lots of provenance (and context)
+
+##  
+
+### assay parthood... link from encounter symbol value in shortcut
+drivetrain:AssayPartOfEnc
+  a drivetrain:InstanceToInstanceRecipe ;
+  drivetrain:cardinality drivetrain:many-1 ;
+  drivetrain:subject  drivetrain:AssayToBeTyped ;
+  drivetrain:predicate  obo:BFO_0000050 ;
+  drivetrain:object  drivetrain:EncToBeTyped ;
+.
+
 
