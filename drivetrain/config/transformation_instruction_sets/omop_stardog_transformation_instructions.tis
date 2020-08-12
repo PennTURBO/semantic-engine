@@ -32,11 +32,6 @@
 <http://api.stardog.com/condition_occurrence>  a owl:Class .
 <http://api.stardog.com/drug_exposure>  a owl:Class .
 
-
-drivetrain:star a drivetrain:PredicateSuffixSymbol ;
-  drivetrain:usesSparqlOperator '*' ;
-.
-
 # expect 1152 patients
 #
 # there are different ways of expressing (and grouping?) optionals

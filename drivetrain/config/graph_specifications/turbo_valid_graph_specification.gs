@@ -5,10 +5,6 @@
     owl:versionInfo "unversioned" ;
     owl:versionIRI <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/turbo_valid_graph_specification.ttl> ;
 	rdfs:comment "that's not really a version IRI" .
-
-drivetrain:star a drivetrain:PredicateSuffixSymbol ;
-  drivetrain:usesSparqlOperator '*' ;
-.
   
 owl:Axiom a owl:Class .
 

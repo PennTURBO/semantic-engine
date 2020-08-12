@@ -113,3 +113,10 @@ owl:OntologyProperty a rdfs:Class .
 
 rdfs:comment a rdf:Property .
 
+drivetrain:star a drivetrain:PredicateSuffixSymbol ;
+  drivetrain:usesSparqlOperator '*' ;
+.
+
+drivetrain:plus a drivetrain:PredicateSuffixSymbol ;
+  drivetrain:usesSparqlOperator '+' ;
+.
