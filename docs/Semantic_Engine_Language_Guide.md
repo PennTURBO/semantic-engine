@@ -343,11 +343,32 @@ With the contexts applied, the two Instances will appear like this:
 
 ## Referenced in Graph*
 
+By default, the input pattern of an Update Specification will be matched against the provided `:inputNamedGraph`. This can be altered by specifying that a Connection Recipe is `:referencedInGraph`. See the example below.
+```
+:ClassAtoClassB a :InstanceToInstanceRecipe ;
+  :subject :classA ;
+  :predicate :relatesTo ;
+  :object :classB ;
+  :cardinality :1-1 ;
+  :referencedInGraph :secondaryInputGraph ;
+.
+```
+A new `GRAPH` clause for graph `:secondaryInputGraph` will be created in the `WHERE` clause of the generated `SPARQL` query:
+```
+GRAPH <https://github.com/PennTURBO/Drivetrain/secondaryInputGraph>
+{
+    ?classA <https://github.com/PennTURBO/Drivetrain/relatesTo> ?classB .
+    ?classA rdf:type <https://github.com/PennTURBO/Drivetrain/classA> .
+    ?classB rdf:type <https://github.com/PennTURBO/Drivetrain/classB> .
+}
+```
+Note that uses of `:referencedInGraph` for a Connection Recipe that is included in the output pattern will have no effect.
+
 ## Predicate Suffix*
 
 - "*" and "+" supported
 
-### Input Data Validation
+## Input Data Validation
 
 ## Custom Bind Rules*
 
