@@ -364,6 +364,8 @@ GRAPH <https://github.com/PennTURBO/Drivetrain/secondaryInputGraph>
 ```
 Note that uses of `:referencedInGraph` for a Connection Recipe that is included in the output pattern will have no effect.
 
+If the same Instance is referenced by multiple Connection Recipes that appear in different `GRAPH` clauses, the type declaration will go in the clause for the default input named graph if applicable. If not applicable, (in the case that each of the Connection Recipes referencing the same Instance references a graph that is not the default graph) the behavior is ill-defined and should be addressed in the object-based refactor.
+
 ## Predicate Suffix*
 
 - "*" and "+" supported
