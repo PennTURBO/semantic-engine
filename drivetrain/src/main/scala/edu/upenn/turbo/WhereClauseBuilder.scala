@@ -73,10 +73,10 @@ class WhereClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder 
             subject = typedRecipe.subject.value
             crObject = typedRecipe.crObject.value
             subjectAnInstance = true
-            if (typedRecipe.crObject.isResourceList.get) 
+            if (typedRecipe.crObject.asInstanceOf[Term].isResourceList.get) 
             {
                 objectADescriber = true
-                if (typedRecipe.crObject.ranges != None) valuesBlock += typedRecipe.crObject.value -> getRangesAsString(typedRecipe.crObject.value, typedRecipe.crObject.ranges.get)
+                if (typedRecipe.crObject.asInstanceOf[Term].ranges != None) valuesBlock += typedRecipe.crObject.value -> getRangesAsString(typedRecipe.crObject.value, typedRecipe.crObject.asInstanceOf[Term].ranges.get)
             }
         }
         if (recipe.isInstanceOf[InstToLitConnRecipe])
@@ -86,7 +86,7 @@ class WhereClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder 
             crObject = typedRecipe.crObject.value
             objectALiteralValue = true
             subjectAnInstance = true
-            if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
+            if (!typedRecipe.crObject.asInstanceOf[Literal].isResourceList.get) objectADefinedLiteral = true
         }
         if (recipe.isInstanceOf[TermToLitConnRecipe])
         {
@@ -94,11 +94,11 @@ class WhereClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder 
             subject = typedRecipe.subject.value
             crObject = typedRecipe.crObject.value
             objectALiteralValue = true
-            if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
-            if (typedRecipe.subject.isResourceList.get) 
+            if (!typedRecipe.crObject.asInstanceOf[Literal].isResourceList.get) objectADefinedLiteral = true
+            if (typedRecipe.subject.asInstanceOf[Term].isResourceList.get) 
             {
                subjectADescriber = true
-               if (typedRecipe.subject.ranges != None) valuesBlock += typedRecipe.subject.value -> getRangesAsString(typedRecipe.subject.value, typedRecipe.subject.ranges.get)
+               if (typedRecipe.subject.asInstanceOf[Term].ranges != None) valuesBlock += typedRecipe.subject.value -> getRangesAsString(typedRecipe.subject.value, typedRecipe.subject.asInstanceOf[Term].ranges.get)
             }
         }
         if (recipe.isInstanceOf[TermToTermConnRecipe])
@@ -106,15 +106,15 @@ class WhereClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder 
             var typedRecipe = recipe.asInstanceOf[TermToTermConnRecipe]
             subject = typedRecipe.subject.value
             crObject = typedRecipe.crObject.value
-            if (typedRecipe.crObject.isResourceList.get) 
+            if (typedRecipe.crObject.asInstanceOf[Term].isResourceList.get) 
             {
                 objectADescriber = true
-                if (typedRecipe.crObject.ranges != None) valuesBlock += typedRecipe.crObject.value -> getRangesAsString(typedRecipe.crObject.value, typedRecipe.crObject.ranges.get)
+                if (typedRecipe.crObject.asInstanceOf[Term].ranges != None) valuesBlock += typedRecipe.crObject.value -> getRangesAsString(typedRecipe.crObject.value, typedRecipe.crObject.asInstanceOf[Term].ranges.get)
             }
-            if (typedRecipe.subject.isResourceList.get) 
+            if (typedRecipe.subject.asInstanceOf[Term].isResourceList.get) 
             {
                subjectADescriber = true
-               if (typedRecipe.subject.ranges != None) valuesBlock += typedRecipe.subject.value -> getRangesAsString(typedRecipe.subject.value, typedRecipe.subject.ranges.get)
+               if (typedRecipe.subject.asInstanceOf[Term].ranges != None) valuesBlock += typedRecipe.subject.value -> getRangesAsString(typedRecipe.subject.value, typedRecipe.subject.asInstanceOf[Term].ranges.get)
             }
         }
         if (recipe.isInstanceOf[TermToInstConnRecipe])
@@ -123,10 +123,10 @@ class WhereClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder 
             subject = typedRecipe.subject.value
             crObject = typedRecipe.crObject.value
             objectAnInstance = true
-            if (typedRecipe.subject.isResourceList.get) 
+            if (typedRecipe.subject.asInstanceOf[Term].isResourceList.get) 
             {
                subjectADescriber = true
-               if (typedRecipe.subject.ranges != None) valuesBlock += typedRecipe.subject.value -> getRangesAsString(typedRecipe.subject.value, typedRecipe.subject.ranges.get)
+               if (typedRecipe.subject.asInstanceOf[Term].ranges != None) valuesBlock += typedRecipe.subject.value -> getRangesAsString(typedRecipe.subject.value, typedRecipe.subject.asInstanceOf[Term].ranges.get)
             }
         }
         

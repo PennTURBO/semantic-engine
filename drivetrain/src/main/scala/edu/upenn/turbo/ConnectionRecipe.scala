@@ -2,6 +2,9 @@ package edu.upenn.turbo
 
 trait ConnectionRecipe 
 {
+    var subject: GraphPatternElement = null
+    var crObject: GraphPatternElement = null
+    
     var predicate: String = null 
     var cardinality: String = null
     var name: String = null
@@ -13,38 +16,38 @@ trait ConnectionRecipe
     var minusGroup: Option[String] = None
 }
 
-class InstToInstConnRecipe extends ConnectionRecipe 
+class InstToInstConnRecipe(newSubject: Instance, newObject: Instance) extends ConnectionRecipe 
 {
-    var subject: Instance = null
-    var crObject: Instance = null
+    subject = newSubject
+    crObject = newObject
 }
 
-class InstToTermConnRecipe extends ConnectionRecipe 
+class InstToTermConnRecipe(newSubject: Instance, newObject: Term) extends ConnectionRecipe 
 {
-    var subject: Instance = null
-    var crObject: Term = null
+    subject = newSubject
+    crObject = newObject
 }
 
-class TermToInstConnRecipe extends ConnectionRecipe 
+class TermToInstConnRecipe(newSubject: Term, newObject: Instance) extends ConnectionRecipe 
 {
-    var subject: Term = null
-    var crObject: Instance = null
+    subject = newSubject
+    crObject = newObject
 }
 
-class InstToLitConnRecipe extends ConnectionRecipe 
+class InstToLitConnRecipe(newSubject: Instance, newObject: Literal) extends ConnectionRecipe 
 {
-    var subject: Instance = null
-    var crObject: Literal = null
+    subject = newSubject
+    crObject = newObject
 }
 
-class TermToLitConnRecipe extends ConnectionRecipe 
+class TermToLitConnRecipe(newSubject: Term, newObject: Literal) extends ConnectionRecipe 
 {
-    var subject: Term = null
-    var crObject: Literal = null
+    subject = newSubject
+    crObject = newObject
 }
 
-class TermToTermConnRecipe extends ConnectionRecipe 
+class TermToTermConnRecipe(newSubject: Term, newObject: Term) extends ConnectionRecipe 
 {
-    var subject: Term = null
-    var crObject: Term = null
+    subject = newSubject
+    crObject = newObject
 }

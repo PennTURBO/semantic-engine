@@ -39,7 +39,7 @@ class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 subject = typedRecipe.subject.value
                 crObject = typedRecipe.crObject.value
                 subjectAnInstance = true
-                if (typedRecipe.crObject.isResourceList.get) objectADescriber = true
+                if (typedRecipe.crObject.asInstanceOf[Term].isResourceList.get) objectADescriber = true
             }
             if (recipe.isInstanceOf[InstToLitConnRecipe])
             {
@@ -48,7 +48,7 @@ class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 crObject = typedRecipe.crObject.value
                 objectALiteralValue = true
                 subjectAnInstance = true
-                if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
+                if (!typedRecipe.crObject.asInstanceOf[Literal].isResourceList.get) objectADefinedLiteral = true
             }
             if (recipe.isInstanceOf[TermToLitConnRecipe])
             {
@@ -56,16 +56,16 @@ class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 subject = typedRecipe.subject.value
                 crObject = typedRecipe.crObject.value
                 objectALiteralValue = true
-                if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
-                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
+                if (!typedRecipe.crObject.asInstanceOf[Literal].isResourceList.get) objectADefinedLiteral = true
+                if (typedRecipe.subject.asInstanceOf[Term].isResourceList.get) subjectADescriber = true
             }
             if (recipe.isInstanceOf[TermToTermConnRecipe])
             {
                 var typedRecipe = recipe.asInstanceOf[TermToTermConnRecipe]
                 subject = typedRecipe.subject.value
                 crObject = typedRecipe.crObject.value
-                if (typedRecipe.crObject.isResourceList.get) objectADescriber = true
-                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
+                if (typedRecipe.crObject.asInstanceOf[Term].isResourceList.get) objectADescriber = true
+                if (typedRecipe.subject.asInstanceOf[Term].isResourceList.get) subjectADescriber = true
             }
             if (recipe.isInstanceOf[TermToInstConnRecipe])
             {
@@ -73,7 +73,7 @@ class DeleteClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
                 subject = typedRecipe.subject.value
                 crObject = typedRecipe.crObject.value
                 objectAnInstance = true
-                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
+                if (typedRecipe.subject.asInstanceOf[Term].isResourceList.get) subjectADescriber = true
             }
         
             val newTriple = new Triple(subject, predicate, crObject, false, false, true, true, objectALiteralValue)

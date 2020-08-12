@@ -183,16 +183,17 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         }
         else logger.info("\tInput Data Validation turned off for this instantiation")
         
-        var inputNamedGraph = inputs(0)(GRAPH.toString).toString
-        
         // create primary query
         val primaryQuery = new PatternMatchQuery(gmCxn)
         primaryQuery.setProcessSpecification(thisProcessSpecification)
         primaryQuery.setProcess(process)
         
+        var inputNamedGraph = inputs(0)(GRAPH.toString).toString
+        primaryQuery.setInputGraph(inputNamedGraph)
+        
         var outputNamedGraph: String = null
         primaryQuery.createWhereClause(inputRecipeList)
-        primaryQuery.createBindClause(inputRecipeList, outputRecipeList)
+        primaryQuery.createBindClause(inputRecipeList, outputRecipeList, localUUID)
         
         if (outputs.size != 0)
         {
@@ -217,109 +218,129 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         var discoveredTerms = new HashMap[String, Term]
         var discoveredLiterals = new HashMap[String, Literal]
         
-        val (inputRecipeList, inpDisInst, inpDisTerm, inpDisLit) = processAcornRowResults(inputs, discoveredInstances, discoveredTerms, discoveredLiterals)
+        val (inputRecipeList, inpDisInst, inpDisTerm, inpDisLit) = processAcornRowResults("inputs", inputs, discoveredInstances, discoveredTerms, discoveredLiterals)
         discoveredInstances = inpDisInst; discoveredTerms = inpDisTerm; discoveredLiterals = inpDisLit
-        val (outputRecipeList, outDisInst, outDisTerm, outDisLit) = processAcornRowResults(outputs, discoveredInstances, discoveredTerms, discoveredLiterals)
+        val (outputRecipeList, outDisInst, outDisTerm, outDisLit) = processAcornRowResults("outputs", outputs, discoveredInstances, discoveredTerms, discoveredLiterals)
         discoveredInstances = outDisInst; discoveredTerms = outDisTerm; discoveredLiterals = outDisLit
-        val (removalsRecipeList, remDisInst, remDisTerm, remDisLit) = processAcornRowResults(removals, discoveredInstances, discoveredTerms, discoveredLiterals)
+        val (removalsRecipeList, remDisInst, remDisTerm, remDisLit) = processAcornRowResults("removals", removals, discoveredInstances, discoveredTerms, discoveredLiterals)
         (inputRecipeList, outputRecipeList, removalsRecipeList)
     }
     
-    def processAcornRowResults(data: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], disInst: HashMap[String, Instance], disTerm: HashMap[String, Term], disLit: HashMap[String, Literal]) =
+    def processAcornRowResults(typeOfData: String, data: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], disInst: HashMap[String, Instance], disTerm: HashMap[String, Term], disLit: HashMap[String, Literal]) =
     {        
         val recipesList = new HashSet[ConnectionRecipe]
         for (row <- data)
         {
             val (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectExplicit, 
                 objectExplicit, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper, graphForThisRow, suffixOperator,
-                minusGroup, optionalGroup) 
+                minusGroup, optionalGroup, subjectCustomRule, objectCustomRule, subjectDependee, objectDependee) 
                 = interpretRowData(row)
             
             if (recipeType == instToInstRecipe)
             {
-                val subjInst = findOrCreateNewInstance(disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper)
+                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
-                val obInst = findOrCreateNewInstance(disInst, objectString, objectExplicit, objectIsSingleton, objectIsSuper)
+                val obInst = findOrCreateNewInstance(typeOfData, disInst, objectString, objectExplicit, objectIsSingleton, objectIsSuper, objectCustomRule)
                 disInst += obInst.value -> obInst
                 
                 // right now only updating connection lists for instance-to-instance relations
                 //it would be possible to enforce cardinality based on a LiteralResourceList or maybe even a ClassResourceList...but leaving that alone for now
                 updateConnectionLists(subjInst, obInst, thisMultiplicity)
                                                 
-                val recipe = new InstToInstConnRecipe()
-
-                recipe.subject = subjInst
-                recipe.crObject = obInst
+                val recipe = new InstToInstConnRecipe(subjInst, obInst)
+                subjInst.referencedByRecipes += recipe
+                obInst.referencedByRecipes += recipe
+                if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
+                if (objectDependee != null) addDependent(objectDependee, obInst, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else if (recipeType == instToTermRecipe)
             {
-                val subjInst = findOrCreateNewInstance(disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper)
+                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
-                val objTerm = findOrCreateNewTerm(disTerm, objectString, objectExplicit)
+                val objTerm = findOrCreateNewTerm(typeOfData, disTerm, objectString, objectExplicit, objectCustomRule)
                 disTerm += objTerm.value -> objTerm
                 
-                val recipe = new InstToTermConnRecipe()
-                
-                recipe.subject = subjInst
-                recipe.crObject = objTerm
+                val recipe = new InstToTermConnRecipe(subjInst, objTerm)
+                subjInst.referencedByRecipes += recipe
+                objTerm.referencedByRecipes += recipe
+                if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
+                if (objectDependee != null) addDependent(objectDependee, objTerm, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else if (recipeType == termToInstRecipe)
             {
-                val subjTerm = findOrCreateNewTerm(disTerm, objectString, objectExplicit)
+                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectString, subjectExplicit, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
-                val objInst = findOrCreateNewInstance(disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper)
+                val objInst = findOrCreateNewInstance(typeOfData, disInst, objectString, objectExplicit, objectIsSingleton, objectIsSuper, objectCustomRule)
                 disInst += objInst.value -> objInst
                 
-                val recipe = new TermToInstConnRecipe()
-                
-                recipe.subject = subjTerm
-                recipe.crObject = objInst
+                val recipe = new TermToInstConnRecipe(subjTerm, objInst)
+                subjTerm.referencedByRecipes += recipe
+                objInst.referencedByRecipes += recipe
+                if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
+                if (objectDependee != null) addDependent(objectDependee, objInst, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else if (recipeType == instToLiteralRecipe)
             {
-                val subjInst = findOrCreateNewInstance(disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper)
+                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
-                val objLit = findOrCreateNewLiteral(disLit, subjectString, subjectExplicit)
+                val objLit = findOrCreateNewLiteral(typeOfData, disLit, objectString, objectExplicit, objectCustomRule)
                 disLit += objLit.value -> objLit
                 
-                val recipe = new InstToLitConnRecipe()
-
-                recipe.subject = subjInst
-                recipe.crObject = objLit
+                val recipe = new InstToLitConnRecipe(subjInst, objLit)
+                subjInst.referencedByRecipes += recipe
+                objLit.referencedByRecipes += recipe
+                if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
+                if (objectDependee != null) addDependent(objectDependee, objLit, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else if (recipeType == termToLiteralRecipe)
             {
-                val subjTerm = findOrCreateNewTerm(disTerm, subjectString, subjectExplicit)
+                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectString, subjectExplicit, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
-                val objLit = findOrCreateNewLiteral(disLit, subjectString, subjectExplicit)
+                val objLit = findOrCreateNewLiteral(typeOfData, disLit, objectString, objectExplicit, objectCustomRule)
                 disLit += objLit.value -> objLit
                 
-                val recipe = new TermToLitConnRecipe()
-
-                recipe.subject = subjTerm
-                recipe.crObject = objLit
+                val recipe = new TermToLitConnRecipe(subjTerm, objLit)
+                subjTerm.referencedByRecipes += recipe
+                objLit.referencedByRecipes += recipe
+                if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
+                if (objectDependee != null) addDependent(objectDependee, objLit, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else if (recipeType == termToTermRecipe)
             {
-                val subjTerm = findOrCreateNewTerm(disTerm, subjectString, subjectExplicit)
+                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectString, subjectExplicit, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
-                val objTerm = findOrCreateNewTerm(disTerm, subjectString, subjectExplicit)
+                val objTerm = findOrCreateNewTerm(typeOfData, disTerm, objectString, objectExplicit, objectCustomRule)
                 disTerm += objTerm.value -> objTerm
                 
-                val recipe = new TermToTermConnRecipe()
-
-                recipe.subject = subjTerm
-                recipe.crObject = objTerm
+                val recipe = new TermToTermConnRecipe(subjTerm, objTerm)
+                subjTerm.referencedByRecipes += recipe
+                objTerm.referencedByRecipes += recipe
+                if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
+                if (objectDependee != null) addDependent(objectDependee, objTerm, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
             }
             else throw new RuntimeException(s"Unrecognized input cardinality setting: $thisMultiplicity")
         }
         (recipesList, disInst, disTerm, disLit)
+    }
+    
+    def addDependent(dependee: String, element: GraphPatternElement, disInst: HashMap[String,Instance], disTerm: HashMap[String,Term], disLit:HashMap[String,Literal])
+    {
+        var dependeeElement: GraphPatternElement = null
+        if (disInst.contains(dependee)) dependeeElement = disInst(dependee)
+        if (disTerm.contains(dependee)) dependeeElement = disTerm(dependee)
+        if (disLit.contains(dependee)) dependeeElement = disLit(dependee)
+        if (dependeeElement == null) 
+        {
+            val dependentElement = element.value
+            throw new RuntimeException("Element $dependentElement was declared dependent on $dependee, but $dependee was not found as an input")
+        }
+        element.dependentOn = Some(dependeeElement)
     }
     
     def updateRecipeWithNonTypeData(recipe: ConnectionRecipe, connectionName: String, thisMultiplicity: String, predicate: String, optional: Boolean, 
@@ -384,7 +405,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val recipeType = row(CONNECTIONRECIPETYPE.toString).toString
         
         var optional: Boolean = false
-        if (row(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput") optional = true
+        if (row.contains(INPUTTYPE.toString) && row(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput") optional = true
         
         var subjectExplicit = true
         if (row(SUBJECTADESCRIBER.toString) != null) subjectExplicit = false
@@ -407,15 +428,29 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
         var minusGroup: String = null
         var optionalGroup: String = null
-        if (row.contains(MINUSGROUP.toString) && row(MINUSGROUP.toString).toString != null) minusGroup = row(MINUSGROUP.toString).toString
-        if (row.contains(OPTIONALGROUP.toString) && row(OPTIONALGROUP.toString).toString != null) optionalGroup = row(OPTIONALGROUP.toString).toString
+        if (row.contains(MINUSGROUP.toString) && row(MINUSGROUP.toString) != null) minusGroup = row(MINUSGROUP.toString).toString
+        if (row.contains(OPTIONALGROUP.toString) && row(OPTIONALGROUP.toString) != null) optionalGroup = row(OPTIONALGROUP.toString).toString
+        
+        var subjectDependee: String = null
+        var objectDependee: String = null
+        var subjectCustomRule: String = null
+        var objectCustomRule: String = null
+        if (row.contains(SUBJECTRULE.toString) && row(SUBJECTRULE.toString) != null) subjectCustomRule = row(SUBJECTRULE.toString).toString
+        if (row.contains(OBJECTRULE.toString) && row(OBJECTRULE.toString) != null) objectCustomRule = row(OBJECTRULE.toString).toString
+        if (row.contains(SUBJECTDEPENDEE.toString) && row(SUBJECTDEPENDEE.toString) != null) subjectDependee = row(SUBJECTDEPENDEE.toString).toString
+        if (row.contains(OBJECTDEPENDEE.toString) && row(OBJECTDEPENDEE.toString) != null) objectDependee = row(OBJECTDEPENDEE.toString).toString
+        
+        // null check
+        val nonNulls = Array(subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectExplicit,
+            objectExplicit, subjectExplicit, objectExplicit, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper)
+        for (nonNull <- nonNulls) assert(nonNull != null, "Found null object")
         
         (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectExplicit, 
             objectExplicit, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper, graphForThisRow, suffixOperator,
-            minusGroup, optionalGroup)
+            minusGroup, optionalGroup, subjectCustomRule, objectCustomRule, subjectDependee, objectDependee)
     }
     
-    def findOrCreateNewInstance(disInst: HashMap[String, Instance], stringVal: String, explicit: Boolean, singleton: Boolean, superSingleton: Boolean): Instance =
+    def findOrCreateNewInstance(typeOfData: String, disInst: HashMap[String, Instance], stringVal: String, explicit: Boolean, singleton: Boolean, superSingleton: Boolean, customRule: String): Instance =
     {
         var newInst: Instance = null
         if (disInst.contains(stringVal)) 
@@ -425,15 +460,19 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         }
         else
         {
+          newInst = new Instance()
           newInst.value = stringVal
           newInst.isUntyped = Some(!explicit)
           newInst.isSingleton = Some(singleton)
           newInst.isSuperSingleton = Some(superSingleton)
+          if (customRule != null) newInst.createdWithRule = Some(customRule)
         }
+        if (typeOfData == "input") newInst.existsInInput = Some(true)
+        if (typeOfData == "output") newInst.existsInOutput = Some(true)
         newInst
     }
     
-    def findOrCreateNewTerm(disTerm: HashMap[String, Term], stringVal: String, explicit: Boolean): Term =
+    def findOrCreateNewTerm(typeOfData: String, disTerm: HashMap[String, Term], stringVal: String, explicit: Boolean, customRule: String): Term =
     {
         var newTerm: Term = null
         if (disTerm.contains(stringVal)) 
@@ -443,14 +482,18 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         }
         else
         {
+          newTerm = new Term()
           newTerm.value = stringVal
           newTerm.isResourceList = Some(!explicit)
           if (!explicit) newTerm.ranges = Some(helper.getDescriberRangesAsList(gmCxn, stringVal))
+          if (customRule != null) newTerm.createdWithRule = Some(customRule)
         }
+        if (typeOfData == "input") newTerm.existsInInput = Some(true)
+        if (typeOfData == "output") newTerm.existsInOutput = Some(true)
         newTerm
     }
     
-    def findOrCreateNewLiteral(disLit: HashMap[String, Literal], stringVal: String, explicit: Boolean): Literal =
+    def findOrCreateNewLiteral(typeOfData: String, disLit: HashMap[String, Literal], stringVal: String, explicit: Boolean, customRule: String): Literal =
     {
         var newLit: Literal = null
         if (disLit.contains(stringVal)) 
@@ -460,9 +503,13 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         }
         else
         {
+          newLit = new Literal()
           newLit.value = stringVal
           newLit.isResourceList = Some(!explicit)
+          if (customRule != null) newLit.createdWithRule = Some(customRule)
         }
+        if (typeOfData == "input") newLit.existsInInput = Some(true)
+        if (typeOfData == "output") newLit.existsInOutput = Some(true)
         newLit
     }
     

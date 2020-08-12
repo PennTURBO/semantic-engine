@@ -12,7 +12,7 @@ class InsertClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder
 {
     this.gmCxn = cxn
     
-    def addTripleFromRowResult(outputs: HashSet[ConnectionRecipe], process: String, varsForProcessInput: HashSet[Triple], usedVariables: HashSet[String], outputGraph: String)
+    def addTripleFromRowResult(outputs: HashSet[ConnectionRecipe], process: String, varsForProcessInput: HashSet[Triple], usedVariables: HashSet[GraphPatternElement], outputGraph: String)
     {
         val triplesGroup = new TriplesGroupBuilder()
         
@@ -45,7 +45,7 @@ class InsertClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder
                 subject = typedRecipe.subject.value
                 crObject = typedRecipe.crObject.value
                 subjectAnInstance = true
-                if (typedRecipe.crObject.isResourceList.get) objectADescriber = true
+                if (typedRecipe.crObject.asInstanceOf[Term].isResourceList.get) objectADescriber = true
             }
             if (recipe.isInstanceOf[InstToLitConnRecipe])
             {
@@ -54,7 +54,7 @@ class InsertClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder
                 crObject = typedRecipe.crObject.value
                 objectALiteralValue = true
                 subjectAnInstance = true
-                if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
+                if (!typedRecipe.crObject.asInstanceOf[Literal].isResourceList.get) objectADefinedLiteral = true
             }
             if (recipe.isInstanceOf[TermToLitConnRecipe])
             {
@@ -62,16 +62,16 @@ class InsertClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder
                 subject = typedRecipe.subject.value
                 crObject = typedRecipe.crObject.value
                 objectALiteralValue = true
-                if (!typedRecipe.crObject.isResourceList.get) objectADefinedLiteral = true
-                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
+                if (!typedRecipe.crObject.asInstanceOf[Literal].isResourceList.get) objectADefinedLiteral = true
+                if (typedRecipe.subject.asInstanceOf[Term].isResourceList.get) subjectADescriber = true
             }
             if (recipe.isInstanceOf[TermToTermConnRecipe])
             {
                 var typedRecipe = recipe.asInstanceOf[TermToTermConnRecipe]
                 subject = typedRecipe.subject.value
                 crObject = typedRecipe.crObject.value
-                if (typedRecipe.crObject.isResourceList.get) objectADescriber = true
-                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
+                if (typedRecipe.crObject.asInstanceOf[Term].isResourceList.get) objectADescriber = true
+                if (typedRecipe.subject.asInstanceOf[Term].isResourceList.get) subjectADescriber = true
             }
             if (recipe.isInstanceOf[TermToInstConnRecipe])
             {
@@ -79,7 +79,7 @@ class InsertClauseBuilder(cxn: RepositoryConnection) extends SparqlClauseBuilder
                 subject = typedRecipe.subject.value
                 crObject = typedRecipe.crObject.value
                 objectAnInstance = true
-                if (typedRecipe.subject.isResourceList.get) subjectADescriber = true
+                if (typedRecipe.subject.asInstanceOf[Term].isResourceList.get) subjectADescriber = true
             }
             
             val newTriple = new Triple(subject, predicate, crObject, subjectAnInstance, objectAnInstance, subjectADescriber, objectADescriber, objectALiteralValue)

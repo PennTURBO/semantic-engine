@@ -10,409 +10,216 @@ import scala.util.control._
 
 class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
 {
+    var localUUID: String = ""
     // holds the final set of bind rules to be added to the query, one rule per entry
     var bindRules = new HashSet[String]
     // map of output nodes to input nodes that are that ensure correct cardinality enforcement
-    var multiplicityMap = new HashMap[String, String]
-    var nodesToCreate = new HashSet[String]
-    
-    var boundFromInput: HashSet[String] = null
+    var cardinalityMap = new HashMap[String, String]
     var process: String = ""
+    var singletonElements = new HashSet[GraphPatternElement]
+    var superSingletonElements = new HashSet[GraphPatternElement]
+    var standardElementsToBind = new HashSet[GraphPatternElement]
+    var boundInBindClause = new HashSet[GraphPatternElement]
     
     /*
      * Builds the bind clause and returns a list of variables that have been bound
      */
-    def buildBindClause(process: String, mapConnectionLists: HashMap[String, HashMap[String, HashMap[String, String]]], setConnectionLists: HashMap[String, HashSet[String]], localUUID: String,
-                         customRulesList: HashMap[String, org.eclipse.rdf4j.model.Value], dependenciesList: HashMap[String, org.eclipse.rdf4j.model.Value],
-                         nodesToCreate: HashSet[String], inputHasLevelChange: Boolean, inputInstanceCountMap: HashMap[String, Integer], 
-                         outputInstanceCountMap: HashMap[String, Integer], literalList: HashSet[String], boundInWhereClause: HashSet[String],
-                         optionalList: HashSet[String], classResourceLists: HashSet[String]): HashSet[String] =
+    def buildBindClause(process: String, localUUID: String, inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe]): HashSet[GraphPatternElement] =
     {   
         this.process = process
-        boundFromInput = boundInWhereClause
-        this.nodesToCreate = nodesToCreate
+        this.localUUID = localUUID
         
-        buildMultiplicityMap(inputHasLevelChange, mapConnectionLists, literalList, inputInstanceCountMap, outputInstanceCountMap, optionalList, classResourceLists)
+        buildCardinalityMap(inputs, outputs)
         
-        val boundSingletonVariables = buildSingletonBindClauses(localUUID, setConnectionLists, customRulesList)
-        val boundBaseGroupVariables = buildBaseGroupBindClauses(localUUID, customRulesList, dependenciesList, literalList, mapConnectionLists("inputManyToOneList"))
+        val boundSingletonVariables = buildSingletonBindClauses()
+        val boundBaseGroupVariables = buildBaseGroupBindClauses()
         
         for (a <- bindRules) clause += a
-        for (a <- boundSingletonVariables) boundFromInput += a
-        for (a <- boundBaseGroupVariables) boundFromInput += a
-        boundFromInput
+        
+        boundInBindClause
     }
     
-    def buildMultiplicityMap(inputHasLevelChange: Boolean, mapConnectionLists: HashMap[String, HashMap[String, HashMap[String, String]]],
-                            literalList: HashSet[String], inputInstanceCountMap: HashMap[String, Integer], outputInstanceCountMap: HashMap[String, Integer],
-                            optionalList: HashSet[String], classResourceLists: HashSet[String])
+    def buildCardinalityMap(inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe])
     {
-        /*for ((k,v) <- outputInstanceCountMap) println("Output Instance: " + k + " Count: " + v)
-        println()
-        for ((k,v) <- inputInstanceCountMap) println("Input Instance: " + k + " Count: " + v)*/
-        // everything in this map needs to be assigned a multiplicity in multiplicityMap, unless it is bound from input
-        val outputOneToOneConnections = mapConnectionLists("outputOneToOneList")
-        val inputOneToOneConnections = mapConnectionLists("inputOneToOneList")
-        val inputManyToOneConnections = mapConnectionLists("inputManyToOneList")
-        val elementsForCardinalityCountSearch = new HashSet[String]
-        for (newElement <- nodesToCreate)
+        // first check if there are only 1-1 connections in the input, if so you can choose any element to use as the enforcer
+        var inputHasLevelChange = false
+        for (recipe <- inputs)
         {
-            // first check if there are only 1-1 connections in the input, if so you can choose any element to use as the enforcer
-            if (!inputHasLevelChange) findEnforcerWithDefaultCardinalityMethod(newElement, inputOneToOneConnections, literalList, optionalList, classResourceLists)
-            else
+            if (recipe.isInstanceOf[InstToInstConnRecipe] && (recipe.cardinality == oneToManyMultiplicity || recipe.cardinality == manyToOneMultiplicity))
             {
-                // then check if there are any direct 1-1 connections with an input element
-                if (!multiplicityMap.contains(newElement)) findEnforcerWithDirectCardinalityMethod(newElement, literalList, outputOneToOneConnections, inputOneToOneConnections, inputManyToOneConnections, optionalList, classResourceLists)
-                // make a list for later of output elements that haven't been assigned a cardinality enforcer yet
-                if (!multiplicityMap.contains(newElement)) elementsForCardinalityCountSearch += newElement 
+                inputHasLevelChange = true
             }
         }
-        val elementsForLiteralEnforcerSearch = new HashSet[String]
-        // if no match found, use the instance count maps to try to infer a cardinality relationship
-        for (newElement <- elementsForCardinalityCountSearch)
+        for (recipe <- outputs)
         {
-            findEnforcerWithInstanceCountCardinalityMethod(newElement, literalList, inputInstanceCountMap, outputInstanceCountMap, outputOneToOneConnections, inputOneToOneConnections, optionalList, classResourceLists)
-            if (!multiplicityMap.contains(newElement)) elementsForLiteralEnforcerSearch += newElement 
+            if (!recipe.subject.existsInInput.get && recipe.subject.isInstanceOf[Instance]) 
+            {
+                if (recipe.subject.asInstanceOf[Instance].isSuperSingleton.get) superSingletonElements += recipe.subject
+                else if (recipe.subject.asInstanceOf[Instance].isSingleton.get) singletonElements += recipe.subject
+                else standardElementsToBind += recipe.subject
+                assignCardinalityToInstance(recipe.subject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)
+            }
+            if (!recipe.crObject.existsInInput.get && recipe.crObject.isInstanceOf[Instance])
+            {
+                if (recipe.crObject.asInstanceOf[Instance].isSuperSingleton.get) superSingletonElements += recipe.crObject
+                else if (recipe.crObject.asInstanceOf[Instance].isSingleton.get) singletonElements += recipe.crObject
+                else standardElementsToBind += recipe.crObject
+                assignCardinalityToInstance(recipe.crObject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)
+            }
         }
     }
     
-    def findEnforcerWithDefaultCardinalityMethod(newElement: String, inputOneToOneConnections: HashMap[String, HashMap[String, String]], literalList: HashSet[String], optionalList: HashSet[String], classResourceLists: HashSet[String])
+    def assignCardinalityToInstance(instance: Instance, inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe], inputHasLevelChange: Boolean)
     {
-        var defaultEnforcer: String = null
-        val loop = new Breaks
-        loop.breakable
+        if (!cardinalityMap.contains(instance.value))
         {
-            for ((element, connectionList) <- inputOneToOneConnections)
+            var defaultMethodSuccess = false
+            var directMethodSuccess = false
+            if (!inputHasLevelChange) defaultMethodSuccess = findEnforcerWithDefaultMethod(instance, inputs)
+            if (!defaultMethodSuccess) directMethodSuccess = findEnforcerWithDirectCardinalityMethod(instance, inputs, outputs)
+            if (!defaultMethodSuccess && !directMethodSuccess) 
             {
-                if (!literalList.contains(element) && !optionalList.contains(element) && !classResourceLists.contains(element))
-                {
-                    defaultEnforcer = element
-                    loop.break
-                }
+               val unassignedElement = instance.value
+               throw new RuntimeException(s"Could not assign cardinality enforcer for element $unassignedElement")
             }
-        }
-        if (defaultEnforcer != null)
-        {
-            logger.info(s"The following cardinality enforcement has been assigned via the default method: $defaultEnforcer enforces cardinality on $newElement")
-            multiplicityMap += newElement -> defaultEnforcer
         }
     }
     
-    def findEnforcerWithDirectCardinalityMethod(newElement: String, literalList: HashSet[String], outputOneToOneConnections: HashMap[String, HashMap[String, String]], inputOneToOneConnections: HashMap[String, HashMap[String, String]], inputManyToOneConnections: HashMap[String, HashMap[String, String]], optionalList: HashSet[String], classResourceLists: HashSet[String])
+    def findEnforcerWithDefaultMethod(instance: Instance, inputs: HashSet[ConnectionRecipe]): Boolean =
     {
-        val sameCardinalityOutputConnections = outputOneToOneConnections.getOrElse(newElement, null)
-        val literalCandidates = new HashSet[String]
-        val optionalCandidates = new HashSet[String]
-        if (sameCardinalityOutputConnections != null)
+        var foundEnforcer: Boolean = false
+        val inputsIterator = inputs.toIterator
+        var enforcer: String = ""
+        while (enforcer == "" && inputsIterator.hasNext)
         {
-            for ((element,cxnName) <- sameCardinalityOutputConnections)
+            val nextInput = inputsIterator.next
+            if (!nextInput.isOptional.get && nextInput.optionalGroup == None)
             {
-                if (boundFromInput.contains(element)) 
-                {
-                    if (literalList.contains(element)) literalCandidates += element
-                    if (optionalList.contains(element)) optionalCandidates += element
-                    if (!literalCandidates.contains(element) && !optionalCandidates.contains(element) && !classResourceLists.contains(element))
-                    {
-                        if (!multiplicityMap.contains(newElement))
-                        {
-                            multiplicityMap += newElement -> element
-                            logger.info(s"The following cardinality enforcement has been assigned via the direct cardinality method: $element enforces cardinality on $newElement")
-                        }
-                    }
-                }
-            } 
-            // if no required, non-literal element was found, search among optional and literal connections for one
-            if (!multiplicityMap.contains(newElement)) assignCardinalityEnforcerFromAssociatedElement(newElement, inputOneToOneConnections, optionalCandidates, literalList, optionalList, classResourceLists)
-            if (!multiplicityMap.contains(newElement)) assignCardinalityEnforcerFromAssociatedElement(newElement, inputOneToOneConnections, literalCandidates, literalList, optionalList, classResourceLists)
-            // if we still haven't found anything, we can use an optional candidate if it exists
-            if (!multiplicityMap.contains(newElement))
-            {
-                for (candidate <- optionalCandidates)
-                {
-                    if (!literalCandidates.contains(candidate) && !classResourceLists.contains(candidate)) 
-                    {
-                        if (!multiplicityMap.contains(newElement))
-                        {
-                            multiplicityMap += newElement -> candidate
-                            logger.info(s"The following cardinality enforcement has been assigned via the optional direct cardinality method: $candidate enforces cardinality on $newElement")
-                        }
-                    }
-                }
+                if (nextInput.subject.isInstanceOf[Instance]) enforcer = nextInput.subject.value
+                else if (nextInput.crObject.isInstanceOf[Instance]) enforcer = nextInput.subject.value
             }
-            // if we still haven't found anything, we can use a literal candidate if it exists
-            /*if (!multiplicityMap.contains(newElement))
+            if (enforcer != "") 
             {
-                for (candidate <- literalCandidates)
+                cardinalityMap += instance.value -> enforcer
+                foundEnforcer = true
+            }
+        }
+        foundEnforcer
+    }
+    
+    def findEnforcerWithDirectCardinalityMethod(instance: Instance, inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe]): Boolean =
+    {
+        var foundEnforcer: Boolean = false
+        var enforcer: String = ""
+        val connectionIterator = instance.oneToOneConnections.toIterator
+        while (enforcer == "" && connectionIterator.hasNext)
+        {
+            val connectedElement = connectionIterator.next
+            if (connectedElement.existsInInput.get && connectedElement.isInstanceOf[Instance])
+            {
+                var connectionRequired = false
+                for (recipe <- connectedElement.referencedByRecipes)
                 {
-                    if (!multiplicityMap.contains(newElement))
-                    {
-                        multiplicityMap += newElement -> candidate
-                        logger.info(s"The following cardinality enforcement has been assigned via the literal direct cardinality method: $candidate enforces cardinality on $newElement")
-                    }
+                    if (!recipe.isOptional.get && recipe.optionalGroup == None) connectionRequired = true
                 }
-            }*/
+                if (connectionRequired) enforcer = connectedElement.value
+            }
+        }
+        if (enforcer != "") 
+        {
+            cardinalityMap += instance.value -> enforcer
+            foundEnforcer = true
+        }
+        foundEnforcer
+    }
+    
+    def buildSingletonBindClauses()
+    {
+        for (singleton <- singletonElements)
+        {
+            if (!boundInBindClause.contains(singleton))
+            {
+                val singletonAsVar = helper.convertTypeToSparqlVariable(singleton.value)
+                if (singleton.createdWithRule == None)
+                {
+                    bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
+                }
+                else addCustomBindRule(singleton)
+                boundInBindClause += singleton 
+            }
+        }
+        for (superSingleton <- superSingletonElements)
+        {
+            if (!boundInBindClause.contains(superSingleton))
+            {
+                val superSingletonAsVar = helper.convertTypeToSparqlVariable(superSingleton.value)
+                if (superSingleton.createdWithRule == None)
+                {
+                    bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${superSingletonAsVar}\",\"${localUUID}\")))) AS ${superSingletonAsVar})\n"""
+                }
+                else addCustomBindRule(superSingleton)
+                boundInBindClause += superSingleton  
+            }
+        }
+    }
+    
+    def buildBaseGroupBindClauses()
+    {
+        for (element <- standardElementsToBind)
+        {
+            if (!boundInBindClause.contains(element))
+            {
+                if (element.createdWithRule == None)
+                {
+                    if (element.dependentOn != None) addDependentBindRule(element)
+                    else addStandardBindRule(element)    
+                }
+                else addCustomBindRule(element)
+            }
         } 
     }
     
-    def assignCardinalityEnforcerFromAssociatedElement(newElement: String, inputOneToOneConnections: HashMap[String, HashMap[String, String]], listToCheck: HashSet[String], literalList: HashSet[String], optionalList: HashSet[String], classResourceLists: HashSet[String])
+    def addCustomBindRule(element: GraphPatternElement)
     {
-        for (candidate <- listToCheck)
+        val elementName = element.value
+        val assigneeAsVar = helper.convertTypeToSparqlVariable(elementName)
+        var thisCustomRule = element.createdWithRule.get
+        if (thisCustomRule.contains("dependent"))
         {
-            if(inputOneToOneConnections.contains(candidate))
-            {
-                for ((element, name) <- inputOneToOneConnections(candidate))
-                {
-                    if (!optionalList.contains(element) && !literalList.contains(element) && !classResourceLists.contains(element))
-                    {
-                        if (!multiplicityMap.contains(newElement))
-                        {
-                            multiplicityMap += newElement -> element
-                            logger.info(s"The following cardinality enforcement has been assigned via the non-candidate bridge method: $element enforces cardinality on $newElement")   
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    def findEnforcerWithInstanceCountCardinalityMethod(newElement: String, literalList: HashSet[String], inputInstanceCountMap: HashMap[String, Integer], outputInstanceCountMap: HashMap[String, Integer], outputOneToOneConnections: HashMap[String, HashMap[String, String]], inputOneToOneConnections: HashMap[String, HashMap[String, String]], optionalList: HashSet[String], classResourceLists: HashSet[String])
-    {
-        // look for any output element that has a 1-1 cardinality relationship with an input element, to establish a baseline
-        for ((outputElement, connectionList) <- outputOneToOneConnections)
+            assert(element.dependentOn != None, s"Element $elementName has no dependent, but dependent is requested in custom rule $thisCustomRule")
+            thisCustomRule = thisCustomRule.replaceAll("\\$\\{dependent\\}", helper.convertTypeToSparqlVariable(element.dependentOn.get.value))
+        }  
+        if (thisCustomRule.contains("multiplicityEnforcer"))
         {
-            for ((connectedElement, connectionName) <- connectionList)
-            {
-                if (boundFromInput.contains(connectedElement))
-                {
-                    val inputInstanceCount = inputInstanceCountMap(connectedElement)
-                    val outputInstanceCount = outputInstanceCountMap(outputElement)
-                    val newElementInstanceCount = outputInstanceCountMap(newElement)
-                    
-                    for ((inputElement, inputElementInstanceCount) <- inputInstanceCountMap)
-                    {
-                        // avoid literals as cardinality enforcers (for now)
-                        if (!literalList.contains(inputElement))
-                        {
-                            // if the difference in instance counts is the same, it means the elements are on the same "cardinality plane"
-                            if (inputInstanceCount - outputInstanceCount == inputElementInstanceCount - newElementInstanceCount)
-                            {
-                                // if we previously find an enforcer for this element, make sure the new one is the same or exists on the same cardinality plane
-                                if (multiplicityMap.contains(newElement))
-                                {
-                                    val currentEnforcer = multiplicityMap(newElement)
-                                    if (currentEnforcer != inputElement && !inputOneToOneConnections(inputElement).contains(currentEnforcer)) throw new RuntimeException(s"Multiple possible cardinality enforcers found for $newElement: $currentEnforcer and $inputElement both appear qualified but exist on different cardinality planes")
-                                }
-                                else if (!classResourceLists.contains(inputElement))
-                                {
-                                    multiplicityMap += newElement -> inputElement
-                                    logger.info(s"The following cardinality enforcement has been assigned via the cardinality level change method: $inputElement enforces cardinality on $newElement")
-                                }
-                            } 
-                        }
-                    }
-                }
-            }
+            assert(cardinalityMap.contains(elementName), s"Element $elementName has no cardinality enforcer, but an enforcer is requested in custom rule $thisCustomRule")
+            thisCustomRule = thisCustomRule.replaceAll("\\$\\{multiplicityEnforcer\\}", cardinalityMap(elementName))
         }
-    }
-    
-    def buildSingletonBindClauses(localUUID: String, setConnectionLists: HashMap[String, HashSet[String]], customRulesList: HashMap[String, org.eclipse.rdf4j.model.Value]): HashSet[String] =
-    {
-        val outputSingletonClasses = setConnectionLists("outputSingletonList")
-        val outputSuperSingletonClasses = setConnectionLists("outputSuperSingletonList")
-        
-        val boundVariables = new HashSet[String]
-        for (singleton <- outputSingletonClasses)
-        {
-            if (!(boundFromInput.contains(singleton)) && !customRulesList.contains(singleton))
-            {
-                boundVariables += singleton
-                val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
-                bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
-            }
-        }
-        for (singleton <- outputSuperSingletonClasses)
-        {
-            if (!(boundFromInput.contains(singleton)) && !customRulesList.contains(singleton))
-            {
-                boundVariables += singleton
-                val singletonAsVar = helper.convertTypeToSparqlVariable(singleton)
-                bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\")))) AS ${singletonAsVar})\n"""
-            }
-        }
-        boundVariables
-    }
-    
-    def buildBaseGroupBindClauses(localUUID: String, customRulesList: HashMap[String, org.eclipse.rdf4j.model.Value], dependenciesList: HashMap[String, org.eclipse.rdf4j.model.Value], literalList: HashSet[String], inputManyToOneConnections: HashMap[String, HashMap[String, String]]): HashSet[String] =
-    {
-        val boundVariables = new HashSet[String]
-        for ((assignee, rule) <- customRulesList)
-        {
-            assert (!literalList.contains(assignee), s"Literal $assignee has not been bound in input")
-            
-            val assigneeAsVar = helper.convertTypeToSparqlVariable(assignee)
-            var dependent: Option[String] = None : Option[String]
-            if (dependenciesList.contains(assignee)) dependent = Some(dependenciesList(assignee).toString)
-            var customRule = helper.removeQuotesFromString(rule.toString.split("\\^")(0))+"\n"
-            if (dependent != None && customRule.contains("dependent"))
-            {
-                val dependee = helper.convertTypeToSparqlVariable(dependent.get, true)
-                customRule = customRule.replaceAll("\\$\\{dependent\\}", dependee)
-            }
-            var enforcer: String = null
-            if (customRule.contains("multiplicityEnforcer"))
-            {
-                assert(multiplicityMap.contains(assignee), s"A cardinality enforcer is required by the custom rule for $assignee, but no enforcer was found.")
-                assert(!literalList.contains(multiplicityMap(assignee)), s"Literals cannot be used as enforcers for custom rules: $customRule")
-                enforcer = multiplicityMap(assignee)
-                enforcer = helper.convertTypeToSparqlVariable(enforcer)
-                customRule = customRule.replaceAll("\\$\\{multiplicityEnforcer\\}", enforcer)
-            }
-            addCustomBindRule(customRule, assigneeAsVar, localUUID)
-            // remove custom rule assignee from multiplicity map so we don't create two rules for the same thing
-            multiplicityMap.remove(assignee)
-            nodesToCreate.remove(assignee)
-            boundVariables += assignee
-        }
-        for ((assignee, enforcer) <- multiplicityMap)
-        {
-            assert (!literalList.contains(assignee), s"Literal $assignee has not been bound in input")
-            val assigneeAsVar = helper.convertTypeToSparqlVariable(assignee)
-            /*if (literalList.contains(enforcer))
-            {
-                val secondaryEnforcer
-                if (dependenciesList.contains(assignee)) 
-                {
-                   val dependee = helper.convertTypeToSparqlVariable(dependenciesList(assignee), true)
-                   addDependentBindRuleWithLiteral(assigneeAsVar, localUUID, enforcer, dependee)
-                }
-                else addStandardBindRuleWithLiteral(assigneeAsVar, localUUID, enforcer)  
-            }
-            else
-            {*/
-                if (dependenciesList.contains(assignee)) 
-                {
-                   val dependee = helper.convertTypeToSparqlVariable(dependenciesList(assignee), true)
-                   addDependentBindRule(assigneeAsVar, localUUID, enforcer, dependee)
-                }
-                else addStandardBindRule(assigneeAsVar, localUUID, enforcer)     
-            //}
-            boundVariables += assignee
-            nodesToCreate.remove(assignee)
-        }
-        var nonCreatedElements = ""
-        for (node <- nodesToCreate) nonCreatedElements += node + " "
-        if (nonCreatedElements != "") throw new RuntimeException(s"The following elements to be created could not be assigned cardinality enforcers: $nonCreatedElements")
-        boundVariables
-    }
-    
-    def addCustomBindRule(customRule: String, assigneeAsVar: String, localUUID: String)
-    {
-        var thisCustomRule = customRule
         thisCustomRule = thisCustomRule.replaceAll("\\$\\{replacement\\}", assigneeAsVar)
         thisCustomRule = thisCustomRule.replaceAll("\\$\\{localUUID\\}", localUUID)
         thisCustomRule = thisCustomRule.replaceAll("\\$\\{defaultPrefix\\}", defaultPrefix)
         // these assertions may not be valid if a user decides to create a prefix or term with one of these words in it
-        assert (!thisCustomRule.contains("replacement"), s"No replacement for custom rule was identified, but custom rule requires a replacement. Rule string: $customRule")
-        assert (!thisCustomRule.contains("dependent"), s"No dependent for custom rule was identified, but custom rule requires a dependent. Rule string: $customRule")
+        assert (!thisCustomRule.contains("replacement"), s"No replacement for custom rule was identified, but custom rule requires a replacement. Rule string: $thisCustomRule")
+        assert (!thisCustomRule.contains("dependent"), s"No dependent for custom rule was identified, but custom rule requires a dependent. Rule string: $thisCustomRule")
         assert (!thisCustomRule.contains("localUUID"))
-        assert (!thisCustomRule.contains("multiplicityEnforcer"), s"No cardinality enforcer for custom rule was identified, but custom rule requires an enforcer. Rule string: $customRule")
+        assert (!thisCustomRule.contains("multiplicityEnforcer"), s"No cardinality enforcer for custom rule was identified, but custom rule requires an enforcer. Rule string: $thisCustomRule")
         assert (!thisCustomRule.contains("defaultPrefix"))
         bindRules += thisCustomRule
     }
     
-    def addStandardBindRule(newNode: String, localUUID: String, multiplicityEnforcer: String)
+    def addStandardBindRule(element: GraphPatternElement)
     {   
-        if (newNode != "")
-        {
-            var newNodeAsVar = newNode
-            var multiplicityEnforcerAsVar = multiplicityEnforcer
-            if (!newNode.contains('?'))
-            {
-                newNodeAsVar = helper.convertTypeToSparqlVariable(newNode)
-            }
-            if (!multiplicityEnforcer.contains('?'))
-            {
-                multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(multiplicityEnforcer)
-            }
-    
-            bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""
-        }
+        var newNodeAsVar = helper.convertTypeToSparqlVariable(element.value)
+        assert(cardinalityMap.contains(element.value), s"No cardinality enforcer found for new element $newNodeAsVar")
+        var multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(cardinalityMap(element.value))
+        bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""
     }
     
-    def addStandardBindRuleWithLiteral(newNode: String, localUUID: String, literalEnforcer: String, connectedInstanceNode: String)
-    {   
-        if (newNode != "")
-        {
-            var newNodeAsVar = newNode
-            var literalEnforcerAsVar = literalEnforcer
-            var instanceAsVar = connectedInstanceNode
-            if (!newNode.contains('?'))
-            {
-                newNodeAsVar = helper.convertTypeToSparqlVariable(newNode)
-            }
-            if (!literalEnforcer.contains('?'))
-            {
-                literalEnforcerAsVar = helper.convertTypeToSparqlVariable(literalEnforcer)
-            }
-            if (!connectedInstanceNode.contains('?'))
-            {
-                instanceAsVar = helper.convertTypeToSparqlVariable(connectedInstanceNode)
-            }
-    
-            bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${literalEnforcerAsVar}), str(${instanceAsVar}))))) AS ${newNodeAsVar})\n"""
-        }
-    }
-    
-    def addDependentBindRuleWithLiteral(newNode: String, localUUID: String, literalEnforcer: String, connectedInstanceNode: String, dependee: String)
-    {   
-        if (newNode != "")
-        {
-            var newNodeAsVar = newNode
-            var literalEnforcerAsVar = literalEnforcer
-            var instanceAsVar = connectedInstanceNode
-            var dependeeAsVar = dependee
-            if (!newNode.contains('?'))
-            {
-                newNodeAsVar = helper.convertTypeToSparqlVariable(newNode)
-            }
-            if (!literalEnforcer.contains('?'))
-            {
-                literalEnforcerAsVar = helper.convertTypeToSparqlVariable(literalEnforcer)
-            }
-            if (!connectedInstanceNode.contains('?'))
-            {
-                instanceAsVar = helper.convertTypeToSparqlVariable(connectedInstanceNode)
-            }
-            if (!dependee.contains('?'))
-            {
-                dependeeAsVar = helper.convertTypeToSparqlVariable(dependee)
-            }
-    
-            bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${literalEnforcerAsVar}), str(${instanceAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
-        }
-    }
-    
-    def addDependentBindRule(newNode: String, localUUID: String, multiplicityEnforcer: String, dependee: String)
+    def addDependentBindRule(element: GraphPatternElement)
     {
-        if (newNode != "")
-        {
-            var newNodeAsVar = newNode
-            var multiplicityEnforcerAsVar = multiplicityEnforcer
-            var dependeeAsVar = dependee
-            if (!newNode.contains('?'))
-            {
-                newNodeAsVar = helper.convertTypeToSparqlVariable(newNode)
-            }
-            if (!multiplicityEnforcer.contains('?'))
-            {
-                multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(multiplicityEnforcer)
-            }
-            if (!dependee.contains('?'))
-            {
-                dependeeAsVar = helper.convertTypeToSparqlVariable(dependee)
-            }
-            
-            bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
-        }
+        var newNodeAsVar = helper.convertTypeToSparqlVariable(element.value)
+        assert(cardinalityMap.contains(element.value), s"No cardinality enforcer found for new element $newNodeAsVar")
+        var multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(cardinalityMap(element.value))
+        var dependeeAsVar = helper.convertTypeToSparqlVariable(element.dependentOn.get.value)
+        bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
     }
 }

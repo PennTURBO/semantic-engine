@@ -47,7 +47,7 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
      in the insert clause will not be converted to a variable unless it is included in this list. The boolean value represents whether a URI is qualified
      to be a multiplicity enforcer for the bind clause. To be qualified, it must have a type declared in the Where block and at some point be listed as required
      input to the process. */
-    var usedVariables: HashSet[String] = new HashSet[String]
+    var usedVariables: HashSet[GraphPatternElement] = new HashSet[GraphPatternElement]
     
     override def runQuery(cxn: RepositoryConnection)
     {
@@ -119,23 +119,22 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
     def createWhereClause(inputs: HashSet[ConnectionRecipe])
     {
         assert (whereClause == "")
-        assert (defaultInputGraph != null && defaultInputGraph != "")
+        assert (defaultInputGraph != null && defaultInputGraph != "", "No default input named graph set")
         varsForProcessInput = whereClauseBuilder.addTripleFromRowResult(inputs, defaultInputGraph, process)
-        
-        assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "")
+        assert (whereClauseBuilder.clause != null && whereClauseBuilder.clause != "", "Where Clause is empty")
         assert (whereClauseBuilder.clause.contains("GRAPH"))
         val innerClause = whereClauseBuilder.clause
         whereClause += s"WHERE { \n$innerClause"
     }
 
-    def createBindClause(inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe])
+    def createBindClause(inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe], localUUID: String)
     {
         assert (bindClause == "")
         if (whereClause == null || whereClause.size == 0) 
         {
             throw new RuntimeException("Bind clause cannot be built before where clause is built.")
         }
-        usedVariables = bindClauseBuilder.buildBindClause(inputs, outputs)
+        usedVariables = bindClauseBuilder.buildBindClause(process, localUUID, inputs, outputs)
      
         bindClause = bindClauseBuilder.clause
         // if we attempted to build the bind clause and no binds were necessary, make the clause contain a single empty character so that other clauses can be built
