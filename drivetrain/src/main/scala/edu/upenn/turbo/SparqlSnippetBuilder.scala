@@ -11,13 +11,13 @@ class SparqlSnippetBuilder extends ProjectwideGlobals
         val subject = buildSubject(recipe)
         val predicate = buildPredicate(recipe)
         val crObject = buildObject(recipe)
-        subject + " " + predicate + " " + crObject
+        subject + " " + predicate + " " + crObject + " .\n"
     }
     
     def buildSubject(recipe: ConnectionRecipe): String =
     {
         var subject = "<" + recipe.subject.value + ">"
-        if (recipe.isInstanceOf[Instance] || (recipe.isInstanceOf[Term] && recipe.asInstanceOf[Term].isResourceList.get)) subject = helper.convertTypeToSparqlVariable(recipe.subject.value, true)
+        if (recipe.subject.isInstanceOf[Instance] || (recipe.subject.isInstanceOf[Term] && recipe.subject.asInstanceOf[Term].isResourceList.get)) subject = helper.convertTypeToSparqlVariable(recipe.subject.value, true)
         subject
     }
 
@@ -39,15 +39,15 @@ class SparqlSnippetBuilder extends ProjectwideGlobals
     def buildObject(recipe: ConnectionRecipe): String =
     {
         var crObject = ""
-        if (recipe.isInstanceOf[Literal])
+        if (recipe.crObject.isInstanceOf[Literal])
         {
-            if (!recipe.asInstanceOf[Literal].isResourceList.get) crObject = recipe.crObject.value
+            if (!recipe.crObject.asInstanceOf[Literal].isResourceList.get) crObject = recipe.crObject.value
             else crObject = helper.convertTypeToSparqlVariable(recipe.crObject.value, true)
         }
         else
         {
-            var crObject = "<" + recipe.crObject.value + ">"
-            if (recipe.isInstanceOf[Instance] || (recipe.isInstanceOf[Term] && recipe.asInstanceOf[Term].isResourceList.get)) crObject = helper.convertTypeToSparqlVariable(recipe.crObject.value, true) 
+            crObject = "<" + recipe.crObject.value + ">"
+            if (recipe.crObject.isInstanceOf[Instance] || (recipe.crObject.isInstanceOf[Term] && recipe.crObject.asInstanceOf[Term].isResourceList.get)) crObject = helper.convertTypeToSparqlVariable(recipe.crObject.value, true) 
         }
         crObject
     }

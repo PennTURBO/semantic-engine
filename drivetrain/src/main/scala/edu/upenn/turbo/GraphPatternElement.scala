@@ -3,7 +3,7 @@ package edu.upenn.turbo
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.ArrayBuffer
 
-trait GraphPatternElement 
+trait GraphPatternElement extends ProjectwideGlobals
 {
     var value: String = null
     
@@ -19,20 +19,48 @@ trait GraphPatternElement
     var createdWithRule: Option[String] = None
 }
 
-class Instance extends GraphPatternElement
+class Instance(newValue: String) extends GraphPatternElement
 {
+    value = newValue
+    
+    def buildInstanceType(instance: Instance)
+    {
+        instance.sparqlTypeString = helper.convertTypeToSparqlVariable(instance.value, true) + " rdf:type " + instance.instanceType + " .\n"
+    }
+    
+    var instanceType: String = null
+    var sparqlTypeString: String = null
+    
     var isUntyped: Option[Boolean] = None
     var isSingleton: Option[Boolean] = None
     var isSuperSingleton: Option[Boolean] = None 
 }
 
-class Term extends GraphPatternElement
+class Term(newValue: String) extends GraphPatternElement
 {
+    value = newValue
+    
+    def buildValuesBlock(term: Term)
+    {
+        if (ranges != None) 
+        {
+            val asVariable = helper.convertTypeToSparqlVariable(term.value, true)
+            var res = s"VALUES $asVariable {"
+            for (item <- ranges.get) res += "<" + item + ">"
+            res + "}"
+            rangesAsSparqlValues = Some(res)
+        }
+    }
+  
+    var rangesAsSparqlValues: Option[String] = None
+    
     var isResourceList: Option[Boolean] = None
     var ranges: Option[ArrayBuffer[String]] = None
 }
 
-class Literal extends GraphPatternElement
+class Literal(newValue: String) extends GraphPatternElement
 {
+    value = newValue
+    
     var isResourceList: Option[Boolean] = None
 }

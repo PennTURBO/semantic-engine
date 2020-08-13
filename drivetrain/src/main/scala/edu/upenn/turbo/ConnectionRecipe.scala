@@ -24,38 +24,44 @@ trait ConnectionRecipe
     }
 }
 
-class InstToInstConnRecipe(newSubject: Instance, newObject: Instance) extends ConnectionRecipe 
+class InstToInstConnRecipe(newSubject: Instance, newPredicate: String, newObject: Instance) extends ConnectionRecipe 
 {
     subject = newSubject
+    predicate = newPredicate
     crObject = newObject
 }
 
-class InstToTermConnRecipe(newSubject: Instance, newObject: Term) extends ConnectionRecipe 
+class InstToTermConnRecipe(newSubject: Instance, newPredicate: String, newObject: Term) extends ConnectionRecipe 
 {
     subject = newSubject
+    predicate = newPredicate
     crObject = newObject
 }
 
-class TermToInstConnRecipe(newSubject: Term, newObject: Instance) extends ConnectionRecipe 
+class TermToInstConnRecipe(newSubject: Term, newPredicate: String, newObject: Instance) extends ConnectionRecipe 
 {
     subject = newSubject
+    predicate = newPredicate
     crObject = newObject
 }
 
-class InstToLitConnRecipe(newSubject: Instance, newObject: Literal) extends ConnectionRecipe 
+class InstToLitConnRecipe(newSubject: Instance, newPredicate: String, newObject: Literal) extends ConnectionRecipe 
 {
     subject = newSubject
+    predicate = newPredicate
     crObject = newObject
 }
 
-class TermToLitConnRecipe(newSubject: Term, newObject: Literal) extends ConnectionRecipe 
+class TermToLitConnRecipe(newSubject: Term, newPredicate: String, newObject: Literal) extends ConnectionRecipe 
 {
     subject = newSubject
+    predicate = newPredicate
     crObject = newObject
 }
 
-class TermToTermConnRecipe(newSubject: Term, newObject: Term) extends ConnectionRecipe 
+class TermToTermConnRecipe(newSubject: Term, newPredicate: String, newObject: Term) extends ConnectionRecipe 
 {
     subject = newSubject
+    predicate = newPredicate
     crObject = newObject
 }

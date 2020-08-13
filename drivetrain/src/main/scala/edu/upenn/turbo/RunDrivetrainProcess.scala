@@ -18,9 +18,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
 {
     var localUUID: String = null
     var variableSet = new HashSet[Value]
-    var inputSet = new HashSet[Value]
-    var inputProcessSet = new HashSet[String]
-    var typeMap = new HashMap[String,Value]
     var multithread = useMultipleThreads
     
     var inputDataValidator: InputDataValidator = null
@@ -76,7 +73,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
            
             val primaryQuery = processQueryMap(processSpecification)
             val genericWhereClause = primaryQuery.whereClause
-            primaryQuery.defaultInputGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(primaryQuery.defaultInputGraph)
             
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
             //var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
@@ -109,7 +105,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 logger.info("Completed process " + processSpecification + " in " + runtime + " seconds")
 
                 // create metadata about process
-                val metaDataQuery = new DataQuery()
                 val metaInfo: HashMap[Value, ArrayBuffer[String]] = HashMap(METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
                                                                 DATE -> ArrayBuffer(currDate.toString), 
                                                                 PROCESSSPECIFICATION -> ArrayBuffer(processSpecification), 
@@ -120,10 +115,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                                                                 INPUTNAMEDGRAPHS -> inputNamedGraphsList
                                                                 )
                                                                 
-                val metaDataTriples = createMetaDataTriples(metaInfo)
-                metaDataQuery.createInsertDataClause(metaDataTriples, processNamedGraph)
-                //logger.info(metaDataQuery.getQuery())
-                metaDataQuery.runQuery(cxn)  
+                addMetaDataTriples(metaInfo, processNamedGraph)
                 if (triplesAdded == 0) logger.warn("Process " + processSpecification + " did not add any triples upon execution")
             }
         }
@@ -218,11 +210,11 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         var discoveredTerms = new HashMap[String, Term]
         var discoveredLiterals = new HashMap[String, Literal]
         
-        val (inputRecipeList, inpDisInst, inpDisTerm, inpDisLit) = processAcornRowResults("inputs", inputs, discoveredInstances, discoveredTerms, discoveredLiterals)
+        val (inputRecipeList, inpDisInst, inpDisTerm, inpDisLit) = processAcornRowResults("input", inputs, discoveredInstances, discoveredTerms, discoveredLiterals)
         discoveredInstances = inpDisInst; discoveredTerms = inpDisTerm; discoveredLiterals = inpDisLit
-        val (outputRecipeList, outDisInst, outDisTerm, outDisLit) = processAcornRowResults("outputs", outputs, discoveredInstances, discoveredTerms, discoveredLiterals)
+        val (outputRecipeList, outDisInst, outDisTerm, outDisLit) = processAcornRowResults("output", outputs, discoveredInstances, discoveredTerms, discoveredLiterals)
         discoveredInstances = outDisInst; discoveredTerms = outDisTerm; discoveredLiterals = outDisLit
-        val (removalsRecipeList, remDisInst, remDisTerm, remDisLit) = processAcornRowResults("removals", removals, discoveredInstances, discoveredTerms, discoveredLiterals)
+        val (removalsRecipeList, remDisInst, remDisTerm, remDisLit) = processAcornRowResults("removal", removals, discoveredInstances, discoveredTerms, discoveredLiterals)
         (inputRecipeList, outputRecipeList, removalsRecipeList)
     }
     
@@ -235,100 +227,110 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 objectExplicit, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper, graphForThisRow, suffixOperator,
                 minusGroup, optionalGroup, subjectCustomRule, objectCustomRule, subjectDependee, objectDependee) 
                 = interpretRowData(row)
-            
+                
+            var subjectWithContext = subjectString
+            var objectWithContext = objectString
+            if (row(SUBJECTCONTEXT.toString) != null) subjectWithContext += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
+            if (row(OBJECTCONTEXT.toString) != null) objectWithContext += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
             if (recipeType == instToInstRecipe)
             {
-                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
+                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectExplicit, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
-                val obInst = findOrCreateNewInstance(typeOfData, disInst, objectString, objectExplicit, objectIsSingleton, objectIsSuper, objectCustomRule)
+                val obInst = findOrCreateNewInstance(typeOfData, disInst, objectString, objectWithContext, objectExplicit, objectIsSingleton, objectIsSuper, objectCustomRule)
                 disInst += obInst.value -> obInst
                 
                 // right now only updating connection lists for instance-to-instance relations
                 //it would be possible to enforce cardinality based on a LiteralResourceList or maybe even a ClassResourceList...but leaving that alone for now
                 updateConnectionLists(subjInst, obInst, thisMultiplicity)
                                                 
-                val recipe = new InstToInstConnRecipe(subjInst, obInst)
+                val recipe = new InstToInstConnRecipe(subjInst, predicate, obInst)
                 subjInst.referencedByRecipes += recipe
                 obInst.referencedByRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, obInst, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
                 recipe.addSparqlSnippet()
+                recipesList += recipe
             }
             else if (recipeType == instToTermRecipe)
             {
-                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
+                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectExplicit, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
-                val objTerm = findOrCreateNewTerm(typeOfData, disTerm, objectString, objectExplicit, objectCustomRule)
+                val objTerm = findOrCreateNewTerm(typeOfData, disTerm, objectWithContext, objectExplicit, objectCustomRule)
                 disTerm += objTerm.value -> objTerm
                 
-                val recipe = new InstToTermConnRecipe(subjInst, objTerm)
+                val recipe = new InstToTermConnRecipe(subjInst, predicate, objTerm)
                 subjInst.referencedByRecipes += recipe
                 objTerm.referencedByRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objTerm, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
                 recipe.addSparqlSnippet()
+                recipesList += recipe
             }
             else if (recipeType == termToInstRecipe)
             {
-                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectString, subjectExplicit, subjectCustomRule)
+                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectExplicit, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
-                val objInst = findOrCreateNewInstance(typeOfData, disInst, objectString, objectExplicit, objectIsSingleton, objectIsSuper, objectCustomRule)
+                val objInst = findOrCreateNewInstance(typeOfData, disInst, objectString, objectWithContext, objectExplicit, objectIsSingleton, objectIsSuper, objectCustomRule)
                 disInst += objInst.value -> objInst
                 
-                val recipe = new TermToInstConnRecipe(subjTerm, objInst)
+                val recipe = new TermToInstConnRecipe(subjTerm, predicate, objInst)
                 subjTerm.referencedByRecipes += recipe
                 objInst.referencedByRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objInst, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
                 recipe.addSparqlSnippet()
+                recipesList += recipe
             }
             else if (recipeType == instToLiteralRecipe)
             {
-                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectExplicit, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
+                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectExplicit, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
-                val objLit = findOrCreateNewLiteral(typeOfData, disLit, objectString, objectExplicit, objectCustomRule)
+                val objLit = findOrCreateNewLiteral(typeOfData, disLit, objectWithContext, objectExplicit, objectCustomRule)
                 disLit += objLit.value -> objLit
                 
-                val recipe = new InstToLitConnRecipe(subjInst, objLit)
+                val recipe = new InstToLitConnRecipe(subjInst, predicate, objLit)
                 subjInst.referencedByRecipes += recipe
                 objLit.referencedByRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objLit, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
                 recipe.addSparqlSnippet()
+                recipesList += recipe
             }
             else if (recipeType == termToLiteralRecipe)
             {
-                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectString, subjectExplicit, subjectCustomRule)
+                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectExplicit, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
-                val objLit = findOrCreateNewLiteral(typeOfData, disLit, objectString, objectExplicit, objectCustomRule)
+                val objLit = findOrCreateNewLiteral(typeOfData, disLit, objectWithContext, objectExplicit, objectCustomRule)
                 disLit += objLit.value -> objLit
                 
-                val recipe = new TermToLitConnRecipe(subjTerm, objLit)
+                val recipe = new TermToLitConnRecipe(subjTerm, predicate, objLit)
                 subjTerm.referencedByRecipes += recipe
                 objLit.referencedByRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objLit, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
                 recipe.addSparqlSnippet()
+                recipesList += recipe
             }
             else if (recipeType == termToTermRecipe)
             {
-                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectString, subjectExplicit, subjectCustomRule)
+                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectExplicit, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
-                val objTerm = findOrCreateNewTerm(typeOfData, disTerm, objectString, objectExplicit, objectCustomRule)
+                val objTerm = findOrCreateNewTerm(typeOfData, disTerm, objectWithContext, objectExplicit, objectCustomRule)
                 disTerm += objTerm.value -> objTerm
                 
-                val recipe = new TermToTermConnRecipe(subjTerm, objTerm)
+                val recipe = new TermToTermConnRecipe(subjTerm, predicate, objTerm)
                 subjTerm.referencedByRecipes += recipe
                 objTerm.referencedByRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objTerm, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
                 recipe.addSparqlSnippet()
+                recipesList += recipe
             }
             else throw new RuntimeException(s"Unrecognized input cardinality setting: $thisMultiplicity")
         }
@@ -354,7 +356,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     {
         recipe.name = connectionName
         recipe.cardinality = thisMultiplicity
-        recipe.predicate = predicate
         recipe.isOptional = Some(optional)
         if (graphForThisRow != null) recipe.foundInGraph = Some(graphForThisRow)
         if (suffixOperator != null) recipe.predicateSuffixOperator = Some(suffixOperator)
@@ -367,13 +368,30 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         if (cardinality == oneToOneMultiplicity)
         {
             val subjList = subj.oneToOneConnections
-            val objList = subj.oneToOneConnections
-            
-            for (instance <- subjList) instance.oneToOneConnections += obj
-            for (instance <- objList) instance.oneToOneConnections += subj
+            val objList = obj.oneToOneConnections
             
             subjList += obj
             objList += subj
+            
+            for (instance <- subjList)
+            {
+                if (obj != instance && subj != instance) 
+                {
+                    instance.oneToOneConnections += obj   
+                    obj.oneToOneConnections += instance
+                }
+            }
+            for (instance <- objList) 
+            {
+                if (subj != instance && obj != instance) 
+                {
+                    instance.oneToOneConnections += subj
+                    subj.oneToOneConnections += instance
+                }
+            }
+            
+            //for (element <- subjList) logger.info(subj.value + " is connected with " + element.value)
+            //for (element <- objList) logger.info(obj.value + " is connected with " + element.value)
         }
         else if (cardinality == oneToManyMultiplicity)
         {
@@ -397,9 +415,6 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     {
         var subjectString = row(SUBJECT.toString).toString
         var objectString = row(OBJECT.toString).toString
-                   
-        if (row(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
-        if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
         
         val predicate = row(PREDICATE.toString).toString
         
@@ -417,6 +432,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         if (row(SUBJECTADESCRIBER.toString) != null) subjectExplicit = false
         var objectExplicit = true
         if (row(OBJECTADESCRIBER.toString) != null) objectExplicit = false
+        if (row(OBJECTALITERALVALUE.toString) != null) objectExplicit = true
         
         // SPARQL searches process that created this input as an output and returns their graph (GRAPHOFCREATINGPROCESS). We override that if the user provided a graph explicitly (GRAPHOFORIGIN)
         var graphForThisRow: String = null
@@ -456,25 +472,28 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             minusGroup, optionalGroup, subjectCustomRule, objectCustomRule, subjectDependee, objectDependee)
     }
     
-    def findOrCreateNewInstance(typeOfData: String, disInst: HashMap[String, Instance], stringVal: String, explicit: Boolean, singleton: Boolean, superSingleton: Boolean, customRule: String): Instance =
+    def findOrCreateNewInstance(typeOfData: String, disInst: HashMap[String, Instance], stringVal: String, valWithContext: String, explicit: Boolean, singleton: Boolean, superSingleton: Boolean, customRule: String): Instance =
     {
         var newInst: Instance = null
-        if (disInst.contains(stringVal)) 
+        if (disInst.contains(valWithContext)) 
         {
             // might be a good place to validate the discovered element with the informations gathered about it that are parameters to this method
-            newInst = disInst(stringVal)
+            newInst = disInst(valWithContext)
         }
         else
         {
-          newInst = new Instance()
-          newInst.value = stringVal
+          newInst = new Instance(valWithContext)
           newInst.isUntyped = Some(!explicit)
           newInst.isSingleton = Some(singleton)
           newInst.isSuperSingleton = Some(superSingleton)
+          newInst.instanceType = stringVal
+          newInst.buildInstanceType(newInst)
           if (customRule != null) newInst.createdWithRule = Some(customRule)
         }
         if (typeOfData == "input") newInst.existsInInput = Some(true)
+        else if (newInst.existsInInput == None) newInst.existsInInput = Some(false)
         if (typeOfData == "output") newInst.existsInOutput = Some(true)
+        else if (newInst.existsInOutput == None) newInst.existsInOutput = Some(false)
         newInst
     }
     
@@ -488,14 +507,15 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         }
         else
         {
-          newTerm = new Term()
-          newTerm.value = stringVal
+          newTerm = new Term(stringVal)
           newTerm.isResourceList = Some(!explicit)
           if (!explicit) newTerm.ranges = Some(helper.getDescriberRangesAsList(gmCxn, stringVal))
           if (customRule != null) newTerm.createdWithRule = Some(customRule)
         }
         if (typeOfData == "input") newTerm.existsInInput = Some(true)
+        else if (newTerm.existsInInput == None) newTerm.existsInInput = Some(false)
         if (typeOfData == "output") newTerm.existsInOutput = Some(true)
+        else if (newTerm.existsInOutput == None) newTerm.existsInOutput = Some(false)
         newTerm
     }
     
@@ -509,13 +529,14 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         }
         else
         {
-          newLit = new Literal()
-          newLit.value = stringVal
+          newLit = new Literal(stringVal)
           newLit.isResourceList = Some(!explicit)
           if (customRule != null) newLit.createdWithRule = Some(customRule)
         }
         if (typeOfData == "input") newLit.existsInInput = Some(true)
+        else if (newLit.existsInInput == None) newLit.existsInInput = Some(false)
         if (typeOfData == "output") newLit.existsInOutput = Some(true)
+        else if (newLit.existsInOutput == None) newLit.existsInOutput = Some(false)
         newLit
     }
     
@@ -539,7 +560,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         runProcess(orderedProcessList, dataValidationMode, validateAgainstOntology)
     }
     
-    def createMetaDataTriples(metaInfo: HashMap[Value, ArrayBuffer[String]]): ArrayBuffer[Triple] =
+    def addMetaDataTriples(metaInfo: HashMap[Value, ArrayBuffer[String]], processNamedGraph: String)
     {
         val processSpecification = metaInfo(PROCESSSPECIFICATION)(0)
         val currDate = metaInfo(DATE)(0)
@@ -558,40 +579,47 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
         helper.validateURI(processNamedGraph)
         var metaTriples = ArrayBuffer(
-             new Triple(processSpecification, "turbo:TURBO_0010106", queryVal),
-             new Triple(updateProcess, "turbo:TURBO_0010107", runtime),
-             new Triple(updateProcess, "turbo:TURBO_0010108", triplesAdded),
-             new Triple(updateProcess, "rdf:type", "turbo:TURBO_0010347"),
-             new Triple(updateProcess, "obo:BFO_0000055", updatePlanUri),
-             new Triple(updatePlanUri, "rdf:type", "turbo:TURBO_0010373"),
-             new Triple(updatePlanUri, "obo:RO_0000059", processSpecification),
-             new Triple(processSpecification, "rdf:type", "turbo:TURBO_0010354"),
-             new Triple(processBoundary, "obo:RO_0002223", updateProcess),
-             new Triple(processBoundary, "rdf:type", "obo:BFO_0000035"),
-             new Triple(timeMeasDatum, "obo:IAO_0000136", processBoundary),
-             new Triple(timeMeasDatum, "rdf:type", "obo:IAO_0000416")
+             new TermToLitConnRecipe(new Term(processSpecification), "turbo:TURBO_0010106", new Literal(queryVal)),
+             new TermToLitConnRecipe(new Term(updateProcess), "turbo:TURBO_0010107", new Literal(runtime)),
+             new TermToLitConnRecipe(new Term(updateProcess), "turbo:TURBO_0010108", new Literal(triplesAdded)),
+             new TermToTermConnRecipe(new Term(updateProcess), "rdf:type", new Term("turbo:TURBO_0010347")),
+             new TermToTermConnRecipe(new Term(updateProcess), "obo:BFO_0000055", new Term(updatePlanUri)),
+             new TermToTermConnRecipe(new Term(updatePlanUri), "rdf:type", new Term("turbo:TURBO_0010373")),
+             new TermToTermConnRecipe(new Term(updatePlanUri), "obo:RO_0000059", new Term(processSpecification)),
+             new TermToTermConnRecipe(new Term(processSpecification), "rdf:type", new Term("turbo:TURBO_0010354")),
+             new TermToTermConnRecipe(new Term(processBoundary), "obo:RO_0002223", new Term(updateProcess)),
+             new TermToTermConnRecipe(new Term(processBoundary), "rdf:type", new Term("obo:BFO_0000035")),
+             new TermToTermConnRecipe(new Term(timeMeasDatum), "obo:IAO_0000136", new Term(processBoundary)),
+             new TermToTermConnRecipe(new Term(timeMeasDatum), "rdf:type", new Term("obo:IAO_0000416"))
         )
         for (inputGraph <- inputNamedGraphsList) 
         {
             val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(inputGraph)
-            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", graphForThisRow)
+            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "turbo:TURBO_0010187", new Term(graphForThisRow))
         }
         if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) 
         {
             val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(outputNamedGraph)
-            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", graphForThisRow)
+            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "turbo:TURBO_0010186", new Term(graphForThisRow))
         }
         else if (removalsNamedGraph != null) 
         {
             val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(removalsNamedGraph)
-            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", graphForThisRow)
+            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "turbo:TURBO_0010186", new Term(graphForThisRow))
         }
         
-        //Triple class currently does not support literal datatypes other than strings, so making custom query to insert current date with dateTime format
+        var metaDataQuery = s"INSERT DATA {\n GRAPH {$processNamedGraph "
+        for (recipe <- metaTriples) 
+        {
+            recipe.addSparqlSnippet()
+            metaDataQuery += recipe.asSparql
+        }
+        metaDataQuery += "}\n}\n"
+        update.updateSparql(cxn, metaDataQuery)
+        
+        //Literal class currently does not support literal datatypes other than strings, so making custom query to insert current date with dateTime format
         val dateInsert = s"""INSERT DATA {Graph <$processNamedGraph> { <$timeMeasDatum> obo:IAO_0000004 "$currDate"^^xsd:dateTime .}}"""
         //logger.info(dateInsert)
         update.updateSparql(cxn, dateInsert)
-        
-        metaTriples
     }
 }

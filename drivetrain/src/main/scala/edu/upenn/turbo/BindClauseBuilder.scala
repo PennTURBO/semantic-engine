@@ -8,8 +8,10 @@ import java.util.regex.Pattern
 import org.eclipse.rdf4j.repository.RepositoryConnection
 import scala.util.control._
 
-class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
+class BindClauseBuilder extends ProjectwideGlobals
 {
+    var clause = ""
+    
     var localUUID: String = ""
     // holds the final set of bind rules to be added to the query, one rule per entry
     var bindRules = new HashSet[String]
@@ -52,19 +54,39 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
         }
         for (recipe <- outputs)
         {
-            if (!recipe.subject.existsInInput.get && recipe.subject.isInstanceOf[Instance]) 
+            if (!recipe.subject.existsInInput.get) 
             {
-                if (recipe.subject.asInstanceOf[Instance].isSuperSingleton.get) superSingletonElements += recipe.subject
-                else if (recipe.subject.asInstanceOf[Instance].isSingleton.get) singletonElements += recipe.subject
-                else standardElementsToBind += recipe.subject
-                assignCardinalityToInstance(recipe.subject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)
+                if (recipe.subject.isInstanceOf[Instance])
+                {
+                    if (recipe.subject.asInstanceOf[Instance].isSuperSingleton.get) superSingletonElements += recipe.subject
+                    else if (recipe.subject.asInstanceOf[Instance].isSingleton.get) singletonElements += recipe.subject
+                    else 
+                    {
+                        standardElementsToBind += recipe.subject
+                        assignCardinalityToInstance(recipe.subject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)
+                    } 
+                }
+                else if (recipe.subject.isInstanceOf[Term] && recipe.subject.createdWithRule != None)
+                {
+                    standardElementsToBind += recipe.subject
+                }
             }
-            if (!recipe.crObject.existsInInput.get && recipe.crObject.isInstanceOf[Instance])
+            if (!recipe.crObject.existsInInput.get)
             {
-                if (recipe.crObject.asInstanceOf[Instance].isSuperSingleton.get) superSingletonElements += recipe.crObject
-                else if (recipe.crObject.asInstanceOf[Instance].isSingleton.get) singletonElements += recipe.crObject
-                else standardElementsToBind += recipe.crObject
-                assignCardinalityToInstance(recipe.crObject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)
+                if (recipe.crObject.isInstanceOf[Instance])
+                {
+                    if (recipe.crObject.asInstanceOf[Instance].isSuperSingleton.get) superSingletonElements += recipe.crObject
+                    else if (recipe.crObject.asInstanceOf[Instance].isSingleton.get) singletonElements += recipe.crObject
+                    else 
+                    {
+                        standardElementsToBind += recipe.crObject  
+                        assignCardinalityToInstance(recipe.crObject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)
+                    } 
+                }
+                else if (recipe.crObject.isInstanceOf[Term] && recipe.crObject.createdWithRule != None)
+                {
+                    standardElementsToBind += recipe.crObject
+                }
             }
         }
     }
@@ -183,7 +205,7 @@ class BindClauseBuilder extends SparqlClauseBuilder with ProjectwideGlobals
     {
         val elementName = element.value
         val assigneeAsVar = helper.convertTypeToSparqlVariable(elementName)
-        var thisCustomRule = element.createdWithRule.get
+        var thisCustomRule = helper.removeQuotesFromString(element.createdWithRule.get.split("\\^")(0))+"\n"
         if (thisCustomRule.contains("dependent"))
         {
             assert(element.dependentOn != None, s"Element $elementName has no dependent, but dependent is requested in custom rule $thisCustomRule")
