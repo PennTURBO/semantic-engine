@@ -1,0 +1,87 @@
+# baseURI: https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/post_icbo_synthea_omop_cnp_transformation_instructions.ttl/
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix drivetrain: <https://github.com/PennTURBO/Drivetrain/> .
+@prefix properties: <http://turboProperties.org/> .
+
+<https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/post_icbo_synthea_omop_cnp_transformation_instructions.ttl>
+  a owl:Ontology ;
+  owl:priorVersion "not applicable" ;
+  owl:versionInfo "unversioned" ;
+  owl:versionIRI <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/post_icbo_synthea_omop_cnp_transformation_instructions.ttl> ;
+  rdfs:comment "that's not really a version IRI" .
+
+# MAM: I should probably make the resource lists more specific (integer, string...) in this file
+
+# classes present in shortcuts but not defiend elsewhere
+
+<http://example.com/resource/R_LAB_RESULT_ITEM_shortcut> a owl:Class .
+
+# remaining data
+#<http://example.com/resource/lab_ressult_shortcut/399771298>
+#        mydata:LOINC             "3096-5" ;
+#        mydata:MRN_HUP           "15450398" ;
+#        mydata:PK_PATIENT_ENCOUNTER_ID_hex "FFB8EC9714597490E0430100007FA0BB" ;
+#        mydata:UNIT_OF_MEASURE   "g/TV" .
+
+<https://github.com/PennTURBO/Drivetrain/star>
+  a <https://github.com/PennTURBO/Drivetrain/PredicateSuffixSymbol> ;
+   drivetrain:usesSparqlOperator "*" .
+
+ drivetrain:assays
+  a <http://transformunify.org/ontologies/TURBO_0010354> ;
+   drivetrain:hasRequiredInput  drivetrain:ReadAssayKeySymbVal ;
+   drivetrain:hasRequiredInput  drivetrain:ReadAssayValnumSymbVal ;
+   drivetrain:hasOutput  drivetrain:AssayExpansionSpecification ;
+   drivetrain:hasOutput  drivetrain:AssayKeySymbHasRepresentation ;
+   drivetrain:hasOutput  drivetrain:AssayKeySymbPartOfKey ;
+   drivetrain:hasOutput  drivetrain:AssayKeyDenotesAssay ;
+   drivetrain:hasOutput  drivetrain:AssayHasSpecifiedOutputDataItem ;
+   drivetrain:hasOutput  drivetrain:AssayDataItemHasValueSpecification ;
+   drivetrain:hasOutput  drivetrain:AssayValspecHasRepresentation ;
+   drivetrain:hasOutput  drivetrain:AssayDataItemIsAboutPerson ;
+   drivetrain:hasOutput  drivetrain:CridDenotesPerson;
+   drivetrain:hasOutput  drivetrain:PersonSymbolPartOfCrid ;
+   drivetrain:inputNamedGraph  properties:shortcutNamedGraph ;
+   drivetrain:outputNamedGraph properties:expandedNamedGraph .
+
+#  drivetrain:precedes drivetrain:HealthCareEncounters ;
+
+drivetrain:KeyDenotesAssayInp
+  a drivetrain:InstanceToInstanceRecipe ;
+    drivetrain:subject ontologies:TURBO_0010433 ;
+    drivetrain:predicate obo:IAO_0000219 ;
+    drivetrain:object drivetrain:MeasToBeTyped ;
+  drivetrain:cardinality drivetrain:1-1 ;  
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
+  drivetrain:subjectUsesContext drivetrain:MeasDenotationContext ;
+.
+
+drivetrain:ReadAssayKeySymbVal
+  a  drivetrain:InstanceToLiteralRecipe ;
+   drivetrain:cardinality  drivetrain:1-1 ;
+   drivetrain:subject <http://example.com/resource/R_LAB_RESULT_ITEM_shortcut> ;
+   drivetrain:predicate <http://example.com/resource/PK_LAB_RESULT_ID> ;
+   drivetrain:object  drivetrain:assay_keysym_LiteralValue .
+
+ drivetrain:assay_keysym_LiteralValue a  drivetrain:LiteralResourceList .
+
+ drivetrain:ReadAssayValnumSymbVal
+  a  drivetrain:InstanceToLiteralRecipe ;
+   drivetrain:cardinality  drivetrain:1-1 ;
+   drivetrain:subject <http://example.com/resource/R_LAB_RESULT_ITEM_shortcut> ;
+   drivetrain:predicate <http://example.com/resource/RESULT_VALUE_NUM> ;
+   drivetrain:object  drivetrain:assay_valnum_LiteralValue .
+
+ drivetrain:assay_valnum_LiteralValue a  drivetrain:LiteralResourceList .
+
+ drivetrain:AssayExpansionSpecification 
+  a drivetrain:InstanceToInstanceRecipe ;
+  drivetrain:referencedInGraph properties:expandedNamedGraph ;
+  drivetrain:cardinality drivetrain:1-1 ;
+  drivetrain:subject <http://example.com/resource/R_LAB_RESULT_ITEM_shortcut> ;
+  drivetrain:predicate ontologies:TURBO_0010113 ;
+  drivetrain:object obo:IAO_0000028 ;
+.
+
