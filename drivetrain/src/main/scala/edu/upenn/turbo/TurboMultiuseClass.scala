@@ -807,17 +807,17 @@ class TurboMultiuseClass extends Enumeration with Matchers
     def getDescriberRangesAsString(cxn: RepositoryConnection, describer: String): String =
     {
         val sparqlResults = getDescriberRangesAsList(cxn, describer)
-        if (sparqlResults.size == 0) ""
+        if (sparqlResults == None) ""
         else 
         {
             val describerAsVar = convertTypeToSparqlVariable(describer, true)
             var res = s"VALUES $describerAsVar {"
-            for (item <- sparqlResults) res += "<" + item + ">"
+            for (item <- sparqlResults.get) res += "<" + item + ">"
             res + "}"
         }
     }
     
-    def getDescriberRangesAsList(cxn: RepositoryConnection, describer: String): ArrayBuffer[String] =
+    def getDescriberRangesAsList(cxn: RepositoryConnection, describer: String): Option[ArrayBuffer[String]] =
     {
         val sparql: String = s"""
           Select * Where
@@ -826,7 +826,9 @@ class TurboMultiuseClass extends Enumeration with Matchers
               <$describer> a drivetrain:ClassResourceList .
           }
           """
-        update.querySparqlAndUnpackTuple(cxn, sparql, "range")
+        val res = update.querySparqlAndUnpackTuple(cxn, sparql, "range")
+        if (res.size == 0) None
+        else Some(res)
     }
     
     def buildFromNamedGraphsClauseFromList(graphs: ArrayBuffer[String]): String =

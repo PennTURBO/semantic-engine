@@ -139,7 +139,7 @@ class InputDataValidator(graphModelCxn: RepositoryConnection, dataRepoCxn: Repos
         if (input(OBJECTADESCRIBER.toString) != null) objectADescriber = true
         
         var minusBlock = ""
-        if (describerRanges.size == 0) 
+        if (describerRanges == None) 
         {
             var describerInQuery = s"<$describer>"
             if (objectADescriber) describerInQuery = helper.convertTypeToSparqlVariable(describer)
@@ -151,7 +151,7 @@ class InputDataValidator(graphModelCxn: RepositoryConnection, dataRepoCxn: Repos
             minusBlock += "{\n"
             for (termIndex <- 0 to describerRanges.size - 1) 
             {
-              val term = describerRanges(termIndex)
+              val term = describerRanges.get(termIndex)
               minusBlock += s"""
                   {$subjectAsVar <$predicate> <$term> .}\n
               """
@@ -191,7 +191,7 @@ class InputDataValidator(graphModelCxn: RepositoryConnection, dataRepoCxn: Repos
         if (input(SUBJECTADESCRIBER.toString) != null) subjectADescriber = true
         
         var minusBlock = ""
-        if (describerRanges.size == 0) 
+        if (describerRanges == None) 
         {
             var describerInQuery = s"<$describer>"
             if (subjectADescriber) describerInQuery = helper.convertTypeToSparqlVariable(describer)
@@ -203,7 +203,7 @@ class InputDataValidator(graphModelCxn: RepositoryConnection, dataRepoCxn: Repos
             minusBlock += "{\n"
             for (termIndex <- 0 to describerRanges.size - 1) 
             {
-              val term = describerRanges(termIndex)
+              val term = describerRanges.get(termIndex)
               minusBlock += s"""
                   {<$term> <$predicate> $objectAsVar .}\n
               """

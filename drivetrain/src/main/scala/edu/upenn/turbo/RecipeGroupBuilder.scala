@@ -7,7 +7,9 @@ import scala.collection.mutable.HashSet
 trait RecipeGroupBuilder extends ProjectwideGlobals
 {
     var clause = ""
+    var includeValuesBlocks: Boolean = false
     var typedInstances = new HashSet[Instance]
+    var termsWithValuesBlocks = new HashSet[Term]
     
     def searchAndAddFromOtherGroups(group: ConnectionRecipeGroup, otherGroups: HashMap[String, ConnectionRecipeGroup])
     {
@@ -58,13 +60,18 @@ trait RecipeGroupBuilder extends ProjectwideGlobals
             clause += recipe.crObject.asInstanceOf[Instance].sparqlTypeString
             typedInstances += recipe.crObject.asInstanceOf[Instance]
         }
-        if (recipe.subject.isInstanceOf[Term] && recipe.subject.asInstanceOf[Term].rangesAsSparqlValues != None)
+        if (includeValuesBlocks)
         {
-            clause += recipe.subject.asInstanceOf[Term].rangesAsSparqlValues.get
-        }
-        if (recipe.crObject.isInstanceOf[Term] && recipe.crObject.asInstanceOf[Term].rangesAsSparqlValues != None)
-        {
-            clause += recipe.crObject.asInstanceOf[Term].rangesAsSparqlValues.get
+            if (recipe.subject.isInstanceOf[Term] && recipe.subject.asInstanceOf[Term].rangesAsSparqlValues != None && !termsWithValuesBlocks.contains(recipe.subject.asInstanceOf[Term]))
+            {
+                clause += recipe.subject.asInstanceOf[Term].rangesAsSparqlValues.get
+                termsWithValuesBlocks += recipe.subject.asInstanceOf[Term]
+            }
+            if (recipe.crObject.isInstanceOf[Term] && recipe.crObject.asInstanceOf[Term].rangesAsSparqlValues != None && !termsWithValuesBlocks.contains(recipe.crObject.asInstanceOf[Term]))
+            {
+                clause += recipe.crObject.asInstanceOf[Term].rangesAsSparqlValues.get
+                termsWithValuesBlocks += recipe.crObject.asInstanceOf[Term]
+            } 
         }
         if (recipe.isOptional.get) clause += "}\n"
     }
@@ -92,6 +99,7 @@ class InsertClauseBuilder extends RecipeGroupBuilder
 
 class WhereClauseBuilder extends RecipeGroupBuilder
 {
+    includeValuesBlocks = true
     def buildWhereGroup(defaultInputGraphRecipes: ConnectionRecipeGroup, requiredGroup: ConnectionRecipeGroup, optionalGroups: HashMap[String, ConnectionRecipeGroup], minusGroups: HashMap[String, ConnectionRecipeGroup]): String =
     {   
         addGroup(defaultInputGraphRecipes)

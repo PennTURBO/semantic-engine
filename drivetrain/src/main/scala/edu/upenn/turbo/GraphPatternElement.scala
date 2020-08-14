@@ -25,7 +25,7 @@ class Instance(newValue: String) extends GraphPatternElement
     
     def buildInstanceType(instance: Instance)
     {
-        instance.sparqlTypeString = helper.convertTypeToSparqlVariable(instance.value, true) + " rdf:type " + instance.instanceType + " .\n"
+        instance.sparqlTypeString = helper.convertTypeToSparqlVariable(instance.value, true) + " rdf:type <" + instance.instanceType + "> .\n"
     }
     
     var instanceType: String = null
@@ -40,14 +40,14 @@ class Term(newValue: String) extends GraphPatternElement
 {
     value = newValue
     
-    def buildValuesBlock(term: Term)
+    def buildValuesBlock()
     {
         if (ranges != None) 
         {
-            val asVariable = helper.convertTypeToSparqlVariable(term.value, true)
+            val asVariable = helper.convertTypeToSparqlVariable(value, true)
             var res = s"VALUES $asVariable {"
             for (item <- ranges.get) res += "<" + item + ">"
-            res + "}"
+            res += "}\n"
             rangesAsSparqlValues = Some(res)
         }
     }

@@ -293,8 +293,8 @@ class TestBuilder extends ProjectwideGlobals
             if (objectADescriber != null)
             {
                 val descRanges = helper.getDescriberRangesAsList(gmCxn, objectString)
-                if (descRanges.size == 0) localObjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
-                else localObjectString = descRanges(0)
+                if (descRanges == None) localObjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
+                else localObjectString = descRanges.get(0)
             }
             for (subjectURI <- subjectInstanceArray)
             {
@@ -308,8 +308,8 @@ class TestBuilder extends ProjectwideGlobals
             if (subjectADescriber != null)
             {
                 val descRanges = helper.getDescriberRangesAsList(gmCxn, subjectString)
-                if (descRanges.size == 0) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
-                else localSubjectString = descRanges(0)
+                if (descRanges == None) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
+                else localSubjectString = descRanges.get(0)
             }
             for (objectURI <- objectInstanceArray)
             {
@@ -324,14 +324,14 @@ class TestBuilder extends ProjectwideGlobals
             if (subjectADescriber != null)
             {
                 val descRanges = helper.getDescriberRangesAsList(gmCxn, subjectString)
-                if (descRanges.size == 0) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
-                else localSubjectString = descRanges(0)
+                if (descRanges == None) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
+                else localSubjectString = descRanges.get(0)
             }
             if (objectADescriber != null)
             {
                 val descRanges = helper.getDescriberRangesAsList(gmCxn, objectString)
-                if (descRanges.size == 0) localObjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
-                else localObjectString = descRanges(0)
+                if (descRanges == None) localObjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
+                else localObjectString = descRanges.get(0)
             }
             thisTripleAsData += s"<$localSubjectString> <$predicateString> <$localObjectString> .\n"
         }
@@ -353,8 +353,8 @@ class TestBuilder extends ProjectwideGlobals
             if (subjectADescriber != null)
             {
                 val descRanges = helper.getDescriberRangesAsList(gmCxn, subjectString)
-                if (descRanges.size == 0) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
-                else localSubjectString = descRanges(0)
+                if (descRanges == None) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
+                else localSubjectString = descRanges.get(0)
             }
             thisTripleAsData += makeTripleWithLiteral(literalType, objectString, localSubjectString, predicateString)
         }
