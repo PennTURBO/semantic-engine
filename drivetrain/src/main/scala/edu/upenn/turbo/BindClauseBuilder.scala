@@ -128,12 +128,13 @@ class BindClauseBuilder extends ProjectwideGlobals
         }
         foundEnforcer
     }
-    
+
     def findEnforcerWithDirectCardinalityMethod(instance: Instance, inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe]): Boolean =
     {
         var foundEnforcer: Boolean = false
         var enforcer: String = ""
-        val connectionIterator = instance.oneToOneConnections.toIterator
+        // sorting by connection recipe ensures that we will always choose the same enforcer, if there are multiple that are valid
+        val connectionIterator = instance.oneToOneConnections.sortWith(_.value < _.value).toIterator
         while (enforcer == "" && connectionIterator.hasNext)
         {
             val connectedElement = connectionIterator.next
@@ -157,6 +158,7 @@ class BindClauseBuilder extends ProjectwideGlobals
     
     def buildSingletonBindClauses()
     {
+        logger.info("bind clause using localuuid " + localUUID)
         for (singleton <- singletonElements)
         {
             if (!boundInBindClause.contains(singleton))
@@ -210,11 +212,11 @@ class BindClauseBuilder extends ProjectwideGlobals
         {
             assert(element.dependentOn != None, s"Element $elementName has no dependent, but dependent is requested in custom rule $thisCustomRule")
             thisCustomRule = thisCustomRule.replaceAll("\\$\\{dependent\\}", helper.convertTypeToSparqlVariable(element.dependentOn.get.value))
-        }  
+        }
         if (thisCustomRule.contains("multiplicityEnforcer"))
         {
             assert(cardinalityMap.contains(elementName), s"Element $elementName has no cardinality enforcer, but an enforcer is requested in custom rule $thisCustomRule")
-            thisCustomRule = thisCustomRule.replaceAll("\\$\\{multiplicityEnforcer\\}", cardinalityMap(elementName))
+            thisCustomRule = thisCustomRule.replaceAll("\\$\\{multiplicityEnforcer\\}", helper.convertTypeToSparqlVariable(cardinalityMap(elementName)))
         }
         thisCustomRule = thisCustomRule.replaceAll("\\$\\{replacement\\}", assigneeAsVar)
         thisCustomRule = thisCustomRule.replaceAll("\\$\\{localUUID\\}", localUUID)

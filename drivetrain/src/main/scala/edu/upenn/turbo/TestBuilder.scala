@@ -9,7 +9,6 @@ import org.eclipse.rdf4j.model.Value
 import java.io.File
 import java.time.LocalDateTime
 import java.util.UUID
-import org.eclipse.rdf4j.model.Literal
 import org.json4s._
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
@@ -145,7 +144,7 @@ class TestBuilder extends ProjectwideGlobals
         var fullPredsAsString = ""
         for (index <- 0 to outputPredsList.size-1) 
         {
-            if (!outputPredsList(index)(2).isInstanceOf[Literal]) fullPredsAsString += "<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> <"+outputPredsList(index)(2)+">"
+            if (!outputPredsList(index)(2).isInstanceOf[org.eclipse.rdf4j.model.Literal]) fullPredsAsString += "<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> <"+outputPredsList(index)(2)+">"
             else fullPredsAsString += "<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> "+outputPredsList(index)(2)
             if (index != outputPredsList.size-1) fullPredsAsString += "\n"
         }

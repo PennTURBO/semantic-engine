@@ -57,19 +57,19 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
     
     def setInputGraph(inputGraph: String)
     {
-        this.defaultInputGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(inputGraph)
+        this.defaultInputGraph = inputGraph
         helper.validateURI(this.defaultInputGraph)
     }
     
     def setOutputGraph(outputGraph: String)
     {
-        this.defaultOutputGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(outputGraph)
+        this.defaultOutputGraph = outputGraph
         helper.validateURI(this.defaultOutputGraph)
     }
     
     def setRemovalsGraph(removalsGraph: String)
     {
-        this.defaultRemovalsGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(removalsGraph)
+        this.defaultRemovalsGraph = removalsGraph
         helper.validateURI(this.defaultRemovalsGraph)
     }
     
@@ -92,31 +92,17 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
         {
             throw new RuntimeException("Insert clause cannot be built before where or bind clauses are built.")
         }
-        val insertGroup = new ConnectionRecipeGroup("","")
-        var graph = defaultOutputGraph
-        for (recipe <- outputs)
-        {
-            if (insertGroup.recipesByGraph.contains(graph)) insertGroup.recipesByGraph(graph) += recipe
-            else insertGroup.recipesByGraph += graph -> HashSet(recipe) 
-        }
+        assert (defaultOutputGraph != null && defaultOutputGraph != "")
         val groupBuilder = new InsertClauseBuilder
-        insertClause = groupBuilder.buildInsertGroup(insertGroup)
+        insertClause = groupBuilder.buildInsertGroup(outputs, defaultOutputGraph)
     }
 
     def createDeleteClause(removals: HashSet[ConnectionRecipe])
     {
         assert (deleteClause == "")
         assert (defaultRemovalsGraph != null && defaultRemovalsGraph != "")
-        
-        val deleteGroup = new ConnectionRecipeGroup("","")
-        for (recipe <- removals)
-        {
-            var graph = defaultRemovalsGraph
-            if (deleteGroup.recipesByGraph.contains(graph)) deleteGroup.recipesByGraph(graph) += recipe
-            else deleteGroup.recipesByGraph += graph -> HashSet(recipe) 
-        }
         val groupBuilder = new DeleteClauseBuilder
-        deleteClause = groupBuilder.buildDeleteGroup(deleteGroup)
+        deleteClause = groupBuilder.buildDeleteGroup(removals, defaultRemovalsGraph)
     }
     
     def createWhereClause(inputs: HashSet[ConnectionRecipe])
@@ -124,62 +110,8 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
         assert (inputs.size != 0)
         assert (whereClause == "")
         assert (defaultInputGraph != null && defaultInputGraph != "", "No default input named graph set")
-        val defaultInputGraphRequiredGroup = new ConnectionRecipeGroup("","")
-        val alternateGraphRequiredGroup = new ConnectionRecipeGroup("","")
-        val minusGroups: HashMap[String, ConnectionRecipeGroup] = new HashMap[String, ConnectionRecipeGroup]
-        val optionalGroups: HashMap[String, ConnectionRecipeGroup] = new HashMap[String, ConnectionRecipeGroup]
-        for (recipe <- inputs) 
-        {
-            var graph = defaultInputGraph
-            if (recipe.foundInGraph != None) graph = recipe.foundInGraph.get
-            if (recipe.minusGroup != None)
-            {
-                val minusGroup = recipe.minusGroup.get
-                if (minusGroups.contains(minusGroup))
-                {
-                    val thisGroup = minusGroups(minusGroup)
-                    if (thisGroup.recipesByGraph.contains(graph)) thisGroup.recipesByGraph(graph) += recipe
-                    else thisGroup.recipesByGraph += graph -> HashSet(recipe)
-                }
-                else 
-                {
-                    val newMinusGroup = new ConnectionRecipeGroup("MINUS{\n","}\n")
-                    newMinusGroup.recipesByGraph += graph -> HashSet(recipe)
-                    minusGroups += minusGroup -> newMinusGroup
-                }
-            }
-            if (recipe.optionalGroup != None)
-            {
-                val optionalGroup = recipe.optionalGroup.get
-                if (optionalGroups.contains(optionalGroup))
-                {
-                    val thisGroup = optionalGroups(optionalGroup)
-                    if (thisGroup.recipesByGraph.contains(graph)) thisGroup.recipesByGraph(graph) += recipe
-                    else thisGroup.recipesByGraph += graph -> HashSet(recipe)
-                }
-                else
-                {
-                    val newOptionalGroup = new ConnectionRecipeGroup("OPTIONAL{\n","}\n")
-                    newOptionalGroup.recipesByGraph += graph -> HashSet(recipe)
-                    optionalGroups += optionalGroup -> newOptionalGroup
-                }
-            }
-            if (recipe.minusGroup == None && recipe.optionalGroup == None)
-            {
-                if (graph == defaultInputGraph) 
-                {
-                    if (defaultInputGraphRequiredGroup.recipesByGraph.contains(defaultInputGraph)) defaultInputGraphRequiredGroup.recipesByGraph(defaultInputGraph) += recipe
-                    else defaultInputGraphRequiredGroup.recipesByGraph += defaultInputGraph -> HashSet(recipe)
-                }
-                else
-                {
-                     if (alternateGraphRequiredGroup.recipesByGraph.contains(graph)) alternateGraphRequiredGroup.recipesByGraph(graph) += recipe
-                     else alternateGraphRequiredGroup.recipesByGraph += graph -> HashSet(recipe) 
-                }
-            }
-        }
         val groupBuilder = new WhereClauseBuilder
-        whereClause = groupBuilder.buildWhereGroup(defaultInputGraphRequiredGroup, alternateGraphRequiredGroup, optionalGroups, minusGroups)
+        whereClause = groupBuilder.buildWhereGroup(inputs, defaultInputGraph)
     }
 
     def createBindClause(inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe], localUUID: String)

@@ -8,7 +8,6 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
-import org.eclipse.rdf4j.model.Literal
 import java.io.File
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
@@ -117,7 +116,7 @@ var testSearchString: Option[String] = None
             var resultsArray = new ArrayBuffer[String]
             for (index <- 0 to result.size-1) 
             {
-                if (!result(index)(2).isInstanceOf[Literal]) resultsArray += "<"+result(index)(0)+"> <"+result(index)(1)+"> <"+result(index)(2)+">"
+                if (!result(index)(2).isInstanceOf[org.eclipse.rdf4j.model.Literal]) resultsArray += "<"+result(index)(0)+"> <"+result(index)(1)+"> <"+result(index)(2)+">"
                 else resultsArray += "<"+result(index)(0)+"> <"+result(index)(1)+"> "+result(index)(2)
             }
             helper.checkStringArraysForEquivalency(outputTriples, resultsArray.toArray)("equivalent").asInstanceOf[String] should be ("true")
@@ -147,7 +146,7 @@ var testSearchString: Option[String] = None
             var resultsArray = new ArrayBuffer[String]
             for (index <- 0 to result.size-1) 
             {
-                if (!result(index)(2).isInstanceOf[Literal]) resultsArray += "<"+result(index)(0)+"> <"+result(index)(1)+"> <"+result(index)(2)+">"
+                if (!result(index)(2).isInstanceOf[org.eclipse.rdf4j.model.Literal]) resultsArray += "<"+result(index)(0)+"> <"+result(index)(1)+"> <"+result(index)(2)+">"
                 else resultsArray += "<"+result(index)(0)+"> <"+result(index)(1)+"> "+result(index)(2)
             }
             helper.checkStringArraysForEquivalency(outputTriples, resultsArray.toArray)("equivalent").asInstanceOf[String] should be ("true")

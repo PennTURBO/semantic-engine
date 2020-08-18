@@ -135,7 +135,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             //logger.info(localQuery)
             update.updateSparql(localCxn, localQuery)
             ConnectToGraphDB.closeGraphConnection(graphConnection)
-            //logger.info("finished named graph: " + inputNamedGraph) 
+            //logger.info("finished named graph: " + inputNamedGraph)
         }
         else update.updateSparql(paramCxn, localQuery)
     }
@@ -244,18 +244,18 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
         helper.validateURI(processNamedGraph)
         var metaTriples = ArrayBuffer(
-             new TermToLitConnRecipe(new Term(processSpecification), "turbo:TURBO_0010106", new Literal(queryVal)),
-             new TermToLitConnRecipe(new Term(updateProcess), "turbo:TURBO_0010107", new Literal(runtime)),
-             new TermToLitConnRecipe(new Term(updateProcess), "turbo:TURBO_0010108", new Literal(triplesAdded)),
-             new TermToTermConnRecipe(new Term(updateProcess), "rdf:type", new Term("turbo:TURBO_0010347")),
-             new TermToTermConnRecipe(new Term(updateProcess), "obo:BFO_0000055", new Term(updatePlanUri)),
-             new TermToTermConnRecipe(new Term(updatePlanUri), "rdf:type", new Term("turbo:TURBO_0010373")),
-             new TermToTermConnRecipe(new Term(updatePlanUri), "obo:RO_0000059", new Term(processSpecification)),
-             new TermToTermConnRecipe(new Term(processSpecification), "rdf:type", new Term("turbo:TURBO_0010354")),
-             new TermToTermConnRecipe(new Term(processBoundary), "obo:RO_0002223", new Term(updateProcess)),
-             new TermToTermConnRecipe(new Term(processBoundary), "rdf:type", new Term("obo:BFO_0000035")),
-             new TermToTermConnRecipe(new Term(timeMeasDatum), "obo:IAO_0000136", new Term(processBoundary)),
-             new TermToTermConnRecipe(new Term(timeMeasDatum), "rdf:type", new Term("obo:IAO_0000416"))
+             new TermToLitConnRecipe(new Term(processSpecification), "http://transformunify.org/ontologies/TURBO_0010106", new Literal("\"\"\""+queryVal+"\"\"\"")),
+             new TermToLitConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010107", new Literal(runtime)),
+             new TermToLitConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010108", new Literal(triplesAdded)),
+             new TermToTermConnRecipe(new Term(updateProcess), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("turbo:TURBO_0010347")),
+             new TermToTermConnRecipe(new Term(updateProcess), "http://purl.obolibrary.org/obo/BFO_0000055", new Term(updatePlanUri)),
+             new TermToTermConnRecipe(new Term(updatePlanUri), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("turbo:TURBO_0010373")),
+             new TermToTermConnRecipe(new Term(updatePlanUri), "http://purl.obolibrary.org/obo/RO_0000059", new Term(processSpecification)),
+             new TermToTermConnRecipe(new Term(processSpecification), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("turbo:TURBO_0010354")),
+             new TermToTermConnRecipe(new Term(processBoundary), "http://purl.obolibrary.org/obo/RO_0002223", new Term(updateProcess)),
+             new TermToTermConnRecipe(new Term(processBoundary), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("obo:BFO_0000035")),
+             new TermToTermConnRecipe(new Term(timeMeasDatum), "http://purl.obolibrary.org/obo/IAO_0000136", new Term(processBoundary)),
+             new TermToTermConnRecipe(new Term(timeMeasDatum), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("obo:IAO_0000416"))
         )
         for (inputGraph <- inputNamedGraphsList) 
         {
@@ -273,13 +273,17 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "turbo:TURBO_0010186", new Term(graphForThisRow))
         }
         
-        var metaDataQuery = s"INSERT DATA {\n GRAPH {$processNamedGraph "
+        var metaDataQuery = s"INSERT DATA {\n GRAPH <$processNamedGraph> {"
         for (recipe <- metaTriples) 
         {
+            if (recipe.subject.isInstanceOf[Term]) recipe.subject.asInstanceOf[Term].isResourceList = Some(false)
+            if (recipe.crObject.isInstanceOf[Term]) recipe.crObject.asInstanceOf[Term].isResourceList = Some(false)
+            if (recipe.crObject.isInstanceOf[Literal]) recipe.crObject.asInstanceOf[Literal].isResourceList = Some(false)
             recipe.addSparqlSnippet()
             metaDataQuery += recipe.asSparql
         }
         metaDataQuery += "}\n}\n"
+        //logger.info(metaDataQuery)
         update.updateSparql(cxn, metaDataQuery)
         
         //Literal class currently does not support literal datatypes other than strings, so making custom query to insert current date with dateTime format

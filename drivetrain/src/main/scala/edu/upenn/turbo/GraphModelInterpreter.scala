@@ -37,6 +37,7 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
             var objectWithContext = objectString
             if (row(SUBJECTCONTEXT.toString) != null) subjectWithContext += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
             if (row(OBJECTCONTEXT.toString) != null) objectWithContext += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
+
             if (recipeType == instToInstRecipe)
             {
                 val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectAResourceList, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
@@ -151,7 +152,7 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
         if (dependeeElement == null) 
         {
             val dependentElement = element.value
-            throw new RuntimeException("Element $dependentElement was declared dependent on $dependee, but $dependee was not found as an input")
+            throw new RuntimeException(s"Element $dependentElement was declared dependent on $dependee, but $dependee was not found as an input")
         }
         element.dependentOn = Some(dependeeElement)
     }
