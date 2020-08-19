@@ -148,82 +148,82 @@ class GraphModelReader(cxn: RepositoryConnection) extends ProjectwideGlobals
          Select distinct $variablesToSelect
          Where
          {
-              <http://www.itmat.upenn.edu/biobank/EncounterExpansionProcess> drivetrain:hasOutput ?CONNECTIONNAME .
-              ?CONNECTIONNAME a ?CONNECTIONRECIPETYPE .
-              ?CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
-              <http://www.itmat.upenn.edu/biobank/EncounterExpansionProcess> drivetrain:outputNamedGraph ?GRAPH .
-              ?CONNECTIONNAME drivetrain:subject ?SUBJECT .
-              ?CONNECTIONNAME drivetrain:predicate ?PREDICATE .
-              ?CONNECTIONNAME drivetrain:object ?OBJECT .
-              ?CONNECTIONNAME drivetrain:cardinality ?MULTIPLICITY .
+              <$process> drivetrain:hasOutput ?$CONNECTIONNAME .
+              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
+              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
+              <$process> drivetrain:outputNamedGraph ?$GRAPH .
+              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
+              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
+              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
+              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
 
               Optional
               {
-                  ?CONNECTIONNAME drivetrain:subjectUsesContext ?SUBJECTCONTEXT .
-                  ?SUBJECT drivetrain:hasPossibleContext ?SUBJECTCONTEXT .
-                  ?SUBJECTCONTEXT a drivetrain:TurboGraphContext .
+                  ?$CONNECTIONNAME drivetrain:subjectUsesContext ?$SUBJECTCONTEXT .
+                  ?$SUBJECT drivetrain:hasPossibleContext ?$SUBJECTCONTEXT .
+                  ?$SUBJECTCONTEXT a drivetrain:TurboGraphContext .
               }
               Optional
               {
-                  ?CONNECTIONNAME drivetrain:objectUsesContext ?OBJECTCONTEXT .
-                  ?OBJECT drivetrain:hasPossibleContext ?OBJECTCONTEXT .
-                  ?OBJECTCONTEXT a drivetrain:TurboGraphContext .
+                  ?$CONNECTIONNAME drivetrain:objectUsesContext ?$OBJECTCONTEXT .
+                  ?$OBJECT drivetrain:hasPossibleContext ?$OBJECTCONTEXT .
+                  ?$OBJECTCONTEXT a drivetrain:TurboGraphContext .
               }
               Optional
               {
-                  ?SUBJECT drivetrain:usesCustomVariableManipulationRule ?subjectRuleDenoter .
-                  ?subjectRuleDenoter drivetrain:usesSparql ?SUBJECTRULE .
+                  ?$SUBJECT drivetrain:usesCustomVariableManipulationRule ?subjectRuleDenoter .
+                  ?subjectRuleDenoter drivetrain:usesSparql ?$SUBJECTRULE .
               }
               Optional
               {
-                  ?OBJECT drivetrain:usesCustomVariableManipulationRule ?objectRuleDenoter .
-                  ?objectRuleDenoter drivetrain:usesSparql ?OBJECTRULE .
+                  ?$OBJECT drivetrain:usesCustomVariableManipulationRule ?objectRuleDenoter .
+                  ?objectRuleDenoter drivetrain:usesSparql ?$OBJECTRULE .
               }
               Optional
               {
-                  ?SUBJECT a drivetrain:ClassResourceList .
-                  BIND (true as ?SUBJECTADESCRIBER)
+                  ?$SUBJECT a drivetrain:ClassResourceList .
+                  BIND (true as ?$SUBJECTADESCRIBER)
               }
               Optional
               {
-                  ?OBJECT a drivetrain:ClassResourceList .
-                  BIND (true as ?OBJECTADESCRIBER)
+                  ?$OBJECT a drivetrain:ClassResourceList .
+                  BIND (true as ?$OBJECTADESCRIBER)
               }
               Optional
               {
-                  ?recipe drivetrain:objectRequiredToCreate ?OBJECT .
-                  <http://www.itmat.upenn.edu/biobank/EncounterExpansionProcess> ?INPUTTO ?recipe .
+                  ?recipe drivetrain:objectRequiredToCreate ?$OBJECT .
+                  <$process> ?INPUTTO ?recipe .
                   ?recipe drivetrain:object ?OBJECTDEPENDEE1 .
-                FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
+                  FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
               }
               Optional
               {
-                  ?recipe drivetrain:subjectRequiredToCreate ?OBJECT .
-                  <http://www.itmat.upenn.edu/biobank/EncounterExpansionProcess> ?INPUTTO ?recipe .
+                  ?recipe drivetrain:subjectRequiredToCreate ?$OBJECT .
+                  <$process> ?INPUTTO ?recipe .
                   ?recipe drivetrain:subject ?OBJECTDEPENDEE2 .
-                FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
+                  FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
               }
               Optional
               {
-                  ?recipe drivetrain:objectRequiredToCreate ?SUBJECT .
-                  <http://www.itmat.upenn.edu/biobank/EncounterExpansionProcess> ?INPUTTO ?recipe .
+                  ?recipe drivetrain:objectRequiredToCreate ?$SUBJECT .
+                  <$process> ?INPUTTO ?recipe .
                   ?recipe drivetrain:object ?SUBJECTDEPENDEE1 .
-              FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
+                  FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
               }
               Optional
               {
-                  ?recipe drivetrain:subjectRequiredToCreate ?SUBJECT .
-                  <http://www.itmat.upenn.edu/biobank/EncounterExpansionProcess> ?INPUTTO ?recipe .
+                  ?recipe drivetrain:subjectRequiredToCreate ?$SUBJECT .
+                  <$process> ?INPUTTO ?recipe .
                   ?recipe drivetrain:subject ?SUBJECTDEPENDEE2 .
-              FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
+                  FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
               }
-              BIND (isLiteral(?OBJECT) as ?OBJECTALITERALVALUE)
-              BIND(IF (BOUND (?SUBJECTDEPENDEE1), ?SUBJECTDEPENDEE1, ?SUBJECTDEPENDEE2) AS ?SUBJECTDEPENDEE)
-              BIND(IF (BOUND (?OBJECTDEPENDEE1), ?OBJECTDEPENDEE1, ?OBJECTDEPENDEE2) AS ?OBJECTDEPENDEE)
+              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
+              BIND(IF (BOUND (?SUBJECTDEPENDEE1), ?SUBJECTDEPENDEE1, ?SUBJECTDEPENDEE2) AS ?$SUBJECTDEPENDEE)
+              BIND(IF (BOUND (?OBJECTDEPENDEE1), ?OBJECTDEPENDEE1, ?OBJECTDEPENDEE2) AS ?$OBJECTDEPENDEE)
          }
          
          """
-       println(query)
+       //println(query)
        update.querySparqlAndUnpackToListOfMap(gmCxn, query)
     }
 }

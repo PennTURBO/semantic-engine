@@ -1450,7 +1450,7 @@ drivetrain:MeasClassList
 .
 
 drivetrain:MeasMentionsCode
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:1-many ;
   drivetrain:object drivetrain:MeasCodeMentionedClassList ;
   drivetrain:predicate obo:IAO_0000142 ;
@@ -2439,7 +2439,7 @@ drivetrain:RxHasRepresentation
 .
 
 drivetrain:RxMentionsCode
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:RxMentionedClassList ;
   drivetrain:predicate obo:IAO_0000142 ;

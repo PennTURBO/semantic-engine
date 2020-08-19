@@ -98,7 +98,7 @@ class BindClauseBuilder extends ProjectwideGlobals
             var defaultMethodSuccess = false
             var directMethodSuccess = false
             if (!inputHasLevelChange) defaultMethodSuccess = findEnforcerWithDefaultMethod(instance, inputs)
-            if (!defaultMethodSuccess) directMethodSuccess = findEnforcerWithDirectCardinalityMethod(instance, inputs, outputs)
+            if (!defaultMethodSuccess) directMethodSuccess = findEnforcerWithDirectCardinalityMethod(instance)
             if (!defaultMethodSuccess && !directMethodSuccess) 
             {
                val unassignedElement = instance.value
@@ -110,7 +110,7 @@ class BindClauseBuilder extends ProjectwideGlobals
     def findEnforcerWithDefaultMethod(instance: Instance, inputs: HashSet[ConnectionRecipe]): Boolean =
     {
         var foundEnforcer: Boolean = false
-        val inputsIterator = inputs.toIterator
+        val inputsIterator = inputs.toBuffer.sortWith(_.name < _.name).toIterator
         var enforcer: String = ""
         while (enforcer == "" && inputsIterator.hasNext)
         {
@@ -129,12 +129,12 @@ class BindClauseBuilder extends ProjectwideGlobals
         foundEnforcer
     }
 
-    def findEnforcerWithDirectCardinalityMethod(instance: Instance, inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe]): Boolean =
+    def findEnforcerWithDirectCardinalityMethod(instance: Instance): Boolean =
     {
         var foundEnforcer: Boolean = false
         var enforcer: String = ""
         // sorting by connection recipe ensures that we will always choose the same enforcer, if there are multiple that are valid
-        val connectionIterator = instance.oneToOneConnections.sortWith(_.value < _.value).toIterator
+        val connectionIterator = instance.oneToOneConnections.toBuffer.sortWith(_.value < _.value).toIterator
         while (enforcer == "" && connectionIterator.hasNext)
         {
             val connectedElement = connectionIterator.next
@@ -158,7 +158,6 @@ class BindClauseBuilder extends ProjectwideGlobals
     
     def buildSingletonBindClauses()
     {
-        logger.info("bind clause using localuuid " + localUUID)
         for (singleton <- singletonElements)
         {
             if (!boundInBindClause.contains(singleton))

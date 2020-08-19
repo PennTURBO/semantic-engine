@@ -24,7 +24,29 @@ class InsertClauseBuilder extends QueryClauseBuilder
     def buildInsertGroup(outputs: HashSet[ConnectionRecipe], defaultGraph: String): String =
     {
         val insertClauseStructure = new QueryClauseStructure()
-        for (recipe <- outputs) insertClauseStructure.addToDefaultGraphsRequireds(recipe)
+        for (recipe <- outputs) 
+        {
+            // if ClassResourceList only appears in output and has range of 1, use that term instead of the ResourceList's URI
+            if (recipe.subject.isInstanceOf[Term] && 
+                recipe.subject.asInstanceOf[Term].isResourceList.get && 
+                recipe.subject.asInstanceOf[Term].ranges != None && 
+                recipe.subject.asInstanceOf[Term].ranges.get.size == 1 && 
+                !recipe.subject.asInstanceOf[Term].existsInInput.get) 
+            {
+                recipe.subject.value = recipe.subject.asInstanceOf[Term].ranges.get(0)
+                recipe.subject.asInstanceOf[Term].isResourceList = Some(false)
+            }
+            if (recipe.crObject.isInstanceOf[Term] && 
+                recipe.crObject.asInstanceOf[Term].isResourceList.get && 
+                recipe.crObject.asInstanceOf[Term].ranges != None && 
+                recipe.crObject.asInstanceOf[Term].ranges.get.size == 1 && 
+                !recipe.crObject.asInstanceOf[Term].existsInInput.get) 
+            {
+                recipe.crObject.value = recipe.crObject.asInstanceOf[Term].ranges.get(0)
+                recipe.crObject.asInstanceOf[Term].isResourceList = Some(false)
+            }
+            insertClauseStructure.addToDefaultGraphsRequireds(recipe)
+        }
         "INSERT {\n " + insertClauseStructure.buildClause(defaultGraph, includeValuesBlocks) + "}\n"
     }
 }

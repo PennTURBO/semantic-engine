@@ -77,7 +77,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
             //var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
             // get list of all named graphs which match pattern specified in inputNamedGraph but without match on where clause
-            var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, useInputNamedGraphsCache)
+            var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, helper.checkAndConvertPropertiesReferenceToNamedGraph(primaryQuery.defaultInputGraph), useInputNamedGraphsCache)
             logger.info("\tinput named graphs size: " + inputNamedGraphsList.size)
             if (inputNamedGraphsList.size == 0) logger.info(s"\tCannot run process $processSpecification: no input named graphs found")
             else

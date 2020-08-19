@@ -10,9 +10,9 @@ trait GraphPatternElement extends ProjectwideGlobals
     var existsInInput: Option[Boolean] = None
     var existsInOutput: Option[Boolean] = None
     
-    val oneToOneConnections: ArrayBuffer[GraphPatternElement] = new ArrayBuffer[GraphPatternElement]
-    val oneToManyConnections: ArrayBuffer[GraphPatternElement] = new ArrayBuffer[GraphPatternElement]
-    val manyToOneConnections: ArrayBuffer[GraphPatternElement] = new ArrayBuffer[GraphPatternElement]
+    val oneToOneConnections: HashSet[GraphPatternElement] = new HashSet[GraphPatternElement]
+    val oneToManyConnections: HashSet[GraphPatternElement] = new HashSet[GraphPatternElement]
+    val manyToOneConnections: HashSet[GraphPatternElement] = new HashSet[GraphPatternElement]
     
     val referencedByRecipes: HashSet[ConnectionRecipe] = new HashSet[ConnectionRecipe]
     var dependentOn: Option[GraphPatternElement] = None

@@ -315,7 +315,7 @@ ontologies:shortcutAlleleToShortcutAlleleRegistryUri
 .
 ontologies:shortcutAlleleToShortcutBiobankEncounter
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-many> ;
   drivetrain:object drivetrain:shortcutEncounter ;
   drivetrain:predicate ontologies:TURBO_0010142 ;
   drivetrain:mustExecuteIf drivetrain:subjectExists ;

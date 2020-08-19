@@ -32,7 +32,7 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 objectAResourceList, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper, graphForThisRow, suffixOperator,
                 minusGroup, optionalGroup, subjectCustomRule, objectCustomRule, subjectDependee, objectDependee) 
                 = interpretRowData(row)
-                
+                            
             var subjectWithContext = subjectString
             var objectWithContext = objectString
             if (row(SUBJECTCONTEXT.toString) != null) subjectWithContext += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
@@ -55,7 +55,6 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, obInst, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
-                recipe.addSparqlSnippet()
                 recipesList += recipe
             }
             else if (recipeType == instToTermRecipe)
@@ -71,7 +70,6 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objTerm, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
-                recipe.addSparqlSnippet()
                 recipesList += recipe
             }
             else if (recipeType == termToInstRecipe)
@@ -87,7 +85,6 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objInst, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
-                recipe.addSparqlSnippet()
                 recipesList += recipe
             }
             else if (recipeType == instToLiteralRecipe)
@@ -103,7 +100,6 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objLit, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
-                recipe.addSparqlSnippet()
                 recipesList += recipe
             }
             else if (recipeType == termToLiteralRecipe)
@@ -119,7 +115,6 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objLit, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
-                recipe.addSparqlSnippet()
                 recipesList += recipe
             }
             else if (recipeType == termToTermRecipe)
@@ -135,7 +130,6 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objTerm, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
-                recipe.addSparqlSnippet()
                 recipesList += recipe
             }
             else throw new RuntimeException(s"Unrecognized input cardinality setting: $thisMultiplicity")
@@ -179,23 +173,21 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
             subjList += obj
             objList += subj
             
-            for (instance <- subjList)
+            for (subjConn <- subjList)
             {
-                if (obj != instance && subj != instance) 
+                for (otherSubjConn <- subjList) if (subjConn != otherSubjConn) 
                 {
-                    instance.oneToOneConnections += obj   
-                    obj.oneToOneConnections += instance
-                }
-            }
-            for (instance <- objList) 
-            {
-                if (subj != instance && obj != instance) 
-                {
-                    instance.oneToOneConnections += subj
-                    subj.oneToOneConnections += instance
+                    subjConn.oneToOneConnections += otherSubjConn
                 }
             }
             
+            for (objConn <- objList)
+            {
+                for (otherObjConn <- objList) if (objConn != otherObjConn) 
+                {
+                    objConn.oneToOneConnections += otherObjConn
+                }
+            }            
             //for (element <- subjList) logger.info(subj.value + " is connected with " + element.value)
             //for (element <- objList) logger.info(obj.value + " is connected with " + element.value)
         }

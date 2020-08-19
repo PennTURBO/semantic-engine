@@ -760,7 +760,7 @@ drivetrain:PatientMeasurements
 .
 
 drivetrain:MeasScoStarMeas
-  a drivetrain:InstanceToTermRecipe ;
+  a drivetrain:TermToTermRecipe ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object obo:IAO_0000109 ;
   drivetrain:predicate rdfs:subClassOf  ;
@@ -770,7 +770,7 @@ drivetrain:MeasScoStarMeas
 .
 
 drivetrain:MeasClassHasOmopConceptId 
-  a drivetrain:InstanceToLiteralRecipe ;
+  a drivetrain:TermToLiteralRecipe ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:measurement_source_concept_id_IntegerLiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010147  ;
@@ -1248,7 +1248,7 @@ drivetrain:RxWrittenNotDispensedShortcut
 .
 
 drivetrain:WrittenNotDispensedConceptIds 
-  a drivetrain:InstanceToLiteralRecipe ;
+  a drivetrain:TermToLiteralRecipe ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:WrittenNotDispensedLiteral ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
@@ -1257,7 +1257,7 @@ drivetrain:WrittenNotDispensedConceptIds
 .
 
 drivetrain:WrittenNotDispensedSco
-   a drivetrain:InstanceToTermRecipe ;
+   a drivetrain:TermToTermRecipe ;
    drivetrain:cardinality drivetrain:1-1 ;
    drivetrain:object obo:OBI_0000011 ;
    drivetrain:predicate rdfs:subClassOf ;
@@ -1283,10 +1283,6 @@ drivetrain:RxMentionedClassListFromValueRule
 drivetrain:RxMentionedClassList 
   drivetrain:usesCustomVariableManipulationRule drivetrain:RxMentionedClassListFromValueRule .
   
-drivetrain:prescription_id_LiteralValue
-  a drivetrain:IntegerLiteralResourceList ;
-.
-
 drivetrain:prescription_start_datetime_DateLiteralValue
   a drivetrain:DateLiteralResourceList ;
 .
@@ -1696,7 +1692,6 @@ drivetrain:measurement_vocabulary_id_LiteralValue a drivetrain:StringLiteralReso
 drivetrain:person_cridsym_LiteralValue a drivetrain:StringLiteralResourceList .
 drivetrain:person_keysym_LiteralValue a drivetrain:IntegerLiteralResourceList .
 drivetrain:preceding_encounter_keysym_LiteralValue a drivetrain:IntegerLiteralResourceList .
-drivetrain:prescription_id_LiteralValue a drivetrain:IntegerLiteralResourceList .
 drivetrain:prescription_start_datetime_DateLiteralValue a drivetrain:DateLiteralResourceList .
 drivetrain:proc_id_IntegerLiteralValue a drivetrain:IntegerLiteralResourceList .
 drivetrain:procedure_cridsym_LiteralValue a drivetrain:StringLiteralResourceList .

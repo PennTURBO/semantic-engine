@@ -584,6 +584,9 @@ class GraphModelValidator(cxn: RepositoryConnection) extends ProjectwideGlobals
     
     def validateConnectionRecipeTypeDeclarations(process: String)
     {
+        // once untyped instances are created, distinguish them from class resource lists in this method
+        // also check if LiteralResourceLists are typed multiple times inconsistently?
+      
         val checkSubjectInstanceRecipesForLiterals: String = s"""
           Select ?recipe Where
           {

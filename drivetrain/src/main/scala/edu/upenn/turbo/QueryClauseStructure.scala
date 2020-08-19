@@ -200,6 +200,7 @@ class QueryClauseStructure extends ProjectwideGlobals
   	
   	def addToMinusGroups(groupName: String, graph: String, recipe: ConnectionRecipe)
   	{
+  	    recipe.addSparqlSnippet()
   	    if (minusGroups.contains(groupName)) 
   	    {
   	        if (minusGroups(groupName).contains(graph)) minusGroups(groupName)(graph) += recipe
@@ -210,6 +211,7 @@ class QueryClauseStructure extends ProjectwideGlobals
   	
   	def addToOptionalGroups(groupName: String, graph: String, recipe: ConnectionRecipe)
   	{
+  	    recipe.addSparqlSnippet()
   	    if (optionalGroups.contains(groupName)) 
   	    {
   	        if (optionalGroups(groupName).contains(graph)) optionalGroups(groupName)(graph) += recipe
@@ -220,22 +222,26 @@ class QueryClauseStructure extends ProjectwideGlobals
   	
   	def addToDefaultGraphOptionals(recipe: ConnectionRecipe)
   	{
+  	    recipe.addSparqlSnippet()
   	    defaultGraphOptionals += recipe
   	}
   	
   	def addToDefaultGraphsRequireds(recipe: ConnectionRecipe)
   	{
+  	    recipe.addSparqlSnippet()
   	    defaultGraphRequireds += recipe
   	}
   	
   	def addToAlternateGraphsOptionals(graph: String, recipe: ConnectionRecipe)
   	{
+  	    recipe.addSparqlSnippet()
   	    if (alternateGraphsOptionals.contains(graph)) alternateGraphsOptionals(graph) += recipe
   	    else alternateGraphsOptionals += graph -> HashSet(recipe)
   	}
   	
   	def addToAlternateGraphsRequireds(graph: String, recipe: ConnectionRecipe)
   	{
+  	    recipe.addSparqlSnippet()
   	    if (alternateGraphsRequireds.contains(graph)) alternateGraphsRequireds(graph) += recipe
   	    else alternateGraphsRequireds += graph -> HashSet(recipe)
   	}
