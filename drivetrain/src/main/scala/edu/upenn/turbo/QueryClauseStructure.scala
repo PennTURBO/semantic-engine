@@ -23,11 +23,11 @@ class QueryClauseStructure extends ProjectwideGlobals
   	var optionalGroupsSnippetMap = new HashMap[String, HashMap[String, String]]
   	var minusGroupsSnippetMap = new HashMap[String, HashMap[String, String]]
   	
-  	def buildClause(defaultGraph: String, includeValuesBlocks: Boolean): String =
+  	def buildClause(defaultGraph: String, includeValuesBlocks: Boolean, useTypesForDefaultRequireds: Boolean = true): String =
   	{
   	    differentiateOptionalGroups(defaultGraph)
   	    
-  	    buildGraphSnippetsFromLists(defaultGraphRequireds, alternateGraphsRequireds, defaultGraph, includeValuesBlocks)
+  	    buildGraphSnippetsFromLists(defaultGraphRequireds, alternateGraphsRequireds, defaultGraph, includeValuesBlocks, useTypesForDefaultRequireds)
   	    buildGraphSnippetsFromLists(defaultGraphOptionals, alternateGraphsOptionals, defaultGraph, includeValuesBlocks)
   	    buildOptionalGroupsWithinGraphClauses(defaultGraph, includeValuesBlocks)
   	    buildSpecialGroupsOutsideOfGraphClauses(optionalGroups, optionalGroupsSnippetMap, includeValuesBlocks)
@@ -68,19 +68,21 @@ class QueryClauseStructure extends ProjectwideGlobals
   	    clause
   	}
   	
-  	def buildGraphSnippetsFromLists(defaultGraphRecipes: HashSet[ConnectionRecipe], alternateGraphRecipes: HashMap[String, HashSet[ConnectionRecipe]], defaultGraph: String, includeValuesBlocks: Boolean)
+  	def buildGraphSnippetsFromLists(defaultGraphRecipes: HashSet[ConnectionRecipe], alternateGraphRecipes: HashMap[String, HashSet[ConnectionRecipe]], defaultGraph: String, includeValuesBlocks: Boolean, useTypes: Boolean = true)
   	{
   	    for (recipe <- defaultGraphRecipes) 
   	    {
-  	        if (graphToClauseSnippetMap.contains(defaultGraph)) graphToClauseSnippetMap(defaultGraph) += buildRecipe(recipe, includeValuesBlocks)
-  	        else graphToClauseSnippetMap += defaultGraph -> buildRecipe(recipe, includeValuesBlocks)
+  	        if (graphToClauseSnippetMap.contains(defaultGraph)) graphToClauseSnippetMap(defaultGraph) += buildRecipe(recipe, includeValuesBlocks, useTypes)
+  	        else graphToClauseSnippetMap += defaultGraph -> buildRecipe(recipe, includeValuesBlocks, useTypes)
   	    }
   	    for ((graph, recipes)<- alternateGraphRecipes)
   	    {
+  	        var useTypes = true
+  	        if (graph == processNamedGraph) useTypes = false
   	        for (recipe <- recipes)
   	        {
-  	            if (graphToClauseSnippetMap.contains(graph)) graphToClauseSnippetMap(graph) += buildRecipe(recipe, includeValuesBlocks)
-  	            else graphToClauseSnippetMap += graph -> buildRecipe(recipe, includeValuesBlocks)
+  	            if (graphToClauseSnippetMap.contains(graph)) graphToClauseSnippetMap(graph) += buildRecipe(recipe, includeValuesBlocks, useTypes)
+  	            else graphToClauseSnippetMap += graph -> buildRecipe(recipe, includeValuesBlocks, useTypes)
   	        }
   	    }
   	}
@@ -142,17 +144,17 @@ class QueryClauseStructure extends ProjectwideGlobals
   	    str + "}\n"
   	}
 
-  	def buildRecipe(recipe: ConnectionRecipe, includeValuesBlocks: Boolean): String =
+  	def buildRecipe(recipe: ConnectionRecipe, includeValuesBlocks: Boolean, useTypes: Boolean = true): String =
     {
   	    var thisRecipe = ""
   	    if (recipe.isOptional.get) thisRecipe += "OPTIONAL {\n"
         thisRecipe += recipe.asSparql
-        if (recipe.subject.isInstanceOf[Instance] && !recipe.subject.asInstanceOf[Instance].isUntyped.get && !typedInstances.contains(recipe.subject.asInstanceOf[Instance]))
+        if (useTypes && recipe.subject.isInstanceOf[Instance] && !recipe.subject.asInstanceOf[Instance].isUntyped.get && !typedInstances.contains(recipe.subject.asInstanceOf[Instance]))
         {
             thisRecipe += recipe.subject.asInstanceOf[Instance].sparqlTypeString
             typedInstances += recipe.subject.asInstanceOf[Instance]
         }
-        if (recipe.crObject.isInstanceOf[Instance] && !recipe.crObject.asInstanceOf[Instance].isUntyped.get && !typedInstances.contains(recipe.crObject.asInstanceOf[Instance]))
+        if (useTypes && recipe.crObject.isInstanceOf[Instance] && !recipe.crObject.asInstanceOf[Instance].isUntyped.get && !typedInstances.contains(recipe.crObject.asInstanceOf[Instance]))
         {
             thisRecipe += recipe.crObject.asInstanceOf[Instance].sparqlTypeString
             typedInstances += recipe.crObject.asInstanceOf[Instance]

@@ -16,6 +16,7 @@ class SparqlSnippetBuilder extends ProjectwideGlobals
     
     def buildSubject(recipe: ConnectionRecipe): String =
     {
+        if (recipe.subject.isInstanceOf[Term]) assert(recipe.subject.asInstanceOf[Term].isResourceList != None, "isResourceList property for Term " + recipe.subject.value + " cannot be None")
         var subject = "<" + recipe.subject.value + ">"
         if (recipe.subject.isInstanceOf[Instance] || (recipe.subject.isInstanceOf[Term] && recipe.subject.asInstanceOf[Term].isResourceList.get)) subject = helper.convertTypeToSparqlVariable(recipe.subject.value, true)
         subject
@@ -46,6 +47,7 @@ class SparqlSnippetBuilder extends ProjectwideGlobals
         }
         else
         {
+            if (recipe.crObject.isInstanceOf[Term]) assert(recipe.crObject.asInstanceOf[Term].isResourceList != None, "isResourceList property for Term " + recipe.crObject.value + " cannot be None")
             crObject = "<" + recipe.crObject.value + ">"
             if (recipe.crObject.isInstanceOf[Instance] || (recipe.crObject.isInstanceOf[Term] && recipe.crObject.asInstanceOf[Term].isResourceList.get)) crObject = helper.convertTypeToSparqlVariable(recipe.crObject.value, true) 
         }

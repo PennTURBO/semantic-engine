@@ -71,32 +71,32 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
       ?TURBO_0000568 <http://transformunify.org/ontologies/TURBO_0010094> ?alleleGenoIdStringLiteralValue .
       }
       GRAPH <$processNamedGraph> {
-      <processURI> turbo:TURBO_0010184 ?OBI_0001352 .
-      <processURI> turbo:TURBO_0010184 ?GeneSymbolUriOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?ZygosityUriOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000522 .
-      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000568 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0001868 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0200000 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0001573 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0000257 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0001051 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0001479 .
-      <processURI> turbo:TURBO_0010184 ?NCBITaxon_9606 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000527 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0600005 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0002118 .
-      <processURI> turbo:TURBO_0010184 ?GenomeRegistryOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000566 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010144 .
-      <processURI> obo:OBI_0000293 ?NCBITaxon_9606 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010144 .
-      <processURI> obo:OBI_0000293 ?TURBO_0000527 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010169 .
-      <processURI> obo:OBI_0000293 ?GenomeRegistryOfVariousTypes .
-      <processURI> obo:OBI_0000293 ?ZygosityUriOfVariousTypes .
-      <processURI> obo:OBI_0000293 ?GeneSymbolUriOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001352 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?GeneSymbolUriOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?ZygosityUriOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000522 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IAO_0000100 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000568 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001868 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0200000 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001573 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0000257 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001051 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001479 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?NCBITaxon_9606 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000527 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0600005 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0002118 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?GenomeRegistryOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000566 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010144 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?NCBITaxon_9606 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010144 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0000527 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010169 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?GenomeRegistryOfVariousTypes .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?ZygosityUriOfVariousTypes .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?GeneSymbolUriOfVariousTypes .
       }
       }
       WHERE {

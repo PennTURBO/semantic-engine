@@ -43,21 +43,21 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
         ?EFO_0004340 rdf:type <http://www.ebi.ac.uk/efo/EFO_0004340> .
         }
         GRAPH <$processNamedGraph> {
-        <processURI> turbo:TURBO_0010184 ?NCBITaxon_9606 .
-        <processURI> turbo:TURBO_0010184 ?PATO_0000119 .
-        <processURI> turbo:TURBO_0010184 ?OBI_0000097 .
-        <processURI> turbo:TURBO_0010184 ?PATO_0000128 .
-        <processURI> turbo:TURBO_0010184 ?TURBO_0000527 .
-        <processURI> turbo:TURBO_0010184 ?TURBO_0010138 .
-        <processURI> turbo:TURBO_0010184 ?OBI_0001929 .
-        <processURI> turbo:TURBO_0010184 ?EFO_0004340 .
-        <processURI> obo:OBI_0000293 ?NCBITaxon_9606 .
-        <processURI> obo:OBI_0000293 ?TURBO_0010138 .
-        <processURI> obo:OBI_0000293 ?TURBO_0010161 .
-        <processURI> obo:OBI_0000293 ?TURBO_0000527 .
-        <processURI> obo:OBI_0000293 ?OBI_0001929 .
-        <processURI> obo:OBI_0000293 ?EFO_0004340 .
-        <processURI> obo:OBI_0000293 ?TURBO_0010169 .
+        <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?NCBITaxon_9606 .
+        <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?PATO_0000119 .
+        <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0000097 .
+        <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?PATO_0000128 .
+        <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000527 .
+        <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010138 .
+        <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001929 .
+        <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?EFO_0004340 .
+        <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?NCBITaxon_9606 .
+        <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010138 .
+        <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010161 .
+        <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0000527 .
+        <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?OBI_0001929 .
+        <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?EFO_0004340 .
+        <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010169 .
         }
         }
         WHERE {

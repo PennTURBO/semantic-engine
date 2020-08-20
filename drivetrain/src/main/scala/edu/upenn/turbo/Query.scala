@@ -85,16 +85,16 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
         this.process = process
     }
     
-    def createInsertClause(outputs: HashSet[ConnectionRecipe])
+    def createInsertClause(inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe])
     {
         assert (insertClause == "")
         if (whereClause == null || whereClause.size == 0 || bindClause == null || bindClause.size == 0) 
         {
             throw new RuntimeException("Insert clause cannot be built before where or bind clauses are built.")
         }
-        assert (defaultOutputGraph != null && defaultOutputGraph != "")
+        if (outputs.size > 0) assert (defaultOutputGraph != null && defaultOutputGraph != "")
         val groupBuilder = new InsertClauseBuilder
-        insertClause = groupBuilder.buildInsertGroup(outputs, defaultOutputGraph)
+        insertClause = groupBuilder.buildInsertGroup(inputs, outputs, defaultOutputGraph, process)
     }
 
     def createDeleteClause(removals: HashSet[ConnectionRecipe])

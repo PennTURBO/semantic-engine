@@ -871,11 +871,11 @@ class TurboMultiuseClass extends Enumeration with Matchers
         val processQueryMap = RunDrivetrainProcess.runProcess(processSpec, "None", false)
         val query = processQueryMap(processSpec)
         if (printQuery) logger.info(query.getQuery())
-        val queryText = query.getQuery().replaceAll(" ", "").split("\\n")
+        val queryText = query.getQuery().replaceAll(" ", "").replaceAll("<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>","rdf:type").split("\\n")
         var queryTextValueStatementsRemoved = new ArrayBuffer[String]
         for (line <- queryText) if (!line.startsWith("VALUES") && line.length() != 0 && line.charAt(0) != '\r') queryTextValueStatementsRemoved += line
         val process = query.process
-        for (a <- expectedQuery.replaceAll(" ","").split("\\n"))
+        for (a <- expectedQuery.replaceAll(" ","").replaceAll("<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>","rdf:type").split("\\n"))
         {
             if (a.length() != 0 && a.charAt(0) != '\r')
             {

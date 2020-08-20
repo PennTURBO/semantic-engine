@@ -63,7 +63,10 @@ class BindClauseBuilder extends ProjectwideGlobals
                     else 
                     {
                         standardElementsToBind += recipe.subject
-                        assignCardinalityToInstance(recipe.subject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)
+                        if (recipe.subject.createdWithRule == None || (recipe.subject.createdWithRule != None && recipe.subject.createdWithRule.get.contains("multiplicityEnforcer")))
+                        {
+                            assignCardinalityToInstance(recipe.subject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)
+                        }
                     } 
                 }
                 else if (recipe.subject.isInstanceOf[Term] && recipe.subject.createdWithRule != None)
@@ -80,7 +83,10 @@ class BindClauseBuilder extends ProjectwideGlobals
                     else 
                     {
                         standardElementsToBind += recipe.crObject  
-                        assignCardinalityToInstance(recipe.crObject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)
+                        if (recipe.crObject.createdWithRule == None || (recipe.crObject.createdWithRule != None && recipe.crObject.createdWithRule.get.contains("multiplicityEnforcer")))
+                        {
+                            assignCardinalityToInstance(recipe.crObject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)                            
+                        }
                     } 
                 }
                 else if (recipe.crObject.isInstanceOf[Term] && recipe.crObject.createdWithRule != None)

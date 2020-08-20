@@ -120,6 +120,7 @@ class GraphModelReader(cxn: RepositoryConnection) extends ProjectwideGlobals
               ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
               ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
               ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
+              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
               Optional
               {
                   ?$OBJECT a drivetrain:ClassResourceList .

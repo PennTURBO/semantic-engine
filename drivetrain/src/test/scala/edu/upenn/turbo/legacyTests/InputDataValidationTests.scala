@@ -4,9 +4,6 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import java.util.UUID
 import java.io._
-import edu.upenn.turbo.ConnectToGraphDB
-import edu.upenn.turbo.ProjectwideGlobals
-import edu.upenn.turbo.RunDrivetrainProcess
 
 class InputDataValidationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {

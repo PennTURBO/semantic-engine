@@ -24,8 +24,8 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       }
       INSERT {
       GRAPH <$processNamedGraph> {
-      <processURI> obo:OBI_0000293 ?TURBO_0010161 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010169 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010161 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010169 .
       }
       }
       WHERE {

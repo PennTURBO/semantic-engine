@@ -146,24 +146,24 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
       ?OBI_0001929 <http://transformunify.org/ontologies/TURBO_0010094> ?massMeasurementDoubleLiteralValue .
       }
       GRAPH <$processNamedGraph> {
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010138 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0001929 .
-      <processURI> turbo:TURBO_0010184 ?EFO_0004340 .
-      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000522 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000533 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000527 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000534 .
-      <processURI> turbo:TURBO_0010184 ?BiobankEncounterRegistryOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000532 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000531 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010169 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010161 .
-      <processURI> turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000009> .
-      <processURI> turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000015> .
-      <processURI> obo:OBI_0000293 ?TURBO_0010161 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010169 .
-      <processURI> obo:OBI_0000293 ?BiobankEncounterRegistryOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010138 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001929 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?EFO_0004340 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IAO_0000100 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000522 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000533 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000527 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000534 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?BiobankEncounterRegistryOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000532 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000531 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010169 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010161 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> <http://purl.obolibrary.org/obo/UO_0000009> .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> <http://purl.obolibrary.org/obo/UO_0000015> .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010161 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010169 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?BiobankEncounterRegistryOfVariousTypes .
       }
       }
       WHERE {

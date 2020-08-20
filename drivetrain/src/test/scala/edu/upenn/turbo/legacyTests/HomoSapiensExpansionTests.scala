@@ -55,19 +55,19 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
     val expectedQuery: String = s"""
       INSERT {
       GRAPH <$expandedNamedGraph> {
-      ?GenderIdentityDatumOfVariousTypes rdf:type ?GenderIdentityDatumType .
-      ?RaceIdentityDatumOfVariousTypes rdf:type ?RaceIdentityDatumType .
+      ?GenderIdentityDatumOfVariousTypes <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?GenderIdentityDatumType .
+      ?RaceIdentityDatumOfVariousTypes <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?RaceIdentityDatumType .
       ?TURBO_0010092 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0000504 .
-      ?TURBO_0010092 rdf:type <http://transformunify.org/ontologies/TURBO_0010092> .
-      ?TURBO_0000504 rdf:type <http://transformunify.org/ontologies/TURBO_0000504> .
+      ?TURBO_0010092 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010092> .
+      ?TURBO_0000504 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000504> .
       ?TURBO_0010092 <http://purl.obolibrary.org/obo/BFO_0000051> ?HomoSapiensRegistryOfVariousTypes .
       ?HomoSapiensRegistryOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0010092 .
       ?GenderIdentityDatumOfVariousTypes <http://purl.obolibrary.org/obo/IAO_0000136> ?NCBITaxon_9606 .
-      ?NCBITaxon_9606 rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
+      ?NCBITaxon_9606 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
       ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/RO_0000086> ?PATO_0000047 .
-      ?PATO_0000047 rdf:type <http://purl.obolibrary.org/obo/PATO_0000047> .
+      ?PATO_0000047 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/PATO_0000047> .
       ?TURBO_0000504 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
-      ?IAO_0000100 rdf:type <http://purl.obolibrary.org/obo/IAO_0000100> .
+      ?IAO_0000100 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000100> .
       ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0000504 .
       ?GenderIdentityDatumOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
       ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?GenderIdentityDatumOfVariousTypes .
@@ -75,30 +75,30 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
       ?RaceIdentityDatumOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
       ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?RaceIdentityDatumOfVariousTypes .
       ?EFO_0004950 <http://purl.obolibrary.org/obo/IAO_0000136> ?UBERON_0035946 .
-      ?EFO_0004950 rdf:type <http://www.ebi.ac.uk/efo/EFO_0004950> .
-      ?UBERON_0035946 rdf:type <http://purl.obolibrary.org/obo/UBERON_0035946> .
+      ?EFO_0004950 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.ebi.ac.uk/efo/EFO_0004950> .
+      ?UBERON_0035946 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/UBERON_0035946> .
       ?NCBITaxon_9606 <http://transformunify.org/ontologies/TURBO_0000303> ?UBERON_0035946 .
       ?EFO_0004950 <http://purl.obolibrary.org/obo/BFO_0000050> ?IAO_0000100 .
       ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?EFO_0004950 .
       ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010113> ?NCBITaxon_9606 .
-      ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
+      ?TURBO_0010161 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010161> .
       ?TURBO_0010092 <http://purl.obolibrary.org/obo/IAO_0000219> ?NCBITaxon_9606 .
       ?TURBO_0000522 <http://purl.obolibrary.org/obo/OBI_0000293> ?IAO_0000100 .
-      ?TURBO_0000522 rdf:type <http://transformunify.org/ontologies/TURBO_0000522> .
+      ?TURBO_0000522 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0000522> .
       ?TURBO_0000504 <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0010092 .
       ?TURBO_0010168 <http://transformunify.org/ontologies/TURBO_0010113> ?TURBO_0010092 .
-      ?TURBO_0010168 rdf:type <http://transformunify.org/ontologies/TURBO_0010168> .
+      ?TURBO_0010168 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010168> .
       ?MONDO_0004992 <http://purl.obolibrary.org/obo/RO_0000052> ?NCBITaxon_9606 .
-      ?MONDO_0004992 rdf:type <http://purl.obolibrary.org/obo/MONDO_0004992> .
+      ?MONDO_0004992 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/MONDO_0004992> .
       ?TURBO_0010191 <http://transformunify.org/ontologies/TURBO_0010113> ?TURBO_0010070 .
-      ?TURBO_0010191 rdf:type <http://transformunify.org/ontologies/TURBO_0010191> .
-      ?TURBO_0010070 rdf:type <http://transformunify.org/ontologies/TURBO_0010070> .
+      ?TURBO_0010191 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010191> .
+      ?TURBO_0010070 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010070> .
       ?TURBO_0010070 <http://purl.obolibrary.org/obo/BFO_0000050> ?NCBITaxon_9606 .
       ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/BFO_0000051> ?TURBO_0010070 .
       ?TURBO_0010188 <http://purl.obolibrary.org/obo/IAO_0000219> ?TURBO_0010070 .
-      ?TURBO_0010188 rdf:type <http://transformunify.org/ontologies/TURBO_0010188> .
+      ?TURBO_0010188 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010188> .
       ?IAO_0000577 <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0010188 .
-      ?IAO_0000577 rdf:type <http://purl.obolibrary.org/obo/IAO_0000577> .
+      ?IAO_0000577 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://purl.obolibrary.org/obo/IAO_0000577> .
       ?TURBO_0010188 <http://purl.obolibrary.org/obo/BFO_0000051> ?IAO_0000577 .
       ?TURBO_0010188 <http://purl.obolibrary.org/obo/BFO_0000051> ?TumorRegistryDenoterOfVariousTypes .
       ?TumorRegistryDenoterOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0010188 .
@@ -114,40 +114,42 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
       ?IAO_0000577 <http://transformunify.org/ontologies/TURBO_0010094> ?tumorSymbolStringLiteralValue .
       }
       GRAPH <$processNamedGraph> {
-      <processURI> turbo:TURBO_0010184 ?GenderIdentityDatumOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?RaceIdentityDatumOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010092 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000504 .
-      <processURI> turbo:TURBO_0010184 ?HomoSapiensRegistryOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?NCBITaxon_9606 .
-      <processURI> turbo:TURBO_0010184 ?PATO_0000047 .
-      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
-      <processURI> turbo:TURBO_0010184 ?EFO_0004950 .
-      <processURI> turbo:TURBO_0010184 ?UBERON_0035946 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010161 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000522 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010168 .
-      <processURI> turbo:TURBO_0010184 ?MONDO_0004992 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010191 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010070 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010188 .
-      <processURI> turbo:TURBO_0010184 ?IAO_0000577 .
-      <processURI> turbo:TURBO_0010184 ?TumorRegistryDenoterOfVariousTypes .
-      <processURI> obo:OBI_0000293 ?TURBO_0010191 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010161 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010168 .
-      <processURI> obo:OBI_0000293 ?HomoSapiensRegistryOfVariousTypes .
-      <processURI> obo:OBI_0000293 ?TumorRegistryDenoterOfVariousTypes .
-      <processURI> obo:OBI_0000293 ?ShortcutGenderIdentityDatumOfVariousTypes .
-      <processURI> obo:OBI_0000293 ?ShortcutRaceIdentityDatumOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?GenderIdentityDatumOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?GenderIdentityDatumType.
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?RaceIdentityDatumType.
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?RaceIdentityDatumOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010092 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000504 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?HomoSapiensRegistryOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?NCBITaxon_9606 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?PATO_0000047 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IAO_0000100 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?EFO_0004950 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?UBERON_0035946 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010161 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000522 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010168 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?MONDO_0004992 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010191 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010070 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010188 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IAO_0000577 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TumorRegistryDenoterOfVariousTypes .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010191 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010161 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010168 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?HomoSapiensRegistryOfVariousTypes .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TumorRegistryDenoterOfVariousTypes .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?ShortcutGenderIdentityDatumOfVariousTypes .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?ShortcutRaceIdentityDatumOfVariousTypes .
       }
       }
       WHERE {
       GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts_> {
       ?TURBO_0010168 <http://transformunify.org/ontologies/TURBO_0010282> ?HomoSapiensRegistryOfVariousTypes .
-      ?TURBO_0010168 rdf:type <http://transformunify.org/ontologies/TURBO_0010168> .
+      ?TURBO_0010168 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010168> .
       ?TURBO_0010168 <http://purl.obolibrary.org/obo/IAO_0000219> ?TURBO_0010161 .
-      ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
+      ?TURBO_0010161 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010161> .
       ?TURBO_0010168 <http://transformunify.org/ontologies/TURBO_0010079> ?homoSapiensSymbolStringLiteralValue .
       ?TURBO_0010168 <http://transformunify.org/ontologies/TURBO_0010084> ?datasetTitleStringLiteralValue .
       OPTIONAL {
@@ -170,7 +172,7 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
        }
       OPTIONAL {
       ?TURBO_0010191 <http://transformunify.org/ontologies/TURBO_0010277> ?TumorRegistryDenoterOfVariousTypes .
-      ?TURBO_0010191 rdf:type <http://transformunify.org/ontologies/TURBO_0010191> .
+      ?TURBO_0010191 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://transformunify.org/ontologies/TURBO_0010191> .
       ?TURBO_0010191 <http://purl.obolibrary.org/obo/IAO_0000219> ?TURBO_0010161 .
       ?TURBO_0010191 <http://transformunify.org/ontologies/TURBO_0010194> ?tumorSymbolStringLiteralValue .
       }
@@ -1062,7 +1064,6 @@ class HomoSapiensExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike
                   ontologies:TURBO_0010184 ?TURBO_0000504_3 ;
                   ontologies:TURBO_0010184 ?TURBO_0010092_3 ;
                   
-                  ontologies:TURBO_0010184 ?UBERON_0035946 ;
                   ontologies:TURBO_0010184 ?PATO_0000047 ;
                   ontologies:TURBO_0010184 ?IAO_0000100 ;
                   ontologies:TURBO_0010184 ?OMRSE_00000138 ;

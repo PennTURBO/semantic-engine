@@ -200,8 +200,9 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             primaryQuery.setRemovalsGraph(removalsNamedGraph)
             primaryQuery.createDeleteClause(removalsRecipeList)
         }
-        primaryQuery.createInsertClause(outputRecipeList)
+        primaryQuery.createInsertClause(inputRecipeList, outputRecipeList)
         assert(!primaryQuery.getQuery().contains("https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/"), "Could not complete properties term replacement")
+        //logger.info(primaryQuery.getQuery())
         primaryQuery 
     }
     
@@ -247,30 +248,30 @@ object RunDrivetrainProcess extends ProjectwideGlobals
              new TermToLitConnRecipe(new Term(processSpecification), "http://transformunify.org/ontologies/TURBO_0010106", new Literal("\"\"\""+queryVal+"\"\"\"")),
              new TermToLitConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010107", new Literal(runtime)),
              new TermToLitConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010108", new Literal(triplesAdded)),
-             new TermToTermConnRecipe(new Term(updateProcess), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("turbo:TURBO_0010347")),
+             new TermToTermConnRecipe(new Term(updateProcess), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("http://transformunify.org/ontologies/TURBO_0010347")),
              new TermToTermConnRecipe(new Term(updateProcess), "http://purl.obolibrary.org/obo/BFO_0000055", new Term(updatePlanUri)),
-             new TermToTermConnRecipe(new Term(updatePlanUri), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("turbo:TURBO_0010373")),
+             new TermToTermConnRecipe(new Term(updatePlanUri), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("http://transformunify.org/ontologies/TURBO_0010373")),
              new TermToTermConnRecipe(new Term(updatePlanUri), "http://purl.obolibrary.org/obo/RO_0000059", new Term(processSpecification)),
-             new TermToTermConnRecipe(new Term(processSpecification), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("turbo:TURBO_0010354")),
+             new TermToTermConnRecipe(new Term(processSpecification), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("http://transformunify.org/ontologies/TURBO_0010354")),
              new TermToTermConnRecipe(new Term(processBoundary), "http://purl.obolibrary.org/obo/RO_0002223", new Term(updateProcess)),
-             new TermToTermConnRecipe(new Term(processBoundary), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("obo:BFO_0000035")),
+             new TermToTermConnRecipe(new Term(processBoundary), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("http://purl.obolibrary.org/obo/BFO_0000035")),
              new TermToTermConnRecipe(new Term(timeMeasDatum), "http://purl.obolibrary.org/obo/IAO_0000136", new Term(processBoundary)),
-             new TermToTermConnRecipe(new Term(timeMeasDatum), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("obo:IAO_0000416"))
+             new TermToTermConnRecipe(new Term(timeMeasDatum), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("http://purl.obolibrary.org/obo/IAO_0000416"))
         )
         for (inputGraph <- inputNamedGraphsList) 
         {
             val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(inputGraph)
-            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "turbo:TURBO_0010187", new Term(graphForThisRow))
+            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010187", new Term(graphForThisRow))
         }
         if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) 
         {
             val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(outputNamedGraph)
-            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "turbo:TURBO_0010186", new Term(graphForThisRow))
+            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010186", new Term(graphForThisRow))
         }
         else if (removalsNamedGraph != null) 
         {
             val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(removalsNamedGraph)
-            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "turbo:TURBO_0010186", new Term(graphForThisRow))
+            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010186", new Term(graphForThisRow))
         }
         
         var metaDataQuery = s"INSERT DATA {\n GRAPH <$processNamedGraph> {"

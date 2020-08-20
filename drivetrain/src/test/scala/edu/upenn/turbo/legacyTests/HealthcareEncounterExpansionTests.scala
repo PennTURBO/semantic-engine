@@ -257,35 +257,35 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?HealthcareEncounterRegistryOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0000508 .
       }
       GRAPH <$processNamedGraph> {
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000508 .
-      <processURI> turbo:TURBO_0010184 ?HealthcareEncounterRegistryOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010138 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0001929 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010149 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010150 .
-      <processURI> turbo:TURBO_0010184 ?OGMS_0000097 .
-      <processURI> turbo:TURBO_0010184 ?EFO_0004340 .
-      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000512 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000509 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000511 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000522 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010158 .
-      <processURI> turbo:TURBO_0010184 ?VSO_0000006 .
-      <processURI> turbo:TURBO_0010184 ?HTN_00000001 .
-      <processURI> turbo:TURBO_0010184 ?HTN_00000000 .
-      <processURI> turbo:TURBO_0010184 ?NCBITaxon_9606 .
-      <processURI> turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000015> .
-      <processURI> turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000272> .
-      <processURI> turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000009> .
-      <processURI> turbo:TURBO_0010184 ?PATO_0000119 .
-      <processURI> turbo:TURBO_0010184 ?PATO_0000128 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0000093 .
-      <processURI> turbo:TURBO_0010184 ?VSO_0000004 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010158 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010161 .
-      <processURI> obo:OBI_0000293 ?NCBITaxon_9606 .
-      <processURI> obo:OBI_0000293 ?HealthcareEncounterRegistryOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000508 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?HealthcareEncounterRegistryOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010138 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001929 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010149 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010150 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OGMS_0000097 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?EFO_0004340 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IAO_0000100 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000512 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000509 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000511 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000522 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010158 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?VSO_0000006 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?HTN_00000001 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?HTN_00000000 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?NCBITaxon_9606 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> <http://purl.obolibrary.org/obo/UO_0000015> .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> <http://purl.obolibrary.org/obo/UO_0000272> .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> <http://purl.obolibrary.org/obo/UO_0000009> .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?PATO_0000119 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?PATO_0000128 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0000093 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?VSO_0000004 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010158 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010161 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?NCBITaxon_9606 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?HealthcareEncounterRegistryOfVariousTypes .
       }
       }
       WHERE {
@@ -364,17 +364,17 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?OGMS_0000073 <http://transformunify.org/ontologies/TURBO_0010013> ?primaryDiagnosisBooleanLiteralValue .
       }
       GRAPH <$processNamedGraph> {
-      <processURI> turbo:TURBO_0010184 ?OGMS_0000073 .
-      <processURI> turbo:TURBO_0010184 ?IcdTermOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?SnomedTermOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?DiagnosisRegistryOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
-      <processURI> turbo:TURBO_0010184 ?OGMS_0000097 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010160 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010158 .
-      <processURI> obo:OBI_0000293 ?OGMS_0000097 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010160 .
-      <processURI> obo:OBI_0000293 ?DiagnosisRegistryOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OGMS_0000073 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IcdTermOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?SnomedTermOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?DiagnosisRegistryOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IAO_0000100 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OGMS_0000097 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010160 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010158 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?OGMS_0000097 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010160 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?DiagnosisRegistryOfVariousTypes .
       }
       }
       WHERE {
@@ -434,17 +434,17 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?PDRO_0000001 <http://transformunify.org/ontologies/TURBO_0010094> ?medicationOrderNameStringLiteralValue .
       }
       GRAPH <$processNamedGraph> {
-      <processURI> turbo:TURBO_0010184 ?PDRO_0000001 .
-      <processURI> turbo:TURBO_0010184 ?DrugTermOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
-      <processURI> turbo:TURBO_0010184 ?OGMS_0000097 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000561 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000562 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010159 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010158 .
-      <processURI> obo:OBI_0000293 ?OGMS_0000097 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010159 .
-      <processURI> obo:OBI_0000293 ?DrugTermOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?PDRO_0000001 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?DrugTermOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IAO_0000100 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OGMS_0000097 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000561 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000562 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010159 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010158 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?OGMS_0000097 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010159 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?DrugTermOfVariousTypes .
       }
       }
       WHERE {
@@ -500,7 +500,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", healthcareQuery) should be (true) 
     }
     
-    test("generated query matched expected query - diagnosis expansion")
+    /*test("generated query matched expected query - diagnosis expansion")
     {
         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", diagnosisQuery) should be (true) 
     }
@@ -1867,5 +1867,5 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
        val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
        result.size should be (0)
-    }
+    }*/
 }
