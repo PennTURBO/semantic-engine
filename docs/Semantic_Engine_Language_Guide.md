@@ -393,6 +393,30 @@ Note that these operators may cause a significant performance degradation.
 
 ## Input Data Validation
 
+Besides validation of the Semantic Engine Language files, another validation step that uses the `:mustExecuteIf` predicate is validation of concise RDF input data. This option can be turned on in the properties file using key `dataValidationMode`.
+
+If set to `dataValidationMode = stop`, the system will cancel any instantiation in which an error in the input data is found.
+If set to `dataValidationMode = log`, the system will proceed with the instantiation, and log any errors in the `errorLogFile`.
+If set to `dataValidationMode = none`, the system will not perform any validation of input data.
+
+Input Data Validation is executed using the `InputDataValidator`, and takes place before each Update is executed. This means that if set to `stop`, the instantiation may be cancelled after some Updates have already completed. Note that the property `clearGraphsAtStart` in the properties file can be set to `true` to clear the graphs specified in the `expandedNamedGraph` and `processNamedGraph` keys in the properties file, which will effectively reset the repository in the case that an instantiation is terminated in an incomplete state. These graphs can also be cleared manually using the GraphDB web interface.
+
+The `InputDataValidator` checks the execution requirement of each Connection Recipe that is input to the queued Update, and uses that to generate a SPARQL statement that is run against the named graph(s) that contain the concise RDF input data.
+
+For example, consider the following Connection Recipe, and assume that it is referenced as an input by some Update:
+
+```
+:ClassAtoClassB a :InstanceToInstanceRecipe ;
+  :subject :classA ;
+  :predicate :relatesTo ;
+  :object :classB ;
+  :cardinality :1-1 ;
+  :mustExecuteIf :subjectExists ;
+.
+```
+
+If Input Data Validation were turned on, before running the Update that references this Recipe, a SPARQL statement would run to ensure that there are no instances of `classB` that do not have a `relatesTo` relationship with `classA` in the input dataset.
+
 ## Custom Bind Rules*
 
 - Should be used as a "last resort"
