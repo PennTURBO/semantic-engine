@@ -396,7 +396,9 @@ Note that these operators may cause a significant performance degradation.
 Besides validation of the Semantic Engine Language files, another validation step that uses the `:mustExecuteIf` predicate is validation of concise RDF input data. This option can be turned on in the properties file using key `dataValidationMode`.
 
 If set to `dataValidationMode = stop`, the system will cancel any instantiation in which an error in the input data is found.
+
 If set to `dataValidationMode = log`, the system will proceed with the instantiation, and log any errors in the `errorLogFile`.
+
 If set to `dataValidationMode = none`, the system will not perform any validation of input data.
 
 Input Data Validation is executed using the `InputDataValidator`, and takes place before each Update is executed. This means that if set to `stop`, the instantiation may be cancelled after some Updates have already completed. Note that the property `clearGraphsAtStart` in the properties file can be set to `true` to clear the graphs specified in the `expandedNamedGraph` and `processNamedGraph` keys in the properties file, which will effectively reset the repository in the case that an instantiation is terminated in an incomplete state. These graphs can also be cleared manually using the GraphDB web interface.
