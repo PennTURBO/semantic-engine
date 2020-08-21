@@ -50,6 +50,8 @@ drivetrain:TurboGraphRequirementSpecification a owl:Class .
 drivetrain:TurboGraphCardinalityRule a owl:Class .
 drivetrain:PredicateSuffixSymbol a owl:Class .
 
+drivetrain:UntypedInstance a owl:Class .
+
 drivetrain:ResourceList a owl:Class .
 
 drivetrain:ClassResourceList a owl:Class .

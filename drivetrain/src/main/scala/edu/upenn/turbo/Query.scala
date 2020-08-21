@@ -35,6 +35,8 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
     
     var processSpecification: String = null
     var process: String = null
+    
+    var inputDataForValidation: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] = null
 
     var bindClauseBuilder: BindClauseBuilder = new BindClauseBuilder()
         
@@ -77,6 +79,11 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
     {
         assert (processSpecification.contains(':'))
         this.processSpecification = processSpecification
+    }
+    
+    def setInputDataForValidation(inputData: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+    {
+        this.inputDataForValidation = inputData
     }
     
     def setProcess(process: String)

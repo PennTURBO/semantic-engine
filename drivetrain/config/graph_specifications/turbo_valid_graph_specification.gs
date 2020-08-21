@@ -45,7 +45,7 @@ drivetrain:GidTypingRecipe a drivetrain:InstanceToTermRecipe ;
 .
 
 drivetrain:GidToBeTyped 
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 
 drivetrain:GidClassList
@@ -230,7 +230,7 @@ drivetrain:DobHasRawDateString
   drivetrain:object drivetrain:birth_datetime_StringLiteralValue ;
 .
 drivetrain:RidToBeTyped 
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 drivetrain:RidClassList
   a drivetrain:ClassResourceList ;
@@ -406,7 +406,7 @@ drivetrain:EncTypingRecipe
 .
 
 drivetrain:EncToBeTyped 
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 
 drivetrain:EncCridsymbHasRepresentation
@@ -526,7 +526,7 @@ drivetrain:EncTypeAxiomProp
   drivetrain:object rdf:type ;
 .
 drivetrain:EncTypeAxiomTarget
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:many-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedTarget ;
@@ -600,7 +600,7 @@ drivetrain:RoleToRoleType
 .
 
 drivetrain:RoleToBeTyped
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 drivetrain:RoleClassList
   a drivetrain:ClassResourceList ;
@@ -761,7 +761,7 @@ drivetrain:HceKeyDenotesProv4Precedence
 .
 
 drivetrain:Prevenc
-  a drivetrain:ClassResourceList .
+  a drivetrain:UntypedInstance .
 
 drivetrain:EncPrecedenceAxiomContext a drivetrain:TurboGraphContext .
 owl:Axiom drivetrain:hasPossibleContext drivetrain:EncPrecedenceAxiomContext .
@@ -882,7 +882,7 @@ drivetrain:MentioningProvHasRepresentation
 .
 
 drivetrain:MentioningProvMentionsCode
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:predicate obo:IAO_0000142 ;
@@ -927,7 +927,7 @@ drivetrain:ProcTypeAxiomProp
 .
 
 drivetrain:ProcTypeAxiomTarget
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:many-1 ;
   drivetrain:object drivetrain:ProcClassList ;
   drivetrain:predicate owl:annotatedTarget ;
@@ -968,7 +968,7 @@ drivetrain:ProcClassList
 .
 
 drivetrain:ProcToBeTyped 
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 
 drivetrain:ProcMentionedClassList
@@ -1442,7 +1442,7 @@ drivetrain:MeasTypingRecipe a drivetrain:InstanceToTermRecipe ;
 .
 
 drivetrain:MeasToBeTyped 
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 
 drivetrain:MeasClassList
@@ -1811,7 +1811,7 @@ drivetrain:MulAxiomProp
   drivetrain:object obo:IAO_0000039 ;
 .
 drivetrain:MulAxiomTarget
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:many-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedTarget ;

@@ -148,14 +148,15 @@ class InputDataValidator(graphModelCxn: RepositoryConnection, dataRepoCxn: Repos
         }
         else
         {
+            val ranges = describerRanges.get
             minusBlock += "{\n"
-            for (termIndex <- 0 to describerRanges.size - 1) 
+            for (termIndex <- 0 to ranges.size - 1) 
             {
-              val term = describerRanges.get(termIndex)
+              val term = ranges(termIndex)
               minusBlock += s"""
                   {$subjectAsVar <$predicate> <$term> .}\n
               """
-              if (termIndex != describerRanges.size - 1) minusBlock += "UNION\n"
+              if (termIndex != ranges.size - 1) minusBlock += "UNION\n"
             }
             minusBlock += "}\n"  
         }
@@ -200,14 +201,15 @@ class InputDataValidator(graphModelCxn: RepositoryConnection, dataRepoCxn: Repos
         }
         else
         {
+            val ranges = describerRanges.get
             minusBlock += "{\n"
-            for (termIndex <- 0 to describerRanges.size - 1) 
+            for (termIndex <- 0 to ranges.size - 1) 
             {
-              val term = describerRanges.get(termIndex)
+              val term = ranges(termIndex)
               minusBlock += s"""
                   {<$term> <$predicate> $objectAsVar .}\n
               """
-              if (termIndex != describerRanges.size - 1) minusBlock += "UNION\n"
+              if (termIndex != ranges.size - 1) minusBlock += "UNION\n"
             }
             minusBlock += "}\n"  
         }

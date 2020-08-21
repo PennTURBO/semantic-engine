@@ -100,10 +100,10 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             }
             INSERT {
             GRAPH <$processNamedGraph> {
-            <processURI> obo:OBI_0000293 ?class3 .
-            <processURI> obo:OBI_0000293 ?class4 .
-            <processURI> obo:OBI_0000293 ?class1 .
-            <processURI> obo:OBI_0000293 ?class2 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class3 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class4 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class1 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class2 .
             }
             }
             WHERE {
@@ -185,12 +185,12 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
             GRAPH <$processNamedGraph> {
-            <processURI> turbo:TURBO_0010184 ?class1 .
-            <processURI> turbo:TURBO_0010184 ?class2 .
-            <processURI> obo:OBI_0000293 ?class3 .
-            <processURI> obo:OBI_0000293 ?class4 .
-            <processURI> obo:OBI_0000293 ?class1 .
-            <processURI> obo:OBI_0000293 ?class2 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class1 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class2 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class3 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class4 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class1 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class2 .
             }
             }
             WHERE {
@@ -278,12 +278,12 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
             GRAPH <$processNamedGraph> {
-            <processURI> turbo:TURBO_0010184 ?class1 .
-            <processURI> turbo:TURBO_0010184 ?class2 .
-            <processURI> obo:OBI_0000293 ?class3 .
-            <processURI> obo:OBI_0000293 ?class4 .
-            <processURI> obo:OBI_0000293 ?class1 .
-            <processURI> obo:OBI_0000293 ?class2 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class1 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class2 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class3 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class4 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class1 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class2 .
             }
             }
             WHERE {
@@ -372,12 +372,12 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
             GRAPH <$processNamedGraph> {
-            <processURI> turbo:TURBO_0010184 ?class1 .
-            <processURI> turbo:TURBO_0010184 ?class2 .
-            <processURI> obo:OBI_0000293 ?class3 .
-            <processURI> obo:OBI_0000293 ?class4 .
-            <processURI> obo:OBI_0000293 ?class1 .
-            <processURI> obo:OBI_0000293 ?class2 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class1 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class2 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class3 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class4 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class1 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class2 .
             }
             }
             WHERE {
@@ -457,6 +457,10 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
           """
           update.updateSparql(gmCxn, insert)
 
+          // The Minus Group implementation creates a new GRAPH clause even if the GRAPH referenced by the minus group is the same
+          // as a graph that already exists in the query. This is different than the Optional Group implementation which "tucks"
+          // Optional Groups into the GRAPH clause that already exists when applicable (see above test). There isn't necessarily a strong
+          // reason that Minus Groups does not do things that way, and the code can be changed to work that way in the QueryClauseStructure class
           val expectedQuery = s"""INSERT {
             GRAPH <$expandedNamedGraph> {
             ?class1 <http://www.itmat.upenn.edu/biobank/predicate1> ?class2 .
@@ -464,12 +468,12 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
             GRAPH <$processNamedGraph> {
-            <processURI> turbo:TURBO_0010184 ?class1 .
-            <processURI> turbo:TURBO_0010184 ?class2 .
-            <processURI> obo:OBI_0000293 ?class3 .
-            <processURI> obo:OBI_0000293 ?class4 .
-            <processURI> obo:OBI_0000293 ?class1 .
-            <processURI> obo:OBI_0000293 ?class2 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class1 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class2 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class3 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class4 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class1 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class2 .
             }
             }
             WHERE {
@@ -478,15 +482,19 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?class1 rdf:type <http://www.itmat.upenn.edu/biobank/class1> .
             ?class3 rdf:type <http://www.itmat.upenn.edu/biobank/class3> .
             }
-            MINUS {
+             }
+           MINUS {
+           GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts> {
             ?class2 <http://www.itmat.upenn.edu/biobank/predicate3> ?class3 .
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
+            }
             MINUS {
+            GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts> {
             ?class1 <http://www.itmat.upenn.edu/biobank/predicate4> ?class4 .
             ?class4 rdf:type <http://www.itmat.upenn.edu/biobank/class4> .
             }
-             }
+            }
              """
           
          helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
@@ -551,10 +559,10 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             <http://www.itmat.upenn.edu/biobank/term2> <http://www.itmat.upenn.edu/biobank/predicate2> ?literal1 .
             }
             GRAPH <$processNamedGraph> {
-            <processURI> turbo:TURBO_0010184 <http://www.itmat.upenn.edu/biobank/term1> .
-            <processURI> turbo:TURBO_0010184 <http://www.itmat.upenn.edu/biobank/term2> .
-            <processURI> obo:OBI_0000293 <http://www.itmat.upenn.edu/biobank/term1> .
-            <processURI> obo:OBI_0000293 <http://www.itmat.upenn.edu/biobank/term2> .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> <http://www.itmat.upenn.edu/biobank/term1> .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> <http://www.itmat.upenn.edu/biobank/term2> .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/term1> .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/term2> .
             }
             }
             WHERE {
@@ -568,7 +576,8 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
          helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
     }
     
-    test("multiplicity check for 1-many instance to literal - direct method")
+    // The next two tests test the ability to use literals as cardinality enforcers, which is not implemented.
+    /*test("multiplicity check for 1-many instance to literal - direct method")
     {
         val insert = s"""
             INSERT DATA
@@ -634,10 +643,10 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?term3 rdf:type <http://www.itmat.upenn.edu/biobank/term3> .
             }
             GRAPH <$processNamedGraph> {
-            <processURI> turbo:TURBO_0010184 ?term1 .
-            <processURI> turbo:TURBO_0010184 ?term2 .
-            <processURI> turbo:TURBO_0010184 ?term3 .
-            <processURI> obo:OBI_0000293 ?term4 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term1 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term2 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term3 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?term4 .
             }
             }
             WHERE {
@@ -712,10 +721,10 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?term3 rdf:type <http://www.itmat.upenn.edu/biobank/term3> .
             }
             GRAPH <$processNamedGraph> {
-            <processURI> turbo:TURBO_0010184 ?term1 .
-            <processURI> turbo:TURBO_0010184 ?term2 .
-            <processURI> turbo:TURBO_0010184 ?term3 .
-            <processURI> obo:OBI_0000293 ?term4 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term1 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term2 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term3 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?term4 .
             }
             }
             WHERE {
@@ -730,7 +739,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
              """
           
          helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
-    }
+    }*/
     
     test("cardinality enforcement with only instance-to-term in input")
     {
@@ -746,7 +755,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection2 .
                     
                     pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-many .
                     pmbb:connection1 drivetrain:subject pmbb:term1 .
                     pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection1 drivetrain:object pmbb:term2 .
@@ -772,11 +781,14 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
           val expectedQuery = s"""INSERT {
             GRAPH <$expandedNamedGraph> {
             ?term1 <http://www.itmat.upenn.edu/biobank/predicate1> ?term2 .
-            ?term2 rdf:type <http://www.itmat.upenn.edu/biobank/term2>
+            ?term2 rdf:type <http://www.itmat.upenn.edu/biobank/term2> .
+            ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
             }
             GRAPH <$processNamedGraph> {
-            <processURI> turbo:TURBO_0010184 ?term2 .
-            <processURI> obo:OBI_0000293 ?term1 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term2 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term1 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?term1 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/term3> .
             }
             }
             WHERE {
@@ -784,7 +796,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?term1 <http://www.itmat.upenn.edu/biobank/predicate2> <http://www.itmat.upenn.edu/biobank/term3> .
             ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
             }
-            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term1))))) AS ?term2})
+            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term1))))) AS ?term2)
              }
              """
           
@@ -805,7 +817,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                     pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection2 .
                     
                     pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
-                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-many .
                     pmbb:connection1 drivetrain:subject pmbb:term1 .
                     pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection1 drivetrain:object pmbb:term2 .
@@ -831,19 +843,22 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
           val expectedQuery = s"""INSERT {
             GRAPH <$expandedNamedGraph> {
             ?term1 <http://www.itmat.upenn.edu/biobank/predicate1> ?term2 .
-            ?term2 rdf:type <http://www.itmat.upenn.edu/biobank/term2>
+            ?term2 rdf:type <http://www.itmat.upenn.edu/biobank/term2> .
+            ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
             }
             GRAPH <$processNamedGraph> {
-            <processURI> turbo:TURBO_0010184 ?term2 .
-            <processURI> obo:OBI_0000293 ?term1 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term2 .
+            <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term1 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?term1 .
+            <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/term3> .
             }
             }
             WHERE {
             GRAPH <http://www.itmat.upenn.edu/biobank/Shortcuts> {
-            ?term1 <http://www.itmat.upenn.edu/biobank/predicate2> <http://www.itmat.upenn.edu/biobank/term3> .
+            <http://www.itmat.upenn.edu/biobank/term3> <http://www.itmat.upenn.edu/biobank/predicate2> ?term1 .
             ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
             }
-            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term1))))) AS ?term2})
+            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term1))))) AS ?term2)
              }
              """
           

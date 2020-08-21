@@ -124,7 +124,7 @@ class BindClauseBuilder extends ProjectwideGlobals
             if (!nextInput.isOptional.get && nextInput.optionalGroup == None)
             {
                 if (nextInput.subject.isInstanceOf[Instance]) enforcer = nextInput.subject.value
-                else if (nextInput.crObject.isInstanceOf[Instance]) enforcer = nextInput.subject.value
+                else if (nextInput.crObject.isInstanceOf[Instance]) enforcer = nextInput.crObject.value
             }
             if (enforcer != "") 
             {

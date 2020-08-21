@@ -1011,6 +1011,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           ontologies:object2ToObject4 drivetrain:predicate turbo:predicate4 .
           ontologies:object2ToObject4 drivetrain:object turbo:object4 .
           ontologies:object2ToObject4 drivetrain:cardinality drivetrain:1-1 .
+          
+          turbo:object4 a owl:Class .
           }}"""
        update.updateSparql(gmCxn, insert)
        
@@ -1050,7 +1052,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
     }
     
-    test("only optional input should be caught")
+    test("only optional input")
     {
         helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
         val insert = s"""
@@ -1236,6 +1238,48 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
                     
                     drivetrain:literal1 a drivetrain:LiteralResourceList .
+                }
+            }
+          """
+          update.updateSparql(gmCxn, insert)
+          
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "For process http://transformunify.org/ontologies/myProcess1, the following Connection Recipes have declared their objects are literals, but non-literals were found: http://www.itmat.upenn.edu/biobank/connection1 http://www.itmat.upenn.edu/biobank/connection2")
+        }
+    }
+    
+    test("literal resource list defined with two different datatypes")
+    {
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        val insert = s"""
+            INSERT DATA
+            {
+                <$defaultPrefix""" + s"""instructionSet>
+                {
+                    pmbb:myProcess1 a turbo:TURBO_0010354 .
+                    pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    pmbb:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection1 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToLiteralRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:predicate1 a rdf:Property .
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                    drivetrain:literal1 a drivetrain:LiteralResourceList .
+                    
+                    drivetrain:term2 a drivetrain:StringLiteralResourceList .
+                    drivetrain:term2 a drivetrain:IntegerLiteralResourceList .
                 }
             }
           """

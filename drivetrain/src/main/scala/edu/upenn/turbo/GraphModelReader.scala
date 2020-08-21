@@ -76,6 +76,16 @@ class GraphModelReader(cxn: RepositoryConnection) extends ProjectwideGlobals
               }
               Optional
               {
+                  ?$SUBJECT a drivetrain:UntypedInstance .
+                  BIND (true as ?$SUBJECTUNTYPED)
+              }
+              Optional
+              {
+                  ?$OBJECT a drivetrain:UntypedInstance .
+                  BIND (true as ?$OBJECTUNTYPED)
+              }
+              Optional
+              {
                   ?$CONNECTIONNAME drivetrain:mustExecuteIf ?$REQUIREMENT .
               }
               Optional
@@ -189,6 +199,16 @@ class GraphModelReader(cxn: RepositoryConnection) extends ProjectwideGlobals
               {
                   ?$OBJECT a drivetrain:ClassResourceList .
                   BIND (true as ?$OBJECTADESCRIBER)
+              }
+              Optional
+              {
+                  ?$SUBJECT a drivetrain:UntypedInstance .
+                  BIND (true as ?$SUBJECTUNTYPED)
+              }
+              Optional
+              {
+                  ?$OBJECT a drivetrain:UntypedInstance .
+                  BIND (true as ?$OBJECTUNTYPED)
               }
               Optional
               {

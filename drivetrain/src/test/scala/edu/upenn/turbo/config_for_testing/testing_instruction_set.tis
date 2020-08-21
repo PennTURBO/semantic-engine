@@ -70,7 +70,7 @@ ontologies:RxNormDrugTermMinusGroup
   a drivetrain:TurboGraphMinusGroup ;
 .
 ontologies:RxNormDrugTermToTypeDeclaration
-  a drivetrain:InstanceToTermRecipe ;
+  a drivetrain:TermToTermRecipe ;
   drivetrain:partOf ontologies:RxNormDrugTermMinusGroup ;
   drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object owl:Class ;

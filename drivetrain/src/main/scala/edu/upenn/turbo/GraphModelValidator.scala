@@ -80,7 +80,9 @@ class GraphModelValidator(cxn: RepositoryConnection) extends ProjectwideGlobals
                   filter (?p != drivetrain:referencedInGraph)
                   filter (!isLiteral(?o))
                   filter (?o != owl:Class)
+                  filter (?p != drivetrain:subject)
                   filter (?p != drivetrain:predicate)
+                  filter (?p != drivetrain:object)
                   filter (?o != rdf:Property)
               }
               UNION
@@ -584,77 +586,59 @@ class GraphModelValidator(cxn: RepositoryConnection) extends ProjectwideGlobals
     
     def validateConnectionRecipeTypeDeclarations(process: String)
     {
-        // once untyped instances are created, distinguish them from class resource lists in this method
-        // also check if LiteralResourceLists are typed multiple times inconsistently?
-      
-        val checkSubjectInstanceRecipesForLiterals: String = s"""
-          Select ?recipe Where
+        // check all recipes with instances as subjects
+        val instanceSubjectCheck = 
+          """select distinct ?subject where
           {
-              Values ?hasRecipe {drivetrain:hasRequiredInput drivetrain:hasOptionalInput drivetrain:hasOutput}
-              Values ?instanceRecipe {drivetrain:InstanceToInstanceRecipe drivetrain:InstanceToTermRecipe drivetrain:InstanceToLiteralRecipe}
-              <$process> ?hasRecipe ?recipe .
-              ?recipe a ?instanceRecipe .
-              {
-                  {
-                      ?recipe drivetrain:subject ?subject .
-                      ?subject a drivetrain:LiteralResourceList .
-                  }
-                  UNION
-                  {
-                      ?recipe drivetrain:subject ?subject .
-                      filter(isLiteral(?subject))
-                  }
-              }
-          }
-          """
-        var resList = ""
-        var res = update.querySparqlAndUnpackTuple(gmCxn, checkSubjectInstanceRecipesForLiterals, "recipe")
-        for (recipe <- res) resList += recipe
-        if (resList != "") throw new RuntimeException(s"For process $process, the following Connection Recipes have declared their subjects are class instances, but literals were found: $resList")
+            Values ?instanceSubjectRecipe {drivetrain:InstanceToInstanceRecipe drivetrain:InstanceToTermRecipe drivetrain:InstanceToLiteralRecipe}
+            ?recipe a ?instanceSubjectRecipe .
+            ?recipe drivetrain:subject ?subject .
+            Minus
+            {
+               ?subject a ?subjectType .
+               Values ?subjectType {owl:Class drivetrain:UntypedInstance}
+            }
+        }"""
+        var res = update.querySparqlAndUnpackTuple(gmCxn, instanceSubjectCheck, "subject")
+        var err = ""
+        for (subj <- res) err += subj + " "
+        assert (err == "", s"The following subjects were declared as instances by at least one recipe, but were not typed as instances: $err")
         
-        val checkObjectInstanceRecipesForLiterals: String = s"""
-          Select ?recipe Where
+        // check all recipes with instances as objects
+        val instanceObjectCheck = 
+          """select distinct ?object where
           {
-              Values ?hasRecipe {drivetrain:hasRequiredInput drivetrain:hasOptionalInput drivetrain:hasOutput}
-              Values ?instanceRecipe {drivetrain:InstanceToInstanceRecipe drivetrain:TermToInstanceRecipe}
-              <$process> ?hasRecipe ?recipe .
-              ?recipe a ?instanceRecipe .
-              {
-                  {
-                      ?recipe drivetrain:object ?subject .
-                      ?subject a drivetrain:LiteralResourceList .
-                  }
-                  UNION
-                  {
-                      ?recipe drivetrain:object ?subject .
-                      filter(isLiteral(?subject))
-                  }
-              }
-          }
-          """
-        resList = ""
-        res = update.querySparqlAndUnpackTuple(gmCxn, checkObjectInstanceRecipesForLiterals, "recipe")
-        for (recipe <- res) resList += recipe
-        if (resList != "") throw new RuntimeException(s"For process $process, the following Connection Recipes have declared their objects are class instances, but literals were found: $resList")
+            Values ?instanceObjectRecipe {drivetrain:InstanceToInstanceRecipe drivetrain:TermToInstanceRecipe}
+            ?recipe a ?instanceObjectRecipe .
+            ?recipe drivetrain:object ?object .
+            Minus
+            {
+               ?object a ?objectType .
+               Values ?objectType {owl:Class drivetrain:UntypedInstance}
+            }
+        }"""
+        res = update.querySparqlAndUnpackTuple(gmCxn, instanceObjectCheck, "object")
+        err = ""
+        for (obj <- res) err += obj + " "
+        assert (err == "", s"The following objects were declared as instances by at least one recipe, but were not typed as instances: $err")
         
-        val checkObjectLiteralRecipesForInstances: String = s"""
-          Select ?recipe Where
+        // check all recipes with literals as objects
+        val literalObjectCheck = 
+          """select distinct ?object where
           {
-              Values ?hasRecipe {drivetrain:hasRequiredInput drivetrain:hasOptionalInput drivetrain:hasOutput}
-              Values ?literalRecipe {drivetrain:InstanceToLiteral drivetrain:TermToLiteralRecipe}
-              <$process> ?hasRecipe ?recipe .
-              ?recipe a ?literalRecipe .
-              ?recipe drivetrain:object ?object .
-              Minus
-              {
-                  ?object a ?literalType .
-                  ?literalType rdfs:subClassOf* drivetrain:LiteralResourceList .
-              }
-          }
-          """
-        resList = ""
-        res = update.querySparqlAndUnpackTuple(gmCxn, checkObjectLiteralRecipesForInstances, "recipe")
-        for (recipe <- res) resList += recipe + " "
-        if (resList != "") throw new RuntimeException(s"For process $process, the following Connection Recipes have declared their objects are literals, but non-literals were found: $resList")
+            Values ?literalObjectRecipe {drivetrain:InstanceToLiteralRecipe drivetrain:TermToLiteralRecipe}
+            ?recipe a ?literalObjectRecipe .
+            ?recipe drivetrain:object ?object .
+        		filter(!isLiteral(?object))
+        		Minus
+                {
+    				?object a ?objectType .
+            		?objectType rdfs:subClassOf* drivetrain:LiteralResourceList .
+                }
+        }"""
+        res = update.querySparqlAndUnpackTuple(gmCxn, literalObjectCheck, "object")
+        err = ""
+        for (obj <- res) err += obj + " "
+        assert (err == "", s"The following objects were declared as literals by at least one recipe, but were not typed as literals: $err")
     }
 }

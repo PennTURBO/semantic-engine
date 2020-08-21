@@ -309,7 +309,7 @@ drivetrain:EncTypeShortcut
 .
 
 drivetrain:EncScoStarEnc 
-   a drivetrain:InstanceToTermRecipe ;
+   a drivetrain:TermToTermRecipe ;
    drivetrain:cardinality drivetrain:1-1 ;
    drivetrain:object obo:OGMS_0000097 ;
    drivetrain:predicate rdfs:subClassOf ;
@@ -319,7 +319,7 @@ drivetrain:EncScoStarEnc
 .
 
 drivetrain:EncOmopConceptIds 
-  a drivetrain:InstanceToLiteralRecipe ;
+  a drivetrain:TermToLiteralRecipe ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:encounter_type_code_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010147 ;
@@ -505,7 +505,7 @@ drivetrain:PrevencAPrevencsClass
 .
 
 drivetrain:PrevencScoEnc
-  a drivetrain:InstanceToTermRecipe ;
+  a drivetrain:TermToTermRecipe ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object obo:OGMS_0000097 ;
   drivetrain:predicate rdfs:subClassOf ;
@@ -592,7 +592,7 @@ drivetrain:ProcSciShortcut
 .
 
 drivetrain:ProcOmopConceptIds 
-  a drivetrain:InstanceToLiteralRecipe ;
+  a drivetrain:TermToLiteralRecipe ;
   drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject drivetrain:ProcClassList ;
@@ -899,7 +899,7 @@ drivetrain:MeasMoreUnitsShortcut
 .
 
 drivetrain:MulClassHasOmopConceptId 
-  a drivetrain:InstanceToLiteralRecipe ;
+  a drivetrain:TermToLiteralRecipe ;
   drivetrain:referencedInGraph properties:ontologyURL ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject drivetrain:MulClassList ;
@@ -908,7 +908,7 @@ drivetrain:MulClassHasOmopConceptId
 .
 
 drivetrain:MulScoStarMul
-  a drivetrain:InstanceToTermRecipe ;
+  a drivetrain:TermToTermRecipe ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object obo:IAO_0000003 ;
   drivetrain:predicate rdfs:subClassOf  ;

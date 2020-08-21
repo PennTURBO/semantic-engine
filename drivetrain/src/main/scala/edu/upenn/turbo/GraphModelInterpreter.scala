@@ -28,8 +28,8 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
         val recipesList = new HashSet[ConnectionRecipe]
         for (row <- data)
         {
-            val (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectAResourceList, 
-                objectAResourceList, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper, graphForThisRow, suffixOperator,
+            val (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectUntypedOrResourceList, 
+                objectUntypedOrResourceList, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper, graphForThisRow, suffixOperator,
                 minusGroup, optionalGroup, subjectCustomRule, objectCustomRule, subjectDependee, objectDependee) 
                 = interpretRowData(row)
                             
@@ -40,9 +40,9 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
 
             if (recipeType == instToInstRecipe)
             {
-                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectAResourceList, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
+                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectUntypedOrResourceList, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
-                val obInst = findOrCreateNewInstance(typeOfData, disInst, objectString, objectWithContext, objectAResourceList, objectIsSingleton, objectIsSuper, objectCustomRule)
+                val obInst = findOrCreateNewInstance(typeOfData, disInst, objectString, objectWithContext, objectUntypedOrResourceList, objectIsSingleton, objectIsSuper, objectCustomRule)
                 disInst += obInst.value -> obInst
                 
                 // right now only updating connection lists for instance-to-instance relations
@@ -59,9 +59,9 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
             }
             else if (recipeType == instToTermRecipe)
             {
-                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectAResourceList, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
+                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectUntypedOrResourceList, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
-                val objTerm = findOrCreateNewTerm(typeOfData, disTerm, objectWithContext, objectAResourceList, objectCustomRule)
+                val objTerm = findOrCreateNewTerm(typeOfData, disTerm, objectWithContext, objectUntypedOrResourceList, objectCustomRule)
                 disTerm += objTerm.value -> objTerm
                 
                 val recipe = new InstToTermConnRecipe(subjInst, predicate, objTerm)
@@ -74,9 +74,9 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
             }
             else if (recipeType == termToInstRecipe)
             {
-                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectAResourceList, subjectCustomRule)
+                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectUntypedOrResourceList, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
-                val objInst = findOrCreateNewInstance(typeOfData, disInst, objectString, objectWithContext, objectAResourceList, objectIsSingleton, objectIsSuper, objectCustomRule)
+                val objInst = findOrCreateNewInstance(typeOfData, disInst, objectString, objectWithContext, objectUntypedOrResourceList, objectIsSingleton, objectIsSuper, objectCustomRule)
                 disInst += objInst.value -> objInst
                 
                 val recipe = new TermToInstConnRecipe(subjTerm, predicate, objInst)
@@ -89,9 +89,9 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
             }
             else if (recipeType == instToLiteralRecipe)
             {
-                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectAResourceList, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
+                val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectUntypedOrResourceList, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
-                val objLit = findOrCreateNewLiteral(typeOfData, disLit, objectWithContext, objectAResourceList, objectCustomRule)
+                val objLit = findOrCreateNewLiteral(typeOfData, disLit, objectWithContext, objectUntypedOrResourceList, objectCustomRule)
                 disLit += objLit.value -> objLit
                 
                 val recipe = new InstToLitConnRecipe(subjInst, predicate, objLit)
@@ -104,9 +104,9 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
             }
             else if (recipeType == termToLiteralRecipe)
             {
-                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectAResourceList, subjectCustomRule)
+                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectUntypedOrResourceList, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
-                val objLit = findOrCreateNewLiteral(typeOfData, disLit, objectWithContext, objectAResourceList, objectCustomRule)
+                val objLit = findOrCreateNewLiteral(typeOfData, disLit, objectWithContext, objectUntypedOrResourceList, objectCustomRule)
                 disLit += objLit.value -> objLit
                 
                 val recipe = new TermToLitConnRecipe(subjTerm, predicate, objLit)
@@ -119,9 +119,9 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
             }
             else if (recipeType == termToTermRecipe)
             {
-                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectAResourceList, subjectCustomRule)
+                val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectUntypedOrResourceList, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
-                val objTerm = findOrCreateNewTerm(typeOfData, disTerm, objectWithContext, objectAResourceList, objectCustomRule)
+                val objTerm = findOrCreateNewTerm(typeOfData, disTerm, objectWithContext, objectUntypedOrResourceList, objectCustomRule)
                 disTerm += objTerm.value -> objTerm
                 
                 val recipe = new TermToTermConnRecipe(subjTerm, predicate, objTerm)
@@ -230,8 +230,25 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
         if (row(SUBJECTADESCRIBER.toString) != null) subjectAResourceList = true
         var objectAResourceList = false
         if (row(OBJECTADESCRIBER.toString) != null) objectAResourceList = true
-        if (row.contains(GRAPHLITERALTYPE.toString) && row(GRAPHLITERALTYPE.toString) != null) objectAResourceList = true
+        if (row.contains(GRAPHLITERALTYPE.toString) && row(GRAPHLITERALTYPE.toString) != null) 
+        {
+            assert(objectAResourceList == false)
+            objectAResourceList = true
+        }
         
+        var subjectUntyped = false
+        if (row(SUBJECTUNTYPED.toString) != null) subjectUntyped = true
+        var objectUntyped = false
+        if (row(OBJECTUNTYPED.toString) != null) objectUntyped = true
+        
+        assert(!(subjectAResourceList && subjectUntyped))
+        assert(!(objectAResourceList && objectUntyped))
+        
+        var subjectUntypedOrResourceList = false
+        var objectUntypedOrResourceList = false
+        if (subjectAResourceList || subjectUntyped) subjectUntypedOrResourceList = true
+        if (objectAResourceList || objectUntyped) objectUntypedOrResourceList = true
+                
         // SPARQL searches process that created this input as an output and returns their graph (GRAPHOFCREATINGPROCESS). We override that if the user provided a graph explicitly (GRAPHOFORIGIN)
         var graphForThisRow: String = null
         if (row.contains(GRAPHOFCREATINGPROCESS.toString) && row(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = row(GRAPHOFCREATINGPROCESS.toString).toString
@@ -265,8 +282,8 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
             objectAResourceList, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper)
         for (nonNull <- nonNulls) assert(nonNull != null, "Found null object")
         
-        (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectAResourceList, 
-            objectAResourceList, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper, graphForThisRow, suffixOperator,
+        (subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectUntypedOrResourceList, 
+            objectUntypedOrResourceList, subjectIsSingleton, subjectIsSuper, objectIsSingleton, objectIsSuper, graphForThisRow, suffixOperator,
             minusGroup, optionalGroup, subjectCustomRule, objectCustomRule, subjectDependee, objectDependee)
     }
     

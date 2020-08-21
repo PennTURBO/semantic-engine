@@ -79,9 +79,17 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             // get list of all named graphs which match pattern specified in inputNamedGraph but without match on where clause
             var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, helper.checkAndConvertPropertiesReferenceToNamedGraph(primaryQuery.defaultInputGraph), useInputNamedGraphsCache)
             logger.info("\tinput named graphs size: " + inputNamedGraphsList.size)
+        
             if (inputNamedGraphsList.size == 0) logger.info(s"\tCannot run process $processSpecification: no input named graphs found")
             else
             {
+                //run validation on input graph
+                if (dataValidationMode == "stop" || dataValidationMode == "log")
+                {
+                    logger.info(s"\tRunning on Input Data Validation Mode $dataValidationMode")
+                    inputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.inputDataForValidation, dataValidationMode)
+                }
+                else logger.info("\tInput Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
                 if (multithread)
                 {
@@ -140,7 +148,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         else update.updateSparql(paramCxn, localQuery)
     }
 
-    def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()): PatternMatchQuery =
+    def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()) =
     {          
         val modelReader = new GraphModelReader(gmCxn)
     
@@ -167,19 +175,12 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         
         // This needs to be re-implemented using the object model
         //graphModelValidator.validateAcornResults(thisProcessSpecification, inputs, outputs, setConnectionLists, mapConnectionLists)
-        //run validation on input graph
-        if (dataValidationMode == "stop" || dataValidationMode == "log")
-        {
-            logger.info(s"\tRunning on Input Data Validation Mode $dataValidationMode")
-            // This needs to be re-worked to use connection recipes
-            //inputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData, dataValidationMode)
-        }
-        else logger.info("\tInput Data Validation turned off for this instantiation")
         
         // create primary query
         val primaryQuery = new PatternMatchQuery(gmCxn)
         primaryQuery.setProcessSpecification(thisProcessSpecification)
         primaryQuery.setProcess(process)
+        primaryQuery.setInputDataForValidation(inputs)
         
         var inputNamedGraph = inputs(0)(GRAPH.toString).toString
         primaryQuery.setInputGraph(inputNamedGraph)
@@ -203,7 +204,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         primaryQuery.createInsertClause(inputRecipeList, outputRecipeList)
         assert(!primaryQuery.getQuery().contains("https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/"), "Could not complete properties term replacement")
         //logger.info(primaryQuery.getQuery())
-        primaryQuery 
+        primaryQuery
     }
     
     /**
