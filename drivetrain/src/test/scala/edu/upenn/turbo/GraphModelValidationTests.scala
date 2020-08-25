@@ -143,8 +143,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: There are multiple connections between http://transformunify.org/ontologies/object2 and http://transformunify.org/ontologies/object1 with non-matching multiplicities" ||
-                e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: There are multiple connections between http://transformunify.org/ontologies/object1 and http://transformunify.org/ontologies/object2 with non-matching multiplicities")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: There are multiple connections between http://transformunify.org/ontologies/object2 and http://transformunify.org/ontologies/object1 with non-matching cardinality" ||
+                e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: There are multiple connections between http://transformunify.org/ontologies/object1 and http://transformunify.org/ontologies/object2 with non-matching cardinality")
         }
     }
     
@@ -242,7 +242,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: No cardinality enforcer found for output element http://transformunify.org/ontologies/object4")
+            case e: RuntimeException => assert(e.toString == "java.lang.RuntimeException: Could not assign cardinality enforcer for element http://transformunify.org/ontologies/object4")
         }
     }
     
@@ -285,12 +285,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: No cardinality enforcer found for output element http://transformunify.org/ontologies/object4")
+            case e: RuntimeException => assert(e.toString == "java.lang.RuntimeException: Could not assign cardinality enforcer for element http://transformunify.org/ontologies/object4")
         }
     }
     
-    
-    test("many-1 object in output with context")
+    // These tests test the assignment of cardinality enforcers using a cardinality count map from the CardinalityCountBuilder.
+    // This feature hasn't been implemented yet, so these tests are commented.
+    /*test("many-1 object in output with context")
     {
         val insert: String = s"""
           
@@ -356,7 +357,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         
         update.updateSparql(gmCxn, insert)
         RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
-    }
+    }*/
     
     test ("2 output connection recipes - mixed singleton declaration")
     {
@@ -399,7 +400,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: For process http://transformunify.org/ontologies/myProcess1, http://transformunify.org/ontologies/object4 has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Instance http://transformunify.org/ontologies/object4 cannot be a Singleton and have a many-1 connection with another element")
         }
     }
     
@@ -470,7 +471,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Error in graph model: for process http://transformunify.org/ontologies/myProcess1, the multiplicity of http://transformunify.org/ontologies/object2 has not been defined consistently"))
+            case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Inconsistent cardinality found involving elements"))
         }
     }
     
@@ -528,7 +529,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Error in graph model: for process http://transformunify.org/ontologies/myProcess1, the multiplicity of http://transformunify.org/ontologies/object4 has not been defined consistently"))
+            case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Inconsistent cardinality found involving elements"))
         }
     }
     
@@ -586,7 +587,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: For process http://transformunify.org/ontologies/myProcess1, http://transformunify.org/ontologies/object4 has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Instance http://transformunify.org/ontologies/object4 cannot be a Singleton and have a 1-1 connection with another element")
         }
     }
     
@@ -1023,7 +1024,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The object of connection http://transformunify.org/ontologies/object2ToObject4 is not a literal, but the connection is a datatype connection.")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The following objects were declared as literals by at least one recipe, but were not typed as literals: http://transformunify.org/ontologies/object4 ")
         }
     }
     
@@ -1048,10 +1049,12 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The object of connection http://transformunify.org/ontologies/object2ToObject4 is not a literal, but the connection is a datatype connection.")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The following objects were declared as literals by at least one recipe, but were not typed as literals: http://transformunify.org/ontologies/describer1 ")
         }
     }
     
+    // Due to the change made on 8/25, input patterns with only optionals are allowed, and optionals can be used as cardinality enforcers
+    // if there are no required enforcers that qualify
     test("only optional input")
     {
         helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
@@ -1060,11 +1063,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
             {
                 <$defaultPrefix""" + s"""instructionSet>
                 {
-                    pmbb:myProcess1 a turbo:TURBO_0010354 .
-                    pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
-                    pmbb:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
-                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection1 .
-                    pmbb:myProcess1 drivetrain:hasOptionalInput pmbb:connection2 .
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    ontologies:myProcess1 drivetrain:hasOptionalInput pmbb:connection2 .
                     
                     pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
                     pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
@@ -1080,6 +1083,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
 
                     pmbb:term1 a owl:Class .
                     pmbb:term2 a owl:Class .
+                    pmbb:term3 a owl:Class .
                     
                     pmbb:predicate1 a rdf:Property .
                     pmbb:predicate2 a rdf:Property .
@@ -1089,16 +1093,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
             }
           """
           update.updateSparql(gmCxn, insert)
-          
-        try
-        {
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
-            assert (1 == 2)
-        }
-        catch
-        {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: For process http://transformunify.org/ontologies/myProcess1, only optional inputs are available as cardinality enforcers. Please, update your Instruction Set with required inputs for process.")
-        }
+
+          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
     }
     
     test("literal asserted as subject of instance recipes")
@@ -1109,11 +1105,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
             {
                 <$defaultPrefix""" + s"""instructionSet>
                 {
-                    pmbb:myProcess1 a turbo:TURBO_0010354 .
-                    pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
-                    pmbb:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
-                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection1 .
-                    pmbb:myProcess1 drivetrain:hasOptionalInput pmbb:connection2 .
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    ontologies:myProcess1 drivetrain:hasOptionalInput pmbb:connection2 .
                     
                     pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
                     pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
@@ -1123,7 +1119,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     
                     pmbb:connection2 a drivetrain:InstanceToTermRecipe .
                     pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
-                    pmbb:connection2 drivetrain:subject drivetrain:literal1 .
+                    pmbb:connection2 drivetrain:subject pmbb:literal1 .
                     pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
                     pmbb:connection2 drivetrain:object pmbb:term3 .
 
@@ -1135,7 +1131,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                                       
                     drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
                     
-                    drivetrain:literal1 a drivetrain:LiteralResourceList .
+                    pmbb:literal1 a drivetrain:LiteralResourceList .
                 }
             }
           """
@@ -1148,7 +1144,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "For process http://transformunify.org/ontologies/myProcess1, the following Connection Recipes have declared their subjects are instances, but literals were found: http://www.itmat.upenn.edu/biobank/connection1 http://www.itmat.upenn.edu/biobank/connection2")
+            case e: AssertionError => assert(e.toString == """java.lang.AssertionError: assertion failed: The following subjects were declared as instances by at least one recipe, but were not typed as instances: "1"^^<http://www.w3.org/2001/XMLSchema#string> http://www.itmat.upenn.edu/biobank/literal1 """)
         }
     }
     
@@ -1160,11 +1156,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
             {
                 <$defaultPrefix""" + s"""instructionSet>
                 {
-                    pmbb:myProcess1 a turbo:TURBO_0010354 .
-                    pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
-                    pmbb:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
-                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection1 .
-                    pmbb:myProcess1 drivetrain:hasOptionalInput pmbb:connection2 .
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasRequiredInput pmbb:connection1 .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection2 .
                     
                     pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
                     pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
@@ -1172,21 +1168,18 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection1 drivetrain:object "1" .
                     
-                    pmbb:connection2 a drivetrain:InstanceToTermRecipe .
+                    pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
                     pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
-                    pmbb:connection2 drivetrain:subject pmbb:term2 .
-                    pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
-                    pmbb:connection2 drivetrain:object pmbb:literal1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term1 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection2 drivetrain:object pmbb:term2 .
 
                     pmbb:term1 a owl:Class .
                     pmbb:term2 a owl:Class .
                     
                     pmbb:predicate1 a rdf:Property .
-                    pmbb:predicate2 a rdf:Property .
                                       
                     drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
-                    
-                    drivetrain:literal1 a drivetrain:LiteralResourceList .
                 }
             }
           """
@@ -1199,7 +1192,105 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "For process http://transformunify.org/ontologies/myProcess1, the following Connection Recipes have declared their objects are instances, but literals were found: http://www.itmat.upenn.edu/biobank/connection1 http://www.itmat.upenn.edu/biobank/connection2")
+            case e: AssertionError => assert(e.toString == """java.lang.AssertionError: assertion failed: The following objects were declared as instances by at least one recipe, but were not typed as instances: "1"^^<http://www.w3.org/2001/XMLSchema#string> """)
+        }
+    }
+    
+    test("literal asserted as object of term recipes - literal resource list")
+    {
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        val insert = s"""
+            INSERT DATA
+            {
+                <$defaultPrefix""" + s"""instructionSet>
+                {
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasRequiredInput pmbb:connection2 .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToTermRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term2 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection2 drivetrain:object pmbb:literal1 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                                      
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                    
+                    pmbb:literal1 a drivetrain:LiteralResourceList .
+                }
+            }
+          """
+          update.updateSparql(gmCxn, insert)
+          
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == """java.lang.AssertionError: assertion failed: The following objects were declared as terms by at least one recipe, but were typed as literals: http://www.itmat.upenn.edu/biobank/literal1 """)
+        }
+    }
+    
+    test("literal asserted as object of term recipes - raw literal value")
+    {
+        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        val insert = s"""
+            INSERT DATA
+            {
+                <$defaultPrefix""" + s"""instructionSet>
+                {
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasRequiredInput pmbb:connection2 .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToTermRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term2 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection2 drivetrain:object "1" .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                                      
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                }
+            }
+          """
+          update.updateSparql(gmCxn, insert)
+          
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == """java.lang.AssertionError: assertion failed: The following objects were declared as terms by at least one recipe, but were typed as literals: "1"^^<http://www.w3.org/2001/XMLSchema#string> """)
         }
     }
     
@@ -1211,11 +1302,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
             {
                 <$defaultPrefix""" + s"""instructionSet>
                 {
-                    pmbb:myProcess1 a turbo:TURBO_0010354 .
-                    pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
-                    pmbb:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
-                    pmbb:myProcess1 drivetrain:hasOutput pmbb:connection1 .
-                    pmbb:myProcess1 drivetrain:hasOptionalInput pmbb:connection2 .
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    ontologies:myProcess1 drivetrain:hasOptionalInput pmbb:connection2 .
                     
                     pmbb:connection1 a drivetrain:InstanceToLiteralRecipe .
                     pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
@@ -1236,8 +1327,6 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                     pmbb:predicate2 a rdf:Property .
                                       
                     drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
-                    
-                    drivetrain:literal1 a drivetrain:LiteralResourceList .
                 }
             }
           """
@@ -1250,7 +1339,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "For process http://transformunify.org/ontologies/myProcess1, the following Connection Recipes have declared their objects are literals, but non-literals were found: http://www.itmat.upenn.edu/biobank/connection1 http://www.itmat.upenn.edu/biobank/connection2")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The following objects were declared as literals by at least one recipe, but were not typed as literals: http://www.itmat.upenn.edu/biobank/term2 http://www.itmat.upenn.edu/biobank/term1 ")
         }
     }
     
@@ -1262,24 +1351,31 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
             {
                 <$defaultPrefix""" + s"""instructionSet>
                 {
-                    pmbb:myProcess1 a turbo:TURBO_0010354 .
-                    pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
-                    pmbb:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
-                    pmbb:myProcess1 drivetrain:hasRequiredInput pmbb:connection1 .
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasRequiredInput pmbb:connection1 .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection2 .
                     
                     pmbb:connection1 a drivetrain:InstanceToLiteralRecipe .
                     pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
                     pmbb:connection1 drivetrain:subject pmbb:term1 .
                     pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
                     pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term1 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection2 drivetrain:object pmbb:term3 .
 
                     pmbb:term1 a owl:Class .
+                    pmbb:term3 a owl:Class .
                     pmbb:predicate1 a rdf:Property .
                     drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
-                    drivetrain:literal1 a drivetrain:LiteralResourceList .
                     
-                    drivetrain:term2 a drivetrain:StringLiteralResourceList .
-                    drivetrain:term2 a drivetrain:IntegerLiteralResourceList .
+                    pmbb:term2 a drivetrain:StringLiteralResourceList .
+                    pmbb:term2 a drivetrain:IntegerLiteralResourceList .
                 }
             }
           """
@@ -1292,7 +1388,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "For process http://transformunify.org/ontologies/myProcess1, the following Connection Recipes have declared their objects are literals, but non-literals were found: http://www.itmat.upenn.edu/biobank/connection1 http://www.itmat.upenn.edu/biobank/connection2")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: recipe http://www.itmat.upenn.edu/biobank/connection1 may have duplicate properties")
         }
     }
 }

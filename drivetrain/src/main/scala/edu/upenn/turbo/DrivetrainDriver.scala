@@ -101,7 +101,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
   
   def updateModel(gmCxn: RepositoryConnection, instructionSetFile: String = instructionSetFile, graphSpecFile: String = graphSpecificationFile, acornOntology: String = acornOntologyFile)
   {
-      logger.info("Updating graph model using file " + instructionSetFile)
+      logger.info("Updating transformation instructions using file " + instructionSetFile)
       val graph = s"$defaultPrefix" + "instructionSet"
       helper.deleteAllTriplesInDatabase(gmCxn)
       var query = s"INSERT DATA { Graph <$graph> {"

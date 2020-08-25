@@ -116,6 +116,7 @@ class BindClauseBuilder extends ProjectwideGlobals
     def findEnforcerWithDefaultMethod(instance: Instance, inputs: HashSet[ConnectionRecipe]): Boolean =
     {
         var foundEnforcer: Boolean = false
+        val optionalEnforcers = new HashSet[ConnectionRecipe]
         val inputsIterator = inputs.toBuffer.sortWith(_.name < _.name).toIterator
         var enforcer: String = ""
         while (enforcer == "" && inputsIterator.hasNext)
@@ -126,11 +127,20 @@ class BindClauseBuilder extends ProjectwideGlobals
                 if (nextInput.subject.isInstanceOf[Instance]) enforcer = nextInput.subject.value
                 else if (nextInput.crObject.isInstanceOf[Instance]) enforcer = nextInput.crObject.value
             }
-            if (enforcer != "") 
-            {
-                cardinalityMap += instance.value -> enforcer
-                foundEnforcer = true
-            }
+            else optionalEnforcers += nextInput
+        }
+        // if only optional enforcers available, we can try one of those
+        val optionalIterator = optionalEnforcers.toBuffer.sortWith(_.name < _.name).toIterator
+        while (enforcer == "" && optionalIterator.hasNext)
+        {
+            val nextInput = optionalIterator.next
+            if (nextInput.subject.isInstanceOf[Instance]) enforcer = nextInput.subject.value
+            else if (nextInput.crObject.isInstanceOf[Instance]) enforcer = nextInput.crObject.value
+        }
+        if (enforcer != "")
+        {
+            cardinalityMap += instance.value -> enforcer
+            foundEnforcer = true
         }
         foundEnforcer
     }
@@ -147,9 +157,13 @@ class BindClauseBuilder extends ProjectwideGlobals
             if (connectedElement.existsInInput.get && connectedElement.isInstanceOf[Instance])
             {
                 var connectionRequired = false
-                for (recipe <- connectedElement.referencedByRecipes)
+                for (recipe <- connectedElement.referencedByInputRecipes)
                 {
-                    if (!recipe.isOptional.get && recipe.optionalGroup == None) connectionRequired = true
+                    if (!recipe.isOptional.get && recipe.optionalGroup == None) 
+                    {
+                        logger.info("for element " + connectedElement.value + " found non-optional recipe " + recipe.name)
+                        connectionRequired = true
+                    }
                 }
                 if (connectionRequired) enforcer = connectedElement.value
             }

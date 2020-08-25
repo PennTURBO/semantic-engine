@@ -143,55 +143,34 @@ class GraphModelValidator(cxn: RepositoryConnection) extends ProjectwideGlobals
         assert (res.size == 1, (if (res.size == 0) s"Process $process does not exist, ensure required input and output graphs are present" else s"Process $process has duplicate properties"))
     }
     
-    def validateAcornResults(process: String, inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], setLists: HashMap[String, HashSet[String]], mapLists: HashMap[String, HashMap[String, HashMap[String, String]]])
+    def validateAcornResults(inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe])
     {
         checkForDuplicateAcornProperties(inputs)
         checkForDuplicateAcornProperties(outputs)
         
-        val outputOneToOneConnections = mapLists("outputOneToOneList")
-        val inputOneToOneConnections = mapLists("inputOneToOneList")
+        validateSingletonClasses(inputs)
+        validateSingletonClasses(outputs)
         
-        for ((k,v) <- outputOneToOneConnections)
-        {
-            validateSingletonClasses(k, process, setLists)
-            validateManyToOneClasses(k, process, v, mapLists)
-        }
-        for ((k,v) <- inputOneToOneConnections)
-        {
-            validateSingletonClasses(k, process, setLists)
-            validateManyToOneClasses(k, process, v, mapLists)
-        }
+        validateManyToOneClasses(inputs)
+        validateManyToOneClasses(outputs)
     }
     
-    def checkForDuplicateAcornProperties(results: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+    def checkForDuplicateAcornProperties(results: HashSet[ConnectionRecipe])
     {
-        var scannedConnections = new HashMap[String, String]
+        var scannedConnections = new HashSet[String]
         var multiplicityMap = new HashMap[String, String]
-        for (row <- results)
+        for (recipe <- results)
         {
-            val connectionName = row(CONNECTIONNAME.toString).toString
-            val thisMultiplicity = row(MULTIPLICITY.toString).toString
-            val thisGraph = (if (row.contains(GRAPHOFORIGIN.toString) && row(GRAPHOFORIGIN.toString) != null) row(GRAPHOFORIGIN.toString).toString else "")
-            val subjectContext = (if (row.contains(SUBJECTCONTEXT.toString) && row(SUBJECTCONTEXT.toString) != null) row(SUBJECTCONTEXT.toString).toString else "")
-            val objectContext = (if (row.contains(OBJECTCONTEXT.toString) && row(OBJECTCONTEXT.toString) != null) row(OBJECTCONTEXT.toString).toString else "")
-            val requirement = (if (row.contains(REQUIREMENT.toString) && row(REQUIREMENT.toString) != null) row(REQUIREMENT.toString).toString else "")
-            val suffixOperator = (if (row.contains(SUFFIXOPERATOR.toString) && row(SUFFIXOPERATOR.toString) != null) row(SUFFIXOPERATOR.toString).toString else "")
-            val subjectRule = (if (row.contains(SUBJECTRULE.toString) && row(SUBJECTRULE.toString) != null) row(SUBJECTRULE.toString).toString else "")
-            val objectRule = (if (row.contains(OBJECTRULE.toString) && row(OBJECTRULE.toString) != null) row(OBJECTRULE.toString).toString else "")
-            var subjectString = row(SUBJECT.toString).toString
-            var objectString = row(OBJECT.toString).toString
-            if (row(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
-            if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
-            
+            val subjectString = recipe.subject.value
+            val objectString = recipe.crObject.value
             val subjectObjectString = subjectString + objectString
             if (multiplicityMap.contains(subjectObjectString)) assert(multiplicityMap(subjectObjectString) == 
-              thisMultiplicity, s"Error in graph model: There are multiple connections between $subjectString and $objectString with non-matching multiplicities")
-            else multiplicityMap += subjectObjectString -> thisMultiplicity
+              recipe.cardinality, s"Error in graph model: There are multiple connections between $subjectString and $objectString with non-matching cardinality")
+            else multiplicityMap += subjectObjectString -> recipe.cardinality
             
-            val fullConnectionString = subjectObjectString + row(PREDICATE.toString).toString + thisMultiplicity + thisGraph +
-                                       subjectContext + objectContext + requirement + suffixOperator + subjectRule + objectRule
-            if (scannedConnections.contains(connectionName)) assert(scannedConnections(connectionName) == fullConnectionString, s"Error in graph model: recipe $connectionName may have duplicate properties")
-            else scannedConnections += connectionName -> fullConnectionString 
+            val connectionName = recipe.name
+            assert(!scannedConnections.contains(connectionName), s"Error in graph model: recipe $connectionName may have duplicate properties")
+            scannedConnections += connectionName 
         }
     }
     
@@ -523,65 +502,82 @@ class GraphModelValidator(cxn: RepositoryConnection) extends ProjectwideGlobals
         for (recipe <- res) logger.warn(s"Connection recipe $recipe in the Graph Specification is not the output of a queued process in the Instruction Set, but it is not a required recipe.")
     }
     
-    def validateManyToOneClasses(k: String, process: String, v: HashMap[String, String], mapLists: HashMap[String, HashMap[String, HashMap[String, String]]])
+    def validateManyToOneClasses(results: HashSet[ConnectionRecipe])
     {
-        val outputOneToManyConnections = mapLists("outputOneToManyList")
-        val inputOneToManyConnections = mapLists("inputOneToManyList")
-        val outputManyToOneConnections = mapLists("outputManyToOneList")
-        val inputManyToOneConnections = mapLists("inputManyToOneList")
-        
-        for ((connection,connectionName) <- v)
+        for (recipe <- results)
         {
-            if (inputOneToManyConnections.contains(connection) && inputOneToManyConnections(connection).contains(k))
+            for (oneToOneConn <- recipe.subject.oneToOneConnections)
             {
-                 val invalidConnectionName = inputOneToManyConnections(connection)(k)
-                 var connList1 = ""
-                 for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
-                 var connList2 = ""
-                 for ((entity, connName) <- inputOneToManyConnections(connection)) connList2 += entity+"\n"
-                 assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName.\n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")
+                for (oneToManyConn <- oneToOneConn.oneToManyConnections) 
+                {
+                    val element1 = oneToManyConn.value
+                    val element2 = oneToOneConn.value
+                    val element3 = recipe.subject.value
+                    assert(!recipe.subject.oneToOneConnections.contains(oneToManyConn), s"Inconsistent cardinality found involving elements $element1, $element2, and $element3")
+                }
+                for (manyToOneConn <- oneToOneConn.manyToOneConnections) 
+                {
+                    val element1 = manyToOneConn.value
+                    val element2 = oneToOneConn.value
+                    val element3 = recipe.subject.value
+                    assert(!recipe.subject.oneToOneConnections.contains(manyToOneConn), s"Inconsistent cardinality found involving elements $element1 and $element2, and $element3")
+                }
             }
-            if (outputOneToManyConnections.contains(connection) && outputOneToManyConnections(connection).contains(k))
+            for (oneToOneConn <- recipe.crObject.oneToOneConnections)
             {
-                val invalidConnectionName = outputOneToManyConnections(connection)(k)
-                var connList1 = ""
-                for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
-                var connList2 = ""
-                for ((entity, connName) <- outputOneToManyConnections(connection)) connList2 += entity+"\n"
-                assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName. \n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")
-            }
-            if (inputManyToOneConnections.contains(connection) && inputManyToOneConnections(connection).contains(k))
-            {
-                val invalidConnectionName = inputManyToOneConnections(connection)(k)
-                var connList1 = ""
-                for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
-                var connList2 = ""
-                for ((entity, connName) <- inputManyToOneConnections(connection)) connList2 += entity+"\n"
-                assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName. \n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")
-            }
-            if (outputManyToOneConnections.contains(connection) && outputManyToOneConnections(connection).contains(k))
-            {
-                val invalidConnectionName = outputManyToOneConnections(connection)(k)
-                var connList1 = ""
-                for ((entity, connName) <- v) if (entity != k) connList1 += entity+"\n"
-                var connList2 = ""
-                for ((entity, connName) <- outputManyToOneConnections(connection)) connList2 += entity+"\n"
-                assert (1==2, s"Error in graph model: for process $process, the multiplicity of $k has not been defined consistently in its relationship with $connection. The incompatible connections are $connectionName and $invalidConnectionName. \n\n$k has direct or indirect 1-1 relationships with the following entities: \n$connList1 \n$connection has direct or indirect 1-many relationships with the following entities: \n$connList2")
+                for (oneToManyConn <- oneToOneConn.oneToManyConnections) 
+                {
+                    val element1 = oneToManyConn.value
+                    val element2 = oneToOneConn.value
+                    val element3 = recipe.crObject.value
+                    assert(!recipe.crObject.oneToOneConnections.contains(oneToManyConn), s"Inconsistent cardinality found involving elements $element1 and $element2, and $element3")
+                }
+                for (manyToOneConn <- oneToOneConn.manyToOneConnections) 
+                {
+                    val element1 = manyToOneConn.value
+                    val element2 = oneToOneConn.value
+                    val element3 = recipe.crObject.value
+                    assert(!recipe.crObject.oneToOneConnections.contains(manyToOneConn), s"Inconsistent cardinality found involving elements $element1 and $element2, and $element3")
+                }
             }
         }
     }
     
-    def validateSingletonClasses(k: String, process: String, setLists: HashMap[String, HashSet[String]])
+    def validateSingletonClasses(results: HashSet[ConnectionRecipe])
     {
-        val inputSingletonClasses = setLists("inputSingletonList")
-        val inputSuperSingletonClasses = setLists("inputSuperSingletonList")
-        val outputSingletonClasses = setLists("outputSingletonList")
-        val outputSuperSingletonClasses = setLists("outputSuperSingletonList")
-        
-        assert (!inputSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
-        assert (!inputSuperSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a SuperSingleton")
-        assert (!outputSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
-        assert (!outputSuperSingletonClasses.contains(k), s"Error in graph model: For process $process, $k has a 1-1, 1-many, or many-1 relationship and is also considered a SuperSingleton")
+        for (recipe <- results)
+        {
+            for (conn <- recipe.subject.oneToOneConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a 1-1 connection with another element")
+            }
+            for (conn <- recipe.crObject.oneToOneConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a 1-1 connection with another element")
+            }
+            for (conn <- recipe.subject.oneToManyConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a 1-many connection with another element")
+            }
+            for (conn <- recipe.crObject.oneToManyConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a 1-many connection with another element")
+            }
+            for (conn <- recipe.subject.manyToOneConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a many-1 connection with another element")
+            }
+            for (conn <- recipe.crObject.manyToOneConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a many-1 connection with another element")
+            }
+        }
     }
     
     def validateConnectionRecipeTypeDeclarations(process: String)
@@ -632,7 +628,7 @@ class GraphModelValidator(cxn: RepositoryConnection) extends ProjectwideGlobals
         		filter(!isLiteral(?object))
         		Minus
                 {
-    				?object a ?objectType .
+    				    ?object a ?objectType .
             		?objectType rdfs:subClassOf* drivetrain:LiteralResourceList .
                 }
         }"""
@@ -640,5 +636,63 @@ class GraphModelValidator(cxn: RepositoryConnection) extends ProjectwideGlobals
         err = ""
         for (obj <- res) err += obj + " "
         assert (err == "", s"The following objects were declared as literals by at least one recipe, but were not typed as literals: $err")
+        
+        // check all recipes with terms as subjects
+        val termSubjectCheck = 
+          """select distinct ?subject where
+          {
+            Values ?termSubjectRecipe {drivetrain:TermToInstanceRecipe drivetrain:TermToTermRecipe drivetrain:TermToLiteralRecipe}
+            ?recipe a ?termSubjectRecipe .
+            ?recipe drivetrain:subject ?subject .
+        		?subject a ?subjectType .
+        		?subjectType rdfs:subClassOf* drivetrain:LiteralResourceList .
+        }"""
+        res = update.querySparqlAndUnpackTuple(gmCxn, termSubjectCheck, "subject")
+        err = ""
+        for (subj <- res) err += subj + " "
+        assert (err == "", s"The following subjects were declared as terms by at least one recipe, but were typed as literals: $err")
+        
+        // check all recipes with terms as objects
+        val termObjectCheck = 
+          """select distinct ?object where
+          {
+            Values ?termObjectRecipe {drivetrain:InstanceToTermRecipe drivetrain:TermToTermRecipe}
+            ?recipe a ?termObjectRecipe .
+            ?recipe drivetrain:object ?object .
+        		?object a ?objectType .
+        		?objectType rdfs:subClassOf* drivetrain:LiteralResourceList .
+        }"""
+        res = update.querySparqlAndUnpackTuple(gmCxn, termObjectCheck, "object")
+        err = ""
+        for (obj <- res) err += obj + " "
+        assert (err == "", s"The following objects were declared as terms by at least one recipe, but were typed as literals: $err")
+        
+        // check all recipes with terms as subjects
+        val termLiteralSubjectCheck = 
+          """select distinct ?subject where
+          {
+            Values ?termSubjectRecipe {drivetrain:TermToInstanceRecipe drivetrain:TermToTermRecipe drivetrain:TermToLiteralRecipe}
+            ?recipe a ?termSubjectRecipe .
+            ?recipe drivetrain:subject ?subject .
+        		filter(isLiteral(?subject))
+        }"""
+        res = update.querySparqlAndUnpackTuple(gmCxn, termLiteralSubjectCheck, "subject")
+        err = ""
+        for (subj <- res) err += subj + " "
+        assert (err == "", s"The following subjects were declared as terms by at least one recipe, but were typed as literals: $err")
+        
+        // check all recipes with terms as objects
+        val termLiteralObjectCheck = 
+          """select distinct ?object where
+          {
+            Values ?termObjectRecipe {drivetrain:InstanceToTermRecipe drivetrain:TermToTermRecipe}
+            ?recipe a ?termObjectRecipe .
+            ?recipe drivetrain:object ?object .
+        		filter(isLiteral(?object))
+        }"""
+        res = update.querySparqlAndUnpackTuple(gmCxn, termLiteralObjectCheck, "object")
+        err = ""
+        for (obj <- res) err += obj + " "
+        assert (err == "", s"The following objects were declared as terms by at least one recipe, but were typed as literals: $err")
     }
 }

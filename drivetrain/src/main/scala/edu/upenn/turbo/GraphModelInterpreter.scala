@@ -50,8 +50,8 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 updateConnectionLists(subjInst, obInst, thisMultiplicity)
                                                 
                 val recipe = new InstToInstConnRecipe(subjInst, predicate, obInst)
-                subjInst.referencedByRecipes += recipe
-                obInst.referencedByRecipes += recipe
+                if (typeOfData == "input") subjInst.referencedByInputRecipes += recipe
+                if (typeOfData == "input") obInst.referencedByInputRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, obInst, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
@@ -65,8 +65,8 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 disTerm += objTerm.value -> objTerm
                 
                 val recipe = new InstToTermConnRecipe(subjInst, predicate, objTerm)
-                subjInst.referencedByRecipes += recipe
-                objTerm.referencedByRecipes += recipe
+                if (typeOfData == "input") subjInst.referencedByInputRecipes += recipe
+                if (typeOfData == "input") objTerm.referencedByInputRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objTerm, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
@@ -80,8 +80,8 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 disInst += objInst.value -> objInst
                 
                 val recipe = new TermToInstConnRecipe(subjTerm, predicate, objInst)
-                subjTerm.referencedByRecipes += recipe
-                objInst.referencedByRecipes += recipe
+                if (typeOfData == "input") subjTerm.referencedByInputRecipes += recipe
+                if (typeOfData == "input") objInst.referencedByInputRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objInst, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
@@ -95,8 +95,8 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 disLit += objLit.value -> objLit
                 
                 val recipe = new InstToLitConnRecipe(subjInst, predicate, objLit)
-                subjInst.referencedByRecipes += recipe
-                objLit.referencedByRecipes += recipe
+                if (typeOfData == "input") subjInst.referencedByInputRecipes += recipe
+                if (typeOfData == "input") objLit.referencedByInputRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjInst, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objLit, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
@@ -110,8 +110,8 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 disLit += objLit.value -> objLit
                 
                 val recipe = new TermToLitConnRecipe(subjTerm, predicate, objLit)
-                subjTerm.referencedByRecipes += recipe
-                objLit.referencedByRecipes += recipe
+                if (typeOfData == "input") subjTerm.referencedByInputRecipes += recipe
+                if (typeOfData == "input") objLit.referencedByInputRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objLit, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
@@ -125,8 +125,8 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 disTerm += objTerm.value -> objTerm
                 
                 val recipe = new TermToTermConnRecipe(subjTerm, predicate, objTerm)
-                subjTerm.referencedByRecipes += recipe
-                objTerm.referencedByRecipes += recipe
+                if (typeOfData == "input") subjTerm.referencedByInputRecipes += recipe
+                if (typeOfData == "input") objTerm.referencedByInputRecipes += recipe
                 if (subjectDependee != null) addDependent(subjectDependee, subjTerm, disInst, disTerm, disLit)
                 if (objectDependee != null) addDependent(objectDependee, objTerm, disInst, disTerm, disLit)
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
@@ -193,19 +193,13 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
         }
         else if (cardinality == oneToManyMultiplicity)
         {
-            val subjList = subj.oneToManyConnections
-            val objList = subj.oneToManyConnections
-            
-            subjList += obj
-            objList += subj
+            subj.oneToManyConnections += obj
+            obj.oneToManyConnections += subj
         }
         else if (cardinality == manyToOneMultiplicity)
         {
-            val subjList = subj.manyToOneConnections
-            val objList = subj.manyToOneConnections
-            
-            subjList += obj
-            objList += subj
+            subj.manyToOneConnections += obj
+            obj.manyToOneConnections += subj
         }
     }
     

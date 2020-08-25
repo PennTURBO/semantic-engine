@@ -14,7 +14,7 @@ trait GraphPatternElement extends ProjectwideGlobals
     val oneToManyConnections: HashSet[GraphPatternElement] = new HashSet[GraphPatternElement]
     val manyToOneConnections: HashSet[GraphPatternElement] = new HashSet[GraphPatternElement]
     
-    val referencedByRecipes: HashSet[ConnectionRecipe] = new HashSet[ConnectionRecipe]
+    val referencedByInputRecipes: HashSet[ConnectionRecipe] = new HashSet[ConnectionRecipe]
     var dependentOn: Option[GraphPatternElement] = None
     var createdWithRule: Option[String] = None
 }

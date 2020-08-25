@@ -173,8 +173,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         val modelInterpreter = new GraphModelInterpreter(gmCxn)
         var (inputRecipeList, outputRecipeList, removalsRecipeList) = modelInterpreter.handleAcornData(inputs, outputs, removals)
         
-        // This needs to be re-implemented using the object model
-        //graphModelValidator.validateAcornResults(thisProcessSpecification, inputs, outputs, setConnectionLists, mapConnectionLists)
+        graphModelValidator.validateAcornResults(inputRecipeList, outputRecipeList)
         
         // create primary query
         val primaryQuery = new PatternMatchQuery(gmCxn)
