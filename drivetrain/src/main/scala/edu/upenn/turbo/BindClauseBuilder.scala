@@ -116,7 +116,6 @@ class BindClauseBuilder extends ProjectwideGlobals
     def findEnforcerWithDefaultMethod(instance: Instance, inputs: HashSet[ConnectionRecipe]): Boolean =
     {
         var foundEnforcer: Boolean = false
-        val optionalEnforcers = new HashSet[ConnectionRecipe]
         val inputsIterator = inputs.toBuffer.sortWith(_.name < _.name).toIterator
         var enforcer: String = ""
         while (enforcer == "" && inputsIterator.hasNext)
@@ -127,15 +126,6 @@ class BindClauseBuilder extends ProjectwideGlobals
                 if (nextInput.subject.isInstanceOf[Instance]) enforcer = nextInput.subject.value
                 else if (nextInput.crObject.isInstanceOf[Instance]) enforcer = nextInput.crObject.value
             }
-            else optionalEnforcers += nextInput
-        }
-        // if only optional enforcers available, we can try one of those
-        val optionalIterator = optionalEnforcers.toBuffer.sortWith(_.name < _.name).toIterator
-        while (enforcer == "" && optionalIterator.hasNext)
-        {
-            val nextInput = optionalIterator.next
-            if (nextInput.subject.isInstanceOf[Instance]) enforcer = nextInput.subject.value
-            else if (nextInput.crObject.isInstanceOf[Instance]) enforcer = nextInput.crObject.value
         }
         if (enforcer != "")
         {
@@ -149,6 +139,7 @@ class BindClauseBuilder extends ProjectwideGlobals
     {
         var foundEnforcer: Boolean = false
         var enforcer: String = ""
+        val optionalEnforcers = new HashSet[GraphPatternElement]
         // sorting by connection recipe ensures that we will always choose the same enforcer, if there are multiple that are valid
         val connectionIterator = instance.oneToOneConnections.toBuffer.sortWith(_.value < _.value).toIterator
         while (enforcer == "" && connectionIterator.hasNext)
@@ -161,13 +152,16 @@ class BindClauseBuilder extends ProjectwideGlobals
                 {
                     if (!recipe.isOptional.get && recipe.optionalGroup == None) 
                     {
-                        logger.info("for element " + connectedElement.value + " found non-optional recipe " + recipe.name)
                         connectionRequired = true
                     }
                 }
                 if (connectionRequired) enforcer = connectedElement.value
+                else optionalEnforcers += connectedElement
             }
         }
+        // if only optional enforcers available, we can try one of those
+        val optionalIterator = optionalEnforcers.toBuffer.sortWith(_.value < _.value).toIterator
+        while (enforcer == "" && optionalIterator.hasNext) enforcer = optionalIterator.next.value
         if (enforcer != "") 
         {
             cardinalityMap += instance.value -> enforcer
