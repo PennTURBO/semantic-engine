@@ -44,8 +44,6 @@ The following commands can be run via the SBT console. SBT should be started fro
 
 `run updateModel` Clears the model repository and uploads the Transformation Instruction Set, Graph Specification, Semantic Engine Language Ontology, and application ontology into the model repository. This functionality will also be executed automatically before any other data command is executed or test runs.
 
-Click [here](docs/snapshotTestDocs.md) for more detailed information on snapshot test generation.
-
 **Test commands**
 
 `test` Runs all tests
@@ -55,6 +53,8 @@ Click [here](docs/snapshotTestDocs.md) for more detailed information on snapshot
 `testOnly edu.upenn.turbo.SnapshotTest` Runs all Snapshot tests
 
 `testOnly edu.upenn.turbo.SnapshotTest -- -DfindTest={searchString}` Runs Snapshot tests whose name includes the searchString
+
+Click [here](docs/snapshotTestDocs.md) for more detailed information on snapshot test generation.
 
 **Utility commands**
 
