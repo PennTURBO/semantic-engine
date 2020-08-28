@@ -174,6 +174,7 @@ class GraphModelValidator(cxn: RepositoryConnection) extends ProjectwideGlobals
         }
     }
     
+    // checks to see whether any connection recipes create an illegal domain or range according to the application ontology
     def validateGraphSpecificationAgainstOntology()
     {
         val rangeQuery: String = s"""
@@ -286,6 +287,8 @@ class GraphModelValidator(cxn: RepositoryConnection) extends ProjectwideGlobals
         assert(firstRes == "", s"Process $process references undefined recipe $firstRes")
     }
     
+    // Does validation - if fails, will throw assert error or print warning text
+    // Only runs when "run all" is called
     def validateProcessesAgainstGraphSpecification(processList: ArrayBuffer[String])
     {
         var processListAsString = ""
@@ -296,7 +299,9 @@ class GraphModelValidator(cxn: RepositoryConnection) extends ProjectwideGlobals
         processListAsString = processListAsString.substring(0, processListAsString.size-1)
         assert (processListAsString != "")
         
+        // This ensures that all required recipes have been called as outputs of queued update specifications
         findRequiredAndUnqueuedRecipes(processListAsString)
+        // This reminds the user that there may be recipes in the GS that are not outputs, but that is probably ok
         findQueuedAndUnrequiredRecipes(processList, processListAsString)
     }
     

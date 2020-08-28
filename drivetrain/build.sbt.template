@@ -4,7 +4,6 @@ import java.io.File
 // sbt-assembly
 assemblySettings
 test in assembly := {}
-mainClass in assembly := Some("edu.upenn.turbo.DrivetrainAutomatedBenchmarking")
 outputPath := new File("/compiled_classes/output.jar")
 mergeStrategy in assembly <<= (mergeStrategy in assembly) { (old) =>
   {

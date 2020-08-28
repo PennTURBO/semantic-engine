@@ -3,6 +3,7 @@ package edu.upenn.turbo
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.ArrayBuffer
 
+// anything referenced in an Acorn file as a subject or an object
 trait GraphPatternElement extends ProjectwideGlobals
 {
     var value: String = null
@@ -19,6 +20,7 @@ trait GraphPatternElement extends ProjectwideGlobals
     var createdWithRule: Option[String] = None
 }
 
+// Instance is a URI with a pseudo UUID that has rdf:type some class
 class Instance(newValue: String) extends GraphPatternElement
 {
     value = newValue
@@ -32,10 +34,13 @@ class Instance(newValue: String) extends GraphPatternElement
     var sparqlTypeString: String = null
     
     var isUntyped: Option[Boolean] = None
+    // only one instance per update
     var isSingleton: Option[Boolean] = None
+    // only one instance per graph
     var isSuperSingleton: Option[Boolean] = None 
 }
 
+// Term is a class itself, not an instance of a class
 class Term(newValue: String) extends GraphPatternElement
 {
     value = newValue

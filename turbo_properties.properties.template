@@ -36,4 +36,6 @@ reinferRepo = false
 loadAdditionalOntologies = false
 bioportalApiKey = yourKey
 
-useMultipleThreads = true
+# this will significantly speed the processing of large datasets
+useMultipleThreads = false
+numberOfThreads = 4

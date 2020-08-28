@@ -7,6 +7,7 @@ import scala.collection.mutable.HashSet
 import org.eclipse.rdf4j.model.Value
 import java.util.UUID
 
+// this class stores the strings for a SPARQL query's clauses and is a factory for building SPARQL UPDATE queries
 abstract class Query extends ProjectwideGlobals
 {
     var query: String = ""
@@ -21,12 +22,16 @@ abstract class Query extends ProjectwideGlobals
     def getQuery(): String = query
 }
 
+// this class builds a SPARQL UPDATE that is dependent on a specified pattern in the WHERE clause (inputs), as opposed to inserting static data
 class PatternMatchQuery(cxn: RepositoryConnection) extends Query
 {
     this.gmCxn = cxn
     
+    // new node URIs are created here
     var bindClause: String = ""
+    // inputs go here
     var whereClause: String = ""
+    // outputs go here
     var insertClause: String = ""
     var deleteClause: String = ""
     

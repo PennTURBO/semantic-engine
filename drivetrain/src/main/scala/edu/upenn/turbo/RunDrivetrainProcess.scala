@@ -25,7 +25,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     
     var useInputNamedGraphsCache: Boolean = true
     
-    val taskSupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(4))
+    val taskSupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(numberOfThreads))
     
     def setGlobalUUID(globalUUID: String)
     {
@@ -124,6 +124,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                                                                 )
                                                                 
                 addMetaDataTriples(metaInfo, processNamedGraph)
+                logger.info("Process " + processSpecification + " added " + triplesAdded + " triples ")
                 if (triplesAdded == 0) logger.warn("Process " + processSpecification + " did not add any triples upon execution")
             }
         }
@@ -132,7 +133,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     
     def submitQuery(inputNamedGraph: String, primaryQuery: PatternMatchQuery, genericWhereClause: String, paramCxn: RepositoryConnection = null)
     {
-        logger.info("Now running on input named graph: " + inputNamedGraph)
+        //logger.info("Now running on input named graph: " + inputNamedGraph)
         var whereClauseString = primaryQuery.whereClause
         whereClauseString = whereClauseString.replaceAll(primaryQuery.defaultInputGraph, inputNamedGraph)
         val localQuery = primaryQuery.deleteClause + "\n" + primaryQuery.insertClause + "\n" + whereClauseString + primaryQuery.bindClause + "}"
@@ -201,6 +202,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             primaryQuery.createDeleteClause(removalsRecipeList)
         }
         primaryQuery.createInsertClause(inputRecipeList, outputRecipeList)
+        // this is safety code that should never happen, to make sure that all properties: references were replaced
         assert(!primaryQuery.getQuery().contains("https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/"), "Could not complete properties term replacement")
         //logger.info(primaryQuery.getQuery())
         primaryQuery

@@ -56,6 +56,9 @@ trait ProjectwideGlobals extends Enumeration
      val acornOntologyFile = helper.retrievePropertyFromFile("acornOntologyFile")
      val validateAgainstOntology = getBooleanProperty("validateAgainstOntology")
      val useMultipleThreads = getBooleanProperty("useMultipleThreads")
+
+     val numberOfThreads = helper.retrievePropertyFromFile("numberOfThreads").toInt
+     
      
      def getBooleanProperty(property: String): Boolean =
      {

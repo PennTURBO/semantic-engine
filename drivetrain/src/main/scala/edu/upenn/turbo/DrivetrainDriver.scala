@@ -27,6 +27,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
           {
               try
               {   
+                  // this means that anytime "run" is called the model is updated
                   graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
               
                   gmCxn = graphDBMaterials.getGmConnection()
@@ -37,20 +38,25 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   repoManager = graphDBMaterials.getRepoManager()
                   repository = graphDBMaterials.getRepository()
                   
-                  val instantiationURI = defaultPrefix + UUID.randomUUID().toString().replaceAll("-", "")
                   val graphModelValidator = new GraphModelValidator(gmCxn)
                   
                   if (cxn == null || gmCxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
+                  // utility method that loads a RDF file into the production repository - format is hardcoded as the 3rd argument
                   else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.RDFXML)
+                  // utility method that loads triples from a URI into the production repository - format is hardcoded as the value of the 3rd argument
                   else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
-                  else if (args(0) == "loadTestTurboOntology") OntologyLoader.addOntologyFromUrl(cxn)
-                  else if (args(0) == "updateModelOntology") OntologyLoader.addOntologyFromUrl(gmCxn)
+                  // loads application ontology specified in properties file into production repository
+                  else if (args(0) == "loadOntologyToProductionRepo") OntologyLoader.addOntologyFromUrl(cxn)
+                  // loads application ontology specified in properties file into model repository
+                  else if (args(0) == "loadOntologyToModelRepo") OntologyLoader.addOntologyFromUrl(gmCxn)
                   else if (args(0) == "updateModel") logger.info("model updated")
+                  // this means run all update specifications in order, not run all possible commands
                   else if (args(0) == "all")
                   {
                       clearProductionNamedGraphs(cxn)
                       runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
                   }
+                  // prints out the query for a given update spec...does not run anything against the DB
                   else if (args(0) == "printQuery")
                   {
                       if (args.size < 2) logger.info("Must provide a process URI after printQuery declaration")
@@ -77,7 +83,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       //OntologyLoader.addOntologyFromUrl(cxn)
                       clearProductionNamedGraphs(cxn)
                       
-                      logger.info("Note that running individual Drivetrain processes is recommended for testing only. To run the full stack, use 'run all'")
+                      logger.info("Note that running individual Drivetrain Updates is recommended for testing only. To run the full stack, use 'run allUpdates'")
                       RunDrivetrainProcess.setGlobalUUID(globalUUID)
                       graphModelValidator.checkAcornFilesForMissingTypes()
                       if (validateAgainstOntology) graphModelValidator.validateGraphSpecificationAgainstOntology()
