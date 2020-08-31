@@ -432,7 +432,11 @@ Custom Bind Rules can be used to create URIs for Instances using a special rule,
 The SPARQL template can embed the following parameters using a bracket syntax. These will be replaced using a String replace with the appropriate term.
 
 `${dependent}`: Will be replaced with the Element that is declared as a dependent of the element to be created. See the **Dependents** section for how to declare this. If no dependent is declared but the custom rule includes this parameter, an error will be thrown.
+
 `${cardinalityEnforcer}`: Will be replaced with the Element that is discovered as the cardinality enforcer for the element to be created. Cardinalty enforcers cannot be declared and must be discoverable by the `BindClauseBuilder` using the set of rules in place there. If no enforcer is discovered but the custom rule includes this parameter, an error will be thrown.
+
 `${replacement}`: Will be replaced with the Element that is to be assigned the generated URI. In the example above, this would be `:ClassA`.
+
 `${localUUID}`: Will be replaced with the UUID generated for the current instantiation. This can be useful to include to avoid collisions with pre-existing URIs.
+
 `${defaultPrefix}`: Will be replaced with the `defaultPrefix` defined in the properties file `turbo_properties.properties`
