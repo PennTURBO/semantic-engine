@@ -440,3 +440,9 @@ The SPARQL template can embed the following parameters using a bracket syntax. T
 `${localUUID}`: Will be replaced with the UUID generated for the current instantiation. This can be useful to include to avoid collisions with pre-existing URIs.
 
 `${defaultPrefix}`: Will be replaced with the `defaultPrefix` defined in the properties file `turbo_properties.properties`
+
+Here is example of a SPARQL template for a custom rule that uses all of the parameters:
+
+```BIND(uri(concat("${defaultPrefix}",SHA256(CONCAT("${replacement}",str(${cardinalityEnforcer}),"${localUUID}",str(${dependent}))))) AS ${replacement})```
+
+This Custom Rule indicates that a new URI will be created starting with the `defaultPrefix` and ending with the Hash value from the SHA256 function that concatenates a string representing the Element to be created (`replacement`), the `cardinalityEnforcer` for that element, the `localUUID` for the instantiation, and the Element that the Element to be created is `dependent` on. This varies from the standard Bind template because the `dependent` is included as part of the Hash function, rather than the default behavior of creating an `IF BOUND` declaration within the Bind clause.
