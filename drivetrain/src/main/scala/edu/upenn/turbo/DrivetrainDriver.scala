@@ -44,7 +44,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   // utility method that loads a RDF file into the production repository - format is hardcoded as the 3rd argument
                   else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.RDFXML)
                   // utility method that loads triples from a URI into the production repository - format is hardcoded as the value of the 3rd argument
-                  else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), Map(args(2) -> RDFFormat.RDFXML))
+                  else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), args(2), RDFFormat.RDFXML)
                   // loads application ontology specified in properties file into production repository
                   else if (args(0) == "loadOntologyToProductionRepo") OntologyLoader.addOntologyFromUrl(cxn)
                   // loads application ontology specified in properties file into model repository

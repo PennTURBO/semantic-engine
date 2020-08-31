@@ -91,28 +91,26 @@ object OntologyLoader extends ProjectwideGlobals
     
     def addOntologiesFromMap(cxn: RepositoryConnection, ontMap: Map[String, Map[String, RDFFormat]])
     {
-        for((ontology, formatting) <- ontMap) addOntologyFromUrl(cxn, ontology, formatting) 
+        for((ontology, formatting) <- ontMap) addOntologyFromUrl(cxn, ontology, formatting.head._1, formatting.head._2) 
     }
     
      /**
      * Adds an RDF.XML formatted set of triples (usually an ontology) received from a given URL to the specified named graph.
      */
-    def addOntologyFromUrl(cxn: RepositoryConnection, ontology: String = ontologyURL, 
-        formatting: Map[String, RDFFormat] = Map(ontologyURL -> RDFFormat.RDFXML)) 
+    def addOntologyFromUrl(cxn: RepositoryConnection, ontology: String = ontologyURL, graphName: String = ontologyURL, formatting: RDFFormat = RDFFormat.RDFXML)
     {
-        if (formatting.size > 1) throw new RuntimeException ("Formatting map size > 1, internal error occurred.")
         logger.info("Adding ontology " + ontology )
         try
         {
 
             val f = cxn.getValueFactory
             val OntoUrl = new URL(ontology)
-            val OntoGraphName = f.createIRI(formatting.head._1)
+            val OntoGraphName = f.createIRI(graphName)
         
             val OntoBase = "http://transformunify.org/ontologies/"
          
             helper.clearNamedGraph(cxn, OntoGraphName.toString)
-            cxn.add(OntoUrl, OntoBase, formatting.head._2, OntoGraphName)
+            cxn.add(OntoUrl, OntoBase, formatting, OntoGraphName)
         }
         catch
         {

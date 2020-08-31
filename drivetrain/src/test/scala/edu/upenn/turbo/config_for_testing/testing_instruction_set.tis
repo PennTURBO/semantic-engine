@@ -42,7 +42,7 @@ obo:VSO_0000004
 .
 ontologies:BloodPressureMeasurementProcessRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
-  drivetrain:usesSparql "BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat(\"${defaultPrefix}\", SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${multiplicityEnforcer}))))), ?unbound) AS ${replacement})" ;
+  drivetrain:usesSparql "BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat(\"${defaultPrefix}\", SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${cardinalityEnforcer}))))), ?unbound) AS ${replacement})" ;
 .
 ontologies:GenderIdentityTypeRule
   a drivetrain:TurboGraphVariableManipulationLogic ;

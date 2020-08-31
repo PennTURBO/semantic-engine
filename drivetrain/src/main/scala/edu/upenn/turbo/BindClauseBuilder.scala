@@ -226,10 +226,10 @@ class BindClauseBuilder extends ProjectwideGlobals
             assert(element.dependentOn != None, s"Element $elementName has no dependent, but dependent is requested in custom rule $thisCustomRule")
             thisCustomRule = thisCustomRule.replaceAll("\\$\\{dependent\\}", helper.convertTypeToSparqlVariable(element.dependentOn.get.value))
         }
-        if (thisCustomRule.contains("multiplicityEnforcer"))
+        if (thisCustomRule.contains("cardinalityEnforcer"))
         {
             assert(cardinalityMap.contains(elementName), s"Element $elementName has no cardinality enforcer, but an enforcer is requested in custom rule $thisCustomRule")
-            thisCustomRule = thisCustomRule.replaceAll("\\$\\{multiplicityEnforcer\\}", helper.convertTypeToSparqlVariable(cardinalityMap(elementName)))
+            thisCustomRule = thisCustomRule.replaceAll("\\$\\{cardinalityEnforcer\\}", helper.convertTypeToSparqlVariable(cardinalityMap(elementName)))
         }
         thisCustomRule = thisCustomRule.replaceAll("\\$\\{replacement\\}", assigneeAsVar)
         thisCustomRule = thisCustomRule.replaceAll("\\$\\{localUUID\\}", localUUID)
@@ -238,7 +238,7 @@ class BindClauseBuilder extends ProjectwideGlobals
         assert (!thisCustomRule.contains("replacement"), s"No replacement for custom rule was identified, but custom rule requires a replacement. Rule string: $thisCustomRule")
         assert (!thisCustomRule.contains("dependent"), s"No dependent for custom rule was identified, but custom rule requires a dependent. Rule string: $thisCustomRule")
         assert (!thisCustomRule.contains("localUUID"))
-        assert (!thisCustomRule.contains("multiplicityEnforcer"), s"No cardinality enforcer for custom rule was identified, but custom rule requires an enforcer. Rule string: $thisCustomRule")
+        assert (!thisCustomRule.contains("cardinalityEnforcer"), s"No cardinality enforcer for custom rule was identified, but custom rule requires an enforcer. Rule string: $thisCustomRule")
         assert (!thisCustomRule.contains("defaultPrefix"))
         bindRules += thisCustomRule
     }
