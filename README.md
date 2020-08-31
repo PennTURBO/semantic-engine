@@ -28,9 +28,9 @@ The following commands can be run via the SBT console. SBT should be started fro
 
 `run allUpdates` Runs all update specifications from selected transformation instruction set in specified order. The graph will be modified.
 
-`run singleQuery <some_process_URI>` Runs only a specific update specification from the selected transformation instruction set. The graph will be modified.
+`run singleUpdate <some_process_URI>` Runs only a specific update specification from the selected transformation instruction set. The graph will be modified.
 
-`run printQuery <some_process_URI>` Prints the generated update query to the console for a specific update specification. The graph will not be modified.
+`run printQueryForUpdate <some_process_URI>` Prints the generated update query to the console for a specific update specification. The graph will not be modified.
 
 `run buildTest` Builds automated snapshot tests for all update specifications (even unqueued ones) in the selected transformation instruction set. The graph will not be modified.
 
