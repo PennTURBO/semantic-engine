@@ -74,7 +74,7 @@ var testSearchString: Option[String] = None
     
     def getAllTests()
     {
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(false)
+        graphDBMaterials = ConnectToGraphDB.initializeGraph()
         cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         
@@ -99,7 +99,7 @@ var testSearchString: Option[String] = None
             
             if (snapshotTestData.instructionSetFile != prevInstructionSet) 
             {
-                DrivetrainDriver.updateModel(gmCxn, snapshotTestData.instructionSetFile + ".tis")
+                DrivetrainDriver.updateModel(graphDBMaterials, snapshotTestData.instructionSetFile + ".tis")
                 OntologyLoader.addOntologyFromUrl(gmCxn)
                 prevInstructionSet = snapshotTestData.instructionSetFile
             }
@@ -129,7 +129,7 @@ var testSearchString: Option[String] = None
             
             if (snapshotTestData.instructionSetFile != prevInstructionSet) 
             {
-                DrivetrainDriver.updateModel(gmCxn, snapshotTestData.instructionSetFile + ".tis")
+                DrivetrainDriver.updateModel(graphDBMaterials, snapshotTestData.instructionSetFile + ".tis")
                 OntologyLoader.addOntologyFromUrl(gmCxn)
                 prevInstructionSet = snapshotTestData.instructionSetFile
             }

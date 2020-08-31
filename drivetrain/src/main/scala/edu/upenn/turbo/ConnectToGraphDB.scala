@@ -25,31 +25,6 @@ import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
 object ConnectToGraphDB extends ProjectwideGlobals
 {   
     /**
-     * Calls the initialize graph method, then loads the data files specified in the TURBO properties file if the loadFromProperties Boolean
-     * in the TURBO properties file is set to true. Also loads ontology if importOntologies Boolean in the TURBO properties file is set to true.
-     * Returns a TurboGraphConnection containing RepositoryConnection, Repository, and RemoteRepositoryManager objects to be handled and closed
-     * by the calling class.
-     */
-    def initializeGraphUpdateData(loadDataModel: Boolean = true, instructionSetFile: String = instructionSetFile, graphSpecFile: String = graphSpecificationFile): TurboGraphConnection =
-    {
-        val graphConnect: TurboGraphConnection = initializeGraph()
-        if (graphConnect.getConnection() != null && loadDataModel)
-        {
-            try
-            {
-                // update data model and ontology upon establishing connection
-                DrivetrainDriver.updateModel(graphConnect.getGmConnection(), instructionSetFile, graphSpecFile)
-                OntologyLoader.addOntologyFromUrl(graphConnect.getGmConnection())
-            }
-            catch
-            {
-                case e: RuntimeException => closeGraphConnection(graphConnect, false)
-            }
-        }
-        graphConnect
-    }
-    
-    /**
      * Initializes the connection to the Graph DB instance after checking that the TURBO Properties file is in a valid state. Validates connection
      * with username and password specified in TURBO properties file and returns TurboGraphConnection object.
      */
@@ -227,7 +202,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
         graphConnection.setGmRepoManager(gmRepoManager)
         graphConnection.setGmRepository(gmRepository)
         
-        DrivetrainDriver.updateModel(graphConnection.getGmConnection())
+        DrivetrainDriver.updateModel(graphConnection)
         OntologyLoader.addOntologyFromUrl(graphConnection.getGmConnection())
                
         graphConnection

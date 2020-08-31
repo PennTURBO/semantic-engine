@@ -20,7 +20,7 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
     {
         assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
         
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(false)
+        graphDBMaterials = ConnectToGraphDB.initializeGraph()
         cxn = graphDBMaterials.getConnection()
         gmCxn = graphDBMaterials.getGmConnection()
         helper.deleteAllTriplesInDatabase(cxn)

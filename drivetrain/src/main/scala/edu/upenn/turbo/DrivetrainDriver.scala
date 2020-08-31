@@ -17,7 +17,6 @@ object DrivetrainDriver extends ProjectwideGlobals {
   {
       val globalUUID = UUID.randomUUID().toString().replaceAll("-", "")
       if (args.size == 0) logger.info("At least one command line argument required to run the drivetrain application.")
-      //else if (args(0) == "benchmark") benchmark.runBenchmarking(args, globalUUID)
       else
       {
           assert("main" == System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"main\"; check your build.sbt file")
@@ -27,8 +26,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
           {
               try
               {   
-                  // this means that anytime "run" is called the model is updated
-                  graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData()
+                  graphDBMaterials = ConnectToGraphDB.initializeGraph()
               
                   gmCxn = graphDBMaterials.getGmConnection()
                   gmRepoManager = graphDBMaterials.getGmRepoManager()
@@ -49,19 +47,21 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   else if (args(0) == "loadOntologyToProductionRepo") OntologyLoader.addOntologyFromUrl(cxn)
                   // loads application ontology specified in properties file into model repository
                   else if (args(0) == "loadOntologyToModelRepo") OntologyLoader.addOntologyFromUrl(gmCxn)
-                  else if (args(0) == "updateModel") logger.info("model updated")
+                  else if (args(0) == "updateModel") updateModel(graphDBMaterials)
                   // this means run all update specifications in order, not run all possible commands
-                  else if (args(0) == "all")
+                  else if (args(0) == "allUpdates")
                   {
+                      updateModel(graphDBMaterials)
                       clearProductionNamedGraphs(cxn)
                       runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
                   }
                   // prints out the query for a given update spec...does not run anything against the DB
-                  else if (args(0) == "printQuery")
+                  else if (args(0) == "printQueryForUpdate")
                   {
                       if (args.size < 2) logger.info("Must provide a process URI after printQuery declaration")
                       else 
                       {
+                          updateModel(graphDBMaterials)
                           RunDrivetrainProcess.setGlobalUUID(globalUUID)
                           RunDrivetrainProcess.setConnections(gmCxn, cxn)
                           graphModelValidator.checkAcornFilesForMissingTypes()
@@ -74,22 +74,52 @@ object DrivetrainDriver extends ProjectwideGlobals {
                           }
                       }
                   }
-                  else
+                  else if (args(0) == "singleUpdate")
                   {
-                      RunDrivetrainProcess.setConnections(gmCxn, cxn)
-                      graphModelValidator.validateProcessSpecification(helper.getProcessNameAsUri(args(0)))
-                      
-                      //load the TURBO ontology
-                      //OntologyLoader.addOntologyFromUrl(cxn)
-                      clearProductionNamedGraphs(cxn)
-                      
-                      logger.info("Note that running individual Drivetrain Updates is recommended for testing only. To run the full stack, use 'run allUpdates'")
-                      RunDrivetrainProcess.setGlobalUUID(globalUUID)
-                      graphModelValidator.checkAcornFilesForMissingTypes()
-                      if (validateAgainstOntology) graphModelValidator.validateGraphSpecificationAgainstOntology()
-                      val thisProcess = helper.getProcessNameAsUri(args(0))
-                      RunDrivetrainProcess.runProcess(thisProcess)   
+                      if (args.size < 2) logger.info("Must provide a process URI after runSingleUpdate declaration")
+                      else
+                      {
+                          RunDrivetrainProcess.setConnections(gmCxn, cxn)
+                          graphModelValidator.validateProcessSpecification(helper.getProcessNameAsUri(args(0)))
+                          
+                          updateModel(graphDBMaterials)
+                          clearProductionNamedGraphs(cxn)
+                          
+                          logger.info("Note that running individual Drivetrain Updates is recommended for testing only. To run the full stack, use 'run allUpdates'")
+                          RunDrivetrainProcess.setGlobalUUID(globalUUID)
+                          graphModelValidator.checkAcornFilesForMissingTypes()
+                          if (validateAgainstOntology) graphModelValidator.validateGraphSpecificationAgainstOntology()
+                          val thisProcess = helper.getProcessNameAsUri(args(0))
+                          RunDrivetrainProcess.runProcess(thisProcess)    
+                      }
                   }
+                  else if (args(0) == "validateModel")
+                  {
+                      updateModel(graphDBMaterials)
+                      
+                      graphModelValidator.checkAcornFilesForMissingTypes()
+                      graphModelValidator.validateGraphSpecificationAgainstOntology()
+                      
+                      val processes = helper.getAllProcessesInOrder(gmCxn)
+                      graphModelValidator.validateProcessesAgainstGraphSpecification(processes)
+                      
+                      val modelReader = new GraphModelReader(gmCxn)
+                      
+                      for (process <- processes)
+                      {
+                          graphModelValidator.validateConnectionRecipesInProcess(process)
+                          graphModelValidator.validateConnectionRecipeTypeDeclarations(process)  
+                          
+                          val inputs = modelReader.getInputs(process)
+                          val outputs = modelReader.getOutputs(process)
+                          val removals = modelReader.getRemovals(process)
+                          val modelInterpreter = new GraphModelInterpreter(gmCxn)
+                          
+                          val (inputRecipeList, outputRecipeList, removalsRecipeList) = modelInterpreter.handleAcornData(inputs, outputs, removals)
+                          graphModelValidator.validateAcornResults(inputRecipeList, outputRecipeList)
+                      }
+                  }
+                  else logger.info("Unrecognized command line argument " + args(0))
               }
               catch
               {
@@ -105,7 +135,21 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
   }
   
-  def updateModel(gmCxn: RepositoryConnection, instructionSetFile: String = instructionSetFile, graphSpecFile: String = graphSpecificationFile, acornOntology: String = acornOntologyFile)
+  def updateModel(graphConnect: TurboGraphConnection, instructionSetFile: String = instructionSetFile, graphSpecFile: String = graphSpecificationFile, acornOntology: String = acornOntologyFile)
+  {
+      try
+      {
+          // update data model and ontology upon establishing connection
+          DrivetrainDriver.updateModel(graphConnect.getGmConnection(), instructionSetFile, graphSpecFile, acornOntology)
+          OntologyLoader.addOntologyFromUrl(graphConnect.getGmConnection())
+      }
+      catch
+      {
+          case e: RuntimeException => ConnectToGraphDB.closeGraphConnection(graphConnect, false)
+      }
+  }
+  
+  def updateModel(gmCxn: RepositoryConnection, instructionSetFile: String, graphSpecFile: String, acornOntology: String)
   {
       logger.info("Updating transformation instructions using file " + instructionSetFile)
       val graph = s"$defaultPrefix" + "instructionSet"

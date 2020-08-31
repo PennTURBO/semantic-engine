@@ -172,7 +172,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
         if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
         
         val modelInterpreter = new GraphModelInterpreter(gmCxn)
-        var (inputRecipeList, outputRecipeList, removalsRecipeList) = modelInterpreter.handleAcornData(inputs, outputs, removals)
+        val (inputRecipeList, outputRecipeList, removalsRecipeList) = modelInterpreter.handleAcornData(inputs, outputs, removals)
         
         graphModelValidator.validateAcornResults(inputRecipeList, outputRecipeList)
         
