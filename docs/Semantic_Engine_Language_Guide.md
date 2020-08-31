@@ -419,4 +419,20 @@ If Input Data Validation were turned on, before running the Update that referenc
 
 ## Custom Bind Rules*
 
-Custom Bind Rules can be used to create new URIs when the template described in the **Cardinality and URI Construction** section is not sufficient.
+Custom Bind Rules can be used to assign new URIs in special cases when the template described in the **Cardinality and URI Construction** section is not sufficient. Note that by using this feature, a user will be writing raw SPARQL snippets that will be inserted directly into the generated query without safety checks. Make sure you know what you are doing! Having an understanding of SPARQL Bind Clause syntax would be a good prerequisite to have before diving into this. In the future, this system should probably move towards more structured methods for defining special rules; Custom Bind Rules were intended as a "quick and dirty" approach to get the tasks at hand done, but not a long term solution.
+
+Custom Bind Rules can be used to create URIs for Instances using a special rule, or to create URIs for Terms that use a `ClassResourceList`. Using a Custom Bind Rule is currently the only way that a `ClassResourceList` can be assigned a URI in the Bind clause. To indicate that an Element should be assigned a Custom Bind Rule, the following semantics should be used:
+
+```
+:ClassA :usesCustomVariableManipulationRule :customRule1 .
+:customRule1 a :TurboGraphVariableManipulationLogic .
+:customRule1 :usesSparql {USER PUTS SPARQL TEMPLATE HERE}
+```
+
+The SPARQL template can embed the following parameters using a bracket syntax. These will be replaced using a String replace with the appropriate term.
+
+`${dependent}`: Will be replaced with the Element that is declared as a dependent of the element to be created. See the **Dependents** section for how to declare this. If no dependent is declared but the custom rule includes this parameter, an error will be thrown.
+`${cardinalityEnforcer}`: Will be replaced with the Element that is discovered as the cardinality enforcer for the element to be created. Cardinalty enforcers cannot be declared and must be discoverable by the `BindClauseBuilder` using the set of rules in place there. If no enforcer is discovered but the custom rule includes this parameter, an error will be thrown.
+`${replacement}`: Will be replaced with the Element that is to be assigned the generated URI. In the example above, this would be `:ClassA`.
+`${localUUID}`: Will be replaced with the UUID generated for the current instantiation. This can be useful to include to avoid collisions with pre-existing URIs.
+`${defaultPrefix}`: Will be replaced with the `defaultPrefix` defined in the properties file `turbo_properties.properties`
