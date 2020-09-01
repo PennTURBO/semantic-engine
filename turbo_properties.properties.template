@@ -29,7 +29,7 @@ acornOntologyFile = acornOntology.ttl
 
 # dataValidationMode options: None, Log, Stop
 dataValidationMode = Stop
-validateAgainstOntology = true
+validateAgainstOntology = false
 errorLogFile = turbo_errorLog.txt
 
 reinferRepo = false
