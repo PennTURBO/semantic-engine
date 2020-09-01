@@ -8,7 +8,7 @@ This document covers all features included in the Semantic Engine Language, incl
 
 ## Namespace
 
-For the remainder of this document, the prefix `:` will be used to denote `https://github.com/PennTURBO/Drivetrain/` which is the namespace for the Semantic Engine Language. Prefixes can be defined in the file `prefixes.txt`. Although a blank prefix is used for simplicity of example in this document, blank prefixes in the prefix file are not allowed.
+For the remainder of this document, the prefix `:` will be used to denote `https://github.com/PennTURBO/Drivetrain/` which is the namespace for the Semantic Engine Language. Prefixes can be defined in the file `prefixes.txt`.
 
 ## Semantic Engine Language Graph Pattern Elements
 
