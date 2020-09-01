@@ -121,4 +121,4 @@ Each object of a triple with predicate `semanticEngine:hasOutput` represents a C
 
 **6. Run the Semantic Engine**
 
-From the `drivetrain/` directory, start the SBT console and run the Semantic Engine with the command `run singleUpdate https://github.com/PennTURBO/Drivetrain/expandPatientIdentifiers`. Once the instantiation finishes, check your production repository to see the expanded data in the graph `https://github.com/PennTURBO/Drivetrain/expandedTriples`. The original concise RDF data should be preserved as well.
+From the `drivetrain/` directory, start the SBT console and run the Semantic Engine with the command `run singleUpdate semanticEngine:expandPatientIdentifiers`. Once the instantiation finishes, check your production repository to see the expanded data in the graph `https://github.com/PennTURBO/Drivetrain/expandedTriples`. The original concise RDF data should be preserved as well.
