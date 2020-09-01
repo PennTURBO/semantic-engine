@@ -22,7 +22,7 @@ class AcornFunctionalityTests extends FunSuiteLike with BeforeAndAfter with Befo
         assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
         
         graphDBMaterials = ConnectToGraphDB.initializeGraph()
-        DrivetrainDriver.updateModel(graphDBMaterials)
+        DrivetrainDriver.updateModel(graphDBMaterials, "testing_instruction_set.tis", "testing_graph_specification.gs")
         Globals.cxn = graphDBMaterials.getConnection()
         Globals.gmCxn = graphDBMaterials.getGmConnection()
         Utilities.deleteAllTriplesInDatabase(Globals.cxn)
