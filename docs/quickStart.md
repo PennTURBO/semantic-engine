@@ -37,9 +37,9 @@ Now find the setting in the properties file with key `instructionSetFile`. Repla
 You'll want to add some namespace prefixes to make things easier, so open `drivetrain/config/prefixes.txt` and add the following prefixes to the bottom of the list of already known prefixes:
 
 ```
-PREFIX inputSchema: <http://SemanticEngineQuickStart.edu/RdfSchema/>
+inputSchema:http://SemanticEngineQuickStart.edu/RdfSchema/
 ```
-The `inputSchema` prefix will be used to refer to the schema of the incoming concise RDF data.
+The `inputSchema` prefix will be used to refer to the schema of the incoming concise RDF data. Make sure to always list prefixes in the format shown above.
 
 **3. Add concise RDF data to triplestore**
 
