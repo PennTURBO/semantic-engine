@@ -9,8 +9,9 @@ import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
-class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
+class TestBuilderIntegrationTests extends FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
+    var graphDBMaterials: TurboGraphConnection = null
     val clearTestingRepositoryAfterRun: Boolean = false
     
     val uuid = UUID.randomUUID().toString.replaceAll("-", "")
@@ -20,17 +21,15 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
     {
         assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
         
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(false)
-        cxn = graphDBMaterials.getConnection()
-        gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(cxn)
+        graphDBMaterials = ConnectToGraphDB.initializeGraph()
+        Globals.cxn = graphDBMaterials.getConnection()
+        Globals.gmCxn = graphDBMaterials.getGmConnection()
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
         
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
-        OntologyLoader.addOntologyFromUrl(gmCxn)
+        OntologyLoader.addOntologyFromUrl(Globals.gmCxn)
         
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "graphSpecification")
     }
     
     override def afterAll()
@@ -40,8 +39,8 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
     
     after
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "graphSpecification")
     }
     
     test("triples generation test")
@@ -49,7 +48,7 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     pmbb:myProcess1 a turbo:TURBO_0010354 .
                     pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -165,12 +164,13 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
-          val inputs = RunDrivetrainProcess.getInputs("http://www.itmat.upenn.edu/biobank/myProcess1")
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+          val modelReader = new GraphModelReader()
+          val inputs = modelReader.getInputs("http://www.itmat.upenn.edu/biobank/myProcess1")
           val testBuilder = new TestBuilder()
-          val generatedTriples = testBuilder.generateInputTriples("http://www.itmat.upenn.edu/biobank/myProcess1", inputs, gmCxn)
+          val generatedTriples = testBuilder.generateInputTriples("http://www.itmat.upenn.edu/biobank/myProcess1", inputs, Globals.gmCxn)
           val fullTripleSet = generatedTriples(0)
-          update.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
+          SparqlUpdater.updateSparql(Globals.cxn, "INSERT DATA {" + fullTripleSet + "}")
           
           val checkTriples = """
              ASK
@@ -217,9 +217,9 @@ class TestBuilderIntegrationTests extends ProjectwideGlobals with FunSuiteLike w
                  }
              }
             """
-          update.querySparqlBoolean(cxn, checkTriples).get should be (true)
+          SparqlUpdater.querySparqlBoolean(Globals.cxn, checkTriples).get should be (true)
           val count: String = s"SELECT * WHERE {?s ?p ?o .}"
-          val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+          val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "p")
           result.size should be (28)
       }
 }

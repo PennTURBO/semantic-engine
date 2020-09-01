@@ -42,7 +42,7 @@ obo:VSO_0000004
 .
 ontologies:BloodPressureMeasurementProcessRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
-  drivetrain:usesSparql "BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat(\"${defaultPrefix}\", SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${multiplicityEnforcer}))))), ?unbound) AS ${replacement})" ;
+  drivetrain:usesSparql "BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat(\"${defaultPrefix}\", SHA256(CONCAT(\"${replacement}\", \"${localUUID}\", str(${cardinalityEnforcer}))))), ?unbound) AS ${replacement})" ;
 .
 ontologies:GenderIdentityTypeRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
@@ -70,7 +70,7 @@ ontologies:RxNormDrugTermMinusGroup
   a drivetrain:TurboGraphMinusGroup ;
 .
 ontologies:RxNormDrugTermToTypeDeclaration
-  a drivetrain:InstanceToTermRecipe ;
+  a drivetrain:TermToTermRecipe ;
   drivetrain:partOf ontologies:RxNormDrugTermMinusGroup ;
   drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-1> ;
   drivetrain:object owl:Class ;
@@ -485,7 +485,7 @@ ontologies:shortcutAlleleToShortcutAlleleRegistryUri
 .
 ontologies:shortcutAlleleToShortcutBiobankEncounter
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/many-1> ;
   drivetrain:object ontologies:TURBO_0010169 ;
   drivetrain:predicate ontologies:TURBO_0010142 ;
   drivetrain:mustExecuteIf drivetrain:subjectExists ;

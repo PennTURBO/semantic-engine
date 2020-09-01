@@ -45,14 +45,12 @@ drivetrain:TurboGraphMinusGroup a owl:Class .
 drivetrain:TurboGraphOptionalGroup a owl:Class .
 drivetrain:TurboGraphVariableManipulationLogic a owl:Class .
 drivetrain:TurboNamedGraph a owl:Class .
-drivetrain:TurboGraphStringLiteralValue a owl:Class .
-drivetrain:TurboGraphDateLiteralValue a owl:Class .
-drivetrain:TurboGraphDoubleLiteralValue a owl:Class .
-drivetrain:TurboGraphIntegerLiteralValue a owl:Class .
-drivetrain:TurboGraphBooleanLiteralValue a owl:Class .
+
 drivetrain:TurboGraphRequirementSpecification a owl:Class .
 drivetrain:TurboGraphCardinalityRule a owl:Class .
 drivetrain:PredicateSuffixSymbol a owl:Class .
+
+drivetrain:UntypedInstance a owl:Class .
 
 drivetrain:ResourceList a owl:Class .
 
@@ -117,3 +115,10 @@ owl:OntologyProperty a rdfs:Class .
 
 rdfs:comment a rdf:Property .
 
+drivetrain:star a drivetrain:PredicateSuffixSymbol ;
+  drivetrain:usesSparqlOperator '*' ;
+.
+
+drivetrain:plus a drivetrain:PredicateSuffixSymbol ;
+  drivetrain:usesSparqlOperator '+' ;
+.

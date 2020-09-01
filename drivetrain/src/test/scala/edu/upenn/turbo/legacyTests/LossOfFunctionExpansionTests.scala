@@ -9,19 +9,20 @@ import org.scalatest._
 import java.util.UUID
 import scala.collection.mutable.ArrayBuffer
 
-class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
+class LossOfFunctionExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
+    var graphDBMaterials: TurboGraphConnection = null
 
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
-    val processMeta = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", 
+    val processMeta = Utilities.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", 
                                                   Array("http://www.itmat.upenn.edu/biobank/Shortcuts_LofShortcuts"))
         
     
     val expectedQuery: String = s"""
       INSERT {
-      GRAPH <$expandedNamedGraph> {
+      GRAPH <${Globals.expandedNamedGraph}> {
       ?OBI_0001352 <http://purl.obolibrary.org/obo/IAO_0000142> ?GeneSymbolUriOfVariousTypes .
       ?OBI_0001352 rdf:type <http://purl.obolibrary.org/obo/OBI_0001352> .
       ?OBI_0001352 <http://purl.obolibrary.org/obo/OBI_0001938> ?ZygosityUriOfVariousTypes .
@@ -70,37 +71,37 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
       ?OBI_0001352 <http://transformunify.org/ontologies/TURBO_0010095> ?alleleZygosityIntegerLiteralValue .
       ?TURBO_0000568 <http://transformunify.org/ontologies/TURBO_0010094> ?alleleGenoIdStringLiteralValue .
       }
-      GRAPH <$processNamedGraph> {
-      <processURI> turbo:TURBO_0010184 ?OBI_0001352 .
-      <processURI> turbo:TURBO_0010184 ?GeneSymbolUriOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?ZygosityUriOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000522 .
-      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000568 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0001868 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0200000 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0001573 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0000257 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0001051 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0001479 .
-      <processURI> turbo:TURBO_0010184 ?NCBITaxon_9606 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000527 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0600005 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0002118 .
-      <processURI> turbo:TURBO_0010184 ?GenomeRegistryOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000566 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010144 .
-      <processURI> obo:OBI_0000293 ?NCBITaxon_9606 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010144 .
-      <processURI> obo:OBI_0000293 ?TURBO_0000527 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010169 .
-      <processURI> obo:OBI_0000293 ?GenomeRegistryOfVariousTypes .
-      <processURI> obo:OBI_0000293 ?ZygosityUriOfVariousTypes .
-      <processURI> obo:OBI_0000293 ?GeneSymbolUriOfVariousTypes .
+      GRAPH <${Globals.processNamedGraph}> {
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001352 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?GeneSymbolUriOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?ZygosityUriOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000522 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IAO_0000100 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000568 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001868 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0200000 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001573 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0000257 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001051 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001479 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?NCBITaxon_9606 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000527 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0600005 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0002118 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?GenomeRegistryOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000566 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010144 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?NCBITaxon_9606 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010144 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0000527 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010169 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?GenomeRegistryOfVariousTypes .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?ZygosityUriOfVariousTypes .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?GeneSymbolUriOfVariousTypes .
       }
       }
       WHERE {
-      GRAPH <$expandedNamedGraph> {
+      GRAPH <${Globals.expandedNamedGraph}> {
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010113> ?TURBO_0000527 .
       ?TURBO_0000527 rdf:type <http://transformunify.org/ontologies/TURBO_0000527> .
       ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/RO_0000056> ?TURBO_0000527 .
@@ -120,19 +121,19 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
       ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0010015> ?alleleGeneSymbolFirstPartStringLiteralValue .
       ?TURBO_0010144 <http://transformunify.org/ontologies/TURBO_0010016> ?alleleGeneSymbolSecondPartStringLiteralValue .
       }
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0002118","localUUID", str(?TURBO_0000527))))) AS ?OBI_0002118)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000566","localUUID", str(?TURBO_0000527))))) AS ?TURBO_0000566)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001868","localUUID", str(?NCBITaxon_9606))))) AS ?OBI_0001868)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000568","localUUID", str(?TURBO_0000527))))) AS ?TURBO_0000568)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001479","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001479)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0200000","localUUID", str(?TURBO_0000527))))) AS ?OBI_0200000)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001051","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001051)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001352","localUUID", str(?TURBO_0010144))))) AS ?OBI_0001352)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001573","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001573)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0000257","localUUID", str(?TURBO_0000527))))) AS ?OBI_0000257)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0600005","localUUID", str(?TURBO_0000527))))) AS ?OBI_0600005)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0002118","localUUID", str(?TURBO_0000527))))) AS ?OBI_0002118)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000566","localUUID", str(?TURBO_0000527))))) AS ?TURBO_0000566)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0001868","localUUID", str(?NCBITaxon_9606))))) AS ?OBI_0001868)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000568","localUUID", str(?TURBO_0000527))))) AS ?TURBO_0000568)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0001479","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001479)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0200000","localUUID", str(?TURBO_0000527))))) AS ?OBI_0200000)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0001051","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001051)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0001352","localUUID", str(?TURBO_0010144))))) AS ?OBI_0001352)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0001573","localUUID", str(?TURBO_0000527))))) AS ?OBI_0001573)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0000257","localUUID", str(?TURBO_0000527))))) AS ?OBI_0000257)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0600005","localUUID", str(?TURBO_0000527))))) AS ?OBI_0600005)
       }
       """
     
@@ -140,13 +141,11 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
     {
         assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
         
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "testing_instruction_set.tis", "testing_graph_specification.gs")
-        cxn = graphDBMaterials.getConnection()
-        gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(cxn)
-        
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+        graphDBMaterials = ConnectToGraphDB.initializeGraph()
+        DrivetrainDriver.updateModel(graphDBMaterials, "testing_instruction_set.tis", "testing_graph_specification.gs")
+        Globals.cxn = graphDBMaterials.getConnection()
+        Globals.gmCxn = graphDBMaterials.getGmConnection()
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
     }
     
     override def afterAll()
@@ -156,12 +155,12 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
     
     before
     {
-        helper.deleteAllTriplesInDatabase(cxn)
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
     }
     
     test("generated query matched expected query")
     {
-        helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", expectedQuery) should be (true) 
+        Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", expectedQuery) should be (true) 
     }
   
     test("single allele expansion")
@@ -170,7 +169,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:part1 a obo:NCBITaxon_9606 .
                   pmbb:part1 obo:RO_0000056 pmbb:bbenc1 .
@@ -198,14 +197,14 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.updateSparql(cxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", Globals.dataValidationMode, false)
         
         val output: String = s"""
           
           ASK
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   ?allele a obo:OBI_0001352 .
                   
@@ -265,20 +264,20 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.querySparqlBoolean(cxn, output).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, output).get should be (true)
         
         val countTrips: String = 
         s"""
         Select * Where
         {
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?s ?p ?o .
             }
         }
         """
         
-        val tripsResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countTrips, "p")
+        val tripsResult: ArrayBuffer[String] = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, countTrips, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -308,7 +307,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
             "http://purl.obolibrary.org/obo/BFO_0000051", "http://purl.obolibrary.org/obo/RO_0000056"
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, tripsResult.toArray)("equivalent").asInstanceOf[String] should be ("true")
+        Utilities.checkStringArraysForEquivalency(checkPredicates, tripsResult.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         tripsResult.size should be (checkPredicates.size)
         
@@ -316,7 +315,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -349,7 +348,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
                   ontologies:TURBO_0010184 <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000068912> ;
                   ontologies:TURBO_0010184 ontologies:TURBO_0000590 ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?TURBO_0000566 a turbo:TURBO_0000566 .
                 ?OBI_0001868 a obo:OBI_0001868 .
@@ -369,20 +368,20 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
-        update.querySparqlBoolean(cxn, processMeta).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processMeta).get should be (true)
         
         val countProcessTriples: String = 
         s"""
         Select * Where
         {
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?s ?p ?o .
             }
         }
         """
-        val processTriplesResult: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countProcessTriples, "p")
+        val processTriplesResult: ArrayBuffer[String] = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, countProcessTriples, "p")
         processTriplesResult.size should be (41)
     }
 
@@ -392,7 +391,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:part1 a obo:NCBITaxon_9606 .
                   pmbb:part1 obo:RO_0000056 pmbb:bbenc1 .
@@ -439,14 +438,14 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.updateSparql(cxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", Globals.dataValidationMode, false)
         
         val output: String = s"""
           
           ASK
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   ?allele a obo:OBI_0001352 .
                   
@@ -563,45 +562,45 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.querySparqlBoolean(cxn, output).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, output).get should be (true)
         
         val countCollectionProcess: String = 
         s"""
         Select * Where
         {
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?collProc a obo:OBI_0600005 .
             }
         }
         """
-        val collProcRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countCollectionProcess, "collProc")
+        val collProcRes: ArrayBuffer[String] = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, countCollectionProcess, "collProc")
         collProcRes.size should be (2)
 
         val countAllele: String = 
         s"""
         Select * Where
         {
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?allele a obo:OBI_0001352 .
             }
         }
         """
-        val alleleRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countAllele, "allele")
+        val alleleRes: ArrayBuffer[String] = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, countAllele, "allele")
         alleleRes.size should be (2)
 
         val countDNA: String = 
         s"""
         Select * Where
         {
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?dna a obo:OBI_0001868 .
             }
         }
         """
-        val dnaRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countDNA, "dna")
+        val dnaRes: ArrayBuffer[String] = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, countDNA, "dna")
         dnaRes.size should be (1)
     }
 
@@ -611,7 +610,7 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:part1 a obo:NCBITaxon_9606 .
                   pmbb:part1 obo:RO_0000056 pmbb:bbenc1 .
@@ -651,14 +650,14 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.updateSparql(cxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", dataValidationMode, false)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess", Globals.dataValidationMode, false)
         
         val output: String = s"""
           
           ASK
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   ?allele a obo:OBI_0001352 .
                   
@@ -732,32 +731,32 @@ class LossOfFunctionExpansionUnitTests extends ProjectwideGlobals with FunSuiteL
           
           """
         
-        update.querySparqlBoolean(cxn, output).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, output).get should be (true)
         
         val countCollectionProcess: String = 
         s"""
         Select * Where
         {
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?collProc a obo:OBI_0600005 .
             }
         }
         """
-        val collProcRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countCollectionProcess, "collProc")
+        val collProcRes: ArrayBuffer[String] = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, countCollectionProcess, "collProc")
         collProcRes.size should be (1)
 
         val countAllele: String = 
         s"""
         Select * Where
         {
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?allele a obo:OBI_0001352 .
             }
         }
         """
-        val alleleRes: ArrayBuffer[String] = update.querySparqlAndUnpackTuple(cxn, countAllele, "allele")
+        val alleleRes: ArrayBuffer[String] = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, countAllele, "allele")
         alleleRes.size should be (2)
     }
 }

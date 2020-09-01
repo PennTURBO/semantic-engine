@@ -8,15 +8,19 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import java.util.UUID
 import scala.collection.mutable.ArrayBuffer
+import org.slf4j.LoggerFactory
 
-class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
+class BiobankEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
+    val logger = LoggerFactory.getLogger(getClass)
+    
     val clearTestingRepositoryAfterRun: Boolean = false
+    var graphDBMaterials: TurboGraphConnection = null
 
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
     val instantiationAndDataset: String = s"""
-      ASK { GRAPH <$expandedNamedGraph> {
+      ASK { GRAPH <${Globals.expandedNamedGraph}> {
             ?instantiation <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000522 .
         		?instantiation obo:OBI_0000293 ?dataset .
         		?dataset a obo:IAO_0000100 .
@@ -24,7 +28,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
        }}"""
 
     val biobankEncounterMinimum: String = s"""
-      ASK { GRAPH <$expandedNamedGraph> {
+      ASK { GRAPH <${Globals.expandedNamedGraph}> {
             ?encounter <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000527 .
         		?encCrid <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000533 .
         		?encCrid obo:IAO_0000219 ?encounter .
@@ -41,7 +45,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     
     val biobankHeightWeightAndBMI: String = s"""
         	
-        	ASK { GRAPH <$expandedNamedGraph> {
+        	ASK { GRAPH <${Globals.expandedNamedGraph}> {
           
                 ?encounter obo:OBI_0000299 ?BMI .
                 ?encounter turbo:TURBO_0010139 ?heightDatum .
@@ -71,7 +75,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           """
     
     val biobankEncounterDate: String = s"""
-          ASK { GRAPH <$expandedNamedGraph> {
+          ASK { GRAPH <${Globals.expandedNamedGraph}> {
             ?encDate obo:BFO_0000050 ?dataset .
         		?encDate <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000532 .
         		?encDate turbo:TURBO_0010095 "15/Jan/2017" .
@@ -84,13 +88,13 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           }}
       """
     
-    val processMeta: String = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", 
+    val processMeta: String = Utilities.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", 
                                                           Array("http://www.itmat.upenn.edu/biobank/Shortcuts_biobankEncounterShortcuts"))
     
     val anyProcess: String = """
       ASK
       {
-          Graph <$processNamedGraph>
+          Graph <${Globals.processNamedGraph}>
           {
               ?s ?p ?o .
           }
@@ -99,7 +103,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     
     val expectedQuery: String = s"""
       INSERT {
-      GRAPH <$expandedNamedGraph> {
+      GRAPH <${Globals.expandedNamedGraph}> {
       ?TURBO_0010138 <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000015> .
       ?TURBO_0010138 rdf:type <http://transformunify.org/ontologies/TURBO_0010138> .
       ?OBI_0001929 <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000009> .
@@ -145,25 +149,25 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
       ?TURBO_0010138 <http://transformunify.org/ontologies/TURBO_0010094> ?lengthMeasurementDoubleLiteralValue .
       ?OBI_0001929 <http://transformunify.org/ontologies/TURBO_0010094> ?massMeasurementDoubleLiteralValue .
       }
-      GRAPH <$processNamedGraph> {
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010138 .
-      <processURI> turbo:TURBO_0010184 ?OBI_0001929 .
-      <processURI> turbo:TURBO_0010184 ?EFO_0004340 .
-      <processURI> turbo:TURBO_0010184 ?IAO_0000100 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000522 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000533 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000527 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000534 .
-      <processURI> turbo:TURBO_0010184 ?BiobankEncounterRegistryOfVariousTypes .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000532 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0000531 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010169 .
-      <processURI> turbo:TURBO_0010184 ?TURBO_0010161 .
-      <processURI> turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000009> .
-      <processURI> turbo:TURBO_0010184 <http://purl.obolibrary.org/obo/UO_0000015> .
-      <processURI> obo:OBI_0000293 ?TURBO_0010161 .
-      <processURI> obo:OBI_0000293 ?TURBO_0010169 .
-      <processURI> obo:OBI_0000293 ?BiobankEncounterRegistryOfVariousTypes .
+      GRAPH <${Globals.processNamedGraph}> {
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010138 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0001929 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?EFO_0004340 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IAO_0000100 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000522 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000533 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000527 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000534 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?BiobankEncounterRegistryOfVariousTypes .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000532 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000531 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010169 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010161 .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> <http://purl.obolibrary.org/obo/UO_0000009> .
+      <processURI> <http://transformunify.org/ontologies/TURBO_0010184> <http://purl.obolibrary.org/obo/UO_0000015> .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010161 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010169 .
+      <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?BiobankEncounterRegistryOfVariousTypes .
       }
       }
       WHERE {
@@ -192,16 +196,16 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
        ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0000627> ?massMeasurementDoubleLiteralValue .
        }
       }
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000527","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000527)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000534","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000534)
-      BIND(IF (BOUND(?lengthMeasurementDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0010138","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0010138)
-      BIND(IF (BOUND(?massMeasurementDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001929","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?OBI_0001929)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
-      BIND(IF (BOUND(?biobankEncounterDateStringLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000532","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0000532)
-      BIND(IF (BOUND(?biobankEncounterDateStringLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000531","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0000531)
-      BIND(IF (BOUND(?bmiDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?EFO_0004340","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?EFO_0004340)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000533","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000533)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000527","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000527)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000534","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000534)
+      BIND(IF (BOUND(?lengthMeasurementDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0010138","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0010138)
+      BIND(IF (BOUND(?massMeasurementDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0001929","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?OBI_0001929)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
+      BIND(IF (BOUND(?biobankEncounterDateStringLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000532","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0000532)
+      BIND(IF (BOUND(?biobankEncounterDateStringLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000531","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?TURBO_0000531)
+      BIND(IF (BOUND(?bmiDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?EFO_0004340","localUUID", str(?TURBO_0010169))))), ?unbound) AS ?EFO_0004340)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000533","localUUID", str(?TURBO_0010169))))) AS ?TURBO_0000533)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
       }
       """
     
@@ -209,13 +213,11 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     {
         assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
         
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "testing_instruction_set.tis", "testing_graph_specification.gs")
-        cxn = graphDBMaterials.getConnection()
-        gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(cxn)
-        
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+        graphDBMaterials = ConnectToGraphDB.initializeGraph()
+        DrivetrainDriver.updateModel(graphDBMaterials, "testing_instruction_set.tis", "testing_graph_specification.gs")
+        Globals.cxn = graphDBMaterials.getConnection()
+        Globals.gmCxn = graphDBMaterials.getGmConnection()
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
     }
     
     override def afterAll()
@@ -225,12 +227,12 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
     
     before
     {
-        helper.deleteAllTriplesInDatabase(cxn)
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
     }
 
     test("generated query matched expected query")
     {
-        helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", expectedQuery) should be (true) 
+        Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", expectedQuery) should be (true) 
     }
   
     test("bb encounter with all fields")
@@ -253,18 +255,18 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           pmbb:part1 a turbo:TURBO_0010161 .
           }}
           """
-        update.updateSparql(cxn, insert)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
         
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", Globals.dataValidationMode, false)
           
-        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(cxn, biobankEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, biobankHeightWeightAndBMI).get should be (true)
-        update.querySparqlBoolean(cxn, biobankEncounterDate).get should be (true)
-        update.querySparqlBoolean(cxn, processMeta).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, instantiationAndDataset).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, biobankEncounterMinimum).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, biobankHeightWeightAndBMI).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, biobankEncounterDate).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processMeta).get should be (true)
         
-        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+        val count: String = s"SELECT * WHERE {GRAPH <${Globals.expandedNamedGraph}> {?s ?p ?o .}}"
+        val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -292,7 +294,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
             
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
+        Utilities.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (checkPredicates.size)
         
@@ -300,7 +302,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -324,7 +326,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
                   ontologies:TURBO_0010184 pmbb:part1 ;
                   ontologies:TURBO_0010184 ?instantiation ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OBI_0001929 a obo:OBI_0001929 .
@@ -341,7 +343,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           
           """
         
-        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processInputsOutputs).get should be (true)
     }
     
     test("bb encounter with minimum required for expansion")
@@ -355,17 +357,17 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           turbo:TURBO_0010286 turbo:TURBO_0000535 .
           }}
           """
-        update.updateSparql(cxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", Globals.dataValidationMode, false)
         
-        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(cxn, biobankEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, biobankHeightWeightAndBMI).get should be (false)
-        update.querySparqlBoolean(cxn, biobankEncounterDate).get should be (false)
-        update.querySparqlBoolean(cxn, processMeta).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, instantiationAndDataset).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, biobankEncounterMinimum).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, biobankHeightWeightAndBMI).get should be (false)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, biobankEncounterDate).get should be (false)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processMeta).get should be (true)
         
-        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+        val count: String = s"SELECT * WHERE {GRAPH <${Globals.expandedNamedGraph}> {?s ?p ?o .}}"
+        val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -379,7 +381,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
+        Utilities.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (checkPredicates.size)
         
@@ -387,7 +389,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -402,7 +404,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
                   ontologies:TURBO_0010184 pmbb:bbenc1 ;
                   ontologies:TURBO_0010184 ?instantiation ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?TURBO_0000533 a turbo:TURBO_0000533 .
@@ -414,7 +416,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           
           """
         
-        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processInputsOutputs).get should be (true)
     }
     
     test("bb encounter with text but not xsd values")
@@ -434,12 +436,12 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           # turbo:TURBO_0000625 "2017-01-15"^^xsd:date .
           }}
           """
-        update.updateSparql(cxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", dataValidationMode, false)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterExpansionProcess", Globals.dataValidationMode, false)
         
         val dateNoXsd: String = s"""
           ask {
-          GRAPH <$expandedNamedGraph> {
+          GRAPH <${Globals.expandedNamedGraph}> {
         		?encounter a turbo:TURBO_0000527 .
         		?dataset a obo:IAO_0000100 .
         		?encDate a turbo:TURBO_0000532 .
@@ -451,15 +453,15 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
         	}}
           """
         
-        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(cxn, biobankEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, biobankHeightWeightAndBMI).get should be (true)
-        update.querySparqlBoolean(cxn, biobankEncounterDate).get should be (false) 
-        update.querySparqlBoolean(cxn, dateNoXsd).get should be (true)
-        update.querySparqlBoolean(cxn, processMeta).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, instantiationAndDataset).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, biobankEncounterMinimum).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, biobankHeightWeightAndBMI).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, biobankEncounterDate).get should be (false) 
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, dateNoXsd).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processMeta).get should be (true)
         
-        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+        val count: String = s"SELECT * WHERE {GRAPH <${Globals.expandedNamedGraph}> {?s ?p ?o .}}"
+        val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -485,7 +487,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
             "http://purl.obolibrary.org/obo/IAO_0000039"   
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
+        Utilities.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (checkPredicates.size)
         
@@ -493,7 +495,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -511,7 +513,7 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
                   ontologies:TURBO_0010184 pmbb:bbenc1 ;
                   ontologies:TURBO_0010184 ?instantiation ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?TURBO_0000533 a turbo:TURBO_0000533 .
@@ -525,6 +527,6 @@ class BiobankEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuit
           
           """
         
-        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processInputsOutputs).get should be (true)
     }
 }

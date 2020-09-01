@@ -10,7 +10,7 @@ ontologies:GenderIdentityTypeRule
 .
 ontologies:PatientRoleCreationRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
-  drivetrain:usesSparql """BIND(uri(concat("${defaultPrefix}",SHA256(CONCAT("${replacement}",str(${multiplicityEnforcer}),"${localUUID}",str(${dependent}))))) AS ${replacement})""" ;
+  drivetrain:usesSparql """BIND(uri(concat("${defaultPrefix}",SHA256(CONCAT("${replacement}",str(${cardinalityEnforcer}),"${localUUID}",str(${dependent}))))) AS ${replacement})""" ;
 .
 ontologies:IcdDiagnosisRegistryRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
@@ -25,10 +25,6 @@ BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,${replacement}) as ${
 ontologies:RaceIdentityTypeRule
   a drivetrain:TurboGraphVariableManipulationLogic ;
   drivetrain:usesSparql "BIND(IF(BOUND(${dependent}), ${dependent}, obo:OMRSE_00000098) AS ${replacement})" ;
-.
-ontologies:DatasetExpansionRule
-  a drivetrain:TurboGraphVariableManipulationLogic ;
-  drivetrain:usesSparql "BIND(uri(concat(\"${defaultPrefix}\",SHA256(CONCAT(str(${dependent}),\"${localUUID}\")))) AS ${replacement})" ;
 .
 ontologies:shortcutTumorToShortcutHomoSapiens
   a drivetrain:InstanceToInstanceRecipe ;
@@ -66,11 +62,8 @@ pmbb:HomoSapiensExpansionProcess
   drivetrain:hasOutput ontologies:shortcutTumorToExpandedTumor ;
   drivetrain:hasOutput drivetrain:GidAboutPatient ;
   drivetrain:hasOutput drivetrain:GidHasRepresentation ;
-  #drivetrain:hasOutput drivetrain:GidPartOfColumn ;
   drivetrain:hasOutput drivetrain:GidTypingRecipe ;
-  #drivetrain:hasOutput drivetrain:DobPartOfColumn ;
   drivetrain:hasOutput drivetrain:RidAboutPatient ;
-  #drivetrain:hasOutput drivetrain:RidPartOfColumn ;
   drivetrain:hasOutput drivetrain:RidHasRepresentation ;
   drivetrain:hasOutput drivetrain:RidTypingRecipe ;
   drivetrain:hasOutput drivetrain:CridDenotesPatient ;
@@ -318,7 +311,7 @@ ontologies:shortcutAlleleToShortcutAlleleRegistryUri
 .
 ontologies:shortcutAlleleToShortcutBiobankEncounter
   a drivetrain:InstanceToInstanceRecipe ;
-  drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-1> ;
+  drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/many-1> ;
   drivetrain:object drivetrain:shortcutEncounter ;
   drivetrain:predicate ontologies:TURBO_0010142 ;
   drivetrain:mustExecuteIf drivetrain:subjectExists ;
@@ -425,7 +418,7 @@ ontologies:encCodeTypeProvenanceOptionalGroup
 ontologies:shortcutDiagnosisToPrimaryKey
   a drivetrain:InstanceToLiteralRecipe ;
   drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-1> ;
-  drivetrain:object drivetrain:condition_occurrence_id_StringLiteralValue ;
+  drivetrain:object drivetrain:condition_occurrence_id_LiteralValue ;
   drivetrain:predicate drivetrain:scDiag2PrimaryKey ;
   drivetrain:subject ontologies:TURBO_0010160 ;
 .
@@ -742,9 +735,6 @@ drivetrain:IcdClassList
 .
 drivetrain:SnomedClassList 
   drivetrain:usesCustomVariableManipulationRule ontologies:SnomedDiagnosisRegistryRule ;
-.
-obo:IAO_0000100
-  drivetrain:usesCustomVariableManipulationRule ontologies:DatasetExpansionRule ;
 .
 drivetrain:gender_LiteralValue
   a drivetrain:StringLiteralResourceList ;

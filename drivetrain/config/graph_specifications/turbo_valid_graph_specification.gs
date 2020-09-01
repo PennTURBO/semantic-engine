@@ -5,10 +5,6 @@
     owl:versionInfo "unversioned" ;
     owl:versionIRI <https://raw.githubusercontent.com/PennTURBO/Drivetrain/master/drivetrain/ontologies/turbo_valid_graph_specification.ttl> ;
 	rdfs:comment "that's not really a version IRI" .
-
-drivetrain:star a drivetrain:PredicateSuffixSymbol ;
-  drivetrain:usesSparqlOperator '*' ;
-.
   
 owl:Axiom a owl:Class .
 
@@ -49,7 +45,7 @@ drivetrain:GidTypingRecipe a drivetrain:InstanceToTermRecipe ;
 .
 
 drivetrain:GidToBeTyped 
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 
 drivetrain:GidClassList
@@ -234,7 +230,7 @@ drivetrain:DobHasRawDateString
   drivetrain:object drivetrain:birth_datetime_StringLiteralValue ;
 .
 drivetrain:RidToBeTyped 
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 drivetrain:RidClassList
   a drivetrain:ClassResourceList ;
@@ -410,7 +406,7 @@ drivetrain:EncTypingRecipe
 .
 
 drivetrain:EncToBeTyped 
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 
 drivetrain:EncCridsymbHasRepresentation
@@ -530,7 +526,7 @@ drivetrain:EncTypeAxiomProp
   drivetrain:object rdf:type ;
 .
 drivetrain:EncTypeAxiomTarget
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:many-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedTarget ;
@@ -604,7 +600,7 @@ drivetrain:RoleToRoleType
 .
 
 drivetrain:RoleToBeTyped
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 drivetrain:RoleClassList
   a drivetrain:ClassResourceList ;
@@ -765,7 +761,7 @@ drivetrain:HceKeyDenotesProv4Precedence
 .
 
 drivetrain:Prevenc
-  a drivetrain:ClassResourceList .
+  a drivetrain:UntypedInstance .
 
 drivetrain:EncPrecedenceAxiomContext a drivetrain:TurboGraphContext .
 owl:Axiom drivetrain:hasPossibleContext drivetrain:EncPrecedenceAxiomContext .
@@ -886,7 +882,7 @@ drivetrain:MentioningProvHasRepresentation
 .
 
 drivetrain:MentioningProvMentionsCode
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:subject ontologies:TURBO_0010404 ;
   drivetrain:predicate obo:IAO_0000142 ;
@@ -931,7 +927,7 @@ drivetrain:ProcTypeAxiomProp
 .
 
 drivetrain:ProcTypeAxiomTarget
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:many-1 ;
   drivetrain:object drivetrain:ProcClassList ;
   drivetrain:predicate owl:annotatedTarget ;
@@ -972,7 +968,7 @@ drivetrain:ProcClassList
 .
 
 drivetrain:ProcToBeTyped 
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 
 drivetrain:ProcMentionedClassList
@@ -1013,7 +1009,8 @@ drivetrain:tumorCridSymbolHasRepresentation
   drivetrain:object drivetrain:tumor_LiteralValue ;
   drivetrain:predicate ontologies:TURBO_0010094 ;
   drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists ;
-  drivetrain:subject obo:IAO_0000577 ;
+  drivetrain:subjectUsesContext drivetrain:TumorCridContext ;
+  drivetrain:subject obo:IAO_0000028 ;
 .
 drivetrain:tumorCridSymbolPartOfTumorCrid
   a drivetrain:InstanceToInstanceRecipe ;
@@ -1445,7 +1442,7 @@ drivetrain:MeasTypingRecipe a drivetrain:InstanceToTermRecipe ;
 .
 
 drivetrain:MeasToBeTyped 
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 
 drivetrain:MeasClassList
@@ -1453,7 +1450,7 @@ drivetrain:MeasClassList
 .
 
 drivetrain:MeasMentionsCode
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:1-many ;
   drivetrain:object drivetrain:MeasCodeMentionedClassList ;
   drivetrain:predicate obo:IAO_0000142 ;
@@ -1814,7 +1811,7 @@ drivetrain:MulAxiomProp
   drivetrain:object obo:IAO_0000039 ;
 .
 drivetrain:MulAxiomTarget
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:many-1 ;
   drivetrain:subject owl:Axiom ;
   drivetrain:predicate owl:annotatedTarget ;
@@ -2442,7 +2439,7 @@ drivetrain:RxHasRepresentation
 .
 
 drivetrain:RxMentionsCode
-  a drivetrain:InstanceToInstanceRecipe ;
+  a drivetrain:InstanceToTermRecipe ;
   drivetrain:cardinality drivetrain:1-1 ;
   drivetrain:object drivetrain:RxMentionedClassList ;
   drivetrain:predicate obo:IAO_0000142 ;

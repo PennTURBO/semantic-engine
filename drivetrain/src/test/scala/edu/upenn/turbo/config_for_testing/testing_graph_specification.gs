@@ -1308,7 +1308,7 @@ ontologies:DrugTermOfVariousTypes
   a drivetrain:ClassResourceList ;
 .
 ontologies:GenderIdentityDatumOfVariousTypes
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 ontologies:GenderIdentityDatumType
   a drivetrain:ClassResourceList ;
@@ -1338,7 +1338,7 @@ ontologies:IcdTermOfVariousTypes
   a drivetrain:ClassResourceList ;
 .
 ontologies:RaceIdentityDatumOfVariousTypes
-  a drivetrain:ClassResourceList ;
+  a drivetrain:UntypedInstance ;
 .
 ontologies:RaceIdentityDatumType
   a drivetrain:ClassResourceList ;

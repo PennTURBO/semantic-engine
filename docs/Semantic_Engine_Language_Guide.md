@@ -20,7 +20,7 @@ For the rest of this document, Semantic Engine Language Instances will be referr
 
 Instances are generally expressed as explicit references to some class that is itself defined as an instance of `owl:Class`in the application ontology. As a workaround the `owl:Class` declaration could be placed in a TIS or GS file. If a Connection Recipe explicitly references a class as an Instance, the Semantic Engine will understand to expect or create instances of this class. If creating, URI generation and assignment of type will be handled automatically.
 
-Instances can also be defined without a type. This can come in handy when the type is not known until execution time, perhaps because it is dependent on some element in the incoming dataset. Currently, a ClassResourceList can be supplied instead of a class URI. However, this is a bit confusing because these are also used as Term placeholders. In the future, developers on this project could create a new Semantic Engine Language feature called `UntypedInstance`.
+Instances can also be defined without a type. This can come in handy when the type is not known until execution time, perhaps because it is dependent on some element in the incoming dataset. An instance of type `UntypedInstance` can be supplied instead of a class URI.
 
 **Terms**
 
@@ -51,9 +51,7 @@ This table is referenced later in this document as the Connection Recipe table.
 
 ## Cardinality and URI Construction
 
-Note that Cardinality enforcement may have some bugs in implementation. I will try to document and correct over the next few weeks.
-
-The following are valid Semantic Engine Cardinality settings: `:1-1`, `:1-many`, `:many-1`, `:many-singleton`, `:singleton-many`, `:singleton-singleton`, `:many-superSingleton`, `:superSingleton-many`, `:singleton-superSingleton`, `:superSingleton-singleton`. `:superSingleton-superSingleton` is not currently valid but should be added.
+The following are valid Semantic Engine Cardinality settings: `:1-1`, `:1-many`, `:many-1`, `:many-singleton`, `:singleton-many`, `:singleton-singleton`, `:many-superSingleton`, `:superSingleton-many`, `:singleton-superSingleton`, `:superSingleton-singleton`. `:superSingleton-superSingleton` is not currently valid but could be added.
 
 A `singleton` is defined as an Instance that a single Update Specification can only create once, but can be created again by other Update Specifications. A `superSingleton` is defined as an Instance that exists only once in the entire graph.
 
@@ -421,4 +419,30 @@ If Input Data Validation were turned on, before running the Update that referenc
 
 ## Custom Bind Rules*
 
-- Should be used as a "last resort"
+Custom Bind Rules can be used to assign new URIs in special cases when the template described in the **Cardinality and URI Construction** section is not sufficient. Note that by using this feature, a user will be writing raw SPARQL snippets that will be inserted directly into the generated query without safety checks. Make sure you know what you are doing! Having an understanding of SPARQL Bind Clause syntax would be a good prerequisite to have before diving into this. In the future, this system should probably move towards more structured methods for defining special rules; Custom Bind Rules were intended as a "quick and dirty" approach to get the tasks at hand done, but not a long term solution.
+
+Custom Bind Rules can be used to create URIs for Instances using a special rule, or to create URIs for Terms that use a `ClassResourceList`. Using a Custom Bind Rule is currently the only way that a `ClassResourceList` can be assigned a URI in the Bind clause. To indicate that an Element should be assigned a Custom Bind Rule, the following semantics should be used:
+
+```
+:ClassA :usesCustomVariableManipulationRule :customRule1 .
+:customRule1 a :TurboGraphVariableManipulationLogic .
+:customRule1 :usesSparql {USER PUTS SPARQL TEMPLATE HERE}
+```
+
+The SPARQL template can embed the following parameters using a bracket syntax. These will be replaced using a String replace with the appropriate term.
+
+`${dependent}`: Will be replaced with the Element that is declared as a dependent of the element to be created. See the **Dependents** section for how to declare this. If no dependent is declared but the custom rule includes this parameter, an error will be thrown.
+
+`${cardinalityEnforcer}`: Will be replaced with the Element that is discovered as the cardinality enforcer for the element to be created. Cardinalty enforcers cannot be declared and must be discoverable by the `BindClauseBuilder` using the set of rules in place there. If no enforcer is discovered but the custom rule includes this parameter, an error will be thrown.
+
+`${replacement}`: Will be replaced with the Element that is to be assigned the generated URI. In the example above, this would be `:ClassA`.
+
+`${localUUID}`: Will be replaced with the UUID generated for the current instantiation. This can be useful to include to avoid collisions with pre-existing URIs.
+
+`${defaultPrefix}`: Will be replaced with the `defaultPrefix` defined in the properties file `turbo_properties.properties`
+
+Here is example of a SPARQL template for a custom rule that uses all of the parameters:
+
+```BIND(uri(concat("${defaultPrefix}",SHA256(CONCAT("${replacement}",str(${cardinalityEnforcer}),"${localUUID}",str(${dependent}))))) AS ${replacement})```
+
+This Custom Rule indicates that a new URI will be created starting with the `defaultPrefix` and ending with the Hash value from the SHA256 function that concatenates a string representing the Element to be created (`replacement`), the `cardinalityEnforcer` for that element, the `localUUID` for the instantiation, and the Element that the Element to be created is `dependent` on. This varies from the standard Bind template because the `dependent` is included as part of the Hash function, rather than the default behavior of creating an `IF BOUND` declaration within the Bind clause.

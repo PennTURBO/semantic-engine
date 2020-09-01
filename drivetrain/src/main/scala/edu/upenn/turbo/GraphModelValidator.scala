@@ -3,13 +3,12 @@ package edu.upenn.turbo
 import org.eclipse.rdf4j.repository.RepositoryConnection
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
+import scala.collection.mutable.HashSet
+import org.slf4j.LoggerFactory
 
-object GraphModelValidator extends ProjectwideGlobals 
+class GraphModelValidator
 {   
-    def setGraphModelConnection(gmCxn: RepositoryConnection)
-    {
-        this.gmCxn = gmCxn
-    }
+    val logger = LoggerFactory.getLogger(getClass)
     
     def checkAcornFilesForMissingTypes()
     {
@@ -17,9 +16,9 @@ object GraphModelValidator extends ProjectwideGlobals
           Select ?s
           where
           {
-              Values ?graphList { <$defaultPrefix""" + s"""instructionSet> 
-                                   <$defaultPrefix""" + s"""graphSpecification>
-                                   <$defaultPrefix""" + s"""acornOntology>}
+              Values ?graphList { <${Globals.defaultPrefix}""" + s"""instructionSet> 
+                                   <${Globals.defaultPrefix}""" + s"""graphSpecification>
+                                   <${Globals.defaultPrefix}""" + s"""acornOntology>}
               Graph ?graphList
               {
                   ?s ?p ?o .
@@ -40,9 +39,9 @@ object GraphModelValidator extends ProjectwideGlobals
           Select ?p
           where
           {
-              Values ?graphList { <$defaultPrefix""" + s"""instructionSet> 
-                                  <$defaultPrefix""" + s"""graphSpecification>
-                                  <$defaultPrefix""" + s"""acornOntology>}
+              Values ?graphList { <${Globals.defaultPrefix}""" + s"""instructionSet> 
+                                  <${Globals.defaultPrefix}""" + s"""graphSpecification>
+                                  <${Globals.defaultPrefix}""" + s"""acornOntology>}
               Graph ?graphList
               {
                   ?s ?p ?o .
@@ -64,8 +63,8 @@ object GraphModelValidator extends ProjectwideGlobals
           where
           {
               {
-                  Values ?graphList { <$defaultPrefix""" + s"""instructionSet> 
-                                      <$defaultPrefix""" + s"""acornOntology>}
+                  Values ?graphList { <${Globals.defaultPrefix}""" + s"""instructionSet> 
+                                      <${Globals.defaultPrefix}""" + s"""acornOntology>}
                   Graph ?graphList
                   {
                       ?s ?p ?o .
@@ -82,13 +81,15 @@ object GraphModelValidator extends ProjectwideGlobals
                   filter (?p != drivetrain:referencedInGraph)
                   filter (!isLiteral(?o))
                   filter (?o != owl:Class)
+                  filter (?p != drivetrain:subject)
                   filter (?p != drivetrain:predicate)
+                  filter (?p != drivetrain:object)
                   filter (?o != rdf:Property)
               }
               UNION
               {
-                  Values ?graphList { <$defaultPrefix""" + s"""graphSpecification> 
-                                      <$defaultPrefix""" + s"""acornOntology>}
+                  Values ?graphList { <${Globals.defaultPrefix}""" + s"""graphSpecification> 
+                                      <${Globals.defaultPrefix}""" + s"""acornOntology>}
                   Graph ?graphList
                   {
                       ?s ?p ?o .
@@ -114,22 +115,22 @@ object GraphModelValidator extends ProjectwideGlobals
                                       
           var firstRes = ""
           
-          val subjectRes = update.querySparqlAndUnpackTuple(gmCxn, checkSubjects, "s")
+          val subjectRes = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, checkSubjects, "s")
           if (subjectRes.size != 0) firstRes = subjectRes(0)
           assert (firstRes == "", s"Error in graph model: $firstRes does not have a type")
           
-          val predRes = update.querySparqlAndUnpackTuple(gmCxn, checkPredicates, "p")
+          val predRes = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, checkPredicates, "p")
           if (predRes.size != 0) firstRes = predRes(0)
           assert (firstRes == "", s"Error in graph model: $firstRes does not have a type")
           
-          val objectRes = update.querySparqlAndUnpackTuple(gmCxn, checkObjects, "o")
+          val objectRes = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, checkObjects, "o")
           if (objectRes.size != 0) firstRes = objectRes(0)
           assert (firstRes == "", s"Error in graph model: $firstRes does not have a type")
     }
     
     def validateProcessSpecification(process: String)
     {
-       helper.validateURI(process)
+       Utilities.validateURI(process)
        
        val select: String = s"""
           Select * Where {
@@ -139,50 +140,50 @@ object GraphModelValidator extends ProjectwideGlobals
           }
           """
         //logger.info(select)
-        val res = update.querySparqlAndUnpackTuple(gmCxn, select, Array("inputNamedGraph", "outputNamedGraph"))
+        val res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, select, Array("inputNamedGraph", "outputNamedGraph"))
         assert (res.size == 1, (if (res.size == 0) s"Process $process does not exist, ensure required input and output graphs are present" else s"Process $process has duplicate properties"))
     }
     
-    def validateAcornResults(results: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]])
+    def validateAcornResults(inputs: HashSet[ConnectionRecipe], outputs: HashSet[ConnectionRecipe])
     {
-        var scannedConnections = new HashMap[String, String]
+        checkForDuplicateAcornProperties(inputs)
+        checkForDuplicateAcornProperties(outputs)
+        
+        validateSingletonClasses(inputs)
+        validateSingletonClasses(outputs)
+        
+        validateManyToOneClasses(inputs)
+        validateManyToOneClasses(outputs)
+    }
+    
+    def checkForDuplicateAcornProperties(results: HashSet[ConnectionRecipe])
+    {
+        var scannedConnections = new HashSet[String]
         var multiplicityMap = new HashMap[String, String]
-        for (row <- results)
+        for (recipe <- results)
         {
-            val connectionName = row(CONNECTIONNAME.toString).toString
-            val thisMultiplicity = row(MULTIPLICITY.toString).toString
-            val thisGraph = (if (row.contains(GRAPHOFORIGIN.toString) && row(GRAPHOFORIGIN.toString) != null) row(GRAPHOFORIGIN.toString).toString else "")
-            val subjectContext = (if (row.contains(SUBJECTCONTEXT.toString) && row(SUBJECTCONTEXT.toString) != null) row(SUBJECTCONTEXT.toString).toString else "")
-            val objectContext = (if (row.contains(OBJECTCONTEXT.toString) && row(OBJECTCONTEXT.toString) != null) row(OBJECTCONTEXT.toString).toString else "")
-            val requirement = (if (row.contains(REQUIREMENT.toString) && row(REQUIREMENT.toString) != null) row(REQUIREMENT.toString).toString else "")
-            val suffixOperator = (if (row.contains(SUFFIXOPERATOR.toString) && row(SUFFIXOPERATOR.toString) != null) row(SUFFIXOPERATOR.toString).toString else "")
-            val subjectRule = (if (row.contains(SUBJECTRULE.toString) && row(SUBJECTRULE.toString) != null) row(SUBJECTRULE.toString).toString else "")
-            val objectRule = (if (row.contains(OBJECTRULE.toString) && row(OBJECTRULE.toString) != null) row(OBJECTRULE.toString).toString else "")
-            var subjectString = row(SUBJECT.toString).toString
-            var objectString = row(OBJECT.toString).toString
-            if (row(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
-            if (row(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
-            
+            val subjectString = recipe.subject.value
+            val objectString = recipe.crObject.value
             val subjectObjectString = subjectString + objectString
             if (multiplicityMap.contains(subjectObjectString)) assert(multiplicityMap(subjectObjectString) == 
-              thisMultiplicity, s"Error in graph model: There are multiple connections between $subjectString and $objectString with non-matching multiplicities")
-            else multiplicityMap += subjectObjectString -> thisMultiplicity
+              recipe.cardinality, s"Error in graph model: There are multiple connections between $subjectString and $objectString with non-matching cardinality")
+            else multiplicityMap += subjectObjectString -> recipe.cardinality
             
-            val fullConnectionString = subjectObjectString + row(PREDICATE.toString).toString + thisMultiplicity + thisGraph +
-                                       subjectContext + objectContext + requirement + suffixOperator + subjectRule + objectRule
-            if (scannedConnections.contains(connectionName)) assert(scannedConnections(connectionName) == fullConnectionString, s"Error in graph model: recipe $connectionName may have duplicate properties")
-            else scannedConnections += connectionName -> fullConnectionString 
+            val connectionName = recipe.name
+            assert(!scannedConnections.contains(connectionName), s"Error in graph model: recipe $connectionName may have duplicate properties")
+            scannedConnections += connectionName 
         }
     }
     
+    // checks to see whether any connection recipes create an illegal domain or range according to the application ontology
     def validateGraphSpecificationAgainstOntology()
     {
         val rangeQuery: String = s"""
           select * where
           {
-              graph <$defaultPrefix"""+s"""graphSpecification>
+              graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
               {
-                  ?recipe a ?CONNECTIONRECIPETYPE .
+                  ?recipe a ?${Globals.CONNECTIONRECIPETYPE} .
                   ?recipe drivetrain:object ?object .
                   ?recipe drivetrain:predicate ?predicate .
                   minus
@@ -190,11 +191,11 @@ object GraphModelValidator extends ProjectwideGlobals
                       ?object a drivetrain:ClassResourceList .
                   }
               }
-              graph <$defaultPrefix"""+s"""acornOntology>
+              graph <${Globals.defaultPrefix}"""+s"""acornOntology>
               {
-                  ?CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
+                  ?${Globals.CONNECTIONRECIPETYPE} rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
               }
-              graph <$ontologyURL>
+              graph <${Globals.ontologyURL}>
               {
                   ?predicate rdfs:subPropertyOf* ?superPredicate .
                   ?superPredicate rdfs:range ?range .
@@ -211,7 +212,7 @@ object GraphModelValidator extends ProjectwideGlobals
           }
           """
         //logger.info(rangeQuery)
-        var res = update.querySparqlAndUnpackTuple(gmCxn, rangeQuery, "recipe")
+        var res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, rangeQuery, "recipe")
         var allRes = ""
         for (singleRes <- res)
         {
@@ -222,7 +223,7 @@ object GraphModelValidator extends ProjectwideGlobals
         val domainQuery: String = s"""
           select * where
           {
-              graph <$defaultPrefix"""+s"""graphSpecification>
+              graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
               {
                   ?recipe a ?CONNECTIONRECIPETYPE .
                   ?recipe drivetrain:subject ?subject .
@@ -232,11 +233,11 @@ object GraphModelValidator extends ProjectwideGlobals
                       ?subject a drivetrain:ClassResourceList .
                   }
               }
-              graph <$defaultPrefix"""+s"""acornOntology>
+              graph <${Globals.defaultPrefix}"""+s"""acornOntology>
               {
                   ?CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
               }
-              graph <$ontologyURL>
+              graph <${Globals.ontologyURL}>
               {
                   ?predicate rdfs:subPropertyOf* ?superPredicate .
                   ?superPredicate rdfs:domain ?domain .
@@ -248,7 +249,7 @@ object GraphModelValidator extends ProjectwideGlobals
           }
           """
         //logger.info(domainQuery)
-        res = update.querySparqlAndUnpackTuple(gmCxn, domainQuery, "recipe")
+        res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, domainQuery, "recipe")
         allRes = ""
         for (singleRes <- res)
         {
@@ -281,12 +282,14 @@ object GraphModelValidator extends ProjectwideGlobals
                 }
             }
           """
-        val res = update.querySparqlAndUnpackTuple(gmCxn, checkRecipes, "recipe")
+        val res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, checkRecipes, "recipe")
         var firstRes = ""
         if (res.size > 0) firstRes = res(0)
         assert(firstRes == "", s"Process $process references undefined recipe $firstRes")
     }
     
+    // Does validation - if fails, will throw assert error or print warning text
+    // Only runs when "run all" is called
     def validateProcessesAgainstGraphSpecification(processList: ArrayBuffer[String])
     {
         var processListAsString = ""
@@ -297,7 +300,9 @@ object GraphModelValidator extends ProjectwideGlobals
         processListAsString = processListAsString.substring(0, processListAsString.size-1)
         assert (processListAsString != "")
         
+        // This ensures that all required recipes have been called as outputs of queued update specifications
         findRequiredAndUnqueuedRecipes(processListAsString)
+        // This reminds the user that there may be recipes in the GS that are not outputs, but that is probably ok
         findQueuedAndUnrequiredRecipes(processList, processListAsString)
     }
     
@@ -309,7 +314,7 @@ object GraphModelValidator extends ProjectwideGlobals
               Select ?recipe Where
               {
                   {
-                      Graph <$defaultPrefix"""+s"""graphSpecification>
+                      Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
                       {
                           ?recipe drivetrain:subject ?subject .
                           ?recipe drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists .
@@ -326,7 +331,7 @@ object GraphModelValidator extends ProjectwideGlobals
                   }
                   UNION
                   {
-                      Graph <$defaultPrefix"""+s"""graphSpecification>
+                      Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
                       {
                           ?recipe drivetrain:subject ?subject .
                           ?recipe drivetrain:mustExecuteIf drivetrain:subjectExists .
@@ -343,7 +348,7 @@ object GraphModelValidator extends ProjectwideGlobals
                   }
                   UNION
                   {
-                      Graph <$defaultPrefix"""+s"""graphSpecification>
+                      Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
                       {
                           ?recipe drivetrain:object ?object .
                           ?recipe drivetrain:mustExecuteIf drivetrain:eitherSubjectOrObjectExists .
@@ -360,7 +365,7 @@ object GraphModelValidator extends ProjectwideGlobals
                   }
                   UNION
                   {
-                      Graph <$defaultPrefix"""+s"""graphSpecification>
+                      Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
                       {
                           ?recipe drivetrain:object ?object .
                           ?recipe drivetrain:mustExistIf drivetrain:objectExists .
@@ -377,7 +382,7 @@ object GraphModelValidator extends ProjectwideGlobals
                   }
                   MINUS
                   {
-                      Graph <$defaultPrefix"""+s"""instructionSet>
+                      Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                       {
                           ?process drivetrain:hasOutput ?recipe .
                           filter (?process IN ($processListAsString))
@@ -387,9 +392,9 @@ object GraphModelValidator extends ProjectwideGlobals
             """
             //logger.info(findRequiredButUncreatedRecipes)      
             var firstRes = ""
-            val res = update.querySparqlAndUnpackTuple(gmCxn, findRequiredButUncreatedRecipes, "recipe")
+            val res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, findRequiredButUncreatedRecipes, "recipe")
             if (res.size > 0) firstRes = res(0)
-            val singleClassCleaned = helper.removeQuotesFromString(singleClass.split("\\^")(0)).split(("__"))
+            val singleClassCleaned = Utilities.removeQuotesFromString(singleClass.split("\\^")(0)).split(("__"))
             val singleClassCleaned1 = singleClassCleaned(0)
             var errMsg = s"Error in graph model: connection recipe $firstRes in the Graph Specification is required due to the existence of $singleClassCleaned1 "
             if (singleClassCleaned.size > 1) errMsg += "with context " + singleClassCleaned(1) + " "
@@ -404,11 +409,11 @@ object GraphModelValidator extends ProjectwideGlobals
           Select distinct ?classWithContext Where
           {
               {
-                  Graph <$defaultPrefix"""+s"""instructionSet>
+                  Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                   {
                       ?process drivetrain:hasOutput ?connection .
                   }
-                  Graph <$defaultPrefix"""+s"""graphSpecification>
+                  Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
                   {
                       ?connection drivetrain:subject ?class .
                       Minus
@@ -429,11 +434,11 @@ object GraphModelValidator extends ProjectwideGlobals
               }
               UNION
               {
-                  Graph <$defaultPrefix"""+s"""instructionSet>
+                  Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                   {
                       ?process drivetrain:hasOutput ?connection .
                   }
-                  Graph <$defaultPrefix"""+s"""graphSpecification>
+                  Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
                   {
                       ?connection drivetrain:object ?class .
                       Minus
@@ -455,7 +460,7 @@ object GraphModelValidator extends ProjectwideGlobals
           }
           """
         //logger.info(getSubjectAndObjectOutputs)
-        update.querySparqlAndUnpackTuple(gmCxn, getSubjectAndObjectOutputs, "classWithContext")
+        SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, getSubjectAndObjectOutputs, "classWithContext")
     }
     
     def findQueuedAndUnrequiredRecipes(processList: ArrayBuffer[String], processListAsString: String)
@@ -476,19 +481,19 @@ object GraphModelValidator extends ProjectwideGlobals
         val getOutputsOfAllProcesses = s"""
           Select ?recipe Where
           {
-              Graph <$defaultPrefix"""+s"""graphSpecification>
+              Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
               {
-                  Values ?CONNECTIONRECIPETYPE {drivetrain:InstanceToTermRecipe 
+                  Values ?${Globals.CONNECTIONRECIPETYPE} {drivetrain:InstanceToTermRecipe 
                                             drivetrain:InstanceToInstanceRecipe
                                             drivetrain:InstanceToLiteralRecipe
                                             drivetrain:TermToInstanceRecipe
                                             drivetrain:TermToTermRecipe
                                             drivetrain:TermToLiteralRecipe}
-                  ?recipe a ?CONNECTIONRECIPETYPE .
+                  ?recipe a ?${Globals.CONNECTIONRECIPETYPE} .
               }
               Minus
               {
-                  Graph <$defaultPrefix"""+s"""instructionSet>
+                  Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                   {
                       ?process drivetrain:hasOutput ?recipe .
                       $filterMultipleProcesses
@@ -499,7 +504,201 @@ object GraphModelValidator extends ProjectwideGlobals
           """
         //println(getOutputsOfAllProcesses)
         var firstRes = ""
-        val res = update.querySparqlAndUnpackTuple(gmCxn, getOutputsOfAllProcesses, "recipe")
-        for (recipe <- res) logger.warn(s"Connection recipe $recipe in the Graph Specification is not the output of a queued process in the Instruction Set, but it is not a required recipe.")
+        val res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, getOutputsOfAllProcesses, "recipe")
+        for (recipe <- res) logger.warn(s"Connection recipe $recipe in the Graph Specification is not the output of a queued process in the Instruction Set. It is optional to implement; this is just a warning.")
+    }
+    
+    def validateManyToOneClasses(results: HashSet[ConnectionRecipe])
+    {
+        for (recipe <- results)
+        {
+            for (oneToOneConn <- recipe.subject.oneToOneConnections)
+            {
+                for (oneToManyConn <- oneToOneConn.oneToManyConnections) 
+                {
+                    val element1 = oneToManyConn.value
+                    val element2 = oneToOneConn.value
+                    val element3 = recipe.subject.value
+                    assert(!recipe.subject.oneToOneConnections.contains(oneToManyConn), s"Inconsistent cardinality found involving elements $element1, $element2, and $element3")
+                }
+                for (manyToOneConn <- oneToOneConn.manyToOneConnections) 
+                {
+                    val element1 = manyToOneConn.value
+                    val element2 = oneToOneConn.value
+                    val element3 = recipe.subject.value
+                    assert(!recipe.subject.oneToOneConnections.contains(manyToOneConn), s"Inconsistent cardinality found involving elements $element1 and $element2, and $element3")
+                }
+            }
+            for (oneToOneConn <- recipe.crObject.oneToOneConnections)
+            {
+                for (oneToManyConn <- oneToOneConn.oneToManyConnections) 
+                {
+                    val element1 = oneToManyConn.value
+                    val element2 = oneToOneConn.value
+                    val element3 = recipe.crObject.value
+                    assert(!recipe.crObject.oneToOneConnections.contains(oneToManyConn), s"Inconsistent cardinality found involving elements $element1 and $element2, and $element3")
+                }
+                for (manyToOneConn <- oneToOneConn.manyToOneConnections) 
+                {
+                    val element1 = manyToOneConn.value
+                    val element2 = oneToOneConn.value
+                    val element3 = recipe.crObject.value
+                    assert(!recipe.crObject.oneToOneConnections.contains(manyToOneConn), s"Inconsistent cardinality found involving elements $element1 and $element2, and $element3")
+                }
+            }
+        }
+    }
+    
+    def validateSingletonClasses(results: HashSet[ConnectionRecipe])
+    {
+        for (recipe <- results)
+        {
+            for (conn <- recipe.subject.oneToOneConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a 1-1 connection with another element")
+            }
+            for (conn <- recipe.crObject.oneToOneConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a 1-1 connection with another element")
+            }
+            for (conn <- recipe.subject.oneToManyConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a 1-many connection with another element")
+            }
+            for (conn <- recipe.crObject.oneToManyConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a 1-many connection with another element")
+            }
+            for (conn <- recipe.subject.manyToOneConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a many-1 connection with another element")
+            }
+            for (conn <- recipe.crObject.manyToOneConnections) if (conn.isInstanceOf[Instance]) 
+            {
+                val connName = conn.value
+                assert(!conn.asInstanceOf[Instance].isSingleton.get && !conn.asInstanceOf[Instance].isSuperSingleton.get, s"Instance $connName cannot be a Singleton and have a many-1 connection with another element")
+            }
+        }
+    }
+    
+    def validateConnectionRecipeTypeDeclarations(process: String)
+    {
+        // check all recipes with instances as subjects
+        val instanceSubjectCheck = 
+          """select distinct ?subject where
+          {
+            Values ?instanceSubjectRecipe {drivetrain:InstanceToInstanceRecipe drivetrain:InstanceToTermRecipe drivetrain:InstanceToLiteralRecipe}
+            ?recipe a ?instanceSubjectRecipe .
+            ?recipe drivetrain:subject ?subject .
+            Minus
+            {
+               ?subject a ?subjectType .
+               Values ?subjectType {owl:Class drivetrain:UntypedInstance}
+            }
+        }"""
+        var res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, instanceSubjectCheck, "subject")
+        var err = ""
+        for (subj <- res) err += subj + " "
+        assert (err == "", s"The following subjects were declared as instances by at least one recipe, but were not typed as instances: $err")
+        
+        // check all recipes with instances as objects
+        val instanceObjectCheck = 
+          """select distinct ?object where
+          {
+            Values ?instanceObjectRecipe {drivetrain:InstanceToInstanceRecipe drivetrain:TermToInstanceRecipe}
+            ?recipe a ?instanceObjectRecipe .
+            ?recipe drivetrain:object ?object .
+            Minus
+            {
+               ?object a ?objectType .
+               Values ?objectType {owl:Class drivetrain:UntypedInstance}
+            }
+        }"""
+        res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, instanceObjectCheck, "object")
+        err = ""
+        for (obj <- res) err += obj + " "
+        assert (err == "", s"The following objects were declared as instances by at least one recipe, but were not typed as instances: $err")
+        
+        // check all recipes with literals as objects
+        val literalObjectCheck = 
+          """select distinct ?object where
+          {
+            Values ?literalObjectRecipe {drivetrain:InstanceToLiteralRecipe drivetrain:TermToLiteralRecipe}
+            ?recipe a ?literalObjectRecipe .
+            ?recipe drivetrain:object ?object .
+        		filter(!isLiteral(?object))
+        		Minus
+                {
+    				    ?object a ?objectType .
+            		?objectType rdfs:subClassOf* drivetrain:LiteralResourceList .
+                }
+        }"""
+        res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, literalObjectCheck, "object")
+        err = ""
+        for (obj <- res) err += obj + " "
+        assert (err == "", s"The following objects were declared as literals by at least one recipe, but were not typed as literals: $err")
+        
+        // check all recipes with terms as subjects
+        val termSubjectCheck = 
+          """select distinct ?subject where
+          {
+            Values ?termSubjectRecipe {drivetrain:TermToInstanceRecipe drivetrain:TermToTermRecipe drivetrain:TermToLiteralRecipe}
+            ?recipe a ?termSubjectRecipe .
+            ?recipe drivetrain:subject ?subject .
+        		?subject a ?subjectType .
+        		?subjectType rdfs:subClassOf* drivetrain:LiteralResourceList .
+        }"""
+        res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, termSubjectCheck, "subject")
+        err = ""
+        for (subj <- res) err += subj + " "
+        assert (err == "", s"The following subjects were declared as terms by at least one recipe, but were typed as literals: $err")
+        
+        // check all recipes with terms as objects
+        val termObjectCheck = 
+          """select distinct ?object where
+          {
+            Values ?termObjectRecipe {drivetrain:InstanceToTermRecipe drivetrain:TermToTermRecipe}
+            ?recipe a ?termObjectRecipe .
+            ?recipe drivetrain:object ?object .
+        		?object a ?objectType .
+        		?objectType rdfs:subClassOf* drivetrain:LiteralResourceList .
+        }"""
+        res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, termObjectCheck, "object")
+        err = ""
+        for (obj <- res) err += obj + " "
+        assert (err == "", s"The following objects were declared as terms by at least one recipe, but were typed as literals: $err")
+        
+        // check all recipes with terms as subjects
+        val termLiteralSubjectCheck = 
+          """select distinct ?subject where
+          {
+            Values ?termSubjectRecipe {drivetrain:TermToInstanceRecipe drivetrain:TermToTermRecipe drivetrain:TermToLiteralRecipe}
+            ?recipe a ?termSubjectRecipe .
+            ?recipe drivetrain:subject ?subject .
+        		filter(isLiteral(?subject))
+        }"""
+        res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, termLiteralSubjectCheck, "subject")
+        err = ""
+        for (subj <- res) err += subj + " "
+        assert (err == "", s"The following subjects were declared as terms by at least one recipe, but were typed as literals: $err")
+        
+        // check all recipes with terms as objects
+        val termLiteralObjectCheck = 
+          """select distinct ?object where
+          {
+            Values ?termObjectRecipe {drivetrain:InstanceToTermRecipe drivetrain:TermToTermRecipe}
+            ?recipe a ?termObjectRecipe .
+            ?recipe drivetrain:object ?object .
+        		filter(isLiteral(?object))
+        }"""
+        res = SparqlUpdater.querySparqlAndUnpackTuple(Globals.gmCxn, termLiteralObjectCheck, "object")
+        err = ""
+        for (obj <- res) err += obj + " "
+        assert (err == "", s"The following objects were declared as terms by at least one recipe, but were typed as literals: $err")
     }
 }
