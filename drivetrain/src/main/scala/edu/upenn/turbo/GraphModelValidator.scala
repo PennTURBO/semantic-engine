@@ -228,10 +228,6 @@ class GraphModelValidator
                   ?recipe a ?CONNECTIONRECIPETYPE .
                   ?recipe drivetrain:subject ?subject .
                   ?recipe drivetrain:predicate ?predicate .
-                  minus
-                  {
-                      ?subject a drivetrain:ClassResourceList .
-                  }
               }
               graph <${Globals.defaultPrefix}"""+s"""acornOntology>
               {
@@ -245,6 +241,11 @@ class GraphModelValidator
                   {
                       ?subject rdfs:subClassOf* ?domain .
                   }
+              }
+              Minus
+              {
+                  ?subject a ?resourceList .
+                  ?resourceList rdfs:subClassOf* drivetrain:ResourceList .
               }
           }
           """

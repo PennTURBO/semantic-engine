@@ -121,6 +121,7 @@ object DrivetrainDriver {
                       }
                       
                       graphModelValidator.validateGraphSpecificationAgainstOntology()
+                      logger.info("Validation checks passed")
                   }
                   else logger.info("Unrecognized command line argument " + args(0))
               }
