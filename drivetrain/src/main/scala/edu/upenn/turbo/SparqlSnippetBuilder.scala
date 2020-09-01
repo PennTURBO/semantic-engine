@@ -2,12 +2,15 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashSet
+import org.slf4j.LoggerFactory
 
-class SparqlSnippetBuilder extends ProjectwideGlobals
+class SparqlSnippetBuilder
 {
+    val logger = LoggerFactory.getLogger(getClass)
+    
     def buildSnippet(recipe: ConnectionRecipe): String =
     {
-        helper.validateURI(recipe.subject.value)
+        Utilities.validateURI(recipe.subject.value)
         val subject = buildSubject(recipe)
         val predicate = buildPredicate(recipe)
         val crObject = buildObject(recipe)
@@ -18,7 +21,7 @@ class SparqlSnippetBuilder extends ProjectwideGlobals
     {
         if (recipe.subject.isInstanceOf[Term]) assert(recipe.subject.asInstanceOf[Term].isResourceList != None, "isResourceList property for Term " + recipe.subject.value + " cannot be None")
         var subject = "<" + recipe.subject.value + ">"
-        if (recipe.subject.isInstanceOf[Instance] || (recipe.subject.isInstanceOf[Term] && recipe.subject.asInstanceOf[Term].isResourceList.get)) subject = helper.convertTypeToSparqlVariable(recipe.subject.value, true)
+        if (recipe.subject.isInstanceOf[Instance] || (recipe.subject.isInstanceOf[Term] && recipe.subject.asInstanceOf[Term].isResourceList.get)) subject = Utilities.convertTypeToSparqlVariable(recipe.subject.value, true)
         subject
     }
 
@@ -33,7 +36,7 @@ class SparqlSnippetBuilder extends ProjectwideGlobals
             if (!allowedOperators.contains(formattedSuffixOperator)) formattedSuffixOperator = ""
             if (predicate == "a" || predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") predicate = "rdf:type" + formattedSuffixOperator
         }
-            helper.validateURI(predicate)
+            Utilities.validateURI(predicate)
             "<" + predicate + ">" + formattedSuffixOperator
     }
     
@@ -43,13 +46,13 @@ class SparqlSnippetBuilder extends ProjectwideGlobals
         if (recipe.crObject.isInstanceOf[Literal])
         {
             if (!recipe.crObject.asInstanceOf[Literal].isResourceList.get) crObject = recipe.crObject.value
-            else crObject = helper.convertTypeToSparqlVariable(recipe.crObject.value, true)
+            else crObject = Utilities.convertTypeToSparqlVariable(recipe.crObject.value, true)
         }
         else
         {
             if (recipe.crObject.isInstanceOf[Term]) assert(recipe.crObject.asInstanceOf[Term].isResourceList != None, "isResourceList property for Term " + recipe.crObject.value + " cannot be None")
             crObject = "<" + recipe.crObject.value + ">"
-            if (recipe.crObject.isInstanceOf[Instance] || (recipe.crObject.isInstanceOf[Term] && recipe.crObject.asInstanceOf[Term].isResourceList.get)) crObject = helper.convertTypeToSparqlVariable(recipe.crObject.value, true) 
+            if (recipe.crObject.isInstanceOf[Instance] || (recipe.crObject.isInstanceOf[Term] && recipe.crObject.asInstanceOf[Term].isResourceList.get)) crObject = Utilities.convertTypeToSparqlVariable(recipe.crObject.value, true) 
         }
         crObject
     }

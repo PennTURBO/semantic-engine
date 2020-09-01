@@ -4,7 +4,7 @@ import scala.collection.mutable.HashSet
 import scala.collection.mutable.ArrayBuffer
 
 // anything referenced in an Acorn file as a subject or an object
-trait GraphPatternElement extends ProjectwideGlobals
+trait GraphPatternElement
 {
     var value: String = null
     
@@ -27,7 +27,7 @@ class Instance(newValue: String) extends GraphPatternElement
     
     def buildInstanceType(instance: Instance)
     {
-        instance.sparqlTypeString = helper.convertTypeToSparqlVariable(instance.value, true) + " rdf:type <" + instance.instanceType + "> .\n"
+        instance.sparqlTypeString = Utilities.convertTypeToSparqlVariable(instance.value, true) + " rdf:type <" + instance.instanceType + "> .\n"
     }
     
     var instanceType: String = null
@@ -49,7 +49,7 @@ class Term(newValue: String) extends GraphPatternElement
     {
         if (ranges != None) 
         {
-            val asVariable = helper.convertTypeToSparqlVariable(value, true)
+            val asVariable = Utilities.convertTypeToSparqlVariable(value, true)
             var res = s"VALUES $asVariable {"
             for (item <- ranges.get) res += "<" + item + ">"
             res += "}\n"

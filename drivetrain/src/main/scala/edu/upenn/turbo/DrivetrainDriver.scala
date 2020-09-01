@@ -7,15 +7,18 @@ import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
 import org.eclipse.rdf4j.rio.RDFFormat
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
-
+import org.slf4j.LoggerFactory
 import java.io.BufferedReader
 import java.io.FileReader
 
-object DrivetrainDriver extends ProjectwideGlobals {
+object DrivetrainDriver {
+  
+  val logger = LoggerFactory.getLogger(getClass)
   
   def main(args: Array[String]): Unit =
   {
       val globalUUID = UUID.randomUUID().toString().replaceAll("-", "")
+      var graphDBMaterials: TurboGraphConnection = null
       if (args.size == 0) logger.info("At least one command line argument required to run the drivetrain application.")
       else
       {
@@ -28,32 +31,32 @@ object DrivetrainDriver extends ProjectwideGlobals {
               {   
                   graphDBMaterials = ConnectToGraphDB.initializeGraph()
               
-                  gmCxn = graphDBMaterials.getGmConnection()
-                  gmRepoManager = graphDBMaterials.getGmRepoManager()
-                  gmRepository = graphDBMaterials.getGmRepository() 
+                  Globals.gmCxn = graphDBMaterials.getGmConnection()
+                  Globals.gmRepoManager = graphDBMaterials.getGmRepoManager()
+                  Globals.gmRepository = graphDBMaterials.getGmRepository() 
               
-                  cxn = graphDBMaterials.getConnection()
-                  repoManager = graphDBMaterials.getRepoManager()
-                  repository = graphDBMaterials.getRepository()
+                  Globals.cxn = graphDBMaterials.getConnection()
+                  Globals.repoManager = graphDBMaterials.getRepoManager()
+                  Globals.repository = graphDBMaterials.getRepository()
                   
-                  val graphModelValidator = new GraphModelValidator(gmCxn)
+                  val graphModelValidator = new GraphModelValidator()
                   
-                  if (cxn == null || gmCxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
+                  if (Globals.cxn == null || Globals.gmCxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
                   // utility method that loads a RDF file into the production repository - format is hardcoded as the 3rd argument
-                  else if (args(0) == "loadRepoFromFile") helper.loadDataFromFile(cxn, args(1), RDFFormat.RDFXML)
+                  else if (args(0) == "loadRepoFromFile") Utilities.loadDataFromFile(Globals.cxn, args(1), RDFFormat.RDFXML)
                   // utility method that loads triples from a URI into the production repository - format is hardcoded as the value of the 3rd argument
-                  else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(cxn, args(1), args(2), RDFFormat.RDFXML)
+                  else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(Globals.cxn, args(1), args(2), RDFFormat.RDFXML)
                   // loads application ontology specified in properties file into production repository
-                  else if (args(0) == "loadOntologyToProductionRepo") OntologyLoader.addOntologyFromUrl(cxn)
+                  else if (args(0) == "loadOntologyToProductionRepo") OntologyLoader.addOntologyFromUrl(Globals.cxn)
                   // loads application ontology specified in properties file into model repository
-                  else if (args(0) == "loadOntologyToModelRepo") OntologyLoader.addOntologyFromUrl(gmCxn)
+                  else if (args(0) == "loadOntologyToModelRepo") OntologyLoader.addOntologyFromUrl(Globals.cxn)
                   else if (args(0) == "updateModel") updateModel(graphDBMaterials)
                   // this means run all update specifications in order, not run all possible commands
                   else if (args(0) == "allUpdates")
                   {
                       updateModel(graphDBMaterials)
-                      clearProductionNamedGraphs(cxn)
-                      runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
+                      clearProductionNamedGraphs()
+                      runAllDrivetrainProcesses(globalUUID)
                   }
                   // prints out the query for a given update spec...does not run anything against the DB
                   else if (args(0) == "printQueryForUpdate")
@@ -63,9 +66,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       {
                           updateModel(graphDBMaterials)
                           RunDrivetrainProcess.setGlobalUUID(globalUUID)
-                          RunDrivetrainProcess.setConnections(gmCxn, cxn)
                           graphModelValidator.checkAcornFilesForMissingTypes()
-                          if (validateAgainstOntology) graphModelValidator.validateGraphSpecificationAgainstOntology()
+                          if (Globals.validateAgainstOntology) graphModelValidator.validateGraphSpecificationAgainstOntology()
                           val query = RunDrivetrainProcess.createPatternMatchQuery(args(1))
                           if (query != null)
                           {
@@ -76,21 +78,21 @@ object DrivetrainDriver extends ProjectwideGlobals {
                   }
                   else if (args(0) == "singleUpdate")
                   {
-                      if (args.size < 2) logger.info("Must provide a process URI after runSingleUpdate declaration")
+                      if (args.size < 2) logger.info("Must provide a process URI after run singleUpdate declaration")
                       else
                       {
-                          RunDrivetrainProcess.setConnections(gmCxn, cxn)
-                          graphModelValidator.validateProcessSpecification(helper.getProcessNameAsUri(args(0)))
+                          val processAsURI = Utilities.getProcessNameAsUri(args(0))
+                          graphModelValidator.validateProcessSpecification(processAsURI)
                           
                           updateModel(graphDBMaterials)
-                          clearProductionNamedGraphs(cxn)
+                          clearProductionNamedGraphs()
                           
                           logger.info("Note that running individual Drivetrain Updates is recommended for testing only. To run the full stack, use 'run allUpdates'")
                           RunDrivetrainProcess.setGlobalUUID(globalUUID)
                           graphModelValidator.checkAcornFilesForMissingTypes()
-                          if (validateAgainstOntology) graphModelValidator.validateGraphSpecificationAgainstOntology()
-                          val thisProcess = helper.getProcessNameAsUri(args(0))
-                          RunDrivetrainProcess.runProcess(thisProcess)    
+                          if (Globals.validateAgainstOntology) graphModelValidator.validateGraphSpecificationAgainstOntology()
+                          val thisProcess = 
+                          RunDrivetrainProcess.runProcess(processAsURI)    
                       }
                   }
                   else if (args(0) == "validateModel")
@@ -98,12 +100,11 @@ object DrivetrainDriver extends ProjectwideGlobals {
                       updateModel(graphDBMaterials)
                       
                       graphModelValidator.checkAcornFilesForMissingTypes()
-                      graphModelValidator.validateGraphSpecificationAgainstOntology()
                       
-                      val processes = helper.getAllProcessesInOrder(gmCxn)
+                      val processes = Utilities.getAllProcessesInOrder(Globals.gmCxn)
                       graphModelValidator.validateProcessesAgainstGraphSpecification(processes)
                       
-                      val modelReader = new GraphModelReader(gmCxn)
+                      val modelReader = new GraphModelReader()
                       
                       for (process <- processes)
                       {
@@ -113,11 +114,13 @@ object DrivetrainDriver extends ProjectwideGlobals {
                           val inputs = modelReader.getInputs(process)
                           val outputs = modelReader.getOutputs(process)
                           val removals = modelReader.getRemovals(process)
-                          val modelInterpreter = new GraphModelInterpreter(gmCxn)
+                          val modelInterpreter = new GraphModelInterpreter()
                           
                           val (inputRecipeList, outputRecipeList, removalsRecipeList) = modelInterpreter.handleAcornData(inputs, outputs, removals)
                           graphModelValidator.validateAcornResults(inputRecipeList, outputRecipeList)
                       }
+                      
+                      graphModelValidator.validateGraphSpecificationAgainstOntology()
                   }
                   else logger.info("Unrecognized command line argument " + args(0))
               }
@@ -135,7 +138,7 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
   }
   
-  def updateModel(graphConnect: TurboGraphConnection, instructionSetFile: String = instructionSetFile, graphSpecFile: String = graphSpecificationFile, acornOntology: String = acornOntologyFile)
+  def updateModel(graphConnect: TurboGraphConnection, instructionSetFile: String = Globals.instructionSetFile, graphSpecFile: String = Globals.graphSpecificationFile, acornOntology: String = Globals.acornOntologyFile)
   {
       try
       {
@@ -152,8 +155,8 @@ object DrivetrainDriver extends ProjectwideGlobals {
   def updateModel(gmCxn: RepositoryConnection, instructionSetFile: String, graphSpecFile: String, acornOntology: String)
   {
       logger.info("Updating transformation instructions using file " + instructionSetFile)
-      val graph = s"$defaultPrefix" + "instructionSet"
-      helper.deleteAllTriplesInDatabase(gmCxn)
+      val graph = Globals.defaultPrefix + "instructionSet"
+      Utilities.deleteAllTriplesInDatabase(gmCxn)
       var query = s"INSERT DATA { Graph <$graph> {"
       var prefixes = ""
       var br: scala.io.BufferedSource = null
@@ -177,10 +180,10 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
       query += "}}"
       //logger.info(query)
-      update.updateSparql(gmCxn, query)
+      SparqlUpdater.updateSparql(gmCxn, query)
       
       logger.info("Updating graph specification using file " + graphSpecFile)
-      val graphSpecGraph = s"$defaultPrefix" + "graphSpecification"
+      val graphSpecGraph = Globals.defaultPrefix + "graphSpecification"
       query = s"INSERT DATA { Graph <$graphSpecGraph> {"
       var graphSpecBr: scala.io.BufferedSource = null
       if (graphSpecFile == "testing_graph_specification.gs") graphSpecBr = io.Source.fromFile(s"src//test//scala//edu//upenn//turbo//config_for_testing//testing_graph_specification.gs")
@@ -203,12 +206,12 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
       query += "}}"
       //logger.info(query)
-      update.updateSparql(gmCxn, query)
+      SparqlUpdater.updateSparql(gmCxn, query)
       
-      logger.info("Updating Acorn ontology using file " + acornOntologyFile)
-      val acornOntologyGraph = s"$defaultPrefix" + "acornOntology"
+      logger.info("Updating Acorn ontology using file " + acornOntology)
+      val acornOntologyGraph = Globals.defaultPrefix + "acornOntology"
       query = s"INSERT DATA { Graph <$acornOntologyGraph> {"
-      val acornBr = io.Source.fromFile(s"ontologies//$acornOntologyFile")
+      val acornBr = io.Source.fromFile(s"ontologies//"+Globals.acornOntologyFile)
       for (line <- acornBr.getLines())
       {
           if (line.size > 0)
@@ -227,36 +230,36 @@ object DrivetrainDriver extends ProjectwideGlobals {
       }
       query += "}}"
       //logger.info(query)
-      update.updateSparql(gmCxn, query)
+      SparqlUpdater.updateSparql(gmCxn, query)
       
       br.close()
   }
   
-  def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String)
+  def runAllDrivetrainProcesses(globalUUID: String)
   {
       //load the TURBO ontology
-      OntologyLoader.addOntologyFromUrl(cxn)
-      RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn, globalUUID)
-      if (reinferRepo)
+      OntologyLoader.addOntologyFromUrl(Globals.cxn)
+      RunDrivetrainProcess.runAllDrivetrainProcesses(globalUUID)
+      if (Globals.reinferRepo)
       {
           logger.info("setting reasoning to rdf plus")
-          ReasoningManager.setReasoningToRdfPlus(cxn)
-          ReasoningManager.setReasoningToNone(cxn) 
+          ReasoningManager.setReasoningToRdfPlus(Globals.cxn)
+          ReasoningManager.setReasoningToNone(Globals.cxn) 
       }
-      if (loadAdditionalOntologies)
+      if (Globals.loadAdditionalOntologies)
       {
           logger.info("loading extra ontologies")
-          OntologyLoader.loadRelevantOntologies(cxn)
+          OntologyLoader.loadRelevantOntologies(Globals.cxn)
       }
   }
   
-  def clearProductionNamedGraphs(cxn: RepositoryConnection)
+  def clearProductionNamedGraphs()
   {
-      if (clearGraphsAtStart)
+      if (Globals.clearGraphsAtStart)
       {
           logger.info("Clearing production named graphs...")
-          helper.clearNamedGraph(cxn, processNamedGraph)
-          helper.clearNamedGraph(cxn, expandedNamedGraph)
+          Utilities.clearNamedGraph(Globals.cxn, Globals.processNamedGraph)
+          Utilities.clearNamedGraph(Globals.cxn, Globals.expandedNamedGraph)
       }
   }
   
@@ -266,26 +269,25 @@ object DrivetrainDriver extends ProjectwideGlobals {
       val graphDbTestConnectionDetails = ConnectToGraphDB.getTestRepositoryConnection()
       val testCxn = graphDbTestConnectionDetails.getConnection()
       val gmCxn = graphDbTestConnectionDetails.getGmConnection()
-      val graphModelValidator = new GraphModelValidator(gmCxn)
+      val graphModelValidator = new GraphModelValidator()
       
       try
       {
-          RunDrivetrainProcess.setConnections(gmCxn, testCxn)
           RunDrivetrainProcess.setMultithreading(false)
           
           var buildArray = new ArrayBuffer[String]
           if (!(args.size > 1)) 
           {
-              logger.info(s"No URI found as argument, all update specifications in instruction set $instructionSetFile will be processed.")
-              buildArray = helper.getAllProcessInInstructionSet(gmCxn)
+              logger.info(s"No URI found as argument, all update specifications in instruction set " + Globals.instructionSetFile + " will be processed.")
+              buildArray = Utilities.getAllProcessInInstructionSet(gmCxn)
           }
           else buildArray = ArrayBuffer(args(1))
           val testBuilder = new TestBuilder()
           
           for (process <- buildArray)
           {
-              helper.deleteAllTriplesInDatabase(testCxn)
-              val processAsURI = helper.getProcessNameAsUri(process)
+              Utilities.deleteAllTriplesInDatabase(testCxn)
+              val processAsURI = Utilities.getProcessNameAsUri(process)
               graphModelValidator.validateProcessSpecification(processAsURI)
               logger.info(s"Building test for process $processAsURI")
               testBuilder.buildTest(testCxn, gmCxn, processAsURI)  
@@ -306,20 +308,19 @@ object DrivetrainDriver extends ProjectwideGlobals {
       
       try
       {
-          RunDrivetrainProcess.setConnections(gmCxn, testCxn)
           RunDrivetrainProcess.setMultithreading(false)
           
           var buildArray = new ArrayBuffer[String]
           val nonProcessArgs = Array("debug", "--min")
           if (nonProcessArgs.contains(args(args.size-1)))
           {
-              logger.info(s"No URI found as argument, all update specifications in instruction set $instructionSetFile will be processed.")
-              buildArray = helper.getAllProcessesInOrder(gmCxn)
+              logger.info(s"No URI found as argument, all update specifications in instruction set " +Globals.instructionSetFile + " will be processed.")
+              buildArray = Utilities.getAllProcessesInOrder(gmCxn)
           }
           else buildArray = ArrayBuffer(args(args.size-1))
           val testBuilder = new TestBuilder()
           
-          helper.deleteAllTriplesInDatabase(testCxn)
+          Utilities.deleteAllTriplesInDatabase(testCxn)
           if (args.size > 1 && args(1) == "--min") testBuilder.postMinTripleOutput(testCxn, gmCxn, buildArray)
           else testBuilder.postMaxTripleOutput(testCxn, gmCxn, buildArray)
           logger.info("Your requested output data is available in the testing repository.")

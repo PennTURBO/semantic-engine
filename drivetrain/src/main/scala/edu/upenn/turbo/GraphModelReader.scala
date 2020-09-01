@@ -4,15 +4,16 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.HashMap
 import org.eclipse.rdf4j.repository.RepositoryConnection
+import org.slf4j.LoggerFactory
 
-class GraphModelReader(cxn: RepositoryConnection) extends ProjectwideGlobals
+class GraphModelReader
 {   
-    this.gmCxn = cxn
+    val logger = LoggerFactory.getLogger(getClass)
     
     def getInputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
     {
        var variablesToSelect = ""
-       for (key <- requiredInputKeysList) variablesToSelect += "?" + key + " "
+       for (key <- Globals.requiredInputKeysList) variablesToSelect += "?" + key + " "
        
        val query = s"""
          
@@ -20,102 +21,102 @@ class GraphModelReader(cxn: RepositoryConnection) extends ProjectwideGlobals
          
          Where
          {
-              Values ?$INPUTTYPE {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
-              <$process> ?$INPUTTYPE ?$CONNECTIONNAME .
-              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
-              <$process> drivetrain:inputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
-              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
+              Values ?${Globals.INPUTTYPE} {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
+              <$process> ?${Globals.INPUTTYPE} ?${Globals.CONNECTIONNAME} .
+              ?${Globals.CONNECTIONNAME} a ?${Globals.CONNECTIONRECIPETYPE} .
+              ?${Globals.CONNECTIONRECIPETYPE} rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
+              <$process> drivetrain:inputNamedGraph ?${Globals.GRAPH} .
+              ?${Globals.CONNECTIONNAME} drivetrain:subject ?${Globals.SUBJECT} .
+              ?${Globals.CONNECTIONNAME} drivetrain:predicate ?${Globals.PREDICATE} .
+              ?${Globals.CONNECTIONNAME} drivetrain:object ?${Globals.OBJECT} .
+              ?${Globals.CONNECTIONNAME} drivetrain:cardinality ?${Globals.MULTIPLICITY} .
               
               Optional
               {
-                  ?$CONNECTIONNAME drivetrain:subjectUsesContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECT drivetrain:hasPossibleContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECTCONTEXT a drivetrain:TurboGraphContext .
+                  ?${Globals.CONNECTIONNAME} drivetrain:subjectUsesContext ?${Globals.SUBJECTCONTEXT} .
+                  ?${Globals.SUBJECT} drivetrain:hasPossibleContext ?${Globals.SUBJECTCONTEXT} .
+                  ?${Globals.SUBJECTCONTEXT} a drivetrain:TurboGraphContext .
               }
               Optional
               {
-                  ?$CONNECTIONNAME drivetrain:objectUsesContext ?$OBJECTCONTEXT .
-                  ?$OBJECT drivetrain:hasPossibleContext ?$OBJECTCONTEXT .
-                  ?$OBJECTCONTEXT a drivetrain:TurboGraphContext .
+                  ?${Globals.CONNECTIONNAME} drivetrain:objectUsesContext ?${Globals.OBJECTCONTEXT} .
+                  ?${Globals.OBJECT} drivetrain:hasPossibleContext ?${Globals.OBJECTCONTEXT} .
+                  ?${Globals.OBJECTCONTEXT} a drivetrain:TurboGraphContext .
               }
               Optional
               {
-                  ?$CONNECTIONNAME drivetrain:partOf ?$OPTIONALGROUP .
-                  ?$OPTIONALGROUP a drivetrain:TurboGraphOptionalGroup .
-                  <$process> drivetrain:buildsOptionalGroup ?$OPTIONALGROUP .
+                  ?${Globals.CONNECTIONNAME} drivetrain:partOf ?${Globals.OPTIONALGROUP} .
+                  ?${Globals.OPTIONALGROUP} a drivetrain:TurboGraphOptionalGroup .
+                  <$process> drivetrain:buildsOptionalGroup ?${Globals.OPTIONALGROUP} .
               }
               Optional
               {
-                  ?$CONNECTIONNAME drivetrain:partOf ?$MINUSGROUP .
-                  ?$MINUSGROUP a drivetrain:TurboGraphMinusGroup .
-                  <$process> drivetrain:buildsMinusGroup ?$MINUSGROUP .
+                  ?${Globals.CONNECTIONNAME} drivetrain:partOf ?${Globals.MINUSGROUP} .
+                  ?${Globals.MINUSGROUP} a drivetrain:TurboGraphMinusGroup .
+                  <$process> drivetrain:buildsMinusGroup ?${Globals.MINUSGROUP} .
               }
               Optional
               {
                   # this feature is a little sketcky. What if the creatingProcess is not queued? What if it is created by multiple processes?
-                  ?creatingProcess drivetrain:hasOutput ?$CONNECTIONNAME .
-                  ?creatingProcess drivetrain:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
+                  ?creatingProcess drivetrain:hasOutput ?${Globals.CONNECTIONNAME} .
+                  ?creatingProcess drivetrain:outputNamedGraph ?${Globals.GRAPHOFCREATINGPROCESS} .
               }
               Optional
               {
-                  ?$CONNECTIONNAME drivetrain:referencedInGraph ?$GRAPHOFORIGIN .
+                  ?${Globals.CONNECTIONNAME} drivetrain:referencedInGraph ?${Globals.GRAPHOFORIGIN} .
               }
               Optional
               {
-                  ?$OBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$OBJECTADESCRIBER)
+                  ?${Globals.OBJECT} a drivetrain:ClassResourceList .
+                  BIND (true AS ?${Globals.OBJECTADESCRIBER})
               }
               Optional
               {
-                  ?$SUBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$SUBJECTADESCRIBER)
+                  ?${Globals.SUBJECT} a drivetrain:ClassResourceList .
+                  BIND (true AS ?${Globals.SUBJECTADESCRIBER})
               }
               Optional
               {
-                  ?$SUBJECT a drivetrain:UntypedInstance .
-                  BIND (true as ?$SUBJECTUNTYPED)
+                  ?${Globals.SUBJECT} a drivetrain:UntypedInstance .
+                  BIND (true as ?${Globals.SUBJECTUNTYPED})
               }
               Optional
               {
-                  ?$OBJECT a drivetrain:UntypedInstance .
-                  BIND (true as ?$OBJECTUNTYPED)
+                  ?${Globals.OBJECT} a drivetrain:UntypedInstance .
+                  BIND (true as ?${Globals.OBJECTUNTYPED})
               }
               Optional
               {
-                  ?$CONNECTIONNAME drivetrain:mustExecuteIf ?$REQUIREMENT .
+                  ?${Globals.CONNECTIONNAME} drivetrain:mustExecuteIf ?${Globals.REQUIREMENT} .
               }
               Optional
               {
-                  ?$CONNECTIONNAME drivetrain:predicateSuffix ?suffix .
+                  ?${Globals.CONNECTIONNAME} drivetrain:predicateSuffix ?suffix .
                   ?suffix a drivetrain:PredicateSuffixSymbol .
-                  ?suffix drivetrain:usesSparqlOperator ?$SUFFIXOPERATOR .
+                  ?suffix drivetrain:usesSparqlOperator ?${Globals.SUFFIXOPERATOR} .
               }
               Optional
               {
-                  ?$OBJECT a ?$GRAPHLITERALTYPE .
-                  ?$GRAPHLITERALTYPE rdfs:subClassOf* drivetrain:LiteralResourceList .
+                  ?${Globals.OBJECT} a ?${Globals.GRAPHLITERALTYPE} .
+                  ?${Globals.GRAPHLITERALTYPE} rdfs:subClassOf* drivetrain:LiteralResourceList .
                   minus
                   {
                       ?OBJECT a ?GRAPHLITERALTYPE2 .
                       ?GRAPHLITERALTYPE2 rdfs:subClassOf+ ?GRAPHLITERALTYPE .
                   }
               }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
+              BIND (isLiteral(?${Globals.OBJECT}) as ?${Globals.OBJECTALITERALVALUE})
          }
          
          """
        //println(query)          
-       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
+       SparqlUpdater.querySparqlAndUnpackToListOfMap(Globals.gmCxn, query)
     }
 
     def getRemovals(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
     {
        var variablesToSelect = ""
-       for (key <- requiredOutputKeysList) variablesToSelect += "?" + key + " "
+       for (key <- Globals.requiredOutputKeysList) variablesToSelect += "?" + key + " "
        
        val query = s"""
          
@@ -123,128 +124,128 @@ class GraphModelReader(cxn: RepositoryConnection) extends ProjectwideGlobals
          
          Where
          {
-              <$process> drivetrain:removes ?$CONNECTIONNAME .
-              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
-              <$process> drivetrain:outputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
-              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
+              <$process> drivetrain:removes ?${Globals.CONNECTIONNAME} .
+              ?${Globals.CONNECTIONNAME} a ?${Globals.CONNECTIONRECIPETYPE} .
+              ?${Globals.CONNECTIONRECIPETYPE} rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
+              <$process> drivetrain:outputNamedGraph ?${Globals.GRAPH} .
+              ?${Globals.CONNECTIONNAME} drivetrain:subject ?${Globals.SUBJECT} .
+              ?${Globals.CONNECTIONNAME} drivetrain:predicate ?${Globals.PREDICATE} .
+              ?${Globals.CONNECTIONNAME} drivetrain:object ?${Globals.OBJECT} .
+              ?${Globals.CONNECTIONNAME} drivetrain:cardinality ?${Globals.MULTIPLICITY} .
               Optional
               {
-                  ?$OBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$OBJECTADESCRIBER)
+                  ?${Globals.OBJECT} a drivetrain:ClassResourceList .
+                  BIND (true AS ?${Globals.OBJECTADESCRIBER})
               }
               Optional
               {
-                  ?$SUBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$SUBJECTADESCRIBER)
+                  ?${Globals.SUBJECT} a drivetrain:ClassResourceList .
+                  BIND (true AS ?${Globals.SUBJECTADESCRIBER})
               }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
+              BIND (isLiteral(?${Globals.OBJECT}) as ?${Globals.OBJECTALITERALVALUE})
          }
          
          """
        
-       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
+       SparqlUpdater.querySparqlAndUnpackToListOfMap(Globals.gmCxn, query)
     }
     
     def getOutputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
     {
        var variablesToSelect = ""
-       for (key <- requiredOutputKeysList) variablesToSelect += "?" + key + " "
+       for (key <- Globals.requiredOutputKeysList) variablesToSelect += "?" + key + " "
        
        val query = s"""
          
          Select distinct $variablesToSelect
          Where
          {
-              <$process> drivetrain:hasOutput ?$CONNECTIONNAME .
-              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
-              <$process> drivetrain:outputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
-              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
+              <$process> drivetrain:hasOutput ?${Globals.CONNECTIONNAME} .
+              ?${Globals.CONNECTIONNAME} a ?${Globals.CONNECTIONRECIPETYPE} .
+              ?${Globals.CONNECTIONRECIPETYPE} rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
+              <$process> drivetrain:outputNamedGraph ?${Globals.GRAPH} .
+              ?${Globals.CONNECTIONNAME} drivetrain:subject ?${Globals.SUBJECT} .
+              ?${Globals.CONNECTIONNAME} drivetrain:predicate ?${Globals.PREDICATE} .
+              ?${Globals.CONNECTIONNAME} drivetrain:object ?${Globals.OBJECT} .
+              ?${Globals.CONNECTIONNAME} drivetrain:cardinality ?${Globals.MULTIPLICITY} .
 
               Optional
               {
-                  ?$CONNECTIONNAME drivetrain:subjectUsesContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECT drivetrain:hasPossibleContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECTCONTEXT a drivetrain:TurboGraphContext .
+                  ?${Globals.CONNECTIONNAME} drivetrain:subjectUsesContext ?${Globals.SUBJECTCONTEXT} .
+                  ?${Globals.SUBJECT} drivetrain:hasPossibleContext ?${Globals.SUBJECTCONTEXT} .
+                  ?${Globals.SUBJECTCONTEXT} a drivetrain:TurboGraphContext .
               }
               Optional
               {
-                  ?$CONNECTIONNAME drivetrain:objectUsesContext ?$OBJECTCONTEXT .
-                  ?$OBJECT drivetrain:hasPossibleContext ?$OBJECTCONTEXT .
-                  ?$OBJECTCONTEXT a drivetrain:TurboGraphContext .
+                  ?${Globals.CONNECTIONNAME} drivetrain:objectUsesContext ?${Globals.OBJECTCONTEXT} .
+                  ?${Globals.OBJECT} drivetrain:hasPossibleContext ?${Globals.OBJECTCONTEXT} .
+                  ?${Globals.OBJECTCONTEXT} a drivetrain:TurboGraphContext .
               }
               Optional
               {
-                  ?$SUBJECT drivetrain:usesCustomVariableManipulationRule ?subjectRuleDenoter .
-                  ?subjectRuleDenoter drivetrain:usesSparql ?$SUBJECTRULE .
+                  ?${Globals.SUBJECT} drivetrain:usesCustomVariableManipulationRule ?subjectRuleDenoter .
+                  ?subjectRuleDenoter drivetrain:usesSparql ?${Globals.SUBJECTRULE} .
               }
               Optional
               {
-                  ?$OBJECT drivetrain:usesCustomVariableManipulationRule ?objectRuleDenoter .
-                  ?objectRuleDenoter drivetrain:usesSparql ?$OBJECTRULE .
+                  ?${Globals.OBJECT} drivetrain:usesCustomVariableManipulationRule ?objectRuleDenoter .
+                  ?objectRuleDenoter drivetrain:usesSparql ?${Globals.OBJECTRULE} .
               }
               Optional
               {
-                  ?$SUBJECT a drivetrain:ClassResourceList .
-                  BIND (true as ?$SUBJECTADESCRIBER)
+                  ?${Globals.SUBJECT} a drivetrain:ClassResourceList .
+                  BIND (true as ?${Globals.SUBJECTADESCRIBER})
               }
               Optional
               {
-                  ?$OBJECT a drivetrain:ClassResourceList .
-                  BIND (true as ?$OBJECTADESCRIBER)
+                  ?${Globals.OBJECT} a drivetrain:ClassResourceList .
+                  BIND (true as ?${Globals.OBJECTADESCRIBER})
               }
               Optional
               {
-                  ?$SUBJECT a drivetrain:UntypedInstance .
-                  BIND (true as ?$SUBJECTUNTYPED)
+                  ?${Globals.SUBJECT} a drivetrain:UntypedInstance .
+                  BIND (true as ?${Globals.SUBJECTUNTYPED})
               }
               Optional
               {
-                  ?$OBJECT a drivetrain:UntypedInstance .
-                  BIND (true as ?$OBJECTUNTYPED)
+                  ?${Globals.OBJECT} a drivetrain:UntypedInstance .
+                  BIND (true as ?${Globals.OBJECTUNTYPED})
               }
               Optional
               {
-                  ?recipe drivetrain:objectRequiredToCreate ?$OBJECT .
+                  ?recipe drivetrain:objectRequiredToCreate ?${Globals.OBJECT} .
                   <$process> ?INPUTTO ?recipe .
                   ?recipe drivetrain:object ?OBJECTDEPENDEE1 .
                   FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
               }
               Optional
               {
-                  ?recipe drivetrain:subjectRequiredToCreate ?$OBJECT .
+                  ?recipe drivetrain:subjectRequiredToCreate ?${Globals.OBJECT} .
                   <$process> ?INPUTTO ?recipe .
                   ?recipe drivetrain:subject ?OBJECTDEPENDEE2 .
                   FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
               }
               Optional
               {
-                  ?recipe drivetrain:objectRequiredToCreate ?$SUBJECT .
+                  ?recipe drivetrain:objectRequiredToCreate ?${Globals.SUBJECT} .
                   <$process> ?INPUTTO ?recipe .
                   ?recipe drivetrain:object ?SUBJECTDEPENDEE1 .
                   FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
               }
               Optional
               {
-                  ?recipe drivetrain:subjectRequiredToCreate ?$SUBJECT .
+                  ?recipe drivetrain:subjectRequiredToCreate ?${Globals.SUBJECT} .
                   <$process> ?INPUTTO ?recipe .
                   ?recipe drivetrain:subject ?SUBJECTDEPENDEE2 .
                   FILTER(?INPUTTO IN(drivetrain:hasRequiredInput, drivetrain:hasOptionalInput))
               }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
-              BIND(IF (BOUND (?SUBJECTDEPENDEE1), ?SUBJECTDEPENDEE1, ?SUBJECTDEPENDEE2) AS ?$SUBJECTDEPENDEE)
-              BIND(IF (BOUND (?OBJECTDEPENDEE1), ?OBJECTDEPENDEE1, ?OBJECTDEPENDEE2) AS ?$OBJECTDEPENDEE)
+              BIND (isLiteral(?${Globals.OBJECT}) as ?${Globals.OBJECTALITERALVALUE})
+              BIND(IF (BOUND (?SUBJECTDEPENDEE1), ?SUBJECTDEPENDEE1, ?SUBJECTDEPENDEE2) AS ?${Globals.SUBJECTDEPENDEE})
+              BIND(IF (BOUND (?OBJECTDEPENDEE1), ?OBJECTDEPENDEE1, ?OBJECTDEPENDEE2) AS ?${Globals.OBJECTDEPENDEE})
          }
          
          """
        //println(query)
-       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
+       SparqlUpdater.querySparqlAndUnpackToListOfMap(Globals.gmCxn, query)
     }
 }

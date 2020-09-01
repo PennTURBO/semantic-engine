@@ -4,9 +4,13 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.Queue
+import org.slf4j.LoggerFactory
 
-object CardinalityCountBuilder extends ProjectwideGlobals
+object CardinalityCountBuilder
 {
+  
+    val logger = LoggerFactory.getLogger(getClass)
+    
     def getInstanceCounts(inputs: ArrayBuffer[HashMap[String,org.eclipse.rdf4j.model.Value]]): HashMap[String, Integer] =
     {
         var instanceCountMap = new HashMap[String, Integer]
@@ -14,28 +18,28 @@ object CardinalityCountBuilder extends ProjectwideGlobals
         val connectionsMap = new HashMap[String, HashSet[String]]
         for (input <- inputs)
         {
-            var subjectString = input(SUBJECT.toString).toString
-            var objectString = input(OBJECT.toString).toString
-            if (input(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(input(SUBJECTCONTEXT.toString).toString).substring(1)
-            if (input(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(input(OBJECTCONTEXT.toString).toString).substring(1)
+            var subjectString = input(Globals.SUBJECT.toString).toString
+            var objectString = input(Globals.OBJECT.toString).toString
+            if (input(Globals.SUBJECTCONTEXT.toString) != null) subjectString += "_"+Utilities.convertTypeToSparqlVariable(input(Globals.SUBJECTCONTEXT.toString).toString).substring(1)
+            if (input(Globals.OBJECTCONTEXT.toString) != null) objectString += "_"+Utilities.convertTypeToSparqlVariable(input(Globals.OBJECTCONTEXT.toString).toString).substring(1)
             val subjectExistsInMap: Boolean = instanceCountMap.contains(subjectString)
             val objectExistsInMap: Boolean = instanceCountMap.contains(objectString)
-            val multiplicity = input(MULTIPLICITY.toString).toString
-            if (input(CONNECTIONRECIPETYPE.toString).toString == instToInstRecipe || input(CONNECTIONRECIPETYPE.toString).toString == instToLiteralRecipe)
+            val multiplicity = input(Globals.MULTIPLICITY.toString).toString
+            if (input(Globals.CONNECTIONRECIPETYPE.toString).toString == Globals.instToInstRecipe || input(Globals.CONNECTIONRECIPETYPE.toString).toString == Globals.instToLiteralRecipe)
             {     
                 if (!subjectExistsInMap && !objectExistsInMap)
                 {
-                    if (multiplicity == oneToOneMultiplicity)
+                    if (multiplicity == Globals.oneToOneMultiplicity)
                     {
                         instanceCountMap += subjectString -> 1
                         instanceCountMap += objectString -> 1
                     }
-                    else if (multiplicity == oneToManyMultiplicity)
+                    else if (multiplicity == Globals.oneToManyMultiplicity)
                     {
                         instanceCountMap += subjectString -> 1
                         instanceCountMap += objectString -> 2
                     }
-                    else if (multiplicity == manyToOneMultiplicity)
+                    else if (multiplicity == Globals.manyToOneMultiplicity)
                     {
                         instanceCountMap += subjectString -> 2
                         instanceCountMap += objectString -> 1
@@ -43,8 +47,8 @@ object CardinalityCountBuilder extends ProjectwideGlobals
                 }
                 else if (!subjectExistsInMap && objectExistsInMap)
                 {
-                    if (multiplicity == oneToOneMultiplicity) instanceCountMap += subjectString -> instanceCountMap(objectString)
-                    else if (multiplicity == oneToManyMultiplicity)
+                    if (multiplicity == Globals.oneToOneMultiplicity) instanceCountMap += subjectString -> instanceCountMap(objectString)
+                    else if (multiplicity == Globals.oneToManyMultiplicity)
                     {
                         if (instanceCountMap(objectString) > 1) instanceCountMap += subjectString -> instanceCountMap(objectString)/2
                         else
@@ -55,12 +59,12 @@ object CardinalityCountBuilder extends ProjectwideGlobals
                             instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, objectString, 2)
                         }
                     }
-                    else if (multiplicity == manyToOneMultiplicity) instanceCountMap += subjectString -> instanceCountMap(objectString)*2
+                    else if (multiplicity == Globals.manyToOneMultiplicity) instanceCountMap += subjectString -> instanceCountMap(objectString)*2
                 }
                 else if (subjectExistsInMap && !objectExistsInMap)
                 {
-                    if (multiplicity == oneToOneMultiplicity) instanceCountMap += objectString -> instanceCountMap(subjectString)
-                    else if (multiplicity == manyToOneMultiplicity)
+                    if (multiplicity == Globals.oneToOneMultiplicity) instanceCountMap += objectString -> instanceCountMap(subjectString)
+                    else if (multiplicity == Globals.manyToOneMultiplicity)
                     {
                         if (instanceCountMap(subjectString) > 1) instanceCountMap += objectString -> instanceCountMap(subjectString)/2
                         else
@@ -71,11 +75,11 @@ object CardinalityCountBuilder extends ProjectwideGlobals
                             instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, 2)
                         }
                     }
-                    else if (multiplicity == oneToManyMultiplicity) instanceCountMap += objectString -> instanceCountMap(subjectString)*2
+                    else if (multiplicity == Globals.oneToManyMultiplicity) instanceCountMap += objectString -> instanceCountMap(subjectString)*2
                 }
                 else if (subjectExistsInMap && objectExistsInMap)
                 {
-                    if (multiplicity == oneToOneMultiplicity && (instanceCountMap(subjectString) != instanceCountMap(objectString)))
+                    if (multiplicity == Globals.oneToOneMultiplicity && (instanceCountMap(subjectString) != instanceCountMap(objectString)))
                     {
                         if (instanceCountMap(subjectString) > instanceCountMap(objectString)) 
                         {
@@ -88,7 +92,7 @@ object CardinalityCountBuilder extends ProjectwideGlobals
                             instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, instanceCountMap(objectString)/instanceCountMap(subjectString))
                         }
                     }
-                    else if (multiplicity == manyToOneMultiplicity)
+                    else if (multiplicity == Globals.manyToOneMultiplicity)
                     {
                         if (instanceCountMap(subjectString) <= instanceCountMap(objectString))
                         {
@@ -97,7 +101,7 @@ object CardinalityCountBuilder extends ProjectwideGlobals
                             instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, multiplier)
                         }  
                     }
-                    else if (multiplicity == oneToManyMultiplicity)
+                    else if (multiplicity == Globals.oneToManyMultiplicity)
                     {
                         if (instanceCountMap(objectString) <= instanceCountMap(subjectString))
                         {
@@ -112,8 +116,8 @@ object CardinalityCountBuilder extends ProjectwideGlobals
                 if (connectionsMap.contains(objectString)) connectionsMap(objectString) += subjectString
                 else connectionsMap += objectString -> HashSet(subjectString)
             }
-            else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe" && !subjectExistsInMap) instancesWithOnlyTerms += subjectString
-            else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe" && !objectExistsInMap) instancesWithOnlyTerms += objectString
+            else if (input(Globals.CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe" && !subjectExistsInMap) instancesWithOnlyTerms += subjectString
+            else if (input(Globals.CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe" && !objectExistsInMap) instancesWithOnlyTerms += objectString
         }
         for (instance <- instancesWithOnlyTerms)
         {

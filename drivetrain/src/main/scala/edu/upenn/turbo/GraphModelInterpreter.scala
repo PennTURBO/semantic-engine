@@ -5,10 +5,8 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
 import org.eclipse.rdf4j.repository.RepositoryConnection
 
-class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobals
+class GraphModelInterpreter
 {
-    this.gmCxn = cxn
-    
     def handleAcornData(inputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], outputs: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]], removals: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]) =
     {
         var discoveredInstances = new HashMap[String, Instance]
@@ -35,10 +33,10 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                             
             var subjectWithContext = subjectString
             var objectWithContext = objectString
-            if (row(SUBJECTCONTEXT.toString) != null) subjectWithContext += "_"+helper.convertTypeToSparqlVariable(row(SUBJECTCONTEXT.toString).toString).substring(1)
-            if (row(OBJECTCONTEXT.toString) != null) objectWithContext += "_"+helper.convertTypeToSparqlVariable(row(OBJECTCONTEXT.toString).toString).substring(1)
+            if (row(Globals.SUBJECTCONTEXT.toString) != null) subjectWithContext += "_"+Utilities.convertTypeToSparqlVariable(row(Globals.SUBJECTCONTEXT.toString).toString).substring(1)
+            if (row(Globals.OBJECTCONTEXT.toString) != null) objectWithContext += "_"+Utilities.convertTypeToSparqlVariable(row(Globals.OBJECTCONTEXT.toString).toString).substring(1)
 
-            if (recipeType == instToInstRecipe)
+            if (recipeType == Globals.instToInstRecipe)
             {
                 val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectUntypedOrResourceList, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
@@ -57,7 +55,7 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
                 recipesList += recipe
             }
-            else if (recipeType == instToTermRecipe)
+            else if (recipeType == Globals.instToTermRecipe)
             {
                 val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectUntypedOrResourceList, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
@@ -72,7 +70,7 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
                 recipesList += recipe
             }
-            else if (recipeType == termToInstRecipe)
+            else if (recipeType == Globals.termToInstRecipe)
             {
                 val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectUntypedOrResourceList, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
@@ -87,7 +85,7 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
                 recipesList += recipe
             }
-            else if (recipeType == instToLiteralRecipe)
+            else if (recipeType == Globals.instToLiteralRecipe)
             {
                 val subjInst = findOrCreateNewInstance(typeOfData, disInst, subjectString, subjectWithContext, subjectUntypedOrResourceList, subjectIsSingleton, subjectIsSuper, subjectCustomRule)
                 disInst += subjInst.value -> subjInst
@@ -102,7 +100,7 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
                 recipesList += recipe
             }
-            else if (recipeType == termToLiteralRecipe)
+            else if (recipeType == Globals.termToLiteralRecipe)
             {
                 val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectUntypedOrResourceList, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
@@ -117,7 +115,7 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 updateRecipeWithNonTypeData(recipe, connectionName, thisMultiplicity, predicate, optional, graphForThisRow, suffixOperator, minusGroup, optionalGroup)
                 recipesList += recipe
             }
-            else if (recipeType == termToTermRecipe)
+            else if (recipeType == Globals.termToTermRecipe)
             {
                 val subjTerm = findOrCreateNewTerm(typeOfData, disTerm, subjectWithContext, subjectUntypedOrResourceList, subjectCustomRule)
                 disTerm += subjTerm.value -> subjTerm
@@ -165,7 +163,7 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
     
     def updateConnectionLists(subj: Instance, obj: Instance, cardinality: String)
     {
-        if (cardinality == oneToOneMultiplicity)
+        if (cardinality == Globals.oneToOneMultiplicity)
         {
             val subjList = subj.oneToOneConnections
             val objList = obj.oneToOneConnections
@@ -191,12 +189,12 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
             //for (element <- subjList) logger.info(subj.value + " is connected with " + element.value)
             //for (element <- objList) logger.info(obj.value + " is connected with " + element.value)
         }
-        else if (cardinality == oneToManyMultiplicity)
+        else if (cardinality == Globals.oneToManyMultiplicity)
         {
             subj.oneToManyConnections += obj
             obj.oneToManyConnections += subj
         }
-        else if (cardinality == manyToOneMultiplicity)
+        else if (cardinality == Globals.manyToOneMultiplicity)
         {
             subj.manyToOneConnections += obj
             obj.manyToOneConnections += subj
@@ -205,35 +203,35 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
     
     def interpretRowData(row: HashMap[String, org.eclipse.rdf4j.model.Value]) =
     {
-        var subjectString = row(SUBJECT.toString).toString
-        var objectString = row(OBJECT.toString).toString
+        var subjectString = row(Globals.SUBJECT.toString).toString
+        var objectString = row(Globals.OBJECT.toString).toString
         
-        val predicate = row(PREDICATE.toString).toString
+        val predicate = row(Globals.PREDICATE.toString).toString
         
         var suffixOperator: String = null
-        if (row.contains(SUFFIXOPERATOR.toString) && row(SUFFIXOPERATOR.toString) != null) suffixOperator = row(SUFFIXOPERATOR.toString).toString
+        if (row.contains(Globals.SUFFIXOPERATOR.toString) && row(Globals.SUFFIXOPERATOR.toString) != null) suffixOperator = row(Globals.SUFFIXOPERATOR.toString).toString
         
-        val connectionName = row(CONNECTIONNAME.toString).toString
-        val thisMultiplicity = row(MULTIPLICITY.toString).toString
-        val recipeType = row(CONNECTIONRECIPETYPE.toString).toString
+        val connectionName = row(Globals.CONNECTIONNAME.toString).toString
+        val thisMultiplicity = row(Globals.MULTIPLICITY.toString).toString
+        val recipeType = row(Globals.CONNECTIONRECIPETYPE.toString).toString
         
         var optional: Boolean = false
-        if (row.contains(INPUTTYPE.toString) && row(INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput") optional = true
+        if (row.contains(Globals.INPUTTYPE.toString) && row(Globals.INPUTTYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/hasOptionalInput") optional = true
         
         var subjectAResourceList = false
-        if (row(SUBJECTADESCRIBER.toString) != null) subjectAResourceList = true
+        if (row(Globals.SUBJECTADESCRIBER.toString) != null) subjectAResourceList = true
         var objectAResourceList = false
-        if (row(OBJECTADESCRIBER.toString) != null) objectAResourceList = true
-        if (row.contains(GRAPHLITERALTYPE.toString) && row(GRAPHLITERALTYPE.toString) != null) 
+        if (row(Globals.OBJECTADESCRIBER.toString) != null) objectAResourceList = true
+        if (row.contains(Globals.GRAPHLITERALTYPE.toString) && row(Globals.GRAPHLITERALTYPE.toString) != null) 
         {
             assert(objectAResourceList == false)
             objectAResourceList = true
         }
         
         var subjectUntyped = false
-        if (row(SUBJECTUNTYPED.toString) != null) subjectUntyped = true
+        if (row(Globals.SUBJECTUNTYPED.toString) != null) subjectUntyped = true
         var objectUntyped = false
-        if (row(OBJECTUNTYPED.toString) != null) objectUntyped = true
+        if (row(Globals.OBJECTUNTYPED.toString) != null) objectUntyped = true
         
         assert(!(subjectAResourceList && subjectUntyped))
         assert(!(objectAResourceList && objectUntyped))
@@ -245,31 +243,31 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
                 
         // SPARQL searches process that created this input as an output and returns their graph (GRAPHOFCREATINGPROCESS). We override that if the user provided a graph explicitly (GRAPHOFORIGIN)
         var graphForThisRow: String = null
-        if (row.contains(GRAPHOFCREATINGPROCESS.toString) && row(GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = row(GRAPHOFCREATINGPROCESS.toString).toString
-        if (row.contains(GRAPHOFORIGIN.toString) && row(GRAPHOFORIGIN.toString) != null) graphForThisRow = row(GRAPHOFORIGIN.toString).toString
+        if (row.contains(Globals.GRAPHOFCREATINGPROCESS.toString) && row(Globals.GRAPHOFCREATINGPROCESS.toString) != null) graphForThisRow = row(Globals.GRAPHOFCREATINGPROCESS.toString).toString
+        if (row.contains(Globals.GRAPHOFORIGIN.toString) && row(Globals.GRAPHOFORIGIN.toString) != null) graphForThisRow = row(Globals.GRAPHOFORIGIN.toString).toString
         
         var subjectIsSingleton = false
         var subjectIsSuper = false
         var objectIsSingleton = false
         var objectIsSuper = false
-        if (subjectSingleton.contains(thisMultiplicity)) subjectIsSingleton = true
-        else if (subjectSuperSingleton.contains(thisMultiplicity)) subjectIsSuper = true
-        if (objectSingleton.contains(thisMultiplicity)) objectIsSingleton = true
-        else if (objectSuperSingleton.contains(thisMultiplicity)) objectIsSuper = true
+        if (Globals.subjectSingleton.contains(thisMultiplicity)) subjectIsSingleton = true
+        else if (Globals.subjectSuperSingleton.contains(thisMultiplicity)) subjectIsSuper = true
+        if (Globals.objectSingleton.contains(thisMultiplicity)) objectIsSingleton = true
+        else if (Globals.objectSuperSingleton.contains(thisMultiplicity)) objectIsSuper = true
         
         var minusGroup: String = null
         var optionalGroup: String = null
-        if (row.contains(MINUSGROUP.toString) && row(MINUSGROUP.toString) != null) minusGroup = row(MINUSGROUP.toString).toString
-        if (row.contains(OPTIONALGROUP.toString) && row(OPTIONALGROUP.toString) != null) optionalGroup = row(OPTIONALGROUP.toString).toString
+        if (row.contains(Globals.MINUSGROUP.toString) && row(Globals.MINUSGROUP.toString) != null) minusGroup = row(Globals.MINUSGROUP.toString).toString
+        if (row.contains(Globals.OPTIONALGROUP.toString) && row(Globals.OPTIONALGROUP.toString) != null) optionalGroup = row(Globals.OPTIONALGROUP.toString).toString
         
         var subjectDependee: String = null
         var objectDependee: String = null
         var subjectCustomRule: String = null
         var objectCustomRule: String = null
-        if (row.contains(SUBJECTRULE.toString) && row(SUBJECTRULE.toString) != null) subjectCustomRule = row(SUBJECTRULE.toString).toString
-        if (row.contains(OBJECTRULE.toString) && row(OBJECTRULE.toString) != null) objectCustomRule = row(OBJECTRULE.toString).toString
-        if (row.contains(SUBJECTDEPENDEE.toString) && row(SUBJECTDEPENDEE.toString) != null) subjectDependee = row(SUBJECTDEPENDEE.toString).toString
-        if (row.contains(OBJECTDEPENDEE.toString) && row(OBJECTDEPENDEE.toString) != null) objectDependee = row(OBJECTDEPENDEE.toString).toString
+        if (row.contains(Globals.SUBJECTRULE.toString) && row(Globals.SUBJECTRULE.toString) != null) subjectCustomRule = row(Globals.SUBJECTRULE.toString).toString
+        if (row.contains(Globals.OBJECTRULE.toString) && row(Globals.OBJECTRULE.toString) != null) objectCustomRule = row(Globals.OBJECTRULE.toString).toString
+        if (row.contains(Globals.SUBJECTDEPENDEE.toString) && row(Globals.SUBJECTDEPENDEE.toString) != null) subjectDependee = row(Globals.SUBJECTDEPENDEE.toString).toString
+        if (row.contains(Globals.OBJECTDEPENDEE.toString) && row(Globals.OBJECTDEPENDEE.toString) != null) objectDependee = row(Globals.OBJECTDEPENDEE.toString).toString
         
         // null check
         val nonNulls = Array(subjectString, objectString, predicate, connectionName, thisMultiplicity, recipeType, optional, subjectAResourceList,
@@ -318,7 +316,7 @@ class GraphModelInterpreter(cxn: RepositoryConnection) extends ProjectwideGlobal
         {
           newTerm = new Term(stringVal)
           newTerm.isResourceList = Some(isResourceList)
-          if (isResourceList) newTerm.ranges = helper.getDescriberRangesAsList(gmCxn, stringVal)
+          if (isResourceList) newTerm.ranges = Utilities.getDescriberRangesAsList(Globals.gmCxn, stringVal)
           if (customRule != null) newTerm.createdWithRule = Some(customRule)
           newTerm.buildValuesBlock()
         }

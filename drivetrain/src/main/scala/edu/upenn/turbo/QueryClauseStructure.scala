@@ -2,9 +2,12 @@ package edu.upenn.turbo
 
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.HashMap
+import org.slf4j.LoggerFactory
 
-class QueryClauseStructure extends ProjectwideGlobals
+class QueryClauseStructure
 {
+    val logger = LoggerFactory.getLogger(getClass)
+    
   	val defaultGraphRequireds = new HashSet[ConnectionRecipe]
   	val defaultGraphOptionals = new HashSet[ConnectionRecipe]
   	val defaultGraphOptionalGroups = new HashMap[String, HashSet[ConnectionRecipe]]
@@ -36,7 +39,7 @@ class QueryClauseStructure extends ProjectwideGlobals
   	    var clause: String = ""
   	    for ((graph, snippet) <- graphToClauseSnippetMap)
   	    {
-  	        val convertedGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(graph)
+  	        val convertedGraph = Utilities.checkAndConvertPropertiesReferenceToNamedGraph(graph)
   	        clause += s"GRAPH <$convertedGraph> {\n"
   	        clause += snippet
   	        clause += "}\n"
@@ -46,7 +49,7 @@ class QueryClauseStructure extends ProjectwideGlobals
   	        clause += "OPTIONAL {\n"
   	        for ((graph, snippet) <- group)
   	        {
-  	            val convertedGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(graph)
+  	            val convertedGraph = Utilities.checkAndConvertPropertiesReferenceToNamedGraph(graph)
   	            clause += s"GRAPH <$convertedGraph> {\n"
       	        clause += snippet
       	        clause += "}\n"
@@ -58,7 +61,7 @@ class QueryClauseStructure extends ProjectwideGlobals
   	        clause += "MINUS {\n"
   	        for ((graph, snippet) <- group)
   	        {
-  	            val convertedGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(graph)
+  	            val convertedGraph = Utilities.checkAndConvertPropertiesReferenceToNamedGraph(graph)
   	            clause += s"GRAPH <$convertedGraph> {\n"
       	        clause += snippet
       	        clause += "}\n"
@@ -78,7 +81,7 @@ class QueryClauseStructure extends ProjectwideGlobals
   	    for ((graph, recipes)<- alternateGraphRecipes)
   	    {
   	        var useTypes = true
-  	        if (graph == processNamedGraph) useTypes = false
+  	        if (graph == Globals.processNamedGraph) useTypes = false
   	        for (recipe <- recipes)
   	        {
   	            if (graphToClauseSnippetMap.contains(graph)) graphToClauseSnippetMap(graph) += buildRecipe(recipe, includeValuesBlocks, useTypes)

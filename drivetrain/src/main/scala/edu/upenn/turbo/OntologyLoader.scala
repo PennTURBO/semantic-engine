@@ -33,15 +33,18 @@ import org.eclipse.rdf4j.model.Model
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.client.methods.HttpGet
 import java.net.SocketException
+import org.slf4j.LoggerFactory
 
-object OntologyLoader extends ProjectwideGlobals
+object OntologyLoader
 {   
+    val logger = LoggerFactory.getLogger(getClass)
+    
     def loadRelevantOntologies(cxn: RepositoryConnection)
     {
         addDrugOntologies(cxn)
         addDiseaseOntologies(cxn)
         // if expanded loss of function data, add gene ontologies
-        if (helper.wasThisProcessRun(cxn, "http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess"))
+        if (Utilities.wasThisProcessRun(cxn, "http://www.itmat.upenn.edu/biobank/LossOfFunctionExpansionProcess"))
         {
             addGeneOntologies(cxn)
         }
@@ -69,7 +72,7 @@ object OntologyLoader extends ProjectwideGlobals
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-upper.owl" -> RDFFormat.RDFXML),
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ingredient.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ingredient.owl" -> RDFFormat.RDFXML),
         "https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ndc.owl" -> Map("https://bitbucket.org/uamsdbmi/dron/raw/master/dron-ndc.owl" -> RDFFormat.RDFXML),
-        "http://data.bioontology.org/ontologies/RXNORM/submissions/"+getBioportalSubmissionInfo("RXNORM").get+"/download?apikey="+bioportalApiKey -> 
+        "http://data.bioontology.org/ontologies/RXNORM/submissions/"+getBioportalSubmissionInfo("RXNORM").get+"/download?apikey="+Globals.bioportalApiKey -> 
           Map("http://data.bioontology.org/ontologies/RXNORM/" -> RDFFormat.TURTLE)
         )
         
@@ -80,9 +83,9 @@ object OntologyLoader extends ProjectwideGlobals
     {
         val diseaseOntologies: Map[String, Map[String, RDFFormat]] = Map(
         "https://github.com/monarch-initiative/mondo/releases/download/current/mondo.owl" -> Map("https://github.com/monarch-initiative/mondo/releases/download/current/mondo.owl" -> RDFFormat.RDFXML),
-        "http://data.bioontology.org/ontologies/ICD10CM/submissions/"+getBioportalSubmissionInfo("ICD10CM").get+"/download?apikey="+bioportalApiKey -> 
+        "http://data.bioontology.org/ontologies/ICD10CM/submissions/"+getBioportalSubmissionInfo("ICD10CM").get+"/download?apikey="+Globals.bioportalApiKey -> 
                 Map("http://data.bioontology.org/ontologies/ICD10CM/" -> RDFFormat.TURTLE),
-        "http://data.bioontology.org/ontologies/ICD9CM/submissions/"+getBioportalSubmissionInfo("ICD9CM").get+"/download?apikey="+bioportalApiKey -> 
+        "http://data.bioontology.org/ontologies/ICD9CM/submissions/"+getBioportalSubmissionInfo("ICD9CM").get+"/download?apikey="+Globals.bioportalApiKey -> 
                 Map("http://data.bioontology.org/ontologies/ICD9CM/" -> RDFFormat.TURTLE)
         )
         
@@ -97,7 +100,7 @@ object OntologyLoader extends ProjectwideGlobals
      /**
      * Adds an RDF.XML formatted set of triples (usually an ontology) received from a given URL to the specified named graph.
      */
-    def addOntologyFromUrl(cxn: RepositoryConnection, ontology: String = ontologyURL, graphName: String = ontologyURL, formatting: RDFFormat = RDFFormat.RDFXML)
+    def addOntologyFromUrl(cxn: RepositoryConnection, ontology: String = Globals.ontologyURL, graphName: String = Globals.ontologyURL, formatting: RDFFormat = RDFFormat.RDFXML)
     {
         logger.info("Adding ontology " + ontology )
         try
@@ -109,7 +112,7 @@ object OntologyLoader extends ProjectwideGlobals
         
             val OntoBase = "http://transformunify.org/ontologies/"
          
-            helper.clearNamedGraph(cxn, OntoGraphName.toString)
+            Utilities.clearNamedGraph(cxn, OntoGraphName.toString)
             cxn.add(OntoUrl, OntoBase, formatting, OntoGraphName)
         }
         catch
@@ -134,7 +137,7 @@ object OntologyLoader extends ProjectwideGlobals
     
     def getBioportalSubmissionInfo(ontology: String): Option[Int] =
     {
-        val url = "http://data.bioontology.org/ontologies/"+ontology+"/latest_submission?apikey="+bioportalApiKey
+        val url = "http://data.bioontology.org/ontologies/"+ontology+"/latest_submission?apikey="+Globals.bioportalApiKey
         try
         {
             var optReturn: Option[Int] = None:Option[Int]

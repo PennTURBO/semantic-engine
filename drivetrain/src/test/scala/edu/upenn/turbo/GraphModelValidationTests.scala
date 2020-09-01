@@ -9,12 +9,13 @@ import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
-class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
+class GraphModelValidationTests extends FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
     
     val uuid = UUID.randomUUID().toString.replaceAll("-", "")
     RunDrivetrainProcess.setGlobalUUID(uuid)
+    var graphDBMaterials: TurboGraphConnection = null
     
     override def beforeAll()
     {
@@ -22,11 +23,9 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         
         graphDBMaterials = ConnectToGraphDB.initializeGraph()
         DrivetrainDriver.updateModel(graphDBMaterials, "carnival_transformation_instructions.tis", "turbo_valid_graph_specification.gs")
-        cxn = graphDBMaterials.getConnection()
-        gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(cxn)
-        
-        RunDrivetrainProcess.setConnections(gmCxn, cxn)
+        Globals.cxn = graphDBMaterials.getConnection()
+        Globals.gmCxn = graphDBMaterials.getGmConnection()
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
     }
     
     override def afterAll()
@@ -36,15 +35,15 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     before
     {
-        helper.deleteAllTriplesInDatabase(cxn)
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "graphSpecification")
         
         val insert = s"""
-        INSERT DATA { Graph <$defaultPrefix""" + s"""instructionSet> {
+        INSERT DATA { Graph <${Globals.defaultPrefix}""" + s"""instructionSet> {
           ontologies:myProcess1 a ontologies:TURBO_0010354 ;
-              drivetrain:inputNamedGraph <$expandedNamedGraph> ;
-              drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
+              drivetrain:inputNamedGraph <${Globals.expandedNamedGraph}> ;
+              drivetrain:outputNamedGraph <${Globals.expandedNamedGraph}> ; 
               drivetrain:hasOutput ontologies:object1ToObject2 ;
               drivetrain:hasRequiredInput ontologies:object1ToObject3 ;
               drivetrain:hasRequiredInput ontologies:object2ToObject3 ;
@@ -87,13 +86,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               drivetrain:subject turbo:object2 ;
             .}}"""
             
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         
         val insertData: String = s"""
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:obj1 a turbo:object1 .
                   pmbb:obj2 a turbo:object2 .
@@ -105,7 +104,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           }
           
           """
-        update.updateSparql(cxn, insertData)
+        SparqlUpdater.updateSparql(Globals.cxn, insertData)
     }
     
     test("run process normally")
@@ -119,7 +118,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject2_2
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -135,7 +134,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
  
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         
         try
         {
@@ -156,7 +155,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -172,7 +171,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         
         RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
     }
@@ -184,7 +183,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -200,7 +199,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
     }
     
@@ -210,7 +209,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -235,7 +234,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         try
         {
             RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
@@ -253,7 +252,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -278,7 +277,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         try
         {
             RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
@@ -298,7 +297,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -322,7 +321,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
     }
     
@@ -332,7 +331,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -356,7 +355,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
     }*/
     
@@ -366,7 +365,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -392,7 +391,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         
         try
         {
@@ -411,7 +410,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -449,7 +448,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:obj4 a turbo:object4 .
                   pmbb:obj5 a turbo:object5 .
@@ -462,8 +461,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
  
         """
         
-        update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(cxn, insertData)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.cxn, insertData)
         
         try
         {
@@ -482,7 +481,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -511,7 +510,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:obj2 turbo:pred3 pmbb:obj4 .
                   pmbb:obj4 a turbo:object4 .
@@ -520,8 +519,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
  
         """
         
-        update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(cxn, insertData)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.cxn, insertData)
         
         try
         {
@@ -540,7 +539,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -569,7 +568,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:obj2 turbo:pred3 pmbb:obj4 .
                   pmbb:obj4 a turbo:object4 .
@@ -578,8 +577,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
  
         """
         
-        update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(cxn, insertData)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.cxn, insertData)
         
         try
         {
@@ -598,7 +597,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -616,7 +615,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:obj2 turbo:pred3 pmbb:obj4 .
                   pmbb:obj4 a turbo:object4 .
@@ -625,8 +624,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
  
         """
         
-        update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(cxn, insertData)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.cxn, insertData)
         
         try
         {
@@ -645,7 +644,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_output
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -659,7 +658,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
@@ -678,7 +677,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""graphSpecification>
+              Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
               {
                   ontologies:notPresentConnection
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -695,11 +694,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses()
         }
         catch
         {
@@ -713,7 +712,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""graphSpecification>
+              Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -726,25 +725,25 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   turbo:pred1 a rdf:Property .
                }
                
-               Graph <$defaultPrefix"""+s"""instructionSet>
+               Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 ;
                        drivetrain:precedes ontologies:myProcess2 .
                    
-                   ontologies:myProcess2 drivetrain:inputNamedGraph <$expandedNamedGraph> ;
+                   ontologies:myProcess2 drivetrain:inputNamedGraph <${Globals.expandedNamedGraph}> ;
                        a turbo:TURBO_0010354 ;
-                       drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
+                       drivetrain:outputNamedGraph <${Globals.expandedNamedGraph}> ; 
                        drivetrain:hasRequiredInput ontologies:object1ToObject4 ;
                        drivetrain:removes ontologies:object1ToObject4 .
                }
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses()
         }
         catch
         {
@@ -754,12 +753,12 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("instruction set does not create recipe required by graph specification")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
         val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""graphSpecification>
+              Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
               {
                   ontologies:object1ToObject3
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -790,13 +789,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   drivetrain:eitherSubjectOrObjectExists a drivetrain:TurboGraphRequirementSpecification .
                }
                
-               Graph <$defaultPrefix"""+s"""instructionSet>
+               Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:myProcess1 a turbo:TURBO_0010354 ;
                        drivetrain:hasOutput ontologies:object1ToObject4 ;
                        drivetrain:hasRequiredInput ontologies:object1ToObject2 ;
-                       drivetrain:inputNamedGraph <$expandedNamedGraph> ;
-                       drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
+                       drivetrain:inputNamedGraph <${Globals.expandedNamedGraph}> ;
+                       drivetrain:outputNamedGraph <${Globals.expandedNamedGraph}> ; 
                    .
                    ontologies:object1ToObject2 a drivetrain:InstanceToInstanceRecipe ;
                        drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-1> ;
@@ -807,11 +806,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses()
             assert(1==2)
         }
         catch
@@ -822,12 +821,12 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("instruction set does not create recipe not required by graph spec due to context")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
         val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""graphSpecification>
+              Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
               {
                   ontologies:object1ToObject3
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -866,13 +865,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   drivetrain:eitherSubjectOrObjectExists a drivetrain:TurboGraphRequirementSpecification .
                }
                
-               Graph <$defaultPrefix"""+s"""instructionSet>
+               Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:myProcess1 a turbo:TURBO_0010354 ;
                        drivetrain:hasOutput ontologies:object1ToObject4 ;
                        drivetrain:hasRequiredInput ontologies:object1ToObject2 ;
-                       drivetrain:inputNamedGraph <$expandedNamedGraph> ;
-                       drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
+                       drivetrain:inputNamedGraph <${Globals.expandedNamedGraph}> ;
+                       drivetrain:outputNamedGraph <${Globals.expandedNamedGraph}> ; 
                    .
                    ontologies:object1ToObject2 a drivetrain:InstanceToInstanceRecipe ;
                        drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-1> ;
@@ -883,11 +882,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses()
         }
         catch
         {
@@ -901,7 +900,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-               <$defaultPrefix"""+s"""instructionSet>
+               <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:object1ToObject3 drivetrain:subject ontologies:someSubject .
                    ontologies:someSubject a owl:Class .
@@ -909,7 +908,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
@@ -928,7 +927,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-               <$defaultPrefix"""+s"""instructionSet>
+               <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:object1ToObject3 drivetrain:referencedInGraph pmbb:namedGraph1 .
                    ontologies:object1ToObject3 drivetrain:referencedInGraph pmbb:namedGraph2 .
@@ -939,7 +938,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
@@ -958,14 +957,14 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-               Graph <$defaultPrefix"""+s"""instructionSet>
+               Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:object1ToObject2 drivetrain:predicate ontologies:somePredicate .
                }
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
@@ -984,14 +983,14 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-               Graph <$defaultPrefix"""+s"""instructionSet>
+               Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:someOtherNamedGraph .
                }
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
@@ -1006,7 +1005,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("datatype connection has class instance object")  
     {
-       val insert = s"""INSERT DATA { Graph <$defaultPrefix""" + s"""instructionSet> {
+       val insert = s"""INSERT DATA { Graph <${Globals.defaultPrefix}""" + s"""instructionSet> {
           ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4 .
           ontologies:object2ToObject4 a drivetrain:InstanceToLiteralRecipe .
           ontologies:object2ToObject4 drivetrain:subject turbo:object2 .
@@ -1016,7 +1015,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           turbo:object4 a owl:Class .
           }}"""
-       update.updateSparql(gmCxn, insert)
+       SparqlUpdater.updateSparql(Globals.gmCxn, insert)
        
        try
         {
@@ -1031,7 +1030,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("datatype connection has describer object")  
     {
-       val insert = s"""INSERT DATA { Graph <$defaultPrefix""" + s"""instructionSet> {
+       val insert = s"""INSERT DATA { Graph <${Globals.defaultPrefix}""" + s"""instructionSet> {
           ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4 .
           ontologies:object2ToObject4 a drivetrain:InstanceToLiteralRecipe .
           ontologies:object2ToObject4 drivetrain:subject turbo:object2 .
@@ -1041,7 +1040,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           turbo:describer1 a drivetrain:ClassResourceList .
           }}"""
-       update.updateSparql(gmCxn, insert)
+       SparqlUpdater.updateSparql(Globals.gmCxn, insert)
        
        try
         {
@@ -1058,11 +1057,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     // if there are no required enforcers that qualify
     test("only optional input")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     ontologies:myProcess1 a turbo:TURBO_0010354 .
                     ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -1093,18 +1092,18 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
 
           RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
     }
     
     test("literal asserted as subject of instance recipes")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     ontologies:myProcess1 a turbo:TURBO_0010354 .
                     ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -1136,7 +1135,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
           
         try
         {
@@ -1151,11 +1150,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("literal asserted as object of instance recipes")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     ontologies:myProcess1 a turbo:TURBO_0010354 .
                     ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -1184,7 +1183,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
           
         try
         {
@@ -1199,11 +1198,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("literal asserted as object of term recipes - literal resource list")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     ontologies:myProcess1 a turbo:TURBO_0010354 .
                     ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -1234,7 +1233,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
           
         try
         {
@@ -1249,11 +1248,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("literal asserted as object of term recipes - raw literal value")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     ontologies:myProcess1 a turbo:TURBO_0010354 .
                     ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -1282,7 +1281,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
           
         try
         {
@@ -1297,11 +1296,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("instance asserted as object of literal recipes")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     ontologies:myProcess1 a turbo:TURBO_0010354 .
                     ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -1331,7 +1330,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
           
         try
         {
@@ -1346,11 +1345,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("literal resource list defined with two different datatypes")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     ontologies:myProcess1 a turbo:TURBO_0010354 .
                     ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -1380,7 +1379,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
           
         try
         {

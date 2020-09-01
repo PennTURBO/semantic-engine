@@ -10,14 +10,10 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import java.util.UUID
 
-trait ProjectwideGlobals extends Enumeration
+object Globals extends Enumeration
 {
-    val helper: TurboMultiuseClass = new TurboMultiuseClass
-    val update: SparqlUpdater = new SparqlUpdater
     val logger = LoggerFactory.getLogger(getClass)
-    
-    var graphDBMaterials: TurboGraphConnection = null
-    
+        
     var cxn: RepositoryConnection = null
     var repoManager: RemoteRepositoryManager = null
     var repository: Repository = null
@@ -25,49 +21,59 @@ trait ProjectwideGlobals extends Enumeration
     var gmCxn: RepositoryConnection = null
     var gmRepoManager: RemoteRepositoryManager = null
     var gmRepository: Repository = null
+    
+    var prefixMap = new HashMap[String, String]
+    val prefixesFromFile = io.Source.fromFile("config/prefixes.txt").getLines
+    for (line <- prefixesFromFile)
+    {
+        assert(!line.contains(" "), "Check prefixes file: entry " + line + " has an illegal space")
+        val splitLine = line.split("\\:",2)
+        assert(splitLine.size == 2, "Check prefixes file: Unable to process line " + line)
+        Utilities.validateURI(splitLine(1))
+        assert(!prefixMap.contains(splitLine(0)), "Duplicate prefix entry for " + splitLine(0))
+        prefixMap += splitLine(0) -> splitLine(1)
+    }
 
      //properties from file are global variables
-     val productionServiceURL = helper.retrieveUriPropertyFromFile("productionServiceURL")
-     val productionUsername = helper.retrievePropertyFromFile("productionUsername")
-     val productionPassword = helper.retrievePropertyFromFile("productionPassword")
-     val productionRepository = helper.retrievePropertyFromFile("productionRepository")
+     val productionServiceURL = Utilities.retrieveUriPropertyFromFile("productionServiceURL")
+     val productionUsername = Utilities.retrievePropertyFromFile("productionUsername")
+     val productionPassword = Utilities.retrievePropertyFromFile("productionPassword")
+     val productionRepository = Utilities.retrievePropertyFromFile("productionRepository")
      
-     val testingServiceURL = helper.retrieveUriPropertyFromFile("testingServiceURL")
-     val testingUsername = helper.retrievePropertyFromFile("testingUsername")
-     val testingPassword = helper.retrievePropertyFromFile("testingPassword")
-     val testingRepository = helper.retrievePropertyFromFile("testingRepository")
+     val testingServiceURL = Utilities.retrieveUriPropertyFromFile("testingServiceURL")
+     val testingUsername = Utilities.retrievePropertyFromFile("testingUsername")
+     val testingPassword = Utilities.retrievePropertyFromFile("testingPassword")
+     val testingRepository = Utilities.retrievePropertyFromFile("testingRepository")
      
-     val modelServiceURL = helper.retrieveUriPropertyFromFile("modelServiceURL")
-     val modelUsername = helper.retrievePropertyFromFile("modelUsername")
-     val modelPassword = helper.retrievePropertyFromFile("modelPassword")
-     val modelRepository = helper.retrievePropertyFromFile("modelRepository")
+     val modelServiceURL = Utilities.retrieveUriPropertyFromFile("modelServiceURL")
+     val modelUsername = Utilities.retrievePropertyFromFile("modelUsername")
+     val modelPassword = Utilities.retrievePropertyFromFile("modelPassword")
+     val modelRepository = Utilities.retrievePropertyFromFile("modelRepository")
      
-     val ontologyURL = helper.retrieveUriPropertyFromFile("ontologyURL")
-     val processNamedGraph = helper.retrieveUriPropertyFromFile("processNamedGraph").replace("\"","")
-     val bioportalApiKey = helper.retrievePropertyFromFile("bioportalApiKey")
+     val ontologyURL = Utilities.retrieveUriPropertyFromFile("ontologyURL")
+     val processNamedGraph = Utilities.retrieveUriPropertyFromFile("processNamedGraph").replace("\"","")
+     val bioportalApiKey = Utilities.retrievePropertyFromFile("bioportalApiKey")
      val reinferRepo = getBooleanProperty("reinferRepo")
      val loadAdditionalOntologies = getBooleanProperty("loadAdditionalOntologies")
-     val instructionSetFile = helper.retrievePropertyFromFile("instructionSetFile")
-     val graphSpecificationFile = helper.retrievePropertyFromFile("graphSpecificationFile")
-     val dataValidationMode = helper.retrievePropertyFromFile("dataValidationMode").toLowerCase()
-     val defaultPrefix = helper.retrieveUriPropertyFromFile("defaultPrefix")
-     val expandedNamedGraph = helper.retrieveUriPropertyFromFile("expandedNamedGraph").replace("\"","")
+     val instructionSetFile = Utilities.retrievePropertyFromFile("instructionSetFile")
+     val graphSpecificationFile = Utilities.retrievePropertyFromFile("graphSpecificationFile")
+     val dataValidationMode = Utilities.retrievePropertyFromFile("dataValidationMode").toLowerCase()
+     val defaultPrefix = Utilities.retrieveUriPropertyFromFile("defaultPrefix")
+     val expandedNamedGraph = Utilities.retrieveUriPropertyFromFile("expandedNamedGraph").replace("\"","")
      val clearGraphsAtStart = getBooleanProperty("clearGraphsAtStart")
-     val acornOntologyFile = helper.retrievePropertyFromFile("acornOntologyFile")
+     val acornOntologyFile = Utilities.retrievePropertyFromFile("acornOntologyFile")
      val validateAgainstOntology = getBooleanProperty("validateAgainstOntology")
      val useMultipleThreads = getBooleanProperty("useMultipleThreads")
 
-     val numberOfThreads = helper.retrievePropertyFromFile("numberOfThreads").toInt
+     val numberOfThreads = Utilities.retrievePropertyFromFile("numberOfThreads").toInt
      
      
      def getBooleanProperty(property: String): Boolean =
      {
-        def boolAsString = helper.retrievePropertyFromFile(property)
+        def boolAsString = Utilities.retrievePropertyFromFile(property)
         if (boolAsString == "true") return true
         else return false
      }
-     
-     val replacementString = "[replaceMe]"
      
      //define enums for SPARQL variables used in the retrieval methods
       val SUBJECT = Value("SUBJECT")

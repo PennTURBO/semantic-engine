@@ -10,26 +10,28 @@ import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
 
-class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
+class GraphCleanupUnitTests extends FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
+    
+    var graphDBMaterials: TurboGraphConnection = null
     
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
     val expectedQuery: String = s"""
       DELETE {
-      GRAPH <$expandedNamedGraph> {
+      GRAPH <${Globals.expandedNamedGraph}> {
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010133> ?TURBO_0010161 .
       }
       }
       INSERT {
-      GRAPH <$processNamedGraph> {
+      GRAPH <${Globals.processNamedGraph}> {
       <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010161 .
       <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?TURBO_0010169 .
       }
       }
       WHERE {
-      GRAPH <$expandedNamedGraph> {
+      GRAPH <${Globals.expandedNamedGraph}> {
       ?TURBO_0010169 <http://transformunify.org/ontologies/TURBO_0010133> ?TURBO_0010161 .
       ?TURBO_0010169 rdf:type <http://transformunify.org/ontologies/TURBO_0010169> .
       ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
@@ -43,11 +45,9 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
         
         graphDBMaterials = ConnectToGraphDB.initializeGraph()
         DrivetrainDriver.updateModel(graphDBMaterials, "testing_instruction_set.tis", "testing_graph_specification.gs")
-        cxn = graphDBMaterials.getConnection()
-        gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(cxn)
-        
-        RunDrivetrainProcess.setConnections(gmCxn, cxn)
+        Globals.cxn = graphDBMaterials.getConnection()
+        Globals.gmCxn = graphDBMaterials.getGmConnection()
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
     }
     
     override def afterAll()
@@ -57,12 +57,12 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
     
     before
     {
-        helper.deleteAllTriplesInDatabase(cxn)
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
     }
   
     test("generated biobank encounter cleanup query matched expected query")
     {
-        helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess", expectedQuery) should be (true) 
+        Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess", expectedQuery) should be (true) 
     }
     
     test ("remove SC bb enc to SC person link from expanded graph")
@@ -70,37 +70,37 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
       val insert = s"""
             INSERT DATA
             {
-            Graph <$expandedNamedGraph> {
+            Graph <${Globals.expandedNamedGraph}> {
                 pmbb:scBbEnc1 turbo:TURBO_0010133 pmbb:scPerson1 .
                 pmbb:scBbEnc1 a turbo:TURBO_0010169 .
                 pmbb:scPerson1 a turbo:TURBO_0010161 .
               }
             }
         """
-      update.updateSparql(cxn, insert)
-      RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess", dataValidationMode, false)
+      SparqlUpdater.updateSparql(Globals.cxn, insert)
+      RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess", Globals.dataValidationMode, false)
       
         val check1: String = s"""
           ASK
           {
-          Graph <$expandedNamedGraph> {
+          Graph <${Globals.expandedNamedGraph}> {
                 pmbb:scBbEnc1 turbo:TURBO_0010133 pmbb:scPerson1 .
               }
           }
           """
         
-        update.querySparqlBoolean(cxn, check1).get should be (false)
-        update.querySparqlBoolean(cxn, helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, check1).get should be (false)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, Utilities.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/ShortcutBiobankEncounterToShortcutPersonCleanupProcess")).get should be (true)
       
-        val count: String = s"SELECT * WHERE {Graph <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+        val count: String = s"SELECT * WHERE {Graph <${Globals.expandedNamedGraph}> {?s ?p ?o .}}"
+        val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "p")
         result.size should be (2)
       
         val processInputsOutputs: String = s"""
           
           ASK
           {
-              GRAPH <$processNamedGraph>
+              GRAPH <${Globals.processNamedGraph}>
               {
                   ?process a turbo:TURBO_0010347 ;
                   
@@ -111,6 +111,6 @@ class GraphCleanupUnitTests extends ProjectwideGlobals with FunSuiteLike with Be
           
           """
         
-        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processInputsOutputs).get should be (true)
     }
 }

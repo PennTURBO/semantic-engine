@@ -8,15 +8,19 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import java.util.UUID
 import scala.collection.mutable.ArrayBuffer
+import org.slf4j.LoggerFactory
 
-class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
+class HealthcareEncounterExpansionUnitTests extends FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
+    val logger = LoggerFactory.getLogger(getClass)
     val clearTestingRepositoryAfterRun: Boolean = false
+    
+    var graphDBMaterials: TurboGraphConnection = null
     
     RunDrivetrainProcess.setGlobalUUID(UUID.randomUUID().toString.replaceAll("-", ""))
     
     val instantiationAndDataset: String = s"""
-      ASK { GRAPH <$expandedNamedGraph> {
+      ASK { GRAPH <${Globals.expandedNamedGraph}> {
             ?instantiation <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000522 .
         		?instantiation obo:OBI_0000293 ?dataset .
         		?dataset a obo:IAO_0000100 .
@@ -24,7 +28,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        }}"""
     
     val healthcareEncounterMinimum: String = s"""
-      ASK { GRAPH <$expandedNamedGraph> {
+      ASK { GRAPH <${Globals.expandedNamedGraph}> {
             ?encounter <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> obo:OGMS_0000097 .
         		?encounterCrid <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000508 .
         		?encounterCrid obo:IAO_0000219 ?encounter .
@@ -40,7 +44,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       """
     
     val healthcareSymbolAndRegistry: String = s"""
-      ASK {GRAPH <$expandedNamedGraph> {
+      ASK {GRAPH <${Globals.expandedNamedGraph}> {
           ?encounter a obo:OGMS_0000097 .
           ?encounterCrid a turbo:TURBO_0000508 .
           ?encounterCrid obo:IAO_0000219 ?encounter .
@@ -56,7 +60,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       """
    
     val healthcareDiagnosis: String = s"""
-          ASK { GRAPH <$expandedNamedGraph> {
+          ASK { GRAPH <${Globals.expandedNamedGraph}> {
           
                 ?dataset a obo:IAO_0000100 .
                 ?encounter a obo:OGMS_0000097 .
@@ -75,7 +79,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           """
     
     val healthcareMedications: String = s"""
-      ask {graph <$expandedNamedGraph> {
+      ask {graph <${Globals.expandedNamedGraph}> {
           ?dataset a obo:IAO_0000100 .
           ?encounter a obo:OGMS_0000097 .
           ?encounter obo:OBI_0000299 ?drugPrescript .
@@ -96,7 +100,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       """
     
     val healthcareMeasurements: String = s"""
-          ASK { GRAPH <$expandedNamedGraph> {
+          ASK { GRAPH <${Globals.expandedNamedGraph}> {
           
                 ?encounter obo:OBI_0000299 ?BMI .
                 ?encounter turbo:TURBO_0010139 ?heightDatum .
@@ -147,7 +151,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         	"""
     
     val healthcareEncounterDate: String = s"""
-          ASK { GRAPH <$expandedNamedGraph> {
+          ASK { GRAPH <${Globals.expandedNamedGraph}> {
             ?encDate <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000512 .
         		?encDate turbo:TURBO_0010095 "15/Jan/2017" .
         		?encDate turbo:TURBO_0010096 "2017-01-15"^^xsd:date .
@@ -160,13 +164,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         		?encounter a obo:OGMS_0000097 .
            }}"""
     
-    val processMeta = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess",
+    val processMeta = Utilities.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess",
                                                   Array("http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts"))
     
     val anyProcess: String = s"""
       ASK
       {
-          Graph <$processNamedGraph>
+          Graph <${Globals.processNamedGraph}>
           {
               ?s ?p ?o .
           }
@@ -175,7 +179,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
     
     val healthcareQuery: String = s"""
       INSERT {
-      GRAPH <$expandedNamedGraph> {
+      GRAPH <${Globals.expandedNamedGraph}> {
       ?TURBO_0000508 <http://purl.obolibrary.org/obo/BFO_0000051> ?HealthcareEncounterRegistryOfVariousTypes .
       ?TURBO_0000508 rdf:type <http://transformunify.org/ontologies/TURBO_0000508> .
       ?TURBO_0010138 <http://purl.obolibrary.org/obo/IAO_0000039> <http://purl.obolibrary.org/obo/UO_0000015> .
@@ -256,7 +260,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?TURBO_0010150 <http://transformunify.org/ontologies/TURBO_0010094> ?diastolicBloodPressureDoubleLiteralValue .
       ?HealthcareEncounterRegistryOfVariousTypes <http://purl.obolibrary.org/obo/BFO_0000050> ?TURBO_0000508 .
       }
-      GRAPH <$processNamedGraph> {
+      GRAPH <${Globals.processNamedGraph}> {
       <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0000508 .
       <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?HealthcareEncounterRegistryOfVariousTypes .
       <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?TURBO_0010138 .
@@ -289,7 +293,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       }
       }
       WHERE {
-      GRAPH <$expandedNamedGraph> {
+      GRAPH <${Globals.expandedNamedGraph}> {
       ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010113> ?NCBITaxon_9606 .
       ?NCBITaxon_9606 rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
       }
@@ -322,31 +326,31 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010258> ?systolicBloodPressureDoubleLiteralValue .
        }
       }
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
-      BIND(IF (BOUND(?bmiDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?EFO_0004340","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?EFO_0004340)
-      BIND(IF (BOUND(?diastolicBloodPressureDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0010150","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010150)
-      BIND(IF (BOUND(?systolicBloodPressureDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0010149","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010149)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000509","localUUID", str(?TURBO_0010158))))) AS ?TURBO_0000509)
-      BIND(IF (BOUND(?lengthMeasurementDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0010138","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010138)
-      BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat("$defaultPrefix", SHA256(CONCAT("?VSO_0000006", "localUUID", str(?TURBO_0010158))))), ?unbound) AS ?VSO_0000006)
-      BIND(IF (BOUND(?healthcareEncounterDateStringLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000512","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0000512)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000508","localUUID", str(?TURBO_0010158))))) AS ?TURBO_0000508)
-      BIND(IF (BOUND(?healthcareEncounterDateStringLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000511","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0000511)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OGMS_0000097","localUUID", str(?TURBO_0010158))))) AS ?OGMS_0000097)
-      BIND(IF (BOUND(?systolicBloodPressureDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?HTN_00000001","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?HTN_00000001)
-      BIND(IF (BOUND(?massMeasurementDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0001929","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?OBI_0001929)
-      BIND(IF (BOUND(?diastolicBloodPressureDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?HTN_00000000","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?HTN_00000000)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
-      BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat("$defaultPrefix", SHA256(CONCAT("?VSO_0000004", "localUUID", str(?NCBITaxon_9606))))), ?unbound) AS ?VSO_0000004)
-      BIND(IF (BOUND(?lengthMeasurementDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?PATO_0000119","localUUID", str(?NCBITaxon_9606))))), ?unbound) AS ?PATO_0000119)
-      BIND(IF (BOUND(?massMeasurementDoubleLiteralValue), uri(concat("$defaultPrefix",SHA256(CONCAT("?PATO_0000128","localUUID", str(?NCBITaxon_9606))))), ?unbound) AS ?PATO_0000128)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0000093","localUUID")))) AS ?OBI_0000093)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
+      BIND(IF (BOUND(?bmiDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?EFO_0004340","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?EFO_0004340)
+      BIND(IF (BOUND(?diastolicBloodPressureDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0010150","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010150)
+      BIND(IF (BOUND(?systolicBloodPressureDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0010149","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010149)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000509","localUUID", str(?TURBO_0010158))))) AS ?TURBO_0000509)
+      BIND(IF (BOUND(?lengthMeasurementDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0010138","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0010138)
+      BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat("${Globals.defaultPrefix}", SHA256(CONCAT("?VSO_0000006", "localUUID", str(?TURBO_0010158))))), ?unbound) AS ?VSO_0000006)
+      BIND(IF (BOUND(?healthcareEncounterDateStringLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000512","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0000512)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000508","localUUID", str(?TURBO_0010158))))) AS ?TURBO_0000508)
+      BIND(IF (BOUND(?healthcareEncounterDateStringLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000511","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?TURBO_0000511)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OGMS_0000097","localUUID", str(?TURBO_0010158))))) AS ?OGMS_0000097)
+      BIND(IF (BOUND(?systolicBloodPressureDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?HTN_00000001","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?HTN_00000001)
+      BIND(IF (BOUND(?massMeasurementDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0001929","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?OBI_0001929)
+      BIND(IF (BOUND(?diastolicBloodPressureDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?HTN_00000000","localUUID", str(?TURBO_0010158))))), ?unbound) AS ?HTN_00000000)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000522","localUUID")))) AS ?TURBO_0000522)
+      BIND(IF ((BOUND(?systolicBloodPressureDoubleLiteralValue) || BOUND(?diastolicBloodPressureDoubleLiteralValue)), uri(concat("${Globals.defaultPrefix}", SHA256(CONCAT("?VSO_0000004", "localUUID", str(?NCBITaxon_9606))))), ?unbound) AS ?VSO_0000004)
+      BIND(IF (BOUND(?lengthMeasurementDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?PATO_0000119","localUUID", str(?NCBITaxon_9606))))), ?unbound) AS ?PATO_0000119)
+      BIND(IF (BOUND(?massMeasurementDoubleLiteralValue), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?PATO_0000128","localUUID", str(?NCBITaxon_9606))))), ?unbound) AS ?PATO_0000128)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0000093","localUUID")))) AS ?OBI_0000093)
       }
       """
     
     val diagnosisQuery = s"""
       INSERT {
-      GRAPH <$expandedNamedGraph> {
+      GRAPH <${Globals.expandedNamedGraph}> {
       ?OGMS_0000073 <http://purl.obolibrary.org/obo/IAO_0000142> ?IcdTermOfVariousTypes .
       ?OGMS_0000073 rdf:type <http://purl.obolibrary.org/obo/OGMS_0000073> .
       ?OGMS_0000073 <http://purl.obolibrary.org/obo/IAO_0000142> ?SnomedTermOfVariousTypes .
@@ -363,7 +367,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?OGMS_0000073 <http://transformunify.org/ontologies/TURBO_0006515> ?diagnosisRegistryStringLiteralValue .
       ?OGMS_0000073 <http://transformunify.org/ontologies/TURBO_0010013> ?primaryDiagnosisBooleanLiteralValue .
       }
-      GRAPH <$processNamedGraph> {
+      GRAPH <${Globals.processNamedGraph}> {
       <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OGMS_0000073 .
       <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IcdTermOfVariousTypes .
       <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?SnomedTermOfVariousTypes .
@@ -378,7 +382,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       }
       }
       WHERE {
-      GRAPH <$expandedNamedGraph> {
+      GRAPH <${Globals.expandedNamedGraph}> {
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010113> ?OGMS_0000097 .
       ?OGMS_0000097 rdf:type <http://purl.obolibrary.org/obo/OGMS_0000097> .
       }
@@ -406,14 +410,14 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       BIND(IF (bound(?icd9term) && !bound(?icd10term),?icd9term,?unbound) as ?IcdTermOfVariousTypes)
       BIND(IF (bound(?icd10term) && !bound(?icd9term),?icd10term,?IcdTermOfVariousTypes) as ?IcdTermOfVariousTypes)
       BIND(IF (?DiagnosisRegistryOfVariousTypes = <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C53489>, uri(concat("http://purl.bioontology.org/ontology/SNOMEDCT/", ?diagnosisTermSuffixStringLiteralValue)), ?unbound) AS ?SnomedTermOfVariousTypes)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OGMS_0000073","localUUID", str(?TURBO_0010160))))) AS ?OGMS_0000073)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OGMS_0000073","localUUID", str(?TURBO_0010160))))) AS ?OGMS_0000073)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
       }
       """
     
     val medicationQuery = s"""
       INSERT {
-      GRAPH <$expandedNamedGraph> {
+      GRAPH <${Globals.expandedNamedGraph}> {
       ?PDRO_0000001 <http://purl.obolibrary.org/obo/IAO_0000142> ?DrugTermOfVariousTypes .
       ?PDRO_0000001 rdf:type <http://purl.obolibrary.org/obo/PDRO_0000001> .
       ?IAO_0000100 <http://purl.obolibrary.org/obo/BFO_0000051> ?PDRO_0000001 .
@@ -433,7 +437,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       ?TURBO_0000562 <http://transformunify.org/ontologies/TURBO_0010094> ?medicationSymbolStringLiteralValue .
       ?PDRO_0000001 <http://transformunify.org/ontologies/TURBO_0010094> ?medicationOrderNameStringLiteralValue .
       }
-      GRAPH <$processNamedGraph> {
+      GRAPH <${Globals.processNamedGraph}> {
       <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?PDRO_0000001 .
       <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?DrugTermOfVariousTypes .
       <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?IAO_0000100 .
@@ -448,7 +452,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
       }
       }
       WHERE {
-      GRAPH <$expandedNamedGraph> {
+      GRAPH <${Globals.expandedNamedGraph}> {
       ?TURBO_0010158 <http://transformunify.org/ontologies/TURBO_0010113> ?OGMS_0000097 .
       ?OGMS_0000097 rdf:type <http://purl.obolibrary.org/obo/OGMS_0000097> .
       }
@@ -465,10 +469,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
        ?TURBO_0010159 <http://transformunify.org/ontologies/TURBO_0005611> ?medicationOrderNameStringLiteralValue .
        }
       }
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000561","localUUID", str(?TURBO_0010159))))) AS ?TURBO_0000561)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?TURBO_0000562","localUUID", str(?TURBO_0010159))))) AS ?TURBO_0000562)
-      BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?PDRO_0000001","localUUID", str(?TURBO_0010159))))) AS ?PDRO_0000001)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000561","localUUID", str(?TURBO_0010159))))) AS ?TURBO_0000561)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(str(?datasetTitleStringLiteralValue),"localUUID")))) AS ?IAO_0000100)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?TURBO_0000562","localUUID", str(?TURBO_0010159))))) AS ?TURBO_0000562)
+      BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?PDRO_0000001","localUUID", str(?TURBO_0010159))))) AS ?PDRO_0000001)
       }
       """
     
@@ -478,11 +482,10 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         
         graphDBMaterials = ConnectToGraphDB.initializeGraph()
         DrivetrainDriver.updateModel(graphDBMaterials, "testing_instruction_set.tis", "testing_graph_specification.gs")
-        cxn = graphDBMaterials.getConnection()
-        gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(cxn)
+        Globals.cxn = graphDBMaterials.getConnection()
+        Globals.gmCxn = graphDBMaterials.getGmConnection()
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
         
-        RunDrivetrainProcess.setConnections(gmCxn, cxn)
         RunDrivetrainProcess.setInputNamedGraphsCache(false)
     }
     
@@ -493,22 +496,22 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
     
     before
     {
-        helper.deleteAllTriplesInDatabase(cxn)
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
     }
     
     test("generated query matched expected query - healthcare expansion")
     {
-        helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", healthcareQuery) should be (true) 
+        Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", healthcareQuery) should be (true) 
     }
     
-    /*test("generated query matched expected query - diagnosis expansion")
+    test("generated query matched expected query - diagnosis expansion")
     {
-        helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", diagnosisQuery) should be (true) 
+        Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", diagnosisQuery) should be (true) 
     }
     
     test("generated query matched expected query - medications expansion")
     {
-        helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", medicationQuery) should be (true) 
+        Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", medicationQuery) should be (true) 
     }
     
     test("hc encounter with all fields")
@@ -546,28 +549,28 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             
             pmbb:part1 a turbo:TURBO_0010161 .
           }
-          Graph <$expandedNamedGraph>
+          Graph <${Globals.expandedNamedGraph}>
           {
               pmbb:part1 turbo:TURBO_0010113 pmbb:expandedPart .
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}
           """
-        update.updateSparql(cxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", Globals.dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", Globals.dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", Globals.dataValidationMode, false)
         
-        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareDiagnosis).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareMedications).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareMeasurements).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareEncounterDate).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
-        update.querySparqlBoolean(cxn, processMeta).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, instantiationAndDataset).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareEncounterMinimum).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareDiagnosis).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareMedications).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareMeasurements).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareEncounterDate).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareSymbolAndRegistry).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processMeta).get should be (true)
         
-        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+        val count: String = s"SELECT * WHERE {GRAPH <${Globals.expandedNamedGraph}> {?s ?p ?o .}}"
+        val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -626,7 +629,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://purl.obolibrary.org/obo/IAO_0000221","http://purl.obolibrary.org/obo/BFO_0000054"
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
+        Utilities.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (checkPredicates.size)
         
@@ -634,7 +637,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -674,7 +677,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 ?instantiation .
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OBI_0001929 a obo:OBI_0001929 .
@@ -704,7 +707,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -720,7 +723,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:diagnosis1 ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OGMS_0000097 a obo:OGMS_0000097 .
@@ -734,7 +737,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -750,7 +753,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:prescription1 ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?PDRO_0000001 a obo:PDRO_0000001 .
@@ -761,9 +764,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(cxn, healthcareInputsOutputs).get should be (true)
-        update.querySparqlBoolean(cxn, diagnosisInputsOutputs).get should be (true)
-        update.querySparqlBoolean(cxn, medicationsInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, diagnosisInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, medicationsInputsOutputs).get should be (true)
     }
     
     test("hc encounter with minimum required for expansion")
@@ -778,28 +781,28 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           turbo:TURBO_0010131 pmbb:part1 .
           pmbb:part1 a turbo:TURBO_0010161 .
           }
-          Graph <$expandedNamedGraph>
+          Graph <${Globals.expandedNamedGraph}>
           {
               pmbb:part1 turbo:TURBO_0010113 pmbb:expandedPart .
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}
           """
-        update.updateSparql(cxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", Globals.dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", Globals.dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", Globals.dataValidationMode, false)
         
-        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareMeasurements).get should be (false)
-        update.querySparqlBoolean(cxn, healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(cxn, healthcareMedications).get should be (false)
-        update.querySparqlBoolean(cxn, healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
-        update.querySparqlBoolean(cxn, processMeta).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, instantiationAndDataset).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareEncounterMinimum).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareMeasurements).get should be (false)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareDiagnosis).get should be (false)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareMedications).get should be (false)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareEncounterDate).get should be (false)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareSymbolAndRegistry).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processMeta).get should be (true)
         
-        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+        val count: String = s"SELECT * WHERE {GRAPH <${Globals.expandedNamedGraph}> {?s ?p ?o .}}"
+        val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -816,7 +819,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
+        Utilities.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (checkPredicates.size)
         
@@ -824,7 +827,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -844,7 +847,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 ?instantiation ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?TURBO_0000508 a turbo:TURBO_0000508 .
@@ -856,7 +859,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processInputsOutputs).get should be (true)
     }
     
     test("hc encounter with text but not xsd values and only diag code without reg info")
@@ -887,19 +890,19 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           pmbb:part1 a turbo:TURBO_0010161 .
           
           }
-          Graph <$expandedNamedGraph>
+          Graph <${Globals.expandedNamedGraph}>
           {
               pmbb:part1 turbo:TURBO_0010113 pmbb:expandedPart .
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}
           """
-        update.updateSparql(cxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", Globals.dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", Globals.dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", Globals.dataValidationMode, false)
         
         val diagnosisNoXsd: String = s"""
-          ASK { GRAPH <$expandedNamedGraph> {
+          ASK { GRAPH <${Globals.expandedNamedGraph}> {
                 ?encounter a obo:OGMS_0000097 .
                 ?dataset a obo:IAO_0000100 .
         		?encounter obo:OBI_0000299 ?diagnosis.
@@ -911,7 +914,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           """
         
         val dateNoXsd: String = s"""
-          ASK { GRAPH <$expandedNamedGraph> {
+          ASK { GRAPH <${Globals.expandedNamedGraph}> {
                 ?encDate <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> turbo:TURBO_0000512 .
         		?encDate turbo:TURBO_0010095 "15/Jan/2017" .
         		# ?encDate turbo:TURBO_0010096 "2017-01-15"^^xsd:date .
@@ -924,7 +927,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
            }}"""
         
         val healthcareMedicationsMinimum: String = s"""
-        ask {graph <$expandedNamedGraph> {
+        ask {graph <${Globals.expandedNamedGraph}> {
             ?dataset a obo:IAO_0000100 .
             ?encounter a obo:OGMS_0000097 .
             ?encounter obo:OBI_0000299 ?drugPrescript .
@@ -943,19 +946,19 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         		}}
         """
         
-        update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareMeasurements).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareDiagnosis).get should be (false)
-        update.querySparqlBoolean(cxn, healthcareMedicationsMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareEncounterDate).get should be (false)
-        update.querySparqlBoolean(cxn, diagnosisNoXsd).get should be (true)
-        update.querySparqlBoolean(cxn, dateNoXsd).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
-        update.querySparqlBoolean(cxn, processMeta).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, instantiationAndDataset).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareEncounterMinimum).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareMeasurements).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareDiagnosis).get should be (false)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareMedicationsMinimum).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareEncounterDate).get should be (false)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, diagnosisNoXsd).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, dateNoXsd).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareSymbolAndRegistry).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processMeta).get should be (true)
         
-        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+        val count: String = s"SELECT * WHERE {GRAPH <${Globals.expandedNamedGraph}> {?s ?p ?o .}}"
+        val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "p")
         
         val checkPredicates = Array (
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://purl.obolibrary.org/obo/OBI_0000293",
@@ -1010,7 +1013,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type","http://transformunify.org/ontologies/TURBO_0010113"
         )
         
-        helper.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
+        Utilities.checkStringArraysForEquivalency(checkPredicates, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         
         result.size should be (checkPredicates.size)
         
@@ -1018,7 +1021,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -1049,7 +1052,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 ?instantiation .
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OBI_0001929 a obo:OBI_0001929 .
@@ -1075,7 +1078,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -1088,7 +1091,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:diagnosis1 ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OGMS_0000097 a obo:OGMS_0000097 .
@@ -1102,7 +1105,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -1116,7 +1119,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:prescription1 ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?PDRO_0000001 a obo:PDRO_0000001 .
@@ -1127,9 +1130,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(cxn, healthcareInputsOutputs).get should be (true)
-        update.querySparqlBoolean(cxn, diagnosisInputsOutputs).get should be (true)
-        update.querySparqlBoolean(cxn, medicationsInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, diagnosisInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, medicationsInputsOutputs).get should be (true)
     }
     
     test("ensure diagnosis info stays together with duplicate hc enc URI")
@@ -1161,21 +1164,21 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           pmbb:hcenc1 turbo:TURBO_0010131 pmbb:part1 .
           pmbb:part1 a turbo:TURBO_0010161 .
           }
-          Graph <$expandedNamedGraph>
+          Graph <${Globals.expandedNamedGraph}>
           {
               pmbb:part1 turbo:TURBO_0010113 pmbb:expandedPart .
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}"""
         
-        update.updateSparql(cxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", Globals.dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", Globals.dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", Globals.dataValidationMode, false)
         
         val checkDiag: String = s"""
           Ask
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:OBI_0000299 ?diagnosis1 .
@@ -1200,7 +1203,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         val countDiag: String = s"""
           Select (count (distinct ?diagnosis) as ?diagnosisCount)
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:OBI_0000299 ?diagnosis .
@@ -1208,18 +1211,18 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               }
           }
           """
-         update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
-         update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
-         update.querySparqlBoolean(cxn, checkDiag).get should be (true)
-         update.querySparqlAndUnpackTuple(cxn, countDiag, "diagnosisCount")(0) should startWith ("\"2")
-         update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
-         update.querySparqlBoolean(cxn, processMeta).get should be (true)
+         SparqlUpdater.querySparqlBoolean(Globals.cxn, instantiationAndDataset).get should be (true)
+         SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareEncounterMinimum).get should be (true)
+         SparqlUpdater.querySparqlBoolean(Globals.cxn, checkDiag).get should be (true)
+         SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, countDiag, "diagnosisCount")(0) should startWith ("\"2")
+         SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareSymbolAndRegistry).get should be (true)
+         SparqlUpdater.querySparqlBoolean(Globals.cxn, processMeta).get should be (true)
         
         val healthcareInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             
             {
                 ?process a turbo:TURBO_0010347 ;
@@ -1240,7 +1243,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 ?instantiation .
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?TURBO_0000508 a turbo:TURBO_0000508 .
@@ -1256,7 +1259,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -1273,7 +1276,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:diagnosis1 ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OGMS_0000097 a obo:OGMS_0000097 .
@@ -1283,8 +1286,8 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(cxn, healthcareInputsOutputs).get should be (true)
-        update.querySparqlBoolean(cxn, diagnosisInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, diagnosisInputsOutputs).get should be (true)
     }
     
     test("ensure medication info stays together with duplicate hc enc URI")
@@ -1314,21 +1317,21 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           pmbb:hcenc1 turbo:TURBO_0010131 pmbb:part1 .
           pmbb:part1 a turbo:TURBO_0010161 .
           }
-          Graph <$expandedNamedGraph>
+          Graph <${Globals.expandedNamedGraph}>
           {
               pmbb:part1 turbo:TURBO_0010113 pmbb:expandedPart .
               pmbb:expandedPart a obo:NCBITaxon_9606 .
           }}"""
         
-        update.updateSparql(cxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", Globals.dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", Globals.dataValidationMode, false)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", Globals.dataValidationMode, false)
         
         val checkDiag: String = s"""
           Ask
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:OBI_0000299 ?prescription1 .
@@ -1359,7 +1362,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         val countDiag: String = s"""
           Select (count (distinct ?prescription) as ?prescriptCount) (count (distinct ?medCrid) as ?medCridCount)
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   ?enc a obo:OGMS_0000097 .
                   ?enc obo:OBI_0000299 ?prescription .
@@ -1368,18 +1371,18 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
               }
           }
           """
-         update.querySparqlBoolean(cxn, instantiationAndDataset).get should be (true)
-         update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
-         update.querySparqlBoolean(cxn, checkDiag).get should be (true)
-         update.querySparqlAndUnpackTuple(cxn, countDiag, "prescriptCount")(0) should startWith ("\"2")
-         update.querySparqlAndUnpackTuple(cxn, countDiag, "medCridCount")(0) should startWith ("\"2")
-         update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
-         update.querySparqlBoolean(cxn, processMeta).get should be (true)
+         SparqlUpdater.querySparqlBoolean(Globals.cxn, instantiationAndDataset).get should be (true)
+         SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareEncounterMinimum).get should be (true)
+         SparqlUpdater.querySparqlBoolean(Globals.cxn, checkDiag).get should be (true)
+         SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, countDiag, "prescriptCount")(0) should startWith ("\"2")
+         SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, countDiag, "medCridCount")(0) should startWith ("\"2")
+         SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareSymbolAndRegistry).get should be (true)
+         SparqlUpdater.querySparqlBoolean(Globals.cxn, processMeta).get should be (true)
         
         val healthcareInputsOutputs: String = s"""
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -1399,7 +1402,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 ?instantiation .
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?TURBO_0000508 a turbo:TURBO_0000508 .
@@ -1415,7 +1418,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -1430,7 +1433,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:prescription1 ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?PDRO_0000001 a obo:PDRO_0000001 .
@@ -1441,13 +1444,13 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(cxn, healthcareInputsOutputs).get should be (true)
-        update.querySparqlBoolean(cxn, medicationsInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, medicationsInputsOutputs).get should be (true)
     }
     
     test("expand hc encs over multiple named graphs")
     {
-        logger.info("starting triples count: " + helper.countTriplesInDatabase(cxn))
+        logger.info("starting triples count: " + Utilities.countTriplesInDatabase(Globals.cxn))
         val insert1: String = s"""
           INSERT DATA
           {
@@ -1524,25 +1527,25 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                       pmbb:hcenc1 turbo:TURBO_0010131 pmbb:part1 .
                       pmbb:part1 a turbo:TURBO_0010161 .
               }
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:part1 turbo:TURBO_0010113 pmbb:expandedPart .
                   pmbb:expandedPart a obo:NCBITaxon_9606 .
               }
           }
           """
-        update.updateSparql(cxn, insert1)
-        logger.info("triples count after insert: " + helper.countTriplesInDatabase(cxn))
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", dataValidationMode, false)
-        logger.info("triples count after hc process: " + helper.countTriplesInDatabase(cxn))
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", dataValidationMode, false)
-        logger.info("triples count after diagnoses process: " + helper.countTriplesInDatabase(cxn))
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", dataValidationMode, false)
-        logger.info("triples count after meds process: " + helper.countTriplesInDatabase(cxn))
+        SparqlUpdater.updateSparql(Globals.cxn, insert1)
+        logger.info("triples count after insert: " + Utilities.countTriplesInDatabase(Globals.cxn))
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess", Globals.dataValidationMode, false)
+        logger.info("triples count after hc process: " + Utilities.countTriplesInDatabase(Globals.cxn))
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", Globals.dataValidationMode, false)
+        logger.info("triples count after diagnoses process: " + Utilities.countTriplesInDatabase(Globals.cxn))
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", Globals.dataValidationMode, false)
+        logger.info("triples count after meds process: " + Utilities.countTriplesInDatabase(Globals.cxn))
         val datasetCheck1: String = s"""
           ASK
           {
-              GRAPH <$expandedNamedGraph>
+              GRAPH <${Globals.expandedNamedGraph}>
               {
                   ?encounter a obo:OGMS_0000097 .
                   ?encounterCrid a turbo:TURBO_0000508 .
@@ -1565,7 +1568,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         val datasetCheck2: String = s"""
           ASK
           {
-              GRAPH <$expandedNamedGraph>
+              GRAPH <${Globals.expandedNamedGraph}>
               {
                   ?dataset a obo:IAO_0000100 .
                   ?dataset dc11:title 'diagnosis.csv'^^xsd:string .
@@ -1588,7 +1591,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         val datasetCheck3: String = s"""
           ASK
           {
-              GRAPH <$expandedNamedGraph>
+              GRAPH <${Globals.expandedNamedGraph}>
               {
                   ?dataset a obo:IAO_0000100 .
                   ?dataset dc11:title 'meds.csv'^^xsd:string .
@@ -1613,7 +1616,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         val datasetCheck4: String = s"""
           ASK
           {
-              GRAPH <$expandedNamedGraph>
+              GRAPH <${Globals.expandedNamedGraph}>
               {
                 ?dataset a obo:IAO_0000100 .
                 ?dataset dc11:title 'bmiAndHeightWeight.csv'^^xsd:string .
@@ -1651,7 +1654,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         val datasetCheck5: String = s"""
           ASK
           {
-              GRAPH <$expandedNamedGraph>
+              GRAPH <${Globals.expandedNamedGraph}>
               {
                 ?dataset a obo:IAO_0000100 .
                 ?dataset dc11:title 'date.csv' .
@@ -1672,7 +1675,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         val thereShouldOnlyBeOneEncounter: String = s"""
           Select ?enc Where
           {
-              Graph <$expandedNamedGraph>{
+              Graph <${Globals.expandedNamedGraph}>{
               ?enc a obo:OGMS_0000097 .}
           }
           """
@@ -1680,38 +1683,38 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
         val thereShouldBeFiveDatasets: String = s"""
           Select ?dataset Where
           {
-              Graph <$expandedNamedGraph> {
+              Graph <${Globals.expandedNamedGraph}> {
               ?dataset a obo:IAO_0000100 .}
           }
           """
         
-        val processMetaMultipleDatasets = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess",
+        val processMetaMultipleDatasets = Utilities.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/HealthcareEncounterExpansionProcess",
                                                   Array("http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts",
                                                       "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts1",
                                                       "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts2",
                                                       "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts3",
                                                       "http://www.itmat.upenn.edu/biobank/Shortcuts_healthcareEncounterShortcuts4"))
         
-        update.querySparqlBoolean(cxn, processMetaMultipleDatasets).get should be (true)
-        update.querySparqlAndUnpackTuple(cxn, thereShouldOnlyBeOneEncounter, "enc").size should be (1)
-        update.querySparqlAndUnpackTuple(cxn, thereShouldBeFiveDatasets, "dataset").size should be (5)
-        update.querySparqlBoolean(cxn, healthcareEncounterMinimum).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareDiagnosis).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareMedications).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareMeasurements).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareEncounterDate).get should be (true)
-        update.querySparqlBoolean(cxn, healthcareSymbolAndRegistry).get should be (true)
-        update.querySparqlBoolean(cxn, datasetCheck1).get should be (true)
-        update.querySparqlBoolean(cxn, datasetCheck2).get should be (true)
-        update.querySparqlBoolean(cxn, datasetCheck3).get should be (true)
-        update.querySparqlBoolean(cxn, datasetCheck4).get should be (true)
-        update.querySparqlBoolean(cxn, datasetCheck5).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processMetaMultipleDatasets).get should be (true)
+        SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, thereShouldOnlyBeOneEncounter, "enc").size should be (1)
+        SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, thereShouldBeFiveDatasets, "dataset").size should be (5)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareEncounterMinimum).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareDiagnosis).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareMedications).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareMeasurements).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareEncounterDate).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareSymbolAndRegistry).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, datasetCheck1).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, datasetCheck2).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, datasetCheck3).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, datasetCheck4).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, datasetCheck5).get should be (true)
         
         val healthcareInputsOutputs: String = s"""
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -1742,7 +1745,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 ?instantiation .
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OBI_0001929 a obo:OBI_0001929 .
@@ -1768,7 +1771,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -1784,7 +1787,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:diagCridSC ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?OGMS_0000097 a obo:OGMS_0000097 .
@@ -1798,7 +1801,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           ASK 
           { 
-            Graph <$processNamedGraph>
+            Graph <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -1814,7 +1817,7 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                   
                   ontologies:TURBO_0010184 pmbb:prescription ;
             }
-            Graph <$expandedNamedGraph>
+            Graph <${Globals.expandedNamedGraph}>
             {
                 ?IAO_0000100 a obo:IAO_0000100 .
                 ?PDRO_0000001 a obo:PDRO_0000001 .
@@ -1825,9 +1828,9 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
           
           """
         
-        update.querySparqlBoolean(cxn, healthcareInputsOutputs).get should be (true)
-        update.querySparqlBoolean(cxn, diagnosisInputsOutputs).get should be (true)
-        update.querySparqlBoolean(cxn, medicationsInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, healthcareInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, diagnosisInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, medicationsInputsOutputs).get should be (true)
     }
     
     test("diagnosis not expanded by itself")
@@ -1842,12 +1845,12 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                       turbo:TURBO_0010013 "true"^^xsd:Boolean ;
                       turbo:TURBO_0010014 "1"^^xsd:Integer . }}
          """
-       update.updateSparql(cxn, insert)
+       SparqlUpdater.updateSparql(Globals.cxn, insert)
        
        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/DiagnosisExpansionProcess", "none", false)
        
-       val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-       val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
+       val count: String = s"SELECT * WHERE {GRAPH <${Globals.expandedNamedGraph}> {?s ?p ?o .}}"
+       val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "s")
        result.size should be (0)
     }
     
@@ -1861,12 +1864,12 @@ class HealthcareEncounterExpansionUnitTests extends ProjectwideGlobals with FunS
                       turbo:TURBO_0005612 turbo:someDrug ;
                       turbo:TURBO_0005601 "3" . }}
          """
-       update.updateSparql(cxn, insert)
+       SparqlUpdater.updateSparql(Globals.cxn, insert)
        
        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/MedicationExpansionProcess", "none", false)
        
-       val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-       val result = update.querySparqlAndUnpackTuple(cxn, count, "s")
+       val count: String = s"SELECT * WHERE {GRAPH <${Globals.expandedNamedGraph}> {?s ?p ?o .}}"
+       val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "s")
        result.size should be (0)
-    }*/
+    }
 }

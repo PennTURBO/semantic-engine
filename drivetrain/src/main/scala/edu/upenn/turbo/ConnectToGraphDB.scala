@@ -15,6 +15,7 @@ import org.eclipse.rdf4j.repository.RepositoryConnection
 import org.eclipse.rdf4j.query.QueryLanguage
 import org.eclipse.rdf4j.model.ValueFactory
 import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
+import org.slf4j.LoggerFactory
 
 /**
  * This class contains all method relating to connecting the Drivetrain application to an instance of Ontotext Graph DB, and loading
@@ -22,8 +23,10 @@ import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager
  * and data file information from the TURBO properties file.
  */
 
-object ConnectToGraphDB extends ProjectwideGlobals
+object ConnectToGraphDB
 {   
+    val logger = LoggerFactory.getLogger(getClass)
+    
     /**
      * Initializes the connection to the Graph DB instance after checking that the TURBO Properties file is in a valid state. Validates connection
      * with username and password specified in TURBO properties file and returns TurboGraphConnection object.
@@ -49,10 +52,10 @@ object ConnectToGraphDB extends ProjectwideGlobals
             val repository: Repository = repoManager.getRepository(repoName)
             val cxn: RepositoryConnection = repository.getConnection()
             
-            val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(modelServiceURL)
-            gmRepoManager.setUsernameAndPassword(modelUsername, modelPassword)
+            val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(Globals.modelServiceURL)
+            gmRepoManager.setUsernameAndPassword(Globals.modelUsername, Globals.modelPassword)
             gmRepoManager.initialize()
-            val gmRepository: Repository = gmRepoManager.getRepository(modelRepository)
+            val gmRepository: Repository = gmRepoManager.getRepository(Globals.modelRepository)
             val gmCxn: RepositoryConnection = gmRepository.getConnection()
             
             graphConnect.setConnection(cxn)
@@ -137,7 +140,7 @@ object ConnectToGraphDB extends ProjectwideGlobals
                 props.getProperty(requiredProperties(a)).isEmpty()
                 if (requiredProperties(a) == "loadAdditionalOntologies")
                 {
-                    if (getBooleanProperty("loadAdditionalOntologies")) 
+                    if (Globals.getBooleanProperty("loadAdditionalOntologies")) 
                     try
                     {
                         props.getProperty("bioportalApiKey").isEmpty()
@@ -179,12 +182,12 @@ object ConnectToGraphDB extends ProjectwideGlobals
 
     def getTestRepositoryConnection(): TurboGraphConnection =
     {
-        logger.info(s"Connecting to repository $testingRepository at $testingServiceURL as $testingUsername")
+        logger.info(s"Connecting to repository "+Globals.testingRepository+ " at " +Globals.testingServiceURL+ " as " +Globals.testingUsername)
 
-        val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(testingServiceURL)
-        repoManager.setUsernameAndPassword(testingUsername, testingPassword)
+        val repoManager: RemoteRepositoryManager = new RemoteRepositoryManager(Globals.testingServiceURL)
+        repoManager.setUsernameAndPassword(Globals.testingUsername, Globals.testingPassword)
         repoManager.initialize()
-        val repository: Repository = repoManager.getRepository(testingRepository)
+        val repository: Repository = repoManager.getRepository(Globals.testingRepository)
         val testCxn: RepositoryConnection = repository.getConnection()
         
         val graphConnection = new TurboGraphConnection
@@ -192,10 +195,10 @@ object ConnectToGraphDB extends ProjectwideGlobals
         graphConnection.setRepoManager(repoManager)
         graphConnection.setRepository(repository)
         
-        val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(modelServiceURL)
-        gmRepoManager.setUsernameAndPassword(modelUsername, modelPassword)
+        val gmRepoManager: RemoteRepositoryManager = new RemoteRepositoryManager(Globals.modelServiceURL)
+        gmRepoManager.setUsernameAndPassword(Globals.modelUsername, Globals.modelPassword)
         gmRepoManager.initialize()
-        val gmRepository: Repository = gmRepoManager.getRepository(modelRepository)
+        val gmRepository: Repository = gmRepoManager.getRepository(Globals.modelRepository)
         val gmCxn: RepositoryConnection = gmRepository.getConnection()
         
         graphConnection.setGmConnection(gmCxn)
@@ -218,18 +221,18 @@ object ConnectToGraphDB extends ProjectwideGlobals
         if ("main" == System.getenv("SCALA_ENV"))
         {
             logger.info("Running in production mode")
-            serviceURL = productionServiceURL
-            username = productionUsername
-            password = productionPassword
-            repository = productionRepository   
+            serviceURL = Globals.productionServiceURL
+            username = Globals.productionUsername
+            password = Globals.productionPassword
+            repository = Globals.productionRepository   
         }
         else if ("test" == System.getenv("SCALA_ENV"))
         {
             logger.info("Running in testing mode")
-            serviceURL = testingServiceURL
-            username = testingUsername
-            password = testingPassword
-            repository = testingRepository   
+            serviceURL = Globals.testingServiceURL
+            username = Globals.testingUsername
+            password = Globals.testingPassword
+            repository = Globals.testingRepository   
         }
         else throw new RuntimeException("System variable SCALA_ENV must be set to \"main\" or \"test\"; check your build.sbt file")
         logger.info(s"Connecting to repository $repository at $serviceURL as $username")

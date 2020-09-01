@@ -13,9 +13,11 @@ import org.json4s._
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization
+import org.slf4j.LoggerFactory
 
-class TestBuilder extends ProjectwideGlobals
+class TestBuilder
 {
+    val logger = LoggerFactory.getLogger(getClass)
     implicit val formats = org.json4s.DefaultFormats
     
     //only make all fields? in the case that there are no optional triples
@@ -27,14 +29,14 @@ class TestBuilder extends ProjectwideGlobals
         RunDrivetrainProcess.setGlobalUUID(UUIDKey)
         for (process <- processList)
         {
-            val processAsURI = helper.getProcessNameAsUri(process)
-            val graphModelValidator = new GraphModelValidator(gmCxn)
+            val processAsURI = Utilities.getProcessNameAsUri(process)
+            val graphModelValidator = new GraphModelValidator()
             graphModelValidator.validateProcessSpecification(processAsURI)
-            val modelReader = new GraphModelReader(gmCxn)
+            val modelReader = new GraphModelReader()
             val inputs = modelReader.getInputs(processAsURI)
             val inputTriplesArr = generateInputTriples(processAsURI, inputs, gmCxn)
             val minimumTripleSet = inputTriplesArr(1)
-            update.updateSparql(cxn, "INSERT DATA {" + minimumTripleSet + "}")
+            SparqlUpdater.updateSparql(cxn, "INSERT DATA {" + minimumTripleSet + "}")
             val queryResultMin = RunDrivetrainProcess.runProcess(processAsURI)
         }
     }
@@ -45,14 +47,14 @@ class TestBuilder extends ProjectwideGlobals
         RunDrivetrainProcess.setGlobalUUID(UUIDKey)
         for (process <- processList)
         {
-            val processAsURI = helper.getProcessNameAsUri(process)
-            val graphModelValidator = new GraphModelValidator(gmCxn)
+            val processAsURI = Utilities.getProcessNameAsUri(process)
+            val graphModelValidator = new GraphModelValidator()
             graphModelValidator.validateProcessSpecification(processAsURI)            
-            val modelReader = new GraphModelReader(gmCxn)
+            val modelReader = new GraphModelReader()
             val inputs = modelReader.getInputs(processAsURI)
-            val inputTriplesArr = generateInputTriples(processAsURI, inputs, gmCxn)
+            val inputTriplesArr = generateInputTriples(processAsURI, inputs, Globals.gmCxn)
             val fullTripleSet = inputTriplesArr(0)
-            update.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
+            SparqlUpdater.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
             val queryResultMax = RunDrivetrainProcess.runProcess(processAsURI)   
         }
     }
@@ -62,12 +64,12 @@ class TestBuilder extends ProjectwideGlobals
         val UUIDKey = UUID.randomUUID().toString().replaceAll("-", "")
         RunDrivetrainProcess.setGlobalUUID(UUIDKey)
         
-        val testFileName = helper.getPostfixfromURI(process) + "SnapshotTest"
-        val instructionSetName = instructionSetFile.split("\\.")(0)
+        val testFileName = Utilities.getPostfixfromURI(process) + "SnapshotTest"
+        val instructionSetName = Globals.instructionSetFile.split("\\.")(0)
         val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + instructionSetName + "_" + testFileName + ".snapshot")
         testFilePath.getParentFile().mkdirs()
         
-        val modelReader = new GraphModelReader(gmCxn)
+        val modelReader = new GraphModelReader()
         val inputs = modelReader.getInputs(process)
         
         val inputTriplesArr = generateInputTriples(process, inputs, gmCxn)
@@ -76,24 +78,24 @@ class TestBuilder extends ProjectwideGlobals
         
         println(fullTripleSet)
         
-        update.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
+        SparqlUpdater.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
         val queryResultMax = RunDrivetrainProcess.runProcess(process)
-        val outputNamedGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(queryResultMax(process).defaultOutputGraph)
+        val outputNamedGraph = Utilities.checkAndConvertPropertiesReferenceToNamedGraph(queryResultMax(process).defaultOutputGraph)
         val outputPredsMax = getOutputPredicates(cxn, outputNamedGraph)
         assert (outputPredsMax.size > 0, s"""Process $process did not create any output based on the "all fields" input.
         This is likely a bug in the TestBuilder code.
         Check that the required and optional triples above are formatted as expected for an input to this process, and call Hayden.""")
         
-        helper.deleteAllTriplesInDatabase(cxn)
+        Utilities.deleteAllTriplesInDatabase(cxn)
         
-        update.updateSparql(cxn, "INSERT DATA {" + minimumTripleSet + "}")
+        SparqlUpdater.updateSparql(cxn, "INSERT DATA {" + minimumTripleSet + "}")
         val queryResultMin = RunDrivetrainProcess.runProcess(process)
         val outputPredsMin = getOutputPredicates(cxn, outputNamedGraph)
         assert (outputPredsMax.size > 0, s"""Process $process did not create any output based on the "minimum fields" input.
         This is likely a bug in the TestBuilder code.
         Check that the required triples above are formatted as expected for an input to this process, and call Hayden.""")
         
-        helper.deleteAllTriplesInDatabase(cxn)
+        Utilities.deleteAllTriplesInDatabase(cxn)
 
         logger.info("Writing test file...")
         
@@ -156,7 +158,7 @@ class TestBuilder extends ProjectwideGlobals
         var generatedRequiredTriples = new HashMap[String, HashSet[String]]
         var generatedOptionalTriples = new HashMap[String, HashSet[String]]
         
-        val defaultInputGraph = inputs(0)(GRAPH.toString).toString
+        val defaultInputGraph = inputs(0)(Globals.GRAPH.toString).toString
         
         val instanceCounts = CardinalityCountBuilder.getInstanceCounts(inputs)
         println("Creating test data with the following instance counts:")
@@ -165,11 +167,11 @@ class TestBuilder extends ProjectwideGlobals
         for (input <- inputs)
         {
             var thisGraph = defaultInputGraph
-            if (input(GRAPHOFCREATINGPROCESS.toString) != null) thisGraph = input(GRAPHOFCREATINGPROCESS.toString).toString
-            if (input(GRAPHOFORIGIN.toString) != null) thisGraph = input(GRAPHOFORIGIN.toString).toString
+            if (input(Globals.GRAPHOFCREATINGPROCESS.toString) != null) thisGraph = input(Globals.GRAPHOFCREATINGPROCESS.toString).toString
+            if (input(Globals.GRAPHOFORIGIN.toString) != null) thisGraph = input(Globals.GRAPHOFORIGIN.toString).toString
             
-            val inputType = input(INPUTTYPE.toString).toString
-            val optionalBlock = input(OPTIONALGROUP.toString)
+            val inputType = input(Globals.INPUTTYPE.toString).toString
+            val optionalBlock = input(Globals.OPTIONALGROUP.toString)
             if (optionalBlock == null && inputType == "https://github.com/PennTURBO/Drivetrain/hasRequiredInput")
             {
                 if (!generatedRequiredTriples.contains(thisGraph)) generatedRequiredTriples += thisGraph -> new HashSet[String]
@@ -186,13 +188,13 @@ class TestBuilder extends ProjectwideGlobals
         var generatedOptionalTriplesAsString = ""
         for ((graph,triples) <- generatedRequiredTriples) 
         {
-            generatedRequiredTriplesAsString += "GRAPH <" + helper.checkAndConvertPropertiesReferenceToNamedGraph(graph) + "> {\n"
+            generatedRequiredTriplesAsString += "GRAPH <" + Utilities.checkAndConvertPropertiesReferenceToNamedGraph(graph) + "> {\n"
             for (triple <- triples) generatedRequiredTriplesAsString += triple
             generatedRequiredTriplesAsString += "}\n"
         }
         for ((graph,triples) <- generatedOptionalTriples)
         {
-            generatedOptionalTriplesAsString += "GRAPH <" + helper.checkAndConvertPropertiesReferenceToNamedGraph(graph) + "> {\n"
+            generatedOptionalTriplesAsString += "GRAPH <" + Utilities.checkAndConvertPropertiesReferenceToNamedGraph(graph) + "> {\n"
             for (triple <- triples) generatedOptionalTriplesAsString += triple
             generatedOptionalTriplesAsString += "}\n"
         }
@@ -216,24 +218,24 @@ class TestBuilder extends ProjectwideGlobals
     
     def getOutputPredicates(cxn: RepositoryConnection, outputNamedGraph: String): ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] =
     {
-        update.querySparqlAndUnpackTuple(cxn, s"Select * Where { Graph <$outputNamedGraph> { ?s ?p ?o . }}", Array("s", "p", "o"))
+        SparqlUpdater.querySparqlAndUnpackTuple(cxn, s"Select * Where { Graph <$outputNamedGraph> { ?s ?p ?o . }}", Array("s", "p", "o"))
     }
     
     def makeInstanceDataFromTriple(gmCxn: RepositoryConnection, input: HashMap[String,org.eclipse.rdf4j.model.Value], instanceCounts: HashMap[String, Integer]): ArrayBuffer[String] =
     {
         var thisTripleAsData = new ArrayBuffer[String]
         
-        val connectionType = input(CONNECTIONRECIPETYPE.toString).toString
-        val connectionName = input(CONNECTIONNAME.toString).toString
-        var subjectString = input(SUBJECT.toString).toString
-        val predicateString = input(PREDICATE.toString).toString
-        var objectString = input(OBJECT.toString).toString
+        val connectionType = input(Globals.CONNECTIONRECIPETYPE.toString).toString
+        val connectionName = input(Globals.CONNECTIONNAME.toString).toString
+        var subjectString = input(Globals.SUBJECT.toString).toString
+        val predicateString = input(Globals.PREDICATE.toString).toString
+        var objectString = input(Globals.OBJECT.toString).toString
         
-        val objectADescriber = input(OBJECTADESCRIBER.toString)
-        val subjectADescriber = input(SUBJECTADESCRIBER.toString)
+        val objectADescriber = input(Globals.OBJECTADESCRIBER.toString)
+        val subjectADescriber = input(Globals.SUBJECTADESCRIBER.toString)
         
-        if (input(SUBJECTCONTEXT.toString) != null) subjectString += "_"+helper.convertTypeToSparqlVariable(input(SUBJECTCONTEXT.toString).toString).substring(1)
-        if (input(OBJECTCONTEXT.toString) != null) objectString += "_"+helper.convertTypeToSparqlVariable(input(OBJECTCONTEXT.toString).toString).substring(1)
+        if (input(Globals.SUBJECTCONTEXT.toString) != null) subjectString += "_"+Utilities.convertTypeToSparqlVariable(input(Globals.SUBJECTCONTEXT.toString).toString).substring(1)
+        if (input(Globals.OBJECTCONTEXT.toString) != null) objectString += "_"+Utilities.convertTypeToSparqlVariable(input(Globals.OBJECTCONTEXT.toString).toString).substring(1)
         
         val subjectInstanceArray = new ArrayBuffer[String]
         val objectInstanceArray = new ArrayBuffer[String]
@@ -291,7 +293,7 @@ class TestBuilder extends ProjectwideGlobals
             var localObjectString = objectString
             if (objectADescriber != null)
             {
-                val descRanges = helper.getDescriberRangesAsList(gmCxn, objectString)
+                val descRanges = Utilities.getDescriberRangesAsList(gmCxn, objectString)
                 if (descRanges == None) localObjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
                 else localObjectString = descRanges.get(0)
             }
@@ -306,7 +308,7 @@ class TestBuilder extends ProjectwideGlobals
             var localSubjectString = subjectString
             if (subjectADescriber != null)
             {
-                val descRanges = helper.getDescriberRangesAsList(gmCxn, subjectString)
+                val descRanges = Utilities.getDescriberRangesAsList(gmCxn, subjectString)
                 if (descRanges == None) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
                 else localSubjectString = descRanges.get(0)
             }
@@ -322,13 +324,13 @@ class TestBuilder extends ProjectwideGlobals
             var localObjectString = objectString
             if (subjectADescriber != null)
             {
-                val descRanges = helper.getDescriberRangesAsList(gmCxn, subjectString)
+                val descRanges = Utilities.getDescriberRangesAsList(gmCxn, subjectString)
                 if (descRanges == None) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
                 else localSubjectString = descRanges.get(0)
             }
             if (objectADescriber != null)
             {
-                val descRanges = helper.getDescriberRangesAsList(gmCxn, objectString)
+                val descRanges = Utilities.getDescriberRangesAsList(gmCxn, objectString)
                 if (descRanges == None) localObjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
                 else localObjectString = descRanges.get(0)
             }
@@ -336,8 +338,8 @@ class TestBuilder extends ProjectwideGlobals
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe")
         {
-            if (input(GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as instance-to-literal, but does not have literal object.")
-            val literalType = input(GRAPHLITERALTYPE.toString).toString
+            if (input(Globals.GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as instance-to-literal, but does not have literal object.")
+            val literalType = input(Globals.GRAPHLITERALTYPE.toString).toString
             for (subjectURI <- subjectInstanceArray)
             {
                 thisTripleAsData += makeTripleWithLiteral(literalType, objectString, subjectURI, predicateString)
@@ -346,12 +348,12 @@ class TestBuilder extends ProjectwideGlobals
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe")
         {
-            if (input(GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as term-to-literal, but does not have literal object.")
-            val literalType = input(GRAPHLITERALTYPE.toString).toString
+            if (input(Globals.GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as term-to-literal, but does not have literal object.")
+            val literalType = input(Globals.GRAPHLITERALTYPE.toString).toString
             var localSubjectString = subjectString
             if (subjectADescriber != null)
             {
-                val descRanges = helper.getDescriberRangesAsList(gmCxn, subjectString)
+                val descRanges = Utilities.getDescriberRangesAsList(gmCxn, subjectString)
                 if (descRanges == None) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
                 else localSubjectString = descRanges.get(0)
             }

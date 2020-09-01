@@ -6,27 +6,28 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
 import org.eclipse.rdf4j.model.Value
 import java.util.UUID
+import org.slf4j.LoggerFactory
 
 // this class stores the strings for a SPARQL query's clauses and is a factory for building SPARQL UPDATE queries
-abstract class Query extends ProjectwideGlobals
+abstract class Query
 {
+    val logger = LoggerFactory.getLogger(getClass)
+    
     var query: String = ""
     var defaultOutputGraph: String = null
     
     def runQuery(cxn: RepositoryConnection)
     {
         assert (query != "" && query != null)
-        update.updateSparql(cxn, query)
+        SparqlUpdater.updateSparql(cxn, query)
     }
     
     def getQuery(): String = query
 }
 
 // this class builds a SPARQL UPDATE that is dependent on a specified pattern in the WHERE clause (inputs), as opposed to inserting static data
-class PatternMatchQuery(cxn: RepositoryConnection) extends Query
+class PatternMatchQuery() extends Query
 {
-    this.gmCxn = cxn
-    
     // new node URIs are created here
     var bindClause: String = ""
     // inputs go here
@@ -57,7 +58,7 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
         assert (query != "" && query != null)
         val graphUUID = UUID.randomUUID().toString().replaceAll("-", "")
         logger.info(query)
-        update.updateSparql(cxn, query)
+        SparqlUpdater.updateSparql(cxn, query)
     }
     
     override def getQuery(): String = deleteClause + "\n" + insertClause + "\n" + whereClause + bindClause + "}"
@@ -65,19 +66,19 @@ class PatternMatchQuery(cxn: RepositoryConnection) extends Query
     def setInputGraph(inputGraph: String)
     {
         this.defaultInputGraph = inputGraph
-        helper.validateURI(this.defaultInputGraph)
+        Utilities.validateURI(this.defaultInputGraph)
     }
     
     def setOutputGraph(outputGraph: String)
     {
         this.defaultOutputGraph = outputGraph
-        helper.validateURI(this.defaultOutputGraph)
+        Utilities.validateURI(this.defaultOutputGraph)
     }
     
     def setRemovalsGraph(removalsGraph: String)
     {
         this.defaultRemovalsGraph = removalsGraph
-        helper.validateURI(this.defaultRemovalsGraph)
+        Utilities.validateURI(this.defaultRemovalsGraph)
     }
     
     def setProcessSpecification(processSpecification: String)

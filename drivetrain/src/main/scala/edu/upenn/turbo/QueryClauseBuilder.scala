@@ -3,10 +3,12 @@ package edu.upenn.turbo
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
+import org.slf4j.LoggerFactory
 
-trait QueryClauseBuilder extends ProjectwideGlobals
+trait QueryClauseBuilder
 {
     var includeValuesBlocks: Boolean = false
+    val logger = LoggerFactory.getLogger(getClass)
 }
 
 class DeleteClauseBuilder extends QueryClauseBuilder
@@ -60,28 +62,28 @@ class InsertClauseBuilder extends QueryClauseBuilder
                 val outputRecipe = new TermToTermConnRecipe(processTerm, "http://transformunify.org/ontologies/TURBO_0010184", recipe.subject.asInstanceOf[Term])
                 outputRecipe.isOptional = Some(false)
                 outputTerms += recipe.subject.asInstanceOf[Term]
-                insertClauseStructure.addToAlternateGraphsRequireds(processNamedGraph, outputRecipe)
+                insertClauseStructure.addToAlternateGraphsRequireds(Globals.processNamedGraph, outputRecipe)
             }
             if (recipe.crObject.isInstanceOf[Term] && !outputTerms.contains(recipe.crObject.asInstanceOf[Term]))
             {
                 val outputRecipe = new TermToTermConnRecipe(processTerm, "http://transformunify.org/ontologies/TURBO_0010184", recipe.crObject.asInstanceOf[Term])
                 outputRecipe.isOptional = Some(false)
                 outputTerms += recipe.crObject.asInstanceOf[Term]
-                insertClauseStructure.addToAlternateGraphsRequireds(processNamedGraph, outputRecipe)
+                insertClauseStructure.addToAlternateGraphsRequireds(Globals.processNamedGraph, outputRecipe)
             }
             if (recipe.subject.isInstanceOf[Instance] && !outputInstances.contains(recipe.subject.asInstanceOf[Instance]))
             {
                 val outputRecipe = new TermToInstConnRecipe(processTerm, "http://transformunify.org/ontologies/TURBO_0010184", recipe.subject.asInstanceOf[Instance])
                 outputRecipe.isOptional = Some(false)
                 outputInstances += recipe.subject.asInstanceOf[Instance]
-                insertClauseStructure.addToAlternateGraphsRequireds(processNamedGraph, outputRecipe)
+                insertClauseStructure.addToAlternateGraphsRequireds(Globals.processNamedGraph, outputRecipe)
             }
             if (recipe.crObject.isInstanceOf[Instance] && !outputInstances.contains(recipe.crObject.asInstanceOf[Instance]))
             {
                 val outputRecipe = new TermToInstConnRecipe(processTerm, "http://transformunify.org/ontologies/TURBO_0010184", recipe.crObject.asInstanceOf[Instance])
                 outputRecipe.isOptional = Some(false)
                 outputInstances += recipe.crObject.asInstanceOf[Instance]
-                insertClauseStructure.addToAlternateGraphsRequireds(processNamedGraph, outputRecipe)
+                insertClauseStructure.addToAlternateGraphsRequireds(Globals.processNamedGraph, outputRecipe)
             }
         }
         for (recipe <- inputs)
@@ -91,28 +93,28 @@ class InsertClauseBuilder extends QueryClauseBuilder
                 val inputRecipe = new TermToTermConnRecipe(processTerm, "http://purl.obolibrary.org/obo/OBI_0000293", recipe.subject.asInstanceOf[Term])
                 inputRecipe.isOptional = Some(false)
                 inputTerms += recipe.subject.asInstanceOf[Term]
-                insertClauseStructure.addToAlternateGraphsRequireds(processNamedGraph, inputRecipe)
+                insertClauseStructure.addToAlternateGraphsRequireds(Globals.processNamedGraph, inputRecipe)
             }
             if (recipe.crObject.isInstanceOf[Term] && !inputTerms.contains(recipe.crObject.asInstanceOf[Term]))
             {
                 val inputRecipe = new TermToTermConnRecipe(processTerm, "http://purl.obolibrary.org/obo/OBI_0000293", recipe.crObject.asInstanceOf[Term])
                 inputRecipe.isOptional = Some(false)
                 inputTerms += recipe.crObject.asInstanceOf[Term]
-                insertClauseStructure.addToAlternateGraphsRequireds(processNamedGraph, inputRecipe)
+                insertClauseStructure.addToAlternateGraphsRequireds(Globals.processNamedGraph, inputRecipe)
             }
             if (recipe.subject.isInstanceOf[Instance] && !inputInstances.contains(recipe.subject.asInstanceOf[Instance]))
             {
                 val inputRecipe = new TermToInstConnRecipe(processTerm, "http://purl.obolibrary.org/obo/OBI_0000293", recipe.subject.asInstanceOf[Instance])
                 inputRecipe.isOptional = Some(false)
                 inputInstances += recipe.subject.asInstanceOf[Instance]
-                insertClauseStructure.addToAlternateGraphsRequireds(processNamedGraph, inputRecipe)
+                insertClauseStructure.addToAlternateGraphsRequireds(Globals.processNamedGraph, inputRecipe)
             }
             if (recipe.crObject.isInstanceOf[Instance] && !inputInstances.contains(recipe.crObject.asInstanceOf[Instance]))
             {
                 val inputRecipe = new TermToInstConnRecipe(processTerm, "http://purl.obolibrary.org/obo/OBI_0000293", recipe.crObject.asInstanceOf[Instance])
                 inputRecipe.isOptional = Some(false)
                 inputInstances += recipe.crObject.asInstanceOf[Instance]
-                insertClauseStructure.addToAlternateGraphsRequireds(processNamedGraph, inputRecipe)
+                insertClauseStructure.addToAlternateGraphsRequireds(Globals.processNamedGraph, inputRecipe)
             }
         }
         "INSERT {\n " + insertClauseStructure.buildClause(defaultGraph, includeValuesBlocks) + "}\n"

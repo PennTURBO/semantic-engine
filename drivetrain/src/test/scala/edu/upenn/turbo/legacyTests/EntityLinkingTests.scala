@@ -8,10 +8,15 @@ import org.scalatest.BeforeAndAfter
 import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
+import org.slf4j.LoggerFactory
 
-class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers with EntityLinkingUnitTestFields
+class BiobankEncounterEntityLinkingUnitTests extends FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers with EntityLinkingUnitTestFields
   {
+      val logger = LoggerFactory.getLogger(getClass)
+    
       val clearTestingRepositoryAfterRun: Boolean = false
+      
+      var graphDBMaterials: TurboGraphConnection = null
       
       var conclusionationNamedGraph: IRI = null
       var masterConclusionation: IRI = null
@@ -22,7 +27,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
       
       val expectedQuery: String = s"""
         INSERT {
-        GRAPH <$expandedNamedGraph> {
+        GRAPH <${Globals.expandedNamedGraph}> {
         ?NCBITaxon_9606 <http://purl.obolibrary.org/obo/RO_0000086> ?PATO_0000119 .
         ?NCBITaxon_9606 rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
         ?PATO_0000119 rdf:type <http://purl.obolibrary.org/obo/PATO_0000119> .
@@ -42,7 +47,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
         ?EFO_0004340 <http://purl.obolibrary.org/obo/IAO_0000136> ?NCBITaxon_9606 .
         ?EFO_0004340 rdf:type <http://www.ebi.ac.uk/efo/EFO_0004340> .
         }
-        GRAPH <$processNamedGraph> {
+        GRAPH <${Globals.processNamedGraph}> {
         <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?NCBITaxon_9606 .
         <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?PATO_0000119 .
         <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?OBI_0000097 .
@@ -61,7 +66,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
         }
         }
         WHERE {
-        GRAPH <$expandedNamedGraph> {
+        GRAPH <${Globals.expandedNamedGraph}> {
         ?TURBO_0010161 <http://transformunify.org/ontologies/TURBO_0010113> ?NCBITaxon_9606 .
         ?TURBO_0010161 rdf:type <http://transformunify.org/ontologies/TURBO_0010161> .
         ?NCBITaxon_9606 rdf:type <http://purl.obolibrary.org/obo/NCBITaxon_9606> .
@@ -82,9 +87,9 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
          ?OBI_0001929 rdf:type <http://purl.obolibrary.org/obo/OBI_0001929> .
         }
         }
-        BIND(IF (BOUND(?TURBO_0010138), uri(concat("$defaultPrefix",SHA256(CONCAT("?PATO_0000119","localUUID", str(?NCBITaxon_9606))))), ?unbound) AS ?PATO_0000119)
-        BIND(IF (BOUND(?OBI_0001929), uri(concat("$defaultPrefix",SHA256(CONCAT("?PATO_0000128","localUUID", str(?NCBITaxon_9606))))), ?unbound) AS ?PATO_0000128)
-        BIND(uri(concat("$defaultPrefix",SHA256(CONCAT("?OBI_0000097","localUUID")))) AS ?OBI_0000097)
+        BIND(IF (BOUND(?TURBO_0010138), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?PATO_0000119","localUUID", str(?NCBITaxon_9606))))), ?unbound) AS ?PATO_0000119)
+        BIND(IF (BOUND(?OBI_0001929), uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?PATO_0000128","localUUID", str(?NCBITaxon_9606))))), ?unbound) AS ?PATO_0000128)
+        BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT("?OBI_0000097","localUUID")))) AS ?OBI_0000097)
         }
         """
       
@@ -94,11 +99,9 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
           
           graphDBMaterials = ConnectToGraphDB.initializeGraph()
           DrivetrainDriver.updateModel(graphDBMaterials, "testing_instruction_set.tis", "testing_graph_specification.gs")
-          cxn = graphDBMaterials.getConnection()
-          gmCxn = graphDBMaterials.getGmConnection()
-          helper.deleteAllTriplesInDatabase(cxn)
-          
-          RunDrivetrainProcess.setConnections(gmCxn, cxn)
+          Globals.cxn = graphDBMaterials.getConnection()
+          Globals.gmCxn = graphDBMaterials.getGmConnection()
+          Utilities.deleteAllTriplesInDatabase(Globals.cxn)
       }
       
       override def afterAll()
@@ -108,12 +111,12 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
       
       before
       {
-          helper.deleteAllTriplesInDatabase(cxn)
+          Utilities.deleteAllTriplesInDatabase(Globals.cxn)
       }
       
       test("generated query matched expected query - biobank")
       {
-          helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", expectedQuery) should be (true) 
+          Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", expectedQuery) should be (true) 
       }
       
       test("biobank encounter entity linking - all fields")
@@ -122,19 +125,19 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
           val insert = s"""
                 INSERT DATA
                 {
-                Graph <$expandedNamedGraph> {
+                Graph <${Globals.expandedNamedGraph}> {
                     $biobankEncounterTriplesAllFields
                     $homoSapiensTriplesAllFields
                   }
                 }
             """
-          update.updateSparql(cxn, insert)
-          RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false)
+          SparqlUpdater.updateSparql(Globals.cxn, insert)
+          RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", Globals.dataValidationMode, false)
           
            val check: String = s"""
             ASK
             {
-            graph <$expandedNamedGraph> {
+            graph <${Globals.expandedNamedGraph}> {
                 ?homoSapiens obo:RO_0000056 ?biobankEncounter .
                 ?homoSapiens obo:RO_0000087 ?puirole .
             		?puirole a obo:OBI_0000097 .
@@ -170,14 +173,14 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
             }}
             """
           
-      update.querySparqlBoolean(cxn, check).get should be (true)
-      update.querySparqlBoolean(cxn, processMetaBiobank).get should be (true)
+      SparqlUpdater.querySparqlBoolean(Globals.cxn, check).get should be (true)
+      SparqlUpdater.querySparqlBoolean(Globals.cxn, processMetaBiobank).get should be (true)
           
       val processInputsOutputs: String = s"""
         
         ASK
         {
-            GRAPH <$processNamedGraph>
+            GRAPH <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -198,7 +201,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
                   ontologies:TURBO_0010184 ?OBI_0000097 ;
                   ontologies:TURBO_0010184 ?PATO_0000128 ;
             }
-            GRAPH <$expandedNamedGraph>
+            GRAPH <${Globals.expandedNamedGraph}>
             {
                 ?TURBO_0000527 a turbo:TURBO_0000527 .
                 ?EFO_0004340 a efo:EFO_0004340 .
@@ -213,10 +216,10 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
         
         """
       
-        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processInputsOutputs).get should be (true)
           
-        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+        val count: String = s"SELECT * WHERE {GRAPH <${Globals.expandedNamedGraph}> {?s ?p ?o .}}"
+        val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "p")
       
         var expectedPredicates: ArrayBuffer[String] = ArrayBuffer(
           "http://purl.obolibrary.org/obo/RO_0000056", "http://purl.obolibrary.org/obo/RO_0000086",
@@ -230,7 +233,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
         homoSapiensAllFieldsExpectedPredicates.foreach(expectedPredicates += _)
         biobankEncounterAllFieldsExpectedPredicates.foreach(expectedPredicates += _)
         
-        helper.checkStringArraysForEquivalency(expectedPredicates.toArray, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
+        Utilities.checkStringArraysForEquivalency(expectedPredicates.toArray, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
         result.size should be (expectedPredicates.size)
     }
   
@@ -240,19 +243,19 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
         val insert = s"""
               INSERT DATA
               {
-              Graph <$expandedNamedGraph> {
+              Graph <${Globals.expandedNamedGraph}> {
                   $biobankEncounterTriplesMinimumFields
                   $homoSapiensTriplesMinimumFields
                 }
               }
           """
-        update.updateSparql(cxn, insert)
-        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", dataValidationMode, false)
+        SparqlUpdater.updateSparql(Globals.cxn, insert)
+        RunDrivetrainProcess.runProcess("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess", Globals.dataValidationMode, false)
         
         val check: String = s"""
           ASK
           {
-              graph <$expandedNamedGraph>
+              graph <${Globals.expandedNamedGraph}>
               {
                   ?homoSapiens obo:RO_0000056 ?biobankEncounter .
                   ?homoSapiens obo:RO_0000087 ?puirole .
@@ -286,15 +289,15 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
               ?s a ?heightOrWeight . }
           """
         
-        update.querySparqlBoolean(cxn, check).get should be (true)
-        update.querySparqlBoolean(cxn, noHeightWeightBmiOrDate).get should be (false)
-        update.querySparqlBoolean(cxn, processMetaBiobank).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, check).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, noHeightWeightBmiOrDate).get should be (false)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processMetaBiobank).get should be (true)
         
         val processInputsOutputs: String = s"""
         
         ASK
         {
-            GRAPH <$processNamedGraph>
+            GRAPH <${Globals.processNamedGraph}>
             {
                 ?process a turbo:TURBO_0010347 ;
                 
@@ -307,7 +310,7 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
                   ontologies:TURBO_0010184 ?NCBITaxon_9606 ;
                   ontologies:TURBO_0010184 ?OBI_0000097 ;
             }
-            GRAPH <$expandedNamedGraph>
+            GRAPH <${Globals.expandedNamedGraph}>
             {
                 ?TURBO_0000527 a turbo:TURBO_0000527 .
                 ?NCBITaxon_9606 a obo:NCBITaxon_9606 .
@@ -317,10 +320,10 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
         
         """
       
-        update.querySparqlBoolean(cxn, processInputsOutputs).get should be (true)
+        SparqlUpdater.querySparqlBoolean(Globals.cxn, processInputsOutputs).get should be (true)
         
-        val count: String = s"SELECT * WHERE {GRAPH <$expandedNamedGraph> {?s ?p ?o .}}"
-        val result = update.querySparqlAndUnpackTuple(cxn, count, "p")
+        val count: String = s"SELECT * WHERE {GRAPH <${Globals.expandedNamedGraph}> {?s ?p ?o .}}"
+        val result = SparqlUpdater.querySparqlAndUnpackTuple(Globals.cxn, count, "p")
       
         var expectedPredicates: ArrayBuffer[String] = ArrayBuffer(
           "http://purl.obolibrary.org/obo/RO_0000056", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
@@ -329,12 +332,12 @@ class BiobankEncounterEntityLinkingUnitTests extends ProjectwideGlobals with Fun
         homoSapiensMinimumFieldsExpectedPredicates.foreach(expectedPredicates += _)
         biobankEncounterMinimumFieldsExpectedPredicates.foreach(expectedPredicates += _)
         
-        helper.checkStringArraysForEquivalency(expectedPredicates.toArray, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
+        Utilities.checkStringArraysForEquivalency(expectedPredicates.toArray, result.toArray)("equivalent").asInstanceOf[String] should be ("true")
           result.size should be (expectedPredicates.size)
       }
 }
     
-trait EntityLinkingUnitTestFields extends ProjectwideGlobals
+trait EntityLinkingUnitTestFields
 {
      val homoSapiensTriplesAllFields = """
     
@@ -579,7 +582,7 @@ trait EntityLinkingUnitTestFields extends ProjectwideGlobals
   val biobankEncounterAllFieldsOutput: String = s"""
           ASK
           {
-          graph <$expandedNamedGraph> {
+          graph <${Globals.expandedNamedGraph}> {
               ?homoSapiens obo:RO_0000056 ?biobankEncounter .
               ?homoSapiens obo:RO_0000087 ?puirole .
           		?puirole a obo:OBI_0000097 .
@@ -615,6 +618,6 @@ trait EntityLinkingUnitTestFields extends ProjectwideGlobals
           }}
           """
   
-      val processMetaBiobank = helper.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
+      val processMetaBiobank = Utilities.buildProcessMetaQuery("http://www.itmat.upenn.edu/biobank/BiobankEncounterEntityLinkingProcess")
 }
     

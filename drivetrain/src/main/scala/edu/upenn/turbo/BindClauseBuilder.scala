@@ -7,9 +7,12 @@ import org.eclipse.rdf4j.model.Value
 import java.util.regex.Pattern
 import org.eclipse.rdf4j.repository.RepositoryConnection
 import scala.util.control._
+import org.slf4j.LoggerFactory
 
-class BindClauseBuilder extends ProjectwideGlobals
+class BindClauseBuilder
 {
+    val logger = LoggerFactory.getLogger(getClass)
+    
     var clause = ""
     
     var localUUID: String = ""
@@ -47,7 +50,7 @@ class BindClauseBuilder extends ProjectwideGlobals
         var inputHasLevelChange = false
         for (recipe <- inputs)
         {
-            if (recipe.isInstanceOf[InstToInstConnRecipe] && (recipe.cardinality == oneToManyMultiplicity || recipe.cardinality == manyToOneMultiplicity))
+            if (recipe.isInstanceOf[InstToInstConnRecipe] && (recipe.cardinality == Globals.oneToManyMultiplicity || recipe.cardinality == Globals.manyToOneMultiplicity))
             {
                 inputHasLevelChange = true
             }
@@ -63,7 +66,7 @@ class BindClauseBuilder extends ProjectwideGlobals
                     else 
                     {
                         standardElementsToBind += recipe.subject
-                        if (recipe.subject.createdWithRule == None || (recipe.subject.createdWithRule != None && recipe.subject.createdWithRule.get.contains("multiplicityEnforcer")))
+                        if (recipe.subject.createdWithRule == None || (recipe.subject.createdWithRule != None && recipe.subject.createdWithRule.get.contains("cardinalityEnforcer")))
                         {
                             assignCardinalityToInstance(recipe.subject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)
                         }
@@ -83,7 +86,7 @@ class BindClauseBuilder extends ProjectwideGlobals
                     else 
                     {
                         standardElementsToBind += recipe.crObject  
-                        if (recipe.crObject.createdWithRule == None || (recipe.crObject.createdWithRule != None && recipe.crObject.createdWithRule.get.contains("multiplicityEnforcer")))
+                        if (recipe.crObject.createdWithRule == None || (recipe.crObject.createdWithRule != None && recipe.crObject.createdWithRule.get.contains("cardinalityEnforcer")))
                         {
                             assignCardinalityToInstance(recipe.crObject.asInstanceOf[Instance], inputs, outputs, inputHasLevelChange)                            
                         }
@@ -172,11 +175,12 @@ class BindClauseBuilder extends ProjectwideGlobals
     
     def buildSingletonBindClauses()
     {
+        val defaultPrefix = Globals.defaultPrefix
         for (singleton <- singletonElements)
         {
             if (!boundInBindClause.contains(singleton))
             {
-                val singletonAsVar = helper.convertTypeToSparqlVariable(singleton.value)
+                val singletonAsVar = Utilities.convertTypeToSparqlVariable(singleton.value)
                 if (singleton.createdWithRule == None)
                 {
                     bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${singletonAsVar}\",\"${localUUID}\",\"${process}")))) AS ${singletonAsVar})\n""" 
@@ -189,7 +193,7 @@ class BindClauseBuilder extends ProjectwideGlobals
         {
             if (!boundInBindClause.contains(superSingleton))
             {
-                val superSingletonAsVar = helper.convertTypeToSparqlVariable(superSingleton.value)
+                val superSingletonAsVar = Utilities.convertTypeToSparqlVariable(superSingleton.value)
                 if (superSingleton.createdWithRule == None)
                 {
                     bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${superSingletonAsVar}\",\"${localUUID}\")))) AS ${superSingletonAsVar})\n"""
@@ -219,21 +223,21 @@ class BindClauseBuilder extends ProjectwideGlobals
     def addCustomBindRule(element: GraphPatternElement)
     {
         val elementName = element.value
-        val assigneeAsVar = helper.convertTypeToSparqlVariable(elementName)
-        var thisCustomRule = helper.removeQuotesFromString(element.createdWithRule.get.split("\\^")(0))+"\n"
+        val assigneeAsVar = Utilities.convertTypeToSparqlVariable(elementName)
+        var thisCustomRule = Utilities.removeQuotesFromString(element.createdWithRule.get.split("\\^")(0))+"\n"
         if (thisCustomRule.contains("dependent"))
         {
             assert(element.dependentOn != None, s"Element $elementName has no dependent, but dependent is requested in custom rule $thisCustomRule")
-            thisCustomRule = thisCustomRule.replaceAll("\\$\\{dependent\\}", helper.convertTypeToSparqlVariable(element.dependentOn.get.value))
+            thisCustomRule = thisCustomRule.replaceAll("\\$\\{dependent\\}", Utilities.convertTypeToSparqlVariable(element.dependentOn.get.value))
         }
         if (thisCustomRule.contains("cardinalityEnforcer"))
         {
             assert(cardinalityMap.contains(elementName), s"Element $elementName has no cardinality enforcer, but an enforcer is requested in custom rule $thisCustomRule")
-            thisCustomRule = thisCustomRule.replaceAll("\\$\\{cardinalityEnforcer\\}", helper.convertTypeToSparqlVariable(cardinalityMap(elementName)))
+            thisCustomRule = thisCustomRule.replaceAll("\\$\\{cardinalityEnforcer\\}", Utilities.convertTypeToSparqlVariable(cardinalityMap(elementName)))
         }
         thisCustomRule = thisCustomRule.replaceAll("\\$\\{replacement\\}", assigneeAsVar)
         thisCustomRule = thisCustomRule.replaceAll("\\$\\{localUUID\\}", localUUID)
-        thisCustomRule = thisCustomRule.replaceAll("\\$\\{defaultPrefix\\}", defaultPrefix)
+        thisCustomRule = thisCustomRule.replaceAll("\\$\\{defaultPrefix\\}", Globals.defaultPrefix)
         // these assertions may not be valid if a user decides to create a prefix or term with one of these words in it
         assert (!thisCustomRule.contains("replacement"), s"No replacement for custom rule was identified, but custom rule requires a replacement. Rule string: $thisCustomRule")
         assert (!thisCustomRule.contains("dependent"), s"No dependent for custom rule was identified, but custom rule requires a dependent. Rule string: $thisCustomRule")
@@ -245,18 +249,20 @@ class BindClauseBuilder extends ProjectwideGlobals
     
     def addStandardBindRule(element: GraphPatternElement)
     {   
-        var newNodeAsVar = helper.convertTypeToSparqlVariable(element.value)
+        val defaultPrefix = Globals.defaultPrefix
+        var newNodeAsVar = Utilities.convertTypeToSparqlVariable(element.value)
         assert(cardinalityMap.contains(element.value), s"No cardinality enforcer found for new element $newNodeAsVar")
-        var multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(cardinalityMap(element.value))
+        var multiplicityEnforcerAsVar = Utilities.convertTypeToSparqlVariable(cardinalityMap(element.value))
         bindRules += s"""BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))) AS ${newNodeAsVar})\n"""
     }
     
     def addDependentBindRule(element: GraphPatternElement)
     {
-        var newNodeAsVar = helper.convertTypeToSparqlVariable(element.value)
+        val defaultPrefix = Globals.defaultPrefix
+        var newNodeAsVar = Utilities.convertTypeToSparqlVariable(element.value)
         assert(cardinalityMap.contains(element.value), s"No cardinality enforcer found for new element $newNodeAsVar")
-        var multiplicityEnforcerAsVar = helper.convertTypeToSparqlVariable(cardinalityMap(element.value))
-        var dependeeAsVar = helper.convertTypeToSparqlVariable(element.dependentOn.get.value)
+        var multiplicityEnforcerAsVar = Utilities.convertTypeToSparqlVariable(cardinalityMap(element.value))
+        var dependeeAsVar = Utilities.convertTypeToSparqlVariable(element.dependentOn.get.value)
         bindRules += s"""BIND(IF (BOUND(${dependeeAsVar}), uri(concat("$defaultPrefix",SHA256(CONCAT(\"${newNodeAsVar}\",\"${localUUID}\", str(${multiplicityEnforcerAsVar}))))), ?unbound) AS ${newNodeAsVar})\n"""   
     }
 }

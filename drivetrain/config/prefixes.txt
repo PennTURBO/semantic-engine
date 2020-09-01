@@ -1,21 +1,21 @@
-PREFIX  dc11: <http://purl.org/dc/elements/1.1/>
-PREFIX  obo:  <http://purl.obolibrary.org/obo/>
-PREFIX  owl:  <http://www.w3.org/2002/07/owl#>
-PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX  turbo: <http://transformunify.org/ontologies/>
-PREFIX  ontologies: <http://transformunify.org/ontologies/>
-PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>
-PREFIX  nci:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
-PREFIX pmbb: <http://www.itmat.upenn.edu/biobank/>
-PREFIX sys: <http://www.ontotext.com/owlim/system#>
-PREFIX efo: <http://www.ebi.ac.uk/efo/>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX ns1: <http://www.geneontology.org/formats/oboInOwl#>
-PREFIX j.0: <http://example.com/resource/>
-PREFIX snomed: <http://purl.bioontology.org/ontology/SNOMEDCT/>
-PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
-PREFIX Thesaurus: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
-PREFIX properties: <https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/>
-PREFIX drivetrain: <https://github.com/PennTURBO/Drivetrain/>
-PREFIX semanticEngine: <https://github.com/PennTURBO/Drivetrain/>
+dc11:http://purl.org/dc/elements/1.1/
+obo:http://purl.obolibrary.org/obo/
+owl:http://www.w3.org/2002/07/owl#
+rdf:http://www.w3.org/1999/02/22-rdf-syntax-ns#
+rdfs:http://www.w3.org/2000/01/rdf-schema#
+turbo:http://transformunify.org/ontologies/
+ontologies:http://transformunify.org/ontologies/
+xsd:http://www.w3.org/2001/XMLSchema#
+nci:http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#
+pmbb:http://www.itmat.upenn.edu/biobank/
+sys:http://www.ontotext.com/owlim/system#
+efo:http://www.ebi.ac.uk/efo/
+skos:http://www.w3.org/2004/02/skos/core#
+ns1:http://www.geneontology.org/formats/oboInOwl#
+j.0:http://example.com/resource/
+snomed:http://purl.bioontology.org/ontology/SNOMEDCT/
+oboInOwl:http://www.geneontology.org/formats/oboInOwl#
+Thesaurus:http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#
+properties:https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/
+drivetrain:https://github.com/PennTURBO/Drivetrain/
+semanticEngine:https://github.com/PennTURBO/Drivetrain/

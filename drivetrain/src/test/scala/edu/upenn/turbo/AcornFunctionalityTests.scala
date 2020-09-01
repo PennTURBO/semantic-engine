@@ -9,12 +9,13 @@ import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
-class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
+class AcornFunctionalityTests extends FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = true
     
     val uuid = UUID.randomUUID().toString.replaceAll("-", "")
     RunDrivetrainProcess.setGlobalUUID(uuid)
+    var graphDBMaterials: TurboGraphConnection = null
     
     override def beforeAll()
     {
@@ -22,15 +23,14 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         
         graphDBMaterials = ConnectToGraphDB.initializeGraph()
         DrivetrainDriver.updateModel(graphDBMaterials)
-        cxn = graphDBMaterials.getConnection()
-        gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(cxn)
+        Globals.cxn = graphDBMaterials.getConnection()
+        Globals.gmCxn = graphDBMaterials.getGmConnection()
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
         
-        RunDrivetrainProcess.setConnections(gmCxn, cxn)
-        OntologyLoader.addOntologyFromUrl(gmCxn)
+        OntologyLoader.addOntologyFromUrl(Globals.gmCxn)
         
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "graphSpecification")
     }
     
     override def afterAll()
@@ -40,8 +40,8 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
     
     after
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "graphSpecification")
     }
     
     test("delete function works")
@@ -49,7 +49,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     pmbb:myProcess1 a turbo:TURBO_0010354 .
                     pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -92,15 +92,15 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
 
           val expectedQuery = s"""DELETE {
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             ?class1 <http://www.itmat.upenn.edu/biobank/predicate1> ?class2 .
             }
             }
             INSERT {
-            GRAPH <$processNamedGraph> {
+            GRAPH <${Globals.processNamedGraph}> {
             <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class3 .
             <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class4 .
             <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class1 .
@@ -120,7 +120,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
              }
              """
           
-         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true) 
+         Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true) 
     }
     
     test("optional group using multiple named graphs")
@@ -128,7 +128,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     pmbb:myProcess1 a turbo:TURBO_0010354 .
                     pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -177,15 +177,15 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
 
           val expectedQuery = s"""INSERT {
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             ?class1 <http://www.itmat.upenn.edu/biobank/predicate1> ?class2 .
             ?class1 rdf:type <http://www.itmat.upenn.edu/biobank/class1> .
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
-            GRAPH <$processNamedGraph> {
+            GRAPH <${Globals.processNamedGraph}> {
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class1 .
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class2 .
             <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class3 .
@@ -205,7 +205,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?class2 <http://www.itmat.upenn.edu/biobank/predicate3> ?class3 .
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             ?class1 <http://www.itmat.upenn.edu/biobank/predicate4> ?class4 .
             ?class4 rdf:type <http://www.itmat.upenn.edu/biobank/class4> .
             }
@@ -213,7 +213,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
              }
              """
           
-         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true) 
+         Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true) 
     }
     
     test("minus group using multiple named graphs")
@@ -221,7 +221,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     pmbb:myProcess1 a turbo:TURBO_0010354 .
                     pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -270,15 +270,15 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
 
           val expectedQuery = s"""INSERT {
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             ?class1 <http://www.itmat.upenn.edu/biobank/predicate1> ?class2 .
             ?class1 rdf:type <http://www.itmat.upenn.edu/biobank/class1> .
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
-            GRAPH <$processNamedGraph> {
+            GRAPH <${Globals.processNamedGraph}> {
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class1 .
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class2 .
             <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class3 .
@@ -298,7 +298,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?class2 <http://www.itmat.upenn.edu/biobank/predicate3> ?class3 .
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             ?class1 <http://www.itmat.upenn.edu/biobank/predicate4> ?class4 .
             ?class4 rdf:type <http://www.itmat.upenn.edu/biobank/class4> .
             }
@@ -306,7 +306,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
              }
              """
           
-         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+         Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
     }
     
     test("multiple optional groups in input")
@@ -314,7 +314,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     pmbb:myProcess1 a turbo:TURBO_0010354 .
                     pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -364,15 +364,15 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
 
           val expectedQuery = s"""INSERT {
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             ?class1 <http://www.itmat.upenn.edu/biobank/predicate1> ?class2 .
             ?class1 rdf:type <http://www.itmat.upenn.edu/biobank/class1> .
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
-            GRAPH <$processNamedGraph> {
+            GRAPH <${Globals.processNamedGraph}> {
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class1 .
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class2 .
             <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class3 .
@@ -398,7 +398,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
              }
              """
           
-         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true) 
+         Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true) 
     }
     
     test("multiple minus groups in input")
@@ -406,7 +406,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     pmbb:myProcess1 a turbo:TURBO_0010354 .
                     pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -456,19 +456,19 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
 
           // The Minus Group implementation creates a new GRAPH clause even if the GRAPH referenced by the minus group is the same
           // as a graph that already exists in the query. This is different than the Optional Group implementation which "tucks"
           // Optional Groups into the GRAPH clause that already exists when applicable (see above test). There isn't necessarily a strong
           // reason that Minus Groups does not do things that way, and the code can be changed to work that way in the QueryClauseStructure class
           val expectedQuery = s"""INSERT {
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             ?class1 <http://www.itmat.upenn.edu/biobank/predicate1> ?class2 .
             ?class1 rdf:type <http://www.itmat.upenn.edu/biobank/class1> .
             ?class2 rdf:type <http://www.itmat.upenn.edu/biobank/class2> .
             }
-            GRAPH <$processNamedGraph> {
+            GRAPH <${Globals.processNamedGraph}> {
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class1 .
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?class2 .
             <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?class3 .
@@ -498,7 +498,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             }
              """
           
-         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+         Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
     }
     
     test("term to term and term to literal recipes works")
@@ -506,7 +506,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     pmbb:myProcess1 a turbo:TURBO_0010354 .
                     pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -552,14 +552,14 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
           
           val expectedQuery = s"""INSERT {
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             <http://www.itmat.upenn.edu/biobank/term2> <http://www.itmat.upenn.edu/biobank/predicate2> <http://www.itmat.upenn.edu/biobank/term1> .
             <http://www.itmat.upenn.edu/biobank/term2> <http://www.itmat.upenn.edu/biobank/predicate2> ?literal1 .
             }
-            GRAPH <$processNamedGraph> {
+            GRAPH <${Globals.processNamedGraph}> {
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> <http://www.itmat.upenn.edu/biobank/term1> .
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> <http://www.itmat.upenn.edu/biobank/term2> .
             <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> <http://www.itmat.upenn.edu/biobank/term1> .
@@ -574,7 +574,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
              }
              """
           
-         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+         Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
     }
     
     // The next two tests test the ability to use literals as cardinality enforcers, which is not implemented.
@@ -583,7 +583,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     pmbb:myProcess1 a turbo:TURBO_0010354 .
                     pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -632,10 +632,10 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(gmCxn, insert)
           
           val expectedQuery = s"""INSERT {
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             ?term1 <http://www.itmat.upenn.edu/biobank/predicate1> ?term2 .
             ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
             ?term2 <http://www.itmat.upenn.edu/biobank/predicate1> ?term3 .
@@ -643,7 +643,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?term3 <http://www.itmat.upenn.edu/biobank/predicate1> ?literal1 .
             ?term3 rdf:type <http://www.itmat.upenn.edu/biobank/term3> .
             }
-            GRAPH <$processNamedGraph> {
+            GRAPH <${Globals.processNamedGraph}> {
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term1 .
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term2 .
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term3 .
@@ -655,13 +655,13 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?term4 <http://www.itmat.upenn.edu/biobank/predicate1> ?literal1 .
             ?term4 rdf:type <http://www.itmat.upenn.edu/biobank/term4> .
             }
-            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term1\",\"localUUID\", str(?term4))))) AS ?term1)
-            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term4))))) AS ?term2)
-            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term3\",\"localUUID\", str(?literal1), str(?term4))))) AS ?term4)
+            BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(\"?term1\",\"localUUID\", str(?term4))))) AS ?term1)
+            BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term4))))) AS ?term2)
+            BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(\"?term3\",\"localUUID\", str(?literal1), str(?term4))))) AS ?term4)
              }
              """
           
-         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+         Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
     }
     
     test("multiplicity check for 1-many instance to literal - instance count method")
@@ -669,7 +669,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     pmbb:myProcess1 a turbo:TURBO_0010354 .
                     pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -711,17 +711,17 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(gmCxn, insert)
           
           val expectedQuery = s"""INSERT {
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             ?term1 <http://www.itmat.upenn.edu/biobank/predicate1> ?term2 .
             ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
             ?term2 <http://www.itmat.upenn.edu/biobank/predicate1> ?term3 .
             ?term2 rdf:type <http://www.itmat.upenn.edu/biobank/term2> .
             ?term3 rdf:type <http://www.itmat.upenn.edu/biobank/term3> .
             }
-            GRAPH <$processNamedGraph> {
+            GRAPH <${Globals.processNamedGraph}> {
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term1 .
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term2 .
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term3 .
@@ -733,13 +733,13 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?term4 <http://www.itmat.upenn.edu/biobank/predicate1> ?literal1 .
             ?term4 rdf:type <http://www.itmat.upenn.edu/biobank/term4> .
             }
-            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term1\",\"localUUID\", str(?term4))))) AS ?term1)
-            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term4))))) AS ?term2)
-            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term3\",\"localUUID\", str(?literal1), str(?term4))))) AS ?term4)
+            BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(\"?term1\",\"localUUID\", str(?term4))))) AS ?term1)
+            BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term4))))) AS ?term2)
+            BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(\"?term3\",\"localUUID\", str(?literal1), str(?term4))))) AS ?term4)
              }
              """
           
-         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+         Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
     }*/
     
     test("cardinality enforcement with only instance-to-term in input")
@@ -747,7 +747,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     pmbb:myProcess1 a turbo:TURBO_0010354 .
                     pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -777,15 +777,15 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
           
           val expectedQuery = s"""INSERT {
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             ?term1 <http://www.itmat.upenn.edu/biobank/predicate1> ?term2 .
             ?term2 rdf:type <http://www.itmat.upenn.edu/biobank/term2> .
             ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
             }
-            GRAPH <$processNamedGraph> {
+            GRAPH <${Globals.processNamedGraph}> {
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term2 .
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term1 .
             <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?term1 .
@@ -797,11 +797,11 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             ?term1 <http://www.itmat.upenn.edu/biobank/predicate2> <http://www.itmat.upenn.edu/biobank/term3> .
             ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
             }
-            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term1))))) AS ?term2)
+            BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term1))))) AS ?term2)
              }
              """
           
-         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+         Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
     }
     
     test("cardinality enforcement with only term-to-instance in input")
@@ -809,7 +809,7 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
         val insert = s"""
             INSERT DATA
             {
-                <$defaultPrefix""" + s"""instructionSet>
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
                 {
                     pmbb:myProcess1 a turbo:TURBO_0010354 .
                     pmbb:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
@@ -839,15 +839,15 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
                 }
             }
           """
-          update.updateSparql(gmCxn, insert)
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
           
           val expectedQuery = s"""INSERT {
-            GRAPH <$expandedNamedGraph> {
+            GRAPH <${Globals.expandedNamedGraph}> {
             ?term1 <http://www.itmat.upenn.edu/biobank/predicate1> ?term2 .
             ?term2 rdf:type <http://www.itmat.upenn.edu/biobank/term2> .
             ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
             }
-            GRAPH <$processNamedGraph> {
+            GRAPH <${Globals.processNamedGraph}> {
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term2 .
             <processURI> <http://transformunify.org/ontologies/TURBO_0010184> ?term1 .
             <processURI> <http://purl.obolibrary.org/obo/OBI_0000293> ?term1 .
@@ -859,10 +859,10 @@ class AcornFunctionalityTests extends ProjectwideGlobals with FunSuiteLike with 
             <http://www.itmat.upenn.edu/biobank/term3> <http://www.itmat.upenn.edu/biobank/predicate2> ?term1 .
             ?term1 rdf:type <http://www.itmat.upenn.edu/biobank/term1> .
             }
-            BIND(uri(concat("$defaultPrefix",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term1))))) AS ?term2)
+            BIND(uri(concat("${Globals.defaultPrefix}",SHA256(CONCAT(\"?term2\",\"localUUID\", str(?term1))))) AS ?term2)
              }
              """
           
-         helper.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
+         Utilities.checkGeneratedQueryAgainstMatchedQuery("http://www.itmat.upenn.edu/biobank/myProcess1", expectedQuery) should be (true)
     }
 }
