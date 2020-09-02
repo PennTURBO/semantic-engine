@@ -30,9 +30,12 @@ import java.io.BufferedInputStream
 import java.io.InputStream
 import org.eclipse.rdf4j.model.impl.LinkedHashModel
 import org.eclipse.rdf4j.model.Model
+import org.slf4j.LoggerFactory
 
-object ReasoningManager extends ProjectwideGlobals
+object ReasoningManager
 {
+    val logger = LoggerFactory.getLogger(getClass)
+    
     private val supportedReasoningLevels: ArrayBuffer[String] = ArrayBuffer(
         "empty",
         "rdfsplus-optimized",
@@ -62,8 +65,8 @@ object ReasoningManager extends ProjectwideGlobals
             logger.info("Attempting to change reasoning level to " + newLevel)
             val addRuleset: String = """ INSERT DATA {_:b sys:addRuleset """"+newLevel+"""" } """
             val setDefaultRuleset: String = """ INSERT DATA {_:b sys:defaultRuleset """"+newLevel+"""" } """    
-            update.updateSparql(cxn, addRuleset)
-            update.updateSparql(cxn, setDefaultRuleset)
+            SparqlUpdater.updateSparql(cxn, addRuleset)
+            SparqlUpdater.updateSparql(cxn, setDefaultRuleset)
             reinferRepository(cxn)
         }
     }
@@ -72,7 +75,7 @@ object ReasoningManager extends ProjectwideGlobals
     {
         logger.info("Reinferring...(this may take several hours)")
         val reinferRepo: String = """ INSERT DATA {[] <http://www.ontotext.com/owlim/system#reinfer> []} """
-        update.updateSparql(cxn, reinferRepo)
+        SparqlUpdater.updateSparql(cxn, reinferRepo)
         logger.info("Reinferring complete")
     }
 }

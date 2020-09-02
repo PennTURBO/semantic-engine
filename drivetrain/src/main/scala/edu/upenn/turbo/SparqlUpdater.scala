@@ -34,36 +34,14 @@ import org.apache.http.client.methods.HttpPost
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.entity.StringEntity
 import org.apache.http.util.EntityUtils
+import org.slf4j.LoggerFactory
 
-class SparqlUpdater
+object SparqlUpdater
 {
     val logger = LoggerFactory.getLogger(getClass)
-    val cxn = DrivetrainDriver.cxn
     
-    val sparqlPrefixes = """
-			PREFIX  dc11: <http://purl.org/dc/elements/1.1/>
-			PREFIX  obo:  <http://purl.obolibrary.org/obo/>
-			PREFIX  owl:  <http://www.w3.org/2002/07/owl#>
-			PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-			PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-			PREFIX  turbo: <http://transformunify.org/ontologies/>
-			PREFIX  ontologies: <http://transformunify.org/ontologies/>
-			PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#>
-			PREFIX  nci:  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
-			PREFIX pmbb: <http://www.itmat.upenn.edu/biobank/>
-			PREFIX sys: <http://www.ontotext.com/owlim/system#>
-			PREFIX efo: <http://www.ebi.ac.uk/efo/>
-			PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-			PREFIX ns1: <http://www.geneontology.org/formats/oboInOwl#>
-			PREFIX graph: <http://haydensgraph.org/>
-			PREFIX j.0: <http://example.com/resource/>
-      PREFIX snomed: <http://purl.bioontology.org/ontology/SNOMEDCT/>
-      PREFIX oboInOwl: <http://www.geneontology.org/formats/oboInOwl#>
-      PREFIX Thesaurus: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
-      PREFIX properties: <https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/>
-      PREFIX drivetrain: <https://github.com/PennTURBO/Drivetrain/>
-			"""
-    
+    var sparqlPrefixes = ""
+    for ((prefix, uri) <- Globals.prefixMap) sparqlPrefixes += "PREFIX " + prefix + ": <" + uri + ">\n"
     
     /**
      * Overloaded method which is Drivetrain's main point of access to Graph DB for SPARQL queries. Used for when only one variable is requested
@@ -87,21 +65,21 @@ class SparqlUpdater
      * 
      * @return ArrayBuffer[ArrayBuffer[Value]] representing the results of the query 
      */
-      def querySparqlAndUnpackTuple(cxn: RepositoryConnection, query: String, variable: Array[String]): ArrayBuffer[ArrayBuffer[Value]] =
+      def querySparqlAndUnpackTuple(cxn: RepositoryConnection, query: String, variable: Array[String]): ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] =
       {
           assert (cxn != null, "The RepositoryConnection object was null")
           val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
-          val unpackedResult: ArrayBuffer[ArrayBuffer[Value]] = unpackTuple(result.get, variable)
+          val unpackedResult: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = unpackTuple(result.get, variable)
           //close tupleQueryResult to free resources
           result.get.close()
           unpackedResult
       }
       
-      def querySparqlAndUnpackTuple(query: String, variable: Array[String]): ArrayBuffer[ArrayBuffer[Value]] =
+      def querySparqlAndUnpackTuple(query: String, variable: Array[String]): ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] =
       {
-          assert (cxn != null, "The RepositoryConnection object was null")
-          val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
-          val unpackedResult: ArrayBuffer[ArrayBuffer[Value]] = unpackTuple(result.get, variable)
+          assert (Globals.cxn != null, "The RepositoryConnection object was null")
+          val result: Option[TupleQueryResult] = querySparql(Globals.cxn, sparqlPrefixes + query)
+          val unpackedResult: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = unpackTuple(result.get, variable)
           //close tupleQueryResult to free resources
           result.get.close()
           unpackedResult
@@ -113,31 +91,31 @@ class SparqlUpdater
      * 
      * @return ArrayBuffer[ArrayBuffer[Value]] representing the results of the query 
      */
-      def querySparqlAndUnpackTuple(cxn: RepositoryConnection, query: String, variable: ArrayBuffer[String]): ArrayBuffer[ArrayBuffer[Value]] =
+      def querySparqlAndUnpackTuple(cxn: RepositoryConnection, query: String, variable: ArrayBuffer[String]): ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] =
       {
           assert (cxn != null, "The RepositoryConnection object was null")
           val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
-          val unpackedResult: ArrayBuffer[ArrayBuffer[Value]] = unpackTuple(result.get, variable)
+          val unpackedResult: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = unpackTuple(result.get, variable)
           //close tupleQueryResult to free resources
           result.get.close()
           unpackedResult
       }
 
-      def querySparqlAndUnpackToMap(cxn: RepositoryConnection, query: String): HashMap[String, ArrayBuffer[Value]] =
+      def querySparqlAndUnpackToMap(cxn: RepositoryConnection, query: String): HashMap[String, ArrayBuffer[org.eclipse.rdf4j.model.Value]] =
       {
           assert (cxn != null, "The RepositoryConnection object was null")
           val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
-          val unpackedResult: HashMap[String, ArrayBuffer[Value]] = unpackTupleToMap(result.get)
+          val unpackedResult: HashMap[String, ArrayBuffer[org.eclipse.rdf4j.model.Value]] = unpackTupleToMap(result.get)
           //close tupleQueryResult to free resources
           result.get.close()
           unpackedResult
       }
       
-      def querySparqlAndUnpackToListOfMap(cxn: RepositoryConnection, query: String): ArrayBuffer[HashMap[String, Value]] =
+      def querySparqlAndUnpackToListOfMap(cxn: RepositoryConnection, query: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
       {
           assert (cxn != null, "The RepositoryConnection object was null")
           val result: Option[TupleQueryResult] = querySparql(cxn, sparqlPrefixes + query)
-          val unpackedResult: ArrayBuffer[HashMap[String, Value]] = unpackTupleToListOfMaps(result.get)
+          val unpackedResult: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] = unpackTupleToListOfMaps(result.get)
           //close tupleQueryResult to free resources
           result.get.close()
           unpackedResult
@@ -219,18 +197,18 @@ class SparqlUpdater
      * 
      * @return a list of lists of strings which represent the values of the given variable for one of the results
      */
-    def unpackTuple(resultTuple: TupleQueryResult, variables: Array[String]): ArrayBuffer[ArrayBuffer[Value]] =
+    def unpackTuple(resultTuple: TupleQueryResult, variables: Array[String]): ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] =
     {
         //Create empty list of lists to be populated and returned
-        val resultList: ArrayBuffer[ArrayBuffer[Value]] = new ArrayBuffer[ArrayBuffer[Value]]
+        val resultList: ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] = new ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]]
         //For each result, add it to the list. Note that this method does not convert to Strings but leaves results as Values
         while (resultTuple.hasNext())
         {
-            val oneResult: ArrayBuffer[Value] = new ArrayBuffer[Value]
+            val oneResult: ArrayBuffer[org.eclipse.rdf4j.model.Value] = new ArrayBuffer[org.eclipse.rdf4j.model.Value]
             val bindingset: BindingSet = resultTuple.next()
             for (a <- 0 to variables.size - 1)
             {
-                var result: Value = null
+                var result: org.eclipse.rdf4j.model.Value = null
                 val variableToUnpack = variables(a)
                 try
                 {
@@ -253,24 +231,24 @@ class SparqlUpdater
      * 
      * @return a list of lists of strings which represent the values of the given variable for one of the results
      */
-    def unpackTuple(resultTuple: TupleQueryResult, variables: ArrayBuffer[String]): ArrayBuffer[ArrayBuffer[Value]] =
+    def unpackTuple(resultTuple: TupleQueryResult, variables: ArrayBuffer[String]): ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] =
     {
         unpackTuple(resultTuple, variables.toArray)
     }
 
-    def unpackTupleToMap(resultTuple: TupleQueryResult): HashMap[String, ArrayBuffer[Value]] =
+    def unpackTupleToMap(resultTuple: TupleQueryResult): HashMap[String, ArrayBuffer[org.eclipse.rdf4j.model.Value]] =
     {
         //Create empty map of lists to be populated and returned
-        var resultList: HashMap[String, ArrayBuffer[Value]] = new HashMap[String, ArrayBuffer[Value]]
+        var resultList: HashMap[String, ArrayBuffer[org.eclipse.rdf4j.model.Value]] = new HashMap[String, ArrayBuffer[org.eclipse.rdf4j.model.Value]]
         //For each result, add it to the list. Note that this method does not convert to Strings but leaves results as Values
         while (resultTuple.hasNext())
         {
-            val oneResult: ArrayBuffer[Value] = new ArrayBuffer[Value]
+            val oneResult: ArrayBuffer[org.eclipse.rdf4j.model.Value] = new ArrayBuffer[org.eclipse.rdf4j.model.Value]
             val bindingset: BindingSet = resultTuple.next()
             for (a <- bindingset.getBindingNames().toArray)
             {
                 val variableName = a.toString
-                val result: Value = bindingset.getValue(variableName)
+                val result: org.eclipse.rdf4j.model.Value = bindingset.getValue(variableName)
                 if (resultList.contains(variableName)) resultList(variableName) += result
                 else resultList += variableName -> ArrayBuffer(result)
             }
@@ -279,19 +257,19 @@ class SparqlUpdater
         resultList
     }
     
-    def unpackTupleToListOfMaps(resultTuple: TupleQueryResult): ArrayBuffer[HashMap[String, Value]] =
+    def unpackTupleToListOfMaps(resultTuple: TupleQueryResult): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
     {
         //Create empty list of maps to be populated and returned
-        var resultList: ArrayBuffer[HashMap[String, Value]] = new ArrayBuffer[HashMap[String, Value]]
+        var resultList: ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] = new ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]]
         //For each result, add it to the list. Note that this method does not convert to Strings but leaves results as Values
         while (resultTuple.hasNext())
         {
-            val oneResult: HashMap[String, Value] = new HashMap[String, Value]
+            val oneResult: HashMap[String, org.eclipse.rdf4j.model.Value] = new HashMap[String, org.eclipse.rdf4j.model.Value]
             val bindingset: BindingSet = resultTuple.next()
             for (a <- bindingset.getBindingNames().toArray)
             {
                 val variableName = a.toString
-                val result: Value = bindingset.getValue(variableName)
+                val result: org.eclipse.rdf4j.model.Value = bindingset.getValue(variableName)
                 oneResult += variableName -> result
             }
             resultList += oneResult

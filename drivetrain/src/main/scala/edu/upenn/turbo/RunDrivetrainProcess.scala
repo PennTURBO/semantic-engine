@@ -13,19 +13,22 @@ import java.util.UUID
 import java.util.Calendar
 import java.text.SimpleDateFormat
 import scala.collection.parallel._
+import org.slf4j.LoggerFactory
 
-object RunDrivetrainProcess extends ProjectwideGlobals
+object RunDrivetrainProcess
 {
+    val logger = LoggerFactory.getLogger(getClass)
+    
     var localUUID: String = null
     var variableSet = new HashSet[Value]
-    var inputSet = new HashSet[Value]
-    var inputProcessSet = new HashSet[String]
-    var typeMap = new HashMap[String,Value]
-    var multithread = useMultipleThreads
+    var multithread = Globals.useMultipleThreads
+    
+    var inputDataValidator: InputDataValidator = new InputDataValidator()
+    var graphModelValidator: GraphModelValidator = new GraphModelValidator()
     
     var useInputNamedGraphsCache: Boolean = true
     
-    val taskSupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(4))
+    val taskSupport = new ForkJoinTaskSupport(new scala.concurrent.forkjoin.ForkJoinPool(Globals.numberOfThreads))
     
     def setGlobalUUID(globalUUID: String)
     {
@@ -35,35 +38,25 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     {
         this.multithread = multithread
     }
-    def setGraphModelConnection(gmCxn: RepositoryConnection)
-    {
-        this.gmCxn = gmCxn
-        InputDataValidator.setGraphModelConnection(gmCxn)
-        GraphModelValidator.setGraphModelConnection(gmCxn)
-    }
-    def setOutputRepositoryConnection(cxn: RepositoryConnection)
-    {
-        this.cxn = cxn
-    }
     def setInputNamedGraphsCache(useInputNamedGraphsCache: Boolean)
     {
         this.useInputNamedGraphsCache = useInputNamedGraphsCache
     }
     
-    def runProcess(processSpecification: String, dataValidationMode: String = dataValidationMode, validateAgainstOntology: Boolean = validateAgainstOntology): HashMap[String, PatternMatchQuery] =
+    def runProcess(processSpecification: String, dataValidationMode: String = Globals.dataValidationMode, validateAgainstOntology: Boolean = Globals.validateAgainstOntology): HashMap[String, PatternMatchQuery] =
     {
         runProcess(ArrayBuffer(processSpecification), dataValidationMode, validateAgainstOntology)
     }
         
     def runProcess(processSpecifications: ArrayBuffer[String], dataValidationMode: String, validateAgainstOntology: Boolean): HashMap[String, PatternMatchQuery] =
     {
-        GraphModelValidator.checkAcornFilesForMissingTypes()
-        if (validateAgainstOntology) GraphModelValidator.validateGraphSpecificationAgainstOntology()
+        graphModelValidator.checkAcornFilesForMissingTypes()
+        if (validateAgainstOntology) graphModelValidator.validateGraphSpecificationAgainstOntology()
         
         var processQueryMap = new HashMap[String, PatternMatchQuery]
         for (processSpecification <- processSpecifications)
         {
-            val updateProcess = helper.genTurboIRI()
+            val updateProcess = Utilities.genTurboIRI()
             processQueryMap += processSpecification -> createPatternMatchQuery(processSpecification, updateProcess)
         }
         for (processSpecification <- processSpecifications)
@@ -71,27 +64,26 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             val startTime = System.nanoTime()
             //val currDate = Calendar.getInstance().getTime()
             val currDate = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ).format( Calendar.getInstance().getTime())
-            val startingTriplesCount = helper.countTriplesInDatabase(cxn)
+            val startingTriplesCount = Utilities.countTriplesInDatabase(Globals.cxn)
             logger.info("Starting process: " + processSpecification)
            
             val primaryQuery = processQueryMap(processSpecification)
             val genericWhereClause = primaryQuery.whereClause
-            primaryQuery.defaultInputGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(primaryQuery.defaultInputGraph)
             
             // get list of all named graphs which match pattern specified in inputNamedGraph and include match to where clause
-            //var inputNamedGraphsList = helper.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
+            //var inputNamedGraphsList = Utilities.generateNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, genericWhereClause)
             // get list of all named graphs which match pattern specified in inputNamedGraph but without match on where clause
-            var inputNamedGraphsList = helper.generateSimpleNamedGraphsListFromPrefix(cxn, primaryQuery.defaultInputGraph, useInputNamedGraphsCache)
+            var inputNamedGraphsList = Utilities.generateSimpleNamedGraphsListFromPrefix(Globals.cxn, Utilities.checkAndConvertPropertiesReferenceToNamedGraph(primaryQuery.defaultInputGraph), useInputNamedGraphsCache)
             logger.info("\tinput named graphs size: " + inputNamedGraphsList.size)
+        
             if (inputNamedGraphsList.size == 0) logger.info(s"\tCannot run process $processSpecification: no input named graphs found")
             else
             {
                 //run validation on input graph
                 if (dataValidationMode == "stop" || dataValidationMode == "log")
                 {
-                    logger.info(s"\tRunning on Input Data Validation Mode $dataValidationMode")
-                    InputDataValidator.setOutputRepositoryConnection(cxn)
-                    InputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.rawInputData, dataValidationMode)
+                    logger.info(s"\tRunning on Input Data Validation Mode " +Globals.dataValidationMode)
+                    inputDataValidator.validateInputData(inputNamedGraphsList, primaryQuery.inputDataForValidation, Globals.dataValidationMode)
                 }
                 else logger.info("\tInput Data Validation turned off for this instantiation")
                 // for each input named graph, run query with specified named graph
@@ -105,33 +97,30 @@ object RunDrivetrainProcess extends ProjectwideGlobals
                 else 
                 {
                     logger.info("Multiple threads disabled")
-                    inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause, cxn))
+                    inputNamedGraphsList.foreach(submitQuery(_, primaryQuery, genericWhereClause, Globals.cxn))
                 }
                 // set back to generic input named graph for storing in metadata
                 primaryQuery.whereClause = genericWhereClause
                 
-                val endingTriplesCount = helper.countTriplesInDatabase(cxn)
+                val endingTriplesCount = Utilities.countTriplesInDatabase(Globals.cxn)
                 val triplesAdded = endingTriplesCount.subtract(startingTriplesCount)
                 val endTime = System.nanoTime()
                 val runtime: String = ((endTime - startTime)/1000000000.0).toString
                 logger.info("Completed process " + processSpecification + " in " + runtime + " seconds")
 
                 // create metadata about process
-                val metaDataQuery = new DataQuery()
-                val metaInfo: HashMap[Value, ArrayBuffer[String]] = HashMap(METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
-                                                                DATE -> ArrayBuffer(currDate.toString), 
-                                                                PROCESSSPECIFICATION -> ArrayBuffer(processSpecification), 
-                                                                PROCESS -> ArrayBuffer(primaryQuery.process),
-                                                                OUTPUTNAMEDGRAPH -> ArrayBuffer(primaryQuery.defaultOutputGraph, primaryQuery.defaultRemovalsGraph),
-                                                                PROCESSRUNTIME -> ArrayBuffer(runtime),
-                                                                TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
-                                                                INPUTNAMEDGRAPHS -> inputNamedGraphsList
+                val metaInfo: HashMap[Globals.Value, ArrayBuffer[String]] = HashMap(Globals.METAQUERY -> ArrayBuffer(primaryQuery.getQuery()), 
+                                                                Globals.DATE -> ArrayBuffer(currDate.toString), 
+                                                                Globals.PROCESSSPECIFICATION -> ArrayBuffer(processSpecification), 
+                                                                Globals.PROCESS -> ArrayBuffer(primaryQuery.process),
+                                                                Globals.OUTPUTNAMEDGRAPH -> ArrayBuffer(primaryQuery.defaultOutputGraph, primaryQuery.defaultRemovalsGraph),
+                                                                Globals.PROCESSRUNTIME -> ArrayBuffer(runtime),
+                                                                Globals.TRIPLESADDED -> ArrayBuffer(triplesAdded.toString),
+                                                                Globals.INPUTNAMEDGRAPHS -> inputNamedGraphsList
                                                                 )
                                                                 
-                val metaDataTriples = createMetaDataTriples(metaInfo)
-                metaDataQuery.createInsertDataClause(metaDataTriples, processNamedGraph)
-                //logger.info(metaDataQuery.getQuery())
-                metaDataQuery.runQuery(cxn)  
+                addMetaDataTriples(metaInfo, Globals.processNamedGraph)
+                logger.info("Process " + processSpecification + " added " + triplesAdded + " triples ")
                 if (triplesAdded == 0) logger.warn("Process " + processSpecification + " did not add any triples upon execution")
             }
         }
@@ -140,7 +129,7 @@ object RunDrivetrainProcess extends ProjectwideGlobals
     
     def submitQuery(inputNamedGraph: String, primaryQuery: PatternMatchQuery, genericWhereClause: String, paramCxn: RepositoryConnection = null)
     {
-        logger.info("Now running on input named graph: " + inputNamedGraph)
+        //logger.info("Now running on input named graph: " + inputNamedGraph)
         var whereClauseString = primaryQuery.whereClause
         whereClauseString = whereClauseString.replaceAll(primaryQuery.defaultInputGraph, inputNamedGraph)
         val localQuery = primaryQuery.deleteClause + "\n" + primaryQuery.insertClause + "\n" + whereClauseString + primaryQuery.bindClause + "}"
@@ -149,393 +138,155 @@ object RunDrivetrainProcess extends ProjectwideGlobals
             val graphConnection = ConnectToGraphDB.getNewConnectionToRepo()
             val localCxn = graphConnection.cxn
             //logger.info(localQuery)
-            update.updateSparql(localCxn, localQuery)
+            SparqlUpdater.updateSparql(localCxn, localQuery)
             ConnectToGraphDB.closeGraphConnection(graphConnection)
-            //logger.info("finished named graph: " + inputNamedGraph) 
+            //logger.info("finished named graph: " + inputNamedGraph)
         }
-        else update.updateSparql(paramCxn, localQuery)
+        else SparqlUpdater.updateSparql(paramCxn, localQuery)
     }
 
-    def createPatternMatchQuery(processSpecification: String, process: String = helper.genTurboIRI()): PatternMatchQuery =
-    {
+    def createPatternMatchQuery(processSpecification: String, process: String = Utilities.genTurboIRI()) =
+    {          
+        val modelReader = new GraphModelReader()
+    
         if (localUUID == null) localUUID = UUID.randomUUID().toString().replaceAll("-", "")
         logger.info(s"Creating new IRIs with hash $localUUID")
-        var thisProcessSpecification = helper.getProcessNameAsUri(processSpecification)
+        var thisProcessSpecification = Utilities.getProcessNameAsUri(processSpecification)
         
-        GraphModelValidator.validateProcessSpecification(thisProcessSpecification)
-        GraphModelValidator.validateConnectionRecipesInProcess(thisProcessSpecification)
+        graphModelValidator.validateProcessSpecification(thisProcessSpecification)
+        graphModelValidator.validateConnectionRecipesInProcess(thisProcessSpecification)
+        graphModelValidator.validateConnectionRecipeTypeDeclarations(thisProcessSpecification)
         
         // retrieve connections (inputs, outputs) from model graph
         // the inputs become the "where" block of the SPARQL query
         // the outputs become the "insert" block
-        val inputs = getInputs(thisProcessSpecification)
-        val outputs = getOutputs(thisProcessSpecification)
-        val removals = getRemovals(thisProcessSpecification)
+        val inputs = modelReader.getInputs(thisProcessSpecification)
+        val outputs = modelReader.getOutputs(thisProcessSpecification)
+        val removals = modelReader.getRemovals(thisProcessSpecification)
         
         if (inputs.size == 0) throw new RuntimeException("Received a list of 0 inputs")
         if (outputs.size == 0 && removals.size == 0) throw new RuntimeException("Did not receive any outputs or removals")
         
-        GraphModelValidator.validateAcornResults(inputs)
-        GraphModelValidator.validateAcornResults(outputs)
+        val modelInterpreter = new GraphModelInterpreter()
+        val (inputRecipeList, outputRecipeList, removalsRecipeList) = modelInterpreter.handleAcornData(inputs, outputs, removals)
         
-        var inputNamedGraph = inputs(0)(GRAPH.toString).toString
+        graphModelValidator.validateAcornResults(inputRecipeList, outputRecipeList)
         
         // create primary query
         val primaryQuery = new PatternMatchQuery()
         primaryQuery.setProcessSpecification(thisProcessSpecification)
         primaryQuery.setProcess(process)
+        primaryQuery.setInputDataForValidation(inputs)
+        
+        var inputNamedGraph = inputs(0)(Globals.GRAPH.toString).toString
         primaryQuery.setInputGraph(inputNamedGraph)
-        primaryQuery.setInputData(inputs)
-        primaryQuery.setGraphModelConnection(gmCxn)
         
         var outputNamedGraph: String = null
-        primaryQuery.createWhereClause(inputs)
-        primaryQuery.createBindClause(outputs, inputs, localUUID)
+        primaryQuery.createWhereClause(inputRecipeList)
+        primaryQuery.createBindClause(inputRecipeList, outputRecipeList, localUUID)
         
         if (outputs.size != 0)
         {
-           outputNamedGraph = outputs(0)(GRAPH.toString).toString   
+           outputNamedGraph = outputs(0)(Globals.GRAPH.toString).toString   
            primaryQuery.setOutputGraph(outputNamedGraph)
         }
         var removalsNamedGraph: String = null
         if (removals.size != 0)
         {
-            removalsNamedGraph = removals(0)(GRAPH.toString).toString
+            removalsNamedGraph = removals(0)(Globals.GRAPH.toString).toString
             primaryQuery.setRemovalsGraph(removalsNamedGraph)
-            primaryQuery.createDeleteClause(removals)
+            primaryQuery.createDeleteClause(removalsRecipeList)
         }
-        primaryQuery.createInsertClause(outputs)
-        assert(!primaryQuery.getQuery().contains("https://github.com/PennTURBO/Drivetrain/blob/master/turbo_properties.properties/"), "Could not complete properties term replacement")
-        primaryQuery 
-    }
-    
-    def getInputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
-    {
-       var variablesToSelect = ""
-       for (key <- requiredInputKeysList) variablesToSelect += "?" + key + " "
-       
-       val query = s"""
-         
-         Select distinct $variablesToSelect
-         
-         Where
-         {
-              Values ?$INPUTTYPE {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
-              <$process> ?$INPUTTYPE ?$CONNECTIONNAME .
-              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
-              <$process> drivetrain:inputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
-              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
-              
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:subjectUsesContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECT drivetrain:hasPossibleContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECTCONTEXT a drivetrain:TurboGraphContext .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:objectUsesContext ?$OBJECTCONTEXT .
-                  ?$OBJECT drivetrain:hasPossibleContext ?$OBJECTCONTEXT .
-                  ?$OBJECTCONTEXT a drivetrain:TurboGraphContext .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:partOf ?$OPTIONALGROUP .
-                  ?$OPTIONALGROUP a drivetrain:TurboGraphOptionalGroup .
-                  <$process> drivetrain:buildsOptionalGroup ?$OPTIONALGROUP .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:partOf ?$MINUSGROUP .
-                  ?$MINUSGROUP a drivetrain:TurboGraphMinusGroup .
-                  <$process> drivetrain:buildsMinusGroup ?$MINUSGROUP .
-              }
-              Optional
-              {
-                  # this feature is a little sketcky. What if the creatingProcess is not queued? What if it is created by multiple processes?
-                  ?creatingProcess drivetrain:hasOutput ?$CONNECTIONNAME .
-                  ?creatingProcess drivetrain:outputNamedGraph ?$GRAPHOFCREATINGPROCESS .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:referencedInGraph ?$GRAPHOFORIGIN .
-              }
-              Optional
-              {
-                  ?$OBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$OBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?$SUBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$SUBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToLiteralRecipe)
-                  BIND (true AS ?$SUBJECTANINSTANCE)
-              }
-              Optional
-              {
-                  ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  BIND (true AS ?$OBJECTANINSTANCE)
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:mustExecuteIf ?$REQUIREMENT .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:predicateSuffix ?suffix .
-                  ?suffix a drivetrain:PredicateSuffixSymbol .
-                  ?suffix drivetrain:usesSparqlOperator ?$SUFFIXOPERATOR .
-              }
-              Optional
-              {
-                  ?$OBJECT a ?$GRAPHLITERALTYPE .
-                  ?$GRAPHLITERALTYPE rdfs:subClassOf* drivetrain:LiteralResourceList .
-                  minus
-                  {
-                      ?OBJECT a ?GRAPHLITERALTYPE2 .
-                      ?GRAPHLITERALTYPE2 rdfs:subClassOf+ ?GRAPHLITERALTYPE .
-                  }
-                  BIND (true AS ?$OBJECTALITERAL)
-              }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
-         }
-         
-         """
-       //println(query)          
-       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
-    }
-
-    def getRemovals(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
-    {
-       var variablesToSelect = ""
-       for (key <- requiredOutputKeysList) variablesToSelect += "?" + key + " "
-       
-       val query = s"""
-         
-         Select distinct $variablesToSelect
-         
-         Where
-         {
-              <$process> drivetrain:removes ?$CONNECTIONNAME .
-              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
-              <$process> drivetrain:outputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
-              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              Optional
-              {
-                  ?$OBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$OBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?$SUBJECT a drivetrain:ClassResourceList .
-                  BIND (true AS ?$SUBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToLiteralRecipe)
-                  BIND (true AS ?$SUBJECTANINSTANCE)
-              }
-              Optional
-              {
-                  ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  BIND (true AS ?$OBJECTANINSTANCE)
-              }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
-         }
-         
-         """
-       
-       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
-    }
-    
-    def getOutputs(process: String): ArrayBuffer[HashMap[String, org.eclipse.rdf4j.model.Value]] =
-    {
-       var variablesToSelect = ""
-       for (key <- requiredOutputKeysList) variablesToSelect += "?" + key + " "
-       
-       val query = s"""
-         
-         Select distinct $variablesToSelect
-         Where
-         {
-              Values ?INPUTTO {drivetrain:hasRequiredInput drivetrain:hasOptionalInput}
-              <$process> drivetrain:hasOutput ?$CONNECTIONNAME .
-              ?$CONNECTIONNAME a ?$CONNECTIONRECIPETYPE .
-              ?$CONNECTIONRECIPETYPE rdfs:subClassOf drivetrain:TurboGraphConnectionRecipe .
-              <$process> drivetrain:outputNamedGraph ?$GRAPH .
-              ?$CONNECTIONNAME drivetrain:subject ?$SUBJECT .
-              ?$CONNECTIONNAME drivetrain:predicate ?$PREDICATE .
-              ?$CONNECTIONNAME drivetrain:object ?$OBJECT .
-              ?$CONNECTIONNAME drivetrain:cardinality ?$MULTIPLICITY .
-              
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:subjectUsesContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECT drivetrain:hasPossibleContext ?$SUBJECTCONTEXT .
-                  ?$SUBJECTCONTEXT a drivetrain:TurboGraphContext .
-              }
-              Optional
-              {
-                  ?$CONNECTIONNAME drivetrain:objectUsesContext ?$OBJECTCONTEXT .
-                  ?$OBJECT drivetrain:hasPossibleContext ?$OBJECTCONTEXT .
-                  ?$OBJECTCONTEXT a drivetrain:TurboGraphContext .
-              }
-              Optional
-              {
-                  ?$SUBJECT drivetrain:usesCustomVariableManipulationRule ?subjectRuleDenoter .
-                  ?subjectRuleDenoter drivetrain:usesSparql ?$SUBJECTRULE .
-              }
-              Optional
-              {
-                  ?$OBJECT drivetrain:usesCustomVariableManipulationRule ?objectRuleDenoter .
-                  ?objectRuleDenoter drivetrain:usesSparql ?$OBJECTRULE .
-              }
-              Optional
-              {
-                  ?$SUBJECT a drivetrain:ClassResourceList .
-                  BIND (true as ?$SUBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?$OBJECT a drivetrain:ClassResourceList .
-                  BIND (true as ?$OBJECTADESCRIBER)
-              }
-              Optional
-              {
-                  ?recipe drivetrain:objectRequiredToCreate ?$OBJECT .
-                  <$process> ?INPUTTO ?recipe .
-                  ?recipe drivetrain:object ?$OBJECTDEPENDEE .
-              }
-              Optional
-              {
-                  ?recipe drivetrain:objectRequiredToCreate ?$SUBJECT .
-                  <$process> ?INPUTTO ?recipe .
-                  ?recipe drivetrain:object ?$SUBJECTDEPENDEE .
-              }
-              Optional
-              {
-                  ?$SUBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToInstanceRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToLiteralRecipe)
-                  BIND (true AS ?$SUBJECTANINSTANCE)
-              }
-              Optional
-              {
-                  ?$OBJECT a owl:Class .
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:InstanceToTermRecipe)
-                  filter (?$CONNECTIONRECIPETYPE != drivetrain:TermToTermRecipe)
-                  BIND (true AS ?$OBJECTANINSTANCE)
-              }
-              Optional
-              {
-                  ?$OBJECT a ?graphLiteral .
-                  ?graphLiteral rdfs:subClassOf* drivetrain:LiteralResourceList .
-                  BIND (true AS ?$OBJECTALITERAL)
-              }
-              BIND (isLiteral(?$OBJECT) as ?$OBJECTALITERALVALUE)
-         }
-         
-         """
-       //println(query)
-       update.querySparqlAndUnpackToListOfMap(gmCxn, query)
+        primaryQuery.createInsertClause(inputRecipeList, outputRecipeList)
+        // this is safety code that should never happen, to make sure that all properties: references were replaced
+        if (Globals.prefixMap.contains("properties")) assert(!primaryQuery.getQuery().contains(Globals.prefixMap("properties")), "Could not complete properties term replacement")
+        //logger.info(primaryQuery.getQuery())
+        primaryQuery
     }
     
     /**
      * Sets instantiation and globalUUID variables, and retrieves list of all processes in the order that they should be run. Then runs each process.
      */
-    def runAllDrivetrainProcesses(cxn: RepositoryConnection, gmCxn: RepositoryConnection, globalUUID: String = UUID.randomUUID().toString.replaceAll("-", ""))
+    def runAllDrivetrainProcesses(globalUUID: String = UUID.randomUUID().toString.replaceAll("-", ""))
     {
         setGlobalUUID(globalUUID)
-        setGraphModelConnection(gmCxn)
-        setOutputRepositoryConnection(cxn)
-      
-        // get list of all processes in order
-        val orderedProcessList: ArrayBuffer[String] = helper.getAllProcessesInOrder(gmCxn)
         
-        GraphModelValidator.validateProcessesAgainstGraphSpecification(orderedProcessList)
+        // get list of all processes in order
+        val orderedProcessList: ArrayBuffer[String] = Utilities.getAllProcessesInOrder(Globals.gmCxn)
+        
+        graphModelValidator.validateProcessesAgainstGraphSpecification(orderedProcessList)
         
         logger.info("Drivetrain will now run the following processes in this order:")
         for (a <- orderedProcessList) logger.info(a)
         
         // run each process
-        runProcess(orderedProcessList, dataValidationMode, validateAgainstOntology)
+        runProcess(orderedProcessList, Globals.dataValidationMode, Globals.validateAgainstOntology)
     }
     
-    def createMetaDataTriples(metaInfo: HashMap[Value, ArrayBuffer[String]]): ArrayBuffer[Triple] =
+    def addMetaDataTriples(metaInfo: HashMap[Globals.Value, ArrayBuffer[String]], processNamedGraph: String)
     {
-        val processSpecification = metaInfo(PROCESSSPECIFICATION)(0)
-        val currDate = metaInfo(DATE)(0)
-        val queryVal = metaInfo(METAQUERY)(0)
-        val outputNamedGraph = metaInfo(OUTPUTNAMEDGRAPH)(0)
-        val removalsNamedGraph = metaInfo(OUTPUTNAMEDGRAPH)(1)
-        val runtime = metaInfo(PROCESSRUNTIME)(0)
-        val triplesAdded = metaInfo(TRIPLESADDED)(0)
-        val inputNamedGraphsList = metaInfo(INPUTNAMEDGRAPHS)
-        val updateProcess = metaInfo(PROCESS)(0)
+        val processSpecification = metaInfo(Globals.PROCESSSPECIFICATION)(0)
+        val currDate = metaInfo(Globals.DATE)(0)
+        val queryVal = metaInfo(Globals.METAQUERY)(0)
+        val outputNamedGraph = metaInfo(Globals.OUTPUTNAMEDGRAPH)(0)
+        val removalsNamedGraph = metaInfo(Globals.OUTPUTNAMEDGRAPH)(1)
+        val runtime = metaInfo(Globals.PROCESSRUNTIME)(0)
+        val triplesAdded = metaInfo(Globals.TRIPLESADDED)(0)
+        val inputNamedGraphsList = metaInfo(Globals.INPUTNAMEDGRAPHS)
+        val updateProcess = metaInfo(Globals.PROCESS)(0)
         
-        val updatePlanUri = helper.genTurboIRI()
+        val updatePlanUri = Utilities.genTurboIRI()
         
-        val timeMeasDatum = helper.genTurboIRI()
-        val processBoundary = helper.genTurboIRI()
+        val timeMeasDatum = Utilities.genTurboIRI()
+        val processBoundary = Utilities.genTurboIRI()
         
-        helper.validateURI(processNamedGraph)
+        Utilities.validateURI(processNamedGraph)
         var metaTriples = ArrayBuffer(
-             new Triple(processSpecification, "turbo:TURBO_0010106", queryVal),
-             new Triple(updateProcess, "turbo:TURBO_0010107", runtime),
-             new Triple(updateProcess, "turbo:TURBO_0010108", triplesAdded),
-             new Triple(updateProcess, "rdf:type", "turbo:TURBO_0010347"),
-             new Triple(updateProcess, "obo:BFO_0000055", updatePlanUri),
-             new Triple(updatePlanUri, "rdf:type", "turbo:TURBO_0010373"),
-             new Triple(updatePlanUri, "obo:RO_0000059", processSpecification),
-             new Triple(processSpecification, "rdf:type", "turbo:TURBO_0010354"),
-             new Triple(processBoundary, "obo:RO_0002223", updateProcess),
-             new Triple(processBoundary, "rdf:type", "obo:BFO_0000035"),
-             new Triple(timeMeasDatum, "obo:IAO_0000136", processBoundary),
-             new Triple(timeMeasDatum, "rdf:type", "obo:IAO_0000416")
+             new TermToLitConnRecipe(new Term(processSpecification), "http://transformunify.org/ontologies/TURBO_0010106", new Literal("\"\"\""+queryVal+"\"\"\"")),
+             new TermToLitConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010107", new Literal(runtime)),
+             new TermToLitConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010108", new Literal(triplesAdded)),
+             new TermToTermConnRecipe(new Term(updateProcess), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("http://transformunify.org/ontologies/TURBO_0010347")),
+             new TermToTermConnRecipe(new Term(updateProcess), "http://purl.obolibrary.org/obo/BFO_0000055", new Term(updatePlanUri)),
+             new TermToTermConnRecipe(new Term(updatePlanUri), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("http://transformunify.org/ontologies/TURBO_0010373")),
+             new TermToTermConnRecipe(new Term(updatePlanUri), "http://purl.obolibrary.org/obo/RO_0000059", new Term(processSpecification)),
+             new TermToTermConnRecipe(new Term(processSpecification), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("http://transformunify.org/ontologies/TURBO_0010354")),
+             new TermToTermConnRecipe(new Term(processBoundary), "http://purl.obolibrary.org/obo/RO_0002223", new Term(updateProcess)),
+             new TermToTermConnRecipe(new Term(processBoundary), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("http://purl.obolibrary.org/obo/BFO_0000035")),
+             new TermToTermConnRecipe(new Term(timeMeasDatum), "http://purl.obolibrary.org/obo/IAO_0000136", new Term(processBoundary)),
+             new TermToTermConnRecipe(new Term(timeMeasDatum), "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", new Term("http://purl.obolibrary.org/obo/IAO_0000416"))
         )
         for (inputGraph <- inputNamedGraphsList) 
         {
-            val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(inputGraph)
-            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010187", graphForThisRow)
+            val graphForThisRow = Utilities.checkAndConvertPropertiesReferenceToNamedGraph(inputGraph)
+            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010187", new Term(graphForThisRow))
         }
         if ((outputNamedGraph == removalsNamedGraph) || outputNamedGraph != null) 
         {
-            val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(outputNamedGraph)
-            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", graphForThisRow)
+            val graphForThisRow = Utilities.checkAndConvertPropertiesReferenceToNamedGraph(outputNamedGraph)
+            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010186", new Term(graphForThisRow))
         }
         else if (removalsNamedGraph != null) 
         {
-            val graphForThisRow = helper.checkAndConvertPropertiesReferenceToNamedGraph(removalsNamedGraph)
-            metaTriples += new Triple(updateProcess, "turbo:TURBO_0010186", graphForThisRow)
+            val graphForThisRow = Utilities.checkAndConvertPropertiesReferenceToNamedGraph(removalsNamedGraph)
+            metaTriples += new TermToTermConnRecipe(new Term(updateProcess), "http://transformunify.org/ontologies/TURBO_0010186", new Term(graphForThisRow))
         }
         
-        //Triple class currently does not support literal datatypes other than strings, so making custom query to insert current date with dateTime format
-        val dateInsert = s"""INSERT DATA {Graph <$processNamedGraph> { <$timeMeasDatum> obo:IAO_0000004 "$currDate"^^xsd:dateTime .}}"""
-        //logger.info(dateInsert)
-        update.updateSparql(cxn, dateInsert)
+        var metaDataQuery = s"INSERT DATA {\n GRAPH <$processNamedGraph> {"
+        for (recipe <- metaTriples) 
+        {
+            if (recipe.subject.isInstanceOf[Term]) recipe.subject.asInstanceOf[Term].isResourceList = Some(false)
+            if (recipe.crObject.isInstanceOf[Term]) recipe.crObject.asInstanceOf[Term].isResourceList = Some(false)
+            if (recipe.crObject.isInstanceOf[Literal]) recipe.crObject.asInstanceOf[Literal].isResourceList = Some(false)
+            recipe.addSparqlSnippet()
+            metaDataQuery += recipe.asSparql
+        }
+        metaDataQuery += "}\n}\n"
+        //logger.info(metaDataQuery)
+        SparqlUpdater.updateSparql(Globals.cxn, metaDataQuery)
         
-        metaTriples
+        //Literal class currently does not support literal datatypes other than strings, so making custom query to insert current date with dateTime format
+        val dateInsert = s"""INSERT DATA {Graph <"""+Globals.processNamedGraph+s"""> { <$timeMeasDatum> obo:IAO_0000004 "$currDate"^^xsd:dateTime .}}"""
+        //logger.info(dateInsert)
+        SparqlUpdater.updateSparql(Globals.cxn, dateInsert)
     }
 }

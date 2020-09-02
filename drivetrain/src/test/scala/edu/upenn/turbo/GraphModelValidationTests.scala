@@ -9,24 +9,23 @@ import org.scalatest._
 import scala.collection.mutable.ArrayBuffer
 import java.util.UUID
 
-class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
+class GraphModelValidationTests extends FunSuiteLike with BeforeAndAfter with BeforeAndAfterAll with Matchers
 {
     val clearTestingRepositoryAfterRun: Boolean = false
     
     val uuid = UUID.randomUUID().toString.replaceAll("-", "")
     RunDrivetrainProcess.setGlobalUUID(uuid)
+    var graphDBMaterials: TurboGraphConnection = null
     
     override def beforeAll()
     {
         assert("test" === System.getenv("SCALA_ENV"), "System variable SCALA_ENV must be set to \"test\"; check your build.sbt file")
         
-        graphDBMaterials = ConnectToGraphDB.initializeGraphUpdateData(true, "carnival_transformation_instructions.tis", "turbo_valid_graph_specification.gs")
-        cxn = graphDBMaterials.getConnection()
-        gmCxn = graphDBMaterials.getGmConnection()
-        helper.deleteAllTriplesInDatabase(cxn)
-        
-        RunDrivetrainProcess.setGraphModelConnection(gmCxn)
-        RunDrivetrainProcess.setOutputRepositoryConnection(cxn)
+        graphDBMaterials = ConnectToGraphDB.initializeGraph()
+        DrivetrainDriver.updateModel(graphDBMaterials, "carnival_transformation_instructions.tis", "turbo_valid_graph_specification.gs")
+        Globals.cxn = graphDBMaterials.getConnection()
+        Globals.gmCxn = graphDBMaterials.getGmConnection()
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
     }
     
     override def afterAll()
@@ -36,15 +35,15 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     before
     {
-        helper.deleteAllTriplesInDatabase(cxn)
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "graphSpecification")
+        Utilities.deleteAllTriplesInDatabase(Globals.cxn)
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "graphSpecification")
         
         val insert = s"""
-        INSERT DATA { Graph <$defaultPrefix""" + s"""instructionSet> {
+        INSERT DATA { Graph <${Globals.defaultPrefix}""" + s"""instructionSet> {
           ontologies:myProcess1 a ontologies:TURBO_0010354 ;
-              drivetrain:inputNamedGraph <$expandedNamedGraph> ;
-              drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
+              drivetrain:inputNamedGraph <${Globals.expandedNamedGraph}> ;
+              drivetrain:outputNamedGraph <${Globals.expandedNamedGraph}> ; 
               drivetrain:hasOutput ontologies:object1ToObject2 ;
               drivetrain:hasRequiredInput ontologies:object1ToObject3 ;
               drivetrain:hasRequiredInput ontologies:object2ToObject3 ;
@@ -87,13 +86,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
               drivetrain:subject turbo:object2 ;
             .}}"""
             
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         
         val insertData: String = s"""
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:obj1 a turbo:object1 .
                   pmbb:obj2 a turbo:object2 .
@@ -105,7 +104,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           }
           
           """
-        update.updateSparql(cxn, insertData)
+        SparqlUpdater.updateSparql(Globals.cxn, insertData)
     }
     
     test("run process normally")
@@ -119,7 +118,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject2_2
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -135,7 +134,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
  
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         
         try
         {
@@ -144,18 +143,19 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: There are multiple connections between http://transformunify.org/ontologies/object2 and http://transformunify.org/ontologies/object1 with non-matching multiplicities" ||
-                e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: There are multiple connections between http://transformunify.org/ontologies/object1 and http://transformunify.org/ontologies/object2 with non-matching multiplicities")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: There are multiple connections between http://transformunify.org/ontologies/object2 and http://transformunify.org/ontologies/object1 with non-matching cardinality" ||
+                e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: There are multiple connections between http://transformunify.org/ontologies/object1 and http://transformunify.org/ontologies/object2 with non-matching cardinality")
         }
     }
     
+    // due to the change on 7/21/20, object4 should still be assigned a multiplicity enforcer because there are only 1-1 connections in the input
     test ("one output recipe - new 1-many object without multiplicity context")
     {
         val insert: String = s"""
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -171,26 +171,19 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         
-        try
-        {
-            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
-            assert (1 == 2)
-        }
-        catch
-        {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: For process http://transformunify.org/ontologies/myProcess1, there is not sufficient context to create the following: Set(http://transformunify.org/ontologies/object4)")
-        }
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
     }
     
+    // due to the change on 7/21/20, object4 should still be assigned a multiplicity enforcer because there are only 1-1 connections in the input
     test ("one output recipe - new many-1 object without multiplicity context")
     {
         val insert: String = s"""
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -206,8 +199,42 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
+    }
+    
+    test("many-1 object in output with no context")
+    {
+        val insert: String = s"""
+          
+          INSERT DATA
+          {
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
+              {
+                  ontologies:object1ToObject4
+                    a drivetrain:InstanceToInstanceRecipe ;
+                    drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/many-1> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object1 ;
+                  .
+                  ontologies:object1ToObject5
+                    a drivetrain:InstanceToInstanceRecipe ;
+                    drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-many> ;
+                    drivetrain:object turbo:object5 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object1 ;
+                  .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 .
+                  ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object1ToObject5 .
+                  
+                  drivetrain:many-1 a drivetrain:TurboGraphCardinalityRule .
+                  drivetrain:1-many a drivetrain:TurboGraphCardinalityRule .
+               }
+           }
+        """
         
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         try
         {
             RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
@@ -215,9 +242,122 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: For process http://transformunify.org/ontologies/myProcess1, there is not sufficient context to create the following: Set(http://transformunify.org/ontologies/object4)")
+            case e: RuntimeException => assert(e.toString == "java.lang.RuntimeException: Could not assign cardinality enforcer for element http://transformunify.org/ontologies/object4")
         }
     }
+    
+    test("1-many object in output with no context")
+    {
+        val insert: String = s"""
+          
+          INSERT DATA
+          {
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
+              {
+                  ontologies:object1ToObject4
+                    a drivetrain:InstanceToInstanceRecipe ;
+                    drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-many> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object1 ;
+                  .
+                  ontologies:object1ToObject5
+                    a drivetrain:InstanceToInstanceRecipe ;
+                    drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/many-1> ;
+                    drivetrain:object turbo:object5 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object1 ;
+                  .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 .
+                  ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object1ToObject5 .
+                  
+                  drivetrain:many-1 a drivetrain:TurboGraphCardinalityRule .
+                  drivetrain:1-many a drivetrain:TurboGraphCardinalityRule .
+               }
+           }
+        """
+        
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: RuntimeException => assert(e.toString == "java.lang.RuntimeException: Could not assign cardinality enforcer for element http://transformunify.org/ontologies/object4")
+        }
+    }
+    
+    // These tests test the assignment of cardinality enforcers using a cardinality count map from the CardinalityCountBuilder.
+    // This feature hasn't been implemented yet, so these tests are commented.
+    /*test("many-1 object in output with context")
+    {
+        val insert: String = s"""
+          
+          INSERT DATA
+          {
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
+              {
+                  ontologies:object1ToObject4
+                    a drivetrain:InstanceToInstanceRecipe ;
+                    drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/many-1> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object1 ;
+                  .
+                  ontologies:object1ToObject5
+                    a drivetrain:InstanceToInstanceRecipe ;
+                    drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/many-1> ;
+                    drivetrain:object turbo:object5 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object1 ;
+                  .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 .
+                  ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object1ToObject5 .
+                  
+                  drivetrain:many-1 a drivetrain:TurboGraphCardinalityRule .
+               }
+           }
+        """
+        
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
+    }
+    
+    test("1-many object in output with context")
+    {
+        val insert: String = s"""
+          
+          INSERT DATA
+          {
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
+              {
+                  ontologies:object1ToObject4
+                    a drivetrain:InstanceToInstanceRecipe ;
+                    drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-many> ;
+                    drivetrain:object turbo:object4 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object1 ;
+                  .
+                  ontologies:object1ToObject5
+                    a drivetrain:InstanceToInstanceRecipe ;
+                    drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-many> ;
+                    drivetrain:object turbo:object5 ;
+                    drivetrain:predicate turbo:pred1 ;
+                    drivetrain:subject turbo:object1 ;
+                  .
+                  ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 .
+                  ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object1ToObject5 .
+                  
+                  drivetrain:many-1 a drivetrain:TurboGraphCardinalityRule .
+               }
+           }
+        """
+        
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+        RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1") 
+    }*/
     
     test ("2 output connection recipes - mixed singleton declaration")
     {
@@ -225,7 +365,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -251,7 +391,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
         
-        update.updateSparql(gmCxn, insert)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insert)
         
         try
         {
@@ -260,7 +400,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: For process http://transformunify.org/ontologies/myProcess1, http://transformunify.org/ontologies/object4 has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Instance http://transformunify.org/ontologies/object4 cannot be a Singleton and have a many-1 connection with another element")
         }
     }
     
@@ -270,7 +410,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -308,7 +448,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:obj4 a turbo:object4 .
                   pmbb:obj5 a turbo:object5 .
@@ -321,8 +461,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
  
         """
         
-        update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(cxn, insertData)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.cxn, insertData)
         
         try
         {
@@ -331,7 +471,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Error in graph model: for process http://transformunify.org/ontologies/myProcess1, the multiplicity of http://transformunify.org/ontologies/object2 has not been defined consistently"))
+            case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Inconsistent cardinality found involving elements"))
         }
     }
     
@@ -341,7 +481,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -370,7 +510,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:obj2 turbo:pred3 pmbb:obj4 .
                   pmbb:obj4 a turbo:object4 .
@@ -379,8 +519,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
  
         """
         
-        update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(cxn, insertData)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.cxn, insertData)
         
         try
         {
@@ -389,7 +529,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Error in graph model: for process http://transformunify.org/ontologies/myProcess1, the multiplicity of http://transformunify.org/ontologies/object4 has not been defined consistently"))
+            case e: AssertionError => assert(e.toString.startsWith("java.lang.AssertionError: assertion failed: Inconsistent cardinality found involving elements"))
         }
     }
     
@@ -399,7 +539,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -428,7 +568,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:obj2 turbo:pred3 pmbb:obj4 .
                   pmbb:obj4 a turbo:object4 .
@@ -437,8 +577,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
  
         """
         
-        update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(cxn, insertData)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.cxn, insertData)
         
         try
         {
@@ -447,7 +587,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: For process http://transformunify.org/ontologies/myProcess1, http://transformunify.org/ontologies/object4 has a 1-1, 1-many, or many-1 relationship and is also considered a Singleton")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Instance http://transformunify.org/ontologies/object4 cannot be a Singleton and have a 1-1 connection with another element")
         }
     }
     
@@ -457,7 +597,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_input
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -475,7 +615,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$expandedNamedGraph>
+              Graph <${Globals.expandedNamedGraph}>
               {
                   pmbb:obj2 turbo:pred3 pmbb:obj4 .
                   pmbb:obj4 a turbo:object4 .
@@ -484,8 +624,8 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
  
         """
         
-        update.updateSparql(gmCxn, insertDataModel)
-        update.updateSparql(cxn, insertData)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.cxn, insertData)
         
         try
         {
@@ -504,7 +644,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""instructionSet>
+              Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
               {
                   ontologies:object2ToObject4_output
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -518,7 +658,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
@@ -537,7 +677,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""graphSpecification>
+              Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
               {
                   ontologies:notPresentConnection
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -554,11 +694,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses()
         }
         catch
         {
@@ -572,7 +712,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""graphSpecification>
+              Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
               {
                   ontologies:object1ToObject4
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -585,25 +725,25 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   turbo:pred1 a rdf:Property .
                }
                
-               Graph <$defaultPrefix"""+s"""instructionSet>
+               Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:myProcess1 drivetrain:hasOutput ontologies:object1ToObject4 ;
                        drivetrain:precedes ontologies:myProcess2 .
                    
-                   ontologies:myProcess2 drivetrain:inputNamedGraph <$expandedNamedGraph> ;
+                   ontologies:myProcess2 drivetrain:inputNamedGraph <${Globals.expandedNamedGraph}> ;
                        a turbo:TURBO_0010354 ;
-                       drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
+                       drivetrain:outputNamedGraph <${Globals.expandedNamedGraph}> ; 
                        drivetrain:hasRequiredInput ontologies:object1ToObject4 ;
                        drivetrain:removes ontologies:object1ToObject4 .
                }
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses()
         }
         catch
         {
@@ -613,12 +753,12 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("instruction set does not create recipe required by graph specification")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
         val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""graphSpecification>
+              Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
               {
                   ontologies:object1ToObject3
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -649,13 +789,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   drivetrain:eitherSubjectOrObjectExists a drivetrain:TurboGraphRequirementSpecification .
                }
                
-               Graph <$defaultPrefix"""+s"""instructionSet>
+               Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:myProcess1 a turbo:TURBO_0010354 ;
                        drivetrain:hasOutput ontologies:object1ToObject4 ;
                        drivetrain:hasRequiredInput ontologies:object1ToObject2 ;
-                       drivetrain:inputNamedGraph <$expandedNamedGraph> ;
-                       drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
+                       drivetrain:inputNamedGraph <${Globals.expandedNamedGraph}> ;
+                       drivetrain:outputNamedGraph <${Globals.expandedNamedGraph}> ; 
                    .
                    ontologies:object1ToObject2 a drivetrain:InstanceToInstanceRecipe ;
                        drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-1> ;
@@ -666,11 +806,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses()
             assert(1==2)
         }
         catch
@@ -681,12 +821,12 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("instruction set does not create recipe not required by graph spec due to context")
     {
-        helper.clearNamedGraph(gmCxn, defaultPrefix + "instructionSet")
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
         val insertDataModel: String = s"""
           
           INSERT DATA
           {
-              Graph <$defaultPrefix"""+s"""graphSpecification>
+              Graph <${Globals.defaultPrefix}"""+s"""graphSpecification>
               {
                   ontologies:object1ToObject3
                     a drivetrain:InstanceToInstanceRecipe ;
@@ -725,13 +865,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
                   drivetrain:eitherSubjectOrObjectExists a drivetrain:TurboGraphRequirementSpecification .
                }
                
-               Graph <$defaultPrefix"""+s"""instructionSet>
+               Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:myProcess1 a turbo:TURBO_0010354 ;
                        drivetrain:hasOutput ontologies:object1ToObject4 ;
                        drivetrain:hasRequiredInput ontologies:object1ToObject2 ;
-                       drivetrain:inputNamedGraph <$expandedNamedGraph> ;
-                       drivetrain:outputNamedGraph <$expandedNamedGraph> ; 
+                       drivetrain:inputNamedGraph <${Globals.expandedNamedGraph}> ;
+                       drivetrain:outputNamedGraph <${Globals.expandedNamedGraph}> ; 
                    .
                    ontologies:object1ToObject2 a drivetrain:InstanceToInstanceRecipe ;
                        drivetrain:cardinality <https://github.com/PennTURBO/Drivetrain/1-1> ;
@@ -742,11 +882,11 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
-            RunDrivetrainProcess.runAllDrivetrainProcesses(cxn, gmCxn)
+            RunDrivetrainProcess.runAllDrivetrainProcesses()
         }
         catch
         {
@@ -760,7 +900,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-               <$defaultPrefix"""+s"""instructionSet>
+               <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:object1ToObject3 drivetrain:subject ontologies:someSubject .
                    ontologies:someSubject a owl:Class .
@@ -768,7 +908,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
@@ -787,7 +927,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-               <$defaultPrefix"""+s"""instructionSet>
+               <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:object1ToObject3 drivetrain:referencedInGraph pmbb:namedGraph1 .
                    ontologies:object1ToObject3 drivetrain:referencedInGraph pmbb:namedGraph2 .
@@ -798,7 +938,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
@@ -817,14 +957,14 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-               Graph <$defaultPrefix"""+s"""instructionSet>
+               Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:object1ToObject2 drivetrain:predicate ontologies:somePredicate .
                }
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
@@ -843,14 +983,14 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           INSERT DATA
           {
-               Graph <$defaultPrefix"""+s"""instructionSet>
+               Graph <${Globals.defaultPrefix}"""+s"""instructionSet>
                {
                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:someOtherNamedGraph .
                }
            }
         """
       
-        update.updateSparql(gmCxn, insertDataModel)
+        SparqlUpdater.updateSparql(Globals.gmCxn, insertDataModel)
         
         try
         {
@@ -865,15 +1005,17 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
     
     test("datatype connection has class instance object")  
     {
-       val insert = s"""INSERT DATA { Graph <$defaultPrefix""" + s"""instructionSet> {
+       val insert = s"""INSERT DATA { Graph <${Globals.defaultPrefix}""" + s"""instructionSet> {
           ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4 .
           ontologies:object2ToObject4 a drivetrain:InstanceToLiteralRecipe .
           ontologies:object2ToObject4 drivetrain:subject turbo:object2 .
           ontologies:object2ToObject4 drivetrain:predicate turbo:predicate4 .
           ontologies:object2ToObject4 drivetrain:object turbo:object4 .
           ontologies:object2ToObject4 drivetrain:cardinality drivetrain:1-1 .
+          
+          turbo:object4 a owl:Class .
           }}"""
-       update.updateSparql(gmCxn, insert)
+       SparqlUpdater.updateSparql(Globals.gmCxn, insert)
        
        try
         {
@@ -882,13 +1024,13 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The object of connection http://transformunify.org/ontologies/object2ToObject4 is not a literal, but the connection is a datatype connection.")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The following objects were declared as literals by at least one recipe, but were not typed as literals: http://transformunify.org/ontologies/object4 ")
         }
     }
     
     test("datatype connection has describer object")  
     {
-       val insert = s"""INSERT DATA { Graph <$defaultPrefix""" + s"""instructionSet> {
+       val insert = s"""INSERT DATA { Graph <${Globals.defaultPrefix}""" + s"""instructionSet> {
           ontologies:myProcess1 drivetrain:hasRequiredInput ontologies:object2ToObject4 .
           ontologies:object2ToObject4 a drivetrain:InstanceToLiteralRecipe .
           ontologies:object2ToObject4 drivetrain:subject turbo:object2 .
@@ -898,7 +1040,7 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
           
           turbo:describer1 a drivetrain:ClassResourceList .
           }}"""
-       update.updateSparql(gmCxn, insert)
+       SparqlUpdater.updateSparql(Globals.gmCxn, insert)
        
        try
         {
@@ -907,7 +1049,346 @@ class GraphModelValidationTests extends ProjectwideGlobals with FunSuiteLike wit
         }
         catch
         {
-            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The object of connection http://transformunify.org/ontologies/object2ToObject4 is not a literal, but the connection is a datatype connection.")
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The following objects were declared as literals by at least one recipe, but were not typed as literals: http://transformunify.org/ontologies/describer1 ")
+        }
+    }
+    
+    // Due to the change made on 8/25, input patterns with only optionals are allowed, and optionals can be used as cardinality enforcers
+    // if there are no required enforcers that qualify
+    test("only optional input")
+    {
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        val insert = s"""
+            INSERT DATA
+            {
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
+                {
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    ontologies:myProcess1 drivetrain:hasOptionalInput pmbb:connection2 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term1 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection2 drivetrain:object pmbb:term3 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    pmbb:term3 a owl:Class .
+                    
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                                      
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                }
+            }
+          """
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+
+          RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+    }
+    
+    test("literal asserted as subject of instance recipes")
+    {
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        val insert = s"""
+            INSERT DATA
+            {
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
+                {
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    ontologies:myProcess1 drivetrain:hasOptionalInput pmbb:connection2 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject "1" .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToTermRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:literal1 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection2 drivetrain:object pmbb:term3 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                                      
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                    
+                    pmbb:literal1 a drivetrain:LiteralResourceList .
+                }
+            }
+          """
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+          
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == """java.lang.AssertionError: assertion failed: The following subjects were declared as instances by at least one recipe, but were not typed as instances: "1"^^<http://www.w3.org/2001/XMLSchema#string> http://www.itmat.upenn.edu/biobank/literal1 """)
+        }
+    }
+    
+    test("literal asserted as object of instance recipes")
+    {
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        val insert = s"""
+            INSERT DATA
+            {
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
+                {
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasRequiredInput pmbb:connection1 .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection2 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object "1" .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term1 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection2 drivetrain:object pmbb:term2 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    
+                    pmbb:predicate1 a rdf:Property .
+                                      
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                }
+            }
+          """
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+          
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == """java.lang.AssertionError: assertion failed: The following objects were declared as instances by at least one recipe, but were not typed as instances: "1"^^<http://www.w3.org/2001/XMLSchema#string> """)
+        }
+    }
+    
+    test("literal asserted as object of term recipes - literal resource list")
+    {
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        val insert = s"""
+            INSERT DATA
+            {
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
+                {
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasRequiredInput pmbb:connection2 .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToTermRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term2 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection2 drivetrain:object pmbb:literal1 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                                      
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                    
+                    pmbb:literal1 a drivetrain:LiteralResourceList .
+                }
+            }
+          """
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+          
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == """java.lang.AssertionError: assertion failed: The following objects were declared as terms by at least one recipe, but were typed as literals: http://www.itmat.upenn.edu/biobank/literal1 """)
+        }
+    }
+    
+    test("literal asserted as object of term recipes - raw literal value")
+    {
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        val insert = s"""
+            INSERT DATA
+            {
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
+                {
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasRequiredInput pmbb:connection2 .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToTermRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term2 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection2 drivetrain:object "1" .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                                      
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                }
+            }
+          """
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+          
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == """java.lang.AssertionError: assertion failed: The following objects were declared as terms by at least one recipe, but were typed as literals: "1"^^<http://www.w3.org/2001/XMLSchema#string> """)
+        }
+    }
+    
+    test("instance asserted as object of literal recipes")
+    {
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        val insert = s"""
+            INSERT DATA
+            {
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
+                {
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection1 .
+                    ontologies:myProcess1 drivetrain:hasOptionalInput pmbb:connection2 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToLiteralRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:TermToLiteralRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term3 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate2 .
+                    pmbb:connection2 drivetrain:object pmbb:term1 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term2 a owl:Class .
+                    
+                    pmbb:predicate1 a rdf:Property .
+                    pmbb:predicate2 a rdf:Property .
+                                      
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                }
+            }
+          """
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+          
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: The following objects were declared as literals by at least one recipe, but were not typed as literals: http://www.itmat.upenn.edu/biobank/term2 http://www.itmat.upenn.edu/biobank/term1 ")
+        }
+    }
+    
+    test("literal resource list defined with two different datatypes")
+    {
+        Utilities.clearNamedGraph(Globals.gmCxn, Globals.defaultPrefix + "instructionSet")
+        val insert = s"""
+            INSERT DATA
+            {
+                <${Globals.defaultPrefix}""" + s"""instructionSet>
+                {
+                    ontologies:myProcess1 a turbo:TURBO_0010354 .
+                    ontologies:myProcess1 drivetrain:inputNamedGraph pmbb:Shortcuts .
+                    ontologies:myProcess1 drivetrain:outputNamedGraph properties:expandedNamedGraph .
+                    ontologies:myProcess1 drivetrain:hasRequiredInput pmbb:connection1 .
+                    ontologies:myProcess1 drivetrain:hasOutput pmbb:connection2 .
+                    
+                    pmbb:connection1 a drivetrain:InstanceToLiteralRecipe .
+                    pmbb:connection1 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection1 drivetrain:subject pmbb:term1 .
+                    pmbb:connection1 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection1 drivetrain:object pmbb:term2 .
+                    
+                    pmbb:connection2 a drivetrain:InstanceToInstanceRecipe .
+                    pmbb:connection2 drivetrain:cardinality drivetrain:1-1 .
+                    pmbb:connection2 drivetrain:subject pmbb:term1 .
+                    pmbb:connection2 drivetrain:predicate pmbb:predicate1 .
+                    pmbb:connection2 drivetrain:object pmbb:term3 .
+
+                    pmbb:term1 a owl:Class .
+                    pmbb:term3 a owl:Class .
+                    pmbb:predicate1 a rdf:Property .
+                    drivetrain:1-1 a drivetrain:TurboGraphCardinalityRule .
+                    
+                    pmbb:term2 a drivetrain:StringLiteralResourceList .
+                    pmbb:term2 a drivetrain:IntegerLiteralResourceList .
+                }
+            }
+          """
+          SparqlUpdater.updateSparql(Globals.gmCxn, insert)
+          
+        try
+        {
+            RunDrivetrainProcess.runProcess("http://transformunify.org/ontologies/myProcess1")
+            assert (1 == 2)
+        }
+        catch
+        {
+            case e: AssertionError => assert(e.toString == "java.lang.AssertionError: assertion failed: Error in graph model: recipe http://www.itmat.upenn.edu/biobank/connection1 may have duplicate properties")
         }
     }
 }

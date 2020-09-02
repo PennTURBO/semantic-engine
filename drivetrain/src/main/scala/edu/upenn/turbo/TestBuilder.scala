@@ -9,15 +9,15 @@ import org.eclipse.rdf4j.model.Value
 import java.io.File
 import java.time.LocalDateTime
 import java.util.UUID
-import org.eclipse.rdf4j.model.Literal
-import scala.collection.mutable.Queue
 import org.json4s._
 import org.json4s.JsonDSL._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization
+import org.slf4j.LoggerFactory
 
-class TestBuilder extends ProjectwideGlobals
+class TestBuilder
 {
+    val logger = LoggerFactory.getLogger(getClass)
     implicit val formats = org.json4s.DefaultFormats
     
     //only make all fields? in the case that there are no optional triples
@@ -29,12 +29,14 @@ class TestBuilder extends ProjectwideGlobals
         RunDrivetrainProcess.setGlobalUUID(UUIDKey)
         for (process <- processList)
         {
-            val processAsURI = helper.getProcessNameAsUri(process)
-            GraphModelValidator.validateProcessSpecification(processAsURI)
-            val inputs = RunDrivetrainProcess.getInputs(processAsURI)
+            val processAsURI = Utilities.getProcessNameAsUri(process)
+            val graphModelValidator = new GraphModelValidator()
+            graphModelValidator.validateProcessSpecification(processAsURI)
+            val modelReader = new GraphModelReader()
+            val inputs = modelReader.getInputs(processAsURI)
             val inputTriplesArr = generateInputTriples(processAsURI, inputs, gmCxn)
             val minimumTripleSet = inputTriplesArr(1)
-            update.updateSparql(cxn, "INSERT DATA {" + minimumTripleSet + "}")
+            SparqlUpdater.updateSparql(cxn, "INSERT DATA {" + minimumTripleSet + "}")
             val queryResultMin = RunDrivetrainProcess.runProcess(processAsURI)
         }
     }
@@ -45,12 +47,14 @@ class TestBuilder extends ProjectwideGlobals
         RunDrivetrainProcess.setGlobalUUID(UUIDKey)
         for (process <- processList)
         {
-            val processAsURI = helper.getProcessNameAsUri(process)
-            GraphModelValidator.validateProcessSpecification(processAsURI)
-            val inputs = RunDrivetrainProcess.getInputs(processAsURI)
-            val inputTriplesArr = generateInputTriples(processAsURI, inputs, gmCxn)
+            val processAsURI = Utilities.getProcessNameAsUri(process)
+            val graphModelValidator = new GraphModelValidator()
+            graphModelValidator.validateProcessSpecification(processAsURI)            
+            val modelReader = new GraphModelReader()
+            val inputs = modelReader.getInputs(processAsURI)
+            val inputTriplesArr = generateInputTriples(processAsURI, inputs, Globals.gmCxn)
             val fullTripleSet = inputTriplesArr(0)
-            update.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
+            SparqlUpdater.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
             val queryResultMax = RunDrivetrainProcess.runProcess(processAsURI)   
         }
     }
@@ -60,12 +64,13 @@ class TestBuilder extends ProjectwideGlobals
         val UUIDKey = UUID.randomUUID().toString().replaceAll("-", "")
         RunDrivetrainProcess.setGlobalUUID(UUIDKey)
         
-        val testFileName = helper.getPostfixfromURI(process) + "SnapshotTest"
-        val instructionSetName = instructionSetFile.split("\\.")(0)
+        val testFileName = Utilities.getPostfixfromURI(process) + "SnapshotTest"
+        val instructionSetName = Globals.instructionSetFile.split("\\.")(0)
         val testFilePath = new File("src//test//scala//edu//upenn//turbo//AutoGenTests//" + instructionSetName + "_" + testFileName + ".snapshot")
         testFilePath.getParentFile().mkdirs()
         
-        val inputs = RunDrivetrainProcess.getInputs(process)
+        val modelReader = new GraphModelReader()
+        val inputs = modelReader.getInputs(process)
         
         val inputTriplesArr = generateInputTriples(process, inputs, gmCxn)
         val fullTripleSet = inputTriplesArr(0)
@@ -73,24 +78,24 @@ class TestBuilder extends ProjectwideGlobals
         
         println(fullTripleSet)
         
-        update.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
+        SparqlUpdater.updateSparql(cxn, "INSERT DATA {" + fullTripleSet + "}")
         val queryResultMax = RunDrivetrainProcess.runProcess(process)
-        val outputNamedGraph = helper.checkAndConvertPropertiesReferenceToNamedGraph(queryResultMax(process).defaultOutputGraph)
+        val outputNamedGraph = Utilities.checkAndConvertPropertiesReferenceToNamedGraph(queryResultMax(process).defaultOutputGraph)
         val outputPredsMax = getOutputPredicates(cxn, outputNamedGraph)
         assert (outputPredsMax.size > 0, s"""Process $process did not create any output based on the "all fields" input.
         This is likely a bug in the TestBuilder code.
         Check that the required and optional triples above are formatted as expected for an input to this process, and call Hayden.""")
         
-        helper.deleteAllTriplesInDatabase(cxn)
+        Utilities.deleteAllTriplesInDatabase(cxn)
         
-        update.updateSparql(cxn, "INSERT DATA {" + minimumTripleSet + "}")
+        SparqlUpdater.updateSparql(cxn, "INSERT DATA {" + minimumTripleSet + "}")
         val queryResultMin = RunDrivetrainProcess.runProcess(process)
         val outputPredsMin = getOutputPredicates(cxn, outputNamedGraph)
         assert (outputPredsMax.size > 0, s"""Process $process did not create any output based on the "minimum fields" input.
         This is likely a bug in the TestBuilder code.
         Check that the required triples above are formatted as expected for an input to this process, and call Hayden.""")
         
-        helper.deleteAllTriplesInDatabase(cxn)
+        Utilities.deleteAllTriplesInDatabase(cxn)
 
         logger.info("Writing test file...")
         
@@ -141,133 +146,11 @@ class TestBuilder extends ProjectwideGlobals
         var fullPredsAsString = ""
         for (index <- 0 to outputPredsList.size-1) 
         {
-            if (!outputPredsList(index)(2).isInstanceOf[Literal]) fullPredsAsString += "<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> <"+outputPredsList(index)(2)+">"
+            if (!outputPredsList(index)(2).isInstanceOf[org.eclipse.rdf4j.model.Literal]) fullPredsAsString += "<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> <"+outputPredsList(index)(2)+">"
             else fullPredsAsString += "<"+outputPredsList(index)(0)+"> <"+outputPredsList(index)(1)+"> "+outputPredsList(index)(2)
             if (index != outputPredsList.size-1) fullPredsAsString += "\n"
         }
         fullPredsAsString
-    }
-    
-    def getInstanceCountsFromInput(inputs: ArrayBuffer[HashMap[String,org.eclipse.rdf4j.model.Value]]): HashMap[String, Integer] =
-    {
-        var instanceCountMap = new HashMap[String, Integer]
-        val instancesWithOnlyTermsOrLiterals = new HashSet[String]
-        val connectionsMap = new HashMap[String, HashSet[String]]
-        for (input <- inputs)
-        {
-            val subjectString = input(SUBJECT.toString).toString
-            val objectString = input(OBJECT.toString).toString
-            val subjectExistsInMap: Boolean = instanceCountMap.contains(subjectString)
-            val objectExistsInMap: Boolean = instanceCountMap.contains(objectString)
-            val multiplicity = input(MULTIPLICITY.toString).toString
-            if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
-            {
-                if (!subjectExistsInMap && !objectExistsInMap) 
-                {
-                    if (multiplicity == oneToOneMultiplicity)
-                    {
-                        instanceCountMap += subjectString -> 1
-                        instanceCountMap += objectString -> 1
-                    }
-                    else if (multiplicity == oneToManyMultiplicity)
-                    {
-                        instanceCountMap += subjectString -> 1
-                        instanceCountMap += objectString -> 2
-                    }
-                    else if (multiplicity == manyToOneMultiplicity)
-                    {
-                        instanceCountMap += subjectString -> 2
-                        instanceCountMap += objectString -> 1
-                    }
-                }
-                else if (!subjectExistsInMap && objectExistsInMap)
-                {
-                    if (multiplicity == oneToOneMultiplicity) instanceCountMap += subjectString -> instanceCountMap(objectString)
-                    else if (multiplicity == oneToManyMultiplicity)
-                    {
-                        if (instanceCountMap(objectString) > 1) instanceCountMap += subjectString -> instanceCountMap(objectString)/2
-                        else
-                        {
-                            instanceCountMap += subjectString -> 1
-                            instanceCountMap(objectString) = 2
-                            // recursively iterate through all connections of objectString, multiply by 2
-                        }
-                    }
-                    else if (multiplicity == manyToOneMultiplicity) instanceCountMap += subjectString -> instanceCountMap(objectString)*2
-                }
-                else if (subjectExistsInMap && !objectExistsInMap)
-                {
-                    if (multiplicity == oneToOneMultiplicity) instanceCountMap += objectString -> instanceCountMap(subjectString)
-                    else if (multiplicity == manyToOneMultiplicity)
-                    {
-                        if (instanceCountMap(subjectString) > 1) instanceCountMap += objectString -> instanceCountMap(subjectString)/2
-                        else
-                        {
-                            instanceCountMap += objectString -> 1
-                            instanceCountMap(subjectString) = 2
-                            // recursively iterate through all connections of subjectString, multiply by 2
-                            instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, 2)
-                        }
-                    }
-                    else if (multiplicity == oneToManyMultiplicity) instanceCountMap += objectString -> instanceCountMap(subjectString)*2
-                }
-                else if (subjectExistsInMap && objectExistsInMap)
-                {
-                    if (multiplicity == oneToOneMultiplicity && (instanceCountMap(subjectString) != instanceCountMap(objectString)))
-                    {
-                        if (instanceCountMap(subjectString) > instanceCountMap(objectString)) instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, objectString, instanceCountMap(subjectString)/instanceCountMap(objectString))
-                        else instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, instanceCountMap(objectString)/instanceCountMap(subjectString))
-                    }
-                    else if (multiplicity == manyToOneMultiplicity)
-                    {
-                        if (instanceCountMap(subjectString) <= instanceCountMap(objectString))
-                        {
-                            val multiplier = instanceCountMap(objectString)*2/instanceCountMap(subjectString)
-                            instanceCountMap(subjectString) = instanceCountMap(objectString)*2
-                            instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, subjectString, multiplier)
-                        }  
-                    }
-                    else if (multiplicity == oneToManyMultiplicity)
-                    {
-                        if (instanceCountMap(objectString) <= instanceCountMap(subjectString))
-                        {
-                            val multiplier = instanceCountMap(subjectString)*2/instanceCountMap(objectString)
-                            instanceCountMap(objectString) = instanceCountMap(subjectString)*2
-                            instanceCountMap = updateMultiplicityChangeThroughConnectionsList(instanceCountMap, connectionsMap, objectString, multiplier)
-                        }  
-                    }
-                }
-                if (connectionsMap.contains(subjectString)) connectionsMap(subjectString) += objectString
-                else connectionsMap += subjectString -> HashSet(objectString)
-                if (connectionsMap.contains(objectString)) connectionsMap(objectString) += subjectString
-                else connectionsMap += objectString -> HashSet(subjectString)
-            }
-            else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToTermRecipe" && !subjectExistsInMap) instancesWithOnlyTermsOrLiterals += subjectString
-            else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/TermToInstanceRecipe" && !objectExistsInMap) instancesWithOnlyTermsOrLiterals += objectString
-            else if (input(CONNECTIONRECIPETYPE.toString).toString == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe" && !subjectExistsInMap) instancesWithOnlyTermsOrLiterals += subjectString
-        }
-        for (instance <- instancesWithOnlyTermsOrLiterals)
-        {
-            if (!instanceCountMap.contains(instance)) instanceCountMap += instance -> 1
-        }
-        println("Creating test data with the following instance counts:")
-        for ((k,v) <- instanceCountMap) println("Instance: " + k + " Count: " + v)
-        instanceCountMap
-    }
-    
-    def updateMultiplicityChangeThroughConnectionsList(instanceCountMap: HashMap[String, Integer], connectionsList: HashMap[String, HashSet[String]], start: String, multiplier: Integer): HashMap[String, Integer] =
-    {
-        val updateQueue = new Queue[String]
-        val alreadyUpdated = HashSet(start)
-        for (cxn <- connectionsList(start)) updateQueue += cxn
-        while (!updateQueue.isEmpty)
-        {
-            val firstElement = updateQueue.dequeue
-            instanceCountMap(firstElement) = instanceCountMap(firstElement)*multiplier
-            alreadyUpdated += firstElement
-            for (cxn <- connectionsList(firstElement)) if (!alreadyUpdated.contains(cxn)) updateQueue += cxn
-        }
-        instanceCountMap
     }
     
     def generateInputTriples(process: String, inputs: ArrayBuffer[HashMap[String,org.eclipse.rdf4j.model.Value]], gmCxn: RepositoryConnection): Array[String] =
@@ -275,18 +158,20 @@ class TestBuilder extends ProjectwideGlobals
         var generatedRequiredTriples = new HashMap[String, HashSet[String]]
         var generatedOptionalTriples = new HashMap[String, HashSet[String]]
         
-        val defaultInputGraph = inputs(0)(GRAPH.toString).toString
+        val defaultInputGraph = inputs(0)(Globals.GRAPH.toString).toString
         
-        val instanceCounts = getInstanceCountsFromInput(inputs)
+        val instanceCounts = CardinalityCountBuilder.getInstanceCounts(inputs)
+        println("Creating test data with the following instance counts:")
+        for ((k,v) <- instanceCounts) println("Instance: " + k + " Count: " + v)
         
         for (input <- inputs)
         {
             var thisGraph = defaultInputGraph
-            if (input(GRAPHOFCREATINGPROCESS.toString) != null) thisGraph = input(GRAPHOFCREATINGPROCESS.toString).toString
-            if (input(GRAPHOFORIGIN.toString) != null) thisGraph = input(GRAPHOFORIGIN.toString).toString
+            if (input(Globals.GRAPHOFCREATINGPROCESS.toString) != null) thisGraph = input(Globals.GRAPHOFCREATINGPROCESS.toString).toString
+            if (input(Globals.GRAPHOFORIGIN.toString) != null) thisGraph = input(Globals.GRAPHOFORIGIN.toString).toString
             
-            val inputType = input(INPUTTYPE.toString).toString
-            val optionalBlock = input(OPTIONALGROUP.toString)
+            val inputType = input(Globals.INPUTTYPE.toString).toString
+            val optionalBlock = input(Globals.OPTIONALGROUP.toString)
             if (optionalBlock == null && inputType == "https://github.com/PennTURBO/Drivetrain/hasRequiredInput")
             {
                 if (!generatedRequiredTriples.contains(thisGraph)) generatedRequiredTriples += thisGraph -> new HashSet[String]
@@ -303,13 +188,13 @@ class TestBuilder extends ProjectwideGlobals
         var generatedOptionalTriplesAsString = ""
         for ((graph,triples) <- generatedRequiredTriples) 
         {
-            generatedRequiredTriplesAsString += "GRAPH <" + helper.checkAndConvertPropertiesReferenceToNamedGraph(graph) + "> {\n"
+            generatedRequiredTriplesAsString += "GRAPH <" + Utilities.checkAndConvertPropertiesReferenceToNamedGraph(graph) + "> {\n"
             for (triple <- triples) generatedRequiredTriplesAsString += triple
             generatedRequiredTriplesAsString += "}\n"
         }
         for ((graph,triples) <- generatedOptionalTriples)
         {
-            generatedOptionalTriplesAsString += "GRAPH <" + helper.checkAndConvertPropertiesReferenceToNamedGraph(graph) + "> {\n"
+            generatedOptionalTriplesAsString += "GRAPH <" + Utilities.checkAndConvertPropertiesReferenceToNamedGraph(graph) + "> {\n"
             for (triple <- triples) generatedOptionalTriplesAsString += triple
             generatedOptionalTriplesAsString += "}\n"
         }
@@ -333,24 +218,24 @@ class TestBuilder extends ProjectwideGlobals
     
     def getOutputPredicates(cxn: RepositoryConnection, outputNamedGraph: String): ArrayBuffer[ArrayBuffer[org.eclipse.rdf4j.model.Value]] =
     {
-        update.querySparqlAndUnpackTuple(cxn, s"Select * Where { Graph <$outputNamedGraph> { ?s ?p ?o . }}", Array("s", "p", "o"))
+        SparqlUpdater.querySparqlAndUnpackTuple(cxn, s"Select * Where { Graph <$outputNamedGraph> { ?s ?p ?o . }}", Array("s", "p", "o"))
     }
     
     def makeInstanceDataFromTriple(gmCxn: RepositoryConnection, input: HashMap[String,org.eclipse.rdf4j.model.Value], instanceCounts: HashMap[String, Integer]): ArrayBuffer[String] =
     {
         var thisTripleAsData = new ArrayBuffer[String]
         
-        val connectionType = input(CONNECTIONRECIPETYPE.toString).toString
-        val connectionName = input(CONNECTIONNAME.toString).toString
-        val subjectString = input(SUBJECT.toString).toString
-        val predicateString = input(PREDICATE.toString).toString
-        val objectString = input(OBJECT.toString).toString
+        val connectionType = input(Globals.CONNECTIONRECIPETYPE.toString).toString
+        val connectionName = input(Globals.CONNECTIONNAME.toString).toString
+        var subjectString = input(Globals.SUBJECT.toString).toString
+        val predicateString = input(Globals.PREDICATE.toString).toString
+        var objectString = input(Globals.OBJECT.toString).toString
         
-        val objectADescriber = input(OBJECTADESCRIBER.toString)
-        val subjectADescriber = input(SUBJECTADESCRIBER.toString)
+        val objectADescriber = input(Globals.OBJECTADESCRIBER.toString)
+        val subjectADescriber = input(Globals.SUBJECTADESCRIBER.toString)
         
-        val subjectContext = input(SUBJECTCONTEXT.toString)
-        val objectContext = input(OBJECTCONTEXT.toString)
+        if (input(Globals.SUBJECTCONTEXT.toString) != null) subjectString += "_"+Utilities.convertTypeToSparqlVariable(input(Globals.SUBJECTCONTEXT.toString).toString).substring(1)
+        if (input(Globals.OBJECTCONTEXT.toString) != null) objectString += "_"+Utilities.convertTypeToSparqlVariable(input(Globals.OBJECTCONTEXT.toString).toString).substring(1)
         
         val subjectInstanceArray = new ArrayBuffer[String]
         val objectInstanceArray = new ArrayBuffer[String]
@@ -360,7 +245,6 @@ class TestBuilder extends ProjectwideGlobals
             for (instance <- 1 to instanceCounts(subjectString))
             {
                 var subjectURI = subjectString + "_" + instance
-                if (subjectContext != null) subjectURI += "_" + helper.convertTypeToSparqlVariable(subjectContext.toString, false)
                 subjectInstanceArray += subjectURI
             } 
         }
@@ -369,11 +253,9 @@ class TestBuilder extends ProjectwideGlobals
             for (instance <- 1 to instanceCounts(objectString))
             {
                 var objectURI = objectString + "_" + instance
-                if (objectContext != null) objectURI += "_" + helper.convertTypeToSparqlVariable(objectContext.toString, false)
                 objectInstanceArray += objectURI
             }   
         }
-        
         if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToInstanceRecipe")
         {
             if (subjectInstanceArray.size == objectInstanceArray.size)
@@ -411,9 +293,9 @@ class TestBuilder extends ProjectwideGlobals
             var localObjectString = objectString
             if (objectADescriber != null)
             {
-                val descRanges = helper.getDescriberRangesAsList(gmCxn, objectString)
-                if (descRanges.size == 0) localObjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
-                else localObjectString = descRanges(0)
+                val descRanges = Utilities.getDescriberRangesAsList(gmCxn, objectString)
+                if (descRanges == None) localObjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
+                else localObjectString = descRanges.get(0)
             }
             for (subjectURI <- subjectInstanceArray)
             {
@@ -426,9 +308,9 @@ class TestBuilder extends ProjectwideGlobals
             var localSubjectString = subjectString
             if (subjectADescriber != null)
             {
-                val descRanges = helper.getDescriberRangesAsList(gmCxn, subjectString)
-                if (descRanges.size == 0) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
-                else localSubjectString = descRanges(0)
+                val descRanges = Utilities.getDescriberRangesAsList(gmCxn, subjectString)
+                if (descRanges == None) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
+                else localSubjectString = descRanges.get(0)
             }
             for (objectURI <- objectInstanceArray)
             {
@@ -442,22 +324,22 @@ class TestBuilder extends ProjectwideGlobals
             var localObjectString = objectString
             if (subjectADescriber != null)
             {
-                val descRanges = helper.getDescriberRangesAsList(gmCxn, subjectString)
-                if (descRanges.size == 0) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
-                else localSubjectString = descRanges(0)
+                val descRanges = Utilities.getDescriberRangesAsList(gmCxn, subjectString)
+                if (descRanges == None) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
+                else localSubjectString = descRanges.get(0)
             }
             if (objectADescriber != null)
             {
-                val descRanges = helper.getDescriberRangesAsList(gmCxn, objectString)
-                if (descRanges.size == 0) localObjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
-                else localObjectString = descRanges(0)
+                val descRanges = Utilities.getDescriberRangesAsList(gmCxn, objectString)
+                if (descRanges == None) localObjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
+                else localObjectString = descRanges.get(0)
             }
             thisTripleAsData += s"<$localSubjectString> <$predicateString> <$localObjectString> .\n"
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/InstanceToLiteralRecipe")
         {
-            if (input(GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as instance-to-literal, but does not have literal object.")
-            val literalType = input(GRAPHLITERALTYPE.toString).toString
+            if (input(Globals.GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as instance-to-literal, but does not have literal object.")
+            val literalType = input(Globals.GRAPHLITERALTYPE.toString).toString
             for (subjectURI <- subjectInstanceArray)
             {
                 thisTripleAsData += makeTripleWithLiteral(literalType, objectString, subjectURI, predicateString)
@@ -466,14 +348,14 @@ class TestBuilder extends ProjectwideGlobals
         }
         else if (connectionType == "https://github.com/PennTURBO/Drivetrain/TermToLiteralRecipe")
         {
-            if (input(GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as term-to-literal, but does not have literal object.")
-            val literalType = input(GRAPHLITERALTYPE.toString).toString
+            if (input(Globals.GRAPHLITERALTYPE.toString) == null) throw new RuntimeException(s"Recipe $connectionName typed as term-to-literal, but does not have literal object.")
+            val literalType = input(Globals.GRAPHLITERALTYPE.toString).toString
             var localSubjectString = subjectString
             if (subjectADescriber != null)
             {
-                val descRanges = helper.getDescriberRangesAsList(gmCxn, subjectString)
-                if (descRanges.size == 0) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
-                else localSubjectString = descRanges(0)
+                val descRanges = Utilities.getDescriberRangesAsList(gmCxn, subjectString)
+                if (descRanges == None) localSubjectString = "http://purl.obolibrary.org/obo/BFO_0000001"
+                else localSubjectString = descRanges.get(0)
             }
             thisTripleAsData += makeTripleWithLiteral(literalType, objectString, localSubjectString, predicateString)
         }
@@ -486,28 +368,28 @@ class TestBuilder extends ProjectwideGlobals
          if (literalType == "https://github.com/PennTURBO/Drivetrain/StringLiteralResourceList" || literalType == "https://github.com/PennTURBO/Drivetrain/LiteralResourceList") 
           {
               val literalValue = "\"" + Math.abs(objectString.hashCode())+"abc" + "\""
-              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:String .\n"
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:string .\n"
           }
           else if (literalType == "https://github.com/PennTURBO/Drivetrain/IntegerLiteralResourceList") 
           {
               val literalValue = "\""+Math.abs(objectString.hashCode())+"\""
-              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Integer .\n"
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:integer .\n"
           }
           else if (literalType == "https://github.com/PennTURBO/Drivetrain/DoubleLiteralResourceList") 
           {
               val literalValue = "\""+Math.abs(objectString.hashCode()) + ".00"+"\""
-              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Double .\n"
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:double .\n"
           }
           else if (literalType == "https://github.com/PennTURBO/Drivetrain/BooleanLiteralResourceList") 
           {
               val literalValue = "\"true\""
-              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Boolean .\n"
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:boolean .\n"
           }
           else if (literalType == "https://github.com/PennTURBO/Drivetrain/DateLiteralResourceList") 
           {
               val lh = objectString.hashCode().toString()
               val literalValue = "\"" + lh.charAt(1)+lh.charAt(2)+"/"+lh.charAt(3)+lh.charAt(4)+"/"+lh.charAt(5)+lh.charAt(6)+ "\""
-              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:Date .\n"
+              thisTripleAsData = s"<$subjectURI> <$predicateString> $literalValue^^xsd:date .\n"
           }
          thisTripleAsData
     }
