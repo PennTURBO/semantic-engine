@@ -49,7 +49,7 @@ object DrivetrainDriver {
                   // loads application ontology specified in properties file into production repository
                   else if (args(0) == "loadOntologyToProductionRepo") OntologyLoader.addOntologyFromUrl(Globals.cxn)
                   // loads application ontology specified in properties file into model repository
-                  else if (args(0) == "loadOntologyToModelRepo") OntologyLoader.addOntologyFromUrl(Globals.cxn)
+                  else if (args(0) == "loadOntologyToModelRepo") OntologyLoader.addOntologyFromUrl(Globals.gmCxn)
                   else if (args(0) == "updateModel") updateModel(graphDBMaterials)
                   // this means run all update specifications in order, not run all possible commands
                   else if (args(0) == "allUpdates")
