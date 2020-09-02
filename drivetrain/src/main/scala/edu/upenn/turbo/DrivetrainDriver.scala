@@ -80,12 +80,12 @@ object DrivetrainDriver {
                   {
                       if (args.size < 2) logger.info("Must provide a process URI after run singleUpdate declaration")
                       else
-                      {
-                          val processAsURI = Utilities.getProcessNameAsUri(args(1))
-                          graphModelValidator.validateProcessSpecification(processAsURI)
-                          
+                      {   
                           updateModel(graphDBMaterials)
                           clearProductionNamedGraphs()
+
+                          val processAsURI = Utilities.getProcessNameAsUri(args(1))
+                          graphModelValidator.validateProcessSpecification(processAsURI)
                           
                           logger.info("Note that running individual Drivetrain Updates is recommended for testing only. To run the full stack, use 'run allUpdates'")
                           RunDrivetrainProcess.setGlobalUUID(globalUUID)
