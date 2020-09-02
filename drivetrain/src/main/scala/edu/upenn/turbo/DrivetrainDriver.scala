@@ -81,7 +81,7 @@ object DrivetrainDriver {
                       if (args.size < 2) logger.info("Must provide a process URI after run singleUpdate declaration")
                       else
                       {
-                          val processAsURI = Utilities.getProcessNameAsUri(args(0))
+                          val processAsURI = Utilities.getProcessNameAsUri(args(1))
                           graphModelValidator.validateProcessSpecification(processAsURI)
                           
                           updateModel(graphDBMaterials)
