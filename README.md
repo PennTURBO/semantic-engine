@@ -60,7 +60,7 @@ Click [here](docs/snapshotTestDocs.md) for more detailed information on snapshot
 
 `run loadRepoFromFile <path_to_some_file>` Loads an RDF file hosted locally into the production repository. Default format is RDF/XML. For now, format must be changed in the code in the DrivetrainDriver object. CTRL+F "loadRepoFromFile to find the appropriate section.
 
-`run loadRepoFromUrl <URL_to_some_file> Loads an RDF file hosted at the given URL into the production repository. Default format is RDF/XML. For now, format must be changed in the code in the DrivetrainDriver object. CTRL+F "loadRepoFromUrl to find the appropriate section.
+`run loadRepoFromUrl <URL_to_some_file>` Loads an RDF file hosted at the given URL into the production repository. Default format is RDF/XML. For now, format must be changed in the code in the DrivetrainDriver object. CTRL+F "loadRepoFromUrl to find the appropriate section.
 
 `run loadOntologyToProductionRepo` Loads the ontology file provided as the value for key `ontologyURL` in the properties file into the production repository.
 
