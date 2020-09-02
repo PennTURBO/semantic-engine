@@ -180,7 +180,7 @@ Unlike Class Resource Lists, no range feature has been implemented for Literal R
 
 **Class Resource Lists**
 
-Class Resource Lists can be used to instruct SPARQL generated from an Update Specification to expect static references to a class at a specific location in the graph pattern. Currently they can also be used as placeholders for Instances or Literals, but this should not be considered a valid use case going forwards. A range feature defines what classes are allowed for a Class Resource List to represent.  For example, a Class Resource List could be defined with ranges in the following manner:
+Class Resource Lists can be used to instruct SPARQL generated from an Update Specification to expect static references to a class at a specific location in the graph pattern. A range feature defines what classes are allowed for a Class Resource List to represent.  For example, a Class Resource List could be defined with ranges in the following manner:
 
 ```
 :genderIdentityClassList
@@ -193,6 +193,22 @@ Class Resource Lists can be used to instruct SPARQL generated from an Update Spe
 This declaration ensures that static classes in the input in the location specified by the Class Resource List are within this list of ranges, or the pattern will not match. This feature is implemented using a `VALUES` clause in SPARQL.
 
 Class Resource Lists can appear in the output of an Update Specification without appearing in the input, but only if they declare a range list of size 1. This is essentially equivalent to hardcoding a class as the value of a Term.
+
+**Untyped Instances**
+
+Untyped Instances can be used to instruct SPARQL generated from an Update Specification that an Instance should not be assigned a type automatically. Untyped Instances will still be assigned URIs as normal Instances are. Declaring Untyped Instances can be useful when the type of an Instance is dependent on something in the input dataset. Untyped Instances can still be assigned types manually by building a Connection Recipe.
+
+The following example Connection Recipe demonstrates how an Untyped Instance can be assigned a type manually.
+
+```
+:typingUntypedInstance a :InstanceToTermRecipe ;
+  :subject :classA ;
+  :predicate rdf:type ;
+  :object :classB ;
+  :cardinality :1-1 ;
+.
+:classA a :UntypedInstance .
+```
 
 ## SPARQL Groups*
 
