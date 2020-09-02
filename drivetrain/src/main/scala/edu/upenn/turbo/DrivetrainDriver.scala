@@ -44,8 +44,8 @@ object DrivetrainDriver {
                   if (Globals.cxn == null || Globals.gmCxn == null) logger.info("There was a problem initializing the graph. Please check your properties file for errors.")
                   // utility method that loads a RDF file into the production repository - format is hardcoded as the 3rd argument
                   else if (args(0) == "loadRepoFromFile") Utilities.loadDataFromFile(Globals.cxn, args(1), RDFFormat.RDFXML)
-                  // utility method that loads triples from a URI into the production repository - format is hardcoded as the value of the 3rd argument
-                  else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(Globals.cxn, args(1), args(2), RDFFormat.RDFXML)
+                  // utility method that loads triples from a URI into the production repository - format is hardcoded as the 4th argument
+                  else if (args(0) == "loadRepoFromUrl") OntologyLoader.addOntologyFromUrl(Globals.cxn, args(1), args(1), RDFFormat.RDFXML)
                   // loads application ontology specified in properties file into production repository
                   else if (args(0) == "loadOntologyToProductionRepo") OntologyLoader.addOntologyFromUrl(Globals.cxn)
                   // loads application ontology specified in properties file into model repository
@@ -268,8 +268,8 @@ object DrivetrainDriver {
   {
       // get connection to test repo
       val graphDbTestConnectionDetails = ConnectToGraphDB.getTestRepositoryConnection()
-      val testCxn = graphDbTestConnectionDetails.getConnection()
-      val gmCxn = graphDbTestConnectionDetails.getGmConnection()
+      Globals.cxn = graphDbTestConnectionDetails.getConnection()
+      Globals.gmCxn = graphDbTestConnectionDetails.getGmConnection()
       val graphModelValidator = new GraphModelValidator()
       
       try
@@ -280,18 +280,18 @@ object DrivetrainDriver {
           if (!(args.size > 1)) 
           {
               logger.info(s"No URI found as argument, all update specifications in instruction set " + Globals.instructionSetFile + " will be processed.")
-              buildArray = Utilities.getAllProcessInInstructionSet(gmCxn)
+              buildArray = Utilities.getAllProcessInInstructionSet(Globals.gmCxn)
           }
           else buildArray = ArrayBuffer(args(1))
           val testBuilder = new TestBuilder()
           
           for (process <- buildArray)
           {
-              Utilities.deleteAllTriplesInDatabase(testCxn)
+              Utilities.deleteAllTriplesInDatabase(Globals.cxn)
               val processAsURI = Utilities.getProcessNameAsUri(process)
               graphModelValidator.validateProcessSpecification(processAsURI)
               logger.info(s"Building test for process $processAsURI")
-              testBuilder.buildTest(testCxn, gmCxn, processAsURI)  
+              testBuilder.buildTest(Globals.cxn, Globals.gmCxn, processAsURI)  
           } 
       }
       finally
@@ -304,8 +304,8 @@ object DrivetrainDriver {
   {
       // get connection to test repo
       val graphDbTestConnectionDetails = ConnectToGraphDB.getTestRepositoryConnection()
-      val testCxn = graphDbTestConnectionDetails.getConnection()
-      val gmCxn = graphDbTestConnectionDetails.getGmConnection()
+      Globals.cxn = graphDbTestConnectionDetails.getConnection()
+      Globals.gmCxn = graphDbTestConnectionDetails.getGmConnection()
       
       try
       {
@@ -316,14 +316,14 @@ object DrivetrainDriver {
           if (nonProcessArgs.contains(args(args.size-1)))
           {
               logger.info(s"No URI found as argument, all update specifications in instruction set " +Globals.instructionSetFile + " will be processed.")
-              buildArray = Utilities.getAllProcessesInOrder(gmCxn)
+              buildArray = Utilities.getAllProcessesInOrder(Globals.gmCxn)
           }
           else buildArray = ArrayBuffer(args(args.size-1))
           val testBuilder = new TestBuilder()
           
-          Utilities.deleteAllTriplesInDatabase(testCxn)
-          if (args.size > 1 && args(1) == "--min") testBuilder.postMinTripleOutput(testCxn, gmCxn, buildArray)
-          else testBuilder.postMaxTripleOutput(testCxn, gmCxn, buildArray)
+          Utilities.deleteAllTriplesInDatabase(Globals.cxn)
+          if (args.size > 1 && args(1) == "--min") testBuilder.postMinTripleOutput(Globals.cxn, Globals.gmCxn, buildArray)
+          else testBuilder.postMaxTripleOutput(Globals.cxn, Globals.gmCxn, buildArray)
           logger.info("Your requested output data is available in the testing repository.")
       }
       finally
